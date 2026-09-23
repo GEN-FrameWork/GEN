@@ -231,6 +231,14 @@ class UI_MANAGER : public XOBSERVER, public XSUBJECT
     // Fase 5: scale = min(sw/dw, sh/dh) then PrepareLayout. No-op if UIScale inactive.
     bool                            Layouts_ApplyFitUIScale                   (UI_LAYOUT* layout);
 
+    // Track L.4: re-resolve rem/vw/vh/%/em length tokens from each element's computed style bag against the
+    // current design viewport + parent box, then RunLayout on top-level roots. Call after SetDesignSize or on
+    // window CHANGESIZE when the design viewport (or parent geometry) may have changed. XML-only layouts = no-op.
+    bool                            Layouts_ReresolveStyleLengths             (UI_LAYOUT* layout);
+
+    // Track L.4 convenience: SetDesignSize + media viewport + ReresolveStyleLengths + UIScale_PrepareLayout.
+    bool                            Layouts_SetDesignSize                     (UI_LAYOUT* layout, XDWORD width, XDWORD height);
+
   private:
                                     UI_MANAGER                                ();
                                     UI_MANAGER                                (UI_MANAGER const&);
@@ -254,6 +262,11 @@ class UI_MANAGER : public XOBSERVER, public XSUBJECT
     // Fase 8: rem/vw/vh/%/em via UI_LENGTH — only for layouts that own a stylesheet (UI_Options untouched).
     void                            BuildLengthContext                        (UI_LAYOUT* layout, double basis, double fontsize, UI_LENGTH_CONTEXT& out);
     bool                            ResolveStyleLength                        (XSTRING& valuestr, UI_LENGTH_CONTEXT& context, double& out);
+
+    // Track L.4: apply xpos/ypos/width/height/gap/flex-basis/margin/padding length tokens from an existing
+    // computed-style bag (no XML, no cascade rebuild). Used by Layouts_ReresolveStyleLengths.
+    bool                            ApplyStyleLengthsFromBag                 (UI_ELEMENT* element, UI_LAYOUT* layout, UI_STYLE& style);
+    void                            ReresolveElementStyleLengthsRecursive     (UI_ELEMENT* element, UI_LAYOUT* layout);
 
     bool                            GetLayoutElement_Base                     (XFILEXMLELEMENT* node, UI_LAYOUT* layout, UI_ELEMENT* element, bool adjusttoparent = false);
     bool                            GetLayoutElement_Base                     (UI_STYLE& style, XSTRING& fathertagname, UI_LAYOUT* layout, UI_ELEMENT* element, bool adjusttoparent = false);

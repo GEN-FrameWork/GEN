@@ -314,7 +314,7 @@ void Call_SPrintf(SCRIPT_LIB* library, SCRIPT* script, XVECTOR<XVARIANT*>* param
 
   returnvalue->Set();
 
-  if(!params->GetSize())
+  if(params->GetSize() < 2)
     {
       script->HaveError(SCRIPT_ERRORCODE_INSUF_PARAMS);
       return;
@@ -326,6 +326,12 @@ void Call_SPrintf(SCRIPT_LIB* library, SCRIPT* script, XVECTOR<XVARIANT*>* param
 
   XVARIANT  variantmask = (*params->Get(1));
   XCHAR*    mask = variantmask;
+
+  if(!mask)
+    {
+      script->HaveError(SCRIPT_ERRORCODE_INSUF_PARAMS);
+      return;
+    }
 
   XSTRING outstring;
   XSTRING string;
@@ -388,7 +394,8 @@ void Call_SPrintf(SCRIPT_LIB* library, SCRIPT* script, XVECTOR<XVARIANT*>* param
                                 case __C('s')   :
                                 case __C('S')   : { XVARIANT variantparam = (*params->Get(paramindex));
                                                     paramindex++;
-                                                    string.Format(param,(XCHAR*)variantparam);
+                                                    // Pass data as a string value — do not re-parse '%' inside it.
+                                                    string = (XCHAR*)variantparam;
                                                     end = true;
                                                   }
                                                   break;
@@ -403,6 +410,7 @@ void Call_SPrintf(SCRIPT_LIB* library, SCRIPT* script, XVECTOR<XVARIANT*>* param
                                       default   : break;
                               }
 
+                        if(mask[c]) c++;   // consume the format character
                       }
                       break;
 
@@ -412,9 +420,11 @@ void Call_SPrintf(SCRIPT_LIB* library, SCRIPT* script, XVECTOR<XVARIANT*>* param
         }
 
       outstring += string;
+      string.Empty();
     }
 
   _out = outstring;
+  (*returnvalue) = outstring;
 }
 
 

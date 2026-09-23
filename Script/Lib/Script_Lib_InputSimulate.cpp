@@ -256,7 +256,7 @@ void Call_Key_Click(SCRIPT_LIB* library, SCRIPT* script, XVECTOR<XVARIANT*>* par
 
   bool status  = false;
 
-  if(!params->GetSize())
+  if(params->GetSize() < 2)
     {
       script->HaveError(SCRIPT_ERRORCODE_INSUF_PARAMS);
       return;
@@ -306,7 +306,7 @@ void Call_Key_ClickByLiteral(SCRIPT_LIB* library, SCRIPT* script, XVECTOR<XVARIA
 
   bool status  = false;
 
-  if(!params->GetSize())
+  if(params->GetSize() < 2)
     {
       script->HaveError(SCRIPT_ERRORCODE_INSUF_PARAMS);
       return;
@@ -358,7 +358,7 @@ void Call_Key_ClickByText(SCRIPT_LIB* library, SCRIPT* script, XVECTOR<XVARIANT*
 
   bool status  = false;
 
-  if(!params->GetSize())
+  if(params->GetSize() < 2)
     {
       script->HaveError(SCRIPT_ERRORCODE_INSUF_PARAMS);
       return;

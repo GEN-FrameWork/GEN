@@ -137,7 +137,17 @@ int SCRIPT_LNG_JAVASCRIPT::Run(int* returnval)
   
   if(returnval) 
     {
-      (*returnval) =  duk_require_int(context, 0);
+      // peval leaves the result at stack top (-1). Non-numeric results are not a hard
+      // peval failure; reject them explicitly when the caller asked for an int.
+      if(!duk_is_number(context, -1))
+        {
+          HaveError(DUK_ERR_TYPE_ERROR);
+          (*returnval) = 0;
+        }
+       else
+        {
+          (*returnval) = (int)duk_get_number(context, -1);
+        }
     }
 
   duk_pop(context);
@@ -413,12 +423,8 @@ duk_ret_t SCRIPT_LNG_JAVASCRIPT::LibraryCallBack(duk_context* context)
       case XVARIANT_TYPE_INTEGER       :  duk_push_int(context, (int)(returnvalue));     nreturnvalues++;   break;
       case XVARIANT_TYPE_CHAR          :  duk_push_int(context, (int)(returnvalue));     nreturnvalues++;   break;
       case XVARIANT_TYPE_XCHAR         :                                                                    break;
-      case XVARIANT_TYPE_FLOAT         :  { XDWORD data = returnvalue;
-
-                                            duk_push_int(context, data);
-                                            nreturnvalues++;
-                                          }
-                                          break;
+      case XVARIANT_TYPE_FLOAT         :  duk_push_number(context, (double)(float)returnvalue);  nreturnvalues++;  break;
+      case XVARIANT_TYPE_DOUBLE        :  duk_push_number(context, (double)returnvalue);         nreturnvalues++;  break;
 
       case XVARIANT_TYPE_STRING        : { XSTRING stringreturnvalue;
 

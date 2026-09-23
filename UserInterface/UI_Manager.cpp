@@ -3918,6 +3918,261 @@ bool UI_MANAGER::ResolveStyleLength(XSTRING& valuestr, UI_LENGTH_CONTEXT& contex
 
 /**-------------------------------------------------------------------------------------------------------------------
 *
+* @fn         bool UI_MANAGER::ApplyStyleLengthsFromBag(UI_ELEMENT* element, UI_LAYOUT* layout, UI_STYLE& style)
+* @brief      Track L.4: re-apply length tokens (box + gap/flex-basis/margin/padding) from a computed style bag.
+* @ingroup    USERINTERFACE
+*
+* --------------------------------------------------------------------------------------------------------------------*/
+bool UI_MANAGER::ApplyStyleLengthsFromBag(UI_ELEMENT* element, UI_LAYOUT* layout, UI_STYLE& style)
+{
+  if(!element || !layout || !layout->GetStyleSheet()) return false;
+
+  double fatherwidth  = 0.0;
+  double fatherheight = 0.0;
+  double fatherem     = 16.0;
+
+  if(element->GetFather() && element->GetFather()->GetBoundaryLine())
+    {
+      fatherwidth  = element->GetFather()->GetBoundaryLine()->width;
+      fatherheight = element->GetFather()->GetBoundaryLine()->height;
+      if(element->GetFather()->GetComputedStyle())
+        {
+          double sf = 0.0;
+          if(element->GetFather()->GetComputedStyle()->Get(__L("sizefont"), sf) && sf > 0.0) fatherem = sf;
+        }
+    }
+
+  double xpos   = element->GetBoundaryLine() ? element->GetBoundaryLine()->x      : 0.0;
+  double ypos   = element->GetBoundaryLine() ? element->GetBoundaryLine()->y      : 0.0;
+  double width  = element->GetBoundaryLine() ? element->GetBoundaryLine()->width  : 0.0;
+  double height = element->GetBoundaryLine() ? element->GetBoundaryLine()->height : 0.0;
+
+  // Flex/grid items get x/y from RunLayout. Re-applying CSS xpos/ypos (especially %) against the post-flex
+  // father box corrupts scale labels and progress widgets — only refresh size/gap/padding/margin for them.
+  bool father_is_flow = false;
+  if(element->GetFather())
+    {
+      father_is_flow = element->GetFather()->IsFlexContainer() || element->GetFather()->IsGridContainer();
+    }
+
+  XSTRING position;
+  if(!father_is_flow && style.Get(__L("xpos"), position))
+    {
+      if(!position.Compare(__L("left"), true))        xpos = UI_ELEMENT_TYPE_ALIGN_LEFT;
+      else if(!position.Compare(__L("right"), true))  xpos = UI_ELEMENT_TYPE_ALIGN_RIGHT;
+      else if(!position.Compare(__L("center"), true)) xpos = UI_ELEMENT_TYPE_ALIGN_CENTER;
+      else
+        {
+          UI_LENGTH_CONTEXT ctx;
+          BuildLengthContext(layout, fatherwidth, fatherem, ctx);
+          ResolveStyleLength(position, ctx, xpos);
+        }
+    }
+
+  if(!father_is_flow && style.Get(__L("ypos"), position))
+    {
+      if(!position.Compare(__L("up"), true))          ypos = UI_ELEMENT_TYPE_ALIGN_UP;
+      else if(!position.Compare(__L("down"), true))   ypos = UI_ELEMENT_TYPE_ALIGN_DOWN;
+      else if(!position.Compare(__L("center"), true)) ypos = UI_ELEMENT_TYPE_ALIGN_CENTER;
+      else
+        {
+          UI_LENGTH_CONTEXT ctx;
+          BuildLengthContext(layout, fatherheight, fatherem, ctx);
+          ResolveStyleLength(position, ctx, ypos);
+        }
+    }
+
+  XSTRING size;
+  if(style.Get(__L("width"), size))
+    {
+      if(!size.Compare(__L("max"), true))        width = UI_ELEMENT_TYPE_ALIGN_MAX;
+      else if(!size.Compare(__L("auto"), true))  width = UI_ELEMENT_TYPE_ALIGN_AUTO;
+      else
+        {
+          UI_LENGTH_CONTEXT ctx;
+          BuildLengthContext(layout, fatherwidth, fatherem, ctx);
+          ResolveStyleLength(size, ctx, width);
+        }
+    }
+
+  if(style.Get(__L("height"), size))
+    {
+      if(!size.Compare(__L("max"), true))        height = UI_ELEMENT_TYPE_ALIGN_MAX;
+      else if(!size.Compare(__L("auto"), true))  height = UI_ELEMENT_TYPE_ALIGN_AUTO;
+      else
+        {
+          UI_LENGTH_CONTEXT ctx;
+          BuildLengthContext(layout, fatherheight, fatherem, ctx);
+          ResolveStyleLength(size, ctx, height);
+        }
+    }
+
+  if(element->GetBoundaryLine())
+    {
+      element->GetBoundaryLine()->x      = xpos;
+      element->GetBoundaryLine()->y      = ypos;
+      element->GetBoundaryLine()->width  = width;
+      element->GetBoundaryLine()->height = height;
+    }
+
+  // Prefer intrinsic snapshot for flex idempotency (same as load-time post-union fix).
+  // Alignment tokens (LEFT/MAX/AUTO/…) are large negatives — only snapshot real positive sizes.
+  if(width  > 0.0) element->SetIntrinsicWidth(width);
+  if(height > 0.0) element->SetIntrinsicHeight(height);
+
+  {
+    UI_LENGTH_CONTEXT ctx;
+    BuildLengthContext(layout, fatherwidth, fatherem, ctx);
+    XSTRING gapstr;
+    double  gapvalue = 0.0;
+    double  rowgap   = element->GetRowGap();
+    double  colgap   = element->GetColumnGap();
+    if(style.Get(__L("gap")       , gapstr) && ResolveStyleLength(gapstr, ctx, gapvalue)) { rowgap = gapvalue; colgap = gapvalue; }
+    if(style.Get(__L("row-gap")   , gapstr) && ResolveStyleLength(gapstr, ctx, gapvalue)) rowgap = gapvalue;
+    if(style.Get(__L("column-gap"), gapstr) && ResolveStyleLength(gapstr, ctx, gapvalue)) colgap = gapvalue;
+    element->SetGap(rowgap, colgap);
+  }
+
+  XSTRING flexbasisstr;
+  if(style.Get(__L("flex-basis"), flexbasisstr))
+    {
+      if(!flexbasisstr.Compare(__L("auto"), true)) element->SetFlexBasisAuto();
+      else
+        {
+          UI_LENGTH_CONTEXT ctx;
+          BuildLengthContext(layout, fatherwidth, fatherem, ctx);
+          double bv = 0.0;
+          if(ResolveStyleLength(flexbasisstr, ctx, bv)) element->SetFlexBasis(bv);
+          else element->SetFlexBasis(flexbasisstr.ConvertToDouble());
+        }
+    }
+
+  {
+    double edges[4] = { 0.0, 0.0, 0.0, 0.0 };
+    UI_LENGTH_CONTEXT lengthctx;
+    BuildLengthContext(layout, fatherwidth, fatherem, lengthctx);
+    if(UI_PROPERTYREGISTRY::ResolveMarginEdges(style, true, true, edges, &lengthctx))
+      {
+        element->SetMargin(UI_ELEMENT_TYPE_ALIGN_LEFT , edges[0]);
+        element->SetMargin(UI_ELEMENT_TYPE_ALIGN_RIGHT, edges[1]);
+        element->SetMargin(UI_ELEMENT_TYPE_ALIGN_UP   , edges[2]);
+        element->SetMargin(UI_ELEMENT_TYPE_ALIGN_DOWN , edges[3]);
+      }
+  }
+
+  XSTRING paddingstr;
+  if(style.Get(__L("padding"), paddingstr))
+    {
+      double out[4] = { 0.0, 0.0, 0.0, 0.0 };
+      UI_LENGTH_CONTEXT ctx;
+      BuildLengthContext(layout, fatherwidth, fatherem, ctx);
+      if(!UI_PROPERTYREGISTRY::ExpandCSSShorthand4Lengths(paddingstr, ctx, out))
+        {
+          UI_PROPERTYREGISTRY::ExpandCSSShorthand4(paddingstr, out);
+        }
+      element->SetPadding(UI_ELEMENT_TYPE_ALIGN_LEFT , out[3]);
+      element->SetPadding(UI_ELEMENT_TYPE_ALIGN_RIGHT, out[1]);
+      element->SetPadding(UI_ELEMENT_TYPE_ALIGN_UP   , out[0]);
+      element->SetPadding(UI_ELEMENT_TYPE_ALIGN_DOWN , out[2]);
+    }
+
+  {
+    UI_LENGTH_CONTEXT ctx;
+    BuildLengthContext(layout, fatherwidth, fatherem, ctx);
+    XSTRING pstr;
+    double  pv = 0.0;
+    if(style.Get(__L("padding-left")  , pstr) && ResolveStyleLength(pstr, ctx, pv)) element->SetPadding(UI_ELEMENT_TYPE_ALIGN_LEFT , pv);
+    if(style.Get(__L("padding-right") , pstr) && ResolveStyleLength(pstr, ctx, pv)) element->SetPadding(UI_ELEMENT_TYPE_ALIGN_RIGHT, pv);
+    if(style.Get(__L("padding-top")   , pstr) && ResolveStyleLength(pstr, ctx, pv)) element->SetPadding(UI_ELEMENT_TYPE_ALIGN_UP   , pv);
+    if(style.Get(__L("padding-bottom"), pstr) && ResolveStyleLength(pstr, ctx, pv)) element->SetPadding(UI_ELEMENT_TYPE_ALIGN_DOWN , pv);
+  }
+
+  return true;
+}
+
+
+/**-------------------------------------------------------------------------------------------------------------------
+*
+* @fn         void UI_MANAGER::ReresolveElementStyleLengthsRecursive(UI_ELEMENT* element, UI_LAYOUT* layout)
+* @brief      Track L.4: depth-first re-resolve (parents before children so % basis is current).
+* @ingroup    USERINTERFACE
+*
+* --------------------------------------------------------------------------------------------------------------------*/
+void UI_MANAGER::ReresolveElementStyleLengthsRecursive(UI_ELEMENT* element, UI_LAYOUT* layout)
+{
+  if(!element || !layout) return;
+
+  UI_STYLE* bag = element->GetComputedStyle();
+  if(bag) ApplyStyleLengthsFromBag(element, layout, *bag);
+
+  XVECTOR<UI_ELEMENT*>* children = element->GetComposeElements();
+  if(children)
+    {
+      for(XDWORD c=0; c<children->GetSize(); c++)
+        {
+          ReresolveElementStyleLengthsRecursive(children->Get(c), layout);
+        }
+    }
+}
+
+
+/**-------------------------------------------------------------------------------------------------------------------
+*
+* @fn         bool UI_MANAGER::Layouts_ReresolveStyleLengths(UI_LAYOUT* layout)
+* @brief      Track L.4: re-resolve style lengths for every element, then RunLayout on each top-level root.
+* @ingroup    USERINTERFACE
+*
+* --------------------------------------------------------------------------------------------------------------------*/
+bool UI_MANAGER::Layouts_ReresolveStyleLengths(UI_LAYOUT* layout)
+{
+  if(!layout || !layout->GetStyleSheet()) return false;
+
+  // Keep @media viewport aligned with design (load-time media still; lengths follow design live).
+  layout->GetStyleSheet()->SetMediaViewport((int)layout->GetDesignWidth(), (int)layout->GetDesignHeight());
+
+  XVECTOR<UI_ELEMENT*>* roots = layout->Elements_Get();
+  if(!roots) return false;
+
+  for(XDWORD c=0; c<roots->GetSize(); c++)
+    {
+      UI_ELEMENT* root = roots->Get(c);
+      if(!root) continue;
+      ReresolveElementStyleLengthsRecursive(root, layout);
+      UI_LAYOUTENGINE::RunLayout(root, UI_LAYOUTSTRATEGY_CSS);
+      // Same post-flex ProgressBar track fix CreateLayouts runs after the first RunLayout.
+      RefreshFlexProgressBarTracks(root, layout->GetSkin());
+    }
+
+  layout->Elements_SetToRedraw(true);
+  return true;
+}
+
+
+/**-------------------------------------------------------------------------------------------------------------------
+*
+* @fn         bool UI_MANAGER::Layouts_SetDesignSize(UI_LAYOUT* layout, XDWORD width, XDWORD height)
+* @brief      Track L.4: change design canvas and refresh length-dependent layout.
+* @ingroup    USERINTERFACE
+*
+* --------------------------------------------------------------------------------------------------------------------*/
+bool UI_MANAGER::Layouts_SetDesignSize(UI_LAYOUT* layout, XDWORD width, XDWORD height)
+{
+  if(!layout || !width || !height) return false;
+
+  layout->SetDesignSize(width, height);
+  if(layout->GetStyleSheet())
+    {
+      layout->GetStyleSheet()->SetMediaViewport((int)width, (int)height);
+      Layouts_ReresolveStyleLengths(layout);
+    }
+
+  if(layout->IsUIScaleActive()) UIScale_PrepareLayout(layout);
+  return true;
+}
+
+
+/**-------------------------------------------------------------------------------------------------------------------
+*
 * @fn         bool UI_MANAGER::GetLayoutElement_Base(XFILEXMLELEMENT* node, UI_LAYOUT* layout, UI_ELEMENT* element, bool adjusttoparent)
 * @brief      Get layout element base
 * @ingroup    USERINTERFACE

@@ -239,7 +239,7 @@ void Call_TracePrintColor(SCRIPT_LIB* library, SCRIPT* script, XVECTOR<XVARIANT*
 
   returnvalue->Set();
 
-  if(!params->GetSize())
+  if(params->GetSize() < 2)
     {
       script->HaveError(SCRIPT_ERRORCODE_INSUF_PARAMS);
       return;
@@ -256,7 +256,11 @@ void Call_TracePrintColor(SCRIPT_LIB* library, SCRIPT* script, XVECTOR<XVARIANT*
   int paramindex = 2;
   int c          = 0;
 
-  if(!mask) return;
+  if(!mask)
+    {
+      script->HaveError(SCRIPT_ERRORCODE_INSUF_PARAMS);
+      return;
+    }
 
   while(mask[c])
     {
