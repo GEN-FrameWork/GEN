@@ -111,16 +111,31 @@ HASHCKS16::~HASHCKS16()
 * --------------------------------------------------------------------------------------------------------------------*/
 bool HASHCKS16::Do(XBYTE* input, XQWORD size)
 {
-  if(!size) return false;
+  if(!input) return false;
+  if(!size)  return false;
 
   XWORD value = 0;
 
   resulttmp->Extract(value);
 
-  for(XDWORD c=0; c<size; c++)
+  // Accumulate 16-bit words. Build each word from bytes (no *(XWORD*) cast):
+  // - avoids unaligned access UB
+  // - matches little-endian *(XWORD*) on Windows/intel
+  // Previous loop ran `size` times while advancing `sizeof(XWORD)` each step, so a
+  // 3-byte buffer was walked 6 bytes off the end — OOB reads that collided on
+  // intel64 Debug stack padding (DifferentInputsLikelyDifferentChecksum).
+  while(size > 1)
     {
-      value = Update(value, (*(XWORD*)input));
-      input = input + sizeof(XWORD); // need to offset the input by 16 bits, as we are adding 16 by 16
+      XWORD word = (XWORD)input[0] | (((XWORD)input[1]) << 8);
+      value = Update(value, word);
+      input += 2;
+      size  -= 2;
+    }
+
+  // Classic 16-bit checksum: odd trailing byte in the low half of the word.
+  if(size == 1)
+    {
+      value = Update(value, (XWORD)input[0]);
     }
 
   value = ~value;

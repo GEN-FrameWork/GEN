@@ -146,7 +146,21 @@ bool CIPHERKEYPRIVATERSA::Set(XMPINTEGER& prime1factor, XMPINTEGER& prime2factor
 * --------------------------------------------------------------------------------------------------------------------*/
 int CIPHERKEYPRIVATERSA::GetSizeInBytes()
 { 
-  return this->exponent.GetSize();      
+  // RSA key size is the modulus N = P*Q, not the private exponent D
+  // (D can be a few bits shorter than N, which would under-report the key).
+  XMPINTEGER N;
+  int        size = 0;
+
+  N.Ini();
+
+  if(N.Multiplication(&prime1factor, &prime2factor))
+    {
+      size = (int)N.GetSize();
+    }
+
+  N.End();
+
+  return size;
 }
 
 

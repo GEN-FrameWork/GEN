@@ -242,7 +242,12 @@ bool CIPHERRSA::SetKey(CIPHERKEY* key, bool integritycheck)
                                           XMPINTEGER           P1;
                                           XMPINTEGER           Q1;
 
-                                          privatekey->Get(context.P, context.Q, context.D); // Assign key public to context
+                                          privatekey->Get(context.P, context.Q, context.D);
+
+                                          // Modulus N is not stored in the private key object; derive it so
+                                          // Sign/Uncipher and GetKeySizeInBytes work when only the private key is set.
+                                          if(!context.N.Multiplication(&context.P, &context.Q))     return false;
+                                          context.len = (context.N.GetMSB() + 7) >> 3;
 
                                           if(!P1.SubtractionSigned(&context.P, 1))                  return false;
                                           if(!Q1.SubtractionSigned(&context.Q, 1))                  return false;
