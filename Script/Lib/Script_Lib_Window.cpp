@@ -130,14 +130,14 @@ bool SCRIPT_LIB_WINDOW::AddLibraryFunctions(SCRIPT* script)
 
   this->script = script;
 
-  script->AddLibraryFunction(this, __L("Window_GetPosX")        , Call_Window_GetPosX);
-  script->AddLibraryFunction(this, __L("Window_GetPosY")        , Call_Window_GetPosY);
-  script->AddLibraryFunction(this, __L("Window_SetBmpFindCFG")  , Call_Window_SetBmpFindCFG);
-  script->AddLibraryFunction(this, __L("Window_SetFocus")       , Call_Window_SetFocus);
-  script->AddLibraryFunction(this, __L("Window_SetPosition")    , Call_Window_SetPosition);
-  script->AddLibraryFunction(this, __L("Window_Resize")         , Call_Window_Resize);
-  script->AddLibraryFunction(this, __L("Window_Minimize")       , Call_Window_Minimize);
-  script->AddLibraryFunction(this, __L("Window_Maximize")       , Call_Window_Maximize);
+  script->AddLibraryFunction(this, __L("Window_GetPosX"), Call_Window_GetPosX);
+  script->AddLibraryFunction(this, __L("Window_GetPosY"), Call_Window_GetPosY);
+  script->AddLibraryFunction(this, __L("Window_SetBmpFindCFG"), Call_Window_SetBmpFindCFG);
+  script->AddLibraryFunction(this, __L("Window_SetFocus"), Call_Window_SetFocus);
+  script->AddLibraryFunction(this, __L("Window_SetPosition"), Call_Window_SetPosition);
+  script->AddLibraryFunction(this, __L("Window_Resize"), Call_Window_Resize);
+  script->AddLibraryFunction(this, __L("Window_Minimize"), Call_Window_Minimize);
+  script->AddLibraryFunction(this, __L("Window_Maximize"), Call_Window_Maximize);
       
   return true;
 }
@@ -703,7 +703,7 @@ void Call_Window_Resize(SCRIPT_LIB* library, SCRIPT* script, XVECTOR<XVARIANT*>*
                       if(screen)
                         {
                           screen->SetHandle(handle_windows);
-                          screen->Resize(sizex,sizey);
+                          screen->Resize(sizex, sizey);
                         
                           GEN_GRPFACTORY.DeleteScreen(screen);  
 
@@ -1180,7 +1180,7 @@ GRPBITMAP* GetBitmap(int x, int y, int sizex, int sizey)
 * @param[in]  color : Color value.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-void FillLineDebug(GRPBITMAP* bitmapscreen, XDWORD*  bufferscreen, XDWORD scrpos, XDWORD linesize, XDWORD color)
+void FillLineDebug(GRPBITMAP* bitmapscreen, XDWORD* bufferscreen, XDWORD scrpos, XDWORD linesize, XDWORD color)
 {
   for(XDWORD c=scrpos; c<(scrpos + linesize); c++)
     {

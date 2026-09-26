@@ -87,7 +87,7 @@ GRPWINDOWSDESKTOPMONITORS::~GRPWINDOWSDESKTOPMONITORS()
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         BOOL CALLBACK GRPWINDOWSDESKTOPMONITORS::MonitorEnum(HMONITOR hmon,HDC hdc,LPRECT rectmonitor,LPARAM pdata)
+* @fn         BOOL CALLBACK GRPWINDOWSDESKTOPMONITORS::MonitorEnum(HMONITOR hmon, HDC hdc, LPRECT rectmonitor, LPARAM pdata)
 * @brief      Monitor enum
 * @ingroup    PLATFORM_WINDOWS
 * 
@@ -99,7 +99,7 @@ GRPWINDOWSDESKTOPMONITORS::~GRPWINDOWSDESKTOPMONITORS()
 * @return     BOOL CALLBACK : Requested value.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-BOOL CALLBACK GRPWINDOWSDESKTOPMONITORS::MonitorEnum(HMONITOR hmon,HDC hdc,LPRECT rectmonitor,LPARAM pdata)
+BOOL CALLBACK GRPWINDOWSDESKTOPMONITORS::MonitorEnum(HMONITOR hmon, HDC hdc, LPRECT rectmonitor, LPARAM pdata)
 {
   GRPWINDOWSDESKTOPMONITORS* deskmonitors = (GRPWINDOWSDESKTOPMONITORS*)pdata;
   if(!deskmonitors)
@@ -144,10 +144,6 @@ void GRPWINDOWSDESKTOPMONITORS::Clean()
 {
 
 }
-
-
-
-
 
 
 /**-------------------------------------------------------------------------------------------------------------------

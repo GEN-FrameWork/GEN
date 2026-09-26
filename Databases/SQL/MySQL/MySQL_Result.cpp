@@ -303,7 +303,7 @@ bool MYSQL_RESULT::ProcessRow()
                                           int    size  = bindresults[e].buffer_length;
 
                                           XSTRING received;
-                                          received.ConvertFromUTF8((XBYTE*)value,size);
+                                          received.ConvertFromUTF8((XBYTE*)value, size);
                                           (*variant) = received;
                                         }
                                         break; 

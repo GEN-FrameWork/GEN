@@ -34,23 +34,17 @@
 
 #include "DIOCheckTCPIPConnections.h"
 
-
-
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
 
 #define DIOCHECKINTERNETCONNECTION_MAXCONNECTIONS        16
 
 #define DIOCHECKINTERNETCONNECTION_DEFAULTTIMECHECK      30
 
-
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
-
 
 class XPUBLISHER;
 class DIOFACTORY;
 class DIOCHECKTCPIPCONNECTIONS;
-
 
 class DIOCHECKINTERNETCONNECTION
 {

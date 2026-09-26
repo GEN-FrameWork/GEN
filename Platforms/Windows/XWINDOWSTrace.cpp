@@ -142,7 +142,7 @@ void XWINDOWSTRACE::PrintSpecial(XTRACE_TARGET* target, XBYTE level, XCHAR* stri
 
       xdatetime.Read();
 
-      SetTraceTextToXBuffer(publicIP, localIP, level, sequence, &xdatetime,  string, xbufferpacket);
+      SetTraceTextToXBuffer(publicIP, localIP, level, sequence, &xdatetime, string, xbufferpacket);
 
       cs.dwData  = 0;
       cs.lpData  = (PVOID)xbufferpacket.Get();
@@ -204,9 +204,9 @@ void XWINDOWSTRACE::PrintFile(XTRACE_TARGET* target, XBYTE level, XCHAR* string)
   fflush(file);
 
   int position = ftell(file);
-  fseek(file,0,SEEK_END);
+  fseek(file, 0, SEEK_END);
   sizefile = ftell(file);
-  fseek(file,position,SEEK_SET);
+  fseek(file, position, SEEK_SET);
 
   if(sizefile+(XDWORD)line.GetSize()>sizelimit)
     {
@@ -215,7 +215,7 @@ void XWINDOWSTRACE::PrintFile(XTRACE_TARGET* target, XBYTE level, XCHAR* string)
       DeleteFile(target->GetAim());
 
       #ifdef BUILDER
-      file = _wfopen(target->GetAim(),__L("at"));
+      file = _wfopen(target->GetAim(), __L("at"));
       if(!file)
         {
           UnLock();
@@ -243,7 +243,7 @@ void XWINDOWSTRACE::PrintFile(XTRACE_TARGET* target, XBYTE level, XCHAR* string)
       
       line.ConvertToASCII(charstr); 
       fwrite(charstr.Get(), 1, line.GetSize(), file);      
-      fwrite(__L("\n\r"),1,1,file);
+      fwrite(__L("\n\r"), 1, 1, file);
 
       fclose(file);
     }
@@ -281,7 +281,7 @@ void XWINDOWSTRACE::PrintNet(XTRACE_TARGET* target, XBYTE level, XCHAR* string)
   XDWORD publicIP = 0;
   #endif
 
-  SetTraceTextToXBuffer(publicIP, localIP, level, sequence, &xdatetime,  string, xbufferpacket);
+  SetTraceTextToXBuffer(publicIP, localIP, level, sequence, &xdatetime, string, xbufferpacket);
 
   SOCKET handle = (SOCKET)target->GetNETHandle();
   send(handle, (const char*)xbufferpacket.Get(), xbufferpacket.GetSize(), 0);
@@ -312,7 +312,7 @@ bool XWINDOWSTRACE::GetHandleNet(XTRACE_TARGET* target)
   SOCKADDR_IN  addr;
   SOCKET       handle;
 
-  memset(&addr,0,sizeof(SOCKADDR_IN));
+  memset(&addr, 0, sizeof(SOCKADDR_IN));
 
   handle = socket(AF_INET, SOCK_DGRAM, 0);
   if(handle == INVALID_SOCKET)  return false;
@@ -336,7 +336,7 @@ bool XWINDOWSTRACE::GetHandleNet(XTRACE_TARGET* target)
       #endif
     }
 
-  connect(handle,(LPSOCKADDR)&addr,sizeof(SOCKADDR_IN));
+  connect(handle, (LPSOCKADDR)&addr, sizeof(SOCKADDR_IN));
 
   XQWORD NEThandle = (XQWORD)handle;
 

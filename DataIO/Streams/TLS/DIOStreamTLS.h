@@ -111,11 +111,7 @@ enum DIOSTREAMTLS_ERROR
   DIOSTREAMTLS_ERROR_KEY_USAGE_LIMIT       ,
 };
 
-
-
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
-
 
 enum DIOSTREAMTLS_HANDSHAKERETRYCAUSE
 {
@@ -124,7 +120,6 @@ enum DIOSTREAMTLS_HANDSHAKERETRYCAUSE
   DIOSTREAMTLS_HANDSHAKERETRYCAUSE_ALGORITHM,
   DIOSTREAMTLS_HANDSHAKERETRYCAUSE_OTHER,
 };
-
 
 template<typename T>
 class DIOSTREAMTLS : public T
@@ -137,7 +132,6 @@ class DIOSTREAMTLS : public T
                                               timeout = DIOSTREAMTLS_TIMEOUT;
                                             }
 
-
     virtual                                ~DIOSTREAMTLS                            ()
                                             {
                                               handshakeclient.End();
@@ -147,7 +141,6 @@ class DIOSTREAMTLS : public T
 
                                               Clean();
                                             }
-
 
     bool                                    Open                                    ()
                                             {
@@ -272,9 +265,6 @@ class DIOSTREAMTLS : public T
                                               return false;
                                             }
 
-
-    
-    
     bool                                    Handshake_Attempt                       (DIOSTREAMTLSCONFIG* config, XCHAR* servername, XCHAR* sniservername, bool astls12)
                                             {
                                               handshakeclient.End();
@@ -370,7 +360,6 @@ class DIOSTREAMTLS : public T
                                               return true;
                                             }
 
-
     bool                                    Handshake_ServerAttempt                 (DIOSTREAMTLSCONFIG* config)
                                             {
                                               handshakeclient.End();
@@ -435,7 +424,6 @@ class DIOSTREAMTLS : public T
                                               return true;
                                             }
 
-
     XDWORD                                  Read                                    (XBYTE* buffer, XDWORD size)
                                             {
                                               if(!buffer || !size) return 0;
@@ -456,7 +444,6 @@ class DIOSTREAMTLS : public T
 
                                               return sizeread;
                                             }
-
 
     XDWORD                                  Read                                    (XBUFFER& buffer)
                                             {
@@ -481,7 +468,6 @@ class DIOSTREAMTLS : public T
 
                                               return buffer.GetSize();
                                             }
-
 
     XDWORD                                  Write                                   (XBYTE* buffer, XDWORD size)
                                             {
@@ -524,12 +510,10 @@ class DIOSTREAMTLS : public T
                                               return size;
                                             }
 
-
     bool                                    KeyUpdate                               (bool requestpeer = false)
                                             {
                                               XBUFFER records;
 
-                                              
                                               if(usingtls12) return false;
 
                                               if(isclosing || isclosed ||
@@ -550,13 +534,11 @@ class DIOSTREAMTLS : public T
                                               return true;
                                             }
 
-
     bool                                    IsSessionResumed                        ()
                                             {
                                               if(usingtls12) return false;
                                               return isserverrole?handshakeserver.IsSessionResumed():handshakeclient.IsSessionResumed();
                                             }
-
 
     bool                                    IsClientAuthenticated                   ()
                                             {
@@ -564,13 +546,11 @@ class DIOSTREAMTLS : public T
                                               return handshakeserver.IsClientAuthenticated();
                                             }
 
-
     CIPHERCERTIFICATEX509*                  GetClientCertificate                    ()
                                             {
                                               if(usingtls12 || !isserverrole) return NULL;
                                               return handshakeserver.GetClientCertificate();
                                             }
-
 
     bool                                    WaitToFilledReadingBuffer               (int filledto = DIOSTREAM_SOMETHINGTOREAD, int timeout = XTIMER_INFINITE)
                                             {
@@ -625,14 +605,12 @@ class DIOSTREAMTLS : public T
                                               return status;
                                             }
 
-
     XBUFFER*                                GetInXBuffer                            ()
                                             {
                                               ApplicationInput_Process();
 
                                               return usingtls12?handshakeclient12.GetSession()->GetApplicationInput():session.GetApplicationInput();
                                             }
-
 
     bool                                    Disconnect                              ()
                                             {
@@ -657,7 +635,6 @@ class DIOSTREAMTLS : public T
 
                                               return status;
                                             }
-
 
     bool                                    Close                                   ()
                                             {
@@ -688,24 +665,20 @@ class DIOSTREAMTLS : public T
                                               return status;
                                             }
 
-
     int                                     GetTimeout                              ()
                                             {
                                               return timeout;
                                             }
-
 
     void                                    SetTimeout                              (int timeout = DIOSTREAMTLS_TIMEOUT)
                                             {
                                               this->timeout = timeout;
                                             }
 
-
     DIOSTREAMTLS_ERROR                      GetLastTLSError                         ()
                                             {
                                               return tlserror;
                                             }
-
 
     void                                    TLSError_Set                            (DIOSTREAMTLS_ERROR error)
                                             {
@@ -729,18 +702,15 @@ class DIOSTREAMTLS : public T
                                                 }
                                             }
 
-
     DIOSTREAMTLS13SESSION*                    GetTLSSession                           ()
                                             {
                                               return &session;
                                             }
 
-
     DIOSTREAMTLS13HANDSHAKECLIENT*            GetTLSHandshakeClient                   ()
                                             {
                                               return &handshakeclient;
                                             }
-
 
     bool                                    EarlyData_Set                            (XBUFFER& data)
                                             {
@@ -760,30 +730,21 @@ class DIOSTREAMTLS : public T
     bool                                    WasEarlyDataAttempted                    () { return earlydataattempted; }
     bool                                    IsEarlyDataAccepted                      () { return earlydataaccepted; }
 
-
-    
-    
-    
     bool                                    IsUsingTLS12                            ()
                                             {
                                               return usingtls12;
                                             }
 
-
     DIOSTREAMTLS12SESSION*                  GetTLSSession12                         ()
                                             {
                                               
-                                              
-                                              
                                               return handshakeclient12.GetSession();
                                             }
-
 
     DIOSTREAMTLS12HANDSHAKECLIENT*          GetTLSHandshakeClient12                 ()
                                             {
                                               return &handshakeclient12;
                                             }
-
 
     bool                                    IsHandshakeCompleted                    ()
                                             {
@@ -792,7 +753,6 @@ class DIOSTREAMTLS : public T
 
                                               return handshakeclient.IsHandshakeCompleted();
                                             }
-
 
     DIOSTREAMTLS13HANDSHAKESERVER*            GetTLSHandshakeServer                   ()
                                             {
@@ -912,7 +872,6 @@ class DIOSTREAMTLS : public T
                                               return status;
                                             }
 
-
     bool                                    ServerHello_Process                     (bool& serverhelloprocessed, XCHAR* servername = NULL)
                                             {
                                               while(!serverhelloprocessed)
@@ -936,10 +895,6 @@ class DIOSTREAMTLS : public T
                                                       continue;
                                                     }
 
-                                                  
-                                                  
-                                                  
-                                                  
                                                   if(contenttype == DIOSTREAMTLS_MSG_CONTENTTYPE_ALERT)
                                                     {
                                                       DIOSTREAMTLS_MSG_ALERT alert;
@@ -1012,7 +967,6 @@ class DIOSTREAMTLS : public T
                                               return true;
                                             }
 
-
     bool                                    Handshake_Server                        ()
                                             {
                                               XTIMER* xtimer;
@@ -1056,7 +1010,6 @@ class DIOSTREAMTLS : public T
 
                                               return status;
                                             }
-
 
     bool                                    ClientHello_Process                     (bool& clienthelloprocessed)
                                             {
@@ -1116,7 +1069,6 @@ class DIOSTREAMTLS : public T
                                               return true;
                                             }
 
-
     bool                                    ApplicationInput_Process                ()
                                             {
                                               XBUFFER input;
@@ -1141,8 +1093,6 @@ class DIOSTREAMTLS : public T
                                                       T::SetStatus(DIOSTREAMSTATUS_DISCONNECTED);
                                                       return false;
                                                     }
-
-                                                  
 
                                                   if(handshakeclient12.GetSession()->IsCloseNotifyReceived())
                                                     {
@@ -1242,7 +1192,6 @@ class DIOSTREAMTLS : public T
                                               return true;
                                             }
 
-
     bool                                    Transport_Read                          (XBUFFER& input)
                                             {
                                               XBUFFER* transportinput = T::GetInXBuffer();
@@ -1265,7 +1214,6 @@ class DIOSTREAMTLS : public T
 
                                               return true;
                                             }
-
 
     bool                                    Transport_Write                         (XBUFFER& output)
                                             {
@@ -1311,7 +1259,6 @@ class DIOSTREAMTLS : public T
                                               return status;
                                             }
 
-
     bool                                    Alert_Send                              (DIOSTREAMTLS_ALERT_LEVEL level, DIOSTREAMTLS_ALERT_DESCRIPTION description)
                                             {
                                               XBUFFER records;
@@ -1323,7 +1270,6 @@ class DIOSTREAMTLS : public T
 
                                               return Transport_Write(records);
                                             }
-
 
     bool                                    CloseNotify_Send                        ()
                                             {
@@ -1337,7 +1283,6 @@ class DIOSTREAMTLS : public T
 
                                               return Transport_Write(records);
                                             }
-
 
     bool                                    IsAuthenticationSecurityFailure          ()
                                             {
@@ -1356,7 +1301,6 @@ class DIOSTREAMTLS : public T
                                                       (error == DIOSTREAMTLS13HANDSHAKECLIENT_AUTHENTICATIONERROR_CERTIFICATEVERIFY));
                                             }
 
-
     void                                    Close_OnError                           ()
                                             {
                                               isclosing = true;
@@ -1367,7 +1311,6 @@ class DIOSTREAMTLS : public T
                                               isclosed  = true;
                                               isclosing = false;
                                             }
-
 
     void                                    Clean                                   ()
                                             {

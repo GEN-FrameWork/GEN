@@ -318,7 +318,7 @@ bool DIOLINUXNETWORKMANAGER::GetDevices(XVECTOR<DIOSTREAMDEVICEIP*>& devices)
                                    default      : break; 
             }
 
-          GetProperty(DIOLINUXNETWORKMANAGER_DEFAULT_DBUS_IFACE_DEVICE, pathdevices.Get(c)->Get(), __L("Interface")  , value); 
+          GetProperty(DIOLINUXNETWORKMANAGER_DEFAULT_DBUS_IFACE_DEVICE, pathdevices.Get(c)->Get(), __L("Interface"), value); 
           value.ToString(valuestr);
           deviceIP->GetName()->Set(valuestr.Get());
           value.Set();
@@ -571,7 +571,6 @@ void DIOLINUXNETWORKMANAGER::HandleEvent_Signal(DIOLINUXDBUS_XEVENT* event)
                                    default      : break; 
     }
 }
-
 
 
 /**-------------------------------------------------------------------------------------------------------------------

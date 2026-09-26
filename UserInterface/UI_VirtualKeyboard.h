@@ -51,10 +51,7 @@ enum UI_VIRTUALKEYBOARD_SET
 #define UI_VIRTUALKEYBOARD_INPUT_HEIGHT       40
 #define UI_VIRTUALKEYBOARD_INPUT_NAME         __L("@[VK_INPUT]")
 
-
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
-
 
 class GRPSCREEN;
 class GRPBITMAP;
@@ -64,7 +61,6 @@ class UI_ANIMATION;
 class UI_ELEMENT;
 class UI_ELEMENT_FORM;
 class UI_ELEMENT_EDITTEXT;
-
 
 class UI_VIRTUALKEYBOARD_KEYINFO
 {
@@ -85,7 +81,6 @@ class UI_VIRTUALKEYBOARD_KEYINFO
     void                          Clean                             ();
 };
 
-
 class UI_VIRTUALKEYBOARD
 {
   public:
@@ -100,8 +95,6 @@ class UI_VIRTUALKEYBOARD
     UI_ELEMENT*                   GetElementEditable                ();
     UI_ELEMENT_EDITTEXT*          GetElementInput                   ();
 
-    // True when "element" belongs to the keyboard form (keys or the in-keyboard input edit). Used so selecting
-    // the input field does not reopen another keyboard session on top of itself.
     bool                          IsOwnElement                      (UI_ELEMENT* element);
 
     bool                          SelectInput                       (UI_ELEMENT* key_select);      
@@ -125,8 +118,8 @@ class UI_VIRTUALKEYBOARD
     UI_SKIN*                      skin;
     bool                          isshow;
     UI_ELEMENT_FORM*              main_form;
-    UI_ELEMENT*                   element_editable;   // layout edit that opened the keyboard (commit target)
-    UI_ELEMENT_EDITTEXT*          element_input;      // live edit inside the keyboard form
+    UI_ELEMENT*                   element_editable;
+    UI_ELEMENT_EDITTEXT*          element_input;
     double                        width;
     double                        height;
     UI_VIRTUALKEYBOARD_SET        actualset;

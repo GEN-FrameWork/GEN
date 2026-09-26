@@ -151,7 +151,7 @@ void XLINUXTRACE::PrintSpecial(XTRACE_TARGET* target, XBYTE level, XCHAR* string
   _aim.Set(target->GetAim());
   _aim.ConvertToUTF8(aim, size);
 
-  signal(SIGPIPE,SIG_IGN);
+  signal(SIGPIPE, SIG_IGN);
 
   filehdl = open((char*)aim, O_RDWR | O_NONBLOCK);
   if(filehdl == -1)
@@ -177,7 +177,7 @@ void XLINUXTRACE::PrintSpecial(XTRACE_TARGET* target, XBYTE level, XCHAR* string
   line.ConvertToASCII(charstr);
 
   write(filehdl, charstr.Get(), line.GetSize());  
-  write(filehdl,__L("\n\r"),2);
+  write(filehdl, __L("\n\r"), 2);
   
   fsync(filehdl);
 
@@ -217,7 +217,7 @@ void XLINUXTRACE::PrintFile(XTRACE_TARGET* target, XBYTE level, XCHAR* string)
   _aim.ConvertToUTF8(aim, size);
 
   _mode.Set(__L("at"));
-  _mode.ConvertToUTF8(mode,size);
+  _mode.ConvertToUTF8(mode, size);
 
   file=fopen((char*)aim, (char*)mode);
   if(!file)
@@ -233,9 +233,9 @@ void XLINUXTRACE::PrintFile(XTRACE_TARGET* target, XBYTE level, XCHAR* string)
   fflush(file);
 
   int position = ftell(file);
-  fseek(file,0,SEEK_END);
+  fseek(file, 0, SEEK_END);
   sizefile = ftell(file);
-  fseek(file,position,SEEK_SET);
+  fseek(file, position, SEEK_SET);
 
   if((sizefile+(int)line.GetSize())>sizelimit)
     {
@@ -247,7 +247,7 @@ void XLINUXTRACE::PrintFile(XTRACE_TARGET* target, XBYTE level, XCHAR* string)
           a++;
         }
 
-      file=fopen((char*)target,(char*)mode);
+      file=fopen((char*)target, (char*)mode);
       if(!file)
         {
           UnLock();
@@ -261,7 +261,7 @@ void XLINUXTRACE::PrintFile(XTRACE_TARGET* target, XBYTE level, XCHAR* string)
   
   line.ConvertToASCII(charstr);
   fwrite(charstr.Get(), 1, line.GetSize(), file);  
-  fwrite(__L("\n\r"),1,1,file);
+  fwrite(__L("\n\r"), 1, 1, file);
 
   fclose(file);
 
@@ -296,11 +296,11 @@ void XLINUXTRACE::PrintNet(XTRACE_TARGET* target, XBYTE level, XCHAR* string)
   XDWORD publicIP = 0;
   #endif
 
-  SetTraceTextToXBuffer(publicIP, localIP, level, sequence, &xdatetime,  string, xbufferpacket);
+  SetTraceTextToXBuffer(publicIP, localIP, level, sequence, &xdatetime, string, xbufferpacket);
   
   int handle = (int)target->GetNETHandle();
 
-  send(handle,(const char*)xbufferpacket.Get(), xbufferpacket.GetSize(), 0);
+  send(handle, (const char*)xbufferpacket.Get(), xbufferpacket.GetSize(), 0);
 
   target->AddNSendings();
  

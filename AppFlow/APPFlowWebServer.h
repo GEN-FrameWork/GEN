@@ -42,12 +42,9 @@
 #include "CipherKey.h"
 #endif
 
-
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
 
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
-
 
 class XEVENT;
 class XBUFFER;
@@ -60,7 +57,6 @@ class DIOSTREAMTLSCONFIG;
 class CIPHERCREDENTIALSPROVIDER;
 class CIPHERSECRETPROVIDER;
 #endif
-
 
 class APPFLOWWEBSERVER : public XOBSERVER, public XSUBJECT
 {
@@ -90,9 +86,9 @@ class APPFLOWWEBSERVER : public XOBSERVER, public XSUBJECT
 
     virtual bool                SendRequest                       (DIOWEBSERVER_CONNECTION* connection, DIOWEBHEADER_RESULT headerresult, XBUFFER* data , int timeout, XSTRING* addhead = NULL);
     bool                        SendRequest                       (DIOWEBSERVER_CONNECTION* connection, DIOWEBHEADER_RESULT headerresult, XSTRING& data , int timeout, XSTRING* addhead = NULL);
-    bool                        SendRequest                       (DIOWEBSERVER_CONNECTION* connection, DIOWEBHEADER_RESULT headerresult, XPATH& file   , int timeout, XSTRING* addhead = NULL);
+    bool                        SendRequest                       (DIOWEBSERVER_CONNECTION* connection, DIOWEBHEADER_RESULT headerresult, XPATH& file, int timeout, XSTRING* addhead = NULL);
 
-    virtual bool                ResolveRequest                    (DIOWEBSERVER* server, DIOWEBSERVER_CONNECTION* connection, DIOWEBSERVER_REQUEST*  request);
+    virtual bool                ResolveRequest                    (DIOWEBSERVER* server, DIOWEBSERVER_CONNECTION* connection, DIOWEBSERVER_REQUEST* request);
 
     virtual bool                GenerateMessagePage               (XCHAR* leyend, DIOWEBPAGEHTMLCREATOR& webHTMLpage);
     bool                        GenerateMessagePage               (XSTRING& leyend, DIOWEBPAGEHTMLCREATOR& webHTMLpage);

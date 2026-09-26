@@ -108,11 +108,7 @@
 
 #define DIOSPIOLEDDISPLAYSSD1331_DEFAULTTIMEOUT                    3
 
-
-
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
-
 
 class DIOSPIOLEDDISPLAYSSD1331 : public DIODISPLAYDEVICE, public DIODEVICESPI
 {

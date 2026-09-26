@@ -80,7 +80,6 @@ enum GRPVECTORFILEDXFTEXTSECTION_TYPESECTION
 
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
 
-
 class XFILETXT;
 
 typedef struct
@@ -90,7 +89,6 @@ typedef struct
    
 } GRPVECTORFILEDXFDEFTEXTSECTION;
 
-
 typedef struct
 {  
    int                                                  type;
@@ -99,7 +97,6 @@ typedef struct
    XCHAR*                                               remark;
 
 } GRPVECTORFILEDXFTEXTSECTIONGENERICDEFTYPE;
-
 
 class GRPVECTORFILEDXFTEXTSECTION : public XSUBJECT, public GRPVECTORFILEDXFTEXTPART
 {

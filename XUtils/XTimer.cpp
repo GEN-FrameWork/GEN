@@ -87,7 +87,7 @@ XTIMERCLOCK::XTIMERCLOCK()
   xmutexclock=GEN_XFACTORY.CreateMutex();
   if(xmutexclock)
     {
-      threadclock = CREATEXTHREAD(XTHREADGROUPID_XTIMERCLOCK, __L("XTIMERCLOCK::XTIMERCLOCK"),ThreadClockFunction,(void*)this);
+      threadclock = CREATEXTHREAD(XTHREADGROUPID_XTIMERCLOCK, __L("XTIMERCLOCK::XTIMERCLOCK"), ThreadClockFunction, (void*)this);
       if(threadclock) threadclock->Ini();
     }
 }
@@ -402,7 +402,7 @@ bool XTIMER::GetMeasureToDate(XDATETIME* xdatetime)
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         bool XTIMER::GetMeasureString(XSTRING& measure,bool large)
+* @fn         bool XTIMER::GetMeasureString(XSTRING& measure, bool large)
 * @brief      Get measure string
 * @ingroup    XUTILS
 * 
@@ -412,7 +412,7 @@ bool XTIMER::GetMeasureToDate(XDATETIME* xdatetime)
 * @return     bool : true if the operation is successful; otherwise false.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-bool XTIMER::GetMeasureString(XSTRING& measure,bool large)
+bool XTIMER::GetMeasureString(XSTRING& measure, bool large)
 {
   XQWORD allseconds = GetMeasureSeconds();
 

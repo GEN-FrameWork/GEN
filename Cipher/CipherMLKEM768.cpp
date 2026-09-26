@@ -1,9 +1,31 @@
 /**-------------------------------------------------------------------------------------------------------------------
+*
 * @file       CipherMLKEM768.cpp
+*
 * @class      CIPHERMLKEM768
 * @brief      ML-KEM-768 (FIPS 203) key encapsulation mechanism
 * @ingroup    CIPHER
+*
+* @copyright  EndoraSoft. All rights reserved.
+*
+* @cond
+* Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated
+* documentation files(the "Software"), to deal in the Software without restriction, including without limitation
+* the rights to use, copy, modify, merge, publish, distribute, sublicense, and/ or sell copies of the Software,
+* and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+*
+* The above copyright notice and this permission notice shall be included in all copies or substantial portions of
+* the Software.
+*
+* THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO
+* THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.IN NO EVENT SHALL THE
+* AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+* TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+* SOFTWARE.
+* @endcond
+*
 * --------------------------------------------------------------------------------------------------------------------*/
+
 #include "GEN_Defines.h"
 
 #include "CipherMLKEM768.h"
@@ -44,6 +66,7 @@ CIPHERMLKEM768::CIPHERMLKEM768()
   Clean();
 }
 
+
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         CIPHERMLKEM768::~CIPHERMLKEM768()
@@ -55,6 +78,7 @@ CIPHERMLKEM768::~CIPHERMLKEM768()
 {
   Clean();
 }
+
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
@@ -80,6 +104,7 @@ bool CIPHERMLKEM768::Random(XBYTE* data, XDWORD size)
   GEN_XFACTORY.DeleteRand(xrand);
   return status;
 }
+
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
@@ -113,12 +138,13 @@ bool CIPHERMLKEM768::KeyPair_Create(XBUFFER& publickey, XBUFFER& privatekey)
       privatekey.SecureDelete();
     }
 
-  CIPHERMLKEM768_SecureErase(d,  sizeof(d));
-  CIPHERMLKEM768_SecureErase(z,  sizeof(z));
+  CIPHERMLKEM768_SecureErase(d, sizeof(d));
+  CIPHERMLKEM768_SecureErase(z, sizeof(z));
   CIPHERMLKEM768_SecureErase(pk, sizeof(pk));
   CIPHERMLKEM768_SecureErase(sk, sizeof(sk));
   return status;
 }
+
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
@@ -155,10 +181,11 @@ bool CIPHERMLKEM768::Encapsulate(XBUFFER& publickey, XBUFFER& ciphertext, XBUFFE
     }
 
   CIPHERMLKEM768_SecureErase(randomness, sizeof(randomness));
-  CIPHERMLKEM768_SecureErase(ct,         sizeof(ct));
-  CIPHERMLKEM768_SecureErase(ss,         sizeof(ss));
+  CIPHERMLKEM768_SecureErase(ct, sizeof(ct));
+  CIPHERMLKEM768_SecureErase(ss, sizeof(ss));
   return status;
 }
+
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
@@ -191,6 +218,7 @@ bool CIPHERMLKEM768::Decapsulate(XBUFFER& privatekey, XBUFFER& ciphertext, XBUFF
   return status;
 }
 
+
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         bool CIPHERMLKEM768::PublicKey_Check(XBUFFER& publickey)
@@ -206,6 +234,7 @@ bool CIPHERMLKEM768::PublicKey_Check(XBUFFER& publickey)
 {
   return publickey.GetSize() == CIPHERMLKEM768_PUBLICKEYSIZE && CIPHERMLKEM768CORE::PublicKey_Check(publickey.Get());
 }
+
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 

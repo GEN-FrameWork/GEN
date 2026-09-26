@@ -411,7 +411,6 @@ bool DIOI2CTOUCHSENSORAT42QT1060::WriteRegister(XBYTE offset, XBYTE* data, XDWOR
 }
 
 
-
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         void DIOI2CTOUCHSENSORAT42QT1060::Handler_Interrupt(void* param)

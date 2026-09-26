@@ -221,19 +221,19 @@ bool XWINDOWSSERVICEBASE::Install(XCHAR* servicename, XCHAR* displayname, XDWORD
   if(scmanager)
     {
 
-      service = CreateService(scmanager                 ,      // SCManager database
-                              servicename               ,      // Name of service
-                              displayname               ,      // Name to display
-                              SERVICE_QUERY_STATUS      ,      // Desired access
-                              SERVICE_WIN32_OWN_PROCESS | SERVICE_INTERACTIVE_PROCESS,      // Service type
-                              starttype                 ,      // Service start type
-                              SERVICE_ERROR_NORMAL      ,      // Error control type
-                              path                      ,      // Service's binary
-                              NULL                      ,      // No load ordering group
-                              NULL                      ,      // No tag identifier
-                              dependencies              ,      // Dependencies
-                              account                   ,      // Service running account
-                              password);                       // Password of the account
+      service = CreateService(scmanager,                                          // SCManager database
+                              servicename,                                        // Name of service
+                              displayname,                                        // Name to display
+                              SERVICE_QUERY_STATUS,                               // Desired access
+                              SERVICE_WIN32_OWN_PROCESS | SERVICE_INTERACTIVE_PROCESS, // Service type
+                              starttype,                                          // Service start type
+                              SERVICE_ERROR_NORMAL,                               // Error control type
+                              path,                                               // Service's binary
+                              NULL,                                               // No load ordering group
+                              NULL,                                               // No tag identifier
+                              dependencies,                                       // Dependencies
+                              account,                                            // Service running account
+                              password);                                          // Password of the account
 
       if(service)
         {
@@ -621,14 +621,15 @@ void XWINDOWSSERVICEBASE::WriteEventLogEntry(XCHAR* message, XWORD type)
   strings[0] = servicename;
   strings[1] = message;
 
-  ReportEvent(heventsource, type    ,  // Event type
-                            0       ,  // Event category
-                            0       ,  // Event identifier
-                            NULL    ,  // No security identifier
-                            2       ,  // Size of lpszStrings array
-                            0       ,  // No binary data
-                            strings ,  // Array of strings
-                            NULL);     // No binary data
+  ReportEvent(heventsource,
+              type,        // Event type
+              0,           // Event category
+              0,           // Event identifier
+              NULL,        // No security identifier
+              2,           // Size of lpszStrings array
+              0,           // No binary data
+              strings,     // Array of strings
+              NULL);       // No binary data
 
 
   DeregisterEventSource(heventsource);
@@ -733,17 +734,17 @@ bool XWINDOWSSERVICEBASE::SetConfig(XCHAR* servicename, XDWORD type, XDWORD star
 
   bool status = false;
 
-  status = ChangeServiceConfig( service       ,                 // handle of service 
-                                type          ,                 // service type: no change 
-                                starttype     ,                 // service start type 
-                                errorcontrol  ,                 // error control: no change 
-                                NULL          ,                 // binary path: no change 
-                                NULL          ,                 // load order group: no change 
-                                NULL          ,                 // tag ID: no change 
-                                NULL          ,                 // dependencies: no change 
-                                NULL          ,                 // account name: no change 
-                                NULL          ,                 // password: no change 
-                                NULL);                          // display name: no change
+  status = ChangeServiceConfig(service,       // handle of service
+                               type,          // service type: no change
+                               starttype,     // service start type
+                               errorcontrol,  // error control: no change
+                               NULL,          // binary path: no change
+                               NULL,          // load order group: no change
+                               NULL,          // tag ID: no change
+                               NULL,          // dependencies: no change
+                               NULL,          // account name: no change
+                               NULL,          // password: no change
+                               NULL);         // display name: no change
     
   CloseServiceHandle(scmanager);
 
@@ -827,7 +828,7 @@ bool XWINDOWSSERVICEBASE::SetDescription(XCHAR* servicename, LPSERVICE_DESCRIPTI
   SC_HANDLE service = OpenService(scmanager, servicename, SERVICE_ALL_ACCESS);
   if(service == NULL) return false;
   
-  status = ChangeServiceConfig2(service,  SERVICE_CONFIG_DESCRIPTION, description); 
+  status = ChangeServiceConfig2(service, SERVICE_CONFIG_DESCRIPTION, description); 
 
   CloseServiceHandle(scmanager);
 
@@ -984,7 +985,7 @@ void WINAPI XWINDOWSSERVICEBASE::ServiceCtrlHandler(DWORD control, DWORD eventty
 * @param[in]  args : Args pointer to use.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-void XWINDOWSSERVICEBASE::Start(XDWORD argc,  XCHAR** args)
+void XWINDOWSSERVICEBASE::Start(XDWORD argc, XCHAR** args)
 {
   try { SetServiceStatus(SERVICE_START_PENDING);
 
@@ -1034,7 +1035,6 @@ void XWINDOWSSERVICEBASE::Pause()
 }
 
 
-
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         void XWINDOWSSERVICEBASE::Continue()
@@ -1057,7 +1057,6 @@ void XWINDOWSSERVICEBASE::Continue()
         SetServiceStatus(SERVICE_PAUSED);
      }
 }
-
 
 
 /**-------------------------------------------------------------------------------------------------------------------
@@ -1100,7 +1099,6 @@ void XWINDOWSSERVICEBASE::PowerEvent(DWORD eventtype)
 }
 
 
-
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         void XWINDOWSSERVICEBASE::SessionChange(DWORD eventtype)
@@ -1117,7 +1115,6 @@ void XWINDOWSSERVICEBASE::SessionChange(DWORD eventtype)
   GEN_XLOG.AddEntry(XLOGLEVEL_INFO, XWINDOWSSERVICEBASE_LOG_SECTIONID_SERVICE, false, __L("%s: Service Session Change: Event [%08X]."), servicename, eventtype);
   #endif
 }
-
 
 
 /**-------------------------------------------------------------------------------------------------------------------

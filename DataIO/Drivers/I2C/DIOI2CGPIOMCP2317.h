@@ -36,8 +36,6 @@
 
 #include "DIODeviceI2C.h"
 
-
-
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
 
 enum DIOI2CGPIOMCP2317PORT
@@ -51,9 +49,6 @@ enum DIOI2CGPIOMCP2317PORT
 #define DIOI2CGPIOMCP2317_IODIR           0x00    // I/O direction
 #define DIOI2CGPIOMCP2317_GPIO            0x12    // Register for inputs
 #define DIOI2CGPIOMCP2317_OLAT            0x14    // Register for outputs
-
-
-
 
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
 

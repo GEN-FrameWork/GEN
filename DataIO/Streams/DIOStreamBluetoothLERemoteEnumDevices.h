@@ -34,8 +34,6 @@
 #include "DIOStreamEnumBluetoothDevices.h"
 #include "DIOStreamDeviceBluetoothLE.h"
 
-
-
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
 
 enum DIOSTREAMBLUETOOTHLEREMOTEENUMDEVICES_SEARCHMODE

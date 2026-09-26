@@ -45,7 +45,6 @@ enum HASHSHA2TYPE
   HASHSHA2TYPE_512        ,
 };
 
-
 #define HASHSHA2_224_DIGEST_SIZE ( 224 / 8)
 #define HASHSHA2_256_DIGEST_SIZE ( 256 / 8)
 #define HASHSHA2_384_DIGEST_SIZE ( 384 / 8)
@@ -66,7 +65,6 @@ typedef struct
 
 } HASHSHA2_256_CTX;
 
-
 typedef struct
 {
   XDWORD        totalsize;
@@ -76,12 +74,8 @@ typedef struct
 
 } HASHSHA2_512_CTX;
 
-
 typedef HASHSHA2_512_CTX HASHSHA2_384_CTX;
 typedef HASHSHA2_256_CTX HASHSHA2_224_CTX;
-
-
-
 
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
 

@@ -185,7 +185,7 @@ bool DIOWINDOWSSTREAMUSBLOCALENUMDEVICES::SearchGUID(const GUID* interfaceclassg
                       trash[1].AdjustSize(_MAXSTR);
                       serial.AdjustSize(_MAXSTR);
 
-                      device->GetResource()->UnFormat(__L("%s#vid_%04x&pid_%04x#%s#%s"),trash[0].Get(), &vendorID, &productID, serial.Get(), trash[1].Get());
+                      device->GetResource()->UnFormat(__L("%s#vid_%04x&pid_%04x#%s#%s"), trash[0].Get(), &vendorID, &productID, serial.Get(), trash[1].Get());
 
                       trash[0].AdjustSize();
                       trash[1].AdjustSize();
@@ -246,18 +246,18 @@ bool DIOWINDOWSSTREAMUSBLOCALENUMDEVICES::GetInfoFromRegistry(DIOSTREAMDEVICEUSB
   if(statusreg == ERROR_SUCCESS)
     {
       sizevalue = _MAXSTR-1;
-      memset(value, 0,_MAXSTR);
-      statusreg = RegQueryValueEx(hkey,__L("LocationInformation"), NULL, &type, (BYTE*)value, &sizevalue);
+      memset(value, 0, _MAXSTR);
+      statusreg = RegQueryValueEx(hkey, __L("LocationInformation"), NULL, &type, (BYTE*)value, &sizevalue);
       if(statusreg == ERROR_SUCCESS) device->GetLocation()->Set(value);
 
       sizevalue = _MAXSTR-1;
-      memset(value, 0,_MAXSTR);
-      statusreg = RegQueryValueEx(hkey,__L("ParentIdPrefix"), NULL, &type, (BYTE*)value, &sizevalue);
+      memset(value, 0, _MAXSTR);
+      statusreg = RegQueryValueEx(hkey, __L("ParentIdPrefix"), NULL, &type, (BYTE*)value, &sizevalue);
       if(statusreg == ERROR_SUCCESS) device->GetParentID()->Set(value);
 
       sizevalue = _MAXSTR-1;
-      memset(value, 0,_MAXSTR);
-      statusreg = RegQueryValueEx(hkey,__L("DeviceDesc"), NULL, &type, (BYTE*)value, &sizevalue);
+      memset(value, 0, _MAXSTR);
+      statusreg = RegQueryValueEx(hkey, __L("DeviceDesc"), NULL, &type, (BYTE*)value, &sizevalue);
       if(statusreg == ERROR_SUCCESS) device->GetDescription()->Set(value);
       indexcut = device->GetDescription()->Find(__L(";"), true);
       if(indexcut !=  XSTRING_NOTFOUND) device->GetDescription()->DeleteCharacters(0, indexcut+1);
@@ -266,8 +266,8 @@ bool DIOWINDOWSSTREAMUSBLOCALENUMDEVICES::GetInfoFromRegistry(DIOSTREAMDEVICEUSB
       int     USBclass = 0x00;
 
       sizevalue = _MAXSTR-1;
-      memset(value, 0,_MAXSTR);
-      statusreg = RegQueryValueEx(hkey,__L("CompatibleIDs"), NULL, &type, (BYTE*)value, &sizevalue);
+      memset(value, 0, _MAXSTR);
+      statusreg = RegQueryValueEx(hkey, __L("CompatibleIDs"), NULL, &type, (BYTE*)value, &sizevalue);
       if(statusreg == ERROR_SUCCESS) USBclassstring.Set(value);
       if(USBclassstring.GetSize()) USBclassstring.UnFormat(__L("USB\\Class_%02x"), &USBclass);
 
@@ -301,8 +301,8 @@ bool DIOWINDOWSSTREAMUSBLOCALENUMDEVICES::GetInfoFromRegistry(DIOSTREAMDEVICEUSB
                               device->GetLocation()->Set((*tmpdevice->GetLocation()));
 
                               sizevalue = _MAXSTR-1;
-                              memset(value, 0,_MAXSTR);
-                              statusreg = RegQueryValueEx(hkey,__L("DeviceDesc"), NULL, &type, (BYTE*)value, &sizevalue);
+                              memset(value, 0, _MAXSTR);
+                              statusreg = RegQueryValueEx(hkey, __L("DeviceDesc"), NULL, &type, (BYTE*)value, &sizevalue);
                               if(statusreg == ERROR_SUCCESS) device->GetDescription()->Set(value);
                               indexcut = device->GetDescription()->Find(__L(";"), true);
                               if(indexcut !=  XSTRING_NOTFOUND) device->GetDescription()->DeleteCharacters(0, indexcut+1);
@@ -311,8 +311,8 @@ bool DIOWINDOWSSTREAMUSBLOCALENUMDEVICES::GetInfoFromRegistry(DIOSTREAMDEVICEUSB
                               int     USBclass = 0x00;
 
                               sizevalue = _MAXSTR-1;
-                              memset(value, 0,_MAXSTR);
-                              statusreg = RegQueryValueEx(hkey,__L("CompatibleIDs"), NULL, &type, (BYTE*)value, &sizevalue);
+                              memset(value, 0, _MAXSTR);
+                              statusreg = RegQueryValueEx(hkey, __L("CompatibleIDs"), NULL, &type, (BYTE*)value, &sizevalue);
                               if(statusreg == ERROR_SUCCESS) USBclassstring.Set(value);
                               if(USBclassstring.GetSize()) USBclassstring.UnFormat(__L("USB\\Class_%02x"), &USBclass);
 
@@ -370,15 +370,7 @@ bool DIOWINDOWSSTREAMUSBLOCALENUMDEVICES::GetUSBDescriptor(HDEVINFO& hdevinfo, i
   devIDstring.Insert(__L("\\\\?\\"), 0);
   devIDstring.Add(__L("#"));
 
-  guidString.Format( __L("{%08X-%04X-%04X-%02X%02X-%02X%02X%02X%02X%02X%02X}") , classGUID.Data1 , classGUID.Data2, classGUID.Data3
-                                                                               , classGUID.Data4[0]
-                                                                               , classGUID.Data4[1]
-                                                                               , classGUID.Data4[2]
-                                                                               , classGUID.Data4[3]
-                                                                               , classGUID.Data4[4]
-                                                                               , classGUID.Data4[5]
-                                                                               , classGUID.Data4[6]
-                                                                               , classGUID.Data4[7]);
+  guidString.Format(__L("{%08X-%04X-%04X-%02X%02X-%02X%02X%02X%02X%02X%02X}"), classGUID.Data1, classGUID.Data2, classGUID.Data3, classGUID.Data4[0], classGUID.Data4[1], classGUID.Data4[2], classGUID.Data4[3], classGUID.Data4[4], classGUID.Data4[5], classGUID.Data4[6], classGUID.Data4[7]);
 
   devIDstring.Add(guidString);
 

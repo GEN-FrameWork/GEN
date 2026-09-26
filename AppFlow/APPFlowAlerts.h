@@ -51,7 +51,6 @@ enum APPFLOW_ALERT_TYPE
   APPFLOW_ALERT_TYPE_MAX
 };
 
-
 enum APPFLOW_ALERT_STATUS
 {
   APPFLOW_ALERT_STATUS_NOTACTIVATED    = 0 ,  
@@ -60,12 +59,9 @@ enum APPFLOW_ALERT_STATUS
   APPFLOW_ALERT_STATUS_ACTIVE              ,  
 };
 
-
 #define APPFLOW_ALERTS_WEBALERTCMD   __L("alert")
 
 #define APPFLOW_ALERTS               APPFLOWALERTS ::GetInstance()
-
-
 
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
 

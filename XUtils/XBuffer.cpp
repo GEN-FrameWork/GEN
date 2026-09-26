@@ -343,7 +343,7 @@ bool XBUFFER::Add(XBYTE* pbuffer, XDWORD psize)
   XDWORD ppos     = size;
   bool   status   = true;
 
-  if(!Resize(size+psize,false))
+  if(!Resize(size+psize, false))
     {
       SetBlocked(false);
       return false;
@@ -444,7 +444,7 @@ bool XBUFFER::Add(XWORD data)
 {
   if(localhardwareuselittleendian) SWAPWORD(data);
 
-  return Add((XBYTE*)&data,sizeof(XWORD));
+  return Add((XBYTE*)&data, sizeof(XWORD));
 }
 
 
@@ -1012,14 +1012,14 @@ XDWORD XBUFFER::Extract(XBYTE* pbuffer, XDWORD ppos, XDWORD psize)
 
   if((ppos+psize)>=size) esize = (size-ppos);
 
-  if(pbuffer) memcpy(pbuffer, &buffer[ppos],esize);
+  if(pbuffer) memcpy(pbuffer, &buffer[ppos], esize);
 
   // #Imanol changed to avoid copyng overlapped memory, as that's undefined
   memmove(&buffer[ppos], &buffer[ppos+esize], size-(ppos+esize));
 
   //memcpy(&buffer[ppos],&buffer[ppos+esize],size-(ppos+esize));
 
-  Resize(size-esize,false);
+  Resize(size-esize, false);
 
   SetBlocked(false);
 
@@ -1144,7 +1144,7 @@ bool XBUFFER::Extract(XQWORD& data, XDWORD ppos)
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         bool XBUFFER::Extract(float& data,XDWORD ppos)
+* @fn         bool XBUFFER::Extract(float& data, XDWORD ppos)
 * @brief      Extract
 * @ingroup    XUTILS
 * 
@@ -1154,7 +1154,7 @@ bool XBUFFER::Extract(XQWORD& data, XDWORD ppos)
 * @return     bool : true if the operation is successful; otherwise false.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-bool XBUFFER::Extract(float& data,XDWORD ppos)
+bool XBUFFER::Extract(float& data, XDWORD ppos)
 {
   XDWORD size = Extract((XBYTE*)&data, ppos, sizeof(XDWORD));
   if(size!=sizeof(XDWORD)) return false;
@@ -1447,7 +1447,7 @@ XWORD* XBUFFER::GetPtrWord()
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         bool XBUFFER::Get(XBYTE* pbuffer,int psize,int frompos)
+* @fn         bool XBUFFER::Get(XBYTE* pbuffer, int psize, int frompos)
 * @brief      Get value
 * @ingroup    XUTILS
 * 
@@ -1458,7 +1458,7 @@ XWORD* XBUFFER::GetPtrWord()
 * @return     bool : true if the operation is successful; otherwise false.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-bool XBUFFER::Get(XBYTE* pbuffer,int psize,int frompos)
+bool XBUFFER::Get(XBYTE* pbuffer, int psize, int frompos)
 {
   if(!pbuffer) return false;
 
@@ -1475,7 +1475,7 @@ bool XBUFFER::Get(XBYTE* pbuffer,int psize,int frompos)
 
   if(buffer)
     {
-      memcpy(pbuffer,&buffer[pos],psize);
+      memcpy(pbuffer, &buffer[pos], psize);
       position = pos + psize;
     }
 
@@ -1561,7 +1561,7 @@ bool XBUFFER::Get(bool& data, int frompos)
 * --------------------------------------------------------------------------------------------------------------------*/
 bool XBUFFER::Get(XWORD& data, int frompos)
 {
-  if(!Get((XBYTE*)&data,sizeof(XWORD), frompos)) return false;
+  if(!Get((XBYTE*)&data, sizeof(XWORD), frompos)) return false;
 
   if(localhardwareuselittleendian) SWAPWORD(data);
 
@@ -2147,7 +2147,7 @@ bool XBUFFER::Resize(XDWORD newsize, bool setblocked)
       size     = 0;
       position = 0;
 
-      if(sizeassign) memset(buffer, 0,  sizeassign);
+      if(sizeassign) memset(buffer, 0, sizeassign);
     }
    else
     {     
@@ -2160,7 +2160,7 @@ bool XBUFFER::Resize(XDWORD newsize, bool setblocked)
           newbuffer = GEN_NEW XBYTE[sizeassign];
           if(newbuffer)
             {             
-              memset(newbuffer , 0,  sizeassign);
+              memset(newbuffer, 0, sizeassign);
 
               if(buffer)
                 {
@@ -2240,11 +2240,15 @@ bool XBUFFER::Delete(bool setblocked)
 
 
 /**-------------------------------------------------------------------------------------------------------------------
-*
+* 
 * @fn         bool XBUFFER::SecureDelete(bool setblocked)
 * @brief      Overwrite the complete allocated storage through volatile writes before releasing it
 * @ingroup    XUTILS
-*
+* 
+* @param[in]  setblocked : 
+* 
+* @return     bool : true if the operation is successful; otherwise false.
+* 
 * --------------------------------------------------------------------------------------------------------------------*/
 bool XBUFFER::SecureDelete(bool setblocked)
 {
@@ -2342,7 +2346,7 @@ bool XBUFFER::FillBuffer(XBYTE fillchar)
 
   if(buffer && size)
     {
-      memset(buffer, fillchar,  size);
+      memset(buffer, fillchar, size);
       status = true;
     }
 
@@ -2397,7 +2401,7 @@ bool XBUFFER::Swap()
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         bool XBUFFER::Compare(XBYTE* pbuffer,XDWORD psize)
+* @fn         bool XBUFFER::Compare(XBYTE* pbuffer, XDWORD psize)
 * @brief      Compare
 * @ingroup    XUTILS
 * 
@@ -2407,7 +2411,7 @@ bool XBUFFER::Swap()
 * @return     bool : true if the operation is successful; otherwise false.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-bool XBUFFER::Compare(XBYTE* pbuffer,XDWORD psize)
+bool XBUFFER::Compare(XBYTE* pbuffer, XDWORD psize)
 {
   if(!pbuffer)  return false;
   if(!psize)    return false;
@@ -3104,7 +3108,7 @@ XDWORD XBUFFER::DecodeBCD(XDWORD ppos, XDWORD psize)
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         XQWORD XBUFFER::DecodeBCDLong(XDWORD ppos,XDWORD psize)
+* @fn         XQWORD XBUFFER::DecodeBCDLong(XDWORD ppos, XDWORD psize)
 * @brief      Decode BCD long
 * @ingroup    XUTILS
 * 
@@ -3114,7 +3118,7 @@ XDWORD XBUFFER::DecodeBCD(XDWORD ppos, XDWORD psize)
 * @return     XQWORD : Requested value.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-XQWORD XBUFFER::DecodeBCDLong(XDWORD ppos,XDWORD psize)
+XQWORD XBUFFER::DecodeBCDLong(XDWORD ppos, XDWORD psize)
 {
   XQWORD result   = 0;
   int    position = ppos;

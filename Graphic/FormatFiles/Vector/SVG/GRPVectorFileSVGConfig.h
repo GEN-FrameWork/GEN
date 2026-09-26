@@ -34,16 +34,11 @@
 
 #include "GRPVectorFileConfig.h"
 
-
-
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
-
-
 
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
 
 class XFILEXMLELEMENT;
-
 
 class GRPVECTORFILESVGCONFIG : public GRPVECTORFILECONFIG
 {

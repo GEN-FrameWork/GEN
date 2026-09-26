@@ -136,7 +136,7 @@ bool XFILESENTENCES::ConvertFileFromDBF(XPATH& xpath)
 
   Create(this->xpath);
 
-  GetPrimaryFile()->Write((XBYTE*)&nrecords,sizeof(XDWORD));
+  GetPrimaryFile()->Write((XBYTE*)&nrecords, sizeof(XDWORD));
 
   GetPrimaryFile()->GetPosition(initablepos);
 
@@ -145,7 +145,7 @@ bool XFILESENTENCES::ConvertFileFromDBF(XPATH& xpath)
       XDWORD idx=0;
       for(int d=0;d<2;d++)
         {
-          GetPrimaryFile()->Write((XBYTE*)&idx,sizeof(XDWORD));
+          GetPrimaryFile()->Write((XBYTE*)&idx, sizeof(XDWORD));
         }
     }
 
@@ -160,20 +160,20 @@ bool XFILESENTENCES::ConvertFileFromDBF(XPATH& xpath)
       if(fsentence)
         {
           fsentence->FillChar();
-          memcpy(fsentence->Get(),(char*)record->GetData(0),record->GetSizeField(0));
+          memcpy(fsentence->Get(), (char*)record->GetData(0), record->GetSizeField(0));
           index = fsentence->ConvertToInt();
 
           fsentence->FillChar();
-          memcpy(fsentence->Get(),(char*)record->GetData(1),record->GetSizeField(1));
+          memcpy(fsentence->Get(), (char*)record->GetData(1), record->GetSizeField(1));
 
-          fsentence->DeleteCharacter(__C(' '),XSTRINGCONTEXT_TO_END);
+          fsentence->DeleteCharacter(__C(' '), XSTRINGCONTEXT_TO_END);
 
           GetPrimaryFile()->GetPosition(fpos);
 
           indexmap.Add(index, (XDWORD)fpos);
 
           XDWORD size = (XDWORD)fsentence->GetSize();
-          GetPrimaryFile()->Write((XBYTE*)&size,sizeof(XDWORD));
+          GetPrimaryFile()->Write((XBYTE*)&size, sizeof(XDWORD));
           
           XBUFFER xbufferexchange;
           (*fsentence).ConvertToExchangeXBuffer(xbufferexchange);
@@ -196,8 +196,8 @@ bool XFILESENTENCES::ConvertFileFromDBF(XPATH& xpath)
       ifilepos = indexmap.GetKey(c);
       filepos  = indexmap.GetElement(c);
 
-      GetPrimaryFile()->Write((XBYTE*)&ifilepos ,sizeof(XDWORD));
-      GetPrimaryFile()->Write((XBYTE*)&filepos   ,sizeof(XDWORD));
+      GetPrimaryFile()->Write((XBYTE*)&ifilepos, sizeof(XDWORD));
+      GetPrimaryFile()->Write((XBYTE*)&filepos, sizeof(XDWORD));
     }
 
   filedbf->Close();
@@ -226,7 +226,7 @@ int XFILESENTENCES::GetNumberSentences()
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         bool XFILESENTENCES::GetSentence(XDWORD index,XSTRING& sentence)
+* @fn         bool XFILESENTENCES::GetSentence(XDWORD index, XSTRING& sentence)
 * @brief      Get sentence
 * @ingroup    XUTILS
 * 
@@ -236,7 +236,7 @@ int XFILESENTENCES::GetNumberSentences()
 * @return     bool : true if the operation is successful; otherwise false.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-bool XFILESENTENCES::GetSentence(XDWORD index,XSTRING& sentence)
+bool XFILESENTENCES::GetSentence(XDWORD index, XSTRING& sentence)
 {
   sentence.Empty();
 

@@ -121,11 +121,13 @@ bool UI_ELEMENT_IMAGE::SetImage(GRPBITMAP* image)
 
 
 /**-------------------------------------------------------------------------------------------------------------------
-*
+* 
 * @fn         XSTRING* UI_ELEMENT_IMAGE::GetResource()
 * @brief      Fase 7: resource path for density rebind.
 * @ingroup    USERINTERFACE
-*
+* 
+* @return     XSTRING* : 
+* 
 * --------------------------------------------------------------------------------------------------------------------*/
 XSTRING* UI_ELEMENT_IMAGE::GetResource()
 {
@@ -134,11 +136,13 @@ XSTRING* UI_ELEMENT_IMAGE::GetResource()
 
 
 /**-------------------------------------------------------------------------------------------------------------------
-*
+* 
 * @fn         void UI_ELEMENT_IMAGE::SetResource(XCHAR* resource)
 * @brief      Fase 7: store resource path for density rebind.
 * @ingroup    USERINTERFACE
-*
+* 
+* @param[in]  resource : 
+* 
 * --------------------------------------------------------------------------------------------------------------------*/
 void UI_ELEMENT_IMAGE::SetResource(XCHAR* resource)
 {

@@ -211,10 +211,7 @@ bool DIOWINDOWSSTREAMBLUETOOTH::Close()
     {
       if(addr)
         {
-          SDP_RegisterService(false,(char*)config->GetServerPropertys(0),
-                                    (char*)config->GetServerPropertys(1),
-                                    (char*)config->GetServerPropertys(2),
-                                    (void*)addr);
+          SDP_RegisterService(false, (char*)config->GetServerPropertys(0), (char*)config->GetServerPropertys(1), (char*)config->GetServerPropertys(2), (void*)addr);
 
           GEN_DELETE (SOCKADDR_BTH*)addr;
           addr = NULL;
@@ -222,7 +219,7 @@ bool DIOWINDOWSSTREAMBLUETOOTH::Close()
 
       if(handleserver!=INVALID_SOCKET)
         {
-          shutdown(handleserver,SD_BOTH);
+          shutdown(handleserver, SD_BOTH);
           closesocket(handleserver);
           handleserver  = INVALID_SOCKET;
         }
@@ -234,7 +231,7 @@ bool DIOWINDOWSSTREAMBLUETOOTH::Close()
       DWORD nonblock = 0;
       if(ioctlsocket(handlesocket, FIONBIO, &nonblock) != SOCKET_ERROR)
         {
-          shutdown(handlesocket,SD_BOTH);
+          shutdown(handlesocket, SD_BOTH);
           closesocket(handlesocket);
 
           handlesocket  = INVALID_SOCKET;
@@ -270,9 +267,9 @@ int DIOWINDOWSSTREAMBLUETOOTH::IsReadyConnect(SOCKET socket)
   FD_ZERO(&fdw);
   FD_ZERO(&fds);
 
-  FD_SET((unsigned int)socket,&fdr);
-  FD_SET((unsigned int)socket,&fdw);
-  FD_SET((unsigned int)socket,&fds);
+  FD_SET((unsigned int)socket, &fdr);
+  FD_SET((unsigned int)socket, &fdw);
+  FD_SET((unsigned int)socket, &fds);
 
   tv.tv_sec  = 0;
   tv.tv_usec = 100;
@@ -281,9 +278,9 @@ int DIOWINDOWSSTREAMBLUETOOTH::IsReadyConnect(SOCKET socket)
   if(rc==SOCKET_ERROR) return -1;
   //if(rc>1)             return -1;
 
-  int status1 = FD_ISSET(socket,&fdr) ? 1 : 0;
-  int status2 = FD_ISSET(socket,&fdw) ? 1 : 0;
-  int status3 = FD_ISSET(socket,&fds) ? 1 : 0;
+  int status1 = FD_ISSET(socket, &fdr) ? 1 : 0;
+  int status2 = FD_ISSET(socket, &fdw) ? 1 : 0;
+  int status3 = FD_ISSET(socket, &fds) ? 1 : 0;
 
   if(status3) return -1;
   if(((status1) || (status2)) && (rc==1))  return  1;
@@ -340,7 +337,7 @@ bool DIOWINDOWSSTREAMBLUETOOTH::SDP_RegisterService(bool reg, char* service_name
   service.dwNumberOfCsAddrs         = 1;
   service.lpcsaBuffer               = &csaddr;
 
-  if(WSASetService(&service,reg?RNRSERVICE_REGISTER:RNRSERVICE_DELETE,0) == SOCKET_ERROR) return false;
+  if(WSASetService(&service, reg?RNRSERVICE_REGISTER:RNRSERVICE_DELETE, 0) == SOCKET_ERROR) return false;
 
   return true;
 }
@@ -390,7 +387,7 @@ void DIOWINDOWSSTREAMBLUETOOTH::ThreadConnection(void* param)
                                                             case -1:  { int sockerr    = 0;
                                                                         int sockerrlen = sizeof(sockerr);
 
-                                                                        if(!getsockopt(diostream->handlesocket, SOL_SOCKET, SO_ERROR,(char *)&sockerr, &sockerrlen))
+                                                                        if(!getsockopt(diostream->handlesocket, SOL_SOCKET, SO_ERROR, (char *)&sockerr, &sockerrlen))
                                                                           {
                                                                             if(sockerr==WSAEHOSTDOWN) diostream->SetIsRefusedConnection(true);
                                                                           }
@@ -432,7 +429,7 @@ void DIOWINDOWSSTREAMBLUETOOTH::ThreadConnection(void* param)
                                                               if(diostream->outbuffer->GetSize()) FD_SET((unsigned int)diostream->handlesocket, &write_flags);
                                                             }
 
-                                                          int error = select((int)(diostream->handlesocket)+1, &read_flags,&write_flags,(fd_set*)0,&waitd);
+                                                          int error = select((int)(diostream->handlesocket)+1, &read_flags, &write_flags, (fd_set*)0, &waitd);
                                                           if(error==SOCKET_ERROR)
                                                             {
                                                               diostream->SetEvent(DIOWINDOWSBTFSMEVENT_DISCONNECTING);
@@ -450,7 +447,7 @@ void DIOWINDOWSSTREAMBLUETOOTH::ThreadConnection(void* param)
                                                                   diostream->SetEvent(DIOWINDOWSBTFSMEVENT_DISCONNECTING);
                                                                   break;
                                                                 }
-                                                               else diostream->inbuffer->Add(buffer,size);
+                                                               else diostream->inbuffer->Add(buffer, size);
 
                                                               FD_CLR((unsigned int)diostream->handlesocket, &read_flags);
                                                             }
@@ -525,15 +522,12 @@ void DIOWINDOWSSTREAMBLUETOOTH::ThreadConnection(void* param)
                                                                     }
 
 
-                                                                  diostream->SDP_RegisterService(true,  (char*)diostream->config->GetServerPropertys(0),
-                                                                                                        (char*)diostream->config->GetServerPropertys(1),
-                                                                                                        (char*)diostream->config->GetServerPropertys(2),
-                                                                                                        (void* )diostream->addr);
+                                                                  diostream->SDP_RegisterService(true, (char*)diostream->config->GetServerPropertys(0), (char*)diostream->config->GetServerPropertys(1), (char*)diostream->config->GetServerPropertys(2), (void* )diostream->addr);
 
                                                                   listen(diostream->handleserver, 5);
 
                                                                   int sizeaddr = sizeof(SOCKADDR_BTH);
-                                                                  diostream->handlesocket = accept(diostream->handleserver,(LPSOCKADDR)&rem_addr, &sizeaddr);
+                                                                  diostream->handlesocket = accept(diostream->handleserver, (LPSOCKADDR)&rem_addr, &sizeaddr);
 
                                                                   DWORD nonblock = 1;
                                                                   if(ioctlsocket(diostream->handlesocket, FIONBIO, &nonblock) == SOCKET_ERROR)

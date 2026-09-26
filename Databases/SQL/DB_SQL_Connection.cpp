@@ -122,7 +122,7 @@ bool DB_SQL_CONNECTION::SetOption(XCHAR* key, XCHAR* value)
           newkey->Set   (key);
           newvalue->Set (value);
 
-          return options.Add(newkey,newvalue);
+          return options.Add(newkey, newvalue);
         }
 
       GEN_DELETE newkey;

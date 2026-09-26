@@ -54,17 +54,13 @@ enum DIOWEBSERVER_XEVENT_TYPE
   DIOWEBSERVER_XEVENT_TYPE_WEBSOCKET_DISCONNECTED                         ,
 };
 
-
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
-
 
 class XSUBJECT;
 class DIOWEBSERVER_REQUEST;
 class DIOWEBSERVER_CONNECTION;
 class DIOWEBSERVER;
 class DIOWEBSERVER_QUERYSTRINGS;
-
 
 class DIOWEBSERVER_XEVENT : public XEVENT
 {

@@ -305,11 +305,13 @@ void UI_LAYOUT::SetUIScale(double scale)
 
 
 /**-------------------------------------------------------------------------------------------------------------------
-*
+* 
 * @fn         void UI_LAYOUT::SetUIScaleForFit(double scale)
 * @brief      Fase 5 autofit: clamp to [FIT_MIN .. MAX]. Does not clear the autofit flag.
 * @ingroup    USERINTERFACE
-*
+* 
+* @param[in]  scale : 
+* 
 * --------------------------------------------------------------------------------------------------------------------*/
 void UI_LAYOUT::SetUIScaleForFit(double scale)
 {
@@ -351,11 +353,13 @@ bool UI_LAYOUT::GetUIScaleEnabled() const
 
 
 /**-------------------------------------------------------------------------------------------------------------------
-*
+* 
 * @fn         void UI_LAYOUT::SetUIScaleAutofit(bool autofit)
 * @brief      Fase 5: when true, scale follows window size via ComputeFitUIScale.
 * @ingroup    USERINTERFACE
-*
+* 
+* @param[in]  autofit : 
+* 
 * --------------------------------------------------------------------------------------------------------------------*/
 void UI_LAYOUT::SetUIScaleAutofit(bool autofit)
 {
@@ -364,11 +368,13 @@ void UI_LAYOUT::SetUIScaleAutofit(bool autofit)
 
 
 /**-------------------------------------------------------------------------------------------------------------------
-*
+* 
 * @fn         bool UI_LAYOUT::GetUIScaleAutofit() const
 * @brief      Whether fit-to-window scale is active.
 * @ingroup    USERINTERFACE
-*
+* 
+* @return     bool : true if the operation is successful; otherwise false.
+* 
 * --------------------------------------------------------------------------------------------------------------------*/
 bool UI_LAYOUT::GetUIScaleAutofit() const
 {
@@ -396,11 +402,13 @@ bool UI_LAYOUT::IsUIScaleActive() const
 
 
 /**-------------------------------------------------------------------------------------------------------------------
-*
+* 
 * @fn         double UI_LAYOUT::GetAssetRasterScale() const
 * @brief      Fase 7: pixel density for design canvas + vector/chart raster (1.0 when UIScale inactive).
 * @ingroup    USERINTERFACE
-*
+* 
+* @return     double : 
+* 
 * --------------------------------------------------------------------------------------------------------------------*/
 double UI_LAYOUT::GetAssetRasterScale() const
 {
@@ -414,11 +422,16 @@ double UI_LAYOUT::GetAssetRasterScale() const
 
 
 /**-------------------------------------------------------------------------------------------------------------------
-*
+* 
 * @fn         double UI_LAYOUT::ComputeFitUIScale(XDWORD screen_w, XDWORD screen_h) const
 * @brief      Fase 5: scale = min(sw/dw, sh/dh), clamped to [FIT_MIN .. MAX]. Does not change layout state.
 * @ingroup    USERINTERFACE
-*
+* 
+* @param[in]  screen_w : 
+* @param[in]  screen_h : 
+* 
+* @return     double : 
+* 
 * --------------------------------------------------------------------------------------------------------------------*/
 double UI_LAYOUT::ComputeFitUIScale(XDWORD screen_w, XDWORD screen_h) const
 {
@@ -440,11 +453,13 @@ double UI_LAYOUT::ComputeFitUIScale(XDWORD screen_w, XDWORD screen_h) const
 
 
 /**-------------------------------------------------------------------------------------------------------------------
-*
+* 
 * @fn         double UI_LAYOUT::GetMinHitSize() const
 * @brief      Fase 6: minimum hit AABB edge in design px (0 disables expansion).
 * @ingroup    USERINTERFACE
-*
+* 
+* @return     double : 
+* 
 * --------------------------------------------------------------------------------------------------------------------*/
 double UI_LAYOUT::GetMinHitSize() const
 {
@@ -453,11 +468,13 @@ double UI_LAYOUT::GetMinHitSize() const
 
 
 /**-------------------------------------------------------------------------------------------------------------------
-*
+* 
 * @fn         void UI_LAYOUT::SetMinHitSize(double size)
 * @brief      Fase 6: set minimum hit AABB (design px). Negative values clamp to 0 (disabled).
 * @ingroup    USERINTERFACE
-*
+* 
+* @param[in]  size : 
+* 
 * --------------------------------------------------------------------------------------------------------------------*/
 void UI_LAYOUT::SetMinHitSize(double size)
 {
@@ -511,10 +528,13 @@ void UI_LAYOUT::DesignToScreen(double design_x, double design_y, double& screen_
 
 
 /**-------------------------------------------------------------------------------------------------------------------
-*
+* 
 * @fn         double UI_LAYOUT::GetUIScaleOffsetX() const
 * @brief      Present letterbox/crop offset X (screen px).
 * @ingroup    USERINTERFACE
+* 
+* @return     double : 
+* 
 * --------------------------------------------------------------------------------------------------------------------*/
 double UI_LAYOUT::GetUIScaleOffsetX() const
 {
@@ -523,10 +543,13 @@ double UI_LAYOUT::GetUIScaleOffsetX() const
 
 
 /**-------------------------------------------------------------------------------------------------------------------
-*
+* 
 * @fn         double UI_LAYOUT::GetUIScaleOffsetY() const
 * @brief      Present letterbox/crop offset Y (screen px).
 * @ingroup    USERINTERFACE
+* 
+* @return     double : 
+* 
 * --------------------------------------------------------------------------------------------------------------------*/
 double UI_LAYOUT::GetUIScaleOffsetY() const
 {
@@ -535,10 +558,14 @@ double UI_LAYOUT::GetUIScaleOffsetY() const
 
 
 /**-------------------------------------------------------------------------------------------------------------------
-*
+* 
 * @fn         void UI_LAYOUT::ComputePresentTransform(XDWORD screen_w, XDWORD screen_h)
 * @brief      Center design*scale in the screen (letterbox when smaller; crop when larger/zoom).
 * @ingroup    USERINTERFACE
+* 
+* @param[in]  screen_w : 
+* @param[in]  screen_h : 
+* 
 * --------------------------------------------------------------------------------------------------------------------*/
 void UI_LAYOUT::ComputePresentTransform(XDWORD screen_w, XDWORD screen_h)
 {
@@ -566,10 +593,16 @@ void UI_LAYOUT::ComputePresentTransform(XDWORD screen_w, XDWORD screen_h)
 
 
 /**-------------------------------------------------------------------------------------------------------------------
-*
+* 
 * @fn         bool UI_LAYOUT::NeedsScaledPresent(XDWORD screen_w, XDWORD screen_h) const
 * @brief      Whether paint must use design offscreen + scaled blit.
 * @ingroup    USERINTERFACE
+* 
+* @param[in]  screen_w : 
+* @param[in]  screen_h : 
+* 
+* @return     bool : true if the operation is successful; otherwise false.
+* 
 * --------------------------------------------------------------------------------------------------------------------*/
 bool UI_LAYOUT::NeedsScaledPresent(XDWORD screen_w, XDWORD screen_h) const
 {
@@ -591,10 +624,13 @@ bool UI_LAYOUT::NeedsScaledPresent(XDWORD screen_w, XDWORD screen_h) const
 
 
 /**-------------------------------------------------------------------------------------------------------------------
-*
+* 
 * @fn         GRP2DCANVAS* UI_LAYOUT::GetDesignCanvas() const
 * @brief      Owned design framebuffer for scaled present, or NULL.
 * @ingroup    USERINTERFACE
+* 
+* @return     GRP2DCANVAS* : 
+* 
 * --------------------------------------------------------------------------------------------------------------------*/
 GRP2DCANVAS* UI_LAYOUT::GetDesignCanvas() const
 {
@@ -603,10 +639,13 @@ GRP2DCANVAS* UI_LAYOUT::GetDesignCanvas() const
 
 
 /**-------------------------------------------------------------------------------------------------------------------
-*
+* 
 * @fn         void UI_LAYOUT::SetDesignCanvas(GRP2DCANVAS* canvas)
 * @brief      Take ownership of a design canvas (deletes any previous).
 * @ingroup    USERINTERFACE
+* 
+* @param[in]  canvas : 
+* 
 * --------------------------------------------------------------------------------------------------------------------*/
 void UI_LAYOUT::SetDesignCanvas(GRP2DCANVAS* canvas)
 {

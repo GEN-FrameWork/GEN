@@ -62,7 +62,7 @@
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         DIOI2COLEDDISPLAYSSD1306::DIOI2COLEDDISPLAYSSD1306( XDWORD width, XDWORD height): DIODEVICEI2C()
+* @fn         DIOI2COLEDDISPLAYSSD1306::DIOI2COLEDDISPLAYSSD1306(XDWORD width, XDWORD height): DIODEVICEI2C()
 * @brief      Constructor of class
 * @ingroup    DATAIO
 * 

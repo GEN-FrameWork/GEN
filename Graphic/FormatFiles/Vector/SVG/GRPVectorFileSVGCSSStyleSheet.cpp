@@ -257,7 +257,7 @@ bool GRPVECTORFILESVGCSSSTYLESHEET::ParseStyleSheetText(XSTRING& text)
   // Defensive: some XML readers leave the CDATA delimiters in the element text content instead of stripping
   // them; if present, remove them here so they never get mistaken for part of the first/last selector.
   sheet.Replace(__L("<![CDATA["), __L(""));
-  sheet.Replace(__L("]]>")      , __L(""));
+  sheet.Replace(__L("]]>"), __L(""));
 
   XVECTOR<XSTRING*> rules;
   sheet.Split(__C('}'), rules, false);

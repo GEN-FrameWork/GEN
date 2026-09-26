@@ -36,15 +36,9 @@
 
 #include "INPDevice.h"
 
-
-
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
 
-
-
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
-
 
 class INPLINUXDEVICEMOUSEDIRECT : public INPDEVICE
 {
@@ -52,7 +46,6 @@ class INPLINUXDEVICEMOUSEDIRECT : public INPDEVICE
 
                                   INPLINUXDEVICEMOUSEDIRECT   ();
     virtual                      ~INPLINUXDEVICEMOUSEDIRECT   ();
-
 
     bool                          Update                      ();
 

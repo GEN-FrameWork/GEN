@@ -32,10 +32,7 @@
 
 #include "DIOGPIO.h"
 
-
-
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
-
 
 enum DIODISPLAYDEVICE_INDEX_GPIOENTRYID
 {
@@ -45,7 +42,6 @@ enum DIODISPLAYDEVICE_INDEX_GPIOENTRYID
 
   DIODISPLAYDEVICE_INDEX_GPIOENTRYID_MAX  
 };
-
 
 
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/

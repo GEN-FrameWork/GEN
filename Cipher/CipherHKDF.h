@@ -38,9 +38,7 @@
 
 #include "Cipher.h"
 
-
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
-
 
 #define CIPHERHKDF_MAXEXPANDBLOCKS          255
 #define CIPHERHKDF_MAXLABELSIZE             255
@@ -49,11 +47,7 @@
 #define CIPHERHKDF_LABELPREFIX_TLS13        __L("tls13 ")
 #define CIPHERHKDF_LABELPREFIX_QUIC         __L("quic ")
 
-
-
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
-
 
 class CIPHERHKDF : public CIPHER
 {

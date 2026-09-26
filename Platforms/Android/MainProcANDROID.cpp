@@ -370,7 +370,7 @@ bool MAINPROCANDROID::OnTouchEvent(AInputEvent* event)
       for(size_t c = 0; c<pointercount; ++c)
         {
           int32_t pointerID    = c;
-          int32_t pointerIndex = AMotionEvent_getPointerId(event,c);
+          int32_t pointerIndex = AMotionEvent_getPointerId(event, c);
 
           if(pointerIndex >= mouse->GetCursors()->GetSize())
             {
@@ -410,20 +410,20 @@ bool MAINPROCANDROID::OnTouchEvent(AInputEvent* event)
                                                               if(mouse->GetButton(pointerIndex)->GetState() != INPBUTTON_STATE_UP)
                                                                 {
                                                                   mouse->GetButton(pointerIndex)->SetState(INPBUTTON_STATE_RELEASED);
-                                                                  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, __L("> ANDROID Motion %d x %f y %f p %f a %d RELEASED"), pointerID,x,y,pressure,action);
+                                                                  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, __L("> ANDROID Motion %d x %f y %f p %f a %d RELEASED"), pointerID, x, y, pressure, action);
 
                                                                 }
                                                                 else
                                                                 {
                                                                   mouse->GetButton(pointerIndex)->SetState(INPBUTTON_STATE_UP);
-                                                                  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, __L("> ANDROID Motion %d x %f y %f p %f a %d UP"), pointerID,x,y,pressure,action);
+                                                                  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, __L("> ANDROID Motion %d x %f y %f p %f a %d UP"), pointerID, x, y, pressure, action);
                                                                 }
                                                             }
                                                         }
                                                         break;
               case AMOTION_EVENT_ACTION_MOVE          :
               case AMOTION_EVENT_ACTION_DOWN          :
-              case AMOTION_EVENT_ACTION_POINTER_DOWN  : { mouse->AddPosition(pointerIndex,x,y, true);
+              case AMOTION_EVENT_ACTION_POINTER_DOWN  : { mouse->AddPosition(pointerIndex, x, y, true);
                                                           if(mouse->GetButton(pointerIndex))
                                                             {
                                                               mouse->GetButton(pointerIndex)->SetPressed(true);
@@ -432,12 +432,12 @@ bool MAINPROCANDROID::OnTouchEvent(AInputEvent* event)
                                                               if(mouse->GetButton(pointerIndex)->GetState() == INPBUTTON_STATE_UP)
                                                                 {
                                                                   mouse->GetButton(pointerIndex)->SetState(INPBUTTON_STATE_PRESSED);
-                                                                  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, __L("> ANDROID Motion %d x %f y %f p %f a %d PRESSED"), pointerID,x,y,pressure,action);
+                                                                  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, __L("> ANDROID Motion %d x %f y %f p %f a %d PRESSED"), pointerID, x, y, pressure, action);
                                                                 }
                                                                 else
                                                                 {
                                                                   mouse->GetButton(pointerIndex)->SetState(INPBUTTON_STATE_HOLD);
-                                                                  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, __L("> ANDROID Motion %d x %f y %f p %f a %d HOLD"), pointerID,x,y,pressure,action);
+                                                                  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, __L("> ANDROID Motion %d x %f y %f p %f a %d HOLD"), pointerID, x, y, pressure, action);
                                                                 }
                                                             }
                                                         }
@@ -473,7 +473,7 @@ bool MAINPROCANDROID::OnTouchEvent(AInputEvent* event)
 * --------------------------------------------------------------------------------------------------------------------*/
 bool MAINPROCANDROID::OnKeyboardEvent(AInputEvent* event)
 {
-  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE , __L("[ANDROID Event] INI OnKeyboardEvent   Android code [%04x]"), AKeyEvent_getKeyCode(event));
+  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, __L("[ANDROID Event] INI OnKeyboardEvent Android code [%04x]"), AKeyEvent_getKeyCode(event));
 
   INPDEVICE* keyboard = androidmain.GetKeyboard();
   if(!keyboard) return false;
@@ -734,8 +734,7 @@ void MAINPROCANDROID::OnConfigurationChanged()
           // Still fire CHANGESIZE so observers can refresh (UI_System keeps design size + UIScale=1).
           #ifdef GRP_OPENGL_ACTIVE
           {
-            XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, __L("[ANDROID] OnConfigurationChanged: keep design %dx%d; native surface %dx%d"),
-                              mainscreen->GetWidth(), mainscreen->GetHeight(), maxwidth, maxheight);
+            XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, __L("[ANDROID] OnConfigurationChanged: keep design %dx%d; native surface %dx%d"), mainscreen->GetWidth(), mainscreen->GetHeight(), maxwidth, maxheight);
             GRPXEVENT grpevent(this, GRPXEVENT_TYPE_SCREEN_CHANGESIZE);
             grpevent.SetScreen(mainscreen);
             applicationgrp->PostEvent(&grpevent);
@@ -900,7 +899,7 @@ void MAINPROCANDROID::OnCreateWindow()
             GRPVIEWPORT* viewport = mainscreen->GetViewport(0);
             if(!viewport)
               {
-                if(!mainscreen->CreateViewport(GRPVIEWPORT_ID_MAIN , 0.0f, 0.0f, (float)mainscreen->GetWidth()   , (float)mainscreen->GetHeight(), 0,  0, (float)mainscreen->GetWidth(), (float)mainscreen->GetHeight()))
+                if(!mainscreen->CreateViewport(GRPVIEWPORT_ID_MAIN, 0.0f, 0.0f, (float)mainscreen->GetWidth(), (float)mainscreen->GetHeight(), 0, 0, (float)mainscreen->GetWidth(), (float)mainscreen->GetHeight()))
                   {
                     return;
                   }                  
@@ -1363,7 +1362,7 @@ bool MAINPROCANDROID::OverturnAssetsToExternalLocation(XPATH& origin, XPATH& dat
 
                   targetpath.SetOnlyPath();
 
-                  int position=targetpath.Find(assetsstring,true);
+                  int position=targetpath.Find(assetsstring, true);
                   if(position!=-1)
                     {
                       XPATH targetfile;
@@ -1385,7 +1384,7 @@ bool MAINPROCANDROID::OverturnAssetsToExternalLocation(XPATH& origin, XPATH& dat
                           if(!xfile->Exist(targetfile.Get()))
                             {
                               xdir->Make(targetpath.Get(), true);
-                              status = unzip->DecompressFile(filecmp,targetpath,namefile.Get());
+                              status = unzip->DecompressFile(filecmp, targetpath, namefile.Get());
                             }
 
                           GEN_XFACTORY.Delete_File(xfile);
@@ -1454,7 +1453,7 @@ bool MAINPROCANDROID::AssetsDir_CreateAll(XPATH& origin)
 
               targetpath.SetOnlyPath();
 
-              int position=targetpath.Find(assetsstring,true);
+              int position=targetpath.Find(assetsstring, true);
               if(position!=-1)
                 {   
                   bool found = false;
@@ -1597,7 +1596,7 @@ bool MAINPROCANDROID::CreateInputDevices(INPMANAGER* inpmanager, GRPANDROIDSCREE
   keyboard  = (INPANDROIDDEVICEKEYBOARD*)INPANDROIDFACTORY::GetInstance().CreateDevice(INPDEVICE_TYPE_KEYBOARD , screen);
   if(keyboard) GEN_INPMANAGER.AddDevice(keyboard);
 
-  mouse     = (INPANDROIDDEVICEMOUSE*)INPANDROIDFACTORY::GetInstance().CreateDevice(INPDEVICE_TYPE_MOUSE       , screen);
+  mouse     = (INPANDROIDDEVICEMOUSE*)INPANDROIDFACTORY::GetInstance().CreateDevice(INPDEVICE_TYPE_MOUSE, screen);
   if(mouse) GEN_INPMANAGER.AddDevice(mouse);
 
   return true;

@@ -135,7 +135,7 @@ bool DIOLINUXSTREAMIPLOCALENUMDEVICES::Search()
        struct sockaddr_in*  address       = (struct sockaddr_in *) &ifreq[c].ifr_addr;
        struct sockaddr_in*  addressmask   = (struct sockaddr_in *) &ifreq[c].ifr_netmask;
 
-       memset(ip  , 0, sizeof(ip));
+       memset(ip, 0, sizeof(ip));
        memset(mask, 0, sizeof(mask));
 
        if(!inet_ntop(AF_INET, &address->sin_addr, ip, sizeof(ip)))

@@ -114,11 +114,7 @@ enum DB_SQL_DATABASE_ENCODING
   DB_SQL_DATABASE_ENCODING_BE_LAST              = DB_SQL_DATABASE_ENCODING_KOI8U
 };
 
-
-
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
-
 
 class XFACTORY;
 class XMUTEX;

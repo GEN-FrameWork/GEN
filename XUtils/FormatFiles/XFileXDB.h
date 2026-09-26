@@ -34,15 +34,11 @@
 #include "XFileHash.h"
 #include "XFileID.h"
 
-
-
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
 
 #define XFILEXDB_TYPE         (XFILE_TYPE_GENERIC | XFILE_FEATURES_HASH)
 #define XFILEXDB_VERSION      0x0100
 #define XFILEXDB_IDSTRING     __L("[XDB File]")
-
-
 
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
 

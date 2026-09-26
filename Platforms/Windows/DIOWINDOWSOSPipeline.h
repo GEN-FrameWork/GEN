@@ -34,8 +34,6 @@
 
 #include "DIOOSPipeline.h"
 
-
-
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
 
 #define DIOWINDOWSOSPIPELINE_BUFSIZE    4096

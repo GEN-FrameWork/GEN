@@ -103,10 +103,10 @@ bool SCRIPT_LIB_DIR::AddLibraryFunctions(SCRIPT* script)
 
   this->script = script;
 
-  script->AddLibraryFunction(this, __L("IsItExists")                        , Call_IsItExists);
-  script->AddLibraryFunction(this, __L("ChangeDir")                         , Call_ChangeDir);
-  script->AddLibraryFunction(this, __L("RemoveDir")                         , Call_RemoveDir);
-  script->AddLibraryFunction(this, __L("MakeDir")                           , Call_MakeDir);
+  script->AddLibraryFunction(this, __L("IsItExists"), Call_IsItExists);
+  script->AddLibraryFunction(this, __L("ChangeDir"), Call_ChangeDir);
+  script->AddLibraryFunction(this, __L("RemoveDir"), Call_RemoveDir);
+  script->AddLibraryFunction(this, __L("MakeDir"), Call_MakeDir);
   
   return true;
 }

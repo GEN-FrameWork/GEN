@@ -135,16 +135,10 @@ enum DIOCOREPROTOCOL_CONNECTION_STATUS
                                                                                  return status;                                                                         \
                                                                                }                                                                                         
 
-
-
-
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
-
 
 class DIOCOREPROTOCOL_CFG;
 class DIOCOREPROTOCOL;
-
 
 class DIOCOREPROTOCOL_CONNECTION : public XFSMACHINE, public XSUBJECT
 {

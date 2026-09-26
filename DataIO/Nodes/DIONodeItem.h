@@ -35,8 +35,6 @@
 
 #include "DIONodeItemValue.h"
 
-
-
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
 
 enum DIONODEITEM_CATEGORY
@@ -48,13 +46,9 @@ enum DIONODEITEM_CATEGORY
   DIONODEITEM_CATEGORY_OWER
 };
 
-
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
 
-
 class DIONODEITEMHANDLER;
-
 
 class DIONODEITEM : public XSERIALIZABLE
 {

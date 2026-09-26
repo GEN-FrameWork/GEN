@@ -33,10 +33,7 @@
 #include "DIOStreamTLSMessages.h"
 #include "DIOStreamTLSMessagesExtension.h"
 
-
-
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
-
 
 #define DIOSTREAMTLS_MSG_FINISHED_MAXSIZE                                   64
 
@@ -173,7 +170,6 @@ class DIOSTREAMTLS_MSG_HANDSHAKE_CERTIFICATEVERIFY : public DIOSTREAMTLS_MSG_INT
     XBUFFER                                 signature;
 };
 
-
 class DIOSTREAMTLS_MSG_HANDSHAKE_FINISHED : public DIOSTREAMTLS_MSG_INTERFACE
 {
   public:
@@ -191,8 +187,6 @@ class DIOSTREAMTLS_MSG_HANDSHAKE_FINISHED : public DIOSTREAMTLS_MSG_INTERFACE
 
     XBUFFER                                 verifydata;
 };
-
-
 
 class DIOSTREAMTLS_MSG_HANDSHAKE_NEWSESSIONTICKET : public DIOSTREAMTLS_MSG_INTERFACE
 {

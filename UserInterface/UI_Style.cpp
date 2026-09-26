@@ -391,6 +391,18 @@ bool UI_STYLE::FillFromInlineStyle(XSTRING& styletext)
 }
 
 
+/**-------------------------------------------------------------------------------------------------------------------
+* 
+* @fn         bool UI_STYLE::FillFromInlineStyle(XSTRING& styletext, UI_STYLESHEET* expandvarsfrom)
+* @brief      Fill From Inline Style
+* @ingroup    USERINTERFACE
+* 
+* @param[in]  styletext : 
+* @param[in]  expandvarsfrom : 
+* 
+* @return     bool : true if the operation is successful; otherwise false.
+* 
+* --------------------------------------------------------------------------------------------------------------------*/
 bool UI_STYLE::FillFromInlineStyle(XSTRING& styletext, UI_STYLESHEET* expandvarsfrom)
 {
   if(styletext.IsEmpty()) return false;

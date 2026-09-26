@@ -34,8 +34,6 @@
 
 #include "UI_Element.h"
 
-
-
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
 
 enum UI_ELEMENT_ANIMATION_STATE
@@ -46,13 +44,9 @@ enum UI_ELEMENT_ANIMATION_STATE
   UI_ELEMENT_ANIMATION_STATE_PAUSE              ,
 };
 
-
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
 
-
 class XTIMER;
-
 
 class UI_ELEMENT_ANIMATION : public UI_ELEMENT
 {

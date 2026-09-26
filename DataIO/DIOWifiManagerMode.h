@@ -32,8 +32,6 @@
 
 #include "XString.h"
 
-
-
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
 
 enum DIOWIFIMANAGER_MODETYPE 
@@ -42,13 +40,9 @@ enum DIOWIFIMANAGER_MODETYPE
   DIOWIFIMANAGER_MODETYPE_LINUX_CLIENT_NM               
 };
 
-
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
 
-
 class DIOIP;
-
 
 class DIOWIFIMANAGERMODE
 {

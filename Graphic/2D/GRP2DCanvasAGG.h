@@ -139,12 +139,10 @@
 
 #define AGG_OUTLINE_END                                       ras.render(true);
 
-
 #define AGG_SOLIDFILL_INI                                     agg::rasterizer_scanline_aa<>                                                                    ras;                             \
                                                               agg::scanline_p8                                                                                 sl;                              \
                                                               agg::renderer_scanline_aa_solid<agg::renderer_base<PIXELFORMATBUFFER> >                          ren(*renderer_base);             \
                                                               agg::renderer_scanline_bin_solid<agg::renderer_base<PIXELFORMATBUFFER> >                         ren_bin(*renderer_base);
-
 
 #define AGG_SOLIDFILL_END                                     agg::render_scanlines(ras, sl, ren);
 
@@ -153,11 +151,7 @@ typedef agg::glyph_raster_bin<agg::rgba8>                     AGG_GLYPH_GEN;
 typedef agg::font_engine_freetype_int32                       AGG_FONT_ENGINE;
 typedef agg::font_cache_manager<AGG_FONT_ENGINE>              AGG_FONT_MANAGER;
 
-
-
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
-
 
 class GRP2DCANVASAGG_SIMPLE_VERTEX_SOURCE
 {
@@ -172,12 +166,10 @@ class GRP2DCANVASAGG_SIMPLE_VERTEX_SOURCE
                                                                                   m_cmd[0]        = agg::path_cmd_stop;
                                                                                 }
 
-
                                                                                 GRP2DCANVASAGG_SIMPLE_VERTEX_SOURCE  (double x1, double y1, double x2, double y2)
                                                                                 {
                                                                                   init(x1, y1, x2, y2);
                                                                                 }
-
 
                                                                                 GRP2DCANVASAGG_SIMPLE_VERTEX_SOURCE  (double x1, double y1, double x2, double y2, double x3, double y3)
                                                                                 {
@@ -198,7 +190,6 @@ class GRP2DCANVASAGG_SIMPLE_VERTEX_SOURCE
                                                                                   m_cmd[1] = agg::path_cmd_line_to;
                                                                                   m_cmd[2] = agg::path_cmd_stop;
                                                                                 }
-
 
     void                                                                        init                          (double x1, double y1, double x2, double y2, double x3, double y3)
                                                                                 {
@@ -243,7 +234,6 @@ class GRP2DCANVASAGG_SIMPLE_VERTEX_SOURCE
     double                                                                      m_y[8];
     unsigned                                                                    m_cmd[8];
 };
-
 
 template<class RASTERIZERTYPE, class RENDERER, class SCANLINETYPE>
 class GRP2DCANVASAGG_DASHED_LINE
@@ -297,7 +287,6 @@ class GRP2DCANVASAGG_DASHED_LINE
     agg::conv_stroke<agg::conv_dash<GRP2DCANVASAGG_SIMPLE_VERTEX_SOURCE> >        m_dash_stroke;
 };
 
-
 template<class PIXELFORMATBUFFER, class COLORTYPE>
 class GRP2DCANVASAGG: public GRP2DCANVAS
 {
@@ -308,7 +297,6 @@ class GRP2DCANVASAGG: public GRP2DCANVAS
 
                                                                                   vectorfont_manager = GEN_NEW AGG_FONT_MANAGER(vectorfont_engine); 
                                                                                 }
-
 
     virtual                                                                    ~GRP2DCANVASAGG                      ()
                                                                                 {                                                                                  
@@ -331,7 +319,6 @@ class GRP2DCANVASAGG: public GRP2DCANVAS
                                                                                   Clean();
                                                                                 }
 
-
     bool                                                                        Buffer_Create                     ()
                                                                                 {
                                                                                   buffersize = (width * height * GetBytesperPixel());
@@ -345,10 +332,6 @@ class GRP2DCANVASAGG: public GRP2DCANVAS
                                                                                     {
                                                                                       return false;
                                                                                     }
-
-
-
-
 
                                                                                   memset(buffer, 0, buffersize);
 
@@ -382,7 +365,6 @@ class GRP2DCANVASAGG: public GRP2DCANVAS
                                                                                                                           agg::renderer_scanline_aa_solid<agg::renderer_base<PIXELFORMATBUFFER> >,
                                                                                                                           agg::scanline_u8 > (rasterizer_type, *renderer_scanline, scanline_type);
 
-
                                                                                   rasterglyph =  GEN_NEW AGG_GLYPH_GEN(0);
                                                                                   if(!rasterglyph) 
                                                                                     {
@@ -395,11 +377,10 @@ class GRP2DCANVASAGG: public GRP2DCANVAS
                                                                                       return false;
                                                                                     }
                                                                                   
-                                                                                  SetClipBox((double)0.0f, (double)0.0f,(double)(width-1), (double)(height-1));
+                                                                                  SetClipBox((double)0.0f, (double)0.0f, (double)(width-1), (double)(height-1));
 
                                                                                   return true;
                                                                                 }
-
 
   bool                                                                          Buffer_SetToZero                  ()
                                                                                 {
@@ -412,8 +393,6 @@ class GRP2DCANVASAGG: public GRP2DCANVAS
 
                                                                                   return true;
                                                                                 }
-
-
 
     bool                                                                        Buffer_Delete                      ()
                                                                                 {
@@ -469,9 +448,6 @@ class GRP2DCANVASAGG: public GRP2DCANVAS
                                                                                   return true;
                                                                                 }
 
-
-
-
     void                                                                        Clear                             (const GRP2DCOLOR* c)                     { renderer_base->clear((*(COLORTYPE*)c));                       }
 
     void                                                                        SetClipBox                        (double x1, double y1, double x2, double y2)
@@ -485,7 +461,6 @@ class GRP2DCANVASAGG: public GRP2DCANVAS
                                                                                   GRP2DCANVAS::SetClipBox(rect); 
                                                                                   renderer_base->clip_box((int)rect.x1, (int)rect.y1, (int)rect.x2, (int)rect.y2);
                                                                                 }
-
 
     GRP2DCOLOR*                                                                 GetPixel                          (double x, double y)
                                                                                 {
@@ -510,13 +485,11 @@ class GRP2DCANVASAGG: public GRP2DCANVAS
                                                                                   renderer_scanline->color((*(COLORTYPE*)c));
                                                                                 }
 
-
     void                                                                        Line                              (double x1, double y1, double x2, double y2)
                                                                                 {
                                                                                   if(!dashline) return;
                                                                                   dashline->Draw(x1, y1, x2, y2, linewidth, dashlength);
                                                                                 }
-
 
     void                                                                        Rectangle                         (double x1, double y1, double x2, double y2, bool isfill)
                                                                                 {
@@ -537,17 +510,15 @@ class GRP2DCANVASAGG: public GRP2DCANVAS
                                                                                       AGG_SOLIDFILL_END
                                                                                     }
                                                                                     
-                                                                                 
                                                                                   if(linewidth <= 1.0)
                                                                                     {
 
-
                                                                                       AGG_SOLIDFILL_INI
                                                                                       
-                                                                                      renderer_base->blend_hline((int)x1,   (int)y1,   (int)x2, renderer_primitives->line_color(), 255);
-                                                                                      renderer_base->blend_vline((int)x2,   (int)y1,   (int)y2, renderer_primitives->line_color(), 255);
-                                                                                      renderer_base->blend_hline((int)x1,   (int)y2,   (int)x2, renderer_primitives->line_color(), 255);
-                                                                                      renderer_base->blend_vline((int)x1,   (int)y1,   (int)y2, renderer_primitives->line_color(), 255); 
+                                                                                      renderer_base->blend_hline((int)x1, (int)y1, (int)x2, renderer_primitives->line_color(), 255);
+                                                                                      renderer_base->blend_vline((int)x2, (int)y1, (int)y2, renderer_primitives->line_color(), 255);
+                                                                                      renderer_base->blend_hline((int)x1, (int)y2, (int)x2, renderer_primitives->line_color(), 255);
+                                                                                      renderer_base->blend_vline((int)x1, (int)y1, (int)y2, renderer_primitives->line_color(), 255); 
 
                                                                                       AGG_SOLIDFILL_END
                                                                                     }
@@ -556,10 +527,6 @@ class GRP2DCANVASAGG: public GRP2DCANVAS
                                                                                       AGG_OUTLINE_INI
 
                                                                                       ren.color(renderer_primitives->line_color());
-
-
-
-
 
                                                                                       ras.move_to_d(x1, y1);
                                                                                       ras.line_to_d(x1, y2);
@@ -596,9 +563,6 @@ class GRP2DCANVASAGG: public GRP2DCANVAS
                                                                                       AGG_OUTLINE_INI
 
                                                                                       ren.color(renderer_primitives->line_color());
-
-
-
 
                                                                                       agg::ellipse ell(x, y, rx, ry, 100);
                                                                                       ras.add_path(ell);
@@ -638,9 +602,6 @@ class GRP2DCANVASAGG: public GRP2DCANVAS
                                                                                    AGG_OUTLINE_INI
 
                                                                                    ren.color(renderer_primitives->line_color());
-
-
-
 
                                                                                    GRP2DVERTEX* vertex = vertexs.Get(0);
                                                                                    if(!vertex) return;
@@ -722,9 +683,6 @@ class GRP2DCANVASAGG: public GRP2DCANVAS
 
                                                                                       stroke.width(linewidth);
                                                                                       stroke.line_cap(agg::butt_cap);
-                                                                                      // round_join: miter_join on coarse polyline rounded-rects (UI forms with per-corner
-                                                                                      // border-radius) produced sharp triangular spikes at every chord vertex -- visible as
-                                                                                      // "picos" in the gutters between UI_System cards. Round joins follow the curve.
                                                                                       stroke.line_join(agg::round_join);
                                                                                   stroke.miter_limit(4.0);
 
@@ -733,7 +691,6 @@ class GRP2DCANVASAGG: public GRP2DCANVAS
                                                                                       AGG_SOLIDFILL_END
                                                                                     }
                                                                                 }
-                                                                                  
                                                                                   
     void                                                                        PathGradientBuildStorage          (GRP2DPATH& path, agg::path_storage& ps)
                                                                                 {
@@ -767,7 +724,6 @@ class GRP2DCANVASAGG: public GRP2DCANVAS
                                                                                         }
                                                                                     }
                                                                                 }
-
 
     void                                                                        PathGradientLinear                (GRP2DPATH& path, bool evenodd, double x1, double y1, double x2, double y2, GRP2DGRADIENTSTOP* stops, int nstops)
                                                                                 {
@@ -829,7 +785,6 @@ class GRP2DCANVASAGG: public GRP2DCANVAS
                                                                                   agg::render_scanlines_aa(ras, sl, *renderer_base, spanallocator, spangradient);
                                                                                 }
 
-
     void                                                                        PathGradientRadial                (GRP2DPATH& path, bool evenodd, double cx, double cy, double r, GRP2DGRADIENTSTOP* stops, int nstops)
                                                                                 {
                                                                                   if(!renderer_base)  return;
@@ -882,7 +837,6 @@ class GRP2DCANVASAGG: public GRP2DCANVAS
 
                                                                                   agg::render_scanlines_aa(ras, sl, *renderer_base, spanallocator, spangradient);
                                                                                 }
-
 
     void                                                                        PathGradientLinearStroke          (GRP2DPATH& path, double linewidth, double x1, double y1, double x2, double y2, GRP2DGRADIENTSTOP* stops, int nstops)
                                                                                 {
@@ -950,7 +904,6 @@ class GRP2DCANVASAGG: public GRP2DCANVAS
                                                                                   agg::render_scanlines_aa(ras, sl, *renderer_base, spanallocator, spangradient);
                                                                                 }
 
-
     void                                                                        PathGradientRadialStroke          (GRP2DPATH& path, double linewidth, double cx, double cy, double r, GRP2DGRADIENTSTOP* stops, int nstops)
                                                                                 {
                                                                                   if(!renderer_base)  return;
@@ -1010,7 +963,6 @@ class GRP2DCANVASAGG: public GRP2DCANVAS
                                                                                   agg::render_scanlines_aa(ras, sl, *renderer_base, spanallocator, spangradient);
                                                                                 }
 
-
     void                                                                        RoundRect                         (double x1, double y1, double x2, double y2, double radius, bool isfill = false)
                                                                                 {
                                                                                   if(isfill)
@@ -1027,31 +979,22 @@ class GRP2DCANVASAGG: public GRP2DCANVAS
                                                                                       AGG_SOLIDFILL_END
                                                                                     }
 
-                                                                                  
                                                                                   if(linewidth >= 1.0)
                                                                                     {
                                                                                       AGG_OUTLINE_INI
 
                                                                                       ren.color(renderer_primitives->line_color());
 
-
-
-
                                                                                       agg::rounded_rect roundrect (x1, y1, x2, y2, radius);
 
-
                                                                                       ras.add_path(roundrect);
-
 
                                                                                       AGG_OUTLINE_END
                                                                                     }
                                                                                 }
 
-
     GRPBITMAP*                                                                  GetBitmap                         (double x, double y, double width, double height)
                                                                                 {
-
-
 
                                                                                   int clipwidth    = (renderer_base->xmax() - renderer_base->xmin());
                                                                                   int clipheight   = (renderer_base->ymax() - renderer_base->ymin());
@@ -1084,15 +1027,11 @@ class GRP2DCANVASAGG: public GRP2DCANVAS
                                                                                   if(bitmapwidth  <= 0) return NULL;
                                                                                   if(bitmapheight <= 0) return NULL;
 
-
-
                                                                                   GRPBITMAP* bitmap = GRPFACTORY::GetInstance().CreateBitmap(bitmapwidth, bitmapheight, mode, isbufferinverse);
                                                                                   if(!bitmap) return NULL;
 
-
                                                                                   GRPBITMAPPIXELFORMATBUFFER<PIXELFORMATBUFFER, COLORTYPE>* bitmapfb = (GRPBITMAPPIXELFORMATBUFFER<PIXELFORMATBUFFER, COLORTYPE>*)bitmap;
                                                                                   agg::rendering_buffer* bitmapbuffer = bitmapfb->GetRenderBuffer();
-
 
                                                                                   int sizeline = bitmapwidth *  GetBytesperPixel();
 
@@ -1104,7 +1043,6 @@ class GRP2DCANVASAGG: public GRP2DCANVAS
 
                                                                                   return bitmap;
                                                                                 }
-
 
     void                                                                        PutBitmapNoAlpha                  (double x, double y, GRPBITMAP* bitmap)
                                                                                 {
@@ -1118,7 +1056,7 @@ class GRP2DCANVASAGG: public GRP2DCANVAS
                                                                                         {
                                                                                           for(XDWORD xb = 0; xb<bitmap->GetWidth(); xb++)
                                                                                             {
-                                                                                              color = (COLORTYPE*)bitmap->GetPixel(xb,yb);
+                                                                                              color = (COLORTYPE*)bitmap->GetPixel(xb, yb);
                                                                                               PutPixel(x+xb, y+yb, color);
                                                                                             }
                                                                                         }
@@ -1134,7 +1072,6 @@ class GRP2DCANVASAGG: public GRP2DCANVAS
                                                                                       int xpos         = (int)(abs((int)x) * GetBytesperPixel());
                                                                                       int c            = 0;
 
-
                                                                                       if(x < 0)
                                                                                         {
                                                                                           xpos    = (int)0;
@@ -1145,7 +1082,6 @@ class GRP2DCANVASAGG: public GRP2DCANVAS
                                                                                         {
                                                                                           c = (int)abs((int)y);
                                                                                         }
-
 
                                                                                       if((x + (int)bitmap->GetWidth())  > (renderer_base->xmin() + clipwidth))
                                                                                         {
@@ -1178,7 +1114,6 @@ class GRP2DCANVASAGG: public GRP2DCANVAS
                                                                                   #endif  
                                                                                 }
 
-
     void                                                                        PutBitmap                         (double x, double y, GRPBITMAP* bitmap)
                                                                                 {
                                                                                   if(!bitmap) return;
@@ -1189,7 +1124,7 @@ class GRP2DCANVASAGG: public GRP2DCANVAS
                                                                                     {
                                                                                       for(XDWORD xb = 0; xb<bitmap->GetWidth(); xb++)
                                                                                         {
-                                                                                          color = (COLORTYPE*)bitmap->GetPixel(xb,yb);
+                                                                                          color = (COLORTYPE*)bitmap->GetPixel(xb, yb);
                                                                                           PutBlendPixel(x+xb, y+yb, color, color->a);
                                                                                         }
                                                                                     }
@@ -1198,7 +1133,6 @@ class GRP2DCANVASAGG: public GRP2DCANVAS
 
                                                                                   #endif  
                                                                                 }
-
 
     void                                                                        PutBitmapAlpha                    (double x, double y, GRPBITMAP* bitmap, double alpha = 100)
                                                                                 {
@@ -1210,7 +1144,7 @@ class GRP2DCANVASAGG: public GRP2DCANVAS
                                                                                     {
                                                                                       for(XDWORD xb = 0; xb<bitmap->GetWidth(); xb++)
                                                                                         {
-                                                                                          color = (COLORTYPE*)bitmap->GetPixel(xb,yb);
+                                                                                          color = (COLORTYPE*)bitmap->GetPixel(xb, yb);
                                                                                           PutBlendPixel(x+xb, y+yb, color, ((alpha * color->a)/100));
                                                                                         }
                                                                                     }
@@ -1219,7 +1153,6 @@ class GRP2DCANVASAGG: public GRP2DCANVAS
 
                                                                                   #endif  
                                                                                 }
-
 
     bool                                                                        RasterFont_Select                 (XCHAR* fontname)
                                                                                 {
@@ -1311,7 +1244,6 @@ class GRP2DCANVASAGG: public GRP2DCANVAS
 
                                                                                    return rasterglyph->height();
                                                                                 }
-
 
     bool                                                                        RasterFont_Printf                 (double x, double y, XCHAR* mask, ...)
                                                                                 {
@@ -1461,12 +1393,10 @@ class GRP2DCANVASAGG: public GRP2DCANVAS
                                                                                   return _height;                      
                                                                                 }
 
-
     double                                                                      VectorFont_GetHeight              ()
                                                                                 {
                                                                                   return vectorfont_config.GetHeight();                                                                                   
                                                                                 }
-
 
     bool                                                                        VectorFont_Print                  (double _x, double _y, XCHAR* _outstring)
                                                                                 {
@@ -1515,26 +1445,10 @@ class GRP2DCANVASAGG: public GRP2DCANVAS
 
                                                                                               case agg::glyph_data_outline    : ras.reset();
 
-                                                                                                                                
-
-
-
-
-
-
-
-
-
-
-
-
-
-
                                                                                                                                 renderer_scanline->color((*vectorfont_config.GetColor()));
                                                                                                                                 agg::render_scanlines(ras, sl, ren);                                                                                  
                                                                                                                                 break;
                                                                                               }
-
 
                                                                                             x += glyph->advance_x;
                                                                                             y += glyph->advance_y;  
@@ -1621,7 +1535,6 @@ class GRP2DCANVASAGG: public GRP2DCANVAS
                                                                                   return true;
                                                                                 }
 
-
     bool                                                                        VectorFont_Printf                 (double _x, double _y, XCHAR* mask, ...)
                                                                                 {
                                                                                   XSTRING outstring;
@@ -1633,10 +1546,8 @@ class GRP2DCANVASAGG: public GRP2DCANVAS
 
                                                                                   va_end(arg);
 
-
                                                                                   return VectorFont_Print(_x, _y, outstring.Get());                                                                                                                                                                 
                                                                                 }
-
 
     bool                                                                        CopyBufferRenderFromViewport      (GRPVIEWPORT* viewport)
                                                                                 {
@@ -1654,9 +1565,7 @@ class GRP2DCANVASAGG: public GRP2DCANVAS
                                                                                       return false;
                                                                                     }
                                                                          
-                                                                                  viewportcanvasbuffer.attach(viewportcanvas->Buffer_Get()  , viewportcanvas->GetWidth()
-                                                                                                                                            , viewportcanvas->GetHeight()
-                                                                                                                                            , (viewportcanvas->IsBufferInverse()?1:-1) * ((int)viewportcanvas->GetWidth() *  viewportcanvas->GetBytesperPixel()));
+                                                                                  viewportcanvasbuffer.attach(viewportcanvas->Buffer_Get(), viewportcanvas->GetWidth(), viewportcanvas->GetHeight(), (viewportcanvas->IsBufferInverse()?1:-1) * ((int)viewportcanvas->GetWidth() * viewportcanvas->GetBytesperPixel()));
 
                                                                                   int sizeline    = (int)(viewport->GetWidth() * GetBytesperPixel());
                                                                                   int nlines      = (int)(viewport->GetHeight()); 
@@ -1667,7 +1576,6 @@ class GRP2DCANVASAGG: public GRP2DCANVAS
                                                                                   int targetposx  = (int)(viewport->GetCanvasPositionX() * GetBytesperPixel());
                                                                                   int targetposy  = (int)(viewport->GetCanvasPositionY());
 
-                                                                                  
                                                                                   for(int c=0; c<nlines; c++)
                                                                                     {
                                                                                       memcpy( rbuffer.row_ptr(c + originposy) + originposx, viewportcanvasbuffer.row_ptr(c + targetposy) +  targetposx, sizeline);
@@ -1675,7 +1583,6 @@ class GRP2DCANVASAGG: public GRP2DCANVAS
 
                                                                                   return true;
                                                                                 }
-
 
     bool                                                                        ReleaseDrawFramerate              ()  
                                                                                 {                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           
@@ -1690,8 +1597,6 @@ class GRP2DCANVASAGG: public GRP2DCANVAS
                                                                                   
                                                                                   return true;
                                                                                 }
-
-
 
     bool                                                                        DrawFramerate                     (GRPSCREEN* screen, double x, double y)
                                                                                 {
@@ -1741,14 +1646,12 @@ class GRP2DCANVASAGG: public GRP2DCANVAS
                                                                                         }
                                                                                     }
                                                                                            
-
-                                                                                  
                                                                                   framerate_bitmap = GetBitmap(framerate_x - 4 , framerate_y - height - 4, (width + 8), (height + 8));
                                                                                                                                                                        
                                                                                   SetFillColor(&colorback);
                                                                                   SetLineColor(&color);   
                                                                                   SetLineWidth(1.0f);
-                                                                                  Rectangle(framerate_x, framerate_y + 2, framerate_x + width , framerate_y - height - 2,  true);
+                                                                                  Rectangle(framerate_x, framerate_y + 2, framerate_x + width, framerate_y - height - 2, true);
                                                                                                                                                                                                                                                    
                                                                                   RasterFont_SetColor(&color);
                                                                                   RasterFont_Printf(framerate_x + 4, framerate_y - 4, text.Get());
@@ -1757,7 +1660,6 @@ class GRP2DCANVASAGG: public GRP2DCANVAS
                                                                                 }
 
   private:   
-
 
     #ifdef DEBUG_ACTIVE 
     bool                                                                        Debug_Draw                        (double originx, double originy, double width, double height)
@@ -1778,7 +1680,6 @@ class GRP2DCANVASAGG: public GRP2DCANVAS
                                                                                 }
     #endif
 
-
     void                                                                        Clean                             ()
                                                                                 {
                                                                                   pixelformatbuffer   = NULL;
@@ -1791,7 +1692,6 @@ class GRP2DCANVASAGG: public GRP2DCANVAS
                                                                                   framerate_y         = 0;
                                                                                   framerate_bitmap    = 0;
                                                                                 }
-
 
     agg::rendering_buffer                                                       rbuffer;
     PIXELFORMATBUFFER*                                                          pixelformatbuffer;

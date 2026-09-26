@@ -199,7 +199,6 @@ enum INPBUTTON_ID
    INPBUTTON_ID_LAST
 };
 
-
 enum INPBUTTON_STATE
 {
   INPBUTTON_STATE_UNKNOWN,
@@ -209,8 +208,6 @@ enum INPBUTTON_STATE
   INPBUTTON_STATE_HOLD
 
 };
-
-
 
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
 

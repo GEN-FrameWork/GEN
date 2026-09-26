@@ -33,10 +33,7 @@
 #include "XString.h"
 #include "DIOStreamConfig.h"
 
-
-
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
-
 
 enum DIOSTREAMI2CCONFIG_ADDRESSSIZE
 {
@@ -45,14 +42,9 @@ enum DIOSTREAMI2CCONFIG_ADDRESSSIZE
   DIOSTREAMI2CCONFIG_ADDRESSSIZE_10BITS         ,
 };
 
-
 #define DIOSTREAMI2CCONFIG_ADDRESSINVALID     -1
 
-
-
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
-
 
 class DIOSTREAMI2CCONFIG : public DIOSTREAMCONFIG
 {

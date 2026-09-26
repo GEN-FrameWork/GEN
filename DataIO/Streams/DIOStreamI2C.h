@@ -62,10 +62,7 @@ enum  DIOSTREAMI2C_FSMSTATES
   DIOSTREAMI2C_LASTSTATE
 };
 
-
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
-
 
 class XBUFFER;
 class DIOGPIO;

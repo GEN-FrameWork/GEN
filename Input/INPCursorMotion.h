@@ -54,7 +54,6 @@ enum INPCURSORMOTION_DIR
   INPCURSORMOTION_DIR_LEFTDOWN                   ,
 };
 
-
 enum INPCURSORMOTION_REDUCEDMODE
 {
   INPCURSORMOTION_REDUCEDMODE_NONE           = 0 ,
@@ -62,8 +61,6 @@ enum INPCURSORMOTION_REDUCEDMODE
   INPCURSORMOTION_REDUCEDMODE_NMAX               ,
   INPCURSORMOTION_REDUCEDMODE_NMAXPERCENT        ,
 };
-
-
 
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
 
@@ -93,7 +90,6 @@ class INPCURSORMOTIONPOINT
      void                             Clean                           ();
 };
 
-
 class INPCURSORMOTION
 {
   public:
@@ -110,14 +106,14 @@ class INPCURSORMOTION
     bool                              AddPoint                        (float x = 0, float y = 0, float z = 0);
     bool                              DeleteAllPoints                 ();
 
-    bool                              AddFromLine                     (INPCURSORMOTION_REDUCEDMODE reducedmode,int reducedfactor, int x1, int y1, int x2, int y2);
-    bool                              AddFromCircle                   (INPCURSORMOTION_REDUCEDMODE reducedmode,int reducedfactor, int x , int y , int radio);
-    bool                              AddFromElipse                   (INPCURSORMOTION_REDUCEDMODE reducedmode,int reducedfactor, int x , int y , int rx, int ry);
+    bool                              AddFromLine                     (INPCURSORMOTION_REDUCEDMODE reducedmode, int reducedfactor, int x1, int y1, int x2, int y2);
+    bool                              AddFromCircle                   (INPCURSORMOTION_REDUCEDMODE reducedmode, int reducedfactor, int x, int y, int radio);
+    bool                              AddFromElipse                   (INPCURSORMOTION_REDUCEDMODE reducedmode, int reducedfactor, int x, int y, int rx, int ry);
 
     float                             GetAngle                        ();
     int                               GetModule                       ();
 
-    bool                              IsInRect                        (int x, int y, int width,int height);
+    bool                              IsInRect                        (int x, int y, int width, int height);
 
     bool                              IsInCurse                       ();
     bool                              SetIsInCurse                    (bool isincurse);

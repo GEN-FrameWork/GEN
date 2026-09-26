@@ -121,14 +121,9 @@ enum DIOI2CMONITORGAUGELTC2942_AN
 #define DIOI2CMONITORGAUGELTC2942_CTL_SHUTDOWN                0x01 // B[0] Shutdown
 #define DIOI2CMONITORGAUGELTC2942_CTL_POWERON                 0xFE // B[0] POWER on
 
-
 #define DIOI2CMONITORGAUGELTC2942_VOLTAGE_READ_ERROR      		0X8000
 
-
-
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
-
 
 class DIOI2CMONITORGAUGELTC2942: public DIODEVICEI2C
 {

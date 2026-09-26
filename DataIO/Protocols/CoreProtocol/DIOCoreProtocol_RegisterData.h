@@ -33,10 +33,7 @@
 #include "XUUID.h"
 #include "XSerializable.h"
 
-
-
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
-
 
 #define DIOCOREPROTOCOL_REGISTERDATA_HEADER_VAR_ID_MACHINE          __L("ID_machine")    
 #define DIOCOREPROTOCOL_REGISTERDATA_HEADER_VAR_ID_CONNECTION       __L("ID_connection")    
@@ -45,11 +42,7 @@
 #define DIOCOREPROTOCOL_REGISTERDATA_HEADER_VAR_USER                __L("user")    
 #define DIOCOREPROTOCOL_REGISTERDATA_HEADER_VAR_DOMAIN              __L("domain")    
 
-
-
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
-
 
 class DIOCOREPROTOCOL_REGISTERDATA : public XSERIALIZABLE
 {

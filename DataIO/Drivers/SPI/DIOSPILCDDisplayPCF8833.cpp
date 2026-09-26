@@ -117,14 +117,14 @@ bool DIOSPILCDDISPLAYPCF8833::IniDevice()
  
   if(GetGPIOEntryID(DIODISPLAYDEVICE_INDEX_GPIOENTRYID_RESET) != DIOGPIO_ID_NOTDEFINED)
     {
-      GEN_DIOGPIO.SetMode(GetGPIOEntryID(DIODISPLAYDEVICE_INDEX_GPIOENTRYID_RESET)  , DIOGPIO_MODE_OUTPUT);
+      GEN_DIOGPIO.SetMode(GetGPIOEntryID(DIODISPLAYDEVICE_INDEX_GPIOENTRYID_RESET), DIOGPIO_MODE_OUTPUT);
       GEN_DIOGPIO.SetValue(GetGPIOEntryID(DIODISPLAYDEVICE_INDEX_GPIOENTRYID_RESET) , true);
     }
 
   if(GetGPIOEntryID(DIODISPLAYDEVICE_INDEX_GPIOENTRYID_DC) != DIOGPIO_ID_NOTDEFINED)
     {
-      GEN_DIOGPIO.SetMode(GetGPIOEntryID(DIODISPLAYDEVICE_INDEX_GPIOENTRYID_DC)     , DIOGPIO_MODE_OUTPUT);
-      GEN_DIOGPIO.SetValue(GetGPIOEntryID(DIODISPLAYDEVICE_INDEX_GPIOENTRYID_DC)    , true);
+      GEN_DIOGPIO.SetMode(GetGPIOEntryID(DIODISPLAYDEVICE_INDEX_GPIOENTRYID_DC), DIOGPIO_MODE_OUTPUT);
+      GEN_DIOGPIO.SetValue(GetGPIOEntryID(DIODISPLAYDEVICE_INDEX_GPIOENTRYID_DC), true);
     }
   
   if(diostream->Open())
@@ -252,7 +252,7 @@ bool DIOSPILCDDISPLAYPCF8833::PutPixel(XWORD x, XWORD y, XWORD color)
 {
   if(!IsInitialized()) return false;
 
-  SetWindow(x ,y, x, y);
+  SetWindow(x, y, x, y);
 
   XBUFFER databuffer;
 
@@ -536,7 +536,7 @@ bool DIOSPILCDDISPLAYPCF8833::Draw_HLine(XBYTE x, XBYTE y, XBYTE width, XWORD co
 
       DIOSPILCDDISPLAYPCF8833_ADDDATA(databuffer, ((color & 0xFF0) >> 0x04));                                // R1G1
       DIOSPILCDDISPLAYPCF8833_ADDDATA(databuffer, ((color & 0x00F) << 0x04) | ((color & 0xF00) >> 0x08));    // B1R2
-      DIOSPILCDDISPLAYPCF8833_ADDDATA(databuffer,  (color & 0x0FF));                                         // G2B2
+      DIOSPILCDDISPLAYPCF8833_ADDDATA(databuffer, (color & 0x0FF));                                         // G2B2
     }
 
   return Buffer_Send(databuffer);
@@ -574,9 +574,9 @@ bool DIOSPILCDDISPLAYPCF8833::Draw_HLine(XBYTE x, XBYTE y, XBYTE width, XWORD* b
 
       i += 2;
 
-      DIOSPILCDDISPLAYPCF8833_ADDDATA(databuffer,  (c1 & 0xFF0) >> 0x04);                              // R1G1
+      DIOSPILCDDISPLAYPCF8833_ADDDATA(databuffer, (c1 & 0xFF0) >> 0x04);                              // R1G1
       DIOSPILCDDISPLAYPCF8833_ADDDATA(databuffer, ((c1 & 0x00F) << 0x04) | ((c2 & 0xF00) >> 0x08));    // B1R2
-      DIOSPILCDDISPLAYPCF8833_ADDDATA(databuffer,  (c2 & 0x0FF));                                      // G2B2
+      DIOSPILCDDISPLAYPCF8833_ADDDATA(databuffer, (c2 & 0x0FF));                                      // G2B2
     }
 
   return Buffer_Send(databuffer);

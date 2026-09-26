@@ -259,9 +259,6 @@ void DIOPCAPNETINTERFACE::Clean()
 }
 
 
-
-
-
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         DIOPCAPFRAME::DIOPCAPFRAME(bool hardwareuselittleendian, bool isloopback)
@@ -281,7 +278,6 @@ DIOPCAPFRAME::DIOPCAPFRAME(bool hardwareuselittleendian, bool isloopback)
 
   data = GEN_NEW XBUFFER();
 }
-
 
 
 /**-------------------------------------------------------------------------------------------------------------------
@@ -338,7 +334,7 @@ bool DIOPCAPFRAME::SetData(XBYTE* data, XDWORD size)
   if(!size)       return false;
 
   this->data->Delete();
-  this->data->Add(data,size);
+  this->data->Add(data, size);
 
   return true;
 }
@@ -559,7 +555,6 @@ int DIOPCAPFRAME::GetDataPayLoadSize()
 }
 
 
-
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         XDWORD DIOPCAPFRAME::GetAllHeadersSize()
@@ -618,7 +613,7 @@ bool DIOPCAPFRAME::GetHeader(DIOPCAPETHERNETHEADER& header)
       return false;
     }
 
-  memcpy((XBYTE*)&header,(XBYTE*)(ethernet_header),sizeof(DIOPCAPETHERNETHEADER));
+  memcpy((XBYTE*)&header, (XBYTE*)(ethernet_header), sizeof(DIOPCAPETHERNETHEADER));
 
   if(hardwareuselittleendian)
     {
@@ -657,7 +652,7 @@ bool DIOPCAPFRAME::GetHeader(DIOPCAPIPHEADER& header)
       return false;
     }
 
-  memcpy((XBYTE*)&header,(XBYTE*)(IP_header),sizeof(DIOPCAPIPHEADER));
+  memcpy((XBYTE*)&header, (XBYTE*)(IP_header), sizeof(DIOPCAPIPHEADER));
 
   if(hardwareuselittleendian)
     {
@@ -698,7 +693,7 @@ bool DIOPCAPFRAME::GetHeader(DIOPCAPUDPHEADER& header)
       return false;
     }
 
-  memcpy((XBYTE*)&header,(XBYTE*)(UDP_header),sizeof(DIOPCAPUDPHEADER));
+  memcpy((XBYTE*)&header, (XBYTE*)(UDP_header), sizeof(DIOPCAPUDPHEADER));
 
   if(hardwareuselittleendian)
     {
@@ -727,7 +722,7 @@ bool DIOPCAPFRAME::GetHeader(DIOPCAPTCPHEADER& header)
 {
   if(!TCP_header) return false;
 
-  memcpy((XBYTE*)&header,(XBYTE*)(TCP_header),sizeof(DIOPCAPTCPHEADER));
+  memcpy((XBYTE*)&header, (XBYTE*)(TCP_header), sizeof(DIOPCAPTCPHEADER));
 
   if(hardwareuselittleendian)
     {
@@ -947,9 +942,6 @@ void DIOPCAPFRAME::Clean()
 
   allheaderssize              = 0;
 }
-
-
-
 
 
 /**-------------------------------------------------------------------------------------------------------------------
@@ -1218,7 +1210,7 @@ bool DIOPCAP::End()
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         bool DIOPCAP::Frames_Add(XBYTE* data,XDWORD size, bool isloopback)
+* @fn         bool DIOPCAP::Frames_Add(XBYTE* data, XDWORD size, bool isloopback)
 * @brief      Frames add
 * @ingroup    DATAIO
 * 
@@ -1229,7 +1221,7 @@ bool DIOPCAP::End()
 * @return     bool : true if the operation is successful; otherwise false.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-bool DIOPCAP::Frames_Add(XBYTE* data,XDWORD size, bool isloopback)
+bool DIOPCAP::Frames_Add(XBYTE* data, XDWORD size, bool isloopback)
 {
   if(!data) return false;
   if(!size) return false;
@@ -1243,7 +1235,7 @@ bool DIOPCAP::Frames_Add(XBYTE* data,XDWORD size, bool isloopback)
   DIOPCAPFRAME* frame = GEN_NEW DIOPCAPFRAME(GEN_XSYSTEM.HardwareUseLittleEndian(), isloopback);
   if(frame)
     {
-      if(frame->SetData(data,size))
+      if(frame->SetData(data, size))
         {
           XBYTE* framedata = frame->GetData()->Get();
           if(framedata)

@@ -98,16 +98,11 @@ enum DIOIEC60870_5_XEVENT_TYPE
 #define DIOIEC60870_5_ASDUCAUSETRANS_OBJECTINFOUNKNOWN          17
 #define DIOIEC60870_5_ASDUCAUSETRANS_INTEGRPEROIDNOTAVAILABLE   18
 
-
-
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
-
 
 class XDATETIME;
 class XTIMER;
 class DIOSTREAM;
-
 
 class DIOIEC60870_5_XEVENT : public XEVENT
 {
@@ -119,7 +114,6 @@ class DIOIEC60870_5_XEVENT : public XEVENT
 
     void                      Clean                               ();
 };
-
 
 class DIO_C_CI_NU_2_RESULT
 {
@@ -140,7 +134,6 @@ class DIO_C_CI_NU_2_RESULT
     XVECTOR<XDWORD>           indexvalues;
     XVECTOR<XDWORD>           values;
 };
-
 
 class DIO_C_TR_AA_RESULT
 {
@@ -198,7 +191,6 @@ class DIO_C_TR_AA_RESULT
     float                     currentphase[3];
 };
 
-
 class DIOIEC60870_5  : public XSUBJECT
 {
   public:
@@ -216,9 +208,9 @@ class DIOIEC60870_5  : public XSUBJECT
     bool                      CMD_C_AC_NA_2_IniSession            (int timeout = DIOIEC60870_5_READTIMEOUT);
     bool                      CMD_C_FS_NA_2_EndSession            (int timeout = DIOIEC60870_5_READTIMEOUT);
 
-    bool                      CMD_C_CI_NU_2_Init                  (int TM,XDATETIME& timestart, XDATETIME& timeend, int timeout = DIOIEC60870_5_READTIMEOUT);
+    bool                      CMD_C_CI_NU_2_Init                  (int TM, XDATETIME& timestart, XDATETIME& timeend, int timeout = DIOIEC60870_5_READTIMEOUT);
     bool                      CMD_C_CI_NU_2_Read                  (DIO_C_CI_NU_2_RESULT* result, int timeout = DIOIEC60870_5_READTIMEOUT);
-    bool                      CMD_C_CI_NU_2_ReadAllValues         (int TM,XDATETIME* timestart, XDATETIME* timeend, XVECTOR<DIO_C_CI_NU_2_RESULT*>* results, int timeout = DIOIEC60870_5_READTIMEOUT);
+    bool                      CMD_C_CI_NU_2_ReadAllValues         (int TM, XDATETIME* timestart, XDATETIME* timeend, XVECTOR<DIO_C_CI_NU_2_RESULT*>* results, int timeout = DIOIEC60870_5_READTIMEOUT);
     bool                      CMD_C_CI_NU_2_DeleteResults         (XVECTOR<DIO_C_CI_NU_2_RESULT*>* results);
 
     bool                      CMD_C_TR_AA_ReadValues              (DIO_C_TR_AA_RESULT* result, int timeout = DIOIEC60870_5_READTIMEOUT);
@@ -235,14 +227,13 @@ class DIOIEC60870_5  : public XSUBJECT
 
   private:
 
-   
     bool                      IsValidFrameCount                   (XBYTE functioncode);
 
     bool                      SendMsgVar                          (XBYTE functioncode, XBUFFER* dataASDU);
     bool                      SendMsgFix                          (XBYTE functioncode);
 
-    bool                      WaitToReadMsg                       (XDWORD size,int timeout =  DIOIEC60870_5_READTIMEOUT);
-    bool                      ReadMsg                             (XBYTE& retfunctioncode, bool& retisfixmsg, XBUFFER* retASDU, int timeout =  DIOIEC60870_5_READTIMEOUT);
+    bool                      WaitToReadMsg                       (XDWORD size, int timeout = DIOIEC60870_5_READTIMEOUT);
+    bool                      ReadMsg                             (XBYTE& retfunctioncode, bool& retisfixmsg, XBUFFER* retASDU, int timeout = DIOIEC60870_5_READTIMEOUT);
 
     XBYTE                     CalculateCheckSum                   (XBYTE* buffer, XDWORD sizebuffer);
     XBYTE                     CalculateCheckSum                   (XBUFFER& xbuffer);

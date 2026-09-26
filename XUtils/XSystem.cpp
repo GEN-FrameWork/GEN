@@ -546,7 +546,7 @@ float XSYSTEM::GetCPUTemperature()
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         bool XSYSTEM::GetMemoryInfo(XDWORD& total,XDWORD& free)
+* @fn         bool XSYSTEM::GetMemoryInfo(XDWORD& total, XDWORD& free)
 * @brief      Get memory info
 * @note       VIRTUAL
 * @ingroup    XUTILS
@@ -557,7 +557,7 @@ float XSYSTEM::GetCPUTemperature()
 * @return     bool : true if the operation is successful; otherwise false.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-bool XSYSTEM::GetMemoryInfo(XDWORD& total,XDWORD& free)
+bool XSYSTEM::GetMemoryInfo(XDWORD& total, XDWORD& free)
 {
   total = 0;
   free  = 0;
@@ -581,7 +581,7 @@ int XSYSTEM::GetFreeMemoryPercent()
   XDWORD free;
   int    percent = 0;
 
-  if(!GetMemoryInfo(total,free)) 
+  if(!GetMemoryInfo(total, free)) 
     {
       return false;
     }

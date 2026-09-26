@@ -34,23 +34,17 @@
 
 #include "DIOStream.h"
 
-
-
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
 
 #define DIOSTREAMCIPHER_HEAD_MAGICNUMBER   0xAAE00055
 #define DIOSTREAMCIPHER_HEAD_SIZE          0x0e
 
-
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
-
 
 class CIPHER;
 class HASHCRC32;
 class DIOSTREAM;
 class DIOSTREAMCONFIG;
-
 
 class DIOSTREAMCIPHER : public DIOSTREAM
 {

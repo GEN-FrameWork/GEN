@@ -111,10 +111,6 @@ void UI_PROPERTY_SCROLLEABLE_STATUS::Clean()
 }
 
 
-
-
-
-
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         UI_PROPERTY_SCROLLEABLE::UI_PROPERTY_SCROLLEABLE()

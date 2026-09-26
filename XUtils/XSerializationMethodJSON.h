@@ -33,15 +33,9 @@
 #include "XSerializationMethod.h"
 #include "XFileJSON.h"
 
-
-
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
 
-
-
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
-
 
 class XSERIALIZATIONMETHODJSON : public XSERIALIZATIONMETHOD
 {
@@ -68,7 +62,6 @@ class XSERIALIZATIONMETHODJSON : public XSERIALIZATIONMETHOD
 
     virtual bool                AddStruct                      (XCHAR* name = NULL, bool open = false);
     virtual bool                AddArray                       (XDWORD nelements, XCHAR* name = NULL, bool open = false);
-
 
     virtual bool                Extract                        (bool& var, XCHAR* name = NULL); 
     virtual bool                Extract                        (char& var, XCHAR* name = NULL);  

@@ -85,15 +85,10 @@ enum DIOBUSPIRATESPEEDNOSNIFFER
 
 #define DIOBUSPIRATE_DEFAULTTIMEOUT  5
 
-
-
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
-
 
 class XTIMER;
 class DIOSTREAM;
-
 
 class DIOBUSPIRATE
 {

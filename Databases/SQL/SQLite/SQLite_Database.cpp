@@ -219,7 +219,7 @@ bool SQLITE_DATABASE::Rollback(XCHAR* savepoint)
 bool SQLITE_DATABASE::Savepoint(XCHAR* savepoint)
 {
   DB_SQL_STRING text;
-  text.Format(__L("SAVEPOINT %s"),savepoint);
+  text.Format(__L("SAVEPOINT %s"), savepoint);
 
   XBUFFER rollbacktext;
   
@@ -244,7 +244,7 @@ bool SQLITE_DATABASE::Savepoint(XCHAR* savepoint)
 bool SQLITE_DATABASE::ReleaseSavepoint(XCHAR* savepoint)
 {
   DB_SQL_STRING text;
-  text.Format(__L("RELEASE %s"),savepoint);
+  text.Format(__L("RELEASE %s"), savepoint);
 
   XBUFFER rollbacktext;
   

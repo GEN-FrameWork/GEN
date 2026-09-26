@@ -32,15 +32,9 @@
 
 #include "UI_Element.h"
 
-
-
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
 
-
-
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
-
 
 class GRPBITMAP;
 
@@ -54,7 +48,6 @@ class UI_ELEMENT_IMAGE : public UI_ELEMENT
     GRPBITMAP*                        GetImage                    ();  
     bool                              SetImage                    (GRPBITMAP* image);
 
-    // Fase 7: resource path used to re-raster SVG / rebind @density on scale change.
     XSTRING*                          GetResource                 ();
     void                              SetResource                 (XCHAR* resource);
 

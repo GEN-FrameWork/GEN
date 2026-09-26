@@ -90,7 +90,7 @@ COMPRESS_ZIP::~COMPRESS_ZIP()
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         bool COMPRESS_ZIP::Compress(XBYTE* source,XDWORD size,XBUFFER* xbuffer)
+* @fn         bool COMPRESS_ZIP::Compress(XBYTE* source, XDWORD size, XBUFFER* xbuffer)
 * @brief      Compress
 * @ingroup    COMPRESS
 * 
@@ -101,7 +101,7 @@ COMPRESS_ZIP::~COMPRESS_ZIP()
 * @return     bool : true if the operation is successful; otherwise false.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-bool COMPRESS_ZIP::Compress(XBYTE* source,XDWORD size,XBUFFER* xbuffer)
+bool COMPRESS_ZIP::Compress(XBYTE* source, XDWORD size, XBUFFER* xbuffer)
 {
   if(!source)  return false;
   if(!size)    return false;
@@ -122,7 +122,7 @@ bool COMPRESS_ZIP::Compress(XBYTE* source,XDWORD size,XBUFFER* xbuffer)
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         bool COMPRESS_ZIP::Decompress(XBYTE* source,XDWORD size,XBUFFER* xbuffer)
+* @fn         bool COMPRESS_ZIP::Decompress(XBYTE* source, XDWORD size, XBUFFER* xbuffer)
 * @brief      Decompress
 * @ingroup    COMPRESS
 * 
@@ -133,7 +133,7 @@ bool COMPRESS_ZIP::Compress(XBYTE* source,XDWORD size,XBUFFER* xbuffer)
 * @return     bool : true if the operation is successful; otherwise false.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-bool COMPRESS_ZIP::Decompress(XBYTE* source,XDWORD size,XBUFFER* xbuffer)
+bool COMPRESS_ZIP::Decompress(XBYTE* source, XDWORD size, XBUFFER* xbuffer)
 {
   if(!source)  return false;
   if(!size)    return false;
@@ -154,7 +154,7 @@ bool COMPRESS_ZIP::Decompress(XBYTE* source,XDWORD size,XBUFFER* xbuffer)
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         int COMPRESS_ZIP::ZCompress(XBYTE* target,XDWORD* targetsize,XBYTE* source,XDWORD sourcesize)
+* @fn         int COMPRESS_ZIP::ZCompress(XBYTE* target, XDWORD* targetsize, XBYTE* source, XDWORD sourcesize)
 * @brief      Z compress
 * @ingroup    COMPRESS
 * 
@@ -166,7 +166,7 @@ bool COMPRESS_ZIP::Decompress(XBYTE* source,XDWORD size,XBUFFER* xbuffer)
 * @return     int : Requested value.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-int COMPRESS_ZIP::ZCompress(XBYTE* target,XDWORD* targetsize,XBYTE* source,XDWORD sourcesize)
+int COMPRESS_ZIP::ZCompress(XBYTE* target, XDWORD* targetsize, XBYTE* source, XDWORD sourcesize)
 {
   z_stream stream;
   int      err;
@@ -215,7 +215,7 @@ int COMPRESS_ZIP::ZCompress(XBYTE* target,XDWORD* targetsize,XBYTE* source,XDWOR
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         int COMPRESS_ZIP::ZDecompress(XBYTE* target,XDWORD* targetsize,XBYTE* source,XDWORD sourcesize)
+* @fn         int COMPRESS_ZIP::ZDecompress(XBYTE* target, XDWORD* targetsize, XBYTE* source, XDWORD sourcesize)
 * @brief      Z decompress
 * @ingroup    COMPRESS
 * 
@@ -227,7 +227,7 @@ int COMPRESS_ZIP::ZCompress(XBYTE* target,XDWORD* targetsize,XBYTE* source,XDWOR
 * @return     int : Requested value.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-int COMPRESS_ZIP::ZDecompress(XBYTE* target,XDWORD* targetsize,XBYTE* source,XDWORD sourcesize)
+int COMPRESS_ZIP::ZDecompress(XBYTE* target, XDWORD* targetsize, XBYTE* source, XDWORD sourcesize)
 {
   z_stream stream;
   int err;

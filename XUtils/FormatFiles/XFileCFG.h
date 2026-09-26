@@ -58,22 +58,16 @@ enum XFILECFG_MODEREMOTEMIX
   XFILECFG_MODEREMOTEMIX_NOTDELADDKEYS   = 0x01 ,
 };
 
-
 #define XFILECFG_EXTENSIONFILE              __L(".ini")
 
 #define XFILECFG_DEFAULTMAXSECUENCEENTRYS    99
 #define XFILECFG_INVALIDINDEXSECUENCE        -1  
 
-
-
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
-
 
 class XPATHS;
 class XFILEINI;
 class XFILEINIREMARK;
-
 
 class XFILECFGVALUE
 {
@@ -136,14 +130,12 @@ class XFILECFGVALUE
     XFILECFG_MODEREMOTEMIX              moderemotemix;
 };
 
-
 class XFILECFG : public XSUBJECT
 {
   public:                                        
                                         XFILECFG                  (XCHAR* namefile = NULL);
     virtual                            ~XFILECFG                  ();
 
-    
     virtual bool                        DoVariableMapping         (); 
     virtual bool                        DoDefault                 ();
 
@@ -170,11 +162,10 @@ class XFILECFG : public XSUBJECT
     bool                                Load                      ();
     virtual bool                        Load                      (XPATH& xpath);
     
-    bool                                Save                      (XFILETXTFORMATCHAR formatchar =  XFILETXTFORMATCHAR_UNKNOWN);
-    virtual bool                        Save                      (XPATH& xpath, XFILETXTFORMATCHAR formatchar =  XFILETXTFORMATCHAR_UNKNOWN);
+    bool                                Save                      (XFILETXTFORMATCHAR formatchar = XFILETXTFORMATCHAR_UNKNOWN);
+    virtual bool                        Save                      (XPATH& xpath, XFILETXTFORMATCHAR formatchar = XFILETXTFORMATCHAR_UNKNOWN);
 
     virtual bool                        End                       ();    
-
 
     XPATH*                              GetPathFile               ();
     XFILEINI*                           GetFileINI                ();

@@ -37,12 +37,7 @@
 
 #include "SNDOpenALBuffer.h"
 
-
-
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
-
-
-
 
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
 
@@ -72,9 +67,6 @@ class SNDOPENALSOURCE
      
     void                        Play                                ();
     void                        ResetPlay                           ();
-
-
-
 
     void                        SetSecondsOffset                    (float seconds);
     void                        SetSamplesOffset                    (int samples);

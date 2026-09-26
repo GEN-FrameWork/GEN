@@ -100,7 +100,6 @@ enum XTHREADGROUPID
   XTHREADGROUPID_APPOWNER
 };
 
-
 #define XTHREAD_TIMEOUT                     60   // seconds
 #define XTHREAD_DEFAULTWAITYIELD            10   // milliseconds
 
@@ -112,7 +111,6 @@ typedef void (*XTHREADFUNCTION)(void* data);
 
 
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
-
 
 class XMUTEX 
 {
@@ -134,7 +132,6 @@ class XMUTEX
     void                          Clean             ();
 };
 
-
 class XTHREAD 
 {
   public:
@@ -142,7 +139,7 @@ class XTHREAD
     virtual                      ~XTHREAD           ();
 
     virtual bool                  Ini               (bool run = true);
-    virtual bool                  Wait              (int miliseconds =  XTHREAD_DEFAULTWAITYIELD);
+    virtual bool                  Wait              (int miliseconds = XTHREAD_DEFAULTWAITYIELD);
 
     virtual bool                  End               ();
 

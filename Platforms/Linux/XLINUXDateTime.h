@@ -32,10 +32,7 @@
 
 #include "XDateTime.h"
 
-
-
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
-
 
 
 
@@ -51,7 +48,7 @@ class XLINUXDATETIME : public XDATETIME
     bool                Read                            (bool islocal = true);
     bool                Write                           (bool islocal = true);
 
-    bool                GetFileDateTime                 (XPATH& xpath,void* tmzip, XDWORD* dt);
+    bool                GetFileDateTime                 (XPATH& xpath, void* tmzip, XDWORD* dt);
     bool                GetFileDateTime                 (XPATH& xpath);
 
     int                 GetMeridianDifference           ();

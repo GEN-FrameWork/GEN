@@ -54,8 +54,6 @@ class GRPLINUXBLITGLESWAYLAND;
 #endif
 
 
-
-
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
 
 // xdg-shell gives no equivalent of X11's synchronous XGetWindowAttributes/XQueryPointer: the
@@ -79,24 +77,19 @@ class GRPLINUXBLITGLESWAYLAND;
 
 typedef struct
 {
-  XDWORD   code;        // Linux evdev BTN_* code (matches event.xbutton.button's role on X11)
+  XDWORD   code;
   bool     pressed;
 
 } GRPLINUXSCREENWAYLAND_BUTTONEVENT;
 
-
 typedef struct
 {
-  XDWORD   keysym;       // xkb_keysym_t -- numerically identical to the XK_* values Xlib uses
+  XDWORD   keysym;
   bool     pressed;
 
 } GRPLINUXSCREENWAYLAND_KEYEVENT;
 
-
-
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
-
 
 class GRP2DCANVAS;
 
@@ -129,14 +122,6 @@ class GRPLINUXSCREENWAYLAND : public GRPSCREEN
 
     bool                                  HasFocus                          ();
 
-
-
-
-
-
-
-
-
     bool                                  DispatchEvents                    ();
 
     struct wl_display*                    GetWLDisplay                      ();
@@ -149,18 +134,10 @@ class GRPLINUXSCREENWAYLAND : public GRPSCREEN
     XDWORD                                GetLastPointerSerial              ();
     XDWORD                                GetLastKeyboardSerial             ();
 
-
-
-
     bool                                   PopButtonEvent                    (XDWORD& code, bool& pressed);
     bool                                   PopKeyEvent                       (XDWORD& keysym, bool& pressed);
     bool                                   GetPointerPosition                (int& x, int& y);
     int                                    GetAndResetScrollDelta            ();
-
-
-
-
-
 
     int                                    GetWindowWidth                    ();
     int                                    GetWindowHeight                   ();
@@ -184,12 +161,7 @@ class GRPLINUXSCREENWAYLAND : public GRPSCREEN
 
     #ifdef LINUX_WAYLAND_XDGDECORATION_ACTIVE
 
-
-
-
     struct zxdg_decoration_manager_v1*    decorationmanager;
-
-
 
     struct zxdg_toplevel_decoration_v1*   toplleveldecoration;
     #endif
@@ -197,16 +169,9 @@ class GRPLINUXSCREENWAYLAND : public GRPSCREEN
     struct wl_pointer*                    pointer;
     struct wl_keyboard*                   keyboard;
 
-
-
-
-
     struct xkb_context*                   xkbcontext;
     struct xkb_keymap*                    xkbkeymap;
     struct xkb_state*                     xkbstate;
-
-
-
 
     XDWORD                                lastpointerserial;
     XDWORD                                lastkeyboardserial;
@@ -214,19 +179,6 @@ class GRPLINUXSCREENWAYLAND : public GRPSCREEN
     bool                                  configured;
     bool                                  haskeyboardfocus;
     bool                                  haspointerfocus;
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     int                                   windowwidth;
     int                                   windowheight;
@@ -245,12 +197,6 @@ class GRPLINUXSCREENWAYLAND : public GRPSCREEN
 
     bool                                  isdesktop;
 
-
-
-
-
-
-
     XVECTOR<struct wl_output*>            outputs;
 
     #ifdef GRP_OPENGL_ACTIVE
@@ -264,45 +210,13 @@ class GRPLINUXSCREENWAYLAND : public GRPSCREEN
     bool                                  ConnectDisplay                    ();
     bool                                  BindGlobals                       ();
 
-
-
-
-
-
-
     void                                  ResolveViewportMax                (float& maxw, float& maxh);
 
-
-
-
-
-
-
-
     void                                  ClampToViewportMax                (int& w, int& h);
-
-
-
-
-
-
-
-
-
-
-
 
     void                                  ApplyMaxSizeHint                  ();
 
   public:
-
-
-
-
-
-
-
-
 
     static void                           Registry_Global                   (void* data, struct wl_registry* registry, XDWORD name, const char* interface, XDWORD version);
     static void                           Registry_GlobalRemove              (void* data, struct wl_registry* registry, XDWORD name);
@@ -317,7 +231,6 @@ class GRPLINUXSCREENWAYLAND : public GRPSCREEN
     static void                           Seat_Capabilities                 (void* data, struct wl_seat* seat, XDWORD capabilities);
     static void                           Seat_Name                        (void* data, struct wl_seat* seat, const char* name);
 
-
     static void                           Pointer_Enter                     (void* data, struct wl_pointer* pointer, XDWORD serial, struct wl_surface* surface, wl_fixed_t sx, wl_fixed_t sy);
     static void                           Pointer_Leave                     (void* data, struct wl_pointer* pointer, XDWORD serial, struct wl_surface* surface);
     static void                           Pointer_Motion                    (void* data, struct wl_pointer* pointer, XDWORD time, wl_fixed_t sx, wl_fixed_t sy);
@@ -328,14 +241,12 @@ class GRPLINUXSCREENWAYLAND : public GRPSCREEN
     static void                           Pointer_AxisStop                  (void* data, struct wl_pointer* pointer, XDWORD time, XDWORD axis);
     static void                           Pointer_AxisDiscrete               (void* data, struct wl_pointer* pointer, XDWORD axis, int discrete);
 
-
     static void                           Keyboard_Keymap                   (void* data, struct wl_keyboard* keyboard, XDWORD format, int fd, XDWORD size);
     static void                           Keyboard_Enter                    (void* data, struct wl_keyboard* keyboard, XDWORD serial, struct wl_surface* surface, struct wl_array* keys);
     static void                           Keyboard_Leave                    (void* data, struct wl_keyboard* keyboard, XDWORD serial, struct wl_surface* surface);
     static void                           Keyboard_Key                      (void* data, struct wl_keyboard* keyboard, XDWORD serial, XDWORD time, XDWORD key, XDWORD state);
     static void                           Keyboard_Modifiers                (void* data, struct wl_keyboard* keyboard, XDWORD serial, XDWORD modsdepressed, XDWORD modslatched, XDWORD modslocked, XDWORD group);
     static void                           Keyboard_RepeatInfo                (void* data, struct wl_keyboard* keyboard, int rate, int delay);
-
 
 
 

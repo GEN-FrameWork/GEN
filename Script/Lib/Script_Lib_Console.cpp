@@ -109,9 +109,9 @@ bool SCRIPT_LIB_CONSOLE::AddLibraryFunctions(SCRIPT* script)
 
   this->script = script;
 
-  script->AddLibraryFunction(this, __L("Console_GetChar")                  , Call_Console_GetChar);
-  script->AddLibraryFunction(this, __L("Console_PutChar")                  , Call_Console_PutChar);
-  script->AddLibraryFunction(this, __L("Console_Printf")                   , Call_Console_Printf);
+  script->AddLibraryFunction(this, __L("Console_GetChar"), Call_Console_GetChar);
+  script->AddLibraryFunction(this, __L("Console_PutChar"), Call_Console_PutChar);
+  script->AddLibraryFunction(this, __L("Console_Printf"), Call_Console_Printf);
 
   return true;
 }
@@ -269,7 +269,7 @@ void Call_Console_Printf(SCRIPT_LIB* library, SCRIPT* script, XVECTOR<XVARIANT*>
                         int  nparam = 1;
                         bool end    = false;
 
-                        memset(param,0,MAXTEMPOSTR*sizeof(XCHAR));
+                        memset(param, 0, MAXTEMPOSTR*sizeof(XCHAR));
                         param[0] = '%';
 
                         c++;
@@ -317,7 +317,7 @@ void Call_Console_Printf(SCRIPT_LIB* library, SCRIPT* script, XVECTOR<XVARIANT*>
                                 case __C('s')   :
                                 case __C('S')   : { XVARIANT variantparam = (*params->Get(paramindex));
                                                     paramindex++;
-                                                    string.Format(param,(XCHAR*)variantparam);
+                                                    string.Format(param, (XCHAR*)variantparam);
                                                     end = true;
                                                   }
                                                   break;

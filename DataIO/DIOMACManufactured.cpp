@@ -217,7 +217,7 @@ bool DIOMACMANUFACTURED::File_GetManufacturedMACs(XPATH& xpath, XSTRING& manufac
                 {
                   _manufactured.Set((XWORD*)xbuffer->Get());
 
-                  if(_manufactured.Find(manufactured,true)!=XSTRING_NOTFOUND)
+                  if(_manufactured.Find(manufactured, true)!=XSTRING_NOTFOUND)
                     {
                       XDWORD ID =  xfilexdb->GetIndexMap()->GetKey(c);
 
@@ -308,21 +308,21 @@ bool DIOMACMANUFACTURED::File_Convert(XBUFFER& xbuffer, XPATH& xpath)
         {
           if(!line->IsEmpty())
             {
-              int start = line->Find(__L("(base 16)"),true);
+              int start = line->Find(__L("(base 16)"), true);
               if(start!=XSTRING_NOTFOUND)
                 {
                   XDWORD  ID = 0;
                 
                   start+=11;
-                  line->UnFormat(__L("%X    (base 16)\t\t"),&ID);
+                  line->UnFormat(__L("%X (base 16)\t\t"), &ID);
 
                   if(idmap.Find(ID)==-1)
                     {
                       XSTRING* name = GEN_NEW XSTRING();
                       if(name)
                         {
-                          line->Copy(start,(*name));
-                          idmap.Add(ID,name);
+                          line->Copy(start, (*name));
+                          idmap.Add(ID, name);
                         }
                     }
                 }
@@ -367,28 +367,28 @@ bool DIOMACMANUFACTURED::File_Convert(XBUFFER& xbuffer, XPATH& xpath)
 
                   XDWORD size = (name->GetSize()+1)*sizeof(XWORD);
 
-                  xfilexdb->GetPrimaryFile()->Write((XBYTE*)&size                 , sizeof(XDWORD));
+                  xfilexdb->GetPrimaryFile()->Write((XBYTE*)&size, sizeof(XDWORD));
 
                   XBUFFER xbufferexchange;            
 
                   (*name)->ConvertToBufferExchange(xbufferexchange, true);
                   xfilexdb->GetPrimaryFile()->Write(xbufferexchange->Get(), size);
                                         
-                  idmapindex.Add(ID,filepos);
+                  idmapindex.Add(ID, filepos);
 
                   GEN_DELETE name;
                 }
             }
 
           xfilexdb->GetPrimaryFile()->SetPosition(initablepos-sizeof(XDWORD));
-          xfilexdb->GetPrimaryFile()->Write((XBYTE*)&nrecords,sizeof(XDWORD));
+          xfilexdb->GetPrimaryFile()->Write((XBYTE*)&nrecords, sizeof(XDWORD));
 
           for(c=0;c<nrecords;c++)
             {
               ID      = (XDWORD)idmapindex.GetKey(c);
               filepos = (XDWORD)idmapindex.GetElement(c);
 
-              xfilexdb->GetPrimaryFile()->Write((XBYTE*)&ID     , sizeof(XDWORD));
+              xfilexdb->GetPrimaryFile()->Write((XBYTE*)&ID, sizeof(XDWORD));
               xfilexdb->GetPrimaryFile()->Write((XBYTE*)&filepos, sizeof(XDWORD));
             }
 

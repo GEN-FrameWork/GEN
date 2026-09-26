@@ -129,7 +129,7 @@ DIOEMAILADDRESS::DIOEMAILADDRESS(const XCHAR* url): XSTRING(url)
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         DIOEMAILADDRESS::DIOEMAILADDRESS(const XCHAR* url,XDWORD size): XSTRING(url, size)
+* @fn         DIOEMAILADDRESS::DIOEMAILADDRESS(const XCHAR* url, XDWORD size): XSTRING(url, size)
 * @brief      Constructor of class
 * @ingroup    DATAIO
 * 
@@ -137,7 +137,7 @@ DIOEMAILADDRESS::DIOEMAILADDRESS(const XCHAR* url): XSTRING(url)
 * @param[in]  size : Size value.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-DIOEMAILADDRESS::DIOEMAILADDRESS(const XCHAR* url,XDWORD size): XSTRING(url, size)
+DIOEMAILADDRESS::DIOEMAILADDRESS(const XCHAR* url, XDWORD size): XSTRING(url, size)
 {
   Clean();
 }

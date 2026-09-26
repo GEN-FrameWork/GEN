@@ -70,7 +70,6 @@ DIOESP32STREAMI2CPORT::DIOESP32STREAMI2CPORT()
 }
 
 
-
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         DIOESP32STREAMI2CPORT::~DIOESP32STREAMI2CPORT()
@@ -83,7 +82,6 @@ DIOESP32STREAMI2CPORT::~DIOESP32STREAMI2CPORT()
 {
   Clean();
 }
-
 
 
 /**-------------------------------------------------------------------------------------------------------------------
@@ -101,7 +99,6 @@ XDWORD DIOESP32STREAMI2CPORT::GetCounterRef()
 }
 
 
-
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         void DIOESP32STREAMI2CPORT::SetCounterRef(XDWORD counterref)
@@ -115,7 +112,6 @@ void DIOESP32STREAMI2CPORT::SetCounterRef(XDWORD counterref)
 {
   this->counterref = counterref;
 }
-
 
 
 /**-------------------------------------------------------------------------------------------------------------------
@@ -133,7 +129,6 @@ I2C_HandleTypeDef* DIOESP32STREAMI2CPORT::GetHandleI2C()
 }
 
 
-
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         void DIOESP32STREAMI2CPORT::SetHandleI2C(I2C_HandleTypeDef* hi2c)
@@ -147,7 +142,6 @@ void DIOESP32STREAMI2CPORT::SetHandleI2C(I2C_HandleTypeDef* hi2c)
 {
   this->hi2c = hi2c;
 }
-
 
 
 /**-------------------------------------------------------------------------------------------------------------------
@@ -226,7 +220,6 @@ DIOESP32STREAMI2C::~DIOESP32STREAMI2C()
 }
 
 
-
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         DIOSTREAMSTATUS DIOESP32STREAMI2C::GetStatus()
@@ -242,7 +235,6 @@ DIOSTREAMSTATUS DIOESP32STREAMI2C::GetStatus()
 
   return status;
 }
-
 
 
 /**-------------------------------------------------------------------------------------------------------------------
@@ -384,7 +376,6 @@ bool DIOESP32STREAMI2C::Open()
 }
 
 
-
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         bool DIOESP32STREAMI2C::WaitToFilledReadingBuffer(int filledto, int timeout)
@@ -414,7 +405,6 @@ bool DIOESP32STREAMI2C::WaitToFilledReadingBuffer(int filledto, int timeout)
 
   return DIOSTREAM::WaitToFilledReadingBuffer(sizebufferdata, timeout);                                        
 }
-
 
 
 /**-------------------------------------------------------------------------------------------------------------------
@@ -450,7 +440,6 @@ XDWORD DIOESP32STREAMI2C::ReadDirect(XBYTE* buffer, XDWORD size)
 
   return br;
 }
-
 
 
 /**-------------------------------------------------------------------------------------------------------------------
@@ -492,7 +481,6 @@ XDWORD DIOESP32STREAMI2C::WriteDirect(XBYTE* buffer, XDWORD size)
 }
 
 
-
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         XDWORD DIOESP32STREAMI2C::Write(XBYTE* buffer, XDWORD size)
@@ -516,7 +504,7 @@ XDWORD DIOESP32STREAMI2C::Write(XBYTE* buffer, XDWORD size)
 
   outbuffer->SetBlocked(true);
     
-  if(!outbuffer->Add(buffer,size))  return 0;
+  if(!outbuffer->Add(buffer, size))  return 0;
 
   nbyteswrite+=size;
   if(xtimernotactivity) xtimernotactivity->Reset();
@@ -525,7 +513,6 @@ XDWORD DIOESP32STREAMI2C::Write(XBYTE* buffer, XDWORD size)
 
   return size;
 }
-
 
 
 /**-------------------------------------------------------------------------------------------------------------------
@@ -541,7 +528,6 @@ bool DIOESP32STREAMI2C::Disconnect()
 {
   return false;
 }
-
 
 
 /**-------------------------------------------------------------------------------------------------------------------
@@ -581,7 +567,6 @@ bool DIOESP32STREAMI2C::Close()
 
   return true;
 }
-
 
 
 /**-------------------------------------------------------------------------------------------------------------------
@@ -752,7 +737,7 @@ void DIOESP32STREAMI2C::ThreadConnection(void* param)
             {
               case DIOSTREAMI2C_FSMSTATE_NONE               : break;
 
-              case DIOSTREAMI2C_FSMSTATE_CONNECTED          : { DIOSTREAM_XEVENT xevent(diostream,DIOSTREAM_XEVENT_TYPE_CONNECTED);
+              case DIOSTREAMI2C_FSMSTATE_CONNECTED          : { DIOSTREAM_XEVENT xevent(diostream, DIOSTREAM_XEVENT_TYPE_CONNECTED);
                                                                 xevent.SetDIOStream(diostream);
                                                                 diostream->PostEvent(&xevent);
 
@@ -762,7 +747,7 @@ void DIOESP32STREAMI2C::ThreadConnection(void* param)
 
               case DIOSTREAMI2C_FSMSTATE_WAITINGTOREAD      : break;
 
-              case DIOSTREAMI2C_FSMSTATE_DISCONNECTING      : { DIOSTREAM_XEVENT xevent(diostream,DIOSTREAM_XEVENT_TYPE_DISCONNECTED);
+              case DIOSTREAMI2C_FSMSTATE_DISCONNECTING      : { DIOSTREAM_XEVENT xevent(diostream, DIOSTREAM_XEVENT_TYPE_DISCONNECTED);
                                                                 xevent.SetDIOStream(diostream);
                                                                 diostream->PostEvent(&xevent);
 
@@ -773,7 +758,6 @@ void DIOESP32STREAMI2C::ThreadConnection(void* param)
         }
     }
 }
-
 
 
 /**-------------------------------------------------------------------------------------------------------------------

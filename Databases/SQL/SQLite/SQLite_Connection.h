@@ -28,7 +28,6 @@
 
 #pragma once
 
-
 #if defined(DB_SQL_ACTIVE) && defined(DB_SQLITE_ACTIVE)
 
 #ifndef SQLITE_CORE

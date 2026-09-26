@@ -226,7 +226,7 @@ bool DIOANDROIDSTREAMUDP::Close()
 
   if(handle>=0)
     {
-      shutdown(handle,SHUT_RDWR);
+      shutdown(handle, SHUT_RDWR);
       close(handle);
       handle  = -1;
     }
@@ -260,9 +260,9 @@ int DIOANDROIDSTREAMUDP::IsReadyConnect(int socket)
   FD_ZERO(&fdw);
   FD_ZERO(&fds);
 
-  FD_SET(socket,&fdr);
-  FD_SET(socket,&fdw);
-  FD_SET(socket,&fds);
+  FD_SET(socket, &fdr);
+  FD_SET(socket, &fdw);
+  FD_SET(socket, &fds);
 
   tv.tv_sec  = 0;
   tv.tv_usec = 100;
@@ -270,9 +270,9 @@ int DIOANDROIDSTREAMUDP::IsReadyConnect(int socket)
   rc = select(socket+1, &fdr, &fdw, &fds, &tv);
   if(rc==-1) return -1;
 
-  int status1 = FD_ISSET(socket,&fdr) ? 1 : 0;
-  int status2 = FD_ISSET(socket,&fdw) ? 1 : 0;
-  int status3 = FD_ISSET(socket,&fds) ? 1 : 0;
+  int status1 = FD_ISSET(socket, &fdr) ? 1 : 0;
+  int status2 = FD_ISSET(socket, &fdw) ? 1 : 0;
+  int status3 = FD_ISSET(socket, &fds) ? 1 : 0;
 
   if(config->IsServer())
     {
@@ -372,7 +372,7 @@ void DIOANDROIDSTREAMUDP::ThreadRunFunction(void* thread)
 
                                                                 memset(&origin_addr, 0, size_addr);
 
-                                                                int size = recvfrom(diostream->handle, (char*)buffer, DIOSTREAM_MAXBUFFER, 0,(sockaddr*)&origin_addr, &size_addr);
+                                                                int size = recvfrom(diostream->handle, (char*)buffer, DIOSTREAM_MAXBUFFER, 0, (sockaddr*)&origin_addr, &size_addr);
 
                                                                 if(size < 0)
                                                                   {
@@ -387,15 +387,9 @@ void DIOANDROIDSTREAMUDP::ThreadRunFunction(void* thread)
 
                                                                     int _address[4] = { 0, 0, 0, 0 };
 
-                                                                    sscanf(inet_ntoa(origin_addr.sin_addr),"%d.%d.%d.%d"  ,&_address[0]
-                                                                                                                          ,&_address[1]
-                                                                                                                          ,&_address[2]
-                                                                                                                          ,&_address[3]);
+                                                                    sscanf(inet_ntoa(origin_addr.sin_addr), "%d.%d.%d.%d", &_address[0], &_address[1], &_address[2], &_address[3]);
 
-                                                                    address.Format(__L("%d.%d.%d.%d") , _address[0]
-                                                                                                      , _address[1]
-                                                                                                      , _address[2]
-                                                                                                      , _address[3]);
+                                                                    address.Format(__L("%d.%d.%d.%d"), _address[0], _address[1], _address[2], _address[3]);
 
                                                                     port =  ntohs(origin_addr.sin_port);
 
@@ -452,7 +446,7 @@ void DIOANDROIDSTREAMUDP::ThreadRunFunction(void* thread)
 
                                                                             target_addr.sin_port  = htons(datagram->GetPort()?datagram->GetPort():diostream->config->GetRemotePort());
 
-                                                                            size = sendto(diostream->handle,(char*)datagram->GetData()->Get(), datagram->GetData()->GetSize(), 0, (sockaddr*)&target_addr, size_addr);
+                                                                            size = sendto(diostream->handle, (char*)datagram->GetData()->Get(), datagram->GetData()->GetSize(), 0, (sockaddr*)&target_addr, size_addr);
 
                                                                             //XTRACE_PRINTCOLOR(1, __L("Write UDP to [%s] (%d)"), tmpremoteaddress.Get(), size);
 
@@ -506,7 +500,7 @@ void DIOANDROIDSTREAMUDP::ThreadRunFunction(void* thread)
                                                                         target_addr.sin_port  = htons(diostream->config->GetRemotePort());
 
                                                                         diostream->outbuffer->SetBlocked(true);
-                                                                        size = sendto(diostream->handle,(char*)diostream->outbuffer->Get(), esize, 0, (sockaddr*)&target_addr, size_addr);
+                                                                        size = sendto(diostream->handle, (char*)diostream->outbuffer->Get(), esize, 0, (sockaddr*)&target_addr, size_addr);
                                                                         diostream->outbuffer->SetBlocked(false);
 
                                                                         if(size == -1)
@@ -596,13 +590,13 @@ void DIOANDROIDSTREAMUDP::ThreadRunFunction(void* thread)
                                                                     }
                                                                 }
 
-                                                              fcntl(diostream->handle, F_SETFL, fcntl(diostream->handle, F_GETFL,0) | O_NONBLOCK);
+                                                              fcntl(diostream->handle, F_SETFL, fcntl(diostream->handle, F_GETFL, 0) | O_NONBLOCK);
 
                                                             }
                                                             break;
 
 
-              case DIOANDROIDUDPFSMSTATE_CONNECTED          : { DIOSTREAM_XEVENT xevent(diostream,DIOSTREAM_XEVENT_TYPE_CONNECTED);
+              case DIOANDROIDUDPFSMSTATE_CONNECTED          : { DIOSTREAM_XEVENT xevent(diostream, DIOSTREAM_XEVENT_TYPE_CONNECTED);
                                                               xevent.SetDIOStream(diostream);
                                                               diostream->PostEvent(&xevent);
 
@@ -614,7 +608,7 @@ void DIOANDROIDSTREAMUDP::ThreadRunFunction(void* thread)
 
               case DIOANDROIDUDPFSMSTATE_SENDINGDATA        : break;
 
-              case DIOANDROIDUDPFSMSTATE_DISCONNECTING      : { DIOSTREAM_XEVENT xevent(diostream,DIOSTREAM_XEVENT_TYPE_DISCONNECTED);
+              case DIOANDROIDUDPFSMSTATE_DISCONNECTING      : { DIOSTREAM_XEVENT xevent(diostream, DIOSTREAM_XEVENT_TYPE_DISCONNECTED);
                                                               xevent.SetDIOStream(diostream);
                                                               diostream->PostEvent(&xevent);
 

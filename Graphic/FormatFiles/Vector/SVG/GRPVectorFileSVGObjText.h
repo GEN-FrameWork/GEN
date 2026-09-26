@@ -34,8 +34,6 @@
 
 #include "GRPVectorFileSVGObj.h"
 
-
-
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
 
 enum GRPVECTORFILESVGTEXTANCHOR
@@ -45,12 +43,9 @@ enum GRPVECTORFILESVGTEXTANCHOR
   GRPVECTORFILESVGTEXTANCHOR_END          ,
 };
 
-
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
 
 class XFILEXMLELEMENT;
-
 
 class GRPVECTORFILESVGOBJTEXT : public GRPVECTORFILESVGOBJ
 {

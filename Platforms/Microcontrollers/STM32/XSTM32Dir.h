@@ -30,7 +30,6 @@
 
 /*---- INCLUDES ------------------------------------------------------------------------------------------------------*/
 
-
 #include <ff.h>
 
 #include "XBase.h"
@@ -50,7 +49,6 @@
   #endif
 #endif
 
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
 
 typedef struct
@@ -59,7 +57,6 @@ typedef struct
   FILINFO   fileinfo;
   
 } XSTM32DIR_SEARCHINFO; 
-
 
 class XSTM32DIR : public XDIR
 {

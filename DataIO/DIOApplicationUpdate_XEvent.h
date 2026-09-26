@@ -59,16 +59,12 @@ enum DIOAPPLICATIONUPDATE_XEVENT_TYPE
   DIOAPPLICATIONUPDATE_XEVENT_TYPE_RESTOREUPDATEFILES                                     ,
 };
 
-
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
-
 
 class XSUBJECT;
 class XSTRING;
 class DIOAPPLICATIONUPDATE_VERSIONDATA;
 class DIOAPPLICATIONUPDATE_FILE;
-
 
 class DIOAPPLICATIONUPDATE_XEVENT : public XEVENT
 {

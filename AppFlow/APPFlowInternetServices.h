@@ -46,8 +46,6 @@ enum APPFLOWINTERNETSERVICES_TASKID
   APPFLOWINTERNETSERVICES_TASKID_CHECKNTPDATETIME                 ,
 };
 
-
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
 
 class XSCHEDULER;
@@ -60,7 +58,6 @@ class DIOSCRAPERWEBPUBLICIP;
 class DIONTP;
 class DIODYNDNS_MANAGER;
 class APPFLOWCFG;
-
 
 class APPFLOWINTERNETSERVICES : public XOBSERVER, public XSUBJECT
 {
@@ -80,7 +77,7 @@ class APPFLOWINTERNETSERVICES : public XOBSERVER, public XSUBJECT
 
     bool                            ChangeCadenceCheck              (APPFLOWINTERNETSERVICES_TASKID taskID, int timecadenceseconds, bool startimmediatelycycles = false);
     
-    XDATETIME*                      DateTime_GetLocal               (bool active_daylightsave =  true, bool active_meridian = true);
+    XDATETIME*                      DateTime_GetLocal               (bool active_daylightsave = true, bool active_meridian = true);
     XDATETIME*                      DateTime_GetUTC                 ();
     int                             DateTime_GetMeridian            ();
     

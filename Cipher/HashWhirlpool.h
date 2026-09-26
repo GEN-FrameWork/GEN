@@ -49,16 +49,13 @@
 
 typedef struct
 {
-  XBYTE   bitlength[HASHWHIRLPOOL_LENGTHBYTES];   // global number of hashed bits (256-bit counter)
-  XBYTE   buffer[HASHWHIRLPOOL_WBLOCKBYTES];      // buffer of data to hash
-  int     bufferbits;                             // current number of bits on the buffer
-  int     bufferpos;                              // current (possibly incomplete) byte slot on the buffer
-  XQWORD  hash[HASHWHIRLPOOL_DIGESTBYTES/8];      // the hashing state
+  XBYTE   bitlength[HASHWHIRLPOOL_LENGTHBYTES];
+  XBYTE   buffer[HASHWHIRLPOOL_WBLOCKBYTES];
+  int     bufferbits;
+  int     bufferpos;
+  XQWORD  hash[HASHWHIRLPOOL_DIGESTBYTES/8];
 
 } WHIRLPOOL;
-
-
-
 
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
 

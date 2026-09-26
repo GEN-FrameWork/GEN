@@ -161,7 +161,7 @@ bool XFILE::Exist(XPATH& xpath)
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         bool XFILE::Open(XPATH& xpath,bool readonly)
+* @fn         bool XFILE::Open(XPATH& xpath, bool readonly)
 * @brief      Open
 * @ingroup    XUTILS
 * 
@@ -171,7 +171,7 @@ bool XFILE::Exist(XPATH& xpath)
 * @return     bool : true if the operation is successful; otherwise false.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-bool XFILE::Open(XPATH& xpath,bool readonly)
+bool XFILE::Open(XPATH& xpath, bool readonly)
 {
   return Open(xpath.Get(), readonly);
 }
@@ -196,7 +196,7 @@ bool XFILE::Create(XPATH& xpath)
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         bool XFILE::Erase(XPATH& xpath,bool overwrite)
+* @fn         bool XFILE::Erase(XPATH& xpath, bool overwrite)
 * @brief      Erase
 * @ingroup    XUTILS
 * 
@@ -206,7 +206,7 @@ bool XFILE::Create(XPATH& xpath)
 * @return     bool : true if the operation is successful; otherwise false.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-bool XFILE::Erase(XPATH& xpath,bool overwrite)
+bool XFILE::Erase(XPATH& xpath, bool overwrite)
 {
   return Erase(xpath.Get(), overwrite);
 }
@@ -214,7 +214,7 @@ bool XFILE::Erase(XPATH& xpath,bool overwrite)
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         bool XFILE::Rename(XPATH& xpathold,XPATH& xpathnew)
+* @fn         bool XFILE::Rename(XPATH& xpathold, XPATH& xpathnew)
 * @brief      Rename
 * @ingroup    XUTILS
 * 
@@ -224,7 +224,7 @@ bool XFILE::Erase(XPATH& xpath,bool overwrite)
 * @return     bool : true if the operation is successful; otherwise false.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-bool XFILE::Rename(XPATH& xpathold,XPATH& xpathnew)
+bool XFILE::Rename(XPATH& xpathold, XPATH& xpathnew)
 {
   return Rename(xpathold.Get(), xpathnew.Get());
 }
@@ -232,7 +232,7 @@ bool XFILE::Rename(XPATH& xpathold,XPATH& xpathnew)
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         bool XFILE::Rename(XCHAR* xpathold,XPATH& xpathnew)
+* @fn         bool XFILE::Rename(XCHAR* xpathold, XPATH& xpathnew)
 * @brief      Rename
 * @ingroup    XUTILS
 * 
@@ -242,7 +242,7 @@ bool XFILE::Rename(XPATH& xpathold,XPATH& xpathnew)
 * @return     bool : true if the operation is successful; otherwise false.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-bool XFILE::Rename(XCHAR* xpathold,XPATH& xpathnew)
+bool XFILE::Rename(XCHAR* xpathold, XPATH& xpathnew)
 {
   return Rename(xpathold, xpathnew.Get());
 }
@@ -250,7 +250,7 @@ bool XFILE::Rename(XCHAR* xpathold,XPATH& xpathnew)
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         bool XFILE::Rename(XPATH& xpathold,XCHAR* xpathnew)
+* @fn         bool XFILE::Rename(XPATH& xpathold, XCHAR* xpathnew)
 * @brief      Rename
 * @ingroup    XUTILS
 * 
@@ -260,7 +260,7 @@ bool XFILE::Rename(XCHAR* xpathold,XPATH& xpathnew)
 * @return     bool : true if the operation is successful; otherwise false.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-bool XFILE::Rename(XPATH& xpathold,XCHAR* xpathnew)
+bool XFILE::Rename(XPATH& xpathold, XCHAR* xpathnew)
 {
   return Rename(xpathold.Get(), xpathnew);
 }
@@ -425,13 +425,13 @@ bool XFILE::InsertBlock(XBYTE* buffer, XDWORD size)
       Read(movebuffer, &rb);
 
       SetPosition(position+size);
-      Write(movebuffer,rb);
+      Write(movebuffer, rb);
 
       position -= XFILE_MAXBUFFER;
     }
 
   SetPosition(origin);
-  Write(buffer,size);
+  Write(buffer, size);
 
   if(status==true) ActualizeSize();
 
@@ -471,7 +471,7 @@ bool XFILE::OverwriteContent(XCHAR* xpath)
 {
   bool status=true;
 
-  if(!Open(xpath,false)) return false;
+  if(!Open(xpath, false)) return false;
 
   GetSize();
 
@@ -483,11 +483,11 @@ bool XFILE::OverwriteContent(XCHAR* xpath)
   buffer = GEN_NEW XBYTE [sizeblock];
   if(!buffer) return false;
 
-  memset(buffer,0,sizeblock);
+  memset(buffer, 0, sizeblock);
 
   for(int c=0;c<block;c++)
     {
-      if(Write(buffer,sizeblock)!=true)
+      if(Write(buffer, sizeblock)!=true)
         {
           status=false;
           break;
@@ -496,7 +496,7 @@ bool XFILE::OverwriteContent(XCHAR* xpath)
 
   if(status==true)
     {
-      if(Write(buffer,mod)!=true)  status=false;
+      if(Write(buffer, mod)!=true)  status=false;
     }
 
   GEN_DELETE_ARRAY buffer;
@@ -521,10 +521,6 @@ void XFILE::Clean()
   isreadonly    = false;
   cachesize     = 0;
 }
-
-
-
-
 
 
 /**-------------------------------------------------------------------------------------------------------------------

@@ -878,11 +878,13 @@ bool UI_MANAGER::Layout_PutBackground(bool scale)
 
 
 /**-------------------------------------------------------------------------------------------------------------------
-*
+* 
 * @fn         void UI_MANAGER::InvalidateCompositionCachesForScreen(GRPSCREEN* screen)
 * @brief      Drop persistent true-backdrop caches for every canvas skin drawn on "screen".
 * @ingroup    USERINTERFACE
-*
+* 
+* @param[in]  screen : 
+* 
 * --------------------------------------------------------------------------------------------------------------------*/
 void UI_MANAGER::InvalidateCompositionCachesForScreen(GRPSCREEN* screen)
 {
@@ -905,12 +907,14 @@ void UI_MANAGER::InvalidateCompositionCachesForScreen(GRPSCREEN* screen)
 
 
 /**-------------------------------------------------------------------------------------------------------------------
-*
+* 
 * @fn         void UI_MANAGER::Elements_SetToRedrawForScreen(GRPSCREEN* screen, bool exclude_chrome)
 * @brief      Mark layouts on "screen" dirty so overlapping content under the caption bar redraws after chrome
-*             auto-hide show/hide (UI_Options menu top sits under the chrome band).
 * @ingroup    USERINTERFACE
-*
+* 
+* @param[in]  screen : 
+* @param[in]  exclude_chrome : 
+* 
 * --------------------------------------------------------------------------------------------------------------------*/
 void UI_MANAGER::Elements_SetToRedrawForScreen(GRPSCREEN* screen, bool exclude_chrome)
 {
@@ -1793,13 +1797,15 @@ void UI_MANAGER::ModalLayer_Invalidate()
 
 
 /**-------------------------------------------------------------------------------------------------------------------
-*
+* 
 * @fn         bool UI_MANAGER::ModalLayer_IsLayoutDrawDeferred(UI_ELEMENT* element)
 * @brief      When the modal layer cache is valid, skip drawing the modal root during layout Update — the
-*             composite pass will blit the opaque cache after all content. While rebuilding the cache,
-*             modal_layer_compositing is set so Draw is allowed.
 * @ingroup    USERINTERFACE
-*
+* 
+* @param[in]  element : 
+* 
+* @return     bool : true if the operation is successful; otherwise false.
+* 
 * --------------------------------------------------------------------------------------------------------------------*/
 bool UI_MANAGER::ModalLayer_IsLayoutDrawDeferred(UI_ELEMENT* element)
 {
@@ -1813,11 +1819,13 @@ bool UI_MANAGER::ModalLayer_IsLayoutDrawDeferred(UI_ELEMENT* element)
 
 
 /**-------------------------------------------------------------------------------------------------------------------
-*
+* 
 * @fn         bool UI_MANAGER::ModalLayer_IsCompositing()
 * @brief      True while the modal tree is being drawn onto the offscreen composition canvas.
 * @ingroup    USERINTERFACE
-*
+* 
+* @return     bool : true if the operation is successful; otherwise false.
+* 
 * --------------------------------------------------------------------------------------------------------------------*/
 bool UI_MANAGER::ModalLayer_IsCompositing()
 {
@@ -1826,11 +1834,15 @@ bool UI_MANAGER::ModalLayer_IsCompositing()
 
 
 /**-------------------------------------------------------------------------------------------------------------------
-*
+* 
 * @fn         bool UI_MANAGER::ModalLayer_IsRebuildProtected(UI_ELEMENT* element)
 * @brief      While the modal offscreen cache is valid, do not peel the modal subtree on the shared canvas.
 * @ingroup    USERINTERFACE
-*
+* 
+* @param[in]  element : 
+* 
+* @return     bool : true if the operation is successful; otherwise false.
+* 
 * --------------------------------------------------------------------------------------------------------------------*/
 bool UI_MANAGER::ModalLayer_IsRebuildProtected(UI_ELEMENT* element)
 {
@@ -1851,16 +1863,16 @@ bool UI_MANAGER::ModalLayer_IsRebuildProtected(UI_ELEMENT* element)
 
 
 /**-------------------------------------------------------------------------------------------------------------------
-*
+* 
 * @fn         bool UI_MANAGER::ModalLayer_SuppressesContentDraw(UI_ELEMENT* element)
 * @brief      True when a non-modal element must not paint: it intersects the composed modal AABB.
 * @note       ROOT CAUSE of ListBoxMenu / Edit punch-through (UI_Options video 2026-09-19): after the modal
-*             was painted last, the next frame's Rebuild restored those elements' areas with PutBitmapNoAlpha
-*             (parchment / menu / edit) straight into the keyboard, then Draw painted them again. Option B's
-*             final DrawModalOnTop could not win against a continuous dirty cycle. Once modal_layer_valid, skip
-*             that content until the modal is dismissed or invalidated.
 * @ingroup    USERINTERFACE
-*
+* 
+* @param[in]  element : 
+* 
+* @return     bool : true if the operation is successful; otherwise false.
+* 
 * --------------------------------------------------------------------------------------------------------------------*/
 bool UI_MANAGER::ModalLayer_SuppressesContentDraw(UI_ELEMENT* element)
 {
@@ -1896,14 +1908,16 @@ bool UI_MANAGER::ModalLayer_SuppressesContentDraw(UI_ELEMENT* element)
 
 
 /**-------------------------------------------------------------------------------------------------------------------
-*
+* 
 * @fn         bool UI_MANAGER::ChromeCaption_SuppressesContentDraw(UI_ELEMENT* element)
 * @brief      True when content intersects the visible custom-chrome caption band.
 * @note       Content paints before chrome. A translucent caption (black,25) then shows ListBoxMenu / edit
-*             through the title bar — the "chrome ghost" in UI_Options when the bar is visible. While the
-*             caption is visible, content must not ink that band; chrome owns those pixels.
 * @ingroup    USERINTERFACE
-*
+* 
+* @param[in]  element : 
+* 
+* @return     bool : true if the operation is successful; otherwise false.
+* 
 * --------------------------------------------------------------------------------------------------------------------*/
 bool UI_MANAGER::ChromeCaption_SuppressesContentDraw(UI_ELEMENT* element)
 {
@@ -1950,11 +1964,15 @@ bool UI_MANAGER::ChromeCaption_SuppressesContentDraw(UI_ELEMENT* element)
 
 
 /**-------------------------------------------------------------------------------------------------------------------
-*
+* 
 * @fn         bool UI_MANAGER::Overlay_SuppressesContentDraw(UI_ELEMENT* element)
 * @brief      Content must not paint under the composed modal or the visible custom caption.
 * @ingroup    USERINTERFACE
-*
+* 
+* @param[in]  element : 
+* 
+* @return     bool : true if the operation is successful; otherwise false.
+* 
 * --------------------------------------------------------------------------------------------------------------------*/
 bool UI_MANAGER::Overlay_SuppressesContentDraw(UI_ELEMENT* element)
 {
@@ -2050,11 +2068,19 @@ void UI_MANAGER::ModalLayer_Release()
 
 
 /**-------------------------------------------------------------------------------------------------------------------
-*
+* 
 * @fn         bool UI_MANAGER::ModalLayer_Rect(UI_ELEMENT* modal, double& x, double& y, double& w, double& h)
 * @brief      Screen AABB of the modal in the same (left, top, w, h) convention as rebuild areas / GetBitmap.
 * @ingroup    USERINTERFACE
-*
+* 
+* @param[in]  modal : 
+* @param[in]  x : 
+* @param[in]  y : 
+* @param[in]  w : 
+* @param[in]  h : 
+* 
+* @return     bool : true if the operation is successful; otherwise false.
+* 
 * --------------------------------------------------------------------------------------------------------------------*/
 bool UI_MANAGER::ModalLayer_Rect(UI_ELEMENT* modal, double& x, double& y, double& w, double& h)
 {
@@ -2087,13 +2113,17 @@ bool UI_MANAGER::ModalLayer_Rect(UI_ELEMENT* modal, double& x, double& y, double
 
 
 /**-------------------------------------------------------------------------------------------------------------------
-*
+* 
 * @fn         bool UI_MANAGER::ModalLayer_RebuildOffscreen(UI_SKINCANVAS* skin_canvas, UI_ELEMENT* modal)
 * @brief      Draw the modal tree onto a dedicated offscreen canvas and store that AABB as modal_layer_bitmap.
 * @note       Never snapshots the shared screen canvas — that was the failure mode of the first option-B pass
-*             (ListBoxMenu formbackdrop already punched into the keyboard rect before capture).
 * @ingroup    USERINTERFACE
-*
+* 
+* @param[in]  skin_canvas : 
+* @param[in]  modal : 
+* 
+* @return     bool : true if the operation is successful; otherwise false.
+* 
 * --------------------------------------------------------------------------------------------------------------------*/
 bool UI_MANAGER::ModalLayer_RebuildOffscreen(UI_SKINCANVAS* skin_canvas, UI_ELEMENT* modal)
 {
@@ -3472,7 +3502,7 @@ bool UI_MANAGER::SubscribeInputEvents(bool active)
   for(int c=0; c<(sizeof(eventtype) / sizeof(UI_XEVENT_TYPE)); c++)
     {
       if(active)        
-            SubscribeEvent(eventtype[c]   , this);              
+            SubscribeEvent(eventtype[c], this);              
       else  UnSubscribeEvent(eventtype[c] , this);        
     }
 
@@ -3503,7 +3533,7 @@ bool UI_MANAGER::SubscribeOutputEvents(bool active, XOBSERVER* observer, XSUBJEC
   for(int c=0; c<(sizeof(eventtype) / sizeof(UI_XEVENT_TYPE)); c++)
     {
       if(active)        
-            observer->SubscribeEvent(eventtype[c]   , subject);              
+            observer->SubscribeEvent(eventtype[c], subject);              
       else  observer->UnSubscribeEvent(eventtype[c] , subject);        
     }
 
@@ -3877,11 +3907,16 @@ bool UI_MANAGER::ResolvePercentValue(XSTRING& valuestr, double basis, double& ou
 
 
 /**-------------------------------------------------------------------------------------------------------------------
-*
+* 
 * @fn         void UI_MANAGER::BuildLengthContext(UI_LAYOUT* layout, double basis, double fontsize, UI_LENGTH_CONTEXT& out)
 * @brief      Fill a UI_LENGTH_CONTEXT from the layout's design viewport and optional --root-font-size theme var.
 * @ingroup    USERINTERFACE
-*
+* 
+* @param[in]  layout : 
+* @param[in]  basis : 
+* @param[in]  fontsize : 
+* @param[in]  out : 
+* 
 * --------------------------------------------------------------------------------------------------------------------*/
 void UI_MANAGER::BuildLengthContext(UI_LAYOUT* layout, double basis, double fontsize, UI_LENGTH_CONTEXT& out)
 {
@@ -3904,11 +3939,17 @@ void UI_MANAGER::BuildLengthContext(UI_LAYOUT* layout, double basis, double font
 
 
 /**-------------------------------------------------------------------------------------------------------------------
-*
+* 
 * @fn         bool UI_MANAGER::ResolveStyleLength(XSTRING& valuestr, UI_LENGTH_CONTEXT& context, double& out)
 * @brief      Resolve a style length token (px / % / em / rem / vw / vh / calc) for stylesheet layouts.
 * @ingroup    USERINTERFACE
-*
+* 
+* @param[in]  valuestr : 
+* @param[in]  context : 
+* @param[in]  out : 
+* 
+* @return     bool : true if the operation is successful; otherwise false.
+* 
 * --------------------------------------------------------------------------------------------------------------------*/
 bool UI_MANAGER::ResolveStyleLength(XSTRING& valuestr, UI_LENGTH_CONTEXT& context, double& out)
 {
@@ -3917,11 +3958,17 @@ bool UI_MANAGER::ResolveStyleLength(XSTRING& valuestr, UI_LENGTH_CONTEXT& contex
 
 
 /**-------------------------------------------------------------------------------------------------------------------
-*
+* 
 * @fn         bool UI_MANAGER::ApplyStyleLengthsFromBag(UI_ELEMENT* element, UI_LAYOUT* layout, UI_STYLE& style)
 * @brief      Track L.4: re-apply length tokens (box + gap/flex-basis/margin/padding) from a computed style bag.
 * @ingroup    USERINTERFACE
-*
+* 
+* @param[in]  element : 
+* @param[in]  layout : 
+* @param[in]  style : 
+* 
+* @return     bool : true if the operation is successful; otherwise false.
+* 
 * --------------------------------------------------------------------------------------------------------------------*/
 bool UI_MANAGER::ApplyStyleLengthsFromBag(UI_ELEMENT* element, UI_LAYOUT* layout, UI_STYLE& style)
 {
@@ -4055,7 +4102,7 @@ bool UI_MANAGER::ApplyStyleLengthsFromBag(UI_ELEMENT* element, UI_LAYOUT* layout
       {
         element->SetMargin(UI_ELEMENT_TYPE_ALIGN_LEFT , edges[0]);
         element->SetMargin(UI_ELEMENT_TYPE_ALIGN_RIGHT, edges[1]);
-        element->SetMargin(UI_ELEMENT_TYPE_ALIGN_UP   , edges[2]);
+        element->SetMargin(UI_ELEMENT_TYPE_ALIGN_UP, edges[2]);
         element->SetMargin(UI_ELEMENT_TYPE_ALIGN_DOWN , edges[3]);
       }
   }
@@ -4072,7 +4119,7 @@ bool UI_MANAGER::ApplyStyleLengthsFromBag(UI_ELEMENT* element, UI_LAYOUT* layout
         }
       element->SetPadding(UI_ELEMENT_TYPE_ALIGN_LEFT , out[3]);
       element->SetPadding(UI_ELEMENT_TYPE_ALIGN_RIGHT, out[1]);
-      element->SetPadding(UI_ELEMENT_TYPE_ALIGN_UP   , out[0]);
+      element->SetPadding(UI_ELEMENT_TYPE_ALIGN_UP, out[0]);
       element->SetPadding(UI_ELEMENT_TYPE_ALIGN_DOWN , out[2]);
     }
 
@@ -4083,7 +4130,7 @@ bool UI_MANAGER::ApplyStyleLengthsFromBag(UI_ELEMENT* element, UI_LAYOUT* layout
     double  pv = 0.0;
     if(style.Get(__L("padding-left")  , pstr) && ResolveStyleLength(pstr, ctx, pv)) element->SetPadding(UI_ELEMENT_TYPE_ALIGN_LEFT , pv);
     if(style.Get(__L("padding-right") , pstr) && ResolveStyleLength(pstr, ctx, pv)) element->SetPadding(UI_ELEMENT_TYPE_ALIGN_RIGHT, pv);
-    if(style.Get(__L("padding-top")   , pstr) && ResolveStyleLength(pstr, ctx, pv)) element->SetPadding(UI_ELEMENT_TYPE_ALIGN_UP   , pv);
+    if(style.Get(__L("padding-top")   , pstr) && ResolveStyleLength(pstr, ctx, pv)) element->SetPadding(UI_ELEMENT_TYPE_ALIGN_UP, pv);
     if(style.Get(__L("padding-bottom"), pstr) && ResolveStyleLength(pstr, ctx, pv)) element->SetPadding(UI_ELEMENT_TYPE_ALIGN_DOWN , pv);
   }
 
@@ -4092,11 +4139,14 @@ bool UI_MANAGER::ApplyStyleLengthsFromBag(UI_ELEMENT* element, UI_LAYOUT* layout
 
 
 /**-------------------------------------------------------------------------------------------------------------------
-*
+* 
 * @fn         void UI_MANAGER::ReresolveElementStyleLengthsRecursive(UI_ELEMENT* element, UI_LAYOUT* layout)
 * @brief      Track L.4: depth-first re-resolve (parents before children so % basis is current).
 * @ingroup    USERINTERFACE
-*
+* 
+* @param[in]  element : 
+* @param[in]  layout : 
+* 
 * --------------------------------------------------------------------------------------------------------------------*/
 void UI_MANAGER::ReresolveElementStyleLengthsRecursive(UI_ELEMENT* element, UI_LAYOUT* layout)
 {
@@ -4117,11 +4167,15 @@ void UI_MANAGER::ReresolveElementStyleLengthsRecursive(UI_ELEMENT* element, UI_L
 
 
 /**-------------------------------------------------------------------------------------------------------------------
-*
+* 
 * @fn         bool UI_MANAGER::Layouts_ReresolveStyleLengths(UI_LAYOUT* layout)
 * @brief      Track L.4: re-resolve style lengths for every element, then RunLayout on each top-level root.
 * @ingroup    USERINTERFACE
-*
+* 
+* @param[in]  layout : 
+* 
+* @return     bool : true if the operation is successful; otherwise false.
+* 
 * --------------------------------------------------------------------------------------------------------------------*/
 bool UI_MANAGER::Layouts_ReresolveStyleLengths(UI_LAYOUT* layout)
 {
@@ -4149,11 +4203,17 @@ bool UI_MANAGER::Layouts_ReresolveStyleLengths(UI_LAYOUT* layout)
 
 
 /**-------------------------------------------------------------------------------------------------------------------
-*
+* 
 * @fn         bool UI_MANAGER::Layouts_SetDesignSize(UI_LAYOUT* layout, XDWORD width, XDWORD height)
 * @brief      Track L.4: change design canvas and refresh length-dependent layout.
 * @ingroup    USERINTERFACE
-*
+* 
+* @param[in]  layout : 
+* @param[in]  width : 
+* @param[in]  height : 
+* 
+* @return     bool : true if the operation is successful; otherwise false.
+* 
 * --------------------------------------------------------------------------------------------------------------------*/
 bool UI_MANAGER::Layouts_SetDesignSize(UI_LAYOUT* layout, XDWORD width, XDWORD height)
 {
@@ -4216,7 +4276,7 @@ bool UI_MANAGER::GetLayoutElement_Base(XFILEXMLELEMENT* node, UI_LAYOUT* layout,
   // Set the element's identity BEFORE the CSS cascade runs, so #id and .class selectors can match. The XML
   // attributes we just harvested carry the authoritative identity; CSS may still overwrite visual keys later,
   // but never the identity itself.
-  XSTRING xml_name;   outstyle.Get(__L("name"),  xml_name);
+  XSTRING xml_name;   outstyle.Get(__L("name"), xml_name);
   XSTRING xml_class;  outstyle.Get(__L("class"), xml_class);
 
   if(element)
@@ -4652,7 +4712,7 @@ bool UI_MANAGER::GetLayoutElement_Base(UI_STYLE& style, XSTRING& fathertagname, 
       {
         element->SetMargin(UI_ELEMENT_TYPE_ALIGN_LEFT , edges[0]);
         element->SetMargin(UI_ELEMENT_TYPE_ALIGN_RIGHT, edges[1]);
-        element->SetMargin(UI_ELEMENT_TYPE_ALIGN_UP   , edges[2]);
+        element->SetMargin(UI_ELEMENT_TYPE_ALIGN_UP, edges[2]);
         element->SetMargin(UI_ELEMENT_TYPE_ALIGN_DOWN , edges[3]);
       }
   }
@@ -4682,7 +4742,7 @@ bool UI_MANAGER::GetLayoutElement_Base(UI_STYLE& style, XSTRING& fathertagname, 
 
       element->SetPadding(UI_ELEMENT_TYPE_ALIGN_LEFT , out[3]);
       element->SetPadding(UI_ELEMENT_TYPE_ALIGN_RIGHT, out[1]);
-      element->SetPadding(UI_ELEMENT_TYPE_ALIGN_UP   , out[0]);
+      element->SetPadding(UI_ELEMENT_TYPE_ALIGN_UP, out[0]);
       element->SetPadding(UI_ELEMENT_TYPE_ALIGN_DOWN , out[2]);
     }
 
@@ -4694,7 +4754,7 @@ bool UI_MANAGER::GetLayoutElement_Base(UI_STYLE& style, XSTRING& fathertagname, 
       double  pv = 0.0;
       if(style.Get(__L("padding-left")  , pstr) && ResolveStyleLength(pstr, ctx, pv)) element->SetPadding(UI_ELEMENT_TYPE_ALIGN_LEFT , pv);
       if(style.Get(__L("padding-right") , pstr) && ResolveStyleLength(pstr, ctx, pv)) element->SetPadding(UI_ELEMENT_TYPE_ALIGN_RIGHT, pv);
-      if(style.Get(__L("padding-top")   , pstr) && ResolveStyleLength(pstr, ctx, pv)) element->SetPadding(UI_ELEMENT_TYPE_ALIGN_UP   , pv);
+      if(style.Get(__L("padding-top")   , pstr) && ResolveStyleLength(pstr, ctx, pv)) element->SetPadding(UI_ELEMENT_TYPE_ALIGN_UP, pv);
       if(style.Get(__L("padding-bottom"), pstr) && ResolveStyleLength(pstr, ctx, pv)) element->SetPadding(UI_ELEMENT_TYPE_ALIGN_DOWN , pv);
     }
    else
@@ -4702,7 +4762,7 @@ bool UI_MANAGER::GetLayoutElement_Base(UI_STYLE& style, XSTRING& fathertagname, 
       double pv;
       if(style.Get(__L("padding-left")  , pv)) element->SetPadding(UI_ELEMENT_TYPE_ALIGN_LEFT , pv);
       if(style.Get(__L("padding-right") , pv)) element->SetPadding(UI_ELEMENT_TYPE_ALIGN_RIGHT, pv);
-      if(style.Get(__L("padding-top")   , pv)) element->SetPadding(UI_ELEMENT_TYPE_ALIGN_UP   , pv);
+      if(style.Get(__L("padding-top")   , pv)) element->SetPadding(UI_ELEMENT_TYPE_ALIGN_UP, pv);
       if(style.Get(__L("padding-bottom"), pv)) element->SetPadding(UI_ELEMENT_TYPE_ALIGN_DOWN , pv);
     }
 
@@ -5679,12 +5739,12 @@ UI_ELEMENT* UI_MANAGER::GetLayoutElement_Button(XFILEXMLELEMENT* node, UI_LAYOUT
 * @return     UI_ELEMENT* : Pointer to the requested object; NULL if it is not available.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-UI_ELEMENT* UI_MANAGER::GetLayoutElement_CheckBox(XFILEXMLELEMENT* node, UI_LAYOUT* layout,  UI_ELEMENT* father, UI_ELEMENT* element_legacy)
+UI_ELEMENT* UI_MANAGER::GetLayoutElement_CheckBox(XFILEXMLELEMENT* node, UI_LAYOUT* layout, UI_ELEMENT* father, UI_ELEMENT* element_legacy)
 {  
   UI_ELEMENT_CHECKBOX* element_checkbox = GEN_NEW UI_ELEMENT_CHECKBOX();
   if(!element_checkbox) return NULL;
 
-  return GetLayoutElement_Option(node, layout,  father, element_checkbox);
+  return GetLayoutElement_Option(node, layout, father, element_checkbox);
 }
 
 
@@ -5784,7 +5844,7 @@ UI_ELEMENT* UI_MANAGER::GetLayoutElement_Form(XFILEXMLELEMENT* node, UI_LAYOUT* 
         {                     
           int value[4] = { 0, 0, 0, 0 }; 
 
-          visibleformstr.UnFormat(__L("%d,%d,%d,%d")  , &value[0], &value[1], &value[2], &value[3]); 
+          visibleformstr.UnFormat(__L("%d,%d,%d,%d"), &value[0], &value[1], &value[2], &value[3]); 
 
           element_form->GetVisibleRect()->x = element_form->GetXPosition() + value[0];
           element_form->GetVisibleRect()->y = element_form->GetYPosition() + value[1];      
@@ -5991,7 +6051,7 @@ UI_ELEMENT* UI_MANAGER::GetLayoutElement_ProgressBar(XFILEXMLELEMENT* node, UI_L
     }
 
 
-  outstyle.GetColor(__L("linecolor")    , *element_progressbar->GetLineColor());
+  outstyle.GetColor(__L("linecolor"), *element_progressbar->GetLineColor());
   outstyle.GetColor(__L("gradientcolor"), *element_progressbar->GetGradientColor());
 
   XSTRING gradientmode;
@@ -6037,9 +6097,9 @@ UI_ELEMENT* UI_MANAGER::GetLayoutElement_ProgressBar(XFILEXMLELEMENT* node, UI_L
   XSTRING roundcapstr;
   if(outstyle.Get(__L("roundcap"), roundcapstr))
     {
-      if(!roundcapstr.Compare(__L("yes"),  true) ||
+      if(!roundcapstr.Compare(__L("yes"), true) ||
          !roundcapstr.Compare(__L("true"), true) ||
-         !roundcapstr.Compare(__L("1"),    true))   element_progressbar->SetRoundCap(true);
+         !roundcapstr.Compare(__L("1"), true))   element_progressbar->SetRoundCap(true);
     }
 
   XSTRING continuouscyclestr;
@@ -6049,13 +6109,13 @@ UI_ELEMENT* UI_MANAGER::GetLayoutElement_ProgressBar(XFILEXMLELEMENT* node, UI_L
         {
           int value[3] = { 0, 0, 0 }; 
 
-          continuouscyclestr.UnFormat(__L("%d,%d,%d")  , &value[0], &value[1], &value[2]); 
+          continuouscyclestr.UnFormat(__L("%d,%d,%d"), &value[0], &value[1], &value[2]); 
 
           if(!value[0]) value[0] = UI_ELEMENT_PROGRESSBAR_CCYCLE_DEFAULTSIZESEGMENT;
           if(!value[1]) value[1] = UI_ELEMENT_PROGRESSBAR_CCYCLE_DEFAULTSTEPSEGMENT;
           if(!value[1]) value[1] = UI_ELEMENT_PROGRESSBAR_CCYCLE_DEFAULTTIMESTEP;
 
-          element_progressbar->ContinuousCycle_Set(true,  value[0], value[1], value[2]);             
+          element_progressbar->ContinuousCycle_Set(true, value[0], value[1], value[2]);             
         }
     }
 
@@ -6071,7 +6131,7 @@ UI_ELEMENT* UI_MANAGER::GetLayoutElement_ProgressBar(XFILEXMLELEMENT* node, UI_L
             {
               int value[4] = { 0, 0, 0, 0 }; 
 
-              progressrectstr.UnFormat(__L("%d,%d,%d,%d")  , &value[0], &value[1], &value[2], &value[3]); 
+              progressrectstr.UnFormat(__L("%d,%d,%d,%d"), &value[0], &value[1], &value[2], &value[3]); 
 
               element_progressrect->GetBoundaryLine()->x = element_progressbar->GetXPosition() + value[0];
               element_progressrect->GetBoundaryLine()->y = element_progressbar->GetYPosition() + value[1];      
@@ -6160,7 +6220,7 @@ UI_ELEMENT* UI_MANAGER::GetLayoutElement_ProgressRadial(XFILEXMLELEMENT* node, U
   element_progress->SetActive(true);
 
   // Value arc gradient END color (gradient START is the base "color"; track ring is "bckgrdcolor").
-  outstyle.GetColor(__L("linecolor")    , *element_progress->GetLineColor());
+  outstyle.GetColor(__L("linecolor"), *element_progress->GetLineColor());
   outstyle.GetColor(__L("gradientcolor"), *element_progress->GetGradientColor());
 
   XSTRING gradientmode;
@@ -6187,9 +6247,9 @@ UI_ELEMENT* UI_MANAGER::GetLayoutElement_ProgressRadial(XFILEXMLELEMENT* node, U
   XSTRING roundcapstr;
   if(outstyle.Get(__L("roundcap"), roundcapstr))
     {
-      if(!roundcapstr.Compare(__L("yes"),  true) ||
+      if(!roundcapstr.Compare(__L("yes"), true) ||
          !roundcapstr.Compare(__L("true"), true) ||
-         !roundcapstr.Compare(__L("1"),    true))   element_progress->SetRoundCap(true);
+         !roundcapstr.Compare(__L("1"), true))   element_progress->SetRoundCap(true);
     }
 
   // Child <text> => centered caption.
@@ -6290,7 +6350,7 @@ UI_ELEMENT* UI_MANAGER::GetLayoutElement_ProgressImage(XFILEXMLELEMENT* node, UI
   if(outstyle.Get(__L("offsetstart"), value)) element_progressimage->SetOffsetStart(value);
 
   value = 0.0f;
-  if(outstyle.Get(__L("offsetend"),   value)) element_progressimage->SetOffsetEnd(value);
+  if(outstyle.Get(__L("offsetend"), value)) element_progressimage->SetOffsetEnd(value);
 
   // resolve the draw mode once (same as GetLayoutElement_Image)
   GRPPROPERTYMODE   grppropertymode = GRPPROPERTYMODE_XX_UNKNOWN;
@@ -6905,9 +6965,9 @@ bool UI_MANAGER::CreateLayouts(XFILEXML& xml, XPATH& xmlpathfile, GRPSCREEN* scr
 
                       bool isseamlesspattern = false;
 
-                      if(!bckseamlesspatternstr.Compare(__L("yes"),  true) ||
+                      if(!bckseamlesspatternstr.Compare(__L("yes"), true) ||
                          !bckseamlesspatternstr.Compare(__L("true"), true) ||
-                         !bckseamlesspatternstr.Compare(__L("1"),    true))   isseamlesspattern = true;
+                         !bckseamlesspatternstr.Compare(__L("1"), true))   isseamlesspattern = true;
 
                       // "backgroundimg" is always the same single resource, whether it ends up being drawn once,
                       // stretched to the layout (GetBitmap(), the default) or repeated as a tile (GetPatternBitmap(),
@@ -7705,10 +7765,15 @@ void UI_MANAGER::MapScreenToDesign(UI_LAYOUT* layout, int screen_x, int screen_y
 
 
 /**-------------------------------------------------------------------------------------------------------------------
-*
+* 
 * @fn         bool UI_MANAGER::UIScale_EnsureDesignCanvas(UI_LAYOUT* layout)
 * @brief      Create/resize the layout's design offscreen canvas to designWidth x designHeight.
 * @ingroup    USERINTERFACE
+* 
+* @param[in]  layout : 
+* 
+* @return     bool : true if the operation is successful; otherwise false.
+* 
 * --------------------------------------------------------------------------------------------------------------------*/
 bool UI_MANAGER::UIScale_EnsureDesignCanvas(UI_LAYOUT* layout)
 {
@@ -7759,10 +7824,15 @@ bool UI_MANAGER::UIScale_EnsureDesignCanvas(UI_LAYOUT* layout)
 
 
 /**-------------------------------------------------------------------------------------------------------------------
-*
+* 
 * @fn         bool UI_MANAGER::UIScale_BeginFrame(UI_LAYOUT* layout)
 * @brief      Redirect skin paint/rebuild to the design canvas when scaled present is required.
 * @ingroup    USERINTERFACE
+* 
+* @param[in]  layout : 
+* 
+* @return     bool : true if the operation is successful; otherwise false.
+* 
 * --------------------------------------------------------------------------------------------------------------------*/
 bool UI_MANAGER::UIScale_BeginFrame(UI_LAYOUT* layout)
 {
@@ -7793,10 +7863,15 @@ bool UI_MANAGER::UIScale_BeginFrame(UI_LAYOUT* layout)
 
 
 /**-------------------------------------------------------------------------------------------------------------------
-*
+* 
 * @fn         bool UI_MANAGER::UIScale_Present(UI_LAYOUT* layout)
 * @brief      Blit design canvas → viewport with uiScale + letterbox offsets; fill letterbox bars.
 * @ingroup    USERINTERFACE
+* 
+* @param[in]  layout : 
+* 
+* @return     bool : true if the operation is successful; otherwise false.
+* 
 * --------------------------------------------------------------------------------------------------------------------*/
 bool UI_MANAGER::UIScale_Present(UI_LAYOUT* layout)
 {
@@ -7915,10 +7990,13 @@ bool UI_MANAGER::UIScale_Present(UI_LAYOUT* layout)
 
 
 /**-------------------------------------------------------------------------------------------------------------------
-*
+* 
 * @fn         void UI_MANAGER::UIScale_EndFrame(UI_LAYOUT* layout)
 * @brief      Restore skin canvas to the live viewport after scaled present.
 * @ingroup    USERINTERFACE
+* 
+* @param[in]  layout : 
+* 
 * --------------------------------------------------------------------------------------------------------------------*/
 void UI_MANAGER::UIScale_EndFrame(UI_LAYOUT* layout)
 {
@@ -7938,10 +8016,15 @@ void UI_MANAGER::UIScale_EndFrame(UI_LAYOUT* layout)
 
 
 /**-------------------------------------------------------------------------------------------------------------------
-*
+* 
 * @fn         bool UI_MANAGER::UIScale_PrepareLayout(UI_LAYOUT* layout)
 * @brief      After changing uiScale at runtime: ensure design canvas, seed background, force full redraw.
 * @ingroup    USERINTERFACE
+* 
+* @param[in]  layout : 
+* 
+* @return     bool : true if the operation is successful; otherwise false.
+* 
 * --------------------------------------------------------------------------------------------------------------------*/
 bool UI_MANAGER::UIScale_PrepareLayout(UI_LAYOUT* layout)
 {
@@ -7990,12 +8073,15 @@ bool UI_MANAGER::UIScale_PrepareLayout(UI_LAYOUT* layout)
 
 
 /**-------------------------------------------------------------------------------------------------------------------
-*
+* 
 * @fn         void UI_MANAGER::UIScale_PresentSharpOverlay(UI_LAYOUT* layout, GRP2DCANVAS* live)
 * @brief      Fase 7: blit denser SVG icons + StatisticsCharts onto live after scaled Present.
 * @note       Design paint / BoundaryLine / hit-test stay in design px. Overlay only when density ≠ 1.
 * @ingroup    USERINTERFACE
-*
+* 
+* @param[in]  layout : 
+* @param[in]  live : 
+* 
 * --------------------------------------------------------------------------------------------------------------------*/
 void UI_MANAGER::UIScale_PresentSharpOverlay(UI_LAYOUT* layout, GRP2DCANVAS* live)
 {
@@ -8016,11 +8102,16 @@ void UI_MANAGER::UIScale_PresentSharpOverlay(UI_LAYOUT* layout, GRP2DCANVAS* liv
 
 
 /**-------------------------------------------------------------------------------------------------------------------
-*
+* 
 * @fn         void UI_MANAGER::UIScale_PresentSharpOverlay_Element(UI_LAYOUT* layout, UI_ELEMENT* element, GRP2DCANVAS* live, double density)
 * @brief      Fase 7: recursive sharp overlay for one element tree.
 * @ingroup    USERINTERFACE
-*
+* 
+* @param[in]  layout : 
+* @param[in]  element : 
+* @param[in]  live : 
+* @param[in]  density : 
+* 
 * --------------------------------------------------------------------------------------------------------------------*/
 void UI_MANAGER::UIScale_PresentSharpOverlay_Element(UI_LAYOUT* layout, UI_ELEMENT* element, GRP2DCANVAS* live, double density)
 {
@@ -8102,11 +8193,13 @@ void UI_MANAGER::UIScale_PresentSharpOverlay_Element(UI_LAYOUT* layout, UI_ELEME
 
 
 /**-------------------------------------------------------------------------------------------------------------------
-*
+* 
 * @fn         void UI_MANAGER::UIScale_InvalidateSharpOverlays(UI_LAYOUT* layout)
 * @brief      Fase 7: drop denser chart overlay caches after scale/window change.
 * @ingroup    USERINTERFACE
-*
+* 
+* @param[in]  layout : 
+* 
 * --------------------------------------------------------------------------------------------------------------------*/
 void UI_MANAGER::UIScale_InvalidateSharpOverlays(UI_LAYOUT* layout)
 {
@@ -8123,11 +8216,13 @@ void UI_MANAGER::UIScale_InvalidateSharpOverlays(UI_LAYOUT* layout)
 
 
 /**-------------------------------------------------------------------------------------------------------------------
-*
+* 
 * @fn         void UI_MANAGER::UIScale_InvalidateSharpOverlays_Element(UI_ELEMENT* element)
 * @brief      Fase 7: recursive sharp-overlay invalidation.
 * @ingroup    USERINTERFACE
-*
+* 
+* @param[in]  element : 
+* 
 * --------------------------------------------------------------------------------------------------------------------*/
 void UI_MANAGER::UIScale_InvalidateSharpOverlays_Element(UI_ELEMENT* element)
 {
@@ -8150,11 +8245,13 @@ void UI_MANAGER::UIScale_InvalidateSharpOverlays_Element(UI_ELEMENT* element)
 
 
 /**-------------------------------------------------------------------------------------------------------------------
-*
+* 
 * @fn         void UI_MANAGER::UIScale_ResetLiveComposition(UI_LAYOUT* layout)
 * @brief      Invalidate composition caches, clear the live viewport canvas, dirty chrome on the same screen.
 * @ingroup    USERINTERFACE
-*
+* 
+* @param[in]  layout : 
+* 
 * --------------------------------------------------------------------------------------------------------------------*/
 void UI_MANAGER::UIScale_ResetLiveComposition(UI_LAYOUT* layout)
 {
@@ -8233,11 +8330,15 @@ bool UI_MANAGER::Layouts_SetUIScale(UI_LAYOUT* layout, double scale)
 
 
 /**-------------------------------------------------------------------------------------------------------------------
-*
+* 
 * @fn         bool UI_MANAGER::Layouts_ApplyFitUIScale(UI_LAYOUT* layout)
 * @brief      Fase 5: set scale = min(sw/dw, sh/dh) from the layout's screen and reclamar paint.
 * @ingroup    USERINTERFACE
-*
+* 
+* @param[in]  layout : 
+* 
+* @return     bool : true if the operation is successful; otherwise false.
+* 
 * --------------------------------------------------------------------------------------------------------------------*/
 bool UI_MANAGER::Layouts_ApplyFitUIScale(UI_LAYOUT* layout)
 {

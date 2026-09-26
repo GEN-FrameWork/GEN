@@ -28,7 +28,6 @@
 
 #pragma once
 
-
 #if defined(DIO_ACTIVE) && defined(DIO_STREAMTWIFI_ACTIVE)
 
 
@@ -43,11 +42,7 @@
 #include "DIOStream.h"
 #include "DIOStreamWifiRemoteEnumDevices.h"
 
-
-
-
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
-
 
 typedef struct
 {
@@ -56,7 +51,6 @@ typedef struct
   DWORD   callbackreason;
 
 } WLAN_CALLBACK_INFO;
-
 
 
 

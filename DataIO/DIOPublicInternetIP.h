@@ -34,16 +34,12 @@
 
 #include "DIOIP.h"
 
-
-
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
 
 #define DIOPUBLICINTERNETIP_URL                                     __L("ipecho.net/plain");
 
 #define DIOPUBLICINTERNETIP_DEFAULTNCHECKSFOREVERYCONNECTION          5
 #define DIOPUBLICINTERNETIP_DEFAULTTIMERCONNECTIONCHECK             100   // milliseconds
-
-
 
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
 

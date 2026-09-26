@@ -36,15 +36,9 @@
 #include "GRPVectorFileDXFValue.h"
 #include "GRPVectorFileDXFTextSectionEntities.h"
 
-
-
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
 
-
-
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
-
 
 class GRPVECTORFILEDXFTEXTBLOCK
 {  

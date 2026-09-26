@@ -306,10 +306,6 @@ void XDIRELEMENT::Clean()
 }
 
 
-
-
-
-
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         XDIR::XDIR()
@@ -391,7 +387,7 @@ bool XDIR::ChangeTo(XPATH& xpath)
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         bool XDIR::Delete(XPATH& xpath,bool all)
+* @fn         bool XDIR::Delete(XPATH& xpath, bool all)
 * @brief      Delete resource
 * @ingroup    XUTILS
 * 
@@ -401,15 +397,15 @@ bool XDIR::ChangeTo(XPATH& xpath)
 * @return     bool : true if the operation is successful; otherwise false.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-bool XDIR::Delete(XPATH& xpath,bool all)
+bool XDIR::Delete(XPATH& xpath, bool all)
 {
-  return Delete(xpath.Get(),all);
+  return Delete(xpath.Get(), all);
 }
 
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         bool XDIR::FirstSearch(XPATH& xpath,XSTRING& patternsearch,XDIRELEMENT* searchelement)
+* @fn         bool XDIR::FirstSearch(XPATH& xpath, XSTRING& patternsearch, XDIRELEMENT* searchelement)
 * @brief      First search
 * @ingroup    XUTILS
 * 
@@ -420,15 +416,15 @@ bool XDIR::Delete(XPATH& xpath,bool all)
 * @return     bool : true if the operation is successful; otherwise false.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-bool XDIR::FirstSearch(XPATH& xpath,XSTRING& patternsearch,XDIRELEMENT* searchelement)
+bool XDIR::FirstSearch(XPATH& xpath, XSTRING& patternsearch, XDIRELEMENT* searchelement)
 {
-  return FirstSearch(xpath.Get(),patternsearch.Get(),searchelement);
+  return FirstSearch(xpath.Get(), patternsearch.Get(), searchelement);
 }
 
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         bool XDIR::FirstSearch(XPATH& xpath,XCHAR* patternsearch,XDIRELEMENT* searchelement)
+* @fn         bool XDIR::FirstSearch(XPATH& xpath, XCHAR* patternsearch, XDIRELEMENT* searchelement)
 * @brief      First search
 * @ingroup    XUTILS
 * 
@@ -439,15 +435,15 @@ bool XDIR::FirstSearch(XPATH& xpath,XSTRING& patternsearch,XDIRELEMENT* searchel
 * @return     bool : true if the operation is successful; otherwise false.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-bool XDIR::FirstSearch(XPATH& xpath,XCHAR* patternsearch,XDIRELEMENT* searchelement)
+bool XDIR::FirstSearch(XPATH& xpath, XCHAR* patternsearch, XDIRELEMENT* searchelement)
 {
-  return FirstSearch(xpath.Get(),patternsearch,searchelement);
+  return FirstSearch(xpath.Get(), patternsearch, searchelement);
 }
 
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         bool XDIR::FirstSearch(XCHAR* xpath,XSTRING& patternsearch,XDIRELEMENT* searchelement)
+* @fn         bool XDIR::FirstSearch(XCHAR* xpath, XSTRING& patternsearch, XDIRELEMENT* searchelement)
 * @brief      First search
 * @ingroup    XUTILS
 * 
@@ -458,15 +454,15 @@ bool XDIR::FirstSearch(XPATH& xpath,XCHAR* patternsearch,XDIRELEMENT* searchelem
 * @return     bool : true if the operation is successful; otherwise false.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-bool XDIR::FirstSearch(XCHAR* xpath,XSTRING& patternsearch,XDIRELEMENT* searchelement)
+bool XDIR::FirstSearch(XCHAR* xpath, XSTRING& patternsearch, XDIRELEMENT* searchelement)
 {
-  return FirstSearch(xpath,patternsearch.Get(),searchelement);
+  return FirstSearch(xpath, patternsearch.Get(), searchelement);
 }
 
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         bool XDIR::Copy(XPATH& xpathsource,XPATH& xpathtarget)
+* @fn         bool XDIR::Copy(XPATH& xpathsource, XPATH& xpathtarget)
 * @brief      Copy
 * @ingroup    XUTILS
 * 
@@ -476,7 +472,7 @@ bool XDIR::FirstSearch(XCHAR* xpath,XSTRING& patternsearch,XDIRELEMENT* searchel
 * @return     bool : true if the operation is successful; otherwise false.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-bool XDIR::Copy(XPATH& xpathsource,XPATH& xpathtarget)
+bool XDIR::Copy(XPATH& xpathsource, XPATH& xpathtarget)
 {
   #define COPYFILE_MAXBUFFER 2048
 
@@ -498,11 +494,11 @@ bool XDIR::Copy(XPATH& xpathsource,XPATH& xpathtarget)
 
                   do { rsize = COPYFILE_MAXBUFFER;
 
-                       memset(buffer,0,rsize);
+                       memset(buffer, 0, rsize);
 
-                       fsource->Read(buffer,&rsize);
+                       fsource->Read(buffer, &rsize);
 
-                       if(rsize) ftarget->Write(buffer,rsize);
+                       if(rsize) ftarget->Write(buffer, rsize);
 
                      } while(rsize == COPYFILE_MAXBUFFER);
 
@@ -528,7 +524,7 @@ bool XDIR::Copy(XPATH& xpathsource,XPATH& xpathtarget)
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         bool XDIR::Copy(XCHAR* xpathsource,XPATH& xpathtarget)
+* @fn         bool XDIR::Copy(XCHAR* xpathsource, XPATH& xpathtarget)
 * @brief      Copy
 * @ingroup    XUTILS
 * 
@@ -538,7 +534,7 @@ bool XDIR::Copy(XPATH& xpathsource,XPATH& xpathtarget)
 * @return     bool : true if the operation is successful; otherwise false.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-bool XDIR::Copy(XCHAR* xpathsource,XPATH& xpathtarget)
+bool XDIR::Copy(XCHAR* xpathsource, XPATH& xpathtarget)
 {
   XPATH _xpathsource;
 
@@ -550,7 +546,7 @@ bool XDIR::Copy(XCHAR* xpathsource,XPATH& xpathtarget)
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         bool XDIR::Copy(XPATH& xpathsource,XCHAR* xpathtarget)
+* @fn         bool XDIR::Copy(XPATH& xpathsource, XCHAR* xpathtarget)
 * @brief      Copy
 * @ingroup    XUTILS
 * 
@@ -560,7 +556,7 @@ bool XDIR::Copy(XCHAR* xpathsource,XPATH& xpathtarget)
 * @return     bool : true if the operation is successful; otherwise false.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-bool XDIR::Copy(XPATH& xpathsource,XCHAR* xpathtarget)
+bool XDIR::Copy(XPATH& xpathsource, XCHAR* xpathtarget)
 {
   XPATH _xpathtarget;
 
@@ -572,7 +568,7 @@ bool XDIR::Copy(XPATH& xpathsource,XCHAR* xpathtarget)
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         bool XDIR::Copy(XCHAR* xpathsource,XCHAR* xpathtarget)
+* @fn         bool XDIR::Copy(XCHAR* xpathsource, XCHAR* xpathtarget)
 * @brief      Copy
 * @ingroup    XUTILS
 * 
@@ -582,7 +578,7 @@ bool XDIR::Copy(XPATH& xpathsource,XCHAR* xpathtarget)
 * @return     bool : true if the operation is successful; otherwise false.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-bool XDIR::Copy(XCHAR* xpathsource,XCHAR* xpathtarget)
+bool XDIR::Copy(XCHAR* xpathsource, XCHAR* xpathtarget)
 {
   XPATH _xpathsource;
   XPATH _xpathtarget;

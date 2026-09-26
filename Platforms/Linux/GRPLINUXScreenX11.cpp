@@ -348,7 +348,7 @@ bool GRPLINUXSCREENX11::Update(GRP2DCANVAS* canvas)
                   // WSLg, XResizeWindow always works even while maximized, so this message is a
                   // no-op there. On WMs that ignore _NET_WM_STATE entirely, both are no-ops and
                   // the next frame will re-detect and retry.
-                  Atom netstate = XInternAtom(display, "_NET_WM_STATE",              False);
+                  Atom netstate = XInternAtom(display, "_NET_WM_STATE", False);
                   Atom maxhorz  = XInternAtom(display, "_NET_WM_STATE_MAXIMIZED_HORZ", False);
                   Atom maxvert  = XInternAtom(display, "_NET_WM_STATE_MAXIMIZED_VERT", False);
 
@@ -365,8 +365,7 @@ bool GRPLINUXSCREENX11::Update(GRP2DCANVAS* canvas)
                       ev.xclient.data.l[2]    = (long)maxvert;
                       ev.xclient.data.l[3]    = 1;            // source: application (not pager)
                       ev.xclient.data.l[4]    = 0;
-                      XSendEvent(display, root, False,
-                                 SubstructureRedirectMask | SubstructureNotifyMask, &ev);
+                      XSendEvent(display, root, False, SubstructureRedirectMask | SubstructureNotifyMask, &ev);
                     }
 
                   XResizeWindow(display, window, cappedw, cappedh);
@@ -434,9 +433,7 @@ bool GRPLINUXSCREENX11::Update(GRP2DCANVAS* canvas)
                 {
                   for(int y=0; y<bh; y++)
                     {
-                      memcpy(croppedbuffer + (size_t)y * (size_t)bw    * 4,
-                             srcbuffer      + (size_t)y * (size_t)width * 4,
-                             (size_t)bw * 4);
+                      memcpy(croppedbuffer + (size_t)y * (size_t)bw * 4, srcbuffer + (size_t)y * (size_t)width * 4, (size_t)bw * 4);
                     }
 
                   blitbuffer = croppedbuffer;
@@ -470,7 +467,6 @@ bool GRPLINUXSCREENX11::Update(GRP2DCANVAS* canvas)
 }
 
 
-
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         bool GRPLINUXSCREENX11::UpdateTransparent(GRP2DCANVAS* canvas)
@@ -486,7 +482,6 @@ bool GRPLINUXSCREENX11::UpdateTransparent(GRP2DCANVAS* canvas)
 {
   return Update(canvas);  
 }
-
 
 
 /**-------------------------------------------------------------------------------------------------------------------
@@ -1117,7 +1112,7 @@ bool GRPLINUXSCREENX11::ShowCursor(bool active)
         {
           cursor = XCreatePixmapCursor(display, blank, blank, &dummy, &dummy, 0, 0);
           XFreePixmap(display, blank);
-          XDefineCursor(display, window,cursor);
+          XDefineCursor(display, window, cursor);
 
         } else return false;
     }
@@ -1193,9 +1188,9 @@ bool GRPLINUXSCREENX11::Maximize(bool active)
       return true;
     }
 
-  Atom wm_state      = XInternAtom(display, "_NET_WM_STATE"                 , False);
-  Atom wm_state_maxh = XInternAtom(display, "_NET_WM_STATE_MAXIMIZED_HORZ"  , False);
-  Atom wm_state_maxv = XInternAtom(display, "_NET_WM_STATE_MAXIMIZED_VERT"  , False);
+  Atom wm_state      = XInternAtom(display, "_NET_WM_STATE", False);
+  Atom wm_state_maxh = XInternAtom(display, "_NET_WM_STATE_MAXIMIZED_HORZ", False);
+  Atom wm_state_maxv = XInternAtom(display, "_NET_WM_STATE_MAXIMIZED_VERT", False);
 
   if((wm_state == None) || (wm_state_maxh == None) || (wm_state_maxv == None)) return false;
 
@@ -1524,13 +1519,12 @@ void GRPLINUXSCREENX11::Chromes_ApplyPostCreate()
      !cfgchromes->GetNativeMinimizeActive() &&
      !cfgchromes->GetNativeMaximizeActive())
     {
-      Atom netwmwindowtype  = XInternAtom(display, "_NET_WM_WINDOW_TYPE",         False);
+      Atom netwmwindowtype  = XInternAtom(display, "_NET_WM_WINDOW_TYPE", False);
       Atom netwmtypeutility = XInternAtom(display, "_NET_WM_WINDOW_TYPE_UTILITY", False);
 
       if(netwmwindowtype != None && netwmtypeutility != None)
         {
-          XChangeProperty(display, window, netwmwindowtype, XA_ATOM, 32, PropModeReplace,
-                          (unsigned char*)&netwmtypeutility, 1);
+          XChangeProperty(display, window, netwmwindowtype, XA_ATOM, 32, PropModeReplace, (unsigned char*)&netwmtypeutility, 1);
         }
     }
 }
@@ -2153,7 +2147,7 @@ bool GRPLINUXSCREENX11::Create_Window(bool show)
 
   if(Style_Is(GRPSCREENSTYLE_NOICONTASKBAR))
     {
-      Atom wm_state             = XInternAtom(display , "_NET_WM_STATE"             , True);
+      Atom wm_state             = XInternAtom(display, "_NET_WM_STATE", True);
       Atom wm_state_skiptaskbar = XInternAtom(display , "_NET_WM_STATE_SKIP_TASKBAR", True);
 
       XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, __L("[Screen X11] Atom SKIP_TASKBAR active"));
@@ -2164,13 +2158,13 @@ bool GRPLINUXSCREENX11::Create_Window(bool show)
         }
        else
         {
-          XChangeProperty(display, window, wm_state, XA_ATOM, 32,PropModeReplace, (unsigned char *)&wm_state_skiptaskbar, 1);          
+          XChangeProperty(display, window, wm_state, XA_ATOM, 32, PropModeReplace, (unsigned char *)&wm_state_skiptaskbar, 1);          
         }
     }
 
   if(Style_Is(GRPSCREENSTYLE_ONTOP))
     {
-      Atom wm_state       = XInternAtom(display , "_NET_WM_STATE"       , True);
+      Atom wm_state       = XInternAtom(display, "_NET_WM_STATE", True);
       Atom wm_state_above = XInternAtom(display , "_NET_WM_STATE_ABOVE" , True);
 
       XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, __L("[Screen X11] Atom ABOVE active"));
@@ -2376,7 +2370,7 @@ XImage* GRPLINUXSCREENX11::CreateXImageFromBuffer(Display* display, int screen, 
           ++outindex;
         }
 
-      image = XCreateImage (display, vinfo.visual, vinfo.depth,  ZPixmap, 0, (char *)newbuffer,width, height, 32, 0);
+      image = XCreateImage (display, vinfo.visual, vinfo.depth, ZPixmap, 0, (char *)newbuffer, width, height, 32, 0);
     }
     else
     {

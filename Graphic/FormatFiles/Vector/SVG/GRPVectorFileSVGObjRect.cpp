@@ -147,10 +147,10 @@ bool GRPVECTORFILESVGOBJRECT::BuildPath(GRP2DPATH& path)
 
   if((lrx <= 0.0) || (lry <= 0.0))
     {
-      path.MoveTo(x        , y         );
-      path.LineTo(x + width, y         );
+      path.MoveTo(x, y);
+      path.LineTo(x + width, y);
       path.LineTo(x + width, y + height);
-      path.LineTo(x        , y + height);
+      path.LineTo(x, y + height);
       path.Close();
     }
    else
@@ -158,15 +158,15 @@ bool GRPVECTORFILESVGOBJRECT::BuildPath(GRP2DPATH& path)
       double kx = lrx * GRPVECTORFILESVGOBJRECT_KAPPA;
       double ky = lry * GRPVECTORFILESVGOBJRECT_KAPPA;
 
-      path.MoveTo (x + lrx        , y                  );
-      path.LineTo (x + width - lrx, y                  );
-      path.CurveTo(x + width - lrx + kx, y             ,  x + width         , y + lry - ky      ,  x + width    , y + lry         );
-      path.LineTo (x + width      , y + height - lry   );
-      path.CurveTo(x + width      , y + height - lry + ky,  x + width - lrx + kx, y + height    ,  x + width - lrx, y + height     );
-      path.LineTo (x + lrx        , y + height         );
-      path.CurveTo(x + lrx - kx   , y + height         ,  x                  , y + height - lry + ky,  x          , y + height - lry);
-      path.LineTo (x              , y + lry            );
-      path.CurveTo(x              , y + lry - ky       ,  x + lrx - kx       , y             ,  x + lrx        , y               );
+      path.MoveTo (x + lrx, y);
+      path.LineTo (x + width - lrx, y);
+      path.CurveTo(x + width - lrx + kx, y, x + width, y + lry - ky, x + width, y + lry);
+      path.LineTo (x + width, y + height - lry);
+      path.CurveTo(x + width, y + height - lry + ky, x + width - lrx + kx, y + height, x + width - lrx, y + height);
+      path.LineTo (x + lrx, y + height);
+      path.CurveTo(x + lrx - kx, y + height, x, y + height - lry + ky, x, y + height - lry);
+      path.LineTo (x, y + lry);
+      path.CurveTo(x, y + lry - ky, x + lrx - kx, y, x + lrx, y);
       path.Close();
     }
 

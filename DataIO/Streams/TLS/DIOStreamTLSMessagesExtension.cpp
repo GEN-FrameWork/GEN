@@ -209,10 +209,6 @@ void DIOSTREAMTLS_MSG_EXTENSION::Clean()
 }
 
 
-
-
-
-
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         DIOSTREAMTLS_MSG_EXTENSION_SNI_SERVERNAME::DIOSTREAMTLS_MSG_EXTENSION_SNI_SERVERNAME()
@@ -467,10 +463,6 @@ void DIOSTREAMTLS_MSG_EXTENSION_SNI_SERVERNAME::Clean()
   name_type   = 0;
   name_length = 0;
 }
-
-
-
-
 
 
 /**-------------------------------------------------------------------------------------------------------------------
@@ -842,10 +834,6 @@ void DIOSTREAMTLS_MSG_EXTENSION_SNI::Clean()
 }
 
 
-
-
-
-
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         DIOSTREAMTLS_MSG_EXTENSION_SUPPORTEDGROUPS::DIOSTREAMTLS_MSG_EXTENSION_SUPPORTEDGROUPS()
@@ -871,10 +859,6 @@ DIOSTREAMTLS_MSG_EXTENSION_SUPPORTEDGROUPS::~DIOSTREAMTLS_MSG_EXTENSION_SUPPORTE
 {
  
 }
-
-
-
-
 
 
 /**-------------------------------------------------------------------------------------------------------------------
@@ -904,10 +888,6 @@ DIOSTREAMTLS_MSG_EXTENSION_ECPOINTFORMATS::~DIOSTREAMTLS_MSG_EXTENSION_ECPOINTFO
 }
 
 
-
-
-
-
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         DIOSTREAMTLS_MSG_EXTENSION_SIGNATUREALGORITHMS::DIOSTREAMTLS_MSG_EXTENSION_SIGNATUREALGORITHMS()
@@ -935,9 +915,6 @@ DIOSTREAMTLS_MSG_EXTENSION_SIGNATUREALGORITHMS::~DIOSTREAMTLS_MSG_EXTENSION_SIGN
 }
 
 
-
-
-
 /**-------------------------------------------------------------------------------------------------------------------
 *
 * @fn         DIOSTREAMTLS_MSG_EXTENSION_SIGNATUREALGORITHMSCERT::DIOSTREAMTLS_MSG_EXTENSION_SIGNATUREALGORITHMSCERT()
@@ -963,10 +940,6 @@ DIOSTREAMTLS_MSG_EXTENSION_SIGNATUREALGORITHMSCERT::~DIOSTREAMTLS_MSG_EXTENSION_
 {
 
 }
-
-
-
-
 
 
 /**-------------------------------------------------------------------------------------------------------------------
@@ -1137,6 +1110,7 @@ bool DIOSTREAMTLS_MSG_EXTENSION_ALPN::List_Get(XDWORD index, DIOSTREAMTLS_ALPN_T
   return false;
 }
 
+
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         bool DIOSTREAMTLS_MSG_EXTENSION_ALPN::List_Get(XDWORD index, XBUFFER& protocol)
@@ -1165,6 +1139,7 @@ bool DIOSTREAMTLS_MSG_EXTENSION_ALPN::List_Get(XDWORD index, XBUFFER& protocol)
     }
   return false;
 }
+
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
@@ -1269,6 +1244,7 @@ bool DIOSTREAMTLS_MSG_EXTENSION_ALPN::List_Add(DIOSTREAMTLS_ALPN_TYPE alpn_type)
 
   return true;
 }
+
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
@@ -1490,10 +1466,6 @@ void DIOSTREAMTLS_MSG_EXTENSION_ALPN::Clean()
 }
 
 
-
-
-
-
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         DIOSTREAMTLS_MSG_EXTENSION_EMS::DIOSTREAMTLS_MSG_EXTENSION_EMS()
@@ -1630,10 +1602,6 @@ void DIOSTREAMTLS_MSG_EXTENSION_EMS::Clean()
 }
 
 
-
-
-
-
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         DIOSTREAMTLS_MSG_EXTENSION_SUPPORTEDVERSIONS::DIOSTREAMTLS_MSG_EXTENSION_SUPPORTEDVERSIONS()
@@ -1661,10 +1629,6 @@ DIOSTREAMTLS_MSG_EXTENSION_SUPPORTEDVERSIONS::~DIOSTREAMTLS_MSG_EXTENSION_SUPPOR
 }
 
 
-
-
-
-
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         DIOSTREAMTLS_MSG_EXTENSION_PSKKEYEXCHANGEMODES::DIOSTREAMTLS_MSG_EXTENSION_PSKKEYEXCHANGEMODES()
@@ -1690,10 +1654,6 @@ DIOSTREAMTLS_MSG_EXTENSION_PSKKEYEXCHANGEMODES::~DIOSTREAMTLS_MSG_EXTENSION_PSKK
 {
  
 }
-
-
-
-
 
 
 /**-------------------------------------------------------------------------------------------------------------------
@@ -1948,10 +1908,6 @@ void DIOSTREAMTLS_MSG_EXTENSION_KEY::Clean()
   lengthkeydata  = 0;
   keydata.Empty();
 }
-
-
-
-
 
 
 /**-------------------------------------------------------------------------------------------------------------------

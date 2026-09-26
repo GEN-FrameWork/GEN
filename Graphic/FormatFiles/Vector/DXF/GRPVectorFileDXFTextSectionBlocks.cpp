@@ -393,7 +393,7 @@ GRPVECTORFILERESULT GRPVECTORFILEDXFTEXTSECTIONBLOCKS::ParserTextSection(XFILETX
         {                       
           GRPVECTORFILEDXF::ParserTextFilePrepareLine(line);
 
-          if(line && !line->Compare(__L("0"),true))
+          if(line && !line->Compare(__L("0"), true))
             {               
               line = fileTXT->GetLine(indexline + 1);
               GRPVECTORFILEDXF::ParserTextFilePrepareLine(line);

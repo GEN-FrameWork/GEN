@@ -136,7 +136,7 @@ APPFLOWWEBSERVER::~APPFLOWWEBSERVER()
 * @return     bool : true if the operation is successful; otherwise false.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-bool APPFLOWWEBSERVER::Ini(APPFLOWCFG* cfg, bool doinitialconnectitivitytest,  bool isapirestonly, bool chekuseragentid)
+bool APPFLOWWEBSERVER::Ini(APPFLOWCFG* cfg, bool doinitialconnectitivitytest, bool isapirestonly, bool chekuseragentid)
 {
   if(!cfg) return false;
 
@@ -581,7 +581,7 @@ DIOSTREAMTLSCONFIG* APPFLOWWEBSERVER::Ini_BuildTLSConfig(APPFLOWCFG* cfg)
 void APPFLOWWEBSERVER::Ini_RegisterEvents()
 {
   RegisterEvent(DIOWEBSERVER_XEVENT_TYPE_REQUEST);
-  SubscribeEvent(DIOWEBSERVER_XEVENT_TYPE_REQUEST                , (XSUBJECT *)webserver);
+  SubscribeEvent(DIOWEBSERVER_XEVENT_TYPE_REQUEST, (XSUBJECT *)webserver);
 
   if(isauthenticatedaccess)
     {
@@ -590,16 +590,16 @@ void APPFLOWWEBSERVER::Ini_RegisterEvents()
     }
 
   RegisterEvent(DIOWEBSERVER_XEVENT_TYPE_REQUEST_ENDPOINT);
-  SubscribeEvent(DIOWEBSERVER_XEVENT_TYPE_REQUEST_ENDPOINT       , (XSUBJECT *)webserver);
+  SubscribeEvent(DIOWEBSERVER_XEVENT_TYPE_REQUEST_ENDPOINT, (XSUBJECT *)webserver);
 
   RegisterEvent(DIOWEBSERVER_XEVENT_TYPE_WEBSOCKET_CONNECTED);
-  SubscribeEvent(DIOWEBSERVER_XEVENT_TYPE_WEBSOCKET_CONNECTED    , (XSUBJECT *)webserver);
+  SubscribeEvent(DIOWEBSERVER_XEVENT_TYPE_WEBSOCKET_CONNECTED, (XSUBJECT *)webserver);
 
   RegisterEvent(DIOWEBSERVER_XEVENT_TYPE_WEBSOCKET_READDATA);
-  SubscribeEvent(DIOWEBSERVER_XEVENT_TYPE_WEBSOCKET_READDATA     , (XSUBJECT *)webserver);
+  SubscribeEvent(DIOWEBSERVER_XEVENT_TYPE_WEBSOCKET_READDATA, (XSUBJECT *)webserver);
 
   RegisterEvent(DIOWEBSERVER_XEVENT_TYPE_WEBSOCKET_PONG);
-  SubscribeEvent(DIOWEBSERVER_XEVENT_TYPE_WEBSOCKET_PONG         , (XSUBJECT *)webserver);
+  SubscribeEvent(DIOWEBSERVER_XEVENT_TYPE_WEBSOCKET_PONG, (XSUBJECT *)webserver);
 
   RegisterEvent(DIOWEBSERVER_XEVENT_TYPE_WEBSOCKET_DISCONNECTED);
   SubscribeEvent(DIOWEBSERVER_XEVENT_TYPE_WEBSOCKET_DISCONNECTED , (XSUBJECT *)webserver);
@@ -1036,7 +1036,7 @@ bool APPFLOWWEBSERVER::ResolveRequest(DIOWEBSERVER* server, DIOWEBSERVER_CONNECT
 
   querystring.DeleteParamsFromURL(resourceconv);
 
-  if(!resourceconv.Compare(__L("/"),true)) resourceconv.Set(__L("/index.html"));
+  if(!resourceconv.Compare(__L("/"), true)) resourceconv.Set(__L("/index.html"));
 
 
   //-------------------------------------------------------------------------------------------------------------------------------
@@ -1168,9 +1168,9 @@ bool APPFLOWWEBSERVER::ResolveRequest(DIOWEBSERVER* server, DIOWEBSERVER_CONNECT
                   leyend = __L("Error: command or erroneous parameters.");
                   GenerateMessagePage(leyend, (*webHTMLpage));
 
-                  GenerateResponse_Error(connection,  DIOWEBHEADER_RESULT_NOTFOUND, leyend);
+                  GenerateResponse_Error(connection, DIOWEBHEADER_RESULT_NOTFOUND, leyend);
 
-                  APPFLOW_LOG_ENTRY(XLOGLEVEL_ERROR,  DIOWEBSERVER_LOGSECTIONID, false, leyend.Get());
+                  APPFLOW_LOG_ENTRY(XLOGLEVEL_ERROR, DIOWEBSERVER_LOGSECTIONID, false, leyend.Get());
                 }
 
               XSTRING IPstring;
@@ -1250,7 +1250,7 @@ bool APPFLOWWEBSERVER::GenerateMessagePage(XSTRING& leyend, DIOWEBPAGEHTMLCREATO
 * @return     bool : true if the operation is successful; otherwise false.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-bool APPFLOWWEBSERVER::GenerateResponse_Error(DIOWEBSERVER_CONNECTION* connection,  DIOWEBHEADER_RESULT result, XCHAR* leyend)
+bool APPFLOWWEBSERVER::GenerateResponse_Error(DIOWEBSERVER_CONNECTION* connection, DIOWEBHEADER_RESULT result, XCHAR* leyend)
 {
   DIOWEBPAGEHTMLCREATOR* webHTMLpage = GEN_NEW DIOWEBPAGEHTMLCREATOR();
   if(!webHTMLpage) return false;
@@ -1280,7 +1280,7 @@ bool APPFLOWWEBSERVER::GenerateResponse_Error(DIOWEBSERVER_CONNECTION* connectio
 * @return     bool : true if the operation is successful; otherwise false.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-bool APPFLOWWEBSERVER::GenerateResponse_Error(DIOWEBSERVER_CONNECTION* connection,  DIOWEBHEADER_RESULT result, XSTRING& leyend)
+bool APPFLOWWEBSERVER::GenerateResponse_Error(DIOWEBSERVER_CONNECTION* connection, DIOWEBHEADER_RESULT result, XSTRING& leyend)
 {
   return GenerateResponse_Error(connection, result, leyend.Get());
 }
@@ -1325,7 +1325,7 @@ bool APPFLOWWEBSERVER::End()
 {
   if(!webserver) return false;
 
-  UnSubscribeEvent(DIOWEBSERVER_XEVENT_TYPE_REQUEST                , (XSUBJECT *)webserver);
+  UnSubscribeEvent(DIOWEBSERVER_XEVENT_TYPE_REQUEST, (XSUBJECT *)webserver);
   DeRegisterEvent(DIOWEBSERVER_XEVENT_TYPE_REQUEST);
 
   if(isauthenticatedaccess)
@@ -1334,16 +1334,16 @@ bool APPFLOWWEBSERVER::End()
       DeRegisterEvent(DIOWEBSERVER_XEVENT_TYPE_CHECKAUTHENTICATE);
     }
 
-  UnSubscribeEvent(DIOWEBSERVER_XEVENT_TYPE_REQUEST_ENDPOINT       , (XSUBJECT *)webserver);
+  UnSubscribeEvent(DIOWEBSERVER_XEVENT_TYPE_REQUEST_ENDPOINT, (XSUBJECT *)webserver);
   DeRegisterEvent(DIOWEBSERVER_XEVENT_TYPE_REQUEST_ENDPOINT);
 
-  UnSubscribeEvent(DIOWEBSERVER_XEVENT_TYPE_WEBSOCKET_CONNECTED    , (XSUBJECT *)webserver);
+  UnSubscribeEvent(DIOWEBSERVER_XEVENT_TYPE_WEBSOCKET_CONNECTED, (XSUBJECT *)webserver);
   DeRegisterEvent(DIOWEBSERVER_XEVENT_TYPE_WEBSOCKET_CONNECTED);
 
-  UnSubscribeEvent(DIOWEBSERVER_XEVENT_TYPE_WEBSOCKET_READDATA     , (XSUBJECT *)webserver);
+  UnSubscribeEvent(DIOWEBSERVER_XEVENT_TYPE_WEBSOCKET_READDATA, (XSUBJECT *)webserver);
   DeRegisterEvent(DIOWEBSERVER_XEVENT_TYPE_WEBSOCKET_READDATA);
 
-  UnSubscribeEvent(DIOWEBSERVER_XEVENT_TYPE_WEBSOCKET_PONG         , (XSUBJECT *)webserver);
+  UnSubscribeEvent(DIOWEBSERVER_XEVENT_TYPE_WEBSOCKET_PONG, (XSUBJECT *)webserver);
   DeRegisterEvent(DIOWEBSERVER_XEVENT_TYPE_WEBSOCKET_PONG);
 
   UnSubscribeEvent(DIOWEBSERVER_XEVENT_TYPE_WEBSOCKET_DISCONNECTED , (XSUBJECT *)webserver);

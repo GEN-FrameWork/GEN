@@ -43,17 +43,12 @@ enum UI_PROPERTY_SELECTABLE_STATE
 	UI_PROPERTY_SELECTABLE_STATE_PRESELECT							  	  ,			
 	UI_PROPERTY_SELECTABLE_STATE_SELECTED								      ,			
 	
-	
 	UI_PROPERTY_SELECTABLE_STATE_MAX
 };
 
-
 #define UI_PROPERTY_SELECTABLE_DEFAULT_TIMESELECTED      100
 
-
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
-
 
 class XTIMER;
 

@@ -70,11 +70,7 @@ enum XVARIANT_TYPE
                                                   data = (void*)GEN_NEW ctype; \
                                                   if(data) *((ctype*)data) = value;
 
-
-
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
-
 
 class XVARIANT
 {

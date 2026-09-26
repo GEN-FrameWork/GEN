@@ -41,8 +41,6 @@
 #include "XLog.h"
 #include "XTrace.h"
 
-
-
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
 
 #define DIOSSHREVERSE_DEFAULTAPPLICATION      __L("sshpass")
@@ -52,10 +50,7 @@
 
 #define DIOSSHREVERSE_LOGSECTIONID            __L("SSHreverse")
 
-
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
-
 
 class DIOSSHREVERSE
 {
@@ -76,7 +71,7 @@ class DIOSSHREVERSE
 
     bool                          DownloadCFG           (XCHAR* URL, XSTRING& publicIP, XSTRING& localIP);
     bool                          DownloadCFG           (XSTRING& URL, XSTRING& publicIP, XSTRING& localIP);    
-    bool                          DownloadCFG           (DIOURL&  URL, XSTRING& publicIP, XSTRING& localIP);
+    bool                          DownloadCFG           (DIOURL& URL, XSTRING& publicIP, XSTRING& localIP);
                                   
     bool                          Activate              ();
     bool                          DeActivate            ();
@@ -85,7 +80,7 @@ class DIOSSHREVERSE
 
     bool                          Exec                  (XCHAR* URL, XSTRING& publicIP, XSTRING& localIP);    
     bool                          Exec                  (XSTRING& URL, XSTRING& publicIP, XSTRING& localIP);    
-    bool                          Exec                  (DIOURL&  URL, XSTRING& publicIP, XSTRING& localIP);
+    bool                          Exec                  (DIOURL& URL, XSTRING& publicIP, XSTRING& localIP);
                                   
 
   private:

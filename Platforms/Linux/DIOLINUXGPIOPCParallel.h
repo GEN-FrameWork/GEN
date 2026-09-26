@@ -28,26 +28,18 @@
 
 #pragma once
 
-
 #ifdef HW_INTEL
-
 
 /*---- INCLUDES ------------------------------------------------------------------------------------------------------*/
 
 #include "DIOGPIO.h"
 
-
-
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
-
 
 #define DIOLINUXGPIOPCPARALLEL_PORT1                0x378
 #define DIOLINUXGPIOPCPARALLEL_PORT2                0x278
 
-
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
-
 
 class DIOLINUXGPIOPCPARALLEL : public DIOGPIO
 {
@@ -70,8 +62,8 @@ class DIOLINUXGPIOPCPARALLEL : public DIOGPIO
 
   private:
 
-    bool                    PC_Get                          (XDWORD nport,XBYTE& data);
-    bool                    PC_Set                          (XDWORD nport,XBYTE data);
+    bool                    PC_Get                          (XDWORD nport, XBYTE& data);
+    bool                    PC_Set                          (XDWORD nport, XBYTE data);
 
     void                    Clean                           ();
 

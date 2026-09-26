@@ -402,7 +402,7 @@ bool XFILECSV::Close()
 {
   bool status[2] = { false , false };
 
-  status[0] = Serialization(false,HaveHeader());
+  status[0] = Serialization(false, HaveHeader());
   status[1] = XFILETXT::Close();
 
   if(status[0] && status[1]) return true;
@@ -538,7 +538,7 @@ XFILECSV_RECORD* XFILECSV::ReadRecord(XDWORD nrecord)
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         bool XFILECSV::WriteRecord(XDWORD nrecord,XFILECSV_RECORD* record)
+* @fn         bool XFILECSV::WriteRecord(XDWORD nrecord, XFILECSV_RECORD* record)
 * @brief      Write record
 * @ingroup    XUTILS
 * 
@@ -548,7 +548,7 @@ XFILECSV_RECORD* XFILECSV::ReadRecord(XDWORD nrecord)
 * @return     bool : true if the operation is successful; otherwise false.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-bool XFILECSV::WriteRecord(XDWORD nrecord,XFILECSV_RECORD* record)
+bool XFILECSV::WriteRecord(XDWORD nrecord, XFILECSV_RECORD* record)
 {
   if(records.IsEmpty())           return false;
   if(nrecord>=records.GetSize())  return false;
@@ -558,7 +558,7 @@ bool XFILECSV::WriteRecord(XDWORD nrecord,XFILECSV_RECORD* record)
 
   GEN_DELETE _record;
 
-  records.Set(nrecord,record);
+  records.Set(nrecord, record);
 
   return true;
 }
@@ -665,7 +665,7 @@ bool XFILECSV::Serialization(bool read, bool haveheader)
               line = GetLine(0)->Get();
               if(!line.IsEmpty())
                 {
-                  if(CreateRecordOfLine(line,&header)) c++;
+                  if(CreateRecordOfLine(line, &header)) c++;
                 }
             }
         }
@@ -683,7 +683,7 @@ bool XFILECSV::Serialization(bool read, bool haveheader)
                   record = GEN_NEW XFILECSV_RECORD();
                   if(record)
                     {
-                      CreateRecordOfLine(line,record);
+                      CreateRecordOfLine(line, record);
                       AddRecord(record);
                     }
                 }
@@ -698,7 +698,7 @@ bool XFILECSV::Serialization(bool read, bool haveheader)
 
           if(haveheader)
             {
-              if(CreateLineOfRecord(&header,line)) AddLine(line);
+              if(CreateLineOfRecord(&header, line)) AddLine(line);
             }
 
           for(int c=0;c<(int)records.GetSize();c++)
@@ -706,7 +706,7 @@ bool XFILECSV::Serialization(bool read, bool haveheader)
               XFILECSV_RECORD* record = (XFILECSV_RECORD*)records.Get(c);
               if(record)
                 {
-                  if(CreateLineOfRecord(record,line)) AddLine(line);
+                  if(CreateLineOfRecord(record, line)) AddLine(line);
                 }
             }
 
@@ -744,10 +744,10 @@ bool XFILECSV::CreateRecordOfLine(XSTRING& line, XFILECSV_RECORD* record)
   int start = 0;
   int end   = 0;
 
-  do{ end = line.Find(__L(";"),true,start);
+  do{ end = line.Find(__L(";"), true, start);
       if(end == XSTRING_NOTFOUND)
         {
-          end = line.Find(__L(","),true,start);
+          end = line.Find(__L(","), true, start);
           if(end != XSTRING_NOTFOUND) SetSeparator(__C(','));
 
         } else SetSeparator(__C(';'));
@@ -756,7 +756,7 @@ bool XFILECSV::CreateRecordOfLine(XSTRING& line, XFILECSV_RECORD* record)
 
       if(end != XSTRING_NOTFOUND)
         {
-          line.Copy(start,end,element);
+          line.Copy(start, end, element);
 
           record->AddElement(element);
 
@@ -764,7 +764,7 @@ bool XFILECSV::CreateRecordOfLine(XSTRING& line, XFILECSV_RECORD* record)
         }
        else
         {
-          line.Copy(start,element);
+          line.Copy(start, element);
           record->AddElement(element);
 
           break;
@@ -778,7 +778,7 @@ bool XFILECSV::CreateRecordOfLine(XSTRING& line, XFILECSV_RECORD* record)
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         bool XFILECSV::CreateLineOfRecord(XFILECSV_RECORD* record,XSTRING& line)
+* @fn         bool XFILECSV::CreateLineOfRecord(XFILECSV_RECORD* record, XSTRING& line)
 * @brief      Create line of record
 * @ingroup    XUTILS
 * 
@@ -788,7 +788,7 @@ bool XFILECSV::CreateRecordOfLine(XSTRING& line, XFILECSV_RECORD* record)
 * @return     bool : true if the operation is successful; otherwise false.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-bool XFILECSV::CreateLineOfRecord(XFILECSV_RECORD* record,XSTRING& line)
+bool XFILECSV::CreateLineOfRecord(XFILECSV_RECORD* record, XSTRING& line)
 {
   line.Empty();
 
@@ -799,7 +799,7 @@ bool XFILECSV::CreateLineOfRecord(XFILECSV_RECORD* record,XSTRING& line)
     {
       XSTRING element;
 
-      record->GetElement(c,element);
+      record->GetElement(c, element);
       line += element;
       if(c<(record->GetNElements()-1)) line += separatorstring;
     }

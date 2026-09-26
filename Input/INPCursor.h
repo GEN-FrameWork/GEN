@@ -38,7 +38,6 @@
 #include "INPCursorMotion.h"
 
 
-
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
 
 enum INPCURSOR_ID
@@ -52,14 +51,11 @@ enum INPCURSOR_ID
   INPCURSOR_ID_TOUCHSCREEN4         ,
 };
 
-
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
 
 class XFACTORY;
 class XTIMER;
 class INPBUTTON;
-
 
 class INPCURSOR : public INPCURSORMOTIONPOINT
 {
@@ -78,7 +74,7 @@ class INPCURSOR : public INPCURSORMOTIONPOINT
     bool                    IsChanged                 ();
     bool                    SetIsChanged              (bool ischanged);
 
-    bool                    IsPositionInRect          (int x = 0, int y = 0, int width = 0,int height = 0);
+    bool                    IsPositionInRect          (int x = 0, int y = 0, int width = 0, int height = 0);
 
     INPCURSORMOTION*        GetMotion                 ();
     bool                    AddPointToMotion          (bool ispressed);

@@ -48,18 +48,13 @@ enum GRP2DPATHSEGMENTTYPE
   GRP2DPATHSEGMENTTYPE_CLOSE           ,                                       // Close current sub path.
 };
 
-
 enum GRP2DPATHFILLRULE
 {
   GRP2DPATHFILLRULE_NONZERO        = 0 ,                                       // Non zero  fill rule (default).
   GRP2DPATHFILLRULE_EVENODD            ,                                       // Even odd  fill rule.
 };
 
-
-
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
-
 
 class GRP2DPATHSEGMENT
 {
@@ -87,7 +82,6 @@ class GRP2DPATHSEGMENT
 
     void                         Clean                ();
 };
-
 
 class GRP2DPATH
 {

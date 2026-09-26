@@ -43,11 +43,7 @@
 #include "GRP2DVectorFileDXFRenderAGG.h"
 #endif
 
-
-
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
-
-
 
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
 
@@ -55,10 +51,7 @@ class GRP2DCANVAS;
 class GRPBITMAP;
 class GRPVECTORFILE;
 
-
-
 /*---- INLINE FUNCTIONS + PROTOTYPES ---------------------------------------------------------------------------------*/
-
 
 class GRP2DVECTORFILERENDERAGG
 {
@@ -83,7 +76,6 @@ class GRP2DVECTORFILERENDERAGG
 
     bool                            GetDrawText                  ();
     void                            SetDrawText                  (bool drawtext);
-
 
     #ifdef GRP_VECTOR_FILE_SVG_ACTIVE
     GRP2DVECTORFILESVGRENDERAGG*    GetSVGRender                 ();

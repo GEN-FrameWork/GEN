@@ -28,9 +28,7 @@
 
 #pragma once
 
-
 #if defined(DIO_ACTIVE) && defined(DIO_STREAMBLUETOOTHLE_ACTIVE)
-
 
 /*---- INCLUDES ------------------------------------------------------------------------------------------------------*/
 

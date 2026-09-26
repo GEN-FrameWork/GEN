@@ -62,7 +62,6 @@ enum DIOWINDOWSICMPFSMEVENTS
   DIOWINDOWSICMP_LASTEVENT
 };
 
-
 enum DIOWINDOWSICMPFSMSTATES
 {
   DIOWINDOWSICMPFSMSTATE_NONE                 = 0 ,
@@ -75,8 +74,6 @@ enum DIOWINDOWSICMPFSMSTATES
 
   DIOWINDOWSICMP_LASTSTATE
 };
-
-
 
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
 

@@ -32,14 +32,10 @@
 
 #include "CompressBase.h"
 
-
-
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
 
 #define COMPRESS_DEFLATE_CHUNK          16384
 #define COMPRESS_DEFLATE_WINDOWBITS     15                                      // zlib-wrapped deflate (RFC 1950)
-
-
 
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
 
@@ -56,15 +52,15 @@ class COMPRESS_DEFLATE : public COMPRESSBASE
                             COMPRESS_DEFLATE      ();
     virtual                ~COMPRESS_DEFLATE      ();
 
-    bool                    Compress              (XBYTE* source,XDWORD size,XBUFFER* buffer);
-    bool                    Decompress            (XBYTE* source,XDWORD size,XBUFFER* buffer);
+    bool                    Compress              (XBYTE* source, XDWORD size, XBUFFER* buffer);
+    bool                    Decompress            (XBYTE* source, XDWORD size, XBUFFER* buffer);
 
   private:
 
     void                    Clean                 ();
 
-    int                     ZCompress             (XBUFFER* target,XBYTE* source,XDWORD sourcesize);
-    int                     ZDecompress           (XBUFFER* target,XBYTE* source,XDWORD sourcesize,int windowbits);
+    int                     ZCompress             (XBUFFER* target, XBYTE* source, XDWORD sourcesize);
+    int                     ZDecompress           (XBUFFER* target, XBYTE* source, XDWORD sourcesize, int windowbits);
 
 };
 

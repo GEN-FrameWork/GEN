@@ -35,22 +35,15 @@
 #include "DIOIP.h"
 #include "DIOStream.h"
 
-
-
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
 
 #define DIOSTREAMTCPIP_MAXLISTEN                        1024
 #define DIOSTREAMTCPIP_TIMEOUTENUMSERVERSIGNAL          3
 
-
-
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
-
 
 class DIOSTREAMTCPIPCONFIG;
 class DIOSTREAMENUMSERVERS;
-
 
 class DIOSTREAMTCPIP : public DIOSTREAM
 {

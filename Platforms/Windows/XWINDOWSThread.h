@@ -39,11 +39,7 @@
 
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
 
-
-
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
-
 
 class XWINDOWSMUTEX : public XMUTEX
 {
@@ -65,11 +61,11 @@ class XWINDOWSMUTEX : public XMUTEX
 class XWINDOWSTHREAD : public XTHREAD
 {
   public:
-                            XWINDOWSTHREAD        (XTHREADGROUPID groupID, XCHAR* ID,XTHREADFUNCTION function = NULL,void* data = NULL);
+                            XWINDOWSTHREAD        (XTHREADGROUPID groupID, XCHAR* ID, XTHREADFUNCTION function = NULL, void* data = NULL);
      virtual               ~XWINDOWSTHREAD        ();
 
      bool                   Ini                   (bool run = true);
-     bool                   Wait                  (int miliseconds =  XTHREAD_DEFAULTWAITYIELD);
+     bool                   Wait                  (int miliseconds = XTHREAD_DEFAULTWAITYIELD);
      bool                   End                   ();
 
   private:

@@ -32,8 +32,6 @@
 
 #include "XBase.h"
 
-
-
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
 
 enum COMPRESSBASE_TYPE
@@ -45,8 +43,6 @@ enum COMPRESSBASE_TYPE
   COMPRESSBASE_TYPE_GZ            ,
   COMPRESSBASE_TYPE_DEFLATE
 };
-
-
 
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
 
@@ -62,13 +58,13 @@ class COMPRESSBASE
     COMPRESSBASE_TYPE     GetType               ();
     COMPRESSBASE_TYPE     SetType               (COMPRESSBASE_TYPE type = COMPRESSBASE_TYPE_NONE);
 
-    virtual bool          Compress              (XBYTE* origin,XDWORD size,XBUFFER* buffer);
-    virtual bool          Decompress            (XBYTE* origin,XDWORD size,XBUFFER* buffer);
+    virtual bool          Compress              (XBYTE* origin, XDWORD size, XBUFFER* buffer);
+    virtual bool          Decompress            (XBYTE* origin, XDWORD size, XBUFFER* buffer);
 
-    virtual bool          Compress              (XBYTE* origin,XDWORD size,void* param1 = NULL);
-    virtual bool          Decompress            (XBYTE* origin,XDWORD size,void* param1 = NULL);
+    virtual bool          Compress              (XBYTE* origin, XDWORD size, void* param1 = NULL);
+    virtual bool          Decompress            (XBYTE* origin, XDWORD size, void* param1 = NULL);
 
-    virtual bool          CompressResult        (bool compress,XBYTE data,void* param1 = NULL);
+    virtual bool          CompressResult        (bool compress, XBYTE data, void* param1 = NULL);
 
   protected:
 

@@ -290,10 +290,6 @@ void DIOPROTOCOL_CONNECTION::Clean()
 }
 
 
-
-
-
-
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         DIOPROTOCOL_CONNECTIONSMANAGER::DIOPROTOCOL_CONNECTIONSMANAGER()
@@ -1318,7 +1314,7 @@ bool DIOPROTOCOL_CONNECTIONSMANAGER::SendEvent(DIOPROTOCOL_CONNECTIONSMANAGER_XE
 {
   if(!protocolconnection) return false;
 
-  DIOPROTOCOL_CONNECTIONSMANAGER_XEVENT xevent(this,type);
+  DIOPROTOCOL_CONNECTIONSMANAGER_XEVENT xevent(this, type);
 
   xevent.SetDIOStreamEnumServers(diostreamenumservers);
   xevent.SetDIOStreamConfig(protocolconnection->GetDIOStreamConfig());
@@ -1588,7 +1584,7 @@ void DIOPROTOCOL_CONNECTIONSMANAGER::ManageProtocolConnectionsClient()
                               GEN_XSLEEP.MilliSeconds(50);
                             }
 
-                         XTRACE_PRINTCOLOR(1, __L("Trying to connect to %s [%s]: %s (%d) seconds."),  URLclient->Get(), scfg->GetRemoteURL()->Get(), protocolconnection?__L("Connected!."):__L("Not Connected!."), xtimerconnections->GetMeasureSeconds());
+                         XTRACE_PRINTCOLOR(1, __L("Trying to connect to %s [%s]: %s (%d) seconds."), URLclient->Get(), scfg->GetRemoteURL()->Get(), protocolconnection?__L("Connected!."):__L("Not Connected!."), xtimerconnections->GetMeasureSeconds());
                         }
                        else
                         {

@@ -33,19 +33,13 @@
 #include "XString.h"
 #include "XMap.h"
 
-
-
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
 
 #define GEN_UI_ANIMATIONS  UI_ANIMATIONS::GetInstance()
 
-
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
 
-
 class UI_ANIMATION;
-
 
 class UI_ANIMATIONS
 {

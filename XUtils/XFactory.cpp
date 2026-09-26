@@ -413,7 +413,7 @@ bool XFACTORY::Delete_Mutex(XMUTEX* mutex)
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         XTHREAD* XFACTORY::CreateThread(XTHREADGROUPID groupID, XCHAR* ID,XTHREADFUNCTION function, void* param)
+* @fn         XTHREAD* XFACTORY::CreateThread(XTHREADGROUPID groupID, XCHAR* ID, XTHREADFUNCTION function, void* param)
 * @brief      Create thread
 * @ingroup    XUTILS
 * 
@@ -425,7 +425,7 @@ bool XFACTORY::Delete_Mutex(XMUTEX* mutex)
 * @return     XTHREAD* : Pointer to the requested object; NULL if it is not available.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-XTHREAD* XFACTORY::CreateThread(XTHREADGROUPID groupID, XCHAR* ID,XTHREADFUNCTION function, void* param)
+XTHREAD* XFACTORY::CreateThread(XTHREADGROUPID groupID, XCHAR* ID, XTHREADFUNCTION function, void* param)
 {
   return NULL;
 }

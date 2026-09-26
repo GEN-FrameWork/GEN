@@ -144,9 +144,9 @@ double XWINDOWSSYSTEM_CPUUSAGE::GetTotalCpuUsage()
       return -1;
     }
 
-  ULONGLONG sysidlediff   = SubtractTimes(idletime    , lastsysidletime);
-  ULONGLONG syskerneldiff = SubtractTimes(kerneltime  , lastsyskerneltime);
-  ULONGLONG sysuserdiff   = SubtractTimes(usertime    , lastsysusertime);
+  ULONGLONG sysidlediff   = SubtractTimes(idletime, lastsysidletime);
+  ULONGLONG syskerneldiff = SubtractTimes(kerneltime, lastsyskerneltime);
+  ULONGLONG sysuserdiff   = SubtractTimes(usertime, lastsysusertime);
 
   ULONGLONG systotal      = syskerneldiff + sysuserdiff;
   ULONGLONG totalsystime  = systotal + sysidlediff;
@@ -288,16 +288,12 @@ void XWINDOWSSYSTEM_CPUUSAGE::Clean()
   lastsystemtime    = 0;
   lastprocesstime   = 0;
 	      
-  ZeroMemory(&lastsysidletime     , sizeof(FILETIME));
-  ZeroMemory(&lastsyskerneltime   , sizeof(FILETIME));
-  ZeroMemory(&lastsysusertime     , sizeof(FILETIME));
-  ZeroMemory(&lastprockerneltime  , sizeof(FILETIME));
-  ZeroMemory(&lastprocusertime    , sizeof(FILETIME));
+  ZeroMemory(&lastsysidletime, sizeof(FILETIME));
+  ZeroMemory(&lastsyskerneltime, sizeof(FILETIME));
+  ZeroMemory(&lastsysusertime, sizeof(FILETIME));
+  ZeroMemory(&lastprockerneltime, sizeof(FILETIME));
+  ZeroMemory(&lastprocusertime, sizeof(FILETIME));
 }
-
-
-
-
 
 
 /**-------------------------------------------------------------------------------------------------------------------
@@ -440,9 +436,9 @@ bool XWINDOWSSYSTEM::GetOperativeSystemID(XSTRING& ID)
       return false;
     }
 
-  wmiinterface.DoQuery(__L("Win32_OperatingSystem"), __L("Caption")        , wmianswer[0]);
-  wmiinterface.DoQuery(__L("Win32_OperatingSystem"), __L("BuildNumber")    , wmianswer[1]);
-  wmiinterface.DoQuery(__L("Win32_OperatingSystem"), __L("CSDVersion")     , wmianswer[2]);
+  wmiinterface.DoQuery(__L("Win32_OperatingSystem"), __L("Caption"), wmianswer[0]);
+  wmiinterface.DoQuery(__L("Win32_OperatingSystem"), __L("BuildNumber"), wmianswer[1]);
+  wmiinterface.DoQuery(__L("Win32_OperatingSystem"), __L("CSDVersion"), wmianswer[2]);
   wmiinterface.DoQuery(__L("Win32_OperatingSystem"), __L("OSArchitecture") , wmianswer[3]);
 
   ID.Format(__L("%s Build(%s) %s %s"), wmianswer[0].Get(), wmianswer[1].Get(), wmianswer[2].Get(), wmianswer[3].Get());
@@ -566,7 +562,7 @@ float XWINDOWSSYSTEM::GetCPUTemperature()
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         bool XWINDOWSSYSTEM::GetMemoryInfo(XDWORD& total,XDWORD& free)
+* @fn         bool XWINDOWSSYSTEM::GetMemoryInfo(XDWORD& total, XDWORD& free)
 * @brief      Get memory info
 * @ingroup    PLATFORM_WINDOWS
 * 
@@ -576,7 +572,7 @@ float XWINDOWSSYSTEM::GetCPUTemperature()
 * @return     bool : true if the operation is successful; otherwise false.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-bool XWINDOWSSYSTEM::GetMemoryInfo(XDWORD& total,XDWORD& free)
+bool XWINDOWSSYSTEM::GetMemoryInfo(XDWORD& total, XDWORD& free)
 {
   /*
   MEMORYSTATUS mem;
@@ -1404,12 +1400,7 @@ int XWINDOWSSYSTEM::GetWifiRSSILevel()
           DWORD                   sizerssi = sizeof(ptr_rssi);
           WLAN_OPCODE_VALUE_TYPE  wlanopcodevaluetype = wlan_opcode_value_type_invalid;
 
-          result = WlanQueryInterface(handleclient, &interfacelinfo->InterfaceGuid
-                                                  , wlan_intf_opcode_rssi
-                                                  , NULL
-                                                  , &sizerssi
-                                                  , ptr_rssi
-                                                  , &wlanopcodevaluetype);
+          result = WlanQueryInterface(handleclient, &interfacelinfo->InterfaceGuid, wlan_intf_opcode_rssi, NULL, &sizerssi, ptr_rssi, &wlanopcodevaluetype);
 
           if(result == ERROR_SUCCESS)
             {

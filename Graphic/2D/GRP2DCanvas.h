@@ -45,7 +45,6 @@
 #include "GRPBitmapSequence.h"
 
 
-
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
 
 enum GRP2DCANVASTYPE
@@ -54,13 +53,9 @@ enum GRP2DCANVASTYPE
   GRP2DCANVASTYPE_AGGLIB        ,
 };
 
-
 #define GRP2DCANVASTYPE_DRAWFRAMERATE_ADJUSTSCREEN  -1.0f
 
-
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
-
 
 class GRPSCREEN;
 class GRPVIEWPORT;
@@ -86,7 +81,6 @@ class GRP2DCANVAS_VECTORFONT_CONFIG
     double                        GetHeight                           ();
     void                          SetHeight                           (double height);
 
-
     GRP2DCOLOR_RGBA8*             GetColor                            ();
     void                          SetColor                            (GRP2DCOLOR_RGBA8* color);
 
@@ -102,7 +96,6 @@ class GRP2DCANVAS_VECTORFONT_CONFIG
     GRP2DCOLOR_RGBA8*             color;
     bool                          iskerning;
 };
-
 
 class GRP2DCANVAS : public GRPPROPERTIES, public GRP2DREBUILDAREAS
 {
@@ -121,12 +114,12 @@ class GRP2DCANVAS : public GRPPROPERTIES, public GRP2DREBUILDAREAS
     virtual void                      GetClipBox                          (double& x1, double& y1, double& x2, double& y2);
     virtual void                      GetClipBox                          (XRECT& rect);
     virtual XRECT&                    GetClipBox                          ();
-    virtual void                      SetClipBox                          (double  x1, double  y1, double  x2, double y2);
+    virtual void                      SetClipBox                          (double x1, double y1, double x2, double y2);
     virtual void                      SetClipBox                          (XRECT& rect);
 
-    virtual GRP2DCOLOR*               GetPixel                            (double x, double  y);
-    virtual void                      PutPixel                            (double x, double  y, const GRP2DCOLOR* color);
-    virtual void                      PutBlendPixel                       (double x, double  y, const GRP2DCOLOR* color, double alpha);
+    virtual GRP2DCOLOR*               GetPixel                            (double x, double y);
+    virtual void                      PutPixel                            (double x, double y, const GRP2DCOLOR* color);
+    virtual void                      PutBlendPixel                       (double x, double y, const GRP2DCOLOR* color, double alpha);
 
     virtual GRP2DCOLOR*               GetFillColor                        ();
     virtual void                      SetFillColor                        (const GRP2DCOLOR* color);
@@ -194,7 +187,7 @@ class GRP2DCANVAS : public GRPPROPERTIES, public GRP2DREBUILDAREAS
     virtual bool                      CopyBufferRenderFromViewport        (GRPVIEWPORT* viewport);
 
     virtual bool                      ReleaseDrawFramerate                ();
-    virtual bool                      DrawFramerate                       (GRPSCREEN* screen, double  x, double  y);
+    virtual bool                      DrawFramerate                       (GRPSCREEN* screen, double x, double y);
 
   protected:
 

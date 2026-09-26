@@ -37,8 +37,6 @@
 #include "DIODeviceSPI.h"
 #include "DIODisplayDevice.h"
 
-
-
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
 
 #define DIOSPITFTDISPLAYILI9341_DCHIGH                   GEN_DIOGPIO.SetValue(GetGPIOEntryID(DIODISPLAYDEVICE_INDEX_GPIOENTRYID_DC), true); 
@@ -53,11 +51,7 @@
 #define DIOSPITFTDISPLAYILI9341_COLOR_YELLOW             0xFFE0
 #define DIOSPITFTDISPLAYILI9341_COLOR_WHITE              0xFFFF
 
-
-
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
-
 
 class DIOSPITFTDISPLAYILI9341 : public DIODISPLAYDEVICE, public DIODEVICESPI
 {

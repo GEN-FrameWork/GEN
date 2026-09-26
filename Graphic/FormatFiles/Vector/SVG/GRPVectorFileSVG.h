@@ -36,13 +36,9 @@
 
 #include "GRPVectorFile.h"
 
-
-
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
 
 #define GRPVECTORFILESVG_EXTENSION      __L(".svg")
-
-
 
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
 
@@ -51,10 +47,7 @@ class XFILEXML;
 class GRPVECTORFILECONFIG;
 class GRPVECTORFILESVGOBJ;
 
-
-
 /*---- INLINE FUNCTIONS + PROTOTYPES ---------------------------------------------------------------------------------*/
-
 
 class GRPVECTORFILESVG : public GRPVECTORFILE
 {

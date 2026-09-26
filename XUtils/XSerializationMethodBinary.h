@@ -62,11 +62,7 @@ enum XSERIALIZATIONMETHODBINARY_TYPEELEMENT
 #define XSERIALIZATIONMETHOD_STRUCT_ID  0x81
 #define XSERIALIZATIONMETHOD_ARRAY_ID   0x82
 
-
-
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
-
 
 class XVARIANT;
 

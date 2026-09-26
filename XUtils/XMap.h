@@ -33,8 +33,6 @@
 #include "XBase.h"
 #include "XVector.h"
 
-
-
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
 
 #ifdef MICROCONTROLLER
@@ -43,10 +41,7 @@
   #define XMAP_ADDINLIMIT           10
 #endif
 
-
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
-
 
 template<class KEY, class ELEMENT>
 class XMAP
@@ -63,7 +58,6 @@ class XMAP
     bool                            IsEmpty                               ()                                              { return keys.GetSize()?false:true;     }
     XDWORD                          GetSize                               ()                                              { return keys.GetSize();                }
 
-
     int                             GetAddInLimit                         ()                                              { return keys.GetAddInLimit();          }
     bool                            SetAddInLimit                         (int addinlimit = XMAP_ADDINLIMIT)
                                     {
@@ -78,7 +72,6 @@ class XMAP
                                       keys.SetIsMulti(ismulti);
                                       elements.SetIsMulti(ismulti);
                                     }
-
 
     int                             CountKey                              (KEY key)
                                     {
@@ -95,7 +88,6 @@ class XMAP
                                       return count;
                                     }
 
-
     bool                            Add                                   (KEY key, ELEMENT element)
                                     {
                                       if(!keys.Add(key)) 
@@ -111,7 +103,6 @@ class XMAP
 
                                       return status;
                                     }
-
 
     int                             Find                                  (KEY key)                                       { return keys.Find(key);                }
 
@@ -138,13 +129,11 @@ class XMAP
 
                                       if(index != NOTFOUND)
                                         {
-                                          return elements.Set(index,element);
+                                          return elements.Set(index, element);
                                         }
 
                                       return false;
                                     }
-
-
 
     bool                            Insert                                (int index, KEY key, ELEMENT element)
                                     {
@@ -155,7 +144,6 @@ class XMAP
 
                                       return elements.Insert(index, element);
                                     }
-
 
     bool                            Delete                                (KEY key)
                                     {
@@ -174,7 +162,6 @@ class XMAP
 
                                       return elements.Delete(element);
                                     }
-
 
     bool                            Delete                                (KEY key, ELEMENT element)
                                     {
@@ -198,7 +185,6 @@ class XMAP
 
                                       return status;
                                     }
-
 
     bool                            DeleteAll                             ()
                                     {

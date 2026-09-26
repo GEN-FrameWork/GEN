@@ -320,7 +320,7 @@ void DIOLINUXSTREAMUSB::ThreadConnection(void* data)
             {
               case DIOLINUXUSBFSMSTATE_NONE               : break;
 
-              case DIOLINUXUSBFSMSTATE_CONNECTED            : { DIOSTREAM_XEVENT xevent(diostream,DIOSTREAM_XEVENT_TYPE_CONNECTED);
+              case DIOLINUXUSBFSMSTATE_CONNECTED            : { DIOSTREAM_XEVENT xevent(diostream, DIOSTREAM_XEVENT_TYPE_CONNECTED);
                                                                 xevent.SetDIOStream(diostream);
                                                                 diostream->PostEvent(&xevent);
 
@@ -332,7 +332,7 @@ void DIOLINUXSTREAMUSB::ThreadConnection(void* data)
 
               case DIOLINUXUSBFSMSTATE_SENDINGDATA          : break;
 
-              case DIOLINUXUSBFSMSTATE_DISCONNECTING        : { DIOSTREAM_XEVENT xevent(diostream,DIOSTREAM_XEVENT_TYPE_DISCONNECTED);
+              case DIOLINUXUSBFSMSTATE_DISCONNECTING        : { DIOSTREAM_XEVENT xevent(diostream, DIOSTREAM_XEVENT_TYPE_DISCONNECTED);
                                                                 xevent.SetDIOStream(diostream);
                                                                 diostream->PostEvent(&xevent);
 
@@ -348,7 +348,7 @@ void DIOLINUXSTREAMUSB::ThreadConnection(void* data)
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         XDWORD DIOLINUXSTREAMUSB::ReadBuffer(XBYTE* buffer,XDWORD size)
+* @fn         XDWORD DIOLINUXSTREAMUSB::ReadBuffer(XBYTE* buffer, XDWORD size)
 * @brief      Read buffer
 * @ingroup    PLATFORM_LINUX
 * 
@@ -358,7 +358,7 @@ void DIOLINUXSTREAMUSB::ThreadConnection(void* data)
 * @return     XDWORD : Requested value.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-XDWORD DIOLINUXSTREAMUSB::ReadBuffer(XBYTE* buffer,XDWORD size)
+XDWORD DIOLINUXSTREAMUSB::ReadBuffer(XBYTE* buffer, XDWORD size)
 {
   if(GetStatus()==DIOSTREAMSTATUS_DISCONNECTED) return 0;
 

@@ -41,15 +41,11 @@
 class GRPWINDOWSBLITGLES;
 #endif
 
-
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
 
 #define GRPWINDOWSSCREEN_NAMECLASS  __L("GEN_Windows_Screen")
 
-
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
-
 
 class GRPWINDOWSSCREEN : public GRPSCREEN
 {
@@ -113,16 +109,9 @@ class GRPWINDOWSSCREEN : public GRPSCREEN
     void                                  Chromes_ApplyStyle                  (DWORD& style, DWORD& exstyle);
     void                                  Chromes_ApplyPostCreate             ();
 
-
-
-
-
     void                                  ApplyResizeLimits                   (MINMAXINFO* minmaxinfo);
     bool                                  IsAboveViewportMinimumSize          ();
     void                                  ClientSizeToWindowSize              (int clientwidth, int clientheight, DWORD style, int& windowwidth, int& windowheight);
-
-
-
 
     void                                  Uncloak                             ();
 

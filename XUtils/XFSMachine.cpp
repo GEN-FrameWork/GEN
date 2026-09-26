@@ -129,7 +129,7 @@ int XFSMACHINESTATE::GetID()
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         bool XFSMACHINESTATE::AddTransition(int input,int outputID)
+* @fn         bool XFSMACHINESTATE::AddTransition(int input, int outputID)
 * @brief      Add transition
 * @ingroup    XUTILS
 * 
@@ -139,7 +139,7 @@ int XFSMACHINESTATE::GetID()
 * @return     bool : true if the operation is successful; otherwise false.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-bool XFSMACHINESTATE::AddTransition(int input,int outputID)
+bool XFSMACHINESTATE::AddTransition(int input, int outputID)
 {
   int c;
 
@@ -241,10 +241,6 @@ void XFSMACHINESTATE::Clean()
   inputs         = NULL;
   outputstates   = NULL;
 }
-
-
-
-
 
 
 /**-------------------------------------------------------------------------------------------------------------------
@@ -392,7 +388,7 @@ bool XFSMACHINE::AddState(XFSMACHINESTATE* state)
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         bool XFSMACHINE::AddState(int state, int event, int tostate,...)
+* @fn         bool XFSMACHINE::AddState(int state, int event, int tostate, ...)
 * @brief      Add state
 * @ingroup    XUTILS
 * 
@@ -404,7 +400,7 @@ bool XFSMACHINE::AddState(XFSMACHINESTATE* state)
 * @return     bool : true if the operation is successful; otherwise false.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-bool XFSMACHINE::AddState(int state, int event, int tostate,...)
+bool XFSMACHINE::AddState(int state, int event, int tostate, ...)
 {
   XFSMACHINESTATE* _state;
   int              narg = 0;
@@ -421,12 +417,12 @@ bool XFSMACHINE::AddState(int state, int event, int tostate,...)
 
   narg+=2;
 
-  _state = GEN_NEW XFSMACHINESTATE(state,(narg/2));
+  _state = GEN_NEW XFSMACHINESTATE(state, (narg/2));
   if(!_state) return false;
 
-  _state->AddTransition(event,tostate);
+  _state->AddTransition(event, tostate);
 
-  va_start(arg,tostate);
+  va_start(arg, tostate);
 
   int _event;
   int _tostate;
@@ -435,7 +431,7 @@ bool XFSMACHINE::AddState(int state, int event, int tostate,...)
        if(_event != XFSMACHINESTATE_EVENTDEFEND)
         {
           _tostate = va_arg(arg, int);
-          _state->AddTransition(_event,_tostate);
+          _state->AddTransition(_event, _tostate);
         }
 
      } while(_event != XFSMACHINESTATE_EVENTDEFEND);
@@ -468,12 +464,12 @@ bool XFSMACHINE::AddSecuencialStates(int state, int maxsecuencialtransitions)
 {
   XFSMACHINESTATE* _state;
 
-  _state = GEN_NEW XFSMACHINESTATE(state,maxsecuencialtransitions);
+  _state = GEN_NEW XFSMACHINESTATE(state, maxsecuencialtransitions);
   if(!_state) return false;
 
   for(int c=0;c<maxsecuencialtransitions;c++)
     {
-      _state->AddTransition(c,c);
+      _state->AddTransition(c, c);
     }
 
   if(!AddState(_state))

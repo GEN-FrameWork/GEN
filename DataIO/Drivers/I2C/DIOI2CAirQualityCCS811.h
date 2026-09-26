@@ -72,11 +72,7 @@ enum  DIOI2CAIRQUALITYCCS811_ERRORS
 
 #define DIOI2CAIRQUALITYCCS811_HW_ID                    0x81
 
-
-
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
-
 
 class DIOI2CAIRQUALITYCCS811: public DIODEVICEI2C
 {

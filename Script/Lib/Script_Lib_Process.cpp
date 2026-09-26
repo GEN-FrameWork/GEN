@@ -107,11 +107,11 @@ bool SCRIPT_LIB_PROCESS::AddLibraryFunctions(SCRIPT* script)
 
   this->script = script;
 
-  script->AddLibraryFunction(this, __L("OpenURL")                            , Call_OpenURL);
-  script->AddLibraryFunction(this, __L("ExecApplication")                    , Call_ExecApplication);
-  script->AddLibraryFunction(this, __L("MakeCommand")                        , Call_MakeCommand);
-  script->AddLibraryFunction(this, __L("TerminateAplication")                , Call_TerminateApplication);
-  script->AddLibraryFunction(this, __L("TerminateAplicationWithWindow")      , Call_TerminateApplicationWithWindow);
+  script->AddLibraryFunction(this, __L("OpenURL"), Call_OpenURL);
+  script->AddLibraryFunction(this, __L("ExecApplication"), Call_ExecApplication);
+  script->AddLibraryFunction(this, __L("MakeCommand"), Call_MakeCommand);
+  script->AddLibraryFunction(this, __L("TerminateAplication"), Call_TerminateApplication);
+  script->AddLibraryFunction(this, __L("TerminateAplicationWithWindow"), Call_TerminateApplicationWithWindow);
 
   return true;
 }

@@ -286,7 +286,7 @@ CIPHERDES::~CIPHERDES()
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         bool CIPHERDES::Cipher(XBYTE* input,XDWORD size)
+* @fn         bool CIPHERDES::Cipher(XBYTE* input, XDWORD size)
 * @brief      Cipher
 * @ingroup    CIPHER
 * 
@@ -296,7 +296,7 @@ CIPHERDES::~CIPHERDES()
 * @return     bool : true if the operation is successful; otherwise false.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-bool CIPHERDES::Cipher(XBYTE* input,XDWORD size)
+bool CIPHERDES::Cipher(XBYTE* input, XDWORD size)
 {
   if(!size) return false;
 
@@ -304,14 +304,14 @@ bool CIPHERDES::Cipher(XBYTE* input,XDWORD size)
   CIPHERDES_CONTEXT  ctx;
   XBYTE              iv[8];
 
-  memset(iv,0,8);
-  if(inivector && inivector->GetSize()>=8) memcpy(iv, inivector->Get() ,8);
+  memset(iv, 0, 8);
+  if(inivector && inivector->GetSize()>=8) memcpy(iv, inivector->Get(), 8);
 
-  inputpadding.Add(input,size);
+  inputpadding.Add(input, size);
   inputpadding.Padding_Add(paddingadjustsize, paddingtype);
 
   result->Delete();
-  result->Add(input,size);
+  result->Add(input, size);
   result->Padding_Add(paddingadjustsize, paddingtype);
 
   CIPHERKEYSYMMETRICAL* key = (CIPHERKEYSYMMETRICAL*)GetKey();
@@ -323,8 +323,8 @@ bool CIPHERDES::Cipher(XBYTE* input,XDWORD size)
   bool status;
 
   if(this->GetChainingMode() == CIPHERCHAININGMODE_ECB)
-         status = DESCipher_ECB(&ctx, CIPHERDES_ENCRYPT, result->GetSize(), iv, inputpadding.Get(),  result->Get());
-    else status = DESCipher_CBC(&ctx, CIPHERDES_ENCRYPT, result->GetSize(), iv, inputpadding.Get(),  result->Get());
+         status = DESCipher_ECB(&ctx, CIPHERDES_ENCRYPT, result->GetSize(), iv, inputpadding.Get(), result->Get());
+    else status = DESCipher_CBC(&ctx, CIPHERDES_ENCRYPT, result->GetSize(), iv, inputpadding.Get(), result->Get());
 
   return status;
 }
@@ -332,7 +332,7 @@ bool CIPHERDES::Cipher(XBYTE* input,XDWORD size)
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         bool CIPHERDES::Uncipher(XBYTE* input,XDWORD size)
+* @fn         bool CIPHERDES::Uncipher(XBYTE* input, XDWORD size)
 * @brief      Uncipher
 * @ingroup    CIPHER
 * 
@@ -342,7 +342,7 @@ bool CIPHERDES::Cipher(XBYTE* input,XDWORD size)
 * @return     bool : true if the operation is successful; otherwise false.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-bool CIPHERDES::Uncipher(XBYTE* input,XDWORD size)
+bool CIPHERDES::Uncipher(XBYTE* input, XDWORD size)
 {
   if(!size) return false;
 
@@ -350,10 +350,10 @@ bool CIPHERDES::Uncipher(XBYTE* input,XDWORD size)
   XBYTE              iv[8];
 
   memset(iv, 0 , 8);
-  if(inivector && inivector->GetSize()>=8) memcpy(iv, inivector->Get() ,8);
+  if(inivector && inivector->GetSize()>=8) memcpy(iv, inivector->Get(), 8);
 
   result->Delete();
-  result->Add(input,size);
+  result->Add(input, size);
 
   CIPHERKEYSYMMETRICAL* key = (CIPHERKEYSYMMETRICAL*)GetKey();
   if(!key)               return false;
@@ -364,8 +364,8 @@ bool CIPHERDES::Uncipher(XBYTE* input,XDWORD size)
   bool status;
 
   if(this->GetChainingMode() == CIPHERCHAININGMODE_ECB)
-         status = DESCipher_ECB(&ctx,  CIPHERDES_DECRYPT, size, iv, input,  result->Get());
-    else status = DESCipher_CBC(&ctx,  CIPHERDES_DECRYPT, size, iv, input,  result->Get());
+         status = DESCipher_ECB(&ctx, CIPHERDES_DECRYPT, size, iv, input, result->Get());
+    else status = DESCipher_CBC(&ctx, CIPHERDES_DECRYPT, size, iv, input, result->Get());
 
   result->Padding_Delete();
 

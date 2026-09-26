@@ -35,22 +35,16 @@
 
 #include "DIOStream.h"
 
-
-
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
 
 #define DIOSTREAMICMP_NOTFOUND            -1
 
-
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
-
 
 class XTIMER;
 class XMUTEX;
 class DIOURL;
 class DIOSTREAMICMPCONFIG;
-
 
 class DIOSTREAMICMPDATAGRAM
 {
@@ -66,19 +60,17 @@ class DIOSTREAMICMPDATAGRAM
     bool                              SetAddress                                (XSTRING& address);
 
     XBUFFER*                          GetData                                   ();
-    bool                              SetData                                   (XBYTE* data,XDWORD size);
+    bool                              SetData                                   (XBYTE* data, XDWORD size);
     void                              SetData                                   (XBUFFER& data);
 
   private:
 
     void                              Clean                                     ();
 
-
     bool                              istosend;
     XSTRING                           address;
     XBUFFER*                          data;
 };
-
 
 class DIOSTREAMICMP : public DIOSTREAM
 {

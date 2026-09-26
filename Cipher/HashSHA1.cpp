@@ -234,7 +234,7 @@ void HASHSHA1::ProcessMessageBlock()
 
   for(t=16;t<80;t++)
     {
-      W[t] = CircularShift(1,W[t-3] ^ W[t-8] ^ W[t-14] ^ W[t-16]);
+      W[t] = CircularShift(1, W[t-3] ^ W[t-8] ^ W[t-14] ^ W[t-16]);
     }
 
   A = H[0];
@@ -245,44 +245,44 @@ void HASHSHA1::ProcessMessageBlock()
 
   for(t=0;t<20;t++)
     {
-      temp  = CircularShift(5,A) + ((B & C) | ((~B) & D)) + E + W[t] + K[0];
+      temp  = CircularShift(5, A) + ((B & C) | ((~B) & D)) + E + W[t] + K[0];
       temp &= 0xFFFFFFFF;
       E     = D;
       D     = C;
-      C     = CircularShift(30,B);
+      C     = CircularShift(30, B);
       B     = A;
       A     = temp;
     }
 
   for(t=20;t<40;t++)
     {
-      temp = CircularShift(5,A) + (B ^ C ^ D) + E + W[t] + K[1];
+      temp = CircularShift(5, A) + (B ^ C ^ D) + E + W[t] + K[1];
       temp &= 0xFFFFFFFF;
       E     = D;
       D     = C;
-      C     = CircularShift(30,B);
+      C     = CircularShift(30, B);
       B     = A;
       A     = temp;
     }
 
   for(t=40;t<60;t++)
     {
-      temp  = CircularShift(5,A) + ((B & C) | (B & D) | (C & D)) + E + W[t] + K[2];
+      temp  = CircularShift(5, A) + ((B & C) | (B & D) | (C & D)) + E + W[t] + K[2];
       temp &= 0xFFFFFFFF;
       E     = D;
       D     = C;
-      C     = CircularShift(30,B);
+      C     = CircularShift(30, B);
       B     = A;
       A     = temp;
     }
 
   for(t=60;t<80;t++)
     {
-      temp  = CircularShift(5,A) + (B ^ C ^ D) + E + W[t] + K[3];
+      temp  = CircularShift(5, A) + (B ^ C ^ D) + E + W[t] + K[3];
       temp &= 0xFFFFFFFF;
       E     = D;
       D     = C;
-      C     = CircularShift(30,B);
+      C     = CircularShift(30, B);
       B     = A;
       A     = temp;
     }

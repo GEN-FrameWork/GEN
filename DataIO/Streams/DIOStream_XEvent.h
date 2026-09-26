@@ -35,8 +35,6 @@
 
 #include "DIOStreamDevice.h"
 
-
-
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
 
 enum DIOSTREAM_XEVENT_TYPE
@@ -48,8 +46,6 @@ enum DIOSTREAM_XEVENT_TYPE
   DIOSTREAM_XEVENT_TYPE_EXCEPTIONDEVICE                             ,
   DIOSTREAM_XEVENT_TYPE_COOPERATIONDEVICE                           ,
 };
-
-
 
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
 

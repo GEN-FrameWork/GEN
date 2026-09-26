@@ -90,7 +90,7 @@ COMPRESS_LZW::~COMPRESS_LZW()
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         bool COMPRESS_LZW::Compress(XBYTE* source,XDWORD size,XBUFFER* xbuffer)
+* @fn         bool COMPRESS_LZW::Compress(XBYTE* source, XDWORD size, XBUFFER* xbuffer)
 * @brief      Compress
 * @ingroup    COMPRESS
 * 
@@ -101,7 +101,7 @@ COMPRESS_LZW::~COMPRESS_LZW()
 * @return     bool : true if the operation is successful; otherwise false.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-bool COMPRESS_LZW::Compress(XBYTE* source,XDWORD size,XBUFFER* xbuffer)
+bool COMPRESS_LZW::Compress(XBYTE* source, XDWORD size, XBUFFER* xbuffer)
 {
   if(!source)  return false;
   if(!size)    return false;
@@ -110,7 +110,7 @@ bool COMPRESS_LZW::Compress(XBYTE* source,XDWORD size,XBUFFER* xbuffer)
   xbuffer->Delete();
   xbuffer->Resize(size+LZW_MAX_OVERCMP);
 
-  XDWORD csize = LZW_Encode(source,size,xbuffer->Get());
+  XDWORD csize = LZW_Encode(source, size, xbuffer->Get());
 
   xbuffer->Resize(csize);
 
@@ -120,7 +120,7 @@ bool COMPRESS_LZW::Compress(XBYTE* source,XDWORD size,XBUFFER* xbuffer)
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         bool COMPRESS_LZW::Decompress(XBYTE* source,XDWORD size,XBUFFER* xbuffer)
+* @fn         bool COMPRESS_LZW::Decompress(XBYTE* source, XDWORD size, XBUFFER* xbuffer)
 * @brief      Decompress
 * @ingroup    COMPRESS
 * 
@@ -131,13 +131,13 @@ bool COMPRESS_LZW::Compress(XBYTE* source,XDWORD size,XBUFFER* xbuffer)
 * @return     bool : true if the operation is successful; otherwise false.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-bool COMPRESS_LZW::Decompress(XBYTE* source,XDWORD size,XBUFFER* xbuffer)
+bool COMPRESS_LZW::Decompress(XBYTE* source, XDWORD size, XBUFFER* xbuffer)
 {
   if(!source)  return false;
   if(!xbuffer) return false;
   if(!size)    return false;
 
-  LZW_Decode(source,xbuffer->Get());
+  LZW_Decode(source, xbuffer->Get());
 
   return true;
 }
@@ -145,7 +145,7 @@ bool COMPRESS_LZW::Decompress(XBYTE* source,XDWORD size,XBUFFER* xbuffer)
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         XDWORD COMPRESS_LZW::LZW_Encode(XBYTE* inbuffer,XDWORD length,XBYTE* outbuffer)
+* @fn         XDWORD COMPRESS_LZW::LZW_Encode(XBYTE* inbuffer, XDWORD length, XBYTE* outbuffer)
 * @brief      LZW encode
 * @ingroup    COMPRESS
 * 
@@ -156,7 +156,7 @@ bool COMPRESS_LZW::Decompress(XBYTE* source,XDWORD size,XBUFFER* xbuffer)
 * @return     XDWORD : Requested value.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-XDWORD COMPRESS_LZW::LZW_Encode(XBYTE* inbuffer,XDWORD length,XBYTE* outbuffer)
+XDWORD COMPRESS_LZW::LZW_Encode(XBYTE* inbuffer, XDWORD length, XBYTE* outbuffer)
 {
   *outbuffer++ = 8 ;
 
@@ -166,7 +166,7 @@ XDWORD COMPRESS_LZW::LZW_Encode(XBYTE* inbuffer,XDWORD length,XBYTE* outbuffer)
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         void COMPRESS_LZW::LZW_Decode(XBYTE* inbuffer,XBYTE* outbuffer)
+* @fn         void COMPRESS_LZW::LZW_Decode(XBYTE* inbuffer, XBYTE* outbuffer)
 * @brief      LZW decode
 * @ingroup    COMPRESS
 * 
@@ -174,7 +174,7 @@ XDWORD COMPRESS_LZW::LZW_Encode(XBYTE* inbuffer,XDWORD length,XBYTE* outbuffer)
 * @param[in]  outbuffer : Output outbuffer.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-void COMPRESS_LZW::LZW_Decode(XBYTE* inbuffer,XBYTE* outbuffer)
+void COMPRESS_LZW::LZW_Decode(XBYTE* inbuffer, XBYTE* outbuffer)
 {
   this->LZW_GIF_Decode (inbuffer, outbuffer, 0, 0, false);
 }
@@ -182,7 +182,7 @@ void COMPRESS_LZW::LZW_Decode(XBYTE* inbuffer,XBYTE* outbuffer)
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         XDWORD COMPRESS_LZW::LZW_GIF_Encode(XBYTE* dibbuffer,XBYTE* outbuffer,XDWORD dibwidth,XDWORD dibheight,XWORD colorbit)
+* @fn         XDWORD COMPRESS_LZW::LZW_GIF_Encode(XBYTE* dibbuffer, XBYTE* outbuffer, XDWORD dibwidth, XDWORD dibheight, XWORD colorbit)
 * @brief      LZWGIF encode
 * @ingroup    COMPRESS
 * 
@@ -195,7 +195,7 @@ void COMPRESS_LZW::LZW_Decode(XBYTE* inbuffer,XBYTE* outbuffer)
 * @return     XDWORD : Requested value.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-XDWORD COMPRESS_LZW::LZW_GIF_Encode(XBYTE* dibbuffer,XBYTE* outbuffer,XDWORD dibwidth,XDWORD dibheight,XWORD colorbit)
+XDWORD COMPRESS_LZW::LZW_GIF_Encode(XBYTE* dibbuffer, XBYTE* outbuffer, XDWORD dibwidth, XDWORD dibheight, XWORD colorbit)
 {
   hash = GEN_NEW XWORD [LZW_MAX_HASHSIZE] ;
 
@@ -259,7 +259,7 @@ XDWORD COMPRESS_LZW::LZW_GIF_Encode(XBYTE* dibbuffer,XBYTE* outbuffer,XDWORD dib
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         void COMPRESS_LZW::LZW_GIF_Decode(XBYTE* inbuffer,XBYTE* dibbuffer,XDWORD dibwidth,XDWORD dibheight,bool binterlace)
+* @fn         void COMPRESS_LZW::LZW_GIF_Decode(XBYTE* inbuffer, XBYTE* dibbuffer, XDWORD dibwidth, XDWORD dibheight, bool binterlace)
 * @brief      LZWGIF decode
 * @ingroup    COMPRESS
 * 
@@ -270,7 +270,7 @@ XDWORD COMPRESS_LZW::LZW_GIF_Encode(XBYTE* dibbuffer,XBYTE* outbuffer,XDWORD dib
 * @param[in]  binterlace : Binterlace value.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-void COMPRESS_LZW::LZW_GIF_Decode(XBYTE* inbuffer,XBYTE* dibbuffer,XDWORD dibwidth,XDWORD dibheight,bool binterlace)
+void COMPRESS_LZW::LZW_GIF_Decode(XBYTE* inbuffer, XBYTE* dibbuffer, XDWORD dibwidth, XDWORD dibheight, bool binterlace)
 {
   strbegin = GEN_NEW LZW_STRING [LZW_MAX_TABLE_SIZE + 32];
 

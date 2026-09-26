@@ -118,10 +118,6 @@ void UI_VIRTUALKEYBOARD_KEYINFO::Clean()
 }
 
 
-
-
-
-
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         UI_VIRTUALKEYBOARD::UI_VIRTUALKEYBOARD()
@@ -236,11 +232,13 @@ UI_ELEMENT* UI_VIRTUALKEYBOARD::GetElementEditable()
 
 
 /**-------------------------------------------------------------------------------------------------------------------
-*
+* 
 * @fn         UI_ELEMENT_EDITTEXT* UI_VIRTUALKEYBOARD::GetElementInput()
 * @brief      Live edit field hosted inside the keyboard form (above the keys).
 * @ingroup    USERINTERFACE
-*
+* 
+* @return     UI_ELEMENT_EDITTEXT* : 
+* 
 * --------------------------------------------------------------------------------------------------------------------*/
 UI_ELEMENT_EDITTEXT* UI_VIRTUALKEYBOARD::GetElementInput()
 {
@@ -249,11 +247,15 @@ UI_ELEMENT_EDITTEXT* UI_VIRTUALKEYBOARD::GetElementInput()
 
 
 /**-------------------------------------------------------------------------------------------------------------------
-*
+* 
 * @fn         bool UI_VIRTUALKEYBOARD::IsOwnElement(UI_ELEMENT* element)
 * @brief      True when element is the keyboard form or a descendant (keys / input edit).
 * @ingroup    USERINTERFACE
-*
+* 
+* @param[in]  element : 
+* 
+* @return     bool : true if the operation is successful; otherwise false.
+* 
 * --------------------------------------------------------------------------------------------------------------------*/
 bool UI_VIRTUALKEYBOARD::IsOwnElement(UI_ELEMENT* element)
 {
@@ -615,11 +617,13 @@ bool UI_VIRTUALKEYBOARD::SelectInput(UI_ELEMENT* key_select)
 
 
 /**-------------------------------------------------------------------------------------------------------------------
-*
+* 
 * @fn         bool UI_VIRTUALKEYBOARD::CommitInputToEditable()
 * @brief      Copy the in-keyboard input text into the layout edit that opened the session.
 * @ingroup    USERINTERFACE
-*
+* 
+* @return     bool : true if the operation is successful; otherwise false.
+* 
 * --------------------------------------------------------------------------------------------------------------------*/
 bool UI_VIRTUALKEYBOARD::CommitInputToEditable()
 {
@@ -1060,11 +1064,16 @@ bool UI_VIRTUALKEYBOARD::CreateAllKeys(double x, double y)
 
 
 /**-------------------------------------------------------------------------------------------------------------------
-*
+* 
 * @fn         bool UI_VIRTUALKEYBOARD::CreateInputField(double sizewidth, double sizeheight)
 * @brief      Create the GEN edittext hosted above the keys (cursor, blink, max size).
 * @ingroup    USERINTERFACE
-*
+* 
+* @param[in]  sizewidth : 
+* @param[in]  sizeheight : 
+* 
+* @return     bool : true if the operation is successful; otherwise false.
+* 
 * --------------------------------------------------------------------------------------------------------------------*/
 bool UI_VIRTUALKEYBOARD::CreateInputField(double sizewidth, double sizeheight)
 {

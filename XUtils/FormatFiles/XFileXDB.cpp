@@ -197,7 +197,7 @@ bool XFILEXDB::OpenFile()
 {
   if(!Open(this->xpath)) return false;
 
-  GetPrimaryFile()->Read((XBYTE*)&nrecords,sizeof(XDWORD));
+  GetPrimaryFile()->Read((XBYTE*)&nrecords, sizeof(XDWORD));
 
   if(!nrecords)
     {
@@ -211,12 +211,12 @@ bool XFILEXDB::OpenFile()
       XDWORD ID     = 0;
       XDWORD filepos  = 0;
 
-      GetPrimaryFile()->Read((XBYTE*)&ID      , sizeof(XDWORD));
+      GetPrimaryFile()->Read((XBYTE*)&ID, sizeof(XDWORD));
       GetPrimaryFile()->Read((XBYTE*)&filepos , sizeof(XDWORD));
 
       //XTRACE_PRINTCOLOR(1,__L("ID: %08X"), ID);
 
-      indexmap.Add(ID,filepos);
+      indexmap.Add(ID, filepos);
     }
 
   indexmap.SetIsMulti(false);
@@ -269,7 +269,7 @@ XBUFFER* XFILEXDB::GetRecord(XDWORD ID)
 
   if(!GetPrimaryFile()->SetPosition(filepos)) return NULL;
 
-  if(!GetPrimaryFile()->Read((XBYTE*)&size ,sizeof(XDWORD))) return NULL;
+  if(!GetPrimaryFile()->Read((XBYTE*)&size, sizeof(XDWORD))) return NULL;
 
   XBUFFER* xbuffer = GEN_NEW XBUFFER();
   if(xbuffer)
@@ -320,7 +320,7 @@ XBUFFER* XFILEXDB::GetRecordIndex(XDWORD index)
 
   if(!GetPrimaryFile()->SetPosition(filepos)) return NULL;
 
-  if(!GetPrimaryFile()->Read((XBYTE*)&size ,sizeof(XDWORD))) return NULL;
+  if(!GetPrimaryFile()->Read((XBYTE*)&size, sizeof(XDWORD))) return NULL;
 
   XBUFFER* xbuffer = GEN_NEW XBUFFER();
   if(xbuffer)

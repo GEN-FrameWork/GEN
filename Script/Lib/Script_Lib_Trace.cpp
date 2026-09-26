@@ -105,12 +105,12 @@ bool SCRIPT_LIB_TRACE::AddLibraryFunctions(SCRIPT* script)
 
   this->script = script;
 
-  script->AddLibraryFunction(this, __L("TraceClearScreen")         , Call_TraceClearScreen);
-  script->AddLibraryFunction(this, __L("TraceClearMsgsStatus")     , Call_TraceClearMsgsStatus);
-  script->AddLibraryFunction(this, __L("TracePrintColor")          , Call_TracePrintColor);  
+  script->AddLibraryFunction(this, __L("TraceClearScreen"), Call_TraceClearScreen);
+  script->AddLibraryFunction(this, __L("TraceClearMsgsStatus"), Call_TraceClearMsgsStatus);
+  script->AddLibraryFunction(this, __L("TracePrintColor"), Call_TracePrintColor);  
 
   // Compatibility: eliminate in a future
-  script->AddLibraryFunction(this, __L("XTRACE_PRINTCOLOR")        , Call_TracePrintColor);
+  script->AddLibraryFunction(this, __L("XTRACE_PRINTCOLOR"), Call_TracePrintColor);
 
   return true;
 }
@@ -274,7 +274,7 @@ void Call_TracePrintColor(SCRIPT_LIB* library, SCRIPT* script, XVECTOR<XVARIANT*
                         int  nparam = 1;
                         bool end    = false;
 
-                        memset(param,0,MAXTEMPOSTR*sizeof(XCHAR));
+                        memset(param, 0, MAXTEMPOSTR*sizeof(XCHAR));
                         param[0] = '%';
 
                         c++;
@@ -322,7 +322,7 @@ void Call_TracePrintColor(SCRIPT_LIB* library, SCRIPT* script, XVECTOR<XVARIANT*
                                 case __C('s')   :
                                 case __C('S')   : { XVARIANT variantparam = (*params->Get(paramindex));
                                                     paramindex++;
-                                                    string.Format(param,(XCHAR*)variantparam);
+                                                    string.Format(param, (XCHAR*)variantparam);
                                                     end = true;
                                                   }
                                                   break;

@@ -97,10 +97,6 @@ void DIOWEBSERVER_ENDPOINT::Clean()
 }
 
 
-
-
-
-
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         DIOWEBSERVER_APIREST::DIOWEBSERVER_APIREST()

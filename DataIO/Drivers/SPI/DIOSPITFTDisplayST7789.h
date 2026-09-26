@@ -94,11 +94,7 @@
 #define DIOSPITFTDISPLAYST7789_COLOR_YELLOW              0xFFE0
 #define DIOSPITFTDISPLAYST7789_COLOR_WHITE               0xFFFF
 
-
-
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
-
 
 class DIOSPITFTDISPLAYST7789 : public DIODISPLAYDEVICE, public DIODEVICESPI
 {

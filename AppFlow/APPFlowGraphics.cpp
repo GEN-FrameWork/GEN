@@ -236,7 +236,7 @@ bool APPFLOWGRAPHICS::CreateMainScreenProcess(bool show)
     }
   #endif
 
-  SubscribeEvent(GRPXEVENT_TYPE_SCREEN_CREATING       , this);
+  SubscribeEvent(GRPXEVENT_TYPE_SCREEN_CREATING, this);
   SubscribeEvent(GRPXEVENT_TYPE_SCREEN_CANVASCREATING , this);
   SubscribeEvent(GRPXEVENT_TYPE_SCREEN_CREATED        , this);
   SubscribeEvent(GRPXEVENT_TYPE_SCREEN_DELETING       , this);
@@ -262,7 +262,7 @@ bool APPFLOWGRAPHICS::CreateMainScreenProcess(bool show)
           GRPVIEWPORT*  viewport = mainscreen->GetViewport(0);
           if(!viewport)
             {
-              if(!mainscreen->CreateViewport(GRPVIEWPORT_ID_MAIN , 0.0f, 0.0f, (float)mainscreen->GetWidth()   , (float)mainscreen->GetHeight(), 0,  0, mainscreen->GetWidth(), mainscreen->GetHeight()))
+              if(!mainscreen->CreateViewport(GRPVIEWPORT_ID_MAIN, 0.0f, 0.0f, (float)mainscreen->GetWidth(), (float)mainscreen->GetHeight(), 0, 0, mainscreen->GetWidth(), mainscreen->GetHeight()))
                 {
                   return false;
                 }                  

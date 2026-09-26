@@ -33,8 +33,6 @@
 #include "DIOURL.h"
 #include "DIOScraperWeb.h"
 
-
-
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
 
 #define DIOSCRAPERWEBWEATHER_NAMEFILE       __L("ws_weather.xml")

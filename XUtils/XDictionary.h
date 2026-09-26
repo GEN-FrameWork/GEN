@@ -33,15 +33,9 @@
 #include "XList.h"
 #include "XString.h"
 
-
-
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
 
-
-
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
-
 
 template<class T>
 class XDICTIONARYENTRY
@@ -51,7 +45,6 @@ class XDICTIONARYENTRY
     XSTRING                           key;
     T                                 value;
 };
-
 
 template<class T>
 class XDICTIONARY

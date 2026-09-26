@@ -36,12 +36,7 @@
 #include "XDir.h"
 #include "XPath.h"
 
-
-
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
-
-
-
 
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
 
@@ -59,7 +54,7 @@ class XWINDOWSDIR : public XDIR
 
     bool                GetActual               (XPATH& xpath);
 
-    bool                FirstSearch             (XCHAR* xpath,XCHAR* patternsearch,XDIRELEMENT* searchelement);
+    bool                FirstSearch             (XCHAR* xpath, XCHAR* patternsearch, XDIRELEMENT* searchelement);
     bool                NextSearch              (XDIRELEMENT* searchelement);
 
   private:

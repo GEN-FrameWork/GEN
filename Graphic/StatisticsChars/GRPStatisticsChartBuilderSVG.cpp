@@ -172,7 +172,7 @@ bool GRPSTATISTICSCHARTBUILDERSVG::EndDocument()
 * --------------------------------------------------------------------------------------------------------------------*/
 bool GRPSTATISTICSCHARTBUILDERSVG::DrawRect(double x, double y, double width, double height, GRPSTATISTICSCHARTSTYLE& style)
 {
-  content.Add(__L("  <rect x=\""));
+  content.Add(__L(" <rect x=\""));
   AppendNumber(content, x);
   content.Add(__L("\" y=\""));
   AppendNumber(content, y);
@@ -207,7 +207,7 @@ bool GRPSTATISTICSCHARTBUILDERSVG::DrawRect(double x, double y, double width, do
 * --------------------------------------------------------------------------------------------------------------------*/
 bool GRPSTATISTICSCHARTBUILDERSVG::DrawLine(double x1, double y1, double x2, double y2, GRPSTATISTICSCHARTSTYLE& style)
 {
-  content.Add(__L("  <line x1=\""));
+  content.Add(__L(" <line x1=\""));
   AppendNumber(content, x1);
   content.Add(__L("\" y1=\""));
   AppendNumber(content, y1);
@@ -247,7 +247,7 @@ bool GRPSTATISTICSCHARTBUILDERSVG::DrawText(double x, double y, XCHAR* text, GRP
 {
   if(!text) return false;
 
-  content.Add(__L("  <text x=\""));
+  content.Add(__L(" <text x=\""));
   AppendNumber(content, x);
   content.Add(__L("\" y=\""));
   AppendNumber(content, y);
@@ -304,7 +304,7 @@ bool GRPSTATISTICSCHARTBUILDERSVG::DrawPolygon(const double* xy, XDWORD npoints,
 {
   if(!xy || (npoints < 2)) return false;
 
-  content.Add(__L("  <polygon points=\""));
+  content.Add(__L(" <polygon points=\""));
 
   for(XDWORD p=0; p<npoints; p++)
     {

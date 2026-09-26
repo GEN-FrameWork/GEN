@@ -31,7 +31,6 @@
 
 #if defined(DIO_ACTIVE) && defined(DIO_STREAMUSB_ACTIVE)
 
-
 /*---- INCLUDES ------------------------------------------------------------------------------------------------------*/
 
 #include <windows.h>
@@ -41,9 +40,6 @@
 
 #include "DIOStreamDeviceUSB.h"
 #include "DIOStreamUSBLocalEnumDevices.h"
-
-
-
 
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
 

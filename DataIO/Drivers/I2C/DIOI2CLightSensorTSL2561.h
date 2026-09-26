@@ -148,7 +148,6 @@ enum DIOI2CLIGHTSENSORTSL2561REGISTER
   DIOI2CLIGHTSENSORTSL2561REGISTER_CHAN1_HIGH       = 0x0F
 };
 
-
 enum DIOI2CLIGHTSENSORTSL2561INTEGRATIONTIME
 {
   DIOI2CLIGHTSENSORTSL2561INTEGRATIONTIME_13MS      = 0x00,    // 13.7ms
@@ -162,17 +161,11 @@ enum DIOI2CLIGHTSENSORTSL2561GAIN
   DIOI2CLIGHTSENSORTSL2561GAIN_16X                  = 0x10,    // 16x gain
 };
 
-
-
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
-
 
 class DIOI2CLIGHTSENSORTSL2561 : public DIODEVICEI2C
 {
   public:
-
-
 
                                                 DIOI2CLIGHTSENSORTSL2561      ();
     virtual                                    ~DIOI2CLIGHTSENSORTSL2561      ();

@@ -993,12 +993,21 @@ void UI_CSSPARSER::SkipToNextRule(XSTRING& text, int& pos)
 
 
 /**-------------------------------------------------------------------------------------------------------------------
-*
+* 
 * @fn         bool UI_CSSPARSER::ParseOneRuleOrAtRule(XSTRING& text, int& pos, UI_STYLESHEET& out, int* media_min_w, int* media_max_w, int& ruleindex, int& rules_kept)
 * @brief      Parse one top-level construct: @import, @media, or a normal rule. Optional media_* attach Track B
-*             gates when parsing nested rules inside an @media block (NULL = unconditional).
 * @ingroup    USERINTERFACE
-*
+* 
+* @param[in]  text : 
+* @param[in]  pos : 
+* @param[in]  out : 
+* @param[in]  media_min_w : 
+* @param[in]  media_max_w : 
+* @param[in]  ruleindex : 
+* @param[in]  rules_kept : 
+* 
+* @return     bool : true if is succesful.
+* 
 * --------------------------------------------------------------------------------------------------------------------*/
 bool UI_CSSPARSER::ParseOneRuleOrAtRule(XSTRING& text, int& pos, UI_STYLESHEET& out, int* media_min_w, int* media_max_w, int& ruleindex, int& rules_kept)
 {
@@ -1101,7 +1110,7 @@ bool UI_CSSPARSER::ParseOneRuleOrAtRule(XSTRING& text, int& pos, UI_STYLESHEET& 
     {
       int startline, startcol, endline, endcol;
       ResolveLineColumn(text, rulestartcolumn, startline, startcol);
-      ResolveLineColumn(text, pos,              endline,   endcol);
+      ResolveLineColumn(text, pos, endline, endcol);
       XTRACE_PRINTCOLOR(XTRACE_COLOR_WARNING, __L("[CSS Parse] rule #%d discarded: malformed selector or declaration block (started at line %d, column %d; gave up at line %d, column %d)"), ruleindex, startline, startcol, endline, endcol);
       if(!currentfilepath.IsEmpty())
         {
@@ -1167,12 +1176,19 @@ bool UI_CSSPARSER::ParseOneRuleOrAtRule(XSTRING& text, int& pos, UI_STYLESHEET& 
 
 
 /**-------------------------------------------------------------------------------------------------------------------
-*
+* 
 * @fn         bool UI_CSSPARSER::ReadMediaCondition(XSTRING& text, int& pos, int& out_min_w, int& out_max_w, bool& out_ok)
 * @brief      Parse `@media` query features after the keyword. Supports (min-width:N[px]) / (max-width:N[px])
-*             optionally joined by `and`. out_ok=false means unsupported feature (caller skips block).
 * @ingroup    USERINTERFACE
-*
+* 
+* @param[in]  text : 
+* @param[in]  pos : 
+* @param[in]  out_min_w : 
+* @param[in]  out_max_w : 
+* @param[in]  out_ok : 
+* 
+* @return     bool : true if is succesful.
+* 
 * --------------------------------------------------------------------------------------------------------------------*/
 bool UI_CSSPARSER::ReadMediaCondition(XSTRING& text, int& pos, int& out_min_w, int& out_max_w, bool& out_ok)
 {
@@ -1267,11 +1283,19 @@ bool UI_CSSPARSER::ReadMediaCondition(XSTRING& text, int& pos, int& out_min_w, i
 
 
 /**-------------------------------------------------------------------------------------------------------------------
-*
+* 
 * @fn         bool UI_CSSPARSER::ParseMediaBlock(XSTRING& text, int& pos, UI_STYLESHEET& out, int media_min_w, int media_max_w)
 * @brief      Parse `{ ... }` body of an @media rule; each kept rule receives the media width range.
 * @ingroup    USERINTERFACE
-*
+* 
+* @param[in]  text : 
+* @param[in]  pos : 
+* @param[in]  out : 
+* @param[in]  media_min_w : 
+* @param[in]  media_max_w : 
+* 
+* @return     bool : true if is succesful.
+* 
 * --------------------------------------------------------------------------------------------------------------------*/
 bool UI_CSSPARSER::ParseMediaBlock(XSTRING& text, int& pos, UI_STYLESHEET& out, int media_min_w, int media_max_w)
 {
@@ -1301,7 +1325,6 @@ bool UI_CSSPARSER::ParseMediaBlock(XSTRING& text, int& pos, UI_STYLESHEET& out, 
 
   return true;   // EOF without '}' -- tolerate like SkipToNextRule
 }
-
 
 
 /**-------------------------------------------------------------------------------------------------------------------

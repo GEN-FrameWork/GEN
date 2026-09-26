@@ -35,8 +35,6 @@
 
 #include "GRPVectorFile.h"
 
-
-
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
 
 enum GRPVECTORFILE_XEVENTTYPE : XDWORD
@@ -44,8 +42,6 @@ enum GRPVECTORFILE_XEVENTTYPE : XDWORD
    GRPVECTORFILE_XEVENTTYPE_UNKNOWN         = XEVENT_TYPE_VECTORFILE ,
    GRPVECTORFILE_XEVENTTYPE_PARTUNKNOWN                             
 };
-
-
 
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
 

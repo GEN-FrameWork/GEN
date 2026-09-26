@@ -49,7 +49,6 @@
 
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
 
-
 class GRPVECTORFILEDXFTEXTBLOCK;
 
 typedef struct
@@ -60,7 +59,6 @@ typedef struct
 
 } GRPVECTORFILEDXFTEXTSECTIONBLOCKDEFTYPE;
 
-
 typedef struct
 {
    XCHAR*                                         name;
@@ -69,7 +67,6 @@ typedef struct
    GRPVECTORFILEDXFTEXTSECTIONBLOCKDEFTYPE        type[GRPVECTORFILEDXFBLOCKS_MAXNDEFTYPES];
 
 } GRPVECTORFILEDXFTEXTSECTIONBLOCKDEF;
-
 
 class GRPVECTORFILEDXFTEXTSECTIONBLOCKS : public GRPVECTORFILEDXFTEXTSECTION
 {

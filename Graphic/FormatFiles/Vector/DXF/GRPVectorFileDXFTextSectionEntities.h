@@ -81,7 +81,6 @@
 #define VFDXF_THICKNESS                               __L("THICKNESS") 
 
 
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
 
 class GRPVECTORFILEDXFXDATACTRL;
@@ -94,7 +93,6 @@ typedef struct
 
 } GRPVECTORFILEDXFTEXTSECTIONENTITYDEFTYPE;
 
-
 typedef struct
 {
    XCHAR*                                           name;
@@ -102,7 +100,6 @@ typedef struct
    GRPVECTORFILEDXFTEXTSECTIONENTITYDEFTYPE         type[GRPVECTORFILEDXFENTITIES_MAXNDEFTYPES];
 
 } GRPVECTORFILEDXFTEXTSECTIONENTITYDEF;
-
 
 class GRPVECTORFILEDXFTEXTSECTIONENTITIES : public GRPVECTORFILEDXFTEXTSECTION
 {

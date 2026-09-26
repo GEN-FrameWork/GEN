@@ -45,7 +45,6 @@ enum APPFLOWINTERNETSERVICES_XEVENT_TYPE
   APPFLOWINTERNETSERVICES_XEVENT_TYPE_ADJUSTDATETIME                                                    
 };
 
-
 enum APPFLOWINTERNETSERVICES_CHECKINTERNETCONNEXION_STATE
 { 
   APPFLOWINTERNETSERVICES_CHECKINTERNETCONNEXION_STATE_NONE              = 0                                      ,
@@ -54,8 +53,6 @@ enum APPFLOWINTERNETSERVICES_CHECKINTERNETCONNEXION_STATE
   APPFLOWINTERNETSERVICES_CHECKINTERNETCONNEXION_STATE_CUT                                                        ,      
   APPFLOWINTERNETSERVICES_CHECKINTERNETCONNEXION_STATE_RESTORE                                                    ,        
 };
-
-
 
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
 

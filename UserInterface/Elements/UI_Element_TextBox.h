@@ -33,17 +33,12 @@
 #include "UI_Property_Scrolleable.h"
 #include "UI_Element.h"
 
-
-
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
 
 #define UI_ELEMENT_TEXTBOX_DEFAULTLINESPACING     4
 #define UI_ELEMENT_TEXTBOX_DEFAULTIMAGESEPARATION  5
 
-
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
-
 
 class UI_ELEMENT_TEXTBOX : public UI_ELEMENT, public UI_PROPERTY_SCROLLEABLE
 {

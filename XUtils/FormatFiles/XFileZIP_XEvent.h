@@ -54,8 +54,6 @@ enum XFILEZIP_XEVENT_TYPE
   XFILEZIP_XEVENT_TYPE_UNZIP_CLOSE                                  ,
 };
 
-
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
 
 class XTIMER;

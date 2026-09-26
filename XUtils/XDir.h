@@ -35,7 +35,6 @@
 #include "XPath.h"
 #include "XDateTime.h"
 
-
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
 
 enum XDIRELEMENTTYPE
@@ -44,8 +43,6 @@ enum XDIRELEMENTTYPE
   XDIRELEMENTTYPE_FILE      ,
   XDIRELEMENTTYPE_DIR       ,
 };
-
-
 
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
 
@@ -90,7 +87,6 @@ class XDIRELEMENT
     void*                   handle;
     void*                   findfiledata;
 };
-
 
 class XDIR 
 {

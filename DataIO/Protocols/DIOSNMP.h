@@ -75,19 +75,15 @@ enum DIOSNMP_OPERATION
 #define DIOSNMPBERTYPE_INFORMRESQUESTPDU        0x06  // Added in SNMP v2
 #define DIOSNMPBERTYPE_SNMPV2TRAPPDU            0x07  // Added in SNMP v2
 
-
 #define DIOSNMP_DEFAULT_PORT                    161
 #define DIOSNMP_DEFAULT_TRAPPORT                162
 
 
 
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
-
 
 class DIOSTREAMUDPCONFIG;
 class DIOSTREAMUDP;
-
 
 class DIOSNMP_XBER :  public XBER
 {
@@ -102,7 +98,6 @@ class DIOSNMP_XBER :  public XBER
     bool                      Sequence_AddTo                (XBER& newxber);
     bool                      TrapData_AddTo                (XBER& newxber);
 };
-
 
 class DIOSNMP_BASE
 {
@@ -130,7 +125,6 @@ class DIOSNMP_BASE
 
      void                     Clean                         ();
 };
-
 
 class DIOSNMP_TRAP : public DIOSNMP_BASE
 {

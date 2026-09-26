@@ -32,13 +32,9 @@
 
 #include "XString.h"
 
-
-
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
 
 #define DIOEMAILADDRESS_SEPARATOR  __L("@")
-
-
 
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
 
@@ -54,7 +50,7 @@ class DIOEMAILADDRESS: public XSTRING
                       DIOEMAILADDRESS            (XDWORD size);
                       DIOEMAILADDRESS            (const char* url);
                       DIOEMAILADDRESS            (const XCHAR* url);
-                      DIOEMAILADDRESS            (const XCHAR* url,XDWORD size);
+                      DIOEMAILADDRESS            (const XCHAR* url, XDWORD size);
                       DIOEMAILADDRESS            (DIOEMAILADDRESS& url);
                       DIOEMAILADDRESS            (XSTRING& url);
                       DIOEMAILADDRESS            (XWORD* url);

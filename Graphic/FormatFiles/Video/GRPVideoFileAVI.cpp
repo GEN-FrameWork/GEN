@@ -116,9 +116,9 @@ bool GRPVIDEOFILEAVI::Open(XCHAR* path)
 
   XDWORD sizedata = 0;
 
-  memset((XBYTE*)&mainheader    , 0, sizeof(GRPVIDEOFILEAVI_MAINHEADER));
-  memset((XBYTE*)&streamheader  , 0, sizeof(GRPVIDEOFILEAVI_STREAMHEADER));
-  memset((XBYTE*)&bitmapheader  , 0, sizeof(GRPVIDEOFILEAVI_BITMAPHEADER));
+  memset((XBYTE*)&mainheader, 0, sizeof(GRPVIDEOFILEAVI_MAINHEADER));
+  memset((XBYTE*)&streamheader, 0, sizeof(GRPVIDEOFILEAVI_STREAMHEADER));
+  memset((XBYTE*)&bitmapheader, 0, sizeof(GRPVIDEOFILEAVI_BITMAPHEADER));
 
   XFILERIFF_LIST* chunk_mainheader = fileRIFF->GetChunk(__L("avih"), __L("hdrl"));
   if(!chunk_mainheader) return false;
@@ -557,9 +557,9 @@ void GRPVIDEOFILEAVI::Clean()
 {
   iscreate        = false;
 
-  memset((XBYTE*)&mainheader    , 0, sizeof(GRPVIDEOFILEAVI_MAINHEADER));
-  memset((XBYTE*)&streamheader  , 0, sizeof(GRPVIDEOFILEAVI_STREAMHEADER));
-  memset((XBYTE*)&bitmapheader  , 0, sizeof(GRPVIDEOFILEAVI_BITMAPHEADER));
+  memset((XBYTE*)&mainheader, 0, sizeof(GRPVIDEOFILEAVI_MAINHEADER));
+  memset((XBYTE*)&streamheader, 0, sizeof(GRPVIDEOFILEAVI_STREAMHEADER));
+  memset((XBYTE*)&bitmapheader, 0, sizeof(GRPVIDEOFILEAVI_BITMAPHEADER));
 
   avi_node        = NULL;
   hdrl_node       = NULL;

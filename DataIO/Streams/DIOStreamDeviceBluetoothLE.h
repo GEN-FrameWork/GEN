@@ -37,18 +37,11 @@
 
 #include "DIOStreamDeviceBluetooth.h"
 
-
-
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
-
-
-
 
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
 
-
 class XTIMER;
-
 
 class DIOSTREAMDEVICEBLUETOOTHLE : public DIOSTREAMDEVICEBLUETOOTH
 {

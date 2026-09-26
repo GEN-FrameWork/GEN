@@ -468,7 +468,7 @@ bool XDATETIME::SetDateFromSeconds(XQWORD allseconds, bool injulian)
   minutes = (int)((hinsec % (60*60)) / 60);
   seconds = (int)((hinsec % (60*60)) % 60);
 
-  GetDateFromNDays(ndays,injulian);
+  GetDateFromNDays(ndays, injulian);
 
   return true;
 }
@@ -895,7 +895,7 @@ bool XDATETIME::AddDays(int days)
 
   ndays += days;
 
-  GetDateFromNDays(ndays,false);
+  GetDateFromNDays(ndays, false);
 
   return true;
 }
@@ -1078,7 +1078,7 @@ bool XDATETIME::SubtractDays(int days)
 
   ndays -= days;
 
-  GetDateFromNDays(ndays,false);
+  GetDateFromNDays(ndays, false);
 
   return true;
 }
@@ -1808,22 +1808,22 @@ bool XDATETIME::GetDateTimeFromString(XSTRING& string, XWORD modificator)
                             {
                               if(IsModificatorActive(modificator, XDATETIME_FORMAT_TIMEWITHSECONDS))
                                 {
-                                  partial.UnFormat(__L("%d:%d:%d.%d"), &hours ,&minutes ,&seconds, &milliseconds);
+                                  partial.UnFormat(__L("%d:%d:%d.%d"), &hours, &minutes, &seconds, &milliseconds);
                                 }
                                else  
                                 {
-                                  partial.UnFormat(__L("%d:%d:%d"), &hours ,&minutes, &milliseconds);
+                                  partial.UnFormat(__L("%d:%d:%d"), &hours, &minutes, &milliseconds);
                                 }
                             }
                            else
                             {
                               if(IsModificatorActive(modificator, XDATETIME_FORMAT_TIMEWITHSECONDS))
                                 {
-                                  partial.UnFormat(__L("%d:%d:%d"), &hours ,&minutes ,&seconds);
+                                  partial.UnFormat(__L("%d:%d:%d"), &hours, &minutes, &seconds);
                                 }
                                else  
                                 {
-                                  partial.UnFormat(__L("%d:%d"), &hours ,&minutes);
+                                  partial.UnFormat(__L("%d:%d"), &hours, &minutes);
                                 }
                             }
                           break;
@@ -1978,22 +1978,22 @@ bool XDATETIME::GetDateTimeFromStringISO8601(XSTRING& string, XWORD modificator)
                                 {
                                   if(IsModificatorActive(modificator, XDATETIME_FORMAT_TIMEWITHSECONDS))
                                     {
-                                      partial.UnFormat(__L("%02d%02d%02d.%03d"), &hours ,&minutes ,&seconds, &milliseconds);
+                                      partial.UnFormat(__L("%02d%02d%02d.%03d"), &hours, &minutes, &seconds, &milliseconds);
                                     }
                                    else  
                                     {
-                                      partial.UnFormat(__L("%02d%02d%02d.%03d"), &hours ,&minutes, &milliseconds);
+                                      partial.UnFormat(__L("%02d%02d%02d.%03d"), &hours, &minutes, &milliseconds);
                                     }
                                 }
                                else
                                 {
                                   if(IsModificatorActive(modificator, XDATETIME_FORMAT_TIMEWITHSECONDS))
                                     {
-                                      partial.UnFormat(__L("%02d%02d%02d"), &hours ,&minutes ,&seconds);
+                                      partial.UnFormat(__L("%02d%02d%02d"), &hours, &minutes, &seconds);
                                     }
                                    else  
                                     {
-                                      partial.UnFormat(__L("%02d%02d"), &hours ,&minutes);
+                                      partial.UnFormat(__L("%02d%02d"), &hours, &minutes);
                                     }
                                 }
                             }
@@ -2003,22 +2003,22 @@ bool XDATETIME::GetDateTimeFromStringISO8601(XSTRING& string, XWORD modificator)
                                 {
                                   if(IsModificatorActive(modificator, XDATETIME_FORMAT_TIMEWITHSECONDS))
                                     {
-                                      partial.UnFormat(__L("%02d:%02d:%02d.%03d"), &hours ,&minutes ,&seconds, &milliseconds);
+                                      partial.UnFormat(__L("%02d:%02d:%02d.%03d"), &hours, &minutes, &seconds, &milliseconds);
                                     }
                                    else  
                                     {
-                                      partial.UnFormat(__L("%02d:%02d:%02d.%03d"), &hours ,&minutes, &milliseconds);
+                                      partial.UnFormat(__L("%02d:%02d:%02d.%03d"), &hours, &minutes, &milliseconds);
                                     }
                                 }
                                else
                                 {
                                   if(IsModificatorActive(modificator, XDATETIME_FORMAT_TIMEWITHSECONDS))
                                     {
-                                      partial.UnFormat(__L("%d:%d:%d"), &hours ,&minutes ,&seconds);
+                                      partial.UnFormat(__L("%d:%d:%d"), &hours, &minutes, &seconds);
                                     }
                                    else  
                                     {
-                                      partial.UnFormat(__L("%d:%d")   , &hours ,&minutes);
+                                      partial.UnFormat(__L("%d:%d"), &hours, &minutes);
                                     }
                                 }
                             }

@@ -106,10 +106,6 @@ void XPATHSMANAGERSECTION::Clean()
 }
 
 
-
-
-
-
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         bool XPATHSMANAGER::GetIsInstanced()
@@ -339,7 +335,7 @@ bool XPATHSMANAGER::AddPathSection(XPATHSMANAGERSECTIONTYPE sectiontype, XSTRING
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         bool XPATHSMANAGER::AddPathSection(XPATHSMANAGERSECTIONTYPE sectiontype,const XCHAR* string)
+* @fn         bool XPATHSMANAGER::AddPathSection(XPATHSMANAGERSECTIONTYPE sectiontype, const XCHAR* string)
 * @brief      Add path section
 * @ingroup    XUTILS
 * 
@@ -349,11 +345,11 @@ bool XPATHSMANAGER::AddPathSection(XPATHSMANAGERSECTIONTYPE sectiontype, XSTRING
 * @return     bool : true if the operation is successful; otherwise false.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-bool XPATHSMANAGER::AddPathSection(XPATHSMANAGERSECTIONTYPE sectiontype,const XCHAR* string)
+bool XPATHSMANAGER::AddPathSection(XPATHSMANAGERSECTIONTYPE sectiontype, const XCHAR* string)
 {
   XSTRING path(string);
 
-  return AddPathSection(sectiontype,path);
+  return AddPathSection(sectiontype, path);
 }
 
 

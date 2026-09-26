@@ -170,7 +170,7 @@ bool DIOSTREAMDEVICEBLUETOOTHLE::DebugPrintInfo()
   XSTRING data;
 
   GetMAC()->GetXString(data);
-  line.Format(__L("MAC           : %s") , data.Get());                          
+  line.Format(__L("MAC : %s"), data.Get());                          
   XTRACE_PRINTCOLOR(2, line.Get());
 
   return true;

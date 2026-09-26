@@ -34,17 +34,13 @@
 
 #include "XBase.h"
 
-
 /*---- PRECOMPILATION INCLUDES ---------------------------------------------------------------------------------------*/
 
 #include "GEN_Control.h"
 
-
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
 
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
-
 
 template<class T>
 class GRPRECTBASE
@@ -58,7 +54,6 @@ class GRPRECTBASE
                                 Clean();
                               }
 
-
                               GRPRECTBASE                       (T x1, T y1, T x2, T y2)
                               {
                                 Clean();
@@ -66,12 +61,10 @@ class GRPRECTBASE
                                 Set(x1, y1, x2, y2);
                               }
 
-
     virtual                  ~GRPRECTBASE                       ()
                               {
                                 Clean();
                               }
-
 
     void                      Set                               (T x1, T y1, T x2, T y2)
                               {
@@ -81,7 +74,6 @@ class GRPRECTBASE
                                 this->y2  = y2;
                               }
 
-
     T                         GetWidth                          ()
                               {
                                 T width  = abs(this->x2 - this->x1);
@@ -89,14 +81,12 @@ class GRPRECTBASE
                                 return width;
                               }
 
-
     T                         GetHeight                         ()
                               {
                                 T height = abs(this->y2 - this->y1);
 
                                 return height;
                               }
-
 
     const SELFTYPE&           Normalize                         ()
                               {
@@ -106,7 +96,6 @@ class GRPRECTBASE
 
                                 return *this;
                               }
-
 
     bool                      Clip                              (const SELFTYPE& r)
                               {
@@ -118,12 +107,10 @@ class GRPRECTBASE
                                 return x1 <= x2 && y1 <= y2;
                               }
 
-
     bool                      IsValid                           () const
                               {
                                 return x1 <= x2 && y1 <= y2;
                               }
-
 
     bool                      IsEmpty                           () const
                               {
@@ -135,12 +122,10 @@ class GRPRECTBASE
                                 return true;
                               }
 
-
     bool                      IsHit                             (T x, T y) const
                               {
                                 return (x >= x1 && x <= x2 && y >= y1 && y <= y2);
                               }
-
 
     int                       IsEqual                           (GRPRECTBASE* rect)
                               {
@@ -157,7 +142,6 @@ class GRPRECTBASE
                                 return ISEQUAL;
                               }
 
-
     bool                      CopyFrom                          (GRPRECTBASE* rect)
                               {
                                 x1 = rect->x1;
@@ -167,7 +151,6 @@ class GRPRECTBASE
 
                                 return IsValid();                                  
                               }
-
 
     bool                      CopyTo                            (GRPRECTBASE* rect)
                               {

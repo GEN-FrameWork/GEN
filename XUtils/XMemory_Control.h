@@ -80,13 +80,9 @@
 
 #define XMEMORY_CONTROL_PRE_DEACTIVATED
 
-
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
 
-
 class XMUTEX;
-
 
 class XMEMORY_CONTROL_ASSIGN
 {
@@ -97,7 +93,6 @@ class XMEMORY_CONTROL_ASSIGN
     char                        namemodule[XMEMORY_CONTROL_MAXNAMEMODULESIZE];
     int                         linemodule;
 };
-
 
 class XMEMORY_CONTROL
 {

@@ -100,8 +100,8 @@ bool SCRIPT_LIB_PATH::AddLibraryFunctions(SCRIPT* script)
 
   this->script = script;
 
-  script->AddLibraryFunction(this, __L("GetPathScript")            , Call_GetPathScript);
-  script->AddLibraryFunction(this, __L("GetNameScript")            , Call_GetNameScript);
+  script->AddLibraryFunction(this, __L("GetPathScript"), Call_GetPathScript);
+  script->AddLibraryFunction(this, __L("GetNameScript"), Call_GetNameScript);
 
   return true;
 }

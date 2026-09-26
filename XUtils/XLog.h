@@ -79,7 +79,6 @@ enum XLOGTYPELIMIT
 #endif
 
 
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
 
 class XFACTORY;
@@ -101,7 +100,6 @@ class XLOGENTRY
     XQWORD                  size;
 };
 
-
 class GEN_API_LIB_EXP XLOGBASE
 {
   public:
@@ -112,7 +110,7 @@ class GEN_API_LIB_EXP XLOGBASE
     bool                    Ini                               (XPATH& xpathfile, XCHAR* nameapplication = NULL, bool isdumpintrace = true);
     bool                    Ini                               (XPATH& xpathfile, XSTRING& nameapplication, bool isdumpintrace = true);
 
-    bool                    SetLimit                          (XLOGTYPELIMIT typelimit, int limit =  XLOG_DEFAULTMAXNENTRYS, int reductionpercentnentrys = XLOG_DEFAULTREDUCTIONPERCENT);
+    bool                    SetLimit                          (XLOGTYPELIMIT typelimit, int limit = XLOG_DEFAULTMAXNENTRYS, int reductionpercentnentrys = XLOG_DEFAULTREDUCTIONPERCENT);
     bool                    SetBackup                         (bool isactive, int maxfiles = XLOG_DEFAULTMAXFILESBACKUP, bool iscompress = false);
     bool                    SetFilters                        (XCHAR* sectionsID, XBYTE level = XLOGLEVEL_ALL);
 
@@ -130,13 +128,13 @@ class GEN_API_LIB_EXP XLOGBASE
     XSTRING*                GetSectionsIDFilter               ();
     bool                    PassFilters                       (XLOGLEVEL level, XCHAR* sectionID);
 
-    bool                    AddEntry                          (XLOGLEVEL level, XCHAR* sectionID, bool inmemory, XCHAR*   mask, ...);
-    bool                    AddEntry                          (XLOGLEVEL level, XCHAR* sectionID, bool inmemory, XBYTE*   data, XDWORD size,           XDWORD sizeline = 16,       bool showoffset  = true, bool showtext = true);
-    bool                    AddEntry                          (XLOGLEVEL level, XCHAR* sectionID, bool inmemory, XBUFFER& data, XDWORD sizeline = 16,  bool showoffset = true,  bool showtext    = true);
+    bool                    AddEntry                          (XLOGLEVEL level, XCHAR* sectionID, bool inmemory, XCHAR* mask, ...);
+    bool                    AddEntry                          (XLOGLEVEL level, XCHAR* sectionID, bool inmemory, XBYTE* data, XDWORD size, XDWORD sizeline = 16, bool showoffset = true, bool showtext = true);
+    bool                    AddEntry                          (XLOGLEVEL level, XCHAR* sectionID, bool inmemory, XBUFFER& data, XDWORD sizeline = 16, bool showoffset = true, bool showtext = true);
 
     bool                    Flush                             ();
 
-    bool                    End                               (bool      doflush = true);
+    bool                    End                               (bool doflush = true);
 
   protected:
 

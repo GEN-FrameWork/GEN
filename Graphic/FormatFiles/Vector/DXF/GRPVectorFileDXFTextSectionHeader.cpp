@@ -87,7 +87,7 @@ GRPVECTORFILEDXFTEXTSECTIONHEADERDEFVARIABLE GRPVECTORFILEDXFTEXTSECTIONHEADER::
   { __L("$CMLJUST")                 , 1, { {  70, __L("")  } } ,  __L("Current multiline justification: 0 = Top; 1 = Middle; 2 = Bottom") },
   { __L("$CMLSCALE")                , 1, { {  40, __L("")  } } ,  __L("Current multiline scale") },
   { __L("$CMLSTYLE")                , 1, { {   2, __L("")  } } ,  __L("Current multiline style name") },
-  { __L("$CSHADOW")                 , 1, { { 280, __L("")  } } ,  __L("Shadow mode for a 3D object: 0 = Casts and receives shadows, 1 = Casts shadows,, 2 = Receives shadows, 3 = Ignores shadows  (Note: Starting with AutoCAD 2016-based products, this variable is obsolete but still supported for backwards compatibility)") },
+  { __L("$CSHADOW")                 , 1, { { 280, __L("")  } } ,  __L("Shadow mode for a 3D object: 0 = Casts and receives shadows, 1 = Casts shadows,, 2 = Receives shadows, 3 = Ignores shadows (Note: Starting with AutoCAD 2016-based products, this variable is obsolete but still supported for backwards compatibility)") },
   { __L("$DELOBJ")                  , 1, { {  70, __L("")  } } ,  __L("Controls object deletion. Minimum AutoCAD version: R13. Maximum AutoCAD version: R14") },
   { __L("$DIMADEC")                 , 1, { {  70, __L("")  } } ,  __L("Number of precision places displayed in angular dimensions") },
   { __L("$DIMALT")                  , 1, { {  70, __L("")  } } ,  __L("Alternate unt dimensioning performed if nonzero") },
@@ -273,7 +273,7 @@ GRPVECTORFILEDXFTEXTSECTIONHEADERDEFVARIABLE GRPVECTORFILEDXFTEXTSECTIONHEADER::
   { __L("$STEPSIZE")                , 1, { {  40, __L("")  } } ,  __L("Specifies the size of each step when in walk or fly mode, in drawing units. Minimum AutoCAD version: R2007") },
   { __L("$STYLESHEET")              , 1, { {   1, __L("")  } } ,  __L("Path to the stylesheet for the drawing. Minimum AutoCAD version: R2000") },
   { __L("$SOLIDHIST")               , 1, { { 280, __L("")  } } ,  __L("Controls whether GEN_NEW composite solids retain a history of their original components. Minimum AutoCAD version: R2007") },
-  { __L("$SORTENTS")                , 1, { { 280, __L("")  } } ,  __L("Controls the object sorting methods; accessible from the Options dialog box User Preferences tab. SORTENTS uses the following bitcodes: 0 = Disables SORTENTS 1 = Sorts for object selection, 2 = Sorts for object snap, 4 = Sorts for redraws; obsolete,  8 = Sorts for MSLIDE command slide creation; obsolete, 16 = Sorts for REGEN commands 32 = Sorts for plotting, 64 = Sorts for PostScript output; obsolete") },
+  { __L("$SORTENTS")                , 1, { { 280, __L("")  } } ,  __L("Controls the object sorting methods; accessible from the Options dialog box User Preferences tab. SORTENTS uses the following bitcodes: 0 = Disables SORTENTS 1 = Sorts for object selection, 2 = Sorts for object snap, 4 = Sorts for redraws; obsolete, 8 = Sorts for MSLIDE command slide creation; obsolete, 16 = Sorts for REGEN commands 32 = Sorts for plotting, 64 = Sorts for PostScript output; obsolete") },
   { __L("$SPLFRAME")                , 1, { {  70, __L("")  } } ,  __L("Spline control polygon display; 1 = on, 0 = off") },  
   { __L("$SPLINESEGS")              , 1, { {  70, __L("")  } } ,  __L("Number of line segments per spline patch") },
   { __L("$SPLINETYPE")              , 1, { {  70, __L("")  } } ,  __L("Spline curve type for PEDIT Spline") },
@@ -701,7 +701,7 @@ GRPVECTORFILERESULT GRPVECTORFILEDXFTEXTSECTIONHEADER::ParserTextSection(XFILETX
 
       GRPVECTORFILEDXF::ParserTextFilePrepareLine(line);
 
-      if(line && !line->Compare(__L("9"),true))
+      if(line && !line->Compare(__L("9"), true))
         {
           c++;
           line = fileTXT->GetLine(c);
@@ -770,11 +770,7 @@ GRPVECTORFILERESULT GRPVECTORFILEDXFTEXTSECTIONHEADER::ParserTextSection(XFILETX
                     {
                       if(GRPVECTORFILEDXFTEXTSECTIONHEADER::defvariable[d].value[e].valuetype)
                         {                     
-                          ParserVariable (fileTXT, part , GRPVECTORFILEDXFTEXTSECTIONHEADER::defvariable[d].name
-                                                        , GRPVECTORFILEDXFTEXTSECTIONHEADER::defvariable[d].value[e].valuetype
-                                                        , GRPVECTORFILEDXFTEXTSECTIONHEADER::defvariable[d].value[e].valuename
-                                                        , &namevar[e]
-                                                        , &variant[e]);
+                          ParserVariable (fileTXT, part, GRPVECTORFILEDXFTEXTSECTIONHEADER::defvariable[d].name, GRPVECTORFILEDXFTEXTSECTIONHEADER::defvariable[d].value[e].valuetype, GRPVECTORFILEDXFTEXTSECTIONHEADER::defvariable[d].value[e].valuename, &namevar[e], &variant[e]);
                         }
                     }                                           
                 }

@@ -226,7 +226,6 @@ enum XLANGUAGE_ISO_639_3_CODE
   XLANGUAGE_ISO_639_3_CODE_ZUL       = 185,     //   Zulu
 };
 
-
 typedef struct
 {
   XDWORD        code;
@@ -238,11 +237,7 @@ typedef struct
 
 } XLANGUAGE_ISO_639_3_ENTRY;
 
-
 #define XLANGUAGE_ISO_639_3_NENTRYS         sizeof(iso_639_3_entry)/sizeof(XLANGUAGE_ISO_639_3_ENTRY)
-
-
-
 
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
 

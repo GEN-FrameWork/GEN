@@ -32,17 +32,11 @@
 
 #include "DIOWifiManagerMode.h"
 
-
-
-
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
 
 #define DIOLINUXWIFIMANAGERMODE_PREFIXCOMMAND     __L("-i %s")
 
-
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
-
 
 class DIOLINUXWIFIMANAGERMODE : public DIOWIFIMANAGERMODE
 {

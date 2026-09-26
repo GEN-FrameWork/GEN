@@ -281,7 +281,7 @@ int DIOLINUXSTREAMTCPIPSERVER::Accept(int handlesocket, void* addr, void* addrle
     }
 
   FD_ZERO(&fds);
-  FD_SET((unsigned int)handlesocket,&fds);
+  FD_SET((unsigned int)handlesocket, &fds);
 
   time_out.tv_sec  = 0;
   time_out.tv_usec = usec;
@@ -489,8 +489,8 @@ bool DIOLINUXSTREAMTCPIPSERVER::GetHandleServer(DIOSTREAMTCPIP* diostream)
 
   // ------------------------------------------------------------------------------------------  
 
-  memset(&loc_addr,0,sizeof(struct sockaddr_in));
-  memset(&rem_addr,0,sizeof(struct sockaddr_in));
+  memset(&loc_addr, 0, sizeof(struct sockaddr_in));
+  memset(&rem_addr, 0, sizeof(struct sockaddr_in));
 
   if(!diostream)
     {
@@ -575,7 +575,7 @@ bool DIOLINUXSTREAMTCPIPSERVER::GetHandleServer(DIOSTREAMTCPIP* diostream)
           return false;
         }
 
-      fcntl(handleserver, F_SETFL, fcntl(handleserver, F_GETFL,0) | O_NONBLOCK);
+      fcntl(handleserver, F_SETFL, fcntl(handleserver, F_GETFL, 0) | O_NONBLOCK);
 
       config->SetHandleMultiServer(handleserver);
 
@@ -736,7 +736,7 @@ void DIOLINUXSTREAMTCPIPSERVER::ThreadConnection(void* data)
 
                                                                               if(size)
                                                                                 {
-                                                                                  diostream->inbuffer->Add(buffer,size);
+                                                                                  diostream->inbuffer->Add(buffer, size);
                                                                                   diostream->AddNBytesRead(size);
                                                                                   diostreamserver->nbytesread += size;
                                                                                 }
@@ -757,7 +757,7 @@ void DIOLINUXSTREAMTCPIPSERVER::ThreadConnection(void* data)
                                                                               if(esize)
                                                                                 {
                                                                                   diostream->outbuffer->SetBlocked(true);
-                                                                                  XDWORD size = send(diostream->GetHandleSocket(), (char*)diostream->outbuffer->Get(), esize,0);
+                                                                                  XDWORD size = send(diostream->GetHandleSocket(), (char*)diostream->outbuffer->Get(), esize, 0);
                                                                                   diostream->outbuffer->SetBlocked(false);
 
                                                                                   if(size == -1)

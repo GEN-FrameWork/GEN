@@ -38,22 +38,15 @@
 #include "GRPRect.h"
 #include "GRPProperties.h"
 
-
-
 /*---- PRECOMPILATION INCLUDES ---------------------------------------------------------------------------------------*/
 
 #include "GEN_Control.h"
-
-
 
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
 
 #define GRPBITMAP_INVALIDHANDLE   0xFFFFFFFFUL
 
-
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
-
 
 class GRPBITMAP : public GRPPROPERTIES
 {
@@ -105,7 +98,6 @@ class GRPBITMAP : public GRPPROPERTIES
     void                                                  Clean                           ();
 };
 
-
 template<class PIXELFORMATBUFFER, class COLORTYPE>
 class GRPBITMAPPIXELFORMATBUFFER : public GRPBITMAP
 {
@@ -116,7 +108,6 @@ class GRPBITMAPPIXELFORMATBUFFER : public GRPBITMAP
                                                             Clean();
                                                             if(CreateBuffers())  isvalid = true;
                                                           }
-
 
     virtual                                              ~GRPBITMAPPIXELFORMATBUFFER      ()
                                                           {
@@ -131,23 +122,20 @@ class GRPBITMAPPIXELFORMATBUFFER : public GRPBITMAP
 
     GRP2DCOLOR*                                           GetPixel                        (int x, int y)
                                                           {                                                            
-                                                            color = renderer_base->pixel(x,y);
+                                                            color = renderer_base->pixel(x, y);
 
                                                             return (GRP2DCOLOR*)&color;                                                            
                                                           }
-
 
     void                                                  PutPixel                        (int x, int y, const GRP2DCOLOR* color)
                                                           {
                                                             renderer_base->copy_pixel(x, y, (*(COLORTYPE*)color));
                                                           }
 
-
     void                                                  PutBlendPixel                   (int x, int y, const GRP2DCOLOR* color, int alpha)
                                                           {
                                                              renderer_base->blend_pixel(x, y, (*(COLORTYPE*)color), alpha);
                                                           }
-
 
     GRPBITMAP*                                            GetSubBitmap                    (GRPRECTINT& rect)
                                                           {
@@ -173,7 +161,6 @@ class GRPBITMAPPIXELFORMATBUFFER : public GRPBITMAP
                                                             return bitmap;
                                                           }
 
-
     GRPBITMAP*                                            Clone                           ()
                                                           {
                                                             GRPBITMAPPIXELFORMATBUFFER<PIXELFORMATBUFFER, COLORTYPE>* bmp = GEN_NEW GRPBITMAPPIXELFORMATBUFFER<PIXELFORMATBUFFER, COLORTYPE>(width, height, mode);
@@ -188,7 +175,6 @@ class GRPBITMAPPIXELFORMATBUFFER : public GRPBITMAP
                                                             return bmp;
                                                           }
 
-
     bool                                                  CopyFrom                        (GRPBITMAP* bitmap)
                                                           {
                                                             CopyPropertysFrom(bitmap);
@@ -202,7 +188,6 @@ class GRPBITMAPPIXELFORMATBUFFER : public GRPBITMAP
                                                             return CopyBuffer(bitmap->GetBuffer());
                                                           }
 
-
     GRPBITMAP*                                            ConvertToMode                   (GRPPROPERTYMODE newmode)
                                                           {
                                                             GRPBITMAP* bitmap = GRPFACTORY::GetInstance().CreateBitmap(width, height, newmode, isbufferinverse);
@@ -214,14 +199,13 @@ class GRPBITMAPPIXELFORMATBUFFER : public GRPBITMAP
                                                               {
                                                                 for(XDWORD x=0; x<width; x++)
                                                                   {
-                                                                    color = (COLORTYPE*)GetPixel(x,y);
+                                                                    color = (COLORTYPE*)GetPixel(x, y);
                                                                     bitmap->PutBlendPixel(x, y, color, color->a);                                                                    
                                                                   }
                                                               }
 
                                                             return bitmap;
                                                           }
-
 
     bool                                                  FlipHorizontal                  ()
                                                           {
@@ -235,7 +219,7 @@ class GRPBITMAPPIXELFORMATBUFFER : public GRPBITMAP
                                                               {
                                                                 for(XDWORD x=0; x<width; x++)
                                                                   {
-                                                                    color = (COLORTYPE*)GetPixel(x,y);
+                                                                    color = (COLORTYPE*)GetPixel(x, y);
                                                                     bitmap->PutBlendPixel(width-x-1, y, color, color->a);                                                                        
                                                                   }
                                                               }
@@ -246,7 +230,6 @@ class GRPBITMAPPIXELFORMATBUFFER : public GRPBITMAP
 
                                                             return true;
                                                           }
-
 
     bool                                                  FlipVertical                    ()
                                                           {
@@ -259,7 +242,7 @@ class GRPBITMAPPIXELFORMATBUFFER : public GRPBITMAP
                                                               {
                                                                 for(XDWORD x=0; x<width; x++)
                                                                   {
-                                                                    color = (COLORTYPE*)GetPixel(x,y);
+                                                                    color = (COLORTYPE*)GetPixel(x, y);
                                                                     bitmap->PutBlendPixel(x, height-y-1, color, color->a);
                                                                   }
                                                               }
@@ -271,23 +254,18 @@ class GRPBITMAPPIXELFORMATBUFFER : public GRPBITMAP
                                                             return true;
                                                           }
 
-
     bool                                                  Rotate                          (float degrees)
                                                           {
                                                             float radians = DEGREE2RADIAN(degrees);
                                                             float oneminusradians = DEGREE2RADIAN((180-degrees));
 
-
                                                             float cosine  = (float)cos(radians);
                                                             float sine    = (float)sin(radians);
-
 
                                                             float oneminussine    = (float)sin(oneminusradians);
 
                                                             int w = (int)(height*fabs(oneminussine) + width*fabs(cosine));
                                                             int h = (int)(height*fabs(cosine) + width*fabs(oneminussine));
-
-
 
                                                             GRPBITMAPPIXELFORMATBUFFER<PIXELFORMATBUFFER, COLORTYPE>* bitmap = GEN_NEW GRPBITMAPPIXELFORMATBUFFER<PIXELFORMATBUFFER, COLORTYPE>(w, h, mode);
                                                             if(!bitmap) return false;
@@ -306,7 +284,7 @@ class GRPBITMAPPIXELFORMATBUFFER : public GRPBITMAP
 
                                                                     if( (sx>=0) && (sx<(int)width) && (sy>=0) && (sy<(int)height) )
                                                                       {
-                                                                        color = (COLORTYPE*)GetPixel(sx,sy);
+                                                                        color = (COLORTYPE*)GetPixel(sx, sy);
                                                                         bitmap->PutBlendPixel(x+w2, y+h2, color, color->a);
                                                                       }
                                                                   }
@@ -318,7 +296,6 @@ class GRPBITMAPPIXELFORMATBUFFER : public GRPBITMAP
 
                                                             return true;
                                                           }
-
 
   bool                                                    Scale                           (int nwidth, int nheight)
                                                           {
@@ -353,7 +330,6 @@ class GRPBITMAPPIXELFORMATBUFFER : public GRPBITMAP
                                                             return true;
                                                           }
 
-
     bool                                                  Crop(GRPRECTINT& rect)
                                                           {
                                                             GRPBITMAP* bitmap = GetSubBitmap(rect);
@@ -373,7 +349,6 @@ class GRPBITMAPPIXELFORMATBUFFER : public GRPBITMAP
                                                             pixelformatbuffer = NULL;
                                                             renderer_base     = NULL;
                                                           }
-
 
     bool                                                  CreateBuffers                   ()
                                                           {
@@ -395,7 +370,6 @@ class GRPBITMAPPIXELFORMATBUFFER : public GRPBITMAP
                                                             return true;
                                                           }
 
-
     bool                                                  CopyBuffer                      (XBYTE* buffer)
                                                           {
                                                             if(!buffersize) return false;
@@ -403,7 +377,6 @@ class GRPBITMAPPIXELFORMATBUFFER : public GRPBITMAP
 
                                                             return true;
                                                           }
-
 
     bool                                                  DeleteBuffers                   ()
                                                           {

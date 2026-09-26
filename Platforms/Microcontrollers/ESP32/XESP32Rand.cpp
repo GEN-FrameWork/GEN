@@ -153,7 +153,7 @@ bool XESP32RAND::Generate(XBYTE* buffer, XDWORD size)
 * --------------------------------------------------------------------------------------------------------------------*/
 int XESP32RAND::MaxElements(int max)
 {
-  return GETRANDOM(0,max-1);
+  return GETRANDOM(0, max-1);
 }
 
 
@@ -170,13 +170,13 @@ int XESP32RAND::MaxElements(int max)
 * --------------------------------------------------------------------------------------------------------------------*/
 int XESP32RAND::Max(int max)
 {
-  return GETRANDOM(0,max);
+  return GETRANDOM(0, max);
 }
 
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         int XESP32RAND::Between(int min,int max)
+* @fn         int XESP32RAND::Between(int min, int max)
 * @brief      Between
 * @ingroup    PLATFORM_ESP32
 * 
@@ -186,9 +186,9 @@ int XESP32RAND::Max(int max)
 * @return     int : Requested value.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-int XESP32RAND::Between(int min,int max)
+int XESP32RAND::Between(int min, int max)
 {
-  return GETRANDOM(min,max);
+  return GETRANDOM(min, max);
 }
 
 

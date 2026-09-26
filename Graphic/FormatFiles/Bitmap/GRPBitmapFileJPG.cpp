@@ -152,10 +152,7 @@ GRPBITMAP* GRPBITMAPFILEJPG::CreateBitmapFromFile(XPATH& xpath, GRPPROPERTYMODE 
               {
                   for (XDWORD x = 0; x < header.width; x++)
                   {
-                      GRP2DCOLOR_RGBA8 color(databuffer[index + 0],
-
-                      databuffer[index + 1],
-                      databuffer[index + 2], 255);
+                      GRP2DCOLOR_RGBA8 color(databuffer[index + 0], databuffer[index + 1], databuffer[index + 2], 255);
 
                       bitmap->PutPixel(x, y, (GRP2DCOLOR*)&color);
 
@@ -225,9 +222,7 @@ GRPBITMAP* GRPBITMAPFILEJPG::CreateBitmapFromBuffer(XBYTE* buffer, XDWORD size, 
               {
                   for (XDWORD x = 0; x < header.width; x++)
                   {
-                      GRP2DCOLOR_RGBA8 color(databuffer[index + 0],
-                                             databuffer[index + 1],
-                                             databuffer[index + 2], 255);
+                      GRP2DCOLOR_RGBA8 color(databuffer[index + 0], databuffer[index + 1], databuffer[index + 2], 255);
 
                       bitmap->PutPixel(x, y, (GRP2DCOLOR*)&color);
 
@@ -309,7 +304,7 @@ bool GRPBITMAPFILEJPG::CreateFileFromBitmap(XPATH& xpath, GRPBITMAP* bitmap, int
 
   if(status)
     {
-      status = EncodeToFile(bitmap->GetWidth(), bitmap->GetHeight(),  databuffer, quality, false);
+      status = EncodeToFile(bitmap->GetWidth(), bitmap->GetHeight(), databuffer, quality, false);
     }
 
   GEN_DELETE_ARRAY databuffer;
@@ -493,13 +488,13 @@ bool GRPBITMAPFILEJPG::DecodeToBufferFromFile(XBYTE* buffer)
   int size  = dinfo.output_width * dinfo.output_height * dinfo.output_components;
   int index = (size-rowstride);
 
-  memset(buffer, 0 ,size);
+  memset(buffer, 0, size);
 
   while (dinfo.output_scanline < dinfo.output_height)
     {
       jpeg_read_scanlines(&dinfo, line, 1);
 
-      memcpy((XBYTE*)&buffer[index],(XBYTE*)(*line),rowstride);
+      memcpy((XBYTE*)&buffer[index], (XBYTE*)(*line), rowstride);
       index-=rowstride;
     }
 
@@ -603,7 +598,7 @@ bool GRPBITMAPFILEJPG::DecodeToBufferFromRawBuffer(XBYTE* buffer, XDWORD size, X
 * @return     bool : true if the operation is successful; otherwise false.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-bool GRPBITMAPFILEJPG::EncodeToFile(int width, int height,  XBYTE* buffer, int quality, bool baseline)
+bool GRPBITMAPFILEJPG::EncodeToFile(int width, int height, XBYTE* buffer, int quality, bool baseline)
 {
   if(!buffer)           
     {

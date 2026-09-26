@@ -72,8 +72,6 @@ enum CIPHERCHAININGMODE
   CIPHERCHAININGMODE_POLY1305       ,
 };
 
-
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
 
 class CIPHER
@@ -104,7 +102,7 @@ class CIPHER
     virtual bool          Cipher                    (XBYTE* input, XDWORD size);
     bool                  Cipher                    (XBUFFER& input);
 
-    virtual bool          Uncipher                  (XBYTE* input,XDWORD size);
+    virtual bool          Uncipher                  (XBYTE* input, XDWORD size);
     bool                  Uncipher                  (XBUFFER& input);
 
     virtual bool          IsAEAD                    ();

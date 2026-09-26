@@ -33,8 +33,6 @@
 #include "XEvent.h"
 #include "XSubject.h"
 
-
-
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
 
 enum DIONODE_XEVENT_TYPE
@@ -42,8 +40,6 @@ enum DIONODE_XEVENT_TYPE
   DIONODE_XEVENT_TYPE_UNKNOWN                 = XEVENT_TYPE_DIONODE ,
   DIONODE_XEVENT_TYPE_UPDATEVALUE                                   ,
 };
-
-
 
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
 

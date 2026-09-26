@@ -98,7 +98,7 @@ XFILETXT::~XFILETXT()
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         bool XFILETXT::Open(XCHAR* path,bool readonly)
+* @fn         bool XFILETXT::Open(XCHAR* path, bool readonly)
 * @brief      Open
 * @ingroup    XUTILS
 * 
@@ -108,7 +108,7 @@ XFILETXT::~XFILETXT()
 * @return     bool : true if the operation is successful; otherwise false.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-bool XFILETXT::Open(XCHAR* path,bool readonly)
+bool XFILETXT::Open(XCHAR* path, bool readonly)
 {
   if(!path)
     {
@@ -144,7 +144,7 @@ bool XFILETXT::Open(XPATH& xpath, bool readonly)
 {
   if(!file) return false;
 
-  if(!file->Open(xpath,readonly)) return false;
+  if(!file->Open(xpath, readonly)) return false;
 
   formatchar = GetFormatCharFromFile(NULL);
 
@@ -283,7 +283,7 @@ XFILETXTFORMATCHAR XFILETXT::GetFormatCharFromFile(XDWORD* sizeBOM)
 
   if(sizeBOM) (*sizeBOM) = 0;
 
-  if(file->Read((XBYTE*)&BOM,3))
+  if(file->Read((XBYTE*)&BOM, 3))
     {
       if((BOM[0]==0xEF)&&(BOM[1]==0xBB)&&(BOM[2]==0xBF))
         {
@@ -854,7 +854,7 @@ bool XFILETXT::WriteAllFile()
   file->SetPosition(0);
   if(sizeBOM)
     {
-      if(!file->Write(BOM,sizeBOM)) return false;
+      if(!file->Write(BOM, sizeBOM)) return false;
     }
 
   XBUFFER xbuffer;
@@ -884,12 +884,12 @@ bool XFILETXT::WriteAllFile()
                                                         XBUFFER charstr;
                                                         
                                                         (*string).ConvertToASCII(charstr); 
-                                                        memcpy(buffer,(XBYTE*)charstr.Get(), bw);
+                                                        memcpy(buffer, (XBYTE*)charstr.Get(), bw);
                                                         
                                                       }
                                                       break;
 
-                  case XFILETXTFORMATCHAR_UTF8      : string->ConvertToUTF8(buffer,bw);
+                  case XFILETXTFORMATCHAR_UTF8      : string->ConvertToUTF8(buffer, bw);
                                                       break;
 
                   case XFILETXTFORMATCHAR_UTF16_BE  : { XWORD* bufferw = (XWORD*)buffer;
@@ -1170,7 +1170,7 @@ bool XFILETXT::GenerateLineFromBuffer(XFILETXTFORMATCHAR formatchar, XBYTE* line
                                                       unibuffer[c] = wline[c];
                                                     }
 
-                                                  string.Set(unibuffer,sizeline);
+                                                  string.Set(unibuffer, sizeline);
 
                                                   GEN_DELETE_ARRAY unibuffer;
                                                 }
@@ -1186,7 +1186,7 @@ bool XFILETXT::GenerateLineFromBuffer(XFILETXTFORMATCHAR formatchar, XBYTE* line
                                                        unibuffer[c] = wline[c];
                                                      }
 
-                                                   string.Set(unibuffer,sizeline);
+                                                   string.Set(unibuffer, sizeline);
 
                                                    GEN_DELETE_ARRAY unibuffer;
                                                  }
@@ -1283,7 +1283,7 @@ bool XFILETXT::AddLineAlready(XSTRING& line, XDWORD* resultsizeline, XDWORD* res
   if(buffer)
     {
       int bw = 0;
-      memset(buffer,0,XFILETXT_MAXBUFFER);
+      memset(buffer, 0, XFILETXT_MAXBUFFER);
 
       switch(formatchar)
         {
@@ -1298,7 +1298,7 @@ bool XFILETXT::AddLineAlready(XSTRING& line, XDWORD* resultsizeline, XDWORD* res
                                               }
                                               break;
 
-          case XFILETXTFORMATCHAR_UTF8      : line.ConvertToUTF8(buffer,bw);
+          case XFILETXTFORMATCHAR_UTF8      : line.ConvertToUTF8(buffer, bw);
                                               break;
 
           case XFILETXTFORMATCHAR_UTF16_BE  : { XWORD* bufferw = (XWORD*)buffer;
@@ -1329,9 +1329,9 @@ bool XFILETXT::AddLineAlready(XSTRING& line, XDWORD* resultsizeline, XDWORD* res
 
       if(bw)
         {
-          if(file->Write(buffer,bw))
+          if(file->Write(buffer, bw))
             {
-              if(file->Write(LF,sizeLF))
+              if(file->Write(LF, sizeLF))
                 {
                   if(resultsizeline) (*resultsizeline) = bw;
                   if(resultsizeLF)   (*resultsizeLF)   = sizeLF;
@@ -1387,7 +1387,7 @@ bool XFILETXT::InsertLine(int index, XSTRING& line)
   XSTRING* string = GEN_NEW XSTRING(line);
   if(!string) return false;
 
-  return lines.Insert(index,string);
+  return lines.Insert(index, string);
 }
 
 

@@ -130,11 +130,11 @@ bool GRPVECTORFILESVGOBJELLIPSE::BuildPath(GRP2DPATH& path)
   double ox = rx * GRPVECTORFILESVGOBJELLIPSE_KAPPA;
   double oy = ry * GRPVECTORFILESVGOBJELLIPSE_KAPPA;
 
-  path.MoveTo (cx + rx, cy         );
-  path.CurveTo(cx + rx, cy + oy,  cx + ox, cy + ry,  cx     , cy + ry);
-  path.CurveTo(cx - ox, cy + ry,  cx - rx, cy + oy,  cx - rx, cy     );
-  path.CurveTo(cx - rx, cy - oy,  cx - ox, cy - ry,  cx     , cy - ry);
-  path.CurveTo(cx + ox, cy - ry,  cx + rx, cy - oy,  cx + rx, cy     );
+  path.MoveTo (cx + rx, cy);
+  path.CurveTo(cx + rx, cy + oy, cx + ox, cy + ry, cx, cy + ry);
+  path.CurveTo(cx - ox, cy + ry, cx - rx, cy + oy, cx - rx, cy);
+  path.CurveTo(cx - rx, cy - oy, cx - ox, cy - ry, cx, cy - ry);
+  path.CurveTo(cx + ox, cy - ry, cx + rx, cy - oy, cx + rx, cy);
   path.Close();
 
   return true;

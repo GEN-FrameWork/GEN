@@ -390,11 +390,7 @@ bool APPFLOWUPDATE::Ini(APPFLOWCFG* cfg, APPFLOWUPDATE_CFG* updatecfg)
 
   EventManager(APPFLOWUPDATE_EVENTOPERATION_REGISTER);
 
-  dioappupdate = GEN_NEW DIOAPPLICATIONUPDATE(update_cfg.GetAppVersion()->GetVersion()         ,
-                                          update_cfg.GetAppVersion()->GetSubVersion()      ,
-                                          update_cfg.GetAppVersion()->GetSubVersionError() ,
-                                          update_cfg.GetAppName()->Get(),
-                                        (*update_cfg.GetPathRootApp()));
+  dioappupdate = GEN_NEW DIOAPPLICATIONUPDATE(update_cfg.GetAppVersion()->GetVersion(), update_cfg.GetAppVersion()->GetSubVersion(), update_cfg.GetAppVersion()->GetSubVersionError(), update_cfg.GetAppName()->Get(), (*update_cfg.GetPathRootApp()));
 
   if(!dioappupdate) return false;
 
@@ -442,7 +438,7 @@ bool APPFLOWUPDATE::EventManager(APPFLOWUPDATE_EVENTOPERATION eventoperation, XS
         {
           case APPFLOWUPDATE_EVENTOPERATION_REGISTER     : RegisterEvent(events[c]);                           break;
           case APPFLOWUPDATE_EVENTOPERATION_DEREGISTER   : DeRegisterEvent(events[c]);                         break;
-          case APPFLOWUPDATE_EVENTOPERATION_SUBSCRIBE    : SubscribeEvent(events[c]   , xsubject, observer);   break;
+          case APPFLOWUPDATE_EVENTOPERATION_SUBSCRIBE    : SubscribeEvent(events[c], xsubject, observer);   break;
           case APPFLOWUPDATE_EVENTOPERATION_UNSUBSCRIBE  : UnSubscribeEvent(events[c] , xsubject, observer);   break;
                                            default   : return false;
         }
@@ -491,9 +487,7 @@ bool APPFLOWUPDATE::Do()
           // Download GEN_NEW version to update available to subdir root/update[x.x.x] Update Version
           xpathupdate = update_cfg.GetPathRootApp()->Get();
           xpathupdate.Slash_Add();
-          xpathupdate.AddFormat(dir_mask.Get() , applicationversiondata.GetVersion()
-                                               , applicationversiondata.GetSubVersion()
-                                               , applicationversiondata.GetSubVersionError());
+          xpathupdate.AddFormat(dir_mask.Get(), applicationversiondata.GetVersion(), applicationversiondata.GetSubVersion(), applicationversiondata.GetSubVersionError());
 
           status = dioappupdate->Download((*update_cfg.GetURL()), update_cfg.Get_Port(), xpathupdate, applicationversiondata, 60, error);
 
@@ -526,9 +520,7 @@ bool APPFLOWUPDATE::Do()
               xpathbackup = update_cfg.GetPathRootApp()->Get();;
               xpathbackup.Slash_Add();
 
-              xpathbackup.AddFormat(dir_mask.Get() , update_cfg.GetAppVersion()->GetVersion()
-                                                   , update_cfg.GetAppVersion()->GetSubVersion()
-                                                   , update_cfg.GetAppVersion()->GetSubVersionError());
+              xpathbackup.AddFormat(dir_mask.Get(), update_cfg.GetAppVersion()->GetVersion(), update_cfg.GetAppVersion()->GetSubVersion(), update_cfg.GetAppVersion()->GetSubVersionError());
 
               // Change actual files for the GEN_NEW version
               status = dioappupdate->ChangeFilesFromDownload(applicationversiondata, xpathupdate, xpathbackup, error);
@@ -761,10 +753,7 @@ bool APPFLOWUPDATE::LogOfEvent(DIOAPPLICATIONUPDATE_XEVENT* event)
     {
       case DIOAPPLICATIONUPDATE_XEVENT_TYPE_GETVERSIONAVAILABLE       : if(event->GetError() == DIOAPPLICATIONUPDATE_NOT_ERROR)
                                                                           {
-                                                                            string.Format( __L("Update Version available %d.%d.%d")
-                                                                                          , event->GetVersionData()->GetVersion()
-                                                                                          , event->GetVersionData()->GetSubVersion()
-                                                                                          , event->GetVersionData()->GetSubVersionError());
+                                                                            string.Format(__L("Update Version available %d.%d.%d"), event->GetVersionData()->GetVersion(), event->GetVersionData()->GetSubVersion(), event->GetVersionData()->GetSubVersionError());
                                                                           }
                                                                          else
                                                                           {
@@ -772,10 +761,7 @@ bool APPFLOWUPDATE::LogOfEvent(DIOAPPLICATIONUPDATE_XEVENT* event)
                                                                           }
                                                                         break;
 
-      case DIOAPPLICATIONUPDATE_XEVENT_TYPE_CHECKVERSIONAVAILABLE     : string.Format( __L("Version %d.%d.%d is ")
-                                                                                      , event->GetVersionData()->GetVersion()
-                                                                                      , event->GetVersionData()->GetSubVersion()
-                                                                                      , event->GetVersionData()->GetSubVersionError());
+      case DIOAPPLICATIONUPDATE_XEVENT_TYPE_CHECKVERSIONAVAILABLE     : string.Format(__L("Version %d.%d.%d is "), event->GetVersionData()->GetVersion(), event->GetVersionData()->GetSubVersion(), event->GetVersionData()->GetSubVersionError());
 
                                                                         switch(event->GetVersionComparation())
                                                                           {
@@ -789,24 +775,17 @@ bool APPFLOWUPDATE::LogOfEvent(DIOAPPLICATIONUPDATE_XEVENT* event)
                                                                         break;
 
 
-      case DIOAPPLICATIONUPDATE_XEVENT_TYPE_DOWNLOADFILE              : if(updatefile) string.Format( __L("Download file %s (%dk).")
-                                                                                                      , updatefile->GetXPathFile()->Get()
-                                                                                                      , updatefile->GetSize()/1024);
+      case DIOAPPLICATIONUPDATE_XEVENT_TYPE_DOWNLOADFILE              : if(updatefile) string.Format(__L("Download file %s (%dk)."), updatefile->GetXPathFile()->Get(), updatefile->GetSize()/1024);
 
                                                                         break;
 
-      case DIOAPPLICATIONUPDATE_XEVENT_TYPE_UNZIPFILE                 : if(updatefile) string.Format( __L("Unzip file %s (%dk) -> %s.")
-                                                                                                      , updatefile->GetXPathFile()->Get()
-                                                                                                      , updatefile->GetSize()/1024
-                                                                                                      , event->GetActualUnzipFileName()->Get());
+      case DIOAPPLICATIONUPDATE_XEVENT_TYPE_UNZIPFILE                 : if(updatefile) string.Format(__L("Unzip file %s (%dk) -> %s."), updatefile->GetXPathFile()->Get(), updatefile->GetSize()/1024, event->GetActualUnzipFileName()->Get());
                                                                         break;
 
       case DIOAPPLICATIONUPDATE_XEVENT_TYPE_DOWNLOADFILES             : string.Format(__L("Downloads file %s."), (event->GetError() == DIOAPPLICATIONUPDATE_NOT_ERROR?__L("Ok."):__L("ERROR!")));
                                                                         break;
 
-      case DIOAPPLICATIONUPDATE_XEVENT_TYPE_BACKUPORIGINALFILE        : if(updatefile) string.Format( __L("Backup original file %s (%dk).")
-                                                                                                      , updatefile->GetXPathFile()->Get()
-                                                                                                      , updatefile->GetSize()/1024);
+      case DIOAPPLICATIONUPDATE_XEVENT_TYPE_BACKUPORIGINALFILE        : if(updatefile) string.Format(__L("Backup original file %s (%dk)."), updatefile->GetXPathFile()->Get(), updatefile->GetSize()/1024);
                                                                         break;
 
       case DIOAPPLICATIONUPDATE_XEVENT_TYPE_BACKUPORIGINALFILES       : string.Format(__L("Backup Original file %s."), (event->GetError() == DIOAPPLICATIONUPDATE_NOT_ERROR?__L("Ok."):__L("ERROR!")));
@@ -816,14 +795,10 @@ bool APPFLOWUPDATE::LogOfEvent(DIOAPPLICATIONUPDATE_XEVENT* event)
                                                                         break;
 
 
-      case DIOAPPLICATIONUPDATE_XEVENT_TYPE_UPDATEFILE                : if(updatefile) string.Format( __L("Copy update file %s (%dk).")
-                                                                                                      , updatefile->GetXPathFile()->Get()
-                                                                                                      , updatefile->GetSize()/1024);
+      case DIOAPPLICATIONUPDATE_XEVENT_TYPE_UPDATEFILE                : if(updatefile) string.Format(__L("Copy update file %s (%dk)."), updatefile->GetXPathFile()->Get(), updatefile->GetSize()/1024);
                                                                         break;
 
-       case DIOAPPLICATIONUPDATE_XEVENT_TYPE_UPDATEEXECFILE           : if(updatefile) string.Format( __L("Notify update EXEC file %s (%dk).")
-                                                                                                      , updatefile->GetXPathFile()->Get()
-                                                                                                      , updatefile->GetSize()/1024);
+       case DIOAPPLICATIONUPDATE_XEVENT_TYPE_UPDATEEXECFILE           : if(updatefile) string.Format(__L("Notify update EXEC file %s (%dk)."), updatefile->GetXPathFile()->Get(), updatefile->GetSize()/1024);
                                                                         break;
 
       case DIOAPPLICATIONUPDATE_XEVENT_TYPE_UPDATEFILES               : string.Format(__L("Update files %s."), (event->GetError() == DIOAPPLICATIONUPDATE_NOT_ERROR?__L("Ok."):__L("ERROR!")));
@@ -833,9 +808,7 @@ bool APPFLOWUPDATE::LogOfEvent(DIOAPPLICATIONUPDATE_XEVENT* event)
       case DIOAPPLICATIONUPDATE_XEVENT_TYPE_APP_END                   : string.Format(__L("Terminate application"));
                                                                         break;
 
-      case DIOAPPLICATIONUPDATE_XEVENT_TYPE_RESTOREUPDATEFILE         : if(updatefile) string.Format( __L("Restore file %s from backup (%dk).")
-                                                                                                    , updatefile->GetXPathFile()->Get()
-                                                                                                    , updatefile->GetSize()/1024);
+      case DIOAPPLICATIONUPDATE_XEVENT_TYPE_RESTOREUPDATEFILE         : if(updatefile) string.Format(__L("Restore file %s from backup (%dk)."), updatefile->GetXPathFile()->Get(), updatefile->GetSize()/1024);
                                                                         break;
 
       case DIOAPPLICATIONUPDATE_XEVENT_TYPE_RESTOREUPDATEFILES        : string.Format(__L("Restore update files %s."), (event->GetError() == DIOAPPLICATIONUPDATE_NOT_ERROR?__L("Ok."):__L("ERROR!")));

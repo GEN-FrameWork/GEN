@@ -37,8 +37,6 @@
 #include "XBER.h"
 #include "XASN1.h"
 
-
-
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
 
 enum XBERXEVENT_TYPE
@@ -48,8 +46,6 @@ enum XBERXEVENT_TYPE
   XBERXEVENT_TYPE_DECODE_DATA                                   ,          
   XBERXEVENT_TYPE_DECODE_END                                                                          
 };
-
-
 
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
 

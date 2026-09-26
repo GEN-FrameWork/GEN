@@ -1108,7 +1108,7 @@ XVARIANT::operator void*() const
 
   void* value = 0;
 
-  memcpy((void*)&value, (XBYTE*)data,  size); 
+  memcpy((void*)&value, (XBYTE*)data, size); 
 
   return value;
 }
@@ -1436,11 +1436,7 @@ bool XVARIANT::ToString(XSTRING& to)
                                                 {
                                                   datetime->CopyFrom(((XDATETIME*)this->data));      
 
-                                                  datetime->GetDateTimeToStringISO8601( XDATETIME_FORMAT_ADDTIME               | 
-                                                                                        XDATETIME_FORMAT_TIMEWITHSECONDS       |
-                                                                                        XDATETIME_FORMAT_TIMEWITHMILLISECONDS  |
-                                                                                        XDATETIME_FORMAT_ISO8601_ADDHOUROFFSET , 
-                                                                                        to);      
+                                                  datetime->GetDateTimeToStringISO8601(XDATETIME_FORMAT_ADDTIME | XDATETIME_FORMAT_TIMEWITHSECONDS | XDATETIME_FORMAT_TIMEWITHMILLISECONDS | XDATETIME_FORMAT_ISO8601_ADDHOUROFFSET, to);      
 
                                                   GEN_XFACTORY.DeleteDateTime(datetime);
                                                 }
@@ -1464,11 +1460,7 @@ bool XVARIANT::ToString(XSTRING& to)
                                                 {
                                                   datetime->CopyFrom(((XDATETIME*)this->data));      
 
-                                                  datetime->GetDateTimeToStringISO8601( XDATETIME_FORMAT_ISO8601_STANDARD      |
-                                                                                        XDATETIME_FORMAT_TIMEWITHSECONDS       |
-                                                                                        XDATETIME_FORMAT_TIMEWITHMILLISECONDS  |
-                                                                                        XDATETIME_FORMAT_ISO8601_ADDHOUROFFSET , 
-                                                                                        to);      
+                                                  datetime->GetDateTimeToStringISO8601(XDATETIME_FORMAT_ISO8601_STANDARD | XDATETIME_FORMAT_TIMEWITHSECONDS | XDATETIME_FORMAT_TIMEWITHMILLISECONDS | XDATETIME_FORMAT_ISO8601_ADDHOUROFFSET, to);      
 
                                                   GEN_XFACTORY.DeleteDateTime(datetime);
                                                 }
@@ -1630,10 +1622,7 @@ bool XVARIANT::FromString(XSTRING& from, XVARIANT_TYPE from_type)
           case XVARIANT_TYPE_TIME             : { XDATETIME* datetime = GEN_XFACTORY.CreateDateTime();
                                                   if(datetime) 
                                                     {
-                                                      datetime->GetDateTimeFromStringISO8601(from,  XDATETIME_FORMAT_ADDTIME               | 
-                                                                                                    XDATETIME_FORMAT_TIMEWITHSECONDS       |
-                                                                                                    XDATETIME_FORMAT_TIMEWITHMILLISECONDS  |
-                                                                                                    XDATETIME_FORMAT_ISO8601_ADDHOUROFFSET);                                                                                             
+                                                      datetime->GetDateTimeFromStringISO8601(from, XDATETIME_FORMAT_ADDTIME | XDATETIME_FORMAT_TIMEWITHSECONDS | XDATETIME_FORMAT_TIMEWITHMILLISECONDS | XDATETIME_FORMAT_ISO8601_ADDHOUROFFSET);                                                                                             
                                                       if(data)
                                                         {
                                                           Destroy();
@@ -1666,10 +1655,7 @@ bool XVARIANT::FromString(XSTRING& from, XVARIANT_TYPE from_type)
           case XVARIANT_TYPE_DATETIME         : { XDATETIME* datetime = GEN_XFACTORY.CreateDateTime();
                                                   if(datetime) 
                                                     {                                                      
-                                                      datetime->GetDateTimeFromStringISO8601(from, XDATETIME_FORMAT_ISO8601_STANDARD      |
-                                                                                                   XDATETIME_FORMAT_TIMEWITHSECONDS       |
-                                                                                                   XDATETIME_FORMAT_TIMEWITHMILLISECONDS  |
-                                                                                                   XDATETIME_FORMAT_ISO8601_ADDHOUROFFSET);                                                                                         
+                                                      datetime->GetDateTimeFromStringISO8601(from, XDATETIME_FORMAT_ISO8601_STANDARD | XDATETIME_FORMAT_TIMEWITHSECONDS | XDATETIME_FORMAT_TIMEWITHMILLISECONDS | XDATETIME_FORMAT_ISO8601_ADDHOUROFFSET);                                                                                         
                                                       if(data)
                                                         {
                                                           Destroy();

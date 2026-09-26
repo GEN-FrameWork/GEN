@@ -483,7 +483,7 @@ bool UI_LENGTH::EvaluateCalcNode(UI_LENGTHCALCNODE* node, UI_LENGTH_CONTEXT& con
   double leftvalue  = 0.0;
   double rightvalue = 0.0;
 
-  if(!EvaluateCalcNode(node->left,  context, leftvalue))  return false;
+  if(!EvaluateCalcNode(node->left, context, leftvalue))  return false;
   if(!EvaluateCalcNode(node->right, context, rightvalue)) return false;
 
   switch(node->op)

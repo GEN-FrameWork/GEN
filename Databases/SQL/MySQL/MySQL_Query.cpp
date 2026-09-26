@@ -109,7 +109,7 @@ bool MYSQL_QUERY::Execute()
   MYSQL_DATABASE* db    = static_cast<MYSQL_DATABASE*>  (database);
   MYSQL*          msql  = static_cast<MYSQL_CONNECTION*>(db->connection)->connection;
 
-  if(value.FindCharacter(__C('*'))!= NOTFOUND && value.Find(__L("COUNT(*)"),true)==XSTRING_NOTFOUND)
+  if(value.FindCharacter(__C('*'))!= NOTFOUND && value.Find(__L("COUNT(*)"), true)==XSTRING_NOTFOUND)
     {
       DB_SQL_STRING error;
 
@@ -142,7 +142,7 @@ bool MYSQL_QUERY::Execute()
 
   XBUFFER* querystringbuffer = GEN_NEW XBUFFER();
   query.ConvertToUTF8   (*querystringbuffer );
-  buffers.Add           (querystringbuffer  );
+  buffers.Add           (querystringbuffer);
 
   int RC = Exec(msql, (char*)querystringbuffer->Get());
   if(RC) return false;
@@ -212,7 +212,7 @@ bool MYSQL_QUERY::Bind(XDWORD ID, DB_SQL_DATETIME& datetime)
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         bool MYSQL_QUERY::Exec(MYSQL* db,char* sql)
+* @fn         bool MYSQL_QUERY::Exec(MYSQL* db, char* sql)
 * @brief      Exec
 * @ingroup    DATABASE
 * 
@@ -222,7 +222,7 @@ bool MYSQL_QUERY::Bind(XDWORD ID, DB_SQL_DATETIME& datetime)
 * @return     bool : true if the operation is successful; otherwise false.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-bool MYSQL_QUERY::Exec(MYSQL* db,char* sql)
+bool MYSQL_QUERY::Exec(MYSQL* db, char* sql)
 {
   if(!db)
     {
@@ -403,7 +403,7 @@ bool MYSQL_QUERY::BindParametersToQuery()
       return false;
     }
 
-  memset(param,0,statementbindings.GetSize()*sizeof(MYSQL_BIND));
+  memset(param, 0, statementbindings.GetSize()*sizeof(MYSQL_BIND));
 
   static_cast<MYSQL_DATABASE*>(this->database)->isnull=false;
 

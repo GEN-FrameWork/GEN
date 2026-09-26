@@ -128,10 +128,6 @@ void XLICENSEID::Clean()
 }
 
 
-
-
-
-
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         XLICENSE::XLICENSE()
@@ -610,8 +606,8 @@ bool XLICENSE::LoadFromBuffer(XBUFFER& xbuffer, XSTRING& applicationID, XBUFFER*
 
   fileini.ConvertFromLines();
 
-  fileini.ReadValue(XLICENSE_FILESECTION, XLICENSE_FILEVALUE_ID         , licenseIDstring);
-  fileini.ReadValue(XLICENSE_FILESECTION, XLICENSE_FILEVALUE_LICENSE    , licensestring);
+  fileini.ReadValue(XLICENSE_FILESECTION, XLICENSE_FILEVALUE_ID, licenseIDstring);
+  fileini.ReadValue(XLICENSE_FILESECTION, XLICENSE_FILEVALUE_LICENSE, licensestring);
   fileini.ReadValue(XLICENSE_FILESECTION, XLICENSE_FILEVALUE_EXPIRATION , licenseexprirationstring);
 
   GenerateMachineID(licenseID);
@@ -689,7 +685,7 @@ bool XLICENSE::CheckMasterCreation(XPATH& xpath, XLICENSEID& licenseID, XSTRING&
           expirationdatetime->AddDays((int)expirationdays);
         }
 
-      expirationdatetime->GetDateTimeToString(XDATETIME_FORMAT_STANDARD,  licenseexpiration);
+      expirationdatetime->GetDateTimeToString(XDATETIME_FORMAT_STANDARD, licenseexpiration);
       GEN_XFACTORY.DeleteDateTime(expirationdatetime);
 
       if(!CipherExpirationDate(true, applicationID, licenseexpiration)) 
@@ -703,8 +699,8 @@ bool XLICENSE::CheckMasterCreation(XPATH& xpath, XLICENSEID& licenseID, XSTRING&
         }
 
       fileini.CreateSection(XLICENSE_FILESECTION);
-      fileini.WriteValue(XLICENSE_FILESECTION, XLICENSE_FILEVALUE_ID        , licenseIDstring);
-      fileini.WriteValue(XLICENSE_FILESECTION, XLICENSE_FILEVALUE_LICENSE   , licensestring);
+      fileini.WriteValue(XLICENSE_FILESECTION, XLICENSE_FILEVALUE_ID, licenseIDstring);
+      fileini.WriteValue(XLICENSE_FILESECTION, XLICENSE_FILEVALUE_LICENSE, licensestring);
       fileini.WriteValue(XLICENSE_FILESECTION, XLICENSE_FILEVALUE_EXPIRATION, licenseexpiration);
 
       fileini.Close();

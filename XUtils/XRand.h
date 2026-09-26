@@ -38,10 +38,7 @@
 
 #define GETRANDOM(min,max)  ((rand()%(int)(((max)+1)-(min)))+(min))
 
-
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
-
 
 class XRAND 
 {
@@ -62,7 +59,7 @@ class XRAND
     virtual int           Between             (int min, int max);
     virtual bool          Generate            (XBYTE* buffer, XDWORD size);
 
-    float                 Between             (float  min,  float max);
+    float                 Between             (float min, float max);
     bool                  Percent             (int percent);
 
   private:

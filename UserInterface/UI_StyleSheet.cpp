@@ -514,11 +514,14 @@ void UI_CSSRULE::ClearMedia()
 
 
 /**-------------------------------------------------------------------------------------------------------------------
-*
+* 
 * @fn         void UI_CSSRULE::SetMediaWidthRange(int min_width_px, int max_width_px)
 * @brief      Attach Track B @media (min/max-width). Pass -1 for an unbound edge.
 * @ingroup    USERINTERFACE
-*
+* 
+* @param[in]  min_width_px : 
+* @param[in]  max_width_px : 
+* 
 * --------------------------------------------------------------------------------------------------------------------*/
 void UI_CSSRULE::SetMediaWidthRange(int min_width_px, int max_width_px)
 {
@@ -529,11 +532,15 @@ void UI_CSSRULE::SetMediaWidthRange(int min_width_px, int max_width_px)
 
 
 /**-------------------------------------------------------------------------------------------------------------------
-*
+* 
 * @fn         bool UI_CSSRULE::MatchesMediaViewport(int viewport_w) const
 * @brief      True if this rule has no media gate, or viewport_w satisfies min/max-width.
 * @ingroup    USERINTERFACE
-*
+* 
+* @param[in]  viewport_w : 
+* 
+* @return     bool : true if the operation is successful; otherwise false.
+* 
 * --------------------------------------------------------------------------------------------------------------------*/
 bool UI_CSSRULE::MatchesMediaViewport(int viewport_w) const
 {
@@ -1091,6 +1098,18 @@ void UI_STYLESHEET::ExpandVariables()
 }
 
 
+/**-------------------------------------------------------------------------------------------------------------------
+* 
+* @fn         bool UI_STYLESHEET::ExpandValueVars(XSTRING& in, XSTRING& out)
+* @brief      Expand Value Vars
+* @ingroup    USERINTERFACE
+* 
+* @param[in]  in : 
+* @param[in]  out : 
+* 
+* @return     bool : true if the operation is successful; otherwise false.
+* 
+* --------------------------------------------------------------------------------------------------------------------*/
 bool UI_STYLESHEET::ExpandValueVars(XSTRING& in, XSTRING& out)
 {
   return SubstituteVars(in, out);
@@ -1346,11 +1365,14 @@ void UI_STYLESHEET::Clean()
 
 
 /**-------------------------------------------------------------------------------------------------------------------
-*
+* 
 * @fn         void UI_STYLESHEET::SetMediaViewport(int width_px, int height_px)
 * @brief      Track B: set design viewport used to gate @media (min/max-width) rules.
 * @ingroup    USERINTERFACE
-*
+* 
+* @param[in]  width_px : 
+* @param[in]  height_px : 
+* 
 * --------------------------------------------------------------------------------------------------------------------*/
 void UI_STYLESHEET::SetMediaViewport(int width_px, int height_px)
 {

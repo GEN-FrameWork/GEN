@@ -316,8 +316,7 @@ static void UI_SkinCanvas_AppendRoundRectPath(GRP2DPATH& path, double minx, doub
 * @param[in]  rBL : Bottom-left corner radius.
 *
 * --------------------------------------------------------------------------------------------------------------------*/
-void UI_SKINCANVAS::AppendRoundRectPathPerCorner(GRP2DPATH& path, double minx, double miny, double maxx, double maxy,
-                                                 double rTL, double rTR, double rBR, double rBL)
+void UI_SKINCANVAS::AppendRoundRectPathPerCorner(GRP2DPATH& path, double minx, double miny, double maxx, double maxy, double rTL, double rTR, double rBR, double rBL)
 {
   double w    = maxx - minx;
   double h    = maxy - miny;
@@ -444,10 +443,7 @@ static bool UI_SkinCanvas_RoundedRectInside(int px, int py, int w, int h, double
 *             clear in UI_SkinCanvas_BuildSoftShadowBitmap.
 *
 * --------------------------------------------------------------------------------------------------------------------*/
-static void UI_SkinCanvas_PunchRoundRectCornerTips(GRP2DCANVAS* canvas, GRP2DREBUILDAREA* backdrop,
-                                                   double minx, double miny, double maxx, double maxy,
-                                                   double rTL, double rTR, double rBR, double rBL,
-                                                   const GRP2DCOLOR_RGBA8* parent_override)
+static void UI_SkinCanvas_PunchRoundRectCornerTips(GRP2DCANVAS* canvas, GRP2DREBUILDAREA* backdrop, double minx, double miny, double maxx, double maxy, double rTL, double rTR, double rBR, double rBL, const GRP2DCOLOR_RGBA8* parent_override)
 {
   if(!canvas) return;
 
@@ -463,7 +459,7 @@ static void UI_SkinCanvas_PunchRoundRectCornerTips(GRP2DCANVAS* canvas, GRP2DREB
 
   // Parent ink: override (must be non-black) > FormBackdrop mid-edge > father's CSS bg (passed as override).
   // Never punch with 0,0,0 — that paints black picos worse than AGG tips.
-  GRP2DCOLOR_RGBA8 parent(0,0,0,255);
+  GRP2DCOLOR_RGBA8 parent(0, 0, 0, 255);
   bool have_parent = false;
   if(parent_override && parent_override->a > 0 &&
      (parent_override->r + parent_override->g + parent_override->b) > 8)
@@ -516,9 +512,7 @@ static void UI_SkinCanvas_PunchRoundRectCornerTips(GRP2DCANVAS* canvas, GRP2DREB
           // Slightly inflate radii for the inside test so we don't erase AGG's AA fringe of the true fill
           // (pixel (3,3) with r=12 is just outside the strict disc but still part of the painted arc).
           bool inside_shape = (px >= 0 && py >= 0 && px < w && py < h) &&
-                              UI_SkinCanvas_RoundedRectInside(px, py, w, h,
-                                                              rTL + 0.75, rTR + 0.75,
-                                                              rBR + 0.75, rBL + 0.75);
+                              UI_SkinCanvas_RoundedRectInside(px, py, w, h, rTL + 0.75, rTR + 0.75, rBR + 0.75, rBL + 0.75);
           if(inside_shape) continue;
 
           canvas->PutPixel((double)(x0 + px), (double)(y0 + py), &parent);
@@ -570,8 +564,7 @@ XDWORD diagskin_shadowcachemiss  = 0;
 // does for the two non-Form call sites, or compositing-then-CACHING it on the owning UI_ELEMENT_FORM, as
 // UI_SkinCanvas_DrawSoftShadow_FormCached does, so the SAME bitmap can be reused on a later frame instead of
 // rebuilt from scratch). Returns NULL on failure (caller falls back to a hard shadow).
-static GRPBITMAP* UI_SkinCanvas_BuildSoftShadowBitmap(int shape_w, int shape_h, double rTL, double rTR, double rBR, double rBL,
-                                                        UI_COLOR* shadow_color, int blur_radius)
+static GRPBITMAP* UI_SkinCanvas_BuildSoftShadowBitmap(int shape_w, int shape_h, double rTL, double rTR, double rBR, double rBL, UI_COLOR* shadow_color, int blur_radius)
 {
   if(!shadow_color || blur_radius <= 0)   return NULL;
   if(shape_w <= 0 || shape_h <= 0)        return NULL;
@@ -724,8 +717,7 @@ static GRPBITMAP* UI_SkinCanvas_BuildSoftShadowBitmap(int shape_w, int shape_h, 
   static bool once = true;
   if(once)
     {
-      XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, __L("[UI Draw] soft shadow: bitmap=%dx%d blur=%d shadow_alpha=%d"),
-                        bw, bh, blur_radius, (int)shadow_color->GetAlpha());
+      XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, __L("[UI Draw] soft shadow: bitmap=%dx%d blur=%d shadow_alpha=%d"), bw, bh, blur_radius, (int)shadow_color->GetAlpha());
       once = false;
     }
 
@@ -783,9 +775,7 @@ static void UI_SkinCanvas_CompositeSoftShadowBitmap(GRP2DCANVAS* canvas, GRPBITM
 // Behaviour-preserving recombination of UI_SkinCanvas_BuildSoftShadowBitmap + UI_SkinCanvas_CompositeSoftShadowBitmap
 // for the two call sites that do not (yet) cache: build, composite, delete, in one shot -- exactly what the
 // original single-piece function used to do.
-static bool UI_SkinCanvas_DrawSoftShadow_Impl(GRP2DCANVAS* canvas, double minx, double miny, double maxx, double maxy,
-                                          double rTL, double rTR, double rBR, double rBL,
-                                          UI_COLOR* shadow_color, int blur_radius)
+static bool UI_SkinCanvas_DrawSoftShadow_Impl(GRP2DCANVAS* canvas, double minx, double miny, double maxx, double maxy, double rTL, double rTR, double rBR, double rBL, UI_COLOR* shadow_color, int blur_radius)
 {
   if(!canvas) return false;
 
@@ -804,9 +794,7 @@ static bool UI_SkinCanvas_DrawSoftShadow_Impl(GRP2DCANVAS* canvas, double minx, 
 
 // Thin wrapper around UI_SkinCanvas_DrawSoftShadow_Impl (renamed above), kept under the ORIGINAL name so the
 // two non-Form call sites are untouched. Tallies the call into diagskin_shadowcalls (see its own comment above).
-static bool UI_SkinCanvas_DrawSoftShadow(GRP2DCANVAS* canvas, double minx, double miny, double maxx, double maxy,
-                                          double rTL, double rTR, double rBR, double rBL,
-                                          UI_COLOR* shadow_color, int blur_radius)
+static bool UI_SkinCanvas_DrawSoftShadow(GRP2DCANVAS* canvas, double minx, double miny, double maxx, double maxy, double rTL, double rTR, double rBR, double rBL, UI_COLOR* shadow_color, int blur_radius)
 {
   bool result = UI_SkinCanvas_DrawSoftShadow_Impl(canvas, minx, miny, maxx, maxy, rTL, rTR, rBR, rBL, shadow_color, blur_radius);
 
@@ -823,9 +811,7 @@ static bool UI_SkinCanvas_DrawSoftShadow(GRP2DCANVAS* canvas, double minx, doubl
 // text-sized rectangle and PutBitmapNoAlpha-restores it as a hard blue/purple block behind "9%" (confirmed
 // against the Monitor del Sistema prototype vs live capture). This helper fills ONLY an annular band
 // (inner_r..outer_r), blurs it with the same AGG path, and composites it -- centre stays the card backdrop.
-static bool UI_SkinCanvas_DrawSoftRingGlow(GRP2DCANVAS* canvas, double cx, double cy,
-                                          double outer_r, double inner_r,
-                                          UI_COLOR* shadow_color, int blur_radius)
+static bool UI_SkinCanvas_DrawSoftRingGlow(GRP2DCANVAS* canvas, double cx, double cy, double outer_r, double inner_r, UI_COLOR* shadow_color, int blur_radius)
 {
   if(!canvas || !shadow_color)        return false;
   if(blur_radius <= 0)                return false;
@@ -927,9 +913,7 @@ static bool UI_SkinCanvas_DrawSoftRingGlow(GRP2DCANVAS* canvas, double cx, doubl
 // ProgressBar track shadow) keep using the uncached UI_SkinCanvas_DrawSoftShadow above -- dashboard.css does
 // not author box-shadow on those element types today, so they were left as-is rather than widening this
 // change beyond what was actually measured.
-static bool UI_SkinCanvas_DrawSoftShadow_FormCached(GRP2DCANVAS* canvas, UI_ELEMENT_FORM* element_form, double minx, double miny, double maxx, double maxy,
-                                                      double rTL, double rTR, double rBR, double rBL,
-                                                      UI_COLOR* shadow_color, int blur_radius)
+static bool UI_SkinCanvas_DrawSoftShadow_FormCached(GRP2DCANVAS* canvas, UI_ELEMENT_FORM* element_form, double minx, double miny, double maxx, double maxy, double rTL, double rTR, double rBR, double rBL, UI_COLOR* shadow_color, int blur_radius)
 {
   if(!canvas || !element_form) return false;
 
@@ -1094,18 +1078,13 @@ void UI_SKINCANVAS::DrawElementBoxShadow(GRP2DCANVAS* canvas, UI_ELEMENT* elemen
   bool soft_ok = false;
   if(sh_blur > 0.0)
     {
-      soft_ok = UI_SkinCanvas_DrawSoftShadow(canvas, sh_minx, sh_miny, sh_maxx, sh_maxy,
-                                            rTL, rTR, rBR, rBL,
-                                            element->GetShadowColor(), (int)sh_blur);
+      soft_ok = UI_SkinCanvas_DrawSoftShadow(canvas, sh_minx, sh_miny, sh_maxx, sh_maxy, rTL, rTR, rBR, rBL, element->GetShadowColor(), (int)sh_blur);
     }
 
   if(!soft_ok)
     {
       // Hard shadow fallback (no blur, or canvas mode not 32-bit) -- same construction as Draw_Form's.
-      GRP2DCOLOR_RGBA8  shadow_col(element->GetShadowColor()->GetRed(),
-                                   element->GetShadowColor()->GetGreen(),
-                                   element->GetShadowColor()->GetBlue(),
-                                   element->GetShadowColor()->GetAlpha());
+      GRP2DCOLOR_RGBA8  shadow_col(element->GetShadowColor()->GetRed(), element->GetShadowColor()->GetGreen(), element->GetShadowColor()->GetBlue(), element->GetShadowColor()->GetAlpha());
 
       GRP2DCOLOR_RGBA8  shadow_line_none(0, 0, 0, 0);
 
@@ -1151,8 +1130,7 @@ void UI_SKINCANVAS::DrawElementBoxShadow(GRP2DCANVAS* canvas, UI_ELEMENT* elemen
 * @param[in]  gy2 : Gy2 value.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-static void UI_SkinCanvas_ProgressBar_DrawGradientRect(GRP2DCANVAS* canvas, double x1, double y1, double x2, double y2, double radius,
-                                                       GRP2DGRADIENTSTOP* stops, double gx1, double gy1, double gx2, double gy2)
+static void UI_SkinCanvas_ProgressBar_DrawGradientRect(GRP2DCANVAS* canvas, double x1, double y1, double x2, double y2, double radius, GRP2DGRADIENTSTOP* stops, double gx1, double gy1, double gx2, double gy2)
 {
   if(!canvas || !stops) return;
 
@@ -1645,11 +1623,13 @@ void UI_SKINCANVAS_REBUILDAREAS::PutBitmapNoAlpha(double x, double y, GRPBITMAP*
 
 
 /**-------------------------------------------------------------------------------------------------------------------
-*
+* 
 * @fn         void UI_SKINCANVAS_REBUILDAREAS::SetTargetCanvas(GRP2DCANVAS* newcanvas)
 * @brief      Retarget rebuild-area GetBitmap/PutBitmapNoAlpha (modal offscreen composition).
 * @ingroup    USERINTERFACE
-*
+* 
+* @param[in]  newcanvas : 
+* 
 * --------------------------------------------------------------------------------------------------------------------*/
 void UI_SKINCANVAS_REBUILDAREAS::SetTargetCanvas(GRP2DCANVAS* newcanvas)
 {
@@ -1658,11 +1638,13 @@ void UI_SKINCANVAS_REBUILDAREAS::SetTargetCanvas(GRP2DCANVAS* newcanvas)
 
 
 /**-------------------------------------------------------------------------------------------------------------------
-*
+* 
 * @fn         GRP2DCANVAS* UI_SKINCANVAS_REBUILDAREAS::GetTargetCanvas()
 * @brief      Canvas currently used by rebuild-area capture/restore.
 * @ingroup    USERINTERFACE
-*
+* 
+* @return     GRP2DCANVAS* : 
+* 
 * --------------------------------------------------------------------------------------------------------------------*/
 GRP2DCANVAS* UI_SKINCANVAS_REBUILDAREAS::GetTargetCanvas()
 {
@@ -1730,7 +1712,7 @@ void UI_SKINCANVAS_REBUILDAREAS::Clean()
 * @param[in]  viewportindex : Viewport index (default 0).
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-UI_SKINCANVAS::UI_SKINCANVAS(GRPSCREEN* screen,  int viewportindex) : UI_SKIN(),  UI_SKINCANVAS_REBUILDAREAS(screen)
+UI_SKINCANVAS::UI_SKINCANVAS(GRPSCREEN* screen, int viewportindex) : UI_SKIN(),  UI_SKINCANVAS_REBUILDAREAS(screen)
 { 
   Clean();     
 
@@ -1836,11 +1818,13 @@ GRP2DCANVAS* UI_SKINCANVAS::GetCanvas()
 
 
 /**-------------------------------------------------------------------------------------------------------------------
-*
+* 
 * @fn         void UI_SKINCANVAS::SetCanvasOverride(GRP2DCANVAS* override_canvas)
 * @brief      Redirect GetCanvas() during modal offscreen composition (NULL = viewport canvas).
 * @ingroup    USERINTERFACE
-*
+* 
+* @param[in]  override_canvas : 
+* 
 * --------------------------------------------------------------------------------------------------------------------*/
 void UI_SKINCANVAS::SetCanvasOverride(GRP2DCANVAS* override_canvas)
 {
@@ -2264,7 +2248,7 @@ bool UI_SKINCANVAS::CalculePosition(UI_ELEMENT* element, double fatherwidth, dou
 * @return     double : Requested value.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-double UI_SKINCANVAS::GetWidthString(XCHAR* string,  XDWORD sizefont)
+double UI_SKINCANVAS::GetWidthString(XCHAR* string, XDWORD sizefont)
 {
   XDWORD width  = 0;
   XDWORD height = 0;
@@ -2631,8 +2615,8 @@ bool UI_SKINCANVAS::CalculateBoundaryLine_Option(UI_ELEMENT* element, bool adjus
   
   CalculePosition(element_option, fatherwidth, fatherheight, adjustsizemargin);
 
-  if(element_animation) CalculePosition(element_animation, element_option->GetBoundaryLine()->width, element_option->GetBoundaryLine()->height,  adjustsizemargin);
-  if(element_text)      CalculePosition(element_text     , element_option->GetBoundaryLine()->width, element_option->GetBoundaryLine()->height,  adjustsizemargin);  
+  if(element_animation) CalculePosition(element_animation, element_option->GetBoundaryLine()->width, element_option->GetBoundaryLine()->height, adjustsizemargin);
+  if(element_text)      CalculePosition(element_text, element_option->GetBoundaryLine()->width, element_option->GetBoundaryLine()->height, adjustsizemargin);  
 
   switch(element_option->GetAllocationTextType())
     {
@@ -3050,9 +3034,9 @@ void UI_SKINCANVAS::ReapplyProgressBarAllocationLayout(UI_ELEMENT_PROGRESSBAR* e
   UI_ELEMENT_ANIMATION* element_animation     = (UI_ELEMENT_ANIMATION*)element_progressbar->Get_UIAnimation();
   UI_ELEMENT_TEXT*      element_text          = (UI_ELEMENT_TEXT*)element_progressbar->Get_UIText();
 
-  if(element_progressrect)  CalculePosition(element_progressrect  , element_progressbar->GetBoundaryLine()->width, element_progressbar->GetBoundaryLine()->height, adjustsizemargin);
-  if(element_animation)     CalculePosition(element_animation     , element_progressbar->GetBoundaryLine()->width, element_progressbar->GetBoundaryLine()->height, adjustsizemargin);
-  if(element_text)          CalculePosition(element_text          , element_progressbar->GetBoundaryLine()->width, element_progressbar->GetBoundaryLine()->height, adjustsizemargin);
+  if(element_progressrect)  CalculePosition(element_progressrect, element_progressbar->GetBoundaryLine()->width, element_progressbar->GetBoundaryLine()->height, adjustsizemargin);
+  if(element_animation)     CalculePosition(element_animation, element_progressbar->GetBoundaryLine()->width, element_progressbar->GetBoundaryLine()->height, adjustsizemargin);
+  if(element_text)          CalculePosition(element_text, element_progressbar->GetBoundaryLine()->width, element_progressbar->GetBoundaryLine()->height, adjustsizemargin);
 
   // DEEP ROOT-CAUSE FIX (2026-09, third pass -- see the GHOST-FILL FIX comment in Draw_ProgressBar() for the
   // visual symptom this was ultimately traced back to): CalculePosition() just above gives element_progressrect/
@@ -3139,7 +3123,7 @@ void UI_SKINCANVAS::ReapplyProgressBarAllocationLayout(UI_ELEMENT_PROGRESSBAR* e
 
       case UI_ELEMENT_OPTION_ALLOCATION_TEXT_TYPE_CENTER  : if(element_progressrect && element_text)
                                                               {
-                                                                element_text->SetXPosition(element_progressrect->GetXPosition() + ((element_progressrect->GetBoundaryLine()->width  - element_text->GetBoundaryLine()->width)/2));
+                                                                element_text->SetXPosition(element_progressrect->GetXPosition() + ((element_progressrect->GetBoundaryLine()->width - element_text->GetBoundaryLine()->width)/2));
                                                                 element_text->SetYPosition(element_progressrect->GetYPosition() - ((element_progressrect->GetBoundaryLine()->height - element_text->GetBoundaryLine()->height)/2));
                                                               }
                                                             break;
@@ -3344,8 +3328,7 @@ bool UI_SKINCANVAS::CalculateBoundaryLine_ProgressRadial(UI_ELEMENT* element, bo
 * @param[in]  ty : Ty value.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-static void UI_SkinCanvas_ProgressImage_Layout(int allocation, double imgw, double imgh, double textw, double texth, double gap,
-                                               double& bw, double& bh, double& ox, double& oy, double& tx, double& ty)
+static void UI_SkinCanvas_ProgressImage_Layout(int allocation, double imgw, double imgh, double textw, double texth, double gap, double& bw, double& bh, double& ox, double& oy, double& tx, double& ty)
 {
   bw = imgw;  bh = imgh;                                                  // defaults: image only
   ox = 0.0;   oy = 0.0;
@@ -3722,8 +3705,7 @@ bool UI_SKINCANVAS::Draw_Text(UI_ELEMENT* element)
             {
               // First time this element is ever drawn (or first redraw after a size change): nothing has
               // painted THIS tick's glyph ink here yet, so this is the pristine moment to capture the backdrop.
-              TextBackdrop_Capture(element, ownarea->GetXPos(), ownarea->GetYPos(),
-                                    (double)ownarea->GetBitmap()->GetWidth(), (double)ownarea->GetBitmap()->GetHeight());
+              TextBackdrop_Capture(element, ownarea->GetXPos(), ownarea->GetYPos(), (double)ownarea->GetBitmap()->GetWidth(), (double)ownarea->GetBitmap()->GetHeight());
             }
            else
             {
@@ -3780,10 +3762,7 @@ bool UI_SKINCANVAS::Draw_Text(UI_ELEMENT* element)
           TextBackdrop_Capture(element, selfbox_left, selfbox_top, selfbox_right - selfbox_left, selfbox_bottom - selfbox_top);
         }
 
-      GRP2DCOLOR_RGBA8  color(element->GetColor()->GetRed(),
-                              element->GetColor()->GetGreen(),
-                              element->GetColor()->GetBlue(),
-                              element->GetColor()->GetAlpha());
+      GRP2DCOLOR_RGBA8  color(element->GetColor()->GetRed(), element->GetColor()->GetGreen(), element->GetColor()->GetBlue(), element->GetColor()->GetAlpha());
 
 
       canvas->Vectorfont_GetConfig()->SetColor(&color);
@@ -3843,10 +3822,7 @@ bool UI_SKINCANVAS::Draw_TextBox(UI_ELEMENT* element)
 
   if(element->MustReDraw()) 
     {
-      GRP2DCOLOR_RGBA8                color(element->GetColor()->GetRed(),
-                                            element->GetColor()->GetGreen(),
-                                            element->GetColor()->GetBlue(),
-                                            element->GetColor()->GetAlpha());
+      GRP2DCOLOR_RGBA8                color(element->GetColor()->GetRed(), element->GetColor()->GetGreen(), element->GetColor()->GetBlue(), element->GetColor()->GetAlpha());
       XVECTOR<UI_SKIN_TEXTBOX_PART*>  parts;
                                      
       canvas->Vectorfont_GetConfig()->SetColor(&color);
@@ -3862,16 +3838,11 @@ bool UI_SKINCANVAS::Draw_TextBox(UI_ELEMENT* element)
               if(textbox_part->GetImage())
                 {
                   // inline image: bottom on the text baseline (drawn at ypos - height)
-                  canvas->PutBitmapAlpha((double)textbox_part->GetXPos(),
-                                         (double)textbox_part->GetYPos() - (double)textbox_part->GetHeight(),
-                                         textbox_part->GetImage(), 100.0f);
+                  canvas->PutBitmapAlpha((double)textbox_part->GetXPos(), (double)textbox_part->GetYPos() - (double)textbox_part->GetHeight(), textbox_part->GetImage(), 100.0f);
                 }
                else
                 {
-                  GRP2DCOLOR_RGBA8 color_part(textbox_part->GetColor()->GetRed(),
-                                              textbox_part->GetColor()->GetGreen(),
-                                              textbox_part->GetColor()->GetBlue(),
-                                              textbox_part->GetColor()->GetAlpha());
+                  GRP2DCOLOR_RGBA8 color_part(textbox_part->GetColor()->GetRed(), textbox_part->GetColor()->GetGreen(), textbox_part->GetColor()->GetBlue(), textbox_part->GetColor()->GetAlpha());
 
                   canvas->Vectorfont_GetConfig()->SetColor(&color_part);
 
@@ -3886,10 +3857,7 @@ bool UI_SKINCANVAS::Draw_TextBox(UI_ELEMENT* element)
 
                   canvas->SetLineWidth(1.0f);
                   canvas->SetLineColor(&color_debug);
-                  canvas->Rectangle(textbox_part->GetXPos() ,  
-                                    textbox_part->GetYPos() ,
-                                    textbox_part->GetXPos() + width , 
-                                    textbox_part->GetYPos() - height);             
+                  canvas->Rectangle(textbox_part->GetXPos(), textbox_part->GetYPos(), textbox_part->GetXPos() + width, textbox_part->GetYPos() - height);             
                   #endif  
                 }
             }
@@ -3938,9 +3906,7 @@ bool UI_SKINCANVAS::Draw_Image(UI_ELEMENT* element)
       // is zero behaviour change for every existing image layout.
       DrawElementBoxShadow(canvas, element, x_position, y_position);
 
-      canvas->PutBitmapAlpha(x_position ,
-                             y_position - element_image->GetImage()->GetHeight(),
-                             element_image->GetImage(), element_image->GetAlpha());
+      canvas->PutBitmapAlpha(x_position, y_position - element_image->GetImage()->GetHeight(), element_image->GetImage(), element_image->GetAlpha());
     }
 
   PostDrawFunction(element, canvas, clip_rect, x_position, y_position);
@@ -3995,9 +3961,7 @@ bool UI_SKINCANVAS::Draw_StatisticsChart(UI_ELEMENT* element)
     {
       DrawElementBoxShadow(canvas, element, x_position, y_position);
 
-      canvas->PutBitmapAlpha(x_position ,
-                             y_position - element_chart->GetBitmap()->GetHeight(),
-                             element_chart->GetBitmap(), element_chart->GetAlpha());
+      canvas->PutBitmapAlpha(x_position, y_position - element_chart->GetBitmap()->GetHeight(), element_chart->GetBitmap(), element_chart->GetAlpha());
     }
 
   PostDrawFunction(element, canvas, clip_rect, x_position, y_position);
@@ -4170,8 +4134,7 @@ bool UI_SKINCANVAS::Draw_Option(UI_ELEMENT* element)
 
           if(!optionbackdrop)
             {
-              OptionBackdrop_Capture(element_option, ownarea_bg->GetXPos(), ownarea_bg->GetYPos(),
-                                      (double)ownarea_bg->GetBitmap()->GetWidth(), (double)ownarea_bg->GetBitmap()->GetHeight());
+              OptionBackdrop_Capture(element_option, ownarea_bg->GetXPos(), ownarea_bg->GetYPos(), (double)ownarea_bg->GetBitmap()->GetWidth(), (double)ownarea_bg->GetBitmap()->GetHeight());
             }
            else
             {
@@ -4195,17 +4158,11 @@ bool UI_SKINCANVAS::Draw_Option(UI_ELEMENT* element)
 
               if(element_option->GetRoundRect())
                 {
-                  canvas->RoundRect(x_position  - UI_SKINCANVAS_PRESELECT_MAXEDGE                                      , 
-                                    y_position  + UI_SKINCANVAS_PRESELECT_MAXEDGE                                      ,
-                                    x_position  + element->GetBoundaryLine()->width  + UI_SKINCANVAS_PRESELECT_MAXEDGE , 
-                                    UI_BOUNDARYLINE_EdgeTop(y_position, element->GetBoundaryLine()->height) - UI_SKINCANVAS_PRESELECT_MAXEDGE , element_option->GetRoundRect(), true);      
+                  canvas->RoundRect(x_position - UI_SKINCANVAS_PRESELECT_MAXEDGE, y_position + UI_SKINCANVAS_PRESELECT_MAXEDGE, x_position + element->GetBoundaryLine()->width + UI_SKINCANVAS_PRESELECT_MAXEDGE, UI_BOUNDARYLINE_EdgeTop(y_position, element->GetBoundaryLine()->height) - UI_SKINCANVAS_PRESELECT_MAXEDGE, element_option->GetRoundRect(), true);      
                 }
                else
                 {
-                  canvas->Rectangle(x_position  - UI_SKINCANVAS_PRESELECT_MAXEDGE                                      , 
-                                    y_position  + UI_SKINCANVAS_PRESELECT_MAXEDGE                                      ,
-                                    x_position  + element->GetBoundaryLine()->width  + UI_SKINCANVAS_PRESELECT_MAXEDGE , 
-                                    UI_BOUNDARYLINE_EdgeTop(y_position, element->GetBoundaryLine()->height) - UI_SKINCANVAS_PRESELECT_MAXEDGE , true);      
+                  canvas->Rectangle(x_position - UI_SKINCANVAS_PRESELECT_MAXEDGE, y_position + UI_SKINCANVAS_PRESELECT_MAXEDGE, x_position + element->GetBoundaryLine()->width + UI_SKINCANVAS_PRESELECT_MAXEDGE, UI_BOUNDARYLINE_EdgeTop(y_position, element->GetBoundaryLine()->height) - UI_SKINCANVAS_PRESELECT_MAXEDGE, true);      
                 } 
             }
         }
@@ -4225,17 +4182,11 @@ bool UI_SKINCANVAS::Draw_Option(UI_ELEMENT* element)
       
                   if(element_option->GetRoundRect())
                     {
-                      canvas->RoundRect(x_position  - UI_SKINCANVAS_PRESELECT_MAXEDGE                                      , 
-                                        y_position  + UI_SKINCANVAS_PRESELECT_MAXEDGE                                      ,
-                                        x_position  + element->GetBoundaryLine()->width  + UI_SKINCANVAS_PRESELECT_MAXEDGE , 
-                                        UI_BOUNDARYLINE_EdgeTop(y_position, element->GetBoundaryLine()->height) - UI_SKINCANVAS_PRESELECT_MAXEDGE , element_option->GetRoundRect(), true);      
+                      canvas->RoundRect(x_position - UI_SKINCANVAS_PRESELECT_MAXEDGE, y_position + UI_SKINCANVAS_PRESELECT_MAXEDGE, x_position + element->GetBoundaryLine()->width + UI_SKINCANVAS_PRESELECT_MAXEDGE, UI_BOUNDARYLINE_EdgeTop(y_position, element->GetBoundaryLine()->height) - UI_SKINCANVAS_PRESELECT_MAXEDGE, element_option->GetRoundRect(), true);      
                     }
                    else
                     {
-                      canvas->Rectangle(x_position  - UI_SKINCANVAS_PRESELECT_MAXEDGE                                      , 
-                                        y_position  + UI_SKINCANVAS_PRESELECT_MAXEDGE                                      ,
-                                        x_position  + element->GetBoundaryLine()->width  + UI_SKINCANVAS_PRESELECT_MAXEDGE , 
-                                        UI_BOUNDARYLINE_EdgeTop(y_position, element->GetBoundaryLine()->height) - UI_SKINCANVAS_PRESELECT_MAXEDGE , true);      
+                      canvas->Rectangle(x_position - UI_SKINCANVAS_PRESELECT_MAXEDGE, y_position + UI_SKINCANVAS_PRESELECT_MAXEDGE, x_position + element->GetBoundaryLine()->width + UI_SKINCANVAS_PRESELECT_MAXEDGE, UI_BOUNDARYLINE_EdgeTop(y_position, element->GetBoundaryLine()->height) - UI_SKINCANVAS_PRESELECT_MAXEDGE, true);      
                     } 
                 }
             }
@@ -4253,17 +4204,11 @@ bool UI_SKINCANVAS::Draw_Option(UI_ELEMENT* element)
       
                   if(element_option->GetRoundRect())
                     {
-                      canvas->RoundRect(x_position  - UI_SKINCANVAS_PRESELECT_MAXEDGE                                      , 
-                                        y_position  + UI_SKINCANVAS_PRESELECT_MAXEDGE                                      ,
-                                        x_position  + element->GetBoundaryLine()->width  + UI_SKINCANVAS_PRESELECT_MAXEDGE , 
-                                        UI_BOUNDARYLINE_EdgeTop(y_position, element->GetBoundaryLine()->height) - UI_SKINCANVAS_PRESELECT_MAXEDGE , element_option->GetRoundRect(), true);      
+                      canvas->RoundRect(x_position - UI_SKINCANVAS_PRESELECT_MAXEDGE, y_position + UI_SKINCANVAS_PRESELECT_MAXEDGE, x_position + element->GetBoundaryLine()->width + UI_SKINCANVAS_PRESELECT_MAXEDGE, UI_BOUNDARYLINE_EdgeTop(y_position, element->GetBoundaryLine()->height) - UI_SKINCANVAS_PRESELECT_MAXEDGE, element_option->GetRoundRect(), true);      
                     }
                    else
                     {
-                      canvas->Rectangle(x_position  - UI_SKINCANVAS_PRESELECT_MAXEDGE                                      , 
-                                        y_position  + UI_SKINCANVAS_PRESELECT_MAXEDGE                                      ,
-                                        x_position  + element->GetBoundaryLine()->width  + UI_SKINCANVAS_PRESELECT_MAXEDGE , 
-                                        UI_BOUNDARYLINE_EdgeTop(y_position, element->GetBoundaryLine()->height) - UI_SKINCANVAS_PRESELECT_MAXEDGE , true);      
+                      canvas->Rectangle(x_position - UI_SKINCANVAS_PRESELECT_MAXEDGE, y_position + UI_SKINCANVAS_PRESELECT_MAXEDGE, x_position + element->GetBoundaryLine()->width + UI_SKINCANVAS_PRESELECT_MAXEDGE, UI_BOUNDARYLINE_EdgeTop(y_position, element->GetBoundaryLine()->height) - UI_SKINCANVAS_PRESELECT_MAXEDGE, true);      
                     } 
                 }
             }
@@ -4447,15 +4392,9 @@ bool UI_SKINCANVAS::Draw_EditText(UI_ELEMENT* element)
 
   PreDrawFunction(element, canvas, clip_rect, x_position, y_position, UI_SKINCANVAS_EDIT_MAXEDGE);
   
-  GRP2DCOLOR_RGBA8  color(element->GetColor()->GetRed(),
-                          element->GetColor()->GetGreen(),
-                          element->GetColor()->GetBlue(),
-                          element->GetColor()->GetAlpha());
+  GRP2DCOLOR_RGBA8  color(element->GetColor()->GetRed(), element->GetColor()->GetGreen(), element->GetColor()->GetBlue(), element->GetColor()->GetAlpha());
 
-  GRP2DCOLOR_RGBA8  bkgcolor(element->GetBackgroundColor()->GetRed(),
-                             element->GetBackgroundColor()->GetGreen(),
-                             element->GetBackgroundColor()->GetBlue(),
-                             element_edittext->IsPreSelect()?element->GetBackgroundColor()->GetAlpha()/2:element->GetBackgroundColor()->GetAlpha());
+  GRP2DCOLOR_RGBA8  bkgcolor(element->GetBackgroundColor()->GetRed(), element->GetBackgroundColor()->GetGreen(), element->GetBackgroundColor()->GetBlue(), element_edittext->IsPreSelect()?element->GetBackgroundColor()->GetAlpha()/2:element->GetBackgroundColor()->GetAlpha());
 
   GRP2DCOLOR_RGBA8  linecolor;
  
@@ -4466,17 +4405,11 @@ bool UI_SKINCANVAS::Draw_EditText(UI_ELEMENT* element)
 
       if(element->GetRoundRect())
         {
-          canvas->RoundRect(element->GetXPosition()  - UI_SKINCANVAS_EDIT_MAXEDGE                                      ,
-                            element->GetYPosition()  + UI_SKINCANVAS_EDIT_MAXEDGE                                      ,       
-                            element->GetXPosition()  + element->GetBoundaryLine()->width  + UI_SKINCANVAS_EDIT_MAXEDGE , 
-                            element->GetTopY() - UI_SKINCANVAS_EDIT_MAXEDGE , element->GetRoundRect(), true);        
+          canvas->RoundRect(element->GetXPosition() - UI_SKINCANVAS_EDIT_MAXEDGE, element->GetYPosition() + UI_SKINCANVAS_EDIT_MAXEDGE, element->GetXPosition() + element->GetBoundaryLine()->width + UI_SKINCANVAS_EDIT_MAXEDGE, element->GetTopY() - UI_SKINCANVAS_EDIT_MAXEDGE, element->GetRoundRect(), true);        
         }
        else
         {
-          canvas->Rectangle(element->GetXPosition()  - UI_SKINCANVAS_EDIT_MAXEDGE                                      ,
-                            element->GetYPosition()  + UI_SKINCANVAS_EDIT_MAXEDGE                                      ,       
-                            element->GetXPosition()  + element->GetBoundaryLine()->width  + UI_SKINCANVAS_EDIT_MAXEDGE , 
-                            element->GetTopY() - UI_SKINCANVAS_EDIT_MAXEDGE , true);
+          canvas->Rectangle(element->GetXPosition() - UI_SKINCANVAS_EDIT_MAXEDGE, element->GetYPosition() + UI_SKINCANVAS_EDIT_MAXEDGE, element->GetXPosition() + element->GetBoundaryLine()->width + UI_SKINCANVAS_EDIT_MAXEDGE, element->GetTopY() - UI_SKINCANVAS_EDIT_MAXEDGE, true);
         }
    
                                    
@@ -4508,10 +4441,7 @@ bool UI_SKINCANVAS::Draw_EditText(UI_ELEMENT* element)
               canvas->SetLineColor(&color);
               canvas->SetFillColor(&color);
 
-              canvas->Rectangle( x_position + cursor_xpos , 
-                                 y_position + UI_SKINCANVAS_EDIT_MAXEDGE - 4  ,
-                                 x_position + cursor_xpos + cursor_size , 
-                                 UI_BOUNDARYLINE_EdgeTop(y_position, element_edittext->GetBoundaryLine()->height) - UI_SKINCANVAS_EDIT_MAXEDGE + 4 , true);                          
+              canvas->Rectangle(x_position + cursor_xpos, y_position + UI_SKINCANVAS_EDIT_MAXEDGE - 4, x_position + cursor_xpos + cursor_size, UI_BOUNDARYLINE_EdgeTop(y_position, element_edittext->GetBoundaryLine()->height) - UI_SKINCANVAS_EDIT_MAXEDGE + 4, true);                          
             }
         }
     }
@@ -4853,16 +4783,13 @@ bool UI_SKINCANVAS::Draw_Form(UI_ELEMENT* element)
         {
           if(ownarea)
             {
-              OptionBackdrop_InvalidateOverlapping(ownarea->GetXPos(), ownarea->GetYPos(),
-                                                     (double)ownarea->GetBitmap()->GetWidth(), (double)ownarea->GetBitmap()->GetHeight(),
-                                                     formneverdrawnbefore);
+              OptionBackdrop_InvalidateOverlapping(ownarea->GetXPos(), ownarea->GetYPos(), (double)ownarea->GetBitmap()->GetWidth(), (double)ownarea->GetBitmap()->GetHeight(), formneverdrawnbefore);
 
               // STALE CAPTION BACKGROUND FIX (2026-09): see TextBackdrop_InvalidateOverlapping()'s own header
               // comment for the full root-cause writeup -- this form is about to paint real ink over this same
               // box, so any text element's cached backdrop overlapping it (e.g. a sidebar label sitting on top
               // of a selection-wash band) is now stale too, exactly like the option case just above.
-              TextBackdrop_InvalidateOverlapping(ownarea->GetXPos(), ownarea->GetYPos(),
-                                                  (double)ownarea->GetBitmap()->GetWidth(), (double)ownarea->GetBitmap()->GetHeight());
+              TextBackdrop_InvalidateOverlapping(ownarea->GetXPos(), ownarea->GetYPos(), (double)ownarea->GetBitmap()->GetWidth(), (double)ownarea->GetBitmap()->GetHeight());
             }
            else
             {
@@ -4910,18 +4837,13 @@ bool UI_SKINCANVAS::Draw_Form(UI_ELEMENT* element)
             {
               // Cached path (see UI_SkinCanvas_DrawSoftShadow_FormCached): reuses the already-blurred bitmap
               // on "element_form" across frames instead of rebuilding it every redraw.
-              soft_ok = UI_SkinCanvas_DrawSoftShadow_FormCached(canvas, element_form, sh_minx, sh_miny, sh_maxx, sh_maxy,
-                                                    rTL, rTR, rBR, rBL,
-                                                    element_form->GetShadowColor(), (int)sh_blur);
+              soft_ok = UI_SkinCanvas_DrawSoftShadow_FormCached(canvas, element_form, sh_minx, sh_miny, sh_maxx, sh_maxy, rTL, rTR, rBR, rBL, element_form->GetShadowColor(), (int)sh_blur);
             }
 
           if(!soft_ok)
             {
               // Hard shadow fallback (no blur, or canvas mode not 32-bit).
-              GRP2DCOLOR_RGBA8  shadow_col(element_form->GetShadowColor()->GetRed(),
-                                           element_form->GetShadowColor()->GetGreen(),
-                                           element_form->GetShadowColor()->GetBlue(),
-                                           element_form->GetShadowColor()->GetAlpha());
+              GRP2DCOLOR_RGBA8  shadow_col(element_form->GetShadowColor()->GetRed(), element_form->GetShadowColor()->GetGreen(), element_form->GetShadowColor()->GetBlue(), element_form->GetShadowColor()->GetAlpha());
 
               GRP2DCOLOR_RGBA8  shadow_line_none(0, 0, 0, 0);
 
@@ -4954,25 +4876,18 @@ bool UI_SKINCANVAS::Draw_Form(UI_ELEMENT* element)
 
       if(!element_form->IsBackgroundColorSet() && !element_form->GetLegacyFillWarningEmitted())
         {
-          XTRACE_PRINTCOLOR(XTRACE_COLOR_WARNING, __L("[UI Draw] Form [%s]: fill via legacy \"color\" property; migrate to \"bckgrdcolor\" (or CSS \"background-color\") for CSS-natural semantics"),
-                            element_form->GetName() ? element_form->GetName()->Get() : __L("(unnamed)"));
+          XTRACE_PRINTCOLOR(XTRACE_COLOR_WARNING, __L("[UI Draw] Form [%s]: fill via legacy \"color\" property; migrate to \"bckgrdcolor\" (or CSS \"background-color\") for CSS-natural semantics"), element_form->GetName() ? element_form->GetName()->Get() : __L("(unnamed)"));
           element_form->SetLegacyFillWarningEmitted(true);
         }
 
-      GRP2DCOLOR_RGBA8  color(fillsrc->GetRed(),
-                              fillsrc->GetGreen(),
-                              fillsrc->GetBlue(),
-                              fillsrc->GetAlpha());
+      GRP2DCOLOR_RGBA8  color(fillsrc->GetRed(), fillsrc->GetGreen(), fillsrc->GetBlue(), fillsrc->GetAlpha());
 
       // Step 5: prefer base-level border-color if authored, otherwise fall back to the historical per-type
       // linecolor member so pre-step-5 layouts render unchanged.
       UI_COLOR* bcsrc = element_form->IsBorderColorSet() ? element_form->GetBorderColor()
                                                          : element_form->GetLineColor();
 
-      GRP2DCOLOR_RGBA8  linecolor(bcsrc->GetRed(),
-                                  bcsrc->GetGreen(),
-                                  bcsrc->GetBlue(),
-                                  bcsrc->GetAlpha());
+      GRP2DCOLOR_RGBA8  linecolor(bcsrc->GetRed(), bcsrc->GetGreen(), bcsrc->GetBlue(), bcsrc->GetAlpha());
 
       canvas->SetLineColor(&linecolor);
       canvas->SetFillColor(&color);
@@ -5015,7 +4930,7 @@ bool UI_SKINCANVAS::Draw_Form(UI_ELEMENT* element)
           bool uniform = (rTL == rTR) && (rTR == rBR) && (rBR == rBL) && (rTL > 0.0);
 
           // Father's CSS background is the true parent ink for nested panels (datetime_box on card).
-          GRP2DCOLOR_RGBA8 corner_parent(0,0,0,255);
+          GRP2DCOLOR_RGBA8 corner_parent(0, 0, 0, 255);
           const GRP2DCOLOR_RGBA8* corner_parent_ptr = NULL;
           {
             UI_ELEMENT* father = element_form->GetFather();
@@ -5027,8 +4942,7 @@ bool UI_SKINCANVAS::Draw_Form(UI_ELEMENT* element)
               }
             if(fbg && fbg->GetAlpha() > 0 && (fbg->GetRed() + fbg->GetGreen() + fbg->GetBlue()) > 8)
               {
-                corner_parent = GRP2DCOLOR_RGBA8((XBYTE)fbg->GetRed(), (XBYTE)fbg->GetGreen(),
-                                                 (XBYTE)fbg->GetBlue(), (XBYTE)fbg->GetAlpha());
+                corner_parent = GRP2DCOLOR_RGBA8((XBYTE)fbg->GetRed(), (XBYTE)fbg->GetGreen(), (XBYTE)fbg->GetBlue(), (XBYTE)fbg->GetAlpha());
                 corner_parent_ptr = &corner_parent;
               }
           }
@@ -5047,9 +4961,7 @@ bool UI_SKINCANVAS::Draw_Form(UI_ELEMENT* element)
             }
 
           // CORNER SPIKES FIX: punch AABB cutouts with father/FormBackdrop parent ink.
-          UI_SkinCanvas_PunchRoundRectCornerTips(canvas, formbackdrop_for_punch,
-                                                 vr_minx, vr_miny, vr_maxx, vr_maxy,
-                                                 rTL, rTR, rBR, rBL, corner_parent_ptr);
+          UI_SkinCanvas_PunchRoundRectCornerTips(canvas, formbackdrop_for_punch, vr_minx, vr_miny, vr_maxx, vr_maxy, rTL, rTR, rBR, rBL, corner_parent_ptr);
         }
        else if(element_form->GetRoundRect())
         {
@@ -5058,7 +4970,7 @@ bool UI_SKINCANVAS::Draw_Form(UI_ELEMENT* element)
           double vw = element_form->GetVisibleRect()->width;
           double vtop = element_form->GetVisibleRect()->GetTop();
 
-          GRP2DCOLOR_RGBA8 corner_parent(0,0,0,255);
+          GRP2DCOLOR_RGBA8 corner_parent(0, 0, 0, 255);
           const GRP2DCOLOR_RGBA8* corner_parent_ptr = NULL;
           {
             UI_ELEMENT* father = element_form->GetFather();
@@ -5070,8 +4982,7 @@ bool UI_SKINCANVAS::Draw_Form(UI_ELEMENT* element)
               }
             if(fbg && fbg->GetAlpha() > 0 && (fbg->GetRed() + fbg->GetGreen() + fbg->GetBlue()) > 8)
               {
-                corner_parent = GRP2DCOLOR_RGBA8((XBYTE)fbg->GetRed(), (XBYTE)fbg->GetGreen(),
-                                                 (XBYTE)fbg->GetBlue(), (XBYTE)fbg->GetAlpha());
+                corner_parent = GRP2DCOLOR_RGBA8((XBYTE)fbg->GetRed(), (XBYTE)fbg->GetGreen(), (XBYTE)fbg->GetBlue(), (XBYTE)fbg->GetAlpha());
                 corner_parent_ptr = &corner_parent;
               }
           }
@@ -5079,16 +4990,11 @@ bool UI_SKINCANVAS::Draw_Form(UI_ELEMENT* element)
           canvas->RoundRect(vx, vy, vx + vw, vtop, element_form->GetRoundRect(), true);
 
           double rr = (double)element_form->GetRoundRect();
-          UI_SkinCanvas_PunchRoundRectCornerTips(canvas, formbackdrop_for_punch,
-                                                 vx, vtop, vx + vw, vy,
-                                                 rr, rr, rr, rr, corner_parent_ptr);
+          UI_SkinCanvas_PunchRoundRectCornerTips(canvas, formbackdrop_for_punch, vx, vtop, vx + vw, vy, rr, rr, rr, rr, corner_parent_ptr);
         }
        else
         {
-          canvas->Rectangle(element_form->GetVisibleRect()->x,
-                            element_form->GetVisibleRect()->y,
-                            element_form->GetVisibleRect()->x + element_form->GetVisibleRect()->width,
-                            element_form->GetVisibleRect()->GetTop(),  true);
+          canvas->Rectangle(element_form->GetVisibleRect()->x, element_form->GetVisibleRect()->y, element_form->GetVisibleRect()->x + element_form->GetVisibleRect()->width, element_form->GetVisibleRect()->GetTop(), true);
         }
     }
 
@@ -5152,15 +5058,9 @@ bool UI_SKINCANVAS::Draw_ListBox(UI_ELEMENT* element)
 
   if(element->MustReDraw()) 
     {
-      GRP2DCOLOR_RGBA8  color(element->GetColor()->GetRed(),
-                              element->GetColor()->GetGreen(),
-                              element->GetColor()->GetBlue(),
-                              element->GetColor()->GetAlpha());
+      GRP2DCOLOR_RGBA8  color(element->GetColor()->GetRed(), element->GetColor()->GetGreen(), element->GetColor()->GetBlue(), element->GetColor()->GetAlpha());
 
-      GRP2DCOLOR_RGBA8  bkgcolor(element->GetBackgroundColor()->GetRed(),
-                                 element->GetBackgroundColor()->GetGreen(),
-                                 element->GetBackgroundColor()->GetBlue(),
-                                 element_listbox->IsPreSelect()?element->GetBackgroundColor()->GetAlpha()/2:element->GetBackgroundColor()->GetAlpha());
+      GRP2DCOLOR_RGBA8  bkgcolor(element->GetBackgroundColor()->GetRed(), element->GetBackgroundColor()->GetGreen(), element->GetBackgroundColor()->GetBlue(), element_listbox->IsPreSelect()?element->GetBackgroundColor()->GetAlpha()/2:element->GetBackgroundColor()->GetAlpha());
 
       GRP2DCOLOR_RGBA8  linecolor;
 
@@ -5172,17 +5072,11 @@ bool UI_SKINCANVAS::Draw_ListBox(UI_ELEMENT* element)
 
       if(element->GetRoundRect())
         {
-          canvas->RoundRect(element->GetXPosition()  - UI_SKINCANVAS_EDIT_MAXEDGE                                      , 
-                            element->GetYPosition()  + UI_SKINCANVAS_EDIT_MAXEDGE                                      ,
-                            element->GetXPosition()  + element->GetBoundaryLine()->width  + UI_SKINCANVAS_EDIT_MAXEDGE , 
-                            element->GetTopY() - UI_SKINCANVAS_EDIT_MAXEDGE , element->GetRoundRect(), true);
+          canvas->RoundRect(element->GetXPosition() - UI_SKINCANVAS_EDIT_MAXEDGE, element->GetYPosition() + UI_SKINCANVAS_EDIT_MAXEDGE, element->GetXPosition() + element->GetBoundaryLine()->width + UI_SKINCANVAS_EDIT_MAXEDGE, element->GetTopY() - UI_SKINCANVAS_EDIT_MAXEDGE, element->GetRoundRect(), true);
         }
        else
         {
-          canvas->Rectangle(element->GetXPosition()  - UI_SKINCANVAS_EDIT_MAXEDGE                                      , 
-                            element->GetYPosition()  + UI_SKINCANVAS_EDIT_MAXEDGE                                      ,
-                            element->GetXPosition()  + element->GetBoundaryLine()->width  + UI_SKINCANVAS_EDIT_MAXEDGE , 
-                            element->GetTopY() - UI_SKINCANVAS_EDIT_MAXEDGE , true);
+          canvas->Rectangle(element->GetXPosition() - UI_SKINCANVAS_EDIT_MAXEDGE, element->GetYPosition() + UI_SKINCANVAS_EDIT_MAXEDGE, element->GetXPosition() + element->GetBoundaryLine()->width + UI_SKINCANVAS_EDIT_MAXEDGE, element->GetTopY() - UI_SKINCANVAS_EDIT_MAXEDGE, true);
         }
                                       
       canvas->Vectorfont_GetConfig()->SetColor(&color);
@@ -5255,10 +5149,10 @@ bool UI_SKINCANVAS::Draw_ProgressBar(UI_ELEMENT* element)
 
       if(element_animation)
         {
-          left   = __MIN(left,   element_animation->GetXPosition());
-          right  = __MAX(right,  element_animation->GetXPosition() + element_animation->GetBoundaryLine()->width);
+          left   = __MIN(left, element_animation->GetXPosition());
+          right  = __MAX(right, element_animation->GetXPosition() + element_animation->GetBoundaryLine()->width);
           bottom = __MAX(bottom, element_animation->GetYPosition());
-          top    = __MIN(top,    element_animation->GetYPosition() - element_animation->GetBoundaryLine()->height);
+          top    = __MIN(top, element_animation->GetYPosition() - element_animation->GetBoundaryLine()->height);
         }
 
       // Pull every edge in by a small, fixed safety margin (well under the >=6px gap every allocationtext case
@@ -5453,17 +5347,12 @@ bool UI_SKINCANVAS::Draw_ProgressBar(UI_ELEMENT* element)
               bool soft_ok = false;
               if(sh_blur > 0.0)
                 {
-                  soft_ok = UI_SkinCanvas_DrawSoftShadow(canvas, sh_minx, sh_miny, sh_maxx, sh_maxy,
-                                                        roundradius, roundradius, roundradius, roundradius,
-                                                        element->GetShadowColor(), (int)sh_blur);
+                  soft_ok = UI_SkinCanvas_DrawSoftShadow(canvas, sh_minx, sh_miny, sh_maxx, sh_maxy, roundradius, roundradius, roundradius, roundradius, element->GetShadowColor(), (int)sh_blur);
                 }
 
               if(!soft_ok)
                 {
-                  GRP2DCOLOR_RGBA8  shadow_col(element->GetShadowColor()->GetRed(),
-                                               element->GetShadowColor()->GetGreen(),
-                                               element->GetShadowColor()->GetBlue(),
-                                               element->GetShadowColor()->GetAlpha());
+                  GRP2DCOLOR_RGBA8  shadow_col(element->GetShadowColor()->GetRed(), element->GetShadowColor()->GetGreen(), element->GetShadowColor()->GetBlue(), element->GetShadowColor()->GetAlpha());
                   GRP2DCOLOR_RGBA8  shadow_line_none(0, 0, 0, 0);
 
                   canvas->SetFillColor(&shadow_col);
@@ -5481,12 +5370,7 @@ bool UI_SKINCANVAS::Draw_ProgressBar(UI_ELEMENT* element)
               canvas->SetLineWidth(1.0);
             }
 
-          UI_SkinCanvas_ProgressBar_DrawRect(canvas,
-                                             element_progressrect->GetXPosition(),
-                                             element_progressrect->GetYPosition(),
-                                             element_progressrect->GetXPosition() + element_progressrect->GetBoundaryLine()->width,
-                                             element_progressrect->GetTopY(),
-                                             roundradius);
+          UI_SkinCanvas_ProgressBar_DrawRect(canvas, element_progressrect->GetXPosition(), element_progressrect->GetYPosition(), element_progressrect->GetXPosition() + element_progressrect->GetBoundaryLine()->width, element_progressrect->GetTopY(), roundradius);
 
           double widthpercent   = element_progressrect->GetBoundaryLine()->width;
           double heightpercent  = element_progressrect->GetBoundaryLine()->height;  
@@ -5565,12 +5449,7 @@ bool UI_SKINCANVAS::Draw_ProgressBar(UI_ELEMENT* element)
 
               canvas->SetFillColor(&color);
 
-              UI_SkinCanvas_ProgressBar_DrawRect(canvas,
-                                                 element_progressrect->GetXPosition() + xpos_segment,
-                                                 element_progressrect->GetYPosition() + ypos_segment,
-                                                 element_progressrect->GetXPosition() + xpos_segment + widthpercent,
-                                                 element_progressrect->GetYPosition() - (ypos_segment + heightpercent),
-                                                 roundradius);
+              UI_SkinCanvas_ProgressBar_DrawRect(canvas, element_progressrect->GetXPosition() + xpos_segment, element_progressrect->GetYPosition() + ypos_segment, element_progressrect->GetXPosition() + xpos_segment + widthpercent, element_progressrect->GetYPosition() - (ypos_segment + heightpercent), roundradius);
               
             }
            else
@@ -5589,10 +5468,7 @@ bool UI_SKINCANVAS::Draw_ProgressBar(UI_ELEMENT* element)
                   stops[0].offset = 0.0;
                   stops[0].color  = color;
                   stops[1].offset = 1.0;
-                  stops[1].color  = GRP2DCOLOR_RGBA8(element_progressbar->GetGradientColor()->GetRed(),
-                                                     element_progressbar->GetGradientColor()->GetGreen(),
-                                                     element_progressbar->GetGradientColor()->GetBlue(),
-                                                     element_progressbar->GetGradientColor()->GetAlpha());
+                  stops[1].color  = GRP2DCOLOR_RGBA8(element_progressbar->GetGradientColor()->GetRed(), element_progressbar->GetGradientColor()->GetGreen(), element_progressbar->GetGradientColor()->GetBlue(), element_progressbar->GetGradientColor()->GetAlpha());
 
                   double bx    = element_progressrect->GetXPosition();
                   double by    = element_progressrect->GetYPosition();
@@ -5621,12 +5497,7 @@ bool UI_SKINCANVAS::Draw_ProgressBar(UI_ELEMENT* element)
                 {
                   canvas->SetFillColor(&color);
 
-                  UI_SkinCanvas_ProgressBar_DrawRect(canvas,
-                                                     element_progressrect->GetXPosition(),
-                                                     element_progressrect->GetYPosition(),
-                                                     element_progressrect->GetXPosition() + widthpercent,
-                                                     element_progressrect->GetYPosition() - heightpercent,
-                                                     roundradius);
+                  UI_SkinCanvas_ProgressBar_DrawRect(canvas, element_progressrect->GetXPosition(), element_progressrect->GetYPosition(), element_progressrect->GetXPosition() + widthpercent, element_progressrect->GetYPosition() - heightpercent, roundradius);
                 }
             }
 
@@ -5837,10 +5708,7 @@ bool UI_SKINCANVAS::Draw_ProgressRadial(UI_ELEMENT* element)
 
               // Glow still paints into neighbour AABBs after this restore; dirty overlapping layout siblings
               // using the padded ownarea so they redraw on top of any bleed this frame.
-              UI_SkinCanvas_DirtyOverlappingLayoutSiblings(element,
-                                                          ownarea->GetXPos(), ownarea->GetYPos(),
-                                                          (double)ownarea->GetBitmap()->GetWidth(),
-                                                          (double)ownarea->GetBitmap()->GetHeight());
+              UI_SkinCanvas_DirtyOverlappingLayoutSiblings(element, ownarea->GetXPos(), ownarea->GetYPos(), (double)ownarea->GetBitmap()->GetWidth(), (double)ownarea->GetBitmap()->GetHeight());
             }
         }
 
@@ -5875,18 +5743,13 @@ bool UI_SKINCANVAS::Draw_ProgressRadial(UI_ELEMENT* element)
           bool soft_ok = false;
           if(sh_blur > 0.0)
             {
-              soft_ok = UI_SkinCanvas_DrawSoftRingGlow(canvas, glow_cx, glow_cy,
-                                                      band_outer, band_inner,
-                                                      element->GetShadowColor(), (int)sh_blur);
+              soft_ok = UI_SkinCanvas_DrawSoftRingGlow(canvas, glow_cx, glow_cy, band_outer, band_inner, element->GetShadowColor(), (int)sh_blur);
             }
 
           if(!soft_ok)
             {
               // Hard fallback: stroke the ring band only -- never fill the disc (would recreate the blue box).
-              GRP2DCOLOR_RGBA8 glow_col(element->GetShadowColor()->GetRed(),
-                                        element->GetShadowColor()->GetGreen(),
-                                        element->GetShadowColor()->GetBlue(),
-                                        element->GetShadowColor()->GetAlpha());
+              GRP2DCOLOR_RGBA8 glow_col(element->GetShadowColor()->GetRed(), element->GetShadowColor()->GetGreen(), element->GetShadowColor()->GetBlue(), element->GetShadowColor()->GetAlpha());
               canvas->SetLineWidth(thick);
               canvas->SetLineColor(&glow_col);
               canvas->Circle(glow_cx, glow_cy, r, false);
@@ -5899,10 +5762,7 @@ bool UI_SKINCANVAS::Draw_ProgressRadial(UI_ELEMENT* element)
       // ---- 1) track ring (full sweep, flat background color) ---------------------------------------------------------
       if(element->GetBackgroundColor()->GetAlpha())
         {
-          GRP2DCOLOR_RGBA8 trackcolor(element->GetBackgroundColor()->GetRed(),
-                                      element->GetBackgroundColor()->GetGreen(),
-                                      element->GetBackgroundColor()->GetBlue(),
-                                      element->GetBackgroundColor()->GetAlpha());
+          GRP2DCOLOR_RGBA8 trackcolor(element->GetBackgroundColor()->GetRed(), element->GetBackgroundColor()->GetGreen(), element->GetBackgroundColor()->GetBlue(), element->GetBackgroundColor()->GetAlpha());
 
           canvas->SetLineWidth(thick);
           canvas->SetLineColor(&trackcolor);
@@ -5973,10 +5833,7 @@ bool UI_SKINCANVAS::Draw_ProgressRadial(UI_ELEMENT* element)
             }
            else                                                          // flat stroke with the element color
             {
-              GRP2DCOLOR_RGBA8 arccolor(element->GetColor()->GetRed(),
-                                        element->GetColor()->GetGreen(),
-                                        element->GetColor()->GetBlue(),
-                                        element->GetColor()->GetAlpha());
+              GRP2DCOLOR_RGBA8 arccolor(element->GetColor()->GetRed(), element->GetColor()->GetGreen(), element->GetColor()->GetBlue(), element->GetColor()->GetAlpha());
 
               canvas->SetLineWidth(thick);
               canvas->SetLineColor(&arccolor);
@@ -6154,7 +6011,7 @@ bool UI_SKINCANVAS::Draw_ProgressImage(UI_ELEMENT* element)
           double cminy = __MIN(oy1, oy2), cmaxy = __MAX(oy1, oy2);
 
           double rminx = __MIN(r_left, r_right),  rmaxx = __MAX(r_left, r_right);
-          double rminy = __MIN(r_top,  r_bottom), rmaxy = __MAX(r_top,  r_bottom);
+          double rminy = __MIN(r_top, r_bottom), rmaxy = __MAX(r_top, r_bottom);
 
           double iminx = __MAX(cminx, rminx), imaxx = __MIN(cmaxx, rmaxx);
           double iminy = __MAX(cminy, rminy), imaxy = __MIN(cmaxy, rmaxy);
@@ -6242,20 +6099,14 @@ bool UI_SKINCANVAS::DrawBackgroundColor(UI_ELEMENT* element, GRP2DCANVAS* canvas
 {
   if(!element->GetBackgroundColor()->GetAlpha()) return false;
 
-  GRP2DCOLOR_RGBA8  bkgcolor(element->GetBackgroundColor()->GetRed(),
-                              element->GetBackgroundColor()->GetGreen(),
-                              element->GetBackgroundColor()->GetBlue(),
-                              element->GetBackgroundColor()->GetAlpha());
+  GRP2DCOLOR_RGBA8  bkgcolor(element->GetBackgroundColor()->GetRed(), element->GetBackgroundColor()->GetGreen(), element->GetBackgroundColor()->GetBlue(), element->GetBackgroundColor()->GetAlpha());
 
 
   canvas->SetLineWidth(0.0f);
   canvas->SetLineColor(&bkgcolor);
   canvas->SetFillColor(&bkgcolor);
 
-  canvas->Rectangle(x_position,
-                    y_position,
-                    x_position  + element->GetBoundaryLine()->width   , 
-                    UI_BOUNDARYLINE_EdgeTop(y_position, element->GetBoundaryLine()->height)  , true);      
+  canvas->Rectangle(x_position, y_position, x_position + element->GetBoundaryLine()->width, UI_BOUNDARYLINE_EdgeTop(y_position, element->GetBoundaryLine()->height), true);      
 
   return true;  
 }
@@ -6299,8 +6150,7 @@ bool UI_SKINCANVAS::DrawBackgroundColor(UI_ELEMENT* element, GRP2DCANVAS* canvas
 * @param[in]  maxy : Maxy value.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-static void UI_SkinCanvas_ContentExtent(UI_ELEMENT* element, bool vx, bool vy, double margin,
-                                        double& minx, double& maxx, double& miny, double& maxy)
+static void UI_SkinCanvas_ContentExtent(UI_ELEMENT* element, bool vx, bool vy, double margin, double& minx, double& maxx, double& miny, double& maxy)
 {
   if(!element) return;
 
@@ -6422,8 +6272,7 @@ bool UI_SKINCANVAS::PreDrawFunction(UI_ELEMENT* element, GRP2DCANVAS* canvas, XR
         {
           bool vx = (sc_self->Scroll_GetOverflow(UI_PROPERTY_SCROLLEABLE_TYPE_HORIZONTAL) == UI_OVERFLOW_VISIBLE);
           bool vy = (sc_self->Scroll_GetOverflow(UI_PROPERTY_SCROLLEABLE_TYPE_VERTICAL)   == UI_OVERFLOW_VISIBLE);
-          if(vx || vy) UI_SkinCanvas_ContentExtent(element, vx, vy, (double)UI_SKINCANVAS_PRESELECT_MAXEDGE,
-                                                    area_left, area_right, area_top, area_bottom);
+          if(vx || vy) UI_SkinCanvas_ContentExtent(element, vx, vy, (double)UI_SKINCANVAS_PRESELECT_MAXEDGE, area_left, area_right, area_top, area_bottom);
         }
 
       // Step 7: expand the rebuild-area to include the box-shadow footprint, so save/restore cycles at
@@ -6455,10 +6304,7 @@ bool UI_SKINCANVAS::PreDrawFunction(UI_ELEMENT* element, GRP2DCANVAS* canvas, XR
             }
         }
 
-      CreateRebuildArea(area_left - edge - shadow_L,
-                        area_top  - edge - shadow_T,
-                        (area_right  - area_left) + (edge * 2) + shadow_L + shadow_R,
-                        (area_bottom - area_top ) + (edge * 2) + shadow_T + shadow_B, element);
+      CreateRebuildArea(area_left - edge - shadow_L, area_top - edge - shadow_T, (area_right - area_left) + (edge * 2) + shadow_L + shadow_R, (area_bottom - area_top ) + (edge * 2) + shadow_T + shadow_B, element);
     }
 
   UI_PROPERTY_SCROLLEABLE* scrolleable = dynamic_cast<UI_PROPERTY_SCROLLEABLE*>(element);
@@ -6468,7 +6314,7 @@ bool UI_SKINCANVAS::PreDrawFunction(UI_ELEMENT* element, GRP2DCANVAS* canvas, XR
       double vp_height   = 0.0f;
       GetScrollViewportSize(element, vp_width, vp_height);
       vp_width  = scrolleable->Scroll_GetContentViewport(UI_PROPERTY_SCROLLEABLE_TYPE_HORIZONTAL, vp_width);
-      vp_height = scrolleable->Scroll_GetContentViewport(UI_PROPERTY_SCROLLEABLE_TYPE_VERTICAL  , vp_height);
+      vp_height = scrolleable->Scroll_GetContentViewport(UI_PROPERTY_SCROLLEABLE_TYPE_VERTICAL, vp_height);
 
       double clip_top    = UI_BOUNDARYLINE_EdgeTop    (y_position, vp_height);
       double clip_bottom = UI_BOUNDARYLINE_EdgeBottom (y_position, vp_height);
@@ -6608,10 +6454,10 @@ bool UI_SKINCANVAS::ResolveScrollPolicy(UI_ELEMENT* element, UI_PROPERTY_SCROLLE
       GetScrollViewportSize(element, tb_w, tb_h);
 
       double vp_w = scrolleable->Scroll_GetContentViewport(UI_PROPERTY_SCROLLEABLE_TYPE_HORIZONTAL, tb_w);
-      double vp_h = scrolleable->Scroll_GetContentViewport(UI_PROPERTY_SCROLLEABLE_TYPE_VERTICAL,   tb_h);
+      double vp_h = scrolleable->Scroll_GetContentViewport(UI_PROPERTY_SCROLLEABLE_TYPE_VERTICAL, tb_h);
 
       scrolleable->Scroll_ResolvePolicy(UI_PROPERTY_SCROLLEABLE_TYPE_HORIZONTAL, vp_w, vp_w);
-      scrolleable->Scroll_ResolvePolicy(UI_PROPERTY_SCROLLEABLE_TYPE_VERTICAL,   vp_h, element_textbox->GetContentHeight());
+      scrolleable->Scroll_ResolvePolicy(UI_PROPERTY_SCROLLEABLE_TYPE_VERTICAL, vp_h, element_textbox->GetContentHeight());
       return true;
     }
 
@@ -6651,7 +6497,7 @@ bool UI_SKINCANVAS::ResolveScrollPolicy(UI_ELEMENT* element, UI_PROPERTY_SCROLLE
   GetScrollViewportSize(element, box_w, box_h);
 
   double vp_w = scrolleable->Scroll_GetContentViewport(UI_PROPERTY_SCROLLEABLE_TYPE_HORIZONTAL, box_w);
-  double vp_h = scrolleable->Scroll_GetContentViewport(UI_PROPERTY_SCROLLEABLE_TYPE_VERTICAL,   box_h);
+  double vp_h = scrolleable->Scroll_GetContentViewport(UI_PROPERTY_SCROLLEABLE_TYPE_VERTICAL, box_h);
 
   // Content extent vs viewport [0 .. viewport]. When the content overflows, the scroll range is the overflow PLUS the
   // content's natural leading margin mirrored at the trailing edge, so the first and last items are framed the same
@@ -6674,7 +6520,7 @@ bool UI_SKINCANVAS::ResolveScrollPolicy(UI_ELEMENT* element, UI_PROPERTY_SCROLLE
     }
 
   scrolleable->Scroll_ResolvePolicy(UI_PROPERTY_SCROLLEABLE_TYPE_HORIZONTAL, vp_w, content_w);
-  scrolleable->Scroll_ResolvePolicy(UI_PROPERTY_SCROLLEABLE_TYPE_VERTICAL,   vp_h, content_h);
+  scrolleable->Scroll_ResolvePolicy(UI_PROPERTY_SCROLLEABLE_TYPE_VERTICAL, vp_h, content_h);
 
   return true;
 }
@@ -6884,9 +6730,7 @@ double UI_SKINCANVAS::TextBox_SizeLine(UI_ELEMENT_TEXTBOX* element_textbox, GRP2
 * @param[in]  aheadright : Aheadright value.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-static void UI_SkinCanvas_TextObstacle(double x, double ltop, double lbot,
-                                       const double* ol, const double* orr, const double* ot, const double* ob, int n,
-                                       double& jumpx, double& aheadleft, double& aheadright)
+static void UI_SkinCanvas_TextObstacle(double x, double ltop, double lbot, const double* ol, const double* orr, const double* ot, const double* ob, int n, double& jumpx, double& aheadleft, double& aheadright)
 {
   jumpx = x;
 
@@ -6975,8 +6819,7 @@ bool UI_SKINCANVAS::TextBox_GenerateLines(UI_ELEMENT_TEXTBOX* element_textbox, G
           double jumpx       = x_text_position;
           double aheadleft   = -1.0f;
           double aheadright  = -1.0f;
-          UI_SkinCanvas_TextObstacle(x_text_position, y_text_position - fontheight, y_text_position,
-                                     obs_l, obs_r, obs_t, obs_b, n_obs, jumpx, aheadleft, aheadright);
+          UI_SkinCanvas_TextObstacle(x_text_position, y_text_position - fontheight, y_text_position, obs_l, obs_r, obs_t, obs_b, n_obs, jumpx, aheadleft, aheadright);
           if(jumpx > x_text_position)
             {
               if(!textbox_part->GetText()->IsEmpty())
@@ -7190,8 +7033,7 @@ bool UI_SKINCANVAS::TextBox_GenerateLines(UI_ELEMENT_TEXTBOX* element_textbox, G
                                   double jx         = xbefore;
                                   double aheadleft  = -1.0f;
                                   double aheadright = -1.0f;
-                                  UI_SkinCanvas_TextObstacle(xbefore, y_text_position - fontheight, y_text_position,
-                                                             obs_l, obs_r, obs_t, obs_b, n_obs, jx, aheadleft, aheadright);
+                                  UI_SkinCanvas_TextObstacle(xbefore, y_text_position - fontheight, y_text_position, obs_l, obs_r, obs_t, obs_b, n_obs, jx, aheadleft, aheadright);
                                   if((aheadleft >= 0.0f) && (x_text_position > aheadleft))
                                     {
                                       if(aheadright < box_right)
@@ -7400,10 +7242,7 @@ bool UI_SKINCANVAS::Debug_Draw(UI_ELEMENT* element, double x_position, double y_
 
   canvas->SetLineWidth(1.0f);
   canvas->SetLineColor(&colorred);
-  canvas->Rectangle(x_position ,  
-                    y_position ,
-                    x_position + (element->GetBoundaryLine()->width), 
-                    UI_BOUNDARYLINE_EdgeTop(y_position, element->GetBoundaryLine()->height));
+  canvas->Rectangle(x_position, y_position, x_position + (element->GetBoundaryLine()->width), UI_BOUNDARYLINE_EdgeTop(y_position, element->GetBoundaryLine()->height));
   return true;
 }
 #endif
@@ -7428,11 +7267,13 @@ void UI_SKINCANVAS::Clean()
 
 
 /**-------------------------------------------------------------------------------------------------------------------
-*
+* 
 * @fn         double UI_SKINCANVAS::GetPaintDensity() const
 * @brief      Fase 7: canvas px per design px while painting (1.0 = identity).
 * @ingroup    USERINTERFACE
-*
+* 
+* @return     double : 
+* 
 * --------------------------------------------------------------------------------------------------------------------*/
 double UI_SKINCANVAS::GetPaintDensity() const
 {
@@ -7441,11 +7282,13 @@ double UI_SKINCANVAS::GetPaintDensity() const
 
 
 /**-------------------------------------------------------------------------------------------------------------------
-*
+* 
 * @fn         void UI_SKINCANVAS::SetPaintDensity(double density)
 * @brief      Fase 7: set paint density for denser design canvas (clamped to > 0).
 * @ingroup    USERINTERFACE
-*
+* 
+* @param[in]  density : 
+* 
 * --------------------------------------------------------------------------------------------------------------------*/
 void UI_SKINCANVAS::SetPaintDensity(double density)
 {
@@ -8211,52 +8054,20 @@ bool UI_SKINCANVAS::OptionBackdrop_Capture(UI_ELEMENT* element, double x, double
 
 
 /**-------------------------------------------------------------------------------------------------------------------
-*
-* @fn         bool UI_SKINCANVAS::OptionBackdrop_InvalidateOverlapping(double x, double y, double width, double height)
+* 
+* @fn         bool UI_SKINCANVAS::OptionBackdrop_InvalidateOverlapping(double x, double y, double width, double height, bool force)
 * @brief      Discards every cached OptionBackdrop entry whose box overlaps the given rectangle. Called from
-*             Draw_Form() right before it paints real ink of its own (see the ALPHA-DARKENING FIX block and the
-*             "MID-EPISODE STALENESS GAP" comment on the "optionbackdrops" member in UI_SkinCanvas.h): a form
-*             that is about to repaint a region makes any option-family element's cached "true backdrop" over
-*             that same region stale, even when that option element's own hover/selection episode never went
-*             idle in between (the case an idle-only discard cannot catch -- e.g. a click that both starts the
-*             clicked button's own hover episode AND flips a sibling selection-band form visible in the very
-*             same tick). Purely geometric (box overlap against whatever is cached), never by element name or
-*             type, so it protects any current or future option-family/form pairing that happens to share
-*             screen space, not only today's nav-<section>-btn/-hl/-bar triple.
-* @ingroup    USERINTERFACE
-*
-* @param[in]  x      : Left edge of the region about to be repainted, in canvas coordinates.
-* @param[in]  y      : Top edge of the region about to be repainted.
-* @param[in]  width  : Width of the region about to be repainted.
-* @param[in]  height : Height of the region about to be repainted.
-*
 * @note       STUCK-PRESELECT-AFTER-LONG-HOVER FIX (2026-09): discarding an entry here is only safe when its
-*             owning option element is genuinely idle right now (nothing of its own currently blended onto the
-*             canvas) -- exactly like OptionBackdrop_Capture()'s own "first time drawn... nothing has painted
-*             ink here yet" precondition (see that function's header comment). When the owner is instead in the
-*             MIDDLE of an active hover/selection episode (its CSS ":hover" wash already partly or fully blended
-*             in, e.g. "nav-<section>-btn"'s own "background-color:255,255,255,6; transition:150" wash, or an
-*             active selection/preselect ring), discarding here forces Draw_Option()'s NEXT redraw to treat
-*             OptionBackdrop_Find() returning NULL as "pristine, capture fresh" -- but the canvas is NOT pristine
-*             at that point, it already shows this element's own live wash. That bakes the wash permanently into
-*             the "true backdrop" it then keeps restoring for the rest of the episode, and the tail of the
-*             fade-out (alpha back down to 0) never removes it because it was never really alpha 0 to begin with
-*             -- the row is left visibly tinted forever after the pointer moves away. Confirmed live via the new
-*             PRESELECTDIAG trace (since removed): resting the pointer on "CPU" long enough for an unrelated,
-*             non-overlapping-by-design sibling card ("card_cpu_temp", refreshed periodically by its own live
-*             stat) to redraw is enough -- its rebuild area's box-shadow halo bleeds a few pixels past its own
-*             left edge and just barely overlaps "nav-cpu-btn"'s own (also slightly padded) box, discarding its
-*             still-active cache; a hover shorter than the time before that periodic redraw fires never hits it,
-*             matching exactly Abraham's own observation ("se queda marcada si el ratón está mucho tiempo
-*             encima"). Fix: skip the discard (leave the still-valid cache alone) when the owner is not idle --
-*             harmless, since whatever changed under THAT tiny overlap is the OTHER element's own responsibility
-*             and gets repainted correctly by ITS OWN owner every time it redraws; this option's cache is only
-*             ever used to restore ITS OWN box, and stays perfectly correct there regardless. The next genuinely
-*             idle moment (idle-discard in Draw_Option(), see the "HOVER-WASH GHOSTING FIX" comment there) still
-*             retires this entry normally, so nothing is kept forever.
-*
+* @ingroup    USERINTERFACE
+* 
+* @param[in]  x : Left edge of the region about to be repainted, in canvas coordinates.
+* @param[in]  y : Top edge of the region about to be repainted.
+* @param[in]  width : Width of the region about to be repainted.
+* @param[in]  height : Height of the region about to be repainted.
+* @param[in]  force : 
+* 
 * @return     bool : true if at least one overlapping entry was found and discarded; false otherwise.
-*
+* 
 * --------------------------------------------------------------------------------------------------------------------*/
 bool UI_SKINCANVAS::OptionBackdrop_InvalidateOverlapping(double x, double y, double width, double height, bool force)
 {

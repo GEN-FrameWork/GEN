@@ -336,7 +336,7 @@ GRPVECTORFILEDXFRESULT GRPVECTORFILEDXF::ParserTextSections(XFILETXT* fileTXT, X
       XSTRING* line = fileTXT->GetLine(c);
       ParserTextFilePrepareLine(line);
 
-      if(line && !line->Compare(__L("0"),true))
+      if(line && !line->Compare(__L("0"), true))
         {           
           line = fileTXT->GetLine(c+1);
           ParserTextFilePrepareLine(line);
@@ -345,7 +345,7 @@ GRPVECTORFILEDXFRESULT GRPVECTORFILEDXF::ParserTextSections(XFILETXT* fileTXT, X
             {             
               line = fileTXT->GetLine(c+2);
               ParserTextFilePrepareLine(line);
-              if(line && !line->Compare(__L("2"),true))
+              if(line && !line->Compare(__L("2"), true))
                 {
                   c += 3;
 
@@ -447,7 +447,7 @@ bool GRPVECTORFILEDXF::ParserHaveAnySection(XFILETXT* file, int nlinesmax)
   do{ XSTRING* line = file->GetLine(c);
       ParserTextFilePrepareLine(line);
 
-      if(line && !line->Compare(__L("0"),true))
+      if(line && !line->Compare(__L("0"), true))
         {
           c++;
           line = file->GetLine(c);
@@ -459,7 +459,7 @@ bool GRPVECTORFILEDXF::ParserHaveAnySection(XFILETXT* file, int nlinesmax)
               line = file->GetLine(c);
               ParserTextFilePrepareLine(line);
 
-              if(line && !line->Compare(__L("2"),true))
+              if(line && !line->Compare(__L("2"), true))
                 {
                   c++;
                   line = file->GetLine(c);
@@ -627,7 +627,7 @@ bool GRPVECTORFILEDXF::ShowTraceAllSections()
                                                                                               if(sectionentities)
                                                                                                 {                   
                                                                                                   line.Format(__L("[Vector file DXF load] Block (%2d) [%s] ENTITIES "), d+1, block->GetName()->Get());                                                                                          
-                                                                                                  GenerateSectionsEntities(sectionentities,line);
+                                                                                                  GenerateSectionsEntities(sectionentities, line);
                                                                                                   XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, line.Get());
                                                                                                 }                                                                               
                                                                                             }
@@ -640,7 +640,7 @@ bool GRPVECTORFILEDXF::ShowTraceAllSections()
               case GRPVECTORFILEDXFTEXTSECTION_TYPESECTION_ENTITIES       : { GRPVECTORFILEDXFTEXTSECTIONENTITIES* sectionentities = (GRPVECTORFILEDXFTEXTSECTIONENTITIES*)GetSection (section->type);
                                                                               if(sectionentities) 
                                                                                 {                                                                              
-                                                                                  GenerateSectionsEntities(sectionentities,line);
+                                                                                  GenerateSectionsEntities(sectionentities, line);
                                                                                   XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, line.Get());
                                                                                 }
                                                                             }

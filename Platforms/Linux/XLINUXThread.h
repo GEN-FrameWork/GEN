@@ -38,14 +38,11 @@
 #include "XThread.h"
 
 
-
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
 
 
 
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
-
 
 class XLINUXMUTEX : public XMUTEX
 {
@@ -69,7 +66,7 @@ class XLINUXMUTEX : public XMUTEX
 class XLINUXTHREAD  : public XTHREAD
 {
   public:
-                         XLINUXTHREAD          (XTHREADGROUPID groupID, XCHAR* ID,XTHREADFUNCTION function = NULL,void* param = NULL);
+                         XLINUXTHREAD          (XTHREADGROUPID groupID, XCHAR* ID, XTHREADFUNCTION function = NULL, void* param = NULL);
     virtual             ~XLINUXTHREAD          ();
 
     bool                 Ini                   (bool run = true);

@@ -34,19 +34,13 @@
 
 #include "DIOFactory.h"
 
-
-
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
-
-
-
 
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
 
 #ifdef DIO_WINDOWSWFP_ACTIVE
 class DIOWINDOWSWFP;
 #endif
-
 
 class DIOWINDOWSFACTORY : public DIOFACTORY
 {

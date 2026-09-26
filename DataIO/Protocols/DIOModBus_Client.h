@@ -77,15 +77,10 @@ enum DIOMODBUS_CLIENT_FUNCTION
                                                                              + diostream->GetInXBuffer()->GetByte(2) /* Size data */                                        \
                                                                              + 2                                     /* Size CRC */
 
-
-
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
-
 
 class XTIMER;
 class DIOSTREAM;
-
 
 class DIOMODBUS_CLIENT
 {

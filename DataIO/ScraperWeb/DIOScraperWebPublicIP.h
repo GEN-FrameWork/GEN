@@ -40,10 +40,7 @@
 #define DIOSCRAPERWEBPUBLICIP_NAMEFILE      __L("ws_publicip.xml")
 #define DIOSCRAPERWEBPUBLICIP_NAMESERVICE   __L("PUBLICIP")
 
-
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
-
 
 class DIOPUBLICIP_RESULT :  public DIOSCRAPERWEBCACHE_RESULT
 {

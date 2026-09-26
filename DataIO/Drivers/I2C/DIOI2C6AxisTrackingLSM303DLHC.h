@@ -61,14 +61,10 @@ enum REG_ADDRS
   DIOI2CLSM303DLHC_OUT_Z_A      = 0x2C,
 };
 
-
 #define DIOI2CLSM303DLHC_ADDR_ACCELEROMETER         0x18
 #define DIOI2CLSM303DLHC_ADDR_COMPASS               0x1e
 
 #define DIOI2CLSM303DLHC_FILTERSHIFT    6
-
-
-
 
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
 
@@ -76,7 +72,6 @@ enum REG_ADDRS
 class XTIMER;
 class DIOSTREAMI2CCONFIG;
 class DIOSTREAMI2C;
-
 
 class DIOI2CLSM303DLHCVECTOR
 {
@@ -114,10 +109,9 @@ class DIOI2CLSM303DLHC : public DIODEVICEI2C
 
     bool                                ReadRegister                                (XBYTE reg, XBYTE& value);
     bool                                ReadRegister                                (XBYTE reg, XWORD& value);
-    bool                                WriteRegister                               (XBYTE reg, XBYTE  value);
+    bool                                WriteRegister                               (XBYTE reg, XBYTE value);
 
     void                                Clean                                       ();
-
 
 };
 
@@ -134,7 +128,6 @@ class DIOI2C3DCOMPASSLSM303DLHC : public DIOI2CLSM303DLHC
     bool                                Read                                        (XWORD& c_x, XWORD& c_y, XWORD& c_z);
 };
 
-
 class DIOI2C3DACCELEROMETERLSM303DLHC : public DIOI2CLSM303DLHC
 {
   public:
@@ -147,7 +140,6 @@ class DIOI2C3DACCELEROMETERLSM303DLHC : public DIOI2CLSM303DLHC
     bool                                Read                                        (XWORD& a_x, XWORD& a_y, XWORD& a_z);
 };
 
-
 class DIOI2C6AXISTRACKINGLSM303DLHC
 {
   public:
@@ -156,13 +148,12 @@ class DIOI2C6AXISTRACKINGLSM303DLHC
     virtual                            ~DIOI2C6AXISTRACKINGLSM303DLHC               ();
 
     bool                                Ini                                         (XCHAR* localdevicename, int remotedeviceaddressaccelerometer, int remotedeviceaddresscompass, int timeout);
-    bool                                Ini                                         (int port,  int remotedeviceaddressaccelerometer, int remotedeviceaddresscompass, int timeout);
+    bool                                Ini                                         (int port, int remotedeviceaddressaccelerometer, int remotedeviceaddresscompass, int timeout);
 
     void                                SetOffset                                   (float x, float y, float z);
     void                                SetScale                                    (float x, float y, float z);
 
     bool                                Read                                        (XWORD& a_x, XWORD& a_y, XWORD& a_z, XWORD& c_x, XWORD& c_y, XWORD& c_z);
-
 
     bool                                Read                                        (DIOI2CLSM303DLHCVECTOR& a, DIOI2CLSM303DLHCVECTOR& c);
 

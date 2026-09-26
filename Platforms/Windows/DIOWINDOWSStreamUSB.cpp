@@ -158,17 +158,12 @@ bool DIOWINDOWSSTREAMUSB::Open()
   XSTRING cfg;
 
 
-  handle = CreateFile(config->GetResource()->Get(), GENERIC_READ | GENERIC_WRITE
-                                                  , FILE_SHARE_READ | FILE_SHARE_WRITE
-                                                  , NULL
-                                                  , OPEN_EXISTING
-                                                  , FILE_FLAG_OVERLAPPED
-                                                  , NULL);
+  handle = CreateFile(config->GetResource()->Get(), GENERIC_READ | GENERIC_WRITE, FILE_SHARE_READ | FILE_SHARE_WRITE, NULL, OPEN_EXISTING, FILE_FLAG_OVERLAPPED, NULL);
 
 
   if(handle==INVALID_HANDLE_VALUE) return false;
 
-  memset(&ovi,0,sizeof(ovi));
+  memset(&ovi, 0, sizeof(ovi));
 
   SetEvent(DIOWINDOWSUSBFSMEVENT_CONNECTED);
 
@@ -294,7 +289,7 @@ void DIOWINDOWSSTREAMUSB::ThreadConnection(void* data)
             {
               case DIOWINDOWSUSBFSMSTATE_NONE             : break;
 
-              case DIOWINDOWSUSBFSMSTATE_CONNECTED          : { DIOSTREAM_XEVENT xevent(diostream,DIOSTREAM_XEVENT_TYPE_CONNECTED);
+              case DIOWINDOWSUSBFSMSTATE_CONNECTED          : { DIOSTREAM_XEVENT xevent(diostream, DIOSTREAM_XEVENT_TYPE_CONNECTED);
                                                                 xevent.SetDIOStream(diostream);
 
                                                                 diostream->PostEvent(&xevent);
@@ -307,7 +302,7 @@ void DIOWINDOWSSTREAMUSB::ThreadConnection(void* data)
 
               case DIOWINDOWSUSBFSMSTATE_SENDINGDATA        : break;
 
-              case DIOWINDOWSUSBFSMSTATE_DISCONNECTING      : { DIOSTREAM_XEVENT xevent(diostream,DIOSTREAM_XEVENT_TYPE_DISCONNECTED);
+              case DIOWINDOWSUSBFSMSTATE_DISCONNECTING      : { DIOSTREAM_XEVENT xevent(diostream, DIOSTREAM_XEVENT_TYPE_DISCONNECTED);
                                                                 xevent.SetDIOStream(diostream);
                                                                 diostream->PostEvent(&xevent);
 
@@ -323,7 +318,7 @@ void DIOWINDOWSSTREAMUSB::ThreadConnection(void* data)
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         XDWORD DIOWINDOWSSTREAMUSB::ReadBuffer(XBYTE* buffer,XDWORD size)
+* @fn         XDWORD DIOWINDOWSSTREAMUSB::ReadBuffer(XBYTE* buffer, XDWORD size)
 * @brief      Read buffer
 * @ingroup    PLATFORM_WINDOWS
 * 
@@ -333,7 +328,7 @@ void DIOWINDOWSSTREAMUSB::ThreadConnection(void* data)
 * @return     XDWORD : Requested value.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-XDWORD DIOWINDOWSSTREAMUSB::ReadBuffer(XBYTE* buffer,XDWORD size)
+XDWORD DIOWINDOWSSTREAMUSB::ReadBuffer(XBYTE* buffer, XDWORD size)
 {
   if(GetStatus()==DIOSTREAMSTATUS_DISCONNECTED) return 0;
   if(size == 0)                                        return 0;
@@ -371,10 +366,10 @@ XDWORD DIOWINDOWSSTREAMUSB::WriteBuffer(XBYTE* buffer, XDWORD size)
   OVERLAPPED oviwrite   = { 0 };
   bool       status;
 
-  oviwrite.hEvent = CreateEvent(0,TRUE,FALSE,0);
+  oviwrite.hEvent = CreateEvent(0, TRUE, FALSE, 0);
   if(!oviwrite.hEvent) return bw;
 
-  if(!WriteFile(handle,buffer,size,&bw,&oviwrite))
+  if(!WriteFile(handle, buffer, size, &bw, &oviwrite))
     {
       if(GetLastError()!=ERROR_IO_PENDING)
         {
@@ -382,9 +377,9 @@ XDWORD DIOWINDOWSSTREAMUSB::WriteBuffer(XBYTE* buffer, XDWORD size)
         }
        else
         {
-          switch(WaitForSingleObject(oviwrite.hEvent,writetimeout))
+          switch(WaitForSingleObject(oviwrite.hEvent, writetimeout))
             {
-              case WAIT_OBJECT_0 :  if(!GetOverlappedResult(handle,&oviwrite,&bw,TRUE))
+              case WAIT_OBJECT_0 :  if(!GetOverlappedResult(handle, &oviwrite, &bw, TRUE))
                                            status = false;
                                       else status = true;
                                     break;
@@ -424,7 +419,7 @@ void DIOWINDOWSSTREAMUSB::Clean()
   handle           = INVALID_HANDLE_VALUE;
   hevent           = NULL;
 
-  memset(&ovi,0,sizeof(ovi));
+  memset(&ovi, 0, sizeof(ovi));
 
   readtimeout      = 3000;
   writetimeout     = 3000;

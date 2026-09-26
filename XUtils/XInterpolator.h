@@ -89,11 +89,7 @@ enum XINTERPOLATOR_MASK
                                           XINTERPOLATOR_MASK_FACTOR
 };
 
-
-
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
-
 
 class XINTERPOLATOR : public XSERIALIZABLE
 {
@@ -109,7 +105,7 @@ class XINTERPOLATOR : public XSERIALIZABLE
     void                            SetMode                       (XINTERPOLATOR_LIMITMODE mode);
 
     void                            Get                           (XDWORD& current, XDWORD& target, float& speed);
-    void                            Set                           (XDWORD current,  XDWORD target, float speed);
+    void                            Set                           (XDWORD current, XDWORD target, float speed);
 
     XDWORD                          GetCurrent                    ();
     void                            SetCurrent                    (XDWORD current);

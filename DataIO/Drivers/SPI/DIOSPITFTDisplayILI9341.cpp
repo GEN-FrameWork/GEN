@@ -108,14 +108,14 @@ bool DIOSPITFTDISPLAYILI9341::IniDevice()
  
   if(GetGPIOEntryID(DIODISPLAYDEVICE_INDEX_GPIOENTRYID_RESET) != DIOGPIO_ID_NOTDEFINED)
     {
-      GEN_DIOGPIO.SetMode(GetGPIOEntryID(DIODISPLAYDEVICE_INDEX_GPIOENTRYID_RESET)  , DIOGPIO_MODE_OUTPUT);
+      GEN_DIOGPIO.SetMode(GetGPIOEntryID(DIODISPLAYDEVICE_INDEX_GPIOENTRYID_RESET), DIOGPIO_MODE_OUTPUT);
       GEN_DIOGPIO.SetValue(GetGPIOEntryID(DIODISPLAYDEVICE_INDEX_GPIOENTRYID_RESET) , true);
     }
 
   if(GetGPIOEntryID(DIODISPLAYDEVICE_INDEX_GPIOENTRYID_DC) != DIOGPIO_ID_NOTDEFINED)
     {
-      GEN_DIOGPIO.SetMode(GetGPIOEntryID(DIODISPLAYDEVICE_INDEX_GPIOENTRYID_DC)     , DIOGPIO_MODE_OUTPUT);
-      GEN_DIOGPIO.SetValue(GetGPIOEntryID(DIODISPLAYDEVICE_INDEX_GPIOENTRYID_DC)    , true);
+      GEN_DIOGPIO.SetMode(GetGPIOEntryID(DIODISPLAYDEVICE_INDEX_GPIOENTRYID_DC), DIOGPIO_MODE_OUTPUT);
+      GEN_DIOGPIO.SetValue(GetGPIOEntryID(DIODISPLAYDEVICE_INDEX_GPIOENTRYID_DC), true);
     }
   
   if(diostream->Open())
@@ -309,17 +309,17 @@ bool DIOSPITFTDISPLAYILI9341::TFT_Init()
   //----------------------------------------------------------------------------
   // 3
 
-  WriteRegister(0xCD,  5, 0x39, 0x2C, 0x00, 0x34, 0x02);        // Power Control A
-  WriteRegister(0xCF,  3, 0x00, 0xAA, 0xB0);                    // Power Control B
-  WriteRegister(0xF7,  1, 0x30);                                // CMD_PUMP_RATIO_CONTROL
-  WriteRegister(0xC0,  1, 0x25);                                // POWER_CONTROL_1
-  WriteRegister(0xC1,  1, 0x11);                                // POWER_CONTROL_2
-  WriteRegister(0xC5,  2, 0x5C, 0x4C);                          // VCOM_CONTROL_1
-  WriteRegister(0xC7,  1, 0x94);                                // VCOM_CONTROL_2
-  WriteRegister(0xE8,  3, 0x85, 0x01, 0x78);                    // DRIVER_TIMING_CONTROL_A
-  WriteRegister(0xEA,  2, 0x00, 0x00);                          // DRIVER_TIMING_CONTROL_B
-  WriteRegister(0x3A,  1, 0x05);                                // COLMOD_PIXEL_FORMAT_SET
-  WriteRegister(0x36,  1, 0x48);                                // MEMORY_ACCESS_CONTROL
+  WriteRegister(0xCD, 5, 0x39, 0x2C, 0x00, 0x34, 0x02);        // Power Control A
+  WriteRegister(0xCF, 3, 0x00, 0xAA, 0xB0);                    // Power Control B
+  WriteRegister(0xF7, 1, 0x30);                                // CMD_PUMP_RATIO_CONTROL
+  WriteRegister(0xC0, 1, 0x25);                                // POWER_CONTROL_1
+  WriteRegister(0xC1, 1, 0x11);                                // POWER_CONTROL_2
+  WriteRegister(0xC5, 2, 0x5C, 0x4C);                          // VCOM_CONTROL_1
+  WriteRegister(0xC7, 1, 0x94);                                // VCOM_CONTROL_2
+  WriteRegister(0xE8, 3, 0x85, 0x01, 0x78);                    // DRIVER_TIMING_CONTROL_A
+  WriteRegister(0xEA, 2, 0x00, 0x00);                          // DRIVER_TIMING_CONTROL_B
+  WriteRegister(0x3A, 1, 0x05);                                // COLMOD_PIXEL_FORMAT_SET
+  WriteRegister(0x36, 1, 0x48);                                // MEMORY_ACCESS_CONTROL
 
   //----------------------------------------------------------------------------
 
@@ -413,10 +413,10 @@ bool DIOSPITFTDISPLAYILI9341::TFT_SetWindow(int xs, int ys, int xe, int ye)
   bool status;
 
   /* Column address set */
-  status = WriteRegister(0x2A, 4,  (xs >> 8) & 0xFF, xs & 0xFF, (xe >> 8) & 0xFF, xe & 0xFF);
+  status = WriteRegister(0x2A, 4, (xs >> 8) & 0xFF, xs & 0xFF, (xe >> 8) & 0xFF, xe & 0xFF);
 
   /* Row adress set */
-  if(status) status = WriteRegister(0x2B, 4,  (ys >> 8) & 0xFF, ys & 0xFF, (ye >> 8) & 0xFF, ye & 0xFF);
+  if(status) status = WriteRegister(0x2B, 4, (ys >> 8) & 0xFF, ys & 0xFF, (ye >> 8) & 0xFF, ye & 0xFF);
 
   return status;
 }

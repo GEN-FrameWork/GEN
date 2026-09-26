@@ -33,17 +33,12 @@
 #include "DIOURL.h"
 #include "DIOScraperWeb.h"
 
-
-
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
 
 #define DIOSCRAPERWEBUSERAGENTID_NAMEFILE       __L("ws_useragentid.xml")
 #define DIOSCRAPERWEBUSERAGENTID_NAMESERVICE    __L("USERAGENTID")
 
-
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
-
 
 class DIOUSERAGENTID_RESULT :  public DIOSCRAPERWEBCACHE_RESULT
 {
@@ -71,7 +66,7 @@ class DIOSCRAPERWEBUSERAGENTID : public DIOSCRAPERWEB
 
     bool                      ChangeURL                       (XCHAR* maskurl, DIOURL& url);
 
-    bool                      Get                             (XCHAR* useragent  , XSTRING& browser, XSTRING& systemoperative, int timeoutforurl = DIOSCRAPERWEB_MAXTIMEOUTFORURL, XSTRING* localIP = NULL, bool usecache = true);
+    bool                      Get                             (XCHAR* useragent, XSTRING& browser, XSTRING& systemoperative, int timeoutforurl = DIOSCRAPERWEB_MAXTIMEOUTFORURL, XSTRING* localIP = NULL, bool usecache = true);
     bool                      Get                             (XSTRING& useragent, XSTRING& browser, XSTRING& systemoperative, int timeoutforurl = DIOSCRAPERWEB_MAXTIMEOUTFORURL, XSTRING* localIP = NULL, bool usecache = true);
 
   private:

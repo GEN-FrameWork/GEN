@@ -36,11 +36,7 @@
 #include "GRPVectorFileSVGTransform.h"
 #include "GRPVectorFileSVGObjText.h"
 
-
-
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
-
-
 
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
 
@@ -49,10 +45,7 @@ class GRP2DPATH;
 class GRPVECTORFILESVG;
 class GRPVECTORFILESVGOBJ;
 
-
-
 /*---- INLINE FUNCTIONS + PROTOTYPES ---------------------------------------------------------------------------------*/
-
 
 class GRP2DVECTORFILESVGRENDERAGG
 {

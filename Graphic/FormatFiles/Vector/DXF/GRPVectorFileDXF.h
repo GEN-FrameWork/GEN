@@ -55,8 +55,6 @@ typedef XINHERITENUM<GRPVECTORFILEDXFRESULTADD, GRPVECTORFILERESULT > GRPVECTORF
 
 #define TEST_NOT_CONCRETE_ENTITY
 
-
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
 
 class XFILETXT;
@@ -64,10 +62,7 @@ class GRPVECTORFILEDXFTEXTSECTIONENTITIES;
 class GRPVECTORFILECONFIG;
 class GRPVECTORFILEDXFENTITYOBJ;
 
-
-
 /*---- INLINE FUNCTIONS + PROTOTYPES ---------------------------------------------------------------------------------*/
-
 
 class GRPVECTORFILEDXF : public GRPVECTORFILE
 {

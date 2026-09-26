@@ -154,7 +154,7 @@ bool APPFLOWLOG::Ini(APPFLOWCFG* cfg, XCHAR* applicationname)
     {     
       GEN_XLOG.SetLimit(XLOGTYPELIMIT_SIZE, cfg->Log_MaxSize()*1000, cfg->Log_ReductionPercent());
       GEN_XLOG.SetFilters(cfg->Log_ActiveSectionsID()->Get(), cfg->Log_LevelMask());
-      GEN_XLOG.SetBackup(cfg->Log_Backup_IsActive(), cfg->Log_Backup_GetMaxFiles(),  cfg->Log_Backup_IsCompress());           
+      GEN_XLOG.SetBackup(cfg->Log_Backup_IsActive(), cfg->Log_Backup_GetMaxFiles(), cfg->Log_Backup_IsCompress());           
     }
 
   return status;

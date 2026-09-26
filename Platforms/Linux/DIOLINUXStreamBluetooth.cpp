@@ -199,7 +199,7 @@ bool DIOLINUXSTREAMBLUETOOTH::Close()
 
       if(handleserver>=0)
         {
-          shutdown(handleserver,SHUT_RDWR);
+          shutdown(handleserver, SHUT_RDWR);
           close(handleserver);
           handleserver  = -1;
         }
@@ -207,8 +207,8 @@ bool DIOLINUXSTREAMBLUETOOTH::Close()
 
   if(handlesocket>=0)
     {
-      fcntl(handlesocket, F_SETFL, fcntl(handlesocket, F_GETFL,0) & ~O_NONBLOCK);
-      shutdown(handlesocket,SHUT_RDWR);
+      fcntl(handlesocket, F_SETFL, fcntl(handlesocket, F_GETFL, 0) & ~O_NONBLOCK);
+      shutdown(handlesocket, SHUT_RDWR);
       close(handlesocket);
       handlesocket  = -1;
     }
@@ -242,9 +242,9 @@ int DIOLINUXSTREAMBLUETOOTH::IsReadyConnect(int socket)
   FD_ZERO(&fdw);
   FD_ZERO(&fds);
 
-  FD_SET((unsigned int)socket,&fdr);
-  FD_SET((unsigned int)socket,&fdw);
-  FD_SET((unsigned int)socket,&fds);
+  FD_SET((unsigned int)socket, &fdr);
+  FD_SET((unsigned int)socket, &fdw);
+  FD_SET((unsigned int)socket, &fds);
 
   tv.tv_sec  = 0;
   tv.tv_usec = 100;
@@ -253,9 +253,9 @@ int DIOLINUXSTREAMBLUETOOTH::IsReadyConnect(int socket)
   if(rc==-1) return -1;
   if(rc== 2) return -1;
 
-  int status1 = FD_ISSET(socket,&fdr) ? 1 : 0;
-  int status2 = FD_ISSET(socket,&fdw) ? 1 : 0;
-  int status3 = FD_ISSET(socket,&fds) ? 1 : 0;
+  int status1 = FD_ISSET(socket, &fdr) ? 1 : 0;
+  int status2 = FD_ISSET(socket, &fdw) ? 1 : 0;
+  int status3 = FD_ISSET(socket, &fds) ? 1 : 0;
 
   if(status3) return -1;
   if(((status1) || (status2)) && (rc==1))  return  1;
@@ -266,7 +266,7 @@ int DIOLINUXSTREAMBLUETOOTH::IsReadyConnect(int socket)
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         sdp_session_t* DIOLINUXSTREAMBLUETOOTH::SDP_RegisterService(char* service_name,char* service_dsc,char* service_prov,int rfcomm_channel)
+* @fn         sdp_session_t* DIOLINUXSTREAMBLUETOOTH::SDP_RegisterService(char* service_name, char* service_dsc, char* service_prov, int rfcomm_channel)
 * @brief      SDP register service
 * @ingroup    PLATFORM_LINUX
 * 
@@ -278,7 +278,7 @@ int DIOLINUXSTREAMBLUETOOTH::IsReadyConnect(int socket)
 * @return     sdp_session_t* : Pointer to the requested object; NULL if it is not available.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-sdp_session_t* DIOLINUXSTREAMBLUETOOTH::SDP_RegisterService(char* service_name,char* service_dsc,char* service_prov,int rfcomm_channel)
+sdp_session_t* DIOLINUXSTREAMBLUETOOTH::SDP_RegisterService(char* service_name, char* service_dsc, char* service_prov, int rfcomm_channel)
 {
   uint32_t service_uuid_int[] = { 0x0111, 10, 1, 1 };
   //uint8_t  rfcomm_channel     = 1;
@@ -486,7 +486,7 @@ void DIOLINUXSTREAMBLUETOOTH::ThreadRunFunction(void* param)
                                                           case -1:  { int       sockerr    = 0;
                                                                       socklen_t sockerrlen = sizeof(sockerr);
 
-                                                                      if(!getsockopt(diostream->handlesocket, SOL_SOCKET, SO_ERROR,(void *)&sockerr, &sockerrlen))
+                                                                      if(!getsockopt(diostream->handlesocket, SOL_SOCKET, SO_ERROR, (void *)&sockerr, &sockerrlen))
                                                                         {
                                                                           if(sockerr==ECONNREFUSED) diostream->SetIsRefusedConnection(true);
                                                                         }
@@ -528,7 +528,7 @@ void DIOLINUXSTREAMBLUETOOTH::ThreadRunFunction(void* param)
                                                             if(diostream->outbuffer->GetSize()) FD_SET(diostream->handlesocket, &write_flags);
                                                           }
 
-                                                        int error = select(diostream->handlesocket+1, &read_flags,&write_flags,(fd_set*)0,&waitd);
+                                                        int error = select(diostream->handlesocket+1, &read_flags, &write_flags, (fd_set*)0, &waitd);
                                                         if(error == -1)
                                                           {
                                                             diostream->SetEvent(DIOLINUXBTFSMEVENT_DISCONNECTING);
@@ -539,13 +539,13 @@ void DIOLINUXSTREAMBLUETOOTH::ThreadRunFunction(void* param)
                                                           {
                                                             XBYTE buffer[DIOSTREAM_MAXBUFFER];
 
-                                                            XDWORD size = recv(diostream->handlesocket,(char*)buffer, DIOSTREAM_MAXBUFFER, 0);
+                                                            XDWORD size = recv(diostream->handlesocket, (char*)buffer, DIOSTREAM_MAXBUFFER, 0);
                                                             if(size<=0)
                                                               {
                                                                 diostream->SetEvent(DIOLINUXBTFSMEVENT_DISCONNECTING);
                                                                 break;
                                                               }
-                                                             else diostream->inbuffer->Add(buffer,size);
+                                                             else diostream->inbuffer->Add(buffer, size);
 
                                                             FD_CLR(diostream->handlesocket, &read_flags);
                                                           }
@@ -558,7 +558,7 @@ void DIOLINUXSTREAMBLUETOOTH::ThreadRunFunction(void* param)
                                                             if(esize)
                                                               {
                                                                 diostream->outbuffer->SetBlocked(true);
-                                                                XDWORD size = send(diostream->handlesocket,(char*)diostream->outbuffer->Get(), esize, 0);
+                                                                XDWORD size = send(diostream->handlesocket, (char*)diostream->outbuffer->Get(), esize, 0);
                                                                 diostream->outbuffer->SetBlocked(false);
 
                                                                 if(size<=0)
@@ -628,9 +628,7 @@ void DIOLINUXSTREAMBLUETOOTH::ThreadRunFunction(void* param)
 
                                                                 listen(diostream->handleserver, 1);
 
-                                                                diostream->sdpserversession =(void*)diostream->SDP_RegisterService((char*)diostream->config->GetServerPropertys(0),
-                                                                                                                                   (char*)diostream->config->GetServerPropertys(1),
-                                                                                                                                   (char*)diostream->config->GetServerPropertys(2),port);
+                                                                diostream->sdpserversession =(void*)diostream->SDP_RegisterService((char*)diostream->config->GetServerPropertys(0), (char*)diostream->config->GetServerPropertys(1), (char*)diostream->config->GetServerPropertys(2), port);
                                                                 if(!diostream->sdpserversession)
                                                                   {
                                                                     diostream->SetEvent(DIOLINUXBTFSMEVENT_DISCONNECTING);
@@ -640,7 +638,7 @@ void DIOLINUXSTREAMBLUETOOTH::ThreadRunFunction(void* param)
 
                                                                 diostream->handlesocket = accept(diostream->handleserver, (struct sockaddr *)&rem_addr, &opt);
 
-                                                                fcntl(diostream->handlesocket, F_SETFL, fcntl(diostream->handlesocket, F_GETFL,0) | O_NONBLOCK);
+                                                                fcntl(diostream->handlesocket, F_SETFL, fcntl(diostream->handlesocket, F_GETFL, 0) | O_NONBLOCK);
                                                               }
                                                              else
                                                               {
@@ -712,7 +710,7 @@ void DIOLINUXSTREAMBLUETOOTH::ThreadRunFunction(void* param)
 
                                                                 diostream->SetIsRefusedConnection(false);
 
-                                                                fcntl(diostream->handlesocket, F_SETFL, fcntl(diostream->handlesocket, F_GETFL,0) | O_NONBLOCK);
+                                                                fcntl(diostream->handlesocket, F_SETFL, fcntl(diostream->handlesocket, F_GETFL, 0) | O_NONBLOCK);
 
                                                                 connect(diostream->handlesocket, (struct sockaddr *)&rem_addr, sizeof(rem_addr));
 

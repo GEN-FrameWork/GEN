@@ -108,10 +108,7 @@ enum DIOSTREAMTLS_LOCALCREDENTIALSERROR
   DIOSTREAMTLS_LOCALCREDENTIALSERROR_INVALIDSERVERNAME               ,
 };
 
-
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
-
 
 class CIPHERKEY;
 class CIPHERTRUSTPROVIDERX509;
@@ -122,18 +119,15 @@ typedef bool (*DIOSTREAMTLS_SESSIONTICKETKEYRING_LOAD)(XBUFFER& encryptedkeyring
 typedef bool (*DIOSTREAMTLS_SESSIONTICKETKEYRING_SAVE)(XBUFFER& encryptedkeyring, void* context);
 typedef bool (*DIOSTREAMTLS_EARLYDATA_REPLAYCHECK)(XBUFFER& ticketidentity, void* context);
 
-
 class DIOSTREAMTLSMEMORYPOLICY
 {
   public:
                             DIOSTREAMTLSMEMORYPOLICY           ();
 
-    bool                    SetConnectionBufferLimits         (XDWORD recordinput, XDWORD handshakeinput,
-                                                               XDWORD transcript, XDWORD applicationinput);
+    bool                    SetConnectionBufferLimits         (XDWORD recordinput, XDWORD handshakeinput, XDWORD transcript, XDWORD applicationinput);
     bool                    SetAIALimits                      (XDWORD headersize, XDWORD bodysize, XDWORD maximumfetches);
     bool                    SetRevocationLimits               (XDWORD OCSPsize, XDWORD CRLsize, XDWORD maximumCRLs);
-    bool                    SetTrustStoreLimits               (XDWORD maximumroots, XDWORD maximumcertificatesize,
-                                                               XDWORD maximumtotalsize);
+    bool                    SetTrustStoreLimits               (XDWORD maximumroots, XDWORD maximumcertificatesize, XDWORD maximumtotalsize);
     bool                    SetMaximumSessionTickets          (XDWORD maximumtickets);
 
     XDWORD                  GetMaximumRecordInputSize         ();
@@ -167,7 +161,6 @@ class DIOSTREAMTLSMEMORYPOLICY
     XDWORD                  maximumtrustcertificatesize;
     XDWORD                  maximumtruststoresize;
 };
-
 
 class DIOSTREAMTLS13SESSIONTICKET
 {
@@ -211,7 +204,6 @@ class DIOSTREAMTLS13SESSIONTICKET
     XDWORD                  maximumearlydatasize;
 };
 
-
 class DIOSTREAMTLSSERVERCREDENTIALS
 {
   public:
@@ -246,7 +238,6 @@ class DIOSTREAMTLSSERVERCREDENTIALS
     XBUFFER                 OCSPstapledresponse;
     XVECTOR<XBUFFER*>       OCSPstapledresponses;
 };
-
 
 class DIOSTREAMTLSCONFIG  : public DIOSTREAMTCPIPCONFIG
 {
@@ -375,9 +366,7 @@ class DIOSTREAMTLSCONFIG  : public DIOSTREAMTCPIPCONFIG
     bool                    SessionTicketKeyRing_Rotate       ();
     bool                    SessionTicketKeyRing_Export       (XBUFFER& wrappingkey, XBUFFER& encryptedkeyring);
     bool                    SessionTicketKeyRing_Import       (XBUFFER& wrappingkey, XBUFFER& encryptedkeyring);
-    bool                    SessionTicketKeyRingSynchronizer_Set (DIOSTREAMTLS_SESSIONTICKETKEYRING_LOAD load,
-                                                                  DIOSTREAMTLS_SESSIONTICKETKEYRING_SAVE save,
-                                                                  XBUFFER& wrappingkey, void* context = NULL);
+    bool                    SessionTicketKeyRingSynchronizer_Set (DIOSTREAMTLS_SESSIONTICKETKEYRING_LOAD load, DIOSTREAMTLS_SESSIONTICKETKEYRING_SAVE save, XBUFFER& wrappingkey, void* context = NULL);
     bool                    SessionTicketKeyRing_Synchronize  (bool publish);
     bool                    SessionTicket_Store               (XCHAR* servername, XBUFFER& ticket, XBUFFER& PSK, XDWORD ageadd, XDWORD lifetime, XWORD ciphersuite, DIOSTREAMTLS_ALPN_TYPE applicationprotocol);
     bool                    SessionTicket_StoreRaw            (XCHAR* servername, XBUFFER& ticket, XBUFFER& PSK, XDWORD ageadd, XDWORD lifetime, XWORD ciphersuite, XBUFFER* applicationprotocol, XDWORD maximumearlydatasize = 0);

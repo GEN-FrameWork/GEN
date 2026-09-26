@@ -34,8 +34,6 @@
 #include "XVector.h"
 #include "XSubject.h"
 
-
-
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
 
 enum XDRIVEIMAGEMANAGER_ERROR
@@ -51,10 +49,7 @@ enum XDRIVEIMAGEMANAGER_ERROR
 
 #define XDRIVEIMAGEMANAGER_DEFAULT_NSECTORPERBLOCK     100000
 
-
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
-
 
 class XDRIVEIMAGEMANAGER_DRIVE
 {
@@ -62,8 +57,6 @@ class XDRIVEIMAGEMANAGER_DRIVE
 
                                 XDRIVEIMAGEMANAGER_DRIVE          ();
     virtual                    ~XDRIVEIMAGEMANAGER_DRIVE          ();
-
-   
 
     XSTRING*                    GetName                           ();
     XSTRING*                    GetLabel                          ();
@@ -94,7 +87,6 @@ class XDRIVEIMAGEMANAGER_DRIVE
     XDWORD                      GetRawHandle                      ();
     void                        SetRawHandle                      (XDWORD handle);
 
-
   private:
 
     void                        Clean                             ();
@@ -111,13 +103,11 @@ class XDRIVEIMAGEMANAGER_DRIVE
     XDWORD                      rawhandle;
 };
 
-
 class XDRIVEIMAGEMANAGER : public XSUBJECT
 {
   public:
                                 XDRIVEIMAGEMANAGER                ();
     virtual                    ~XDRIVEIMAGEMANAGER                (); 
-
 
     static bool                 GetIsInstanced                    ();
     static XDRIVEIMAGEMANAGER&  GetInstance                       ();

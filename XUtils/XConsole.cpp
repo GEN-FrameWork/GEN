@@ -310,7 +310,7 @@ bool XCONSOLE::Print(XCHAR* string)
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         bool XCONSOLE::Printf(XCHAR* mask,...)
+* @fn         bool XCONSOLE::Printf(XCHAR* mask, ...)
 * @brief      Printf
 * @ingroup    XUTILS
 * 
@@ -320,7 +320,7 @@ bool XCONSOLE::Print(XCHAR* string)
 * @return     bool : true if the operation is successful; otherwise false.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-bool XCONSOLE::Printf(XCHAR* mask,...)
+bool XCONSOLE::Printf(XCHAR* mask, ...)
 {
   if(!mask) return false;
 
@@ -378,14 +378,14 @@ bool XCONSOLE::PrintDataBlock(XBYTE* data, XDWORD size, XDWORD marginsize, XDWOR
 
       if(showoffset)
         {
-          strdata.Format(__L("%04X"),index);
+          strdata.Format(__L("%04X"), index);
           string += strdata;
-          string += __L("   ");
+          string += __L(" ");
         }
 
       for(XDWORD c=0; c<_sizeline; c++)
         {
-          strdata.Format(__L("%02X "),data[index]);
+          strdata.Format(__L("%02X "), data[index]);
           string += strdata;
           _size++;
           index++;
@@ -395,7 +395,7 @@ bool XCONSOLE::PrintDataBlock(XBYTE* data, XDWORD size, XDWORD marginsize, XDWOR
         {
           for(XDWORD c=0; c<(sizeline-_sizeline); c++)
             {
-              strdata.Format(__L("   "));
+              strdata.Format(__L(" "));
               string += strdata;
             }
         }
@@ -411,7 +411,7 @@ bool XCONSOLE::PrintDataBlock(XBYTE* data, XDWORD size, XDWORD marginsize, XDWOR
 
               if((character<0x20) || (character>0x80) || (character==__C('%')) || (character==__C('\\'))) character = __C('.');
 
-              strdata.Format(__L("%c"),character);
+              strdata.Format(__L("%c"), character);
               string += strdata;
               index++;
             }
@@ -540,7 +540,7 @@ bool XCONSOLE::WaitKey(XCHAR* text, XDWORD margin, bool prelude, XDWORD timeout)
   while(!KBHit())
     {
       string  = text;
-      string += __L("                            \r");
+      string += __L(" \r");
 
       string2.Format(string.Get(), (timeout - xtimer->GetMeasureSeconds()));
 
@@ -597,7 +597,7 @@ void XCONSOLE::EraseToEndLine(int actualpos)
 
   for(int c=actualpos; c<(ncolumns-4); c++ )
     {
-      PrintMessage(__L(" "), 0 ,false, false);
+      PrintMessage(__L(" "), 0, false, false);
     }
 }
 

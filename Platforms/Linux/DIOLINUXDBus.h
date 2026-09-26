@@ -36,16 +36,11 @@
 #include "XVariant.h"
 #include "XThreadCollected.h"
 
-
-
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
                                                    
 #define DIOLINUXDBUS_IFACE_PROPERTIES         __L("org.freedesktop.DBus.Properties")
 
-
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
-
 
 class DIOLINUXDBUS_MESSAGE
 {
@@ -105,13 +100,11 @@ class DIOLINUXDBUS_ARGUMENTS
     DBusMessageIter                     iter;
 };
 
-
 class DIOLINUXDBUS_SIGNAL
 {
   public:
                                         DIOLINUXDBUS_SIGNAL         ();
     virtual                            ~DIOLINUXDBUS_SIGNAL         ();
-
 
     XSTRING*                            GetType                     ();
     XSTRING*                            GetName                     ();  
@@ -124,7 +117,6 @@ class DIOLINUXDBUS_SIGNAL
     XSTRING                             name;  
 
 };
-
 
 class DIOLINUXDBUS : public XSUBJECT
 {

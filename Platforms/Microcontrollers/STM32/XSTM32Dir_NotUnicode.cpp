@@ -80,7 +80,6 @@ XSTM32DIR_NOTUNICODE::~XSTM32DIR_NOTUNICODE()
 }
 
 
-
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         bool XSTM32DIR_NOTUNICODE::Exist(XCHAR* path)
@@ -108,7 +107,6 @@ bool XSTM32DIR_NOTUNICODE::Exist(XCHAR* path)
   
   return (fresult == FR_OK)?true:false;  
 }
-
 
 
 /**-------------------------------------------------------------------------------------------------------------------
@@ -145,7 +143,7 @@ bool XSTM32DIR_NOTUNICODE::Make(XCHAR* path, bool recursive)
       xpathsequence.Empty();
     
       do{
-          if(xpath.GetPathInSequence(index,pathpart))
+          if(xpath.GetPathInSequence(index, pathpart))
             {
               xpathsequence += pathpart;
               xpathsequence += __L("\\");
@@ -183,7 +181,6 @@ bool XSTM32DIR_NOTUNICODE::Make(XCHAR* path, bool recursive)
 }
 
 
-
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         bool XSTM32DIR_NOTUNICODE::ChangeTo(XCHAR* path)
@@ -218,7 +215,6 @@ bool XSTM32DIR_NOTUNICODE::ChangeTo(XCHAR* path)
 }
 
 
-
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         bool XSTM32DIR_NOTUNICODE::Delete(XCHAR* path, bool all)
@@ -242,7 +238,7 @@ bool XSTM32DIR_NOTUNICODE::Delete(XCHAR* path, bool all)
       xpathname     = path;
       patternsearch = __L("*");
 
-      if(FirstSearch(xpathname.Get(),patternsearch.Get(),&search))
+      if(FirstSearch(xpathname.Get(), patternsearch.Get(), &search))
         {
           do{ xpathname  = path;
               xpathname.Slash_Add();
@@ -283,7 +279,6 @@ bool XSTM32DIR_NOTUNICODE::Delete(XCHAR* path, bool all)
 }
 
 
-
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         bool XSTM32DIR_NOTUNICODE::GetActual(XPATH& xpath)
@@ -308,7 +303,6 @@ bool XSTM32DIR_NOTUNICODE::GetActual(XPATH& xpath)
 
   return true;
 }
-
 
 
 /**-------------------------------------------------------------------------------------------------------------------
@@ -379,7 +373,6 @@ bool XSTM32DIR_NOTUNICODE::FirstSearch(XCHAR* xpath, XCHAR* patternsearch, XDIRE
 }
 
 
-
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         bool XSTM32DIR_NOTUNICODE::NextSearch(XDIRELEMENT* searchelement)
@@ -422,8 +415,6 @@ bool XSTM32DIR_NOTUNICODE::NextSearch(XDIRELEMENT* searchelement)
 }
 
 
-
-
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         bool XSTM32DIR_NOTUNICODE::ReconvertSearchData(XDIRELEMENT* searchelement, FILINFO* fileinfo)
@@ -448,8 +439,6 @@ bool XSTM32DIR_NOTUNICODE::ReconvertSearchData(XDIRELEMENT* searchelement, FILIN
  
   return true;
 }
-
-
 
 
 /**-------------------------------------------------------------------------------------------------------------------

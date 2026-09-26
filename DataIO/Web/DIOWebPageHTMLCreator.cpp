@@ -477,7 +477,7 @@ XCHAR DIOWEBPAGEHTMLCREATOR::operator [] (int position)
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         bool DIOWEBPAGEHTMLCREATOR::Printf(XCHAR* mask,...)
+* @fn         bool DIOWEBPAGEHTMLCREATOR::Printf(XCHAR* mask, ...)
 * @brief      Printf
 * @ingroup    DATAIO
 * 
@@ -487,7 +487,7 @@ XCHAR DIOWEBPAGEHTMLCREATOR::operator [] (int position)
 * @return     bool : true if the operation is successful; otherwise false.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-bool DIOWEBPAGEHTMLCREATOR::Printf(XCHAR* mask,...)
+bool DIOWEBPAGEHTMLCREATOR::Printf(XCHAR* mask, ...)
 {
   XSTRING outstring;
 
@@ -763,7 +763,7 @@ bool DIOWEBPAGEHTMLCREATOR::AddAutoRefresh(int refresh, XSTRING* url)
 
   if(url)
         meta.Format(__L("<META http-equiv=\"refresh\" content=\"%d;URL=%s\"/>"), refresh, url->Get());
-   else meta.Format(__L("<META http-equiv=\"refresh\" content=\"%d;\"/>")      , refresh);
+   else meta.Format(__L("<META http-equiv=\"refresh\" content=\"%d;\"/>"), refresh);
 
   Add(meta.Get());
 
@@ -860,7 +860,7 @@ bool DIOWEBPAGEHTMLCREATOR::AddFile(XPATH& xpath)
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         DIOWEBPAGEHTMLCREATORTAGXENGINESTATUS DIOWEBPAGEHTMLCREATOR::CheckXTAG(XSTRING* originalline,bool& intag, XSTRING& inioutputline,XSTRING& endoutputline)
+* @fn         DIOWEBPAGEHTMLCREATORTAGXENGINESTATUS DIOWEBPAGEHTMLCREATOR::CheckXTAG(XSTRING* originalline, bool& intag, XSTRING& inioutputline, XSTRING& endoutputline)
 * @brief      Check XTAG
 * @ingroup    DATAIO
 * 
@@ -872,7 +872,7 @@ bool DIOWEBPAGEHTMLCREATOR::AddFile(XPATH& xpath)
 * @return     DIOWEBPAGEHTMLCREATORTAGXENGINESTATUS : Requested value.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-DIOWEBPAGEHTMLCREATORTAGXENGINESTATUS DIOWEBPAGEHTMLCREATOR::CheckXTAG(XSTRING* originalline,bool& intag, XSTRING& inioutputline,XSTRING& endoutputline)
+DIOWEBPAGEHTMLCREATORTAGXENGINESTATUS DIOWEBPAGEHTMLCREATOR::CheckXTAG(XSTRING* originalline, bool& intag, XSTRING& inioutputline, XSTRING& endoutputline)
 {
   int index[3];
 
@@ -889,22 +889,22 @@ DIOWEBPAGEHTMLCREATORTAGXENGINESTATUS DIOWEBPAGEHTMLCREATOR::CheckXTAG(XSTRING* 
             {
               lastXTAG.Empty();
 
-              originalline->Copy(0,index[0],inioutputline);
+              originalline->Copy(0, index[0], inioutputline);
 
-              index[2] = originalline->Find(__L("?>"),true);
+              index[2] = originalline->Find(__L("?>"), true);
               if(index[2]!=XSTRING_NOTFOUND)
                 {
                   XSTRING endline;
 
-                  originalline->Copy(index[1]+3,index[2],lastXTAG);
-                  originalline->Copy(index[2]+2,endoutputline);
+                  originalline->Copy(index[1]+3, index[2], lastXTAG);
+                  originalline->Copy(index[2]+2, endoutputline);
 
                   return DIOWEBPAGEHTMLCREATORTAGXENGINESTATUS_FOUNDEND;
 
                 }
                else
                 {
-                  originalline->Copy(index[1]+3,lastXTAG);
+                  originalline->Copy(index[1]+3, lastXTAG);
                   intag = true;
                   return  DIOWEBPAGEHTMLCREATORTAGXENGINESTATUS_FOUNDNOTEND;
                 }
@@ -915,15 +915,15 @@ DIOWEBPAGEHTMLCREATORTAGXENGINESTATUS DIOWEBPAGEHTMLCREATOR::CheckXTAG(XSTRING* 
     }
    else
     {
-      index[0] = originalline->Find(__L("?>"),true);
+      index[0] = originalline->Find(__L("?>"), true);
       if(index[0]!=XSTRING_NOTFOUND)
         {
           XSTRING TAGstring;
 
-          originalline->Copy(0,index[0],TAGstring);
+          originalline->Copy(0, index[0], TAGstring);
           lastXTAG+=TAGstring.Get();
 
-          originalline->Copy(index[0]+2,endoutputline);
+          originalline->Copy(index[0]+2, endoutputline);
 
           intag = false;
 

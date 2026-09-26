@@ -177,6 +177,13 @@ void UI_ELEMENT_TEXT::SetMaxSizeText(XDWORD maxsizetext)
 }
 
 
+/**-------------------------------------------------------------------------------------------------------------------
+* 
+* @fn         void UI_ELEMENT_TEXT::ReapplyStyleVisual()
+* @brief      Reapply Style Visual
+* @ingroup    USERINTERFACE
+* 
+* --------------------------------------------------------------------------------------------------------------------*/
 void UI_ELEMENT_TEXT::ReapplyStyleVisual()
 {
   XDWORD oldsize = sizefont;

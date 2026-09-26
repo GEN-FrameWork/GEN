@@ -53,7 +53,6 @@ enum UI_OVERFLOW_MODE
   UI_OVERFLOW_AUTO                                 ,   // clip,    scrollbar only if content exceeds viewport
 };
 
-
 enum UI_PROPERTY_SCROLLEABLE_ACTIVATE
 {
   UI_PROPERTY_SCROLLEABLE_ACTIVATE_AUTO         = 0 ,   // activation follows the overflow policy (default)
@@ -61,12 +60,7 @@ enum UI_PROPERTY_SCROLLEABLE_ACTIVATE
   UI_PROPERTY_SCROLLEABLE_ACTIVATE_OFF              ,   // user forces the axis inactive (no scroll, no bar)
 };
 
-
 #define UI_PROPERTY_SCROLLEABLE_BARWIDTH        6        // overlay scrollbar thickness (px). Single source for draw + hit-test.
-
-
-
-
 
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
 
@@ -96,7 +90,6 @@ class UI_PROPERTY_SCROLLEABLE_STATUS
     void															        Clean										                ();              
 };
 
-
 class UI_PROPERTY_SCROLLEABLE 
 {
   public:
@@ -112,16 +105,14 @@ class UI_PROPERTY_SCROLLEABLE
     bool                                      Scroll_SetVisible                       (UI_PROPERTY_SCROLLEABLE_TYPE type, bool on);
 
     double                                    Scroll_GetLimit                         (UI_PROPERTY_SCROLLEABLE_TYPE type);
-    void                                      Scroll_SetLimit                         (UI_PROPERTY_SCROLLEABLE_TYPE type, double  limit);
+    void                                      Scroll_SetLimit                         (UI_PROPERTY_SCROLLEABLE_TYPE type, double limit);
 
     double                                    Scroll_GetDisplacement                  (UI_PROPERTY_SCROLLEABLE_TYPE type);
 
     double                                    Scroll_GetStep                          (UI_PROPERTY_SCROLLEABLE_TYPE type);
     void                                      Scroll_SetStep                          (UI_PROPERTY_SCROLLEABLE_TYPE type, double h_step);
 
-
     void                                      Scroll_SetFraction                      (UI_PROPERTY_SCROLLEABLE_TYPE type, double fraction);
-
 
     void                                      Scroll_SetBarWidth                      (UI_PROPERTY_SCROLLEABLE_TYPE type, double width);
     double                                    Scroll_GetBarWidth                      (UI_PROPERTY_SCROLLEABLE_TYPE type);
@@ -135,8 +126,6 @@ class UI_PROPERTY_SCROLLEABLE
 
     void                                      Scroll_SetBarSeparation                 (UI_PROPERTY_SCROLLEABLE_TYPE type, double separationedge, double separationalong);
     void                                      Scroll_GetBarSeparation                 (UI_PROPERTY_SCROLLEABLE_TYPE type, double& separationedge, double& separationalong);
-
-
 
     bool                                      Scroll_GetTrackRect                     (UI_PROPERTY_SCROLLEABLE_TYPE type, double box_left, double box_top, double box_right, double box_bottom, double radius, double& track_left, double& track_top, double& track_right, double& track_bottom);
 

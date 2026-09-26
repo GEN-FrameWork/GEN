@@ -33,18 +33,11 @@
 #include "XList.h"
 #include "DIONodeItemHandler.h"
 
-
-
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
-
-
-
 
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
 
-
 class XTIMER;
-
 
 class DIONODEITEMHANDLER_ENTRYGPIO
 {
@@ -52,7 +45,6 @@ class DIONODEITEMHANDLER_ENTRYGPIO
                                             DIONODEITEMHANDLER_ENTRYGPIO      ();
                                             DIONODEITEMHANDLER_ENTRYGPIO      (XDWORD entryID, bool writemode, int GPIO = DIONODEITEMHANDLER_INVALIDPARAM, int pin = DIONODEITEMHANDLER_INVALIDPARAM, XCHAR* description = __L(""));
     virtual                                ~DIONODEITEMHANDLER_ENTRYGPIO      ();
-
 
     XDWORD                                  GetEntryID                        ();
     void                                    SetEntryID                        (XDWORD entryID);

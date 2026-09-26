@@ -37,17 +37,12 @@
 
 #include "DIOScraperWeb.h"
 
-
-
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
 
 #define DIOSCRAPERWEBGEOLOCATIONIP_NAMEFILE       __L("ws_geolocationip.xml")
 #define DIOSCRAPERWEBGEOLOCATIONIP_NAMESERVICE    __L("GEOLOCATIONIP")
 
-
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
-
 
 class DIOGEOLOCATIONIP_RESULT : public DIOSCRAPERWEBCACHE_RESULT
 {
@@ -96,9 +91,9 @@ class DIOSCRAPERWEBGEOLOCATIONIP : public DIOSCRAPERWEB
 
     bool                    ChangeURL                         (XCHAR* maskurl, DIOURL& url);
 
-    bool                    Get                               (XCHAR* IP  , DIOGEOLOCATIONIP_RESULT& geolocationIP, int timeoutforurl = DIOSCRAPERWEB_MAXTIMEOUTFORURL, XSTRING* localIP = NULL, bool usecache = true);
+    bool                    Get                               (XCHAR* IP, DIOGEOLOCATIONIP_RESULT& geolocationIP, int timeoutforurl = DIOSCRAPERWEB_MAXTIMEOUTFORURL, XSTRING* localIP = NULL, bool usecache = true);
     bool                    Get                               (XSTRING& IP, DIOGEOLOCATIONIP_RESULT& geolocationIP, int timeoutforurl = DIOSCRAPERWEB_MAXTIMEOUTFORURL, XSTRING* localIP = NULL, bool usecache = true);
-    bool                    Get                               (DIOIP& IP  , DIOGEOLOCATIONIP_RESULT& geolocationIP, int timeoutforurl = DIOSCRAPERWEB_MAXTIMEOUTFORURL, XSTRING* localIP = NULL, bool usecache = true);
+    bool                    Get                               (DIOIP& IP, DIOGEOLOCATIONIP_RESULT& geolocationIP, int timeoutforurl = DIOSCRAPERWEB_MAXTIMEOUTFORURL, XSTRING* localIP = NULL, bool usecache = true);
 
   private:
 

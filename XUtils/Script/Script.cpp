@@ -295,7 +295,7 @@ SCRIPT::SCRIPT()
   RegisterEvent(SCRIPT_XEVENT_TYPE_ERROR);
   RegisterEvent(SCRIPT_XEVENT_TYPE_BREAK);
 
-  thread = CREATEXTHREAD(XTHREADGROUPID_SCRIPT, __L("SCRIPT::SCRIPT"),ThreadFunction,(void*)this);
+  thread = CREATEXTHREAD(XTHREADGROUPID_SCRIPT, __L("SCRIPT::SCRIPT"), ThreadFunction, (void*)this);
 
   AddInternalLibraries();
 }
@@ -949,7 +949,6 @@ bool SCRIPT::RunWithThread()
 }
 
 
-
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         bool SCRIPT::IsRunWithThread()
@@ -967,7 +966,7 @@ bool SCRIPT::IsRunWithThread()
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         bool SCRIPT::IsRunThread(int* error,int* returnvalue)
+* @fn         bool SCRIPT::IsRunThread(int* error, int* returnvalue)
 * @brief      Is run thread
 * @ingroup    SCRIPT
 * 
@@ -977,7 +976,7 @@ bool SCRIPT::IsRunWithThread()
 * @return     bool : true if the condition is met; otherwise false.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-bool SCRIPT::IsRunThread(int* error,int* returnvalue)
+bool SCRIPT::IsRunThread(int* error, int* returnvalue)
 {
   if(!thread) return false;
 

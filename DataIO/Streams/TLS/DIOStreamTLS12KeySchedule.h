@@ -55,14 +55,9 @@
 #define DIOSTREAMTLS12KEYSCHEDULE_LABEL_CLIENTFINISHED        "client finished"
 #define DIOSTREAMTLS12KEYSCHEDULE_LABEL_SERVERFINISHED        "server finished"
 
-
-
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
 
-
 class HASH;
-
 
 class DIOSTREAMTLS12KEYSCHEDULE
 {
@@ -82,17 +77,12 @@ class DIOSTREAMTLS12KEYSCHEDULE
     XDWORD                                  GetFixedIVSize                                    ();
     HASH*                                   GetHash                                           ();
 
-    
-    
     bool                                    PRF                                               (XBUFFER& secret, const char* label, XBUFFER& seed, XDWORD outputsize, XBUFFER& output);
 
     bool                                    MasterSecret_Create                               (XBUFFER& premastersecret, XBUFFER& clientrandom, XBUFFER& serverrandom);
     bool                                    MasterSecretExtended_Create                       (XBUFFER& premastersecret, XBUFFER& sessionhash);
     XBUFFER*                                GetMasterSecret                                   ();
 
-    
-    
-    
     bool                                    KeyBlock_Create                                   (XBUFFER& clientrandom, XBUFFER& serverrandom);
 
     XBUFFER*                                GetKey                                            (DIOSTREAMTLSKEYSCHEDULE_DIRECTION direction);

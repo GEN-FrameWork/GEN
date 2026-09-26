@@ -116,7 +116,6 @@ enum XSYSTEM_CHANGESTATUSTYPE
   XSYSTEM_CHANGESTATUSTYPE_SUSPEND
 };
 
-
 enum XSYSTEM_VOLUME_TYPE
 {
   XSYSTEM_VOLUME_TYPE_UNKNOWN                   =       0 ,
@@ -127,10 +126,7 @@ enum XSYSTEM_VOLUME_TYPE
   XSYSTEM_VOLUME_TYPE_RAMDISK
 };
 
-
 #define XSYSTEM_CPUUSAGE_ERROR              -1
-
-
 
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
 
@@ -168,7 +164,6 @@ class XSYSTEM_VOLUMEINFO
     XQWORD                          freebytes;
 };
 
-
 class XSYSTEM
 {
   public:
@@ -196,7 +191,7 @@ class XSYSTEM
 
     virtual float                   GetCPUTemperature               ();
 
-    virtual bool                    GetMemoryInfo                   (XDWORD& total,XDWORD& free);
+    virtual bool                    GetMemoryInfo                   (XDWORD& total, XDWORD& free);
     int                             GetFreeMemoryPercent            ();
     virtual bool                    FreeCacheMemory                 ();
 

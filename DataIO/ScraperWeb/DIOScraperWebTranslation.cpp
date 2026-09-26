@@ -230,7 +230,7 @@ bool DIOSCRAPERWEBTRANSLATION::ChangeURL(XCHAR* maskurl, DIOURL& url)
 
   _maskurl = maskurl;
 
-  int found = _maskurl.Find(__L("google"),true);
+  int found = _maskurl.Find(__L("google"), true);
   if(found != XSTRING_NOTFOUND)
     {
       DIOURL  urltext;

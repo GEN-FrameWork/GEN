@@ -260,15 +260,11 @@ void XFILERIFF_LIST::Clean()
 
   #ifdef DEBUG_ACTIVE    
   
-  memset(typestr      , 0, 5);
+  memset(typestr, 0, 5);
   memset(typeliststr  , 0, 5);  
   
   #endif
 }
-
-
-
-
 
 
 /**-------------------------------------------------------------------------------------------------------------------
@@ -620,7 +616,6 @@ XFILERIFF_LIST* XFILERIFF::GetChunk(XDWORD type, XDWORD fathertypelist)
 {
   return GetList(true, xtreelist.GetRoot(), type, fathertypelist);
 }
-
 
 
 /**-------------------------------------------------------------------------------------------------------------------
@@ -1093,7 +1088,7 @@ bool XFILERIFF::ConvertDWORDtoString(XDWORD data, XSTRING& string)
   characters[2] = (XCHAR)((data >> 8)  & 0x000000FF);
   characters[3] = (XCHAR)((data)       & 0x000000FF);
 
-  string.Format(__L("%C%C%C%C"),  characters[3], characters[2], characters[1], characters[0]);
+  string.Format(__L("%C%C%C%C"), characters[3], characters[2], characters[1], characters[0]);
 
   string.ToUpperCase();
 

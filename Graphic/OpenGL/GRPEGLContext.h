@@ -37,7 +37,6 @@
 
 #include "XBase.h"
 
-
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
 
 #define GRPEGLCONTEXT_DEFAULT_RED_SIZE        8
@@ -47,9 +46,7 @@
 #define GRPEGLCONTEXT_DEFAULT_DEPTH_SIZE      0
 #define GRPEGLCONTEXT_DEFAULT_STENCIL_SIZE    0
 
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
-
 
 class GRPEGLCONTEXT
 {
@@ -57,13 +54,9 @@ class GRPEGLCONTEXT
                                           GRPEGLCONTEXT                         ();
     virtual                              ~GRPEGLCONTEXT                         ();
 
-    bool                                  ChooseConfig                          (EGLNativeDisplayType native_display,
-                                                                                 bool with_alpha,
-                                                                                 EGLint& out_native_visual_id);
+    bool                                  ChooseConfig                          (EGLNativeDisplayType native_display, bool with_alpha, EGLint& out_native_visual_id);
 
-    bool                                  Create                                (EGLNativeDisplayType native_display,
-                                                                                 EGLNativeWindowType  native_window,
-                                                                                 bool with_alpha = true);
+    bool                                  Create                                (EGLNativeDisplayType native_display, EGLNativeWindowType native_window, bool with_alpha = true);
 
     bool                                  MakeCurrent                           ();
     bool                                  RecreateSurface                       (EGLNativeWindowType native_window);

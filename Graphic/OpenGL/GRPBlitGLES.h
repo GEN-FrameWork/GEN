@@ -42,13 +42,10 @@
 #include "XBase.h"
 #include "GRPScreen.h"
 
-
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
-
 
 class GRP2DCANVAS;
 class GRPEGLCONTEXT;
-
 
 class GRPBLITGLES
 {
@@ -61,14 +58,6 @@ class GRPBLITGLES
 
     virtual bool                          GetNativeWindowSize               (int& width, int& height);
 
-
-
-
-
-
-
-
-
     virtual void                          ComputePresentationScale          (GLsizei surfacewidth, GLsizei surfaceheight, float& scalex, float& scaley, float& translatex, float& translatey, bool& visible);
 
     virtual bool                          PreCreateHook                     ();
@@ -76,14 +65,12 @@ class GRPBLITGLES
     
     bool                                  ChooseVisualID                    (EGLNativeDisplayType native_display, EGLint& out_native_visual_id);
 
-
     bool                                  Create                            (GRPSCREEN* screen);
     bool                                  Resize                            (int width, int height);
     bool                                  Update                            (GRP2DCANVAS* canvas);
     bool                                  PresentBlankFrame                 ();
     bool                                  SwapBuffers                       ();
     bool                                  Destroy                           ();
-
 
     void                                  SetUseVSync                       (bool active);
     bool                                  GetUseVSync                       ();
@@ -121,7 +108,6 @@ class GRPBLITGLES
     GLint                                 a_pos;
     GLint                                 a_uv;
 
-    
     GLuint                                pbo[2];
     int                                   pbo_index;
     XDWORD                                pbo_size;

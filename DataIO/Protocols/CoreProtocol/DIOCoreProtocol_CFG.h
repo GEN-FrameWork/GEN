@@ -36,9 +36,6 @@
 #include "DIOStreamConfig.h"
 #include "DIOStream.h"
 
-
-
-
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
 
 #define DIOCOREPROTOCOL_CFG_DEFAULT_MINSIZECOMPRESS                         150 
@@ -51,11 +48,7 @@
 #define DIOCOREPROTOCOL_CFG_DEFAULT_MODEBUS_TIMEOUTBUSFREE                  30 
 #define DIOCOREPROTOCOL_CFG_DEFAULT_MODEBUS_TIMEOUTSENDDATA                 180 
 
-
-
-
 /*---- CLASS ---------------------------------------------------------c------------------------------------------------*/
-
 
 class DIOCOREPROTOCOL_CFG
 {

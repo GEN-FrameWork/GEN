@@ -8,8 +8,24 @@
 *
 * @copyright  EndoraSoft. All rights reserved.
 *
+*
+* @cond
+* Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated
+* documentation files(the "Software"), to deal in the Software without restriction, including without limitation
+* the rights to use, copy, modify, merge, publish, distribute, sublicense, and/ or sell copies of the Software,
+* and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+*
+* The above copyright notice and this permission notice shall be included in all copies or substantial portions of
+* the Software.
+*
+* THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO
+* THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.IN NO EVENT SHALL THE
+* AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+* TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+* SOFTWARE.
+* @endcond
+*
 * --------------------------------------------------------------------------------------------------------------------*/
-
 #include "GEN_Defines.h"
 
 #include "CipherChaCha20Poly1305.h"
@@ -229,8 +245,8 @@ void CIPHERCHACHA20POLY1305::QuarterRound(XDWORD& a, XDWORD& b, XDWORD& c, XDWOR
 {
   a += b; d ^= a; d = RotateLeft32(d, 16);
   c += d; b ^= c; b = RotateLeft32(b, 12);
-  a += b; d ^= a; d = RotateLeft32(d,  8);
-  c += d; b ^= c; b = RotateLeft32(b,  7);
+  a += b; d ^= a; d = RotateLeft32(d, 8);
+  c += d; b ^= c; b = RotateLeft32(b, 7);
 }
 
 
@@ -240,14 +256,13 @@ void CIPHERCHACHA20POLY1305::QuarterRound(XDWORD& a, XDWORD& b, XDWORD& c, XDWOR
 * @brief      Block
 * @ingroup    CIPHER
 * 
-* @param[in]  Value.
+* @param[in]  key : 
 * @param[in]  counter : Counter value.
-* @param[in]  Value.
-* @param[in]  Value.
+* @param[in]  nonce : 
+* @param[in]  output : 
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-void CIPHERCHACHA20POLY1305::Block(const XBYTE key[CIPHERCHACHA20POLY1305_KEYSIZE], XDWORD counter,
-                                   const XBYTE nonce[CIPHERCHACHA20POLY1305_NONCESIZE], XBYTE output[64])
+void CIPHERCHACHA20POLY1305::Block(const XBYTE key[CIPHERCHACHA20POLY1305_KEYSIZE], XDWORD counter, const XBYTE nonce[CIPHERCHACHA20POLY1305_NONCESIZE], XBYTE output[64])
 {
   static const XDWORD constants[4] = { 0x61707865, 0x3320646e, 0x79622d32, 0x6b206574 };
   XDWORD state[16];
@@ -276,7 +291,7 @@ void CIPHERCHACHA20POLY1305::Block(const XBYTE key[CIPHERCHACHA20POLY1305_KEYSIZ
 
   for(int c=0; c<16; c++) Store32LE(&output[c*4], working[c] + state[c]);
 
-  CIPHERCHACHA20POLY1305_SecureErase(state,   sizeof(state));
+  CIPHERCHACHA20POLY1305_SecureErase(state, sizeof(state));
   CIPHERCHACHA20POLY1305_SecureErase(working, sizeof(working));
 }
 
@@ -287,17 +302,15 @@ void CIPHERCHACHA20POLY1305::Block(const XBYTE key[CIPHERCHACHA20POLY1305_KEYSIZ
 * @brief      Crypt
 * @ingroup    CIPHER
 * 
-* @param[in]  Value.
+* @param[in]  key : 
 * @param[in]  counter : Counter value.
-* @param[in]  Value.
+* @param[in]  nonce : 
 * @param[in]  input : Pointer to input.
-* @param[out] output : Pointer to output.
+* @param[out]  output : Pointer to output.
 * @param[in]  size : Size value.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-void CIPHERCHACHA20POLY1305::Crypt(const XBYTE key[CIPHERCHACHA20POLY1305_KEYSIZE], XDWORD counter,
-                                   const XBYTE nonce[CIPHERCHACHA20POLY1305_NONCESIZE],
-                                   const XBYTE* input, XBYTE* output, XDWORD size)
+void CIPHERCHACHA20POLY1305::Crypt(const XBYTE key[CIPHERCHACHA20POLY1305_KEYSIZE], XDWORD counter, const XBYTE nonce[CIPHERCHACHA20POLY1305_NONCESIZE], const XBYTE* input, XBYTE* output, XDWORD size)
 {
   XBYTE block[64];
   XDWORD offset = 0;
@@ -320,10 +333,10 @@ void CIPHERCHACHA20POLY1305::Crypt(const XBYTE key[CIPHERCHACHA20POLY1305_KEYSIZ
 * @brief      Poly1305
 * @ingroup    CIPHER
 * 
-* @param[in]  Value.
+* @param[in]  key : 
 * @param[in]  message : Pointer to message.
 * @param[in]  size : Size value.
-* @param[in]  Value.
+* @param[in]  tag : 
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
 void CIPHERCHACHA20POLY1305::Poly1305(const XBYTE key[32], const XBYTE* message, XQWORD size, XBYTE tag[16])
@@ -440,19 +453,17 @@ void CIPHERCHACHA20POLY1305::Poly1305(const XBYTE key[32], const XBYTE* message,
 * @brief      Calculate tag
 * @ingroup    CIPHER
 * 
-* @param[in]  Value.
-* @param[in]  Value.
+* @param[in]  key : 
+* @param[in]  nonce : 
 * @param[in]  additionaldata : Additionaldata value.
 * @param[in]  ciphertext : Pointer to ciphertext.
 * @param[in]  size : Size value.
-* @param[in]  Value.
+* @param[in]  tag : 
 * 
 * @return     bool : true if the operation is successful; otherwise false.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-bool CIPHERCHACHA20POLY1305::CalculateTag(const XBYTE key[CIPHERCHACHA20POLY1305_KEYSIZE],
-                                           const XBYTE nonce[CIPHERCHACHA20POLY1305_NONCESIZE],
-                                           XBUFFER& additionaldata, const XBYTE* ciphertext, XDWORD size, XBYTE tag[16])
+bool CIPHERCHACHA20POLY1305::CalculateTag(const XBYTE key[CIPHERCHACHA20POLY1305_KEYSIZE], const XBYTE nonce[CIPHERCHACHA20POLY1305_NONCESIZE], XBUFFER& additionaldata, const XBYTE* ciphertext, XDWORD size, XBYTE tag[16])
 {
   XBYTE block[64];
   XBYTE polykey[32];
@@ -468,13 +479,13 @@ bool CIPHERCHACHA20POLY1305::CalculateTag(const XBYTE key[CIPHERCHACHA20POLY1305
   if(status && size && !authenticated.Add((XBYTE*)ciphertext, size)) status = false;
   while(status && (authenticated.GetSize() & 15)) status = authenticated.Add((XBYTE)0);
 
-  Store64LE(lengths,     (XQWORD)additionaldata.GetSize());
+  Store64LE(lengths, (XQWORD)additionaldata.GetSize());
   Store64LE(lengths + 8, (XQWORD)size);
   if(status && !authenticated.Add(lengths, sizeof(lengths))) status = false;
 
   if(status) Poly1305(polykey, authenticated.Get(), authenticated.GetSize(), tag);
 
-  CIPHERCHACHA20POLY1305_SecureErase(block,   sizeof(block));
+  CIPHERCHACHA20POLY1305_SecureErase(block, sizeof(block));
   CIPHERCHACHA20POLY1305_SecureErase(polykey, sizeof(polykey));
   CIPHERCHACHA20POLY1305_SecureErase(lengths, sizeof(lengths));
   return status;
@@ -487,7 +498,7 @@ bool CIPHERCHACHA20POLY1305::CalculateTag(const XBYTE key[CIPHERCHACHA20POLY1305
 * @brief      Get raw key
 * @ingroup    CIPHER
 * 
-* @param[in]  Value.
+* @param[in]  key : 
 * 
 * @return     bool : true if the operation is successful; otherwise false.
 * 
@@ -545,7 +556,7 @@ bool CIPHERCHACHA20POLY1305::CipherAEAD(XBYTE* input, XDWORD size, XBUFFER& nonc
   if(status) status = tag.Add(authtag, sizeof(authtag));
   if(!status) result->Delete();
 
-  CIPHERCHACHA20POLY1305_SecureErase(key,     sizeof(key));
+  CIPHERCHACHA20POLY1305_SecureErase(key, sizeof(key));
   CIPHERCHACHA20POLY1305_SecureErase(authtag, sizeof(authtag));
   return status;
 }
@@ -602,7 +613,7 @@ bool CIPHERCHACHA20POLY1305::UncipherAEAD(XBYTE* input, XDWORD size, XBUFFER& no
     }
 
   if(!status) result->Delete();
-  CIPHERCHACHA20POLY1305_SecureErase(key,      sizeof(key));
+  CIPHERCHACHA20POLY1305_SecureErase(key, sizeof(key));
   CIPHERCHACHA20POLY1305_SecureErase(expected, sizeof(expected));
   return status;
 }

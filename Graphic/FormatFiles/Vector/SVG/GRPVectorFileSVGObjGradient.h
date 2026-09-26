@@ -37,8 +37,6 @@
 #include "GRPVectorFileSVGObj.h"
 #include "GRPVectorFileSVGTransform.h"
 
-
-
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
 
 enum GRPVECTORFILESVGGRADIENTUNITS
@@ -47,12 +45,9 @@ enum GRPVECTORFILESVGGRADIENTUNITS
   GRPVECTORFILESVGGRADIENTUNITS_USERSPACEONUSE          ,                       // coordinates are in user space
 };
 
-
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
 
 class XFILEXMLELEMENT;
-
 
 class GRPVECTORFILESVGOBJGRADIENT : public GRPVECTORFILESVGOBJ
 {

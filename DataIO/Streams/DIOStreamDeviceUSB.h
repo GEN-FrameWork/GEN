@@ -62,11 +62,7 @@ enum DIOSTREAMDEVICEUSBCLASS
   DIOSTREAMDEVICEUSBCLASS_BOTH_VENDOR_SPECIFIC                            = 0xFF ,
 };
 
-
-
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
-
 
 class DIOSTREAMDEVICEUSB_DESCRIPTOR
 {
@@ -127,7 +123,6 @@ class DIOSTREAMDEVICEUSB_DESCRIPTOR
     XBYTE                                           serialnumber;
     XBYTE                                           numconfigurations;
 };
-
 
 class DIOSTREAMDEVICEUSB : public DIOSTREAMDEVICE
 {

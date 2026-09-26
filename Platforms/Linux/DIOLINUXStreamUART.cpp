@@ -173,7 +173,7 @@ bool DIOLINUXSTREAMUART::Open()
     }
    else
     {
-      ttyS.Format(__L("/dev/ttyS%d"),config->GetPort());
+      ttyS.Format(__L("/dev/ttyS%d"), config->GetPort());
     }
 
   XBUFFER charstr;
@@ -693,7 +693,7 @@ void DIOLINUXSTREAMUART::ThreadConnection(void* param)
             {
               case DIOLINUXUARTFSMSTATE_NONE                : break;
 
-              case DIOLINUXUARTFSMSTATE_CONNECTED           : { DIOSTREAM_XEVENT xevent(diostream,DIOSTREAM_XEVENT_TYPE_CONNECTED);
+              case DIOLINUXUARTFSMSTATE_CONNECTED           : { DIOSTREAM_XEVENT xevent(diostream, DIOSTREAM_XEVENT_TYPE_CONNECTED);
                                                                 xevent.SetDIOStream(diostream);
                                                                 diostream->PostEvent(&xevent);
 
@@ -703,7 +703,7 @@ void DIOLINUXSTREAMUART::ThreadConnection(void* param)
 
               case DIOLINUXUARTFSMSTATE_WAITINGTOREAD       : break;
 
-              case DIOLINUXUARTFSMSTATE_DISCONNECTING       : { DIOSTREAM_XEVENT xevent(diostream,DIOSTREAM_XEVENT_TYPE_DISCONNECTED);
+              case DIOLINUXUARTFSMSTATE_DISCONNECTING       : { DIOSTREAM_XEVENT xevent(diostream, DIOSTREAM_XEVENT_TYPE_DISCONNECTED);
                                                                 xevent.SetDIOStream(diostream);
                                                                 diostream->PostEvent(&xevent);
 

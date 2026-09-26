@@ -24,8 +24,9 @@
 * SOFTWARE.
 * @endcond
 * 
+* @class      GRP2DGRADIENTSTOP
+*
 * --------------------------------------------------------------------------------------------------------------------*/
-
 #pragma once
 
 /*---- INCLUDES ------------------------------------------------------------------------------------------------------*/
@@ -44,8 +45,8 @@
 
 struct GRP2DGRADIENTSTOP
 {
-  double                offset;                                                 // 0.0 .. 1.0
-  GRP2DCOLOR_RGBA8      color;                                                  // color with alpha already resolved
+  double                offset;
+  GRP2DCOLOR_RGBA8      color;
 };
 
 

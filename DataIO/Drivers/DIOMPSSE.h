@@ -76,17 +76,12 @@ enum DIOMPSSE_CHIP_TYPE
 #define DIOMPSSE_SIO_WRITE_EEPROM_REQUEST         0x91
 #define DIOMPSSE_SIO_ERASE_EEPROM_REQUEST         0x92
 
-
-
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
-
 
 class DIOSTREAMUSBLOCALENUMDEVICES;
 class DIOSTREAMUSBCONFIG;
 class DIOSTREAMDEVICEUSB;
 class DIOSTREAM;
-
 
 class DIOMPSSE
 {

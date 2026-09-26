@@ -72,9 +72,6 @@ enum XFILEDBF_FIELDTYPE
 #define XFILEDBF_FIELDSTART     32
 #define XFILEDBF_FIELDSIZE      32
 
-
-
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
 
 class XFILEDBF_FIELD
@@ -90,7 +87,6 @@ class XFILEDBF_FIELD
     XBYTE                           size;
 };
 
-
 class XFILEDBF_RECORD
 {
   public:
@@ -101,13 +97,13 @@ class XFILEDBF_RECORD
     bool                            IsFieldEmpty                (int indexfield);
 
     XBYTE*                          GetData                     (int indexfield);
-    bool                            SetData                     (int indexfield, XBYTE* data,int limitsize);
+    bool                            SetData                     (int indexfield, XBYTE* data, int limitsize);
 
     bool                            GetDataString               (int indexfield, XSTRING& string);
     bool                            SetDataString               (int indexfield, XSTRING& string);
 
-    bool                            SetCharacterType            (int indexfield,XCHAR* data);
-    bool                            SetData                     (XBYTE* data,XDWORD size);
+    bool                            SetCharacterType            (int indexfield, XCHAR* data);
+    bool                            SetData                     (XBYTE* data, XDWORD size);
     int                             GetSize                     ();
     int                             GetSizeField                (int indexfield);
 
@@ -120,7 +116,6 @@ class XFILEDBF_RECORD
     int                             size;
     XBYTE*                          datarec;
 };
-
 
 class XFILEDBF_HEADER
 {
@@ -159,7 +154,6 @@ class XFILEDBF_HEADER
     XVECTOR<XFILEDBF_FIELD*>        fields;
 };
 
-
 class XFILEDBF : public XFILECONTAINER
 {
   public:
@@ -168,7 +162,7 @@ class XFILEDBF : public XFILECONTAINER
                                     XFILEDBF                    (XFILE* filebasic);
     virtual                        ~XFILEDBF                    ();
 
-    bool                            Open                        (XPATH& xpath,bool readonly=true);
+    bool                            Open                        (XPATH& xpath, bool readonly=true);
     bool                            Create                      (XPATH& xpath);
     bool                            IsOpen                      ();
     bool                            Close                       (void);

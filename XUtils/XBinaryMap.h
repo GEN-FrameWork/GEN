@@ -33,19 +33,11 @@
 #include "XAVLTree.h"
 #include "XPair.h"
 
-
-
 /*---- PRECOMPILATION INCLUDES ---------------------------------------------------------------------------------------*/
 
 #include "GEN_Control.h"
 
-
-
-
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
-
-
-
 
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
 
@@ -120,7 +112,6 @@ class XBINARYMAP
                                                   XLIST<XPAIR<K, E> > lst;
                                                   container.GetMultiple(XPAIR<K, E>(key, E()), lst);
 
-
                                                   typename XLIST<XPAIR<K, E> >::XITERATOR it;
                                                   for(it = lst.Begin(); it != lst.End(); it++)
                                                     {
@@ -132,9 +123,6 @@ class XBINARYMAP
                                                 {
                                                   return container.Find(XPAIR<K, E>(key, E()));
                                                 }
-
-
-
 
   class XITERATOR
   {

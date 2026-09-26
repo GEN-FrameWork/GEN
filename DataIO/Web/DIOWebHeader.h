@@ -101,7 +101,6 @@ enum DIOWEBHEADER_METHOD
   DIOWEBHEADER_METHOD_TRACE                                     ,   // not implement
 };
 
-
 #define DIOWEBHEADER_CONTENT_LENGTH                       __L("Content-Length")
 #define DIOWEBHEADER_TRANSFER_ENCODING                    __L("Transfer-Encoding")
 #define DIOWEBHEADER_CONTENT_ENCODING                     __L("Content-Encoding")
@@ -113,15 +112,10 @@ enum DIOWEBHEADER_METHOD
 #define DIOWEBHEADER_MAXLINE                              1024
 #define DIOWEBHEADER_MAXSIZE                              (64*1024)
 
-
-
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
-
 
 class XTIMER;
 class DIOSTREAMTCPIP;
-
 
 class DIOWEBHEADER
 {
@@ -130,7 +124,7 @@ class DIOWEBHEADER
     virtual                    ~DIOWEBHEADER                      ();
 
     bool                        Read                              (DIOSTREAMTCPIP* diostream, int timeout, XDWORD maximumsize = DIOWEBHEADER_MAXSIZE);
-    bool                        Write                             (DIOSTREAMTCPIP*  diostream, int timeout);
+    bool                        Write                             (DIOSTREAMTCPIP* diostream, int timeout);
 
     bool                        AddLine                           (XCHAR* line);
     bool                        AddLine                           (XSTRING& line);

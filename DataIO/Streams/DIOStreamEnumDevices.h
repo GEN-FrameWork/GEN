@@ -53,9 +53,6 @@ enum DIOSTREAMENUMTYPE
   DIOSTREAMENUMTYPE_WIFI_REMOTE               ,
 };
 
-
-
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
 
 class XTIMER;

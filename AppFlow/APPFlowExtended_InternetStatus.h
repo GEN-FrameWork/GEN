@@ -32,20 +32,13 @@
 
 #include "DIOWebServer_ResolveEndPoint.h"
 
-
-
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
 
-
-
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
-
 
 class XCONSOLE;
 class APPFLOWCFG;
 class APPFLOWINTERNETSERVICES;
-
 
 class APPFLOWEXTENDED_INTERNETSTATUS : public DIOWEBSERVER_RESOLVEENDPOINT
 {

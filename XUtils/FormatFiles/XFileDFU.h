@@ -33,16 +33,12 @@
 #include "XFile.h"
 #include "XVector.h"
 
-
-
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
 
 #define XFILEDFU_PREFIX_SIGNATUREPREXIF_MAX   5
 #define XFILEDFU_PREFIX_SIGNATUREIMAGE_MAX    6
 #define XFILEDFU_IMAGEPREFIX_NAME_MAX         255
 #define XFILEDFU_PREFIX_SIGNATURESUFFIX_MAX   3
-
-
 
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
 
@@ -87,7 +83,6 @@ class XFILEDFU_IMAGE
     void                            Clean                   ();
 };
 
-
 class XFILEDFU_ELEMENT
 {
   public:
@@ -127,7 +122,6 @@ class XFILEDFU_SUFFIX
 
     void                            Clean                   ();
 };
-
 
 class XFILEDFU 
 {

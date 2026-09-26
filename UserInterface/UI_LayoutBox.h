@@ -188,9 +188,7 @@
 
 #include "XVector.h"
 
-
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
-
 
 /**
 * @struct  UI_LAYOUTBOX_EDGES
@@ -204,7 +202,6 @@ struct UI_LAYOUTBOX_EDGES
   double left;
 };
 
-
 /**
 * @enum   UI_POSITION
 * @brief  CSS "position" property, restricted to the values this engine currently understands.
@@ -216,7 +213,6 @@ enum UI_POSITION
   UI_POSITION_ABSOLUTE              // positioned against its nearest non-STATIC ancestor (or the tree root)
 };
 
-
 /**
 * @struct  UI_LAYOUTBOX_INSET
 * @brief   One CSS inset edge (top/right/bottom/left): either unspecified ("auto", the default) or a resolved value.
@@ -226,7 +222,6 @@ struct UI_LAYOUTBOX_INSET
   bool   specified;
   double value;
 };
-
 
 /**
 * @struct  UI_LAYOUTBOX_INSETS
@@ -240,7 +235,6 @@ struct UI_LAYOUTBOX_INSETS
   UI_LAYOUTBOX_INSET left;
 };
 
-
 /**
 * @enum   UI_FLEX_DIRECTION
 * @brief  CSS "flex-direction": which axis is the main axis, and which way it runs.
@@ -252,7 +246,6 @@ enum UI_FLEX_DIRECTION
   UI_FLEX_DIRECTION_COLUMN,           // main axis vertical, top to bottom
   UI_FLEX_DIRECTION_COLUMN_REVERSE    // main axis vertical, bottom to top
 };
-
 
 /**
 * @enum   UI_JUSTIFY_CONTENT
@@ -348,17 +341,14 @@ enum UI_GRID_TRACK_UNIT
 */
 struct UI_GRIDTRACK
 {
-  // Every field has an in-class default so a caller building a SIMPLE track (as every earlier sub-step's tests
-  // already do: set only "unit" and "value") gets a well-defined, non-minmax track without touching the fields
-  // below -- aggregate initialization and plain field-by-field assignment both still work exactly as before.
-  bool                isminmax = false;   // false: "unit"/"value" are this track's size. true: minmax(min, max).
+  bool                isminmax = false;
 
-  UI_GRID_TRACK_UNIT unit  = UI_GRID_TRACK_UNIT_PX;    // meaningful only when isminmax == false
+  UI_GRID_TRACK_UNIT unit  = UI_GRID_TRACK_UNIT_PX;
   double              value = 0.0;
 
-  UI_GRID_TRACK_UNIT minunit  = UI_GRID_TRACK_UNIT_PX;   // meaningful only when isminmax == true -- never FR
+  UI_GRID_TRACK_UNIT minunit  = UI_GRID_TRACK_UNIT_PX;
   double              minvalue = 0.0;
-  UI_GRID_TRACK_UNIT maxunit  = UI_GRID_TRACK_UNIT_PX;   // meaningful only when isminmax == true -- PX/PERCENT/FR
+  UI_GRID_TRACK_UNIT maxunit  = UI_GRID_TRACK_UNIT_PX;
   double              maxvalue = 0.0;
 
   bool operator==(const UI_GRIDTRACK& other) const
@@ -379,17 +369,12 @@ class UI_LAYOUTBOX
                                     UI_LAYOUTBOX                 ();
     virtual                        ~UI_LAYOUTBOX                 ();
 
-    // Content box: CSS top-left origin, occupies [top, top+height) x [left, left+width). Whatever a future
-    // layout pass decides the CONTENT size is (see UI_COMPUTEDSTYLE::ResolveContentSize() from the previous
-    // increment) -- padding/border/margin below are layered OUTWARD from this, never inward.
     void                            SetContentBox                 (double left, double top, double width, double height);
     double                          GetContentLeft                ();
     double                          GetContentTop                  ();
     double                          GetContentWidth                ();
     double                          GetContentHeight               ();
 
-    // Padding / border / margin, one edge-width set each. Negative input is clamped to 0 (CSS never has a
-    // negative padding/border/margin edge, whatever a bad computed value might otherwise say).
     void                            SetPadding                     (double top, double right, double bottom, double left);
     void                            SetBorder                      (double top, double right, double bottom, double left);
     void                            SetMargin                      (double top, double right, double bottom, double left);
@@ -397,30 +382,19 @@ class UI_LAYOUTBOX
     UI_LAYOUTBOX_EDGES&              GetBorder                      ();
     UI_LAYOUTBOX_EDGES&              GetMargin                      ();
 
-    // Derived rects, each the content box expanded outward by one more layer (padding; padding+border;
-    // padding+border+margin) -- the standard CSS "padding box" / "border box" / "margin box" terms.
     void                            GetPaddingBox                  (double& left, double& top, double& width, double& height);
     void                            GetBorderBox                   (double& left, double& top, double& width, double& height);
     void                            GetMarginBox                   (double& left, double& top, double& width, double& height);
 
-    // Tree: "child" is OWNED from this call on (deleted, recursively, by this node's own destructor) and its
-    // parent link is set to "this". Deliberately mirrors UI_ELEMENT's own father/compose_elements shape (see
-    // UI_Element.h) rather than inventing a different convention, since a future increment sources one tree
-    // from the other.
     void                            AddChild                       (UI_LAYOUTBOX* child);
     XVECTOR<UI_LAYOUTBOX*>&          GetChildren                    ();
     UI_LAYOUTBOX*                    GetParent                      ();
 
-    // Position tag and insets: pure storage, defaults to STATIC / nothing specified (i.e. "auto" on all four
-    // edges). See the SCOPE ADDENDUM above -- UI_LAYOUTENGINE::ApplyPositioning() is what interprets these.
     void                            SetPosition                    (UI_POSITION position);
     UI_POSITION                     GetPosition                    ();
     void                            SetInsets                      (UI_LAYOUTBOX_INSETS& insets);
     UI_LAYOUTBOX_INSETS&             GetInsets                      ();
 
-    // Flex container properties: pure storage, defaults to "not a flex container" / ROW / FLEX_START / no gap.
-    // See the SCOPE ADDENDUM above -- UI_LAYOUTENGINE::ApplyFlexLayout() is what interprets these on a box's
-    // DIRECT children (a box being a flex container says nothing about how ITS OWN box is placed by its parent).
     void                            SetFlexContainer                (bool isflexcontainer);
     bool                            IsFlexContainer                 ();
     void                            SetFlexDirection                (UI_FLEX_DIRECTION direction);
@@ -431,9 +405,6 @@ class UI_LAYOUTBOX
     double                          GetRowGap                       ();
     double                          GetColumnGap                    ();
 
-    // Flex ITEM properties: pure storage, defaults to the CSS initial values (grow 0, shrink 1, basis "auto").
-    // See the SCOPE ADDENDUM above -- these describe how THIS box's own size is resolved by its flex-container
-    // parent, the mirror of the container-side properties above.
     void                            SetFlexGrow                     (double grow);
     double                          GetFlexGrow                     ();
     void                            SetFlexShrink                   (double shrink);
@@ -442,23 +413,16 @@ class UI_LAYOUTBOX
     void                            SetFlexBasis                    (double value);
     UI_LAYOUTBOX_INSET&              GetFlexBasis                    ();
 
-    // Flex-wrap and align-content: pure storage, defaults to NOWRAP / FLEX_START. See the SCOPE ADDENDUM above.
     void                            SetFlexWrap                     (UI_FLEX_WRAP wrap);
     UI_FLEX_WRAP                    GetFlexWrap                     ();
     void                            SetAlignContent                 (UI_ALIGN_CONTENT aligncontent);
     UI_ALIGN_CONTENT                GetAlignContent                  ();
 
-    // Align-items (container) / align-self (item): pure storage, defaults to FLEX_START / AUTO. See the SCOPE
-    // ADDENDUM above for why the default deliberately isn't CSS's real "stretch".
     void                            SetAlignItems                   (UI_ALIGN_ITEMS alignitems);
     UI_ALIGN_ITEMS                  GetAlignItems                    ();
     void                            SetAlignSelf                    (UI_ALIGN_SELF alignself);
     UI_ALIGN_SELF                   GetAlignSelf                     ();
 
-    // Grid container properties: pure storage, defaults to "not a grid container" / no tracks defined (row-gap
-    // and column-gap are the SAME rowgap/columngap Flexbox already stores above -- see the SCOPE ADDENDUM). See
-    // the SCOPE ADDENDUM above -- UI_LAYOUTENGINE::ApplyGridLayout() is what interprets these on a box's DIRECT
-    // children.
     void                            SetGridContainer                (bool isgridcontainer);
     bool                            IsGridContainer                  ();
     void                            AddGridColumnTrack               (UI_GRIDTRACK track);
@@ -468,9 +432,6 @@ class UI_LAYOUTBOX
     void                            ClearGridRowTracks               ();
     XVECTOR<UI_GRIDTRACK>&           GetGridRowTracks                ();
 
-    // Grid ITEM properties: pure storage, defaults to the CSS initial value (span 1 on both axes -- occupy
-    // exactly one cell). See the SCOPE ADDENDUM above -- UI_LAYOUTENGINE::ApplyGridLayout() is what interprets
-    // these when auto-placing a box's DIRECT children, the mirror of the container-side properties above.
     void                            SetGridColumnSpan                (XDWORD span);
     XDWORD                          GetGridColumnSpan                ();
     void                            SetGridRowSpan                   (XDWORD span);
@@ -515,8 +476,8 @@ class UI_LAYOUTBOX
     XDWORD                            gridcolumnspan;
     XDWORD                            gridrowspan;
 
-    UI_LAYOUTBOX*                     parent;            // borrowed -- never owned, never deleted by this class
-    XVECTOR<UI_LAYOUTBOX*>            children;          // owned
+    UI_LAYOUTBOX*                     parent;
+    XVECTOR<UI_LAYOUTBOX*>            children;
 };
 
 

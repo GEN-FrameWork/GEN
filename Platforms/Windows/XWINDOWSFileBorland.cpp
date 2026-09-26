@@ -161,9 +161,9 @@ bool XWINDOWSFILEBORLAND::SetSize(XQWORD size)
   if(!filehandle)   return false;
 
   #ifdef _MSC_VER
-  if(_chsize(_fileno(filehandle),size)) return false;
+  if(_chsize(_fileno(filehandle), size)) return false;
   #else
-  if(chsize(_fileno(filehandle),size)) return false;
+  if(chsize(_fileno(filehandle), size)) return false;
   #endif
 
   ActualizeSize();
@@ -245,10 +245,10 @@ bool XWINDOWSFILEBORLAND::Read(XBYTE* buffer, XDWORD size, CIPHER* cipher)
 
   XDWORD _size;
 
-  _size=(int)fread((void *)buffer,1,(size_t)size, filehandle);
+  _size=(int)fread((void *)buffer, 1, (size_t)size, filehandle);
   if(_size!=size)  return false;
 
-  if(cipher) cipher->Uncipher(buffer,_size);
+  if(cipher) cipher->Uncipher(buffer, _size);
 
   return true;
 }
@@ -283,7 +283,7 @@ bool XWINDOWSFILEBORLAND::Read(XBYTE* buffer, XDWORD* size, CIPHER* cipher)
 
   if(cipher)
     {
-      if(cipher->Uncipher(buffer,_size))
+      if(cipher->Uncipher(buffer, _size))
         {
           memcpy(buffer, cipher->GetResult()->Get(), _size);
 
@@ -314,12 +314,12 @@ bool XWINDOWSFILEBORLAND::Write(XBYTE* buffer, XDWORD size, CIPHER* cipher)
 
   if(cipher)
     {
-      if(!cipher->Cipher(buffer,size)) return false;
+      if(!cipher->Cipher(buffer, size)) return false;
       if(fwrite((void *)cipher->GetResult()->Get(), 1, size, filehandle)!=(unsigned)size)  return false;
     }
    else
     {
-      if(fwrite((void *)buffer,1,size, filehandle)!=(unsigned)size)  return false;
+      if(fwrite((void *)buffer, 1, size, filehandle)!=(unsigned)size)  return false;
     }
 
   ActualizeSize();
@@ -381,7 +381,7 @@ bool XWINDOWSFILEBORLAND::Close()
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         bool XWINDOWSFILEBORLAND::Erase(XCHAR* path,bool overwrite)
+* @fn         bool XWINDOWSFILEBORLAND::Erase(XCHAR* path, bool overwrite)
 * @brief      Erase
 * @ingroup    PLATFORM_WINDOWS
 * 
@@ -391,7 +391,7 @@ bool XWINDOWSFILEBORLAND::Close()
 * @return     bool : true if the operation is successful; otherwise false.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-bool XWINDOWSFILEBORLAND::Erase(XCHAR* path,bool overwrite)
+bool XWINDOWSFILEBORLAND::Erase(XCHAR* path, bool overwrite)
 {
   bool status=true;
 

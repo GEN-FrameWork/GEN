@@ -869,10 +869,6 @@ void XFILEJSONVALUE::Clean()
 }
 
 
-
-
-
-
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         XFILEJSONOBJECT::XFILEJSONOBJECT()
@@ -1045,7 +1041,7 @@ bool XFILEJSONOBJECT::Add(XCHAR* name, XFILEJSONOBJECT* object)
 * --------------------------------------------------------------------------------------------------------------------*/
 bool XFILEJSONOBJECT::Add(XSTRING& name, XFILEJSONOBJECT* object)
 {
-  return Add(name.Get(),object);
+  return Add(name.Get(), object);
 }
 
 
@@ -1447,7 +1443,7 @@ bool XFILEJSON::ReadAndDecodeAllLines()
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         bool XFILEJSON::WriteAndEncodeAllLines(bool istabulatedline,XFILETXTFORMATCHAR formatchar, XFILETXTTYPELF typeLF)
+* @fn         bool XFILEJSON::WriteAndEncodeAllLines(bool istabulatedline, XFILETXTFORMATCHAR formatchar, XFILETXTTYPELF typeLF)
 * @brief      Write and encode all lines
 * @ingroup    XUTILS
 * 
@@ -1458,7 +1454,7 @@ bool XFILEJSON::ReadAndDecodeAllLines()
 * @return     bool : true if the operation is successful; otherwise false.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-bool XFILEJSON::WriteAndEncodeAllLines(bool istabulatedline,XFILETXTFORMATCHAR formatchar, XFILETXTTYPELF typeLF)
+bool XFILEJSON::WriteAndEncodeAllLines(bool istabulatedline, XFILETXTFORMATCHAR formatchar, XFILETXTTYPELF typeLF)
 {
   SetFormatChar(formatchar);
   SetTypeLF(typeLF);
@@ -1858,7 +1854,7 @@ bool XFILEJSON::DecodeObject(int& position, bool isobject, XFILEJSONOBJECT* obje
 
                                                       position++;
 
-                                                      if(!DecodeObject(position,false,(XFILEJSONOBJECT*)newarray))
+                                                      if(!DecodeObject(position, false, (XFILEJSONOBJECT*)newarray))
                                                         {
                                                           GEN_DELETE value;
                                                           return false;
@@ -1930,7 +1926,7 @@ bool XFILEJSON::DecodeObject(int& position, bool isobject, XFILEJSONOBJECT* obje
 
           case XFILEJSONCONTROLCHAR_QUOTE         : { XSTRING valuestring;
 
-                                                      GetString(position,valuestring);
+                                                      GetString(position, valuestring);
 
                                                       value->Set(valuestring);
 
@@ -2441,7 +2437,7 @@ bool XFILEJSON::EncodeObject(bool isobject, XFILEJSONOBJECT* object, bool istabu
 
   if(istabulatedline)
     {
-      AddTabs(encodelevel,XFILEJSON_SPACETABS,line);
+      AddTabs(encodelevel, XFILEJSON_SPACETABS, line);
       encodelevel++;
     }
 
@@ -2490,7 +2486,7 @@ bool XFILEJSON::EncodeObject(bool isobject, XFILEJSONOBJECT* object, bool istabu
                                                                   //XTRACE_PRINTCOLOR(0,line.Get());
                                                                 }
 
-                                                              if(!EncodeObject(true,newobject,istabulatedline)) return false;
+                                                              if(!EncodeObject(true, newobject, istabulatedline)) return false;
                                                               line.Empty();
                                                             }
                                                         }
@@ -2505,7 +2501,7 @@ bool XFILEJSON::EncodeObject(bool isobject, XFILEJSONOBJECT* object, bool istabu
                                                                   //XTRACE_PRINTCOLOR(0,line.Get());
                                                                 }
 
-                                                              if(!EncodeObject(false,(XFILEJSONOBJECT*)newarray,istabulatedline)) return false;
+                                                              if(!EncodeObject(false, (XFILEJSONOBJECT*)newarray, istabulatedline)) return false;
                                                               line.Empty();
                                                             }
                                                         }
@@ -2524,7 +2520,7 @@ bool XFILEJSON::EncodeObject(bool isobject, XFILEJSONOBJECT* object, bool istabu
 
       if(c!=(int)(object->GetValues()->GetSize()-1))
         {
-          if(line.IsEmpty()) AddTabs(encodelevel,XFILEJSON_SPACETABS,line);
+          if(line.IsEmpty()) AddTabs(encodelevel, XFILEJSON_SPACETABS, line);
 
           AddControlCharacter(XFILEJSONCONTROLCHAR_COMMA, line);
         }
@@ -2543,7 +2539,7 @@ bool XFILEJSON::EncodeObject(bool isobject, XFILEJSONOBJECT* object, bool istabu
   if(istabulatedline)
     {
       encodelevel--;
-      AddTabs(encodelevel,XFILEJSON_SPACETABS,line);
+      AddTabs(encodelevel, XFILEJSON_SPACETABS, line);
     }
 
   AddControlCharacter(isobject?XFILEJSONCONTROLCHAR_CLOSEBRACE:XFILEJSONCONTROLCHAR_CLOSEBRACKET, line);

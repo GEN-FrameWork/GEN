@@ -81,14 +81,11 @@ enum XFEEDBACK_CODE
 #define XFEEDBACK_CODE_REFTEXT                    feedback_code_text_temporal                                 
 #define XFEEDBACK_CODE_TEXT                       feedback_code_text_temporal.Get()                                 
 #define XFEEDBACK_CODE_CREATETEXT(text, ...)      XSTRING XFEEDBACK_CODE_REFTEXT;                          \
-                                                  XFEEDBACK_CODE_REFTEXT.Format(text,  ## __VA_ARGS__);   
+                                                  XFEEDBACK_CODE_REFTEXT.Format(text, ## __VA_ARGS__);   
 
 #define XFEEDBACK_CONTROL_LOG_SECTIONID           __L("Feedback")
 
-
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
-
 
 
 class XFEEDBACK
@@ -117,7 +114,6 @@ public:
     XSTRING*                          text;
 };
 
-
 class XFEEDBACK_CONTROL
 {
   public:
@@ -127,7 +123,7 @@ class XFEEDBACK_CONTROL
     bool                              IsActive                    ();
     bool                              Activate                    (bool isactive);
 
-    bool                              AddFeedbak                  (char const* namefile, XFEEDBACK_CODE code, int line,  ...); 
+    bool                              AddFeedbak                  (char const* namefile, XFEEDBACK_CODE code, int line, ...); 
   
     bool                              DisplayAll                  ();
 

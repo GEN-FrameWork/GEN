@@ -118,7 +118,6 @@ enum XDATETIME_SENTENCES
 #define XDATETIME_SECONDSMINUTES(allseconds)                (XDWORD)((((allseconds % XDATETIME_SECONDSINYEAR) % XDATETIME_SECONDSINMONTH) % XDATETIME_SECONDSINDAY) % XDATETIME_SECONDSINHOUR) / 60
 #define XDATETIME_SECONDSSECONDS(allseconds)                (XDWORD)((((allseconds % XDATETIME_SECONDSINYEAR) % XDATETIME_SECONDSINMONTH) % XDATETIME_SECONDSINDAY) % XDATETIME_SECONDSINHOUR) % 60
 
-
 #define XDATETIME_GETACTUALTOSTRING(modificator, string)    { XDATETIME* xdatetime=GEN_XFACTORY.CreateDateTime();                 \
                                                               if(xdatetime)                                                               \
                                                                 {                                                                         \
@@ -127,8 +126,6 @@ enum XDATETIME_SENTENCES
                                                                   GEN_XFACTORY.DeleteDateTime(xdatetime);                                 \
                                                                 }                                                                         \
                                                             }
-
-
 
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
 

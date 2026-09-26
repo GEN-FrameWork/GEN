@@ -143,10 +143,7 @@ class DIOPROTOCOL;
 
 typedef int (*DIOPROTOCOL_RECEIVEDFUNC)   (DIOPROTOCOL* protocol, DIOPROTOCOL_COMMAND* cmd, XBUFFER& buffer, XDWORD rID, XDWORD& param);
 
-
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
-
 
 class XRAND;
 class XDATETIME;
@@ -160,7 +157,6 @@ class HASHCRC32;
 class CIPHER;
 class DIOPROTOCOL_XEVENT;
 class DIOALERT;
-
 
 class DIOPROTOCOL_ANSWER
 {
@@ -180,7 +176,6 @@ class DIOPROTOCOL_ANSWER
     XDWORD                                    ID;
     XBUFFER                                   xbuffer;
 };
-
 
 class DIOPROTOCOL_COMMAND
 {
@@ -211,7 +206,6 @@ class DIOPROTOCOL_COMMAND
     DIOPROTOCOL_RECEIVEDFUNC                  receivedfunc;
     XSTRING                                   description;
 };
-
 
 class DIOPROTOCOL_FILE
 {
@@ -275,7 +269,6 @@ class DIOPROTOCOL_FILE
     void                                      Clean                           ();
 };
 
-
 class DIOPROTOCOL : public XSUBJECT
 {
   public:
@@ -319,13 +312,12 @@ class DIOPROTOCOL : public XSUBJECT
 
      XDATETIME*                               GetDateTime                     ();
 
-     bool                                     AddCommand                      (XDWORD type ,XCHAR* inmask,XCHAR* outmask, DIOPROTOCOL_RECEIVEDFUNC receivedfunc,XCHAR* description);
+     bool                                     AddCommand                      (XDWORD type, XCHAR* inmask, XCHAR* outmask, DIOPROTOCOL_RECEIVEDFUNC receivedfunc, XCHAR* description);
      DIOPROTOCOL_COMMAND*                     GetCommand                      (XDWORD type);
-
 
      DIOPROTOCOL_ANSWER*                      AddAnswer                       (XDWORD type, XDWORD ID, XBUFFER& xbuffer);
      DIOPROTOCOL_ANSWER*                      GetAnswer                       (XDWORD type, XDWORD ID);
-     bool                                     DeleteAnswer                    (XDWORD type,XDWORD ID);
+     bool                                     DeleteAnswer                    (XDWORD type, XDWORD ID);
      bool                                     DeleteAllAnswers                ();
 
      DIOPROTOCOL_ANSWER*                      AddAsk                          (XDWORD type, XDWORD ID, XBUFFER& xbuffer);
@@ -341,9 +333,8 @@ class DIOPROTOCOL : public XSUBJECT
      bool                                     Command                         (XDWORD type, XBUFFER& xbuffer, int timeout = DIOPROTOCOL_TIMEOUT);
 
      bool                                     SendEvent                       (DIOPROTOCOL_XEVENT_TYPE type, DIOPROTOCOL* protocol);
-     bool                                     SendEventCommand                (DIOPROTOCOL* protocol, DIOPROTOCOL_DIRECTION direction,XDWORD type,bool result,void* param1,XDWORD param2);
+     bool                                     SendEventCommand                (DIOPROTOCOL* protocol, DIOPROTOCOL_DIRECTION direction, XDWORD type, bool result, void* param1, XDWORD param2);
      bool                                     SendEventFileBlock              (DIOPROTOCOL_FILESTATUS filestatus, bool fileissend, XPATH* filesource, XPATH* filetarget, int filepercent, void* param);
-
 
      void                                     GetProtocolVersion              (XDWORD& version, XDWORD& subversion, XDWORD& subversionerr);
      void                                     SetProtocolVersion              (XDWORD version, XDWORD subversion, XDWORD subversionerr);
@@ -353,7 +344,7 @@ class DIOPROTOCOL : public XSUBJECT
 
      XSTRING*                                 Application_GetName              ();
 
-     bool                                     SetFileProgress                 (DIOPROTOCOL_DIRECTION direction,XPATH& sourcename,XPATH& targetname,XDWORD CRC32);
+     bool                                     SetFileProgress                 (DIOPROTOCOL_DIRECTION direction, XPATH& sourcename, XPATH& targetname, XDWORD CRC32);
      DIOPROTOCOL_FILE*                        GetFileProgress                 ();
 
      XPATH*                                   GetPathSearch                   ();
@@ -438,7 +429,6 @@ class DIOPROTOCOL : public XSUBJECT
   private:
 
      void                                     Clean                           ();
-
 
      bool                                     DeleteAllCommands               ();
 

@@ -188,7 +188,6 @@ bool APPFLOWINTERNETSERVICES_XEVENT::IsChangePublicIP()
 }
 
 
-
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         void APPFLOWINTERNETSERVICES_XEVENT::SetIsChangePublicIP(bool ischangepublicIP)

@@ -961,7 +961,7 @@ static void Signal_Handler(int sign)
                         break;
     }
 
-  Signal_Printf(iserror, LOG_SIGNAL, __L("[%s %d] Error: %s"), signalstr.Get(), sign,  description.Get());
+  Signal_Printf(iserror, LOG_SIGNAL, __L("[%s %d] Error: %s"), signalstr.Get(), sign, description.Get());
 
   #ifdef APPFLOW_ACTIVE
   if(app)
@@ -998,7 +998,7 @@ static void Signal_Handler(int sign)
 
                           allexceptiontext.Empty();
 
-                          fprintf(stderr," \n");
+                          fprintf(stderr, " \n");
 
                           #ifdef APPFLOW_ACTIVE
                           if(app)
@@ -1199,7 +1199,7 @@ static inline void Signal_PrintfStackTrace(FILE *out, unsigned int max_frames)
   void*  addrlist[max_frames+1];        // storage array for stack trace address data
   XDWORD addrlen = 0;
 
-  memset(addrlist,0, sizeof(addrlist));
+  memset(addrlist, 0, sizeof(addrlist));
 
   addrlen = backtrace(addrlist, sizeof(addrlist) / sizeof(void*)); 
 

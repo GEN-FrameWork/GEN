@@ -118,11 +118,9 @@
 
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
 
-
 class XPUBLISHER;
 class XLICENSE;
 class DIOFACTORY;
-
 
 class XLICENSEID
 {
@@ -139,7 +137,6 @@ class XLICENSEID
 
     XUUID                 ID;
 };
-
 
 class XLICENSE  : public XSUBJECT
 {

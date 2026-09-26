@@ -158,7 +158,7 @@ bool GRPSTATISTICSCHARTSTACKEDCOLUMNS::DrawPlot(GRPSTATISTICSCHARTBUILDER& build
   axisstyle.SetStroke(config.GetAxisColor(), 1.5);
 
   builder.DrawLine(x, y + height, x + width, y + height, axisstyle);            // X axis
-  builder.DrawLine(x, y,          x,         y + height, axisstyle);            // Y axis
+  builder.DrawLine(x, y, x, y + height, axisstyle);            // Y axis
 
   // stacked columns (one column per category, series stacked from the baseline up)
 

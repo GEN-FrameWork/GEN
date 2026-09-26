@@ -242,7 +242,7 @@ bool DIOSTREAMUDPLOCALENUMSERVERS::SendSignal()
       XBUFFER     xbufferexchange;
       HASHCRC32   crc32;
 
-      string.Format(DIOSTREAMUDPLOCALENUMSERVERSID,ID);
+      string.Format(DIOSTREAMUDPLOCALENUMSERVERSID, ID);
 
       string.ConvertToExchangeXBuffer(xbufferexchange);
       crc32.Do(xbufferexchange.Get(), xbufferexchange.GetSize());
@@ -250,7 +250,7 @@ bool DIOSTREAMUDPLOCALENUMSERVERS::SendSignal()
       xbuffer.Add((XDWORD)crc32.GetResultCRC32());
       xbuffer.Add(xbufferexchange.Get(), xbufferexchange.GetSize());
       
-      diostreamudp->Write(xbuffer.Get(),xbuffer.GetSize());
+      diostreamudp->Write(xbuffer.Get(), xbuffer.GetSize());
 
       diostreamudp->WaitToFlushXBuffers(5);
 
@@ -347,7 +347,7 @@ void DIOSTREAMUDPLOCALENUMSERVERS::ThreadDiscoveryLocalServer(void* data)
 
                 data.Extract(crc32result[0]);
 
-                string.Format(DIOSTREAMUDPLOCALENUMSERVERSID,ID);
+                string.Format(DIOSTREAMUDPLOCALENUMSERVERSID, ID);
 
                 string2.Set((XWORD*)data.Get());
                 string2.AdjustSize();

@@ -47,7 +47,6 @@ enum DIONODEITEMVALUE_MODE
   DIONODEITEMVALUE_MODE_READWRITE         = 3 
 };
 
-
 enum DIONODEITEMVALUE_TYPE
 {
   DIONODEITEMVALUE_TYPE_UNKNOWN           = 0 ,
@@ -60,8 +59,6 @@ enum DIONODEITEMVALUE_TYPE
 
   DIONODEITEMVALUE_TYPE_OWNER                 ,
 };
-
-
 
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
 

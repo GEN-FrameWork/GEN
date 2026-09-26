@@ -37,8 +37,6 @@
 #include "DIOURL.h"
 #include "DIOIP.h"
 
-
-
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
 
 enum DIODNSPROTOCOL_MITM_SERVER_XEVENT_TYPE
@@ -48,12 +46,7 @@ enum DIODNSPROTOCOL_MITM_SERVER_XEVENT_TYPE
   DIODNSPROTOCOL_MITM_SERVER_XEVENT_TYPE_ANSWERDNS                                       
 };
 
-
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
-
-
-
 
 /*---- INLINE FUNCTIONS + PROTOTYPES ---------------------------------------------------------------------------------*/
 

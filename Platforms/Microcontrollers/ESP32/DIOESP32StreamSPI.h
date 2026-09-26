@@ -59,7 +59,6 @@ class DIOESP32STREAMSPIPORT : public DIOSTREAMSPI
                                             DIOESP32STREAMSPIPORT               ();
     virtual                                ~DIOESP32STREAMSPIPORT               ();
 
-
     XDWORD                                  GetCounterRef                       ();
     void                                    SetCounterRef                       (XDWORD counterref);
 
@@ -73,8 +72,6 @@ class DIOESP32STREAMSPIPORT : public DIOSTREAMSPI
     XDWORD                                  counterref;
     SPI_HandleTypeDef*                      hspi;
 };
-
-
 
 class DIOESP32STREAMSPI : public DIOSTREAMSPI
 {

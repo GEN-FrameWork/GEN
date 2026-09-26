@@ -37,20 +37,13 @@
 
 #include "DIOFactory.h"
 
-
-
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
 
-
-
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
-
 
 class DIOSTREAMUDPCONFIG;
 class DIOSTREAMUDPACKNOWLEDGE;
 class DIOALERT;
-
 
 class DIOALERTSUDPSERVER
 {

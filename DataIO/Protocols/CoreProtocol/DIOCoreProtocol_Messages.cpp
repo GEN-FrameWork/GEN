@@ -218,10 +218,6 @@ void DIOCOREPROTOCOL_MESSAGE::Clean()
 }
 
 
-
-
-
-
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         DIOCOREPROTOCOL_MESSAGES::DIOCOREPROTOCOL_MESSAGES()
@@ -698,7 +694,7 @@ bool DIOCOREPROTOCOL_MESSAGES::ShowDebug(bool isserver)
       XTRACE_PRINTCOLOR(color, __L("%s"), line.Get());
 
       line.Empty();
-      line.AddFormat(__L("%-24s"), __L("request  : "));
+      line.AddFormat(__L("%-24s"), __L("request : "));
       if(message_request)
         {
           XSTRING UUID;
@@ -716,7 +712,7 @@ bool DIOCOREPROTOCOL_MESSAGES::ShowDebug(bool isserver)
         }    
        else
         {
-          line.AddFormat(__L("%-12s %08X %-42s consumed: %-10s"), __L("unknown"),  0, __L("NULL"), __L("none"));
+          line.AddFormat(__L("%-12s %08X %-42s consumed: %-10s"), __L("unknown"), 0, __L("NULL"), __L("none"));
         } 
 
       XTRACE_PRINTCOLOR(color, __L("%s"), line.Get());
@@ -744,7 +740,7 @@ bool DIOCOREPROTOCOL_MESSAGES::ShowDebug(bool isserver)
         }    
        else
         {
-          line.AddFormat(__L("%-12s %08X %-42s consumed: %-10s"), __L("unknown"),  0, __L("NULL"), __L("none"));
+          line.AddFormat(__L("%-12s %08X %-42s consumed: %-10s"), __L("unknown"), 0, __L("NULL"), __L("none"));
         } 
       
       XTRACE_PRINTCOLOR(color, __L("%s"), line.Get());

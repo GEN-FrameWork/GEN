@@ -33,8 +33,6 @@
 #include "XVector.h"
 #include "XVariant.h"
 
-
-
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
 
 class SCRIPT;
@@ -42,7 +40,6 @@ class SCRIPT_LIB;
 class SCRIPT_LIB_FUNCTION;
 
 typedef void (*SCRFUNCIONLIBRARY) (SCRIPT_LIB* library, SCRIPT* script, XVECTOR<XVARIANT*>* params, XVARIANT* returnvalue);
-
 
 
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/

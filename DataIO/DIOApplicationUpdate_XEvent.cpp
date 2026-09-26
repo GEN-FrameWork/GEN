@@ -143,7 +143,6 @@ void DIOAPPLICATIONUPDATE_XEVENT::SetVersionComparation(int versioncomparation)
 }
 
 
-
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         XVECTOR<DIOAPPLICATIONUPDATE_FILE*>* DIOAPPLICATIONUPDATE_XEVENT::GetFilesToUpdate()
@@ -248,7 +247,6 @@ DIOAPPLICATIONUPDATE_FILE* DIOAPPLICATIONUPDATE_XEVENT::GetActualFileToUpdate()
   if(!filestoupdate) return NULL;
   return filestoupdate->Get(indexoperation);
 }
-
 
 
 /**-------------------------------------------------------------------------------------------------------------------

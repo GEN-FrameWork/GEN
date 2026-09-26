@@ -35,8 +35,6 @@
 
 #include "Script.h"
 
-
-
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
 
 enum SCRIPT_LNG_JAVASCRIPT_ERRORCODE
@@ -50,9 +48,7 @@ enum SCRIPT_LNG_JAVASCRIPT_ERRORCODE
   SCRIPT_LNG_JAVASCRIPT_ERRORCODE_URI_ERROR                                 ,  // URIError
 };
 
-
 #define SCRIPT_LNG_JAVASCRIPT_MAINFUNCTIONNAME   "main"
-
 
 
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/

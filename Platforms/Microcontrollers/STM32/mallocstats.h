@@ -39,16 +39,16 @@ extern "C"
 
 #define STRUCT_MALLINFO_DECLARED 1
 struct mallinfo {
-  MALLINFO_FIELD_TYPE arena;    /* non-mmapped space allocated from system */
-  MALLINFO_FIELD_TYPE ordblks;  /* number of free chunks */
-  MALLINFO_FIELD_TYPE smblks;   /* always 0 */
-  MALLINFO_FIELD_TYPE hblks;    /* always 0 */
-  MALLINFO_FIELD_TYPE hblkhd;   /* space in mmapped regions */
-  MALLINFO_FIELD_TYPE usmblks;  /* maximum total allocated space */
-  MALLINFO_FIELD_TYPE fsmblks;  /* always 0 */
-  MALLINFO_FIELD_TYPE uordblks; /* total allocated space */
-  MALLINFO_FIELD_TYPE fordblks; /* total free space */
-  MALLINFO_FIELD_TYPE keepcost; /* releasable (via malloc_trim) space */
+  MALLINFO_FIELD_TYPE arena;
+  MALLINFO_FIELD_TYPE ordblks;
+  MALLINFO_FIELD_TYPE smblks;
+  MALLINFO_FIELD_TYPE hblks;
+  MALLINFO_FIELD_TYPE hblkhd;
+  MALLINFO_FIELD_TYPE usmblks;
+  MALLINFO_FIELD_TYPE fsmblks;
+  MALLINFO_FIELD_TYPE uordblks;
+  MALLINFO_FIELD_TYPE fordblks;
+  MALLINFO_FIELD_TYPE keepcost;
 };
 /* ------------------------------------------------------------------------*/
 

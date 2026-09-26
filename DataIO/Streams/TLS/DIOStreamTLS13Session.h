@@ -71,7 +71,6 @@ enum DIOSTREAMTLS13SESSION_RESULT
   DIOSTREAMTLS13SESSION_RESULT_COMPLETE         ,
 };
 
-
 enum DIOSTREAMTLS13SESSION_EPOCH
 {
   DIOSTREAMTLS13SESSION_EPOCH_CLEAR        = 0 ,
@@ -82,11 +81,7 @@ enum DIOSTREAMTLS13SESSION_EPOCH
 
 class DIOSTREAMTLSMEMORYPOLICY;
 
-
-
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
-
 
 class DIOSTREAMTLS13SESSION
 {
@@ -107,9 +102,7 @@ class DIOSTREAMTLS13SESSION
     CIPHERECDSAX25519*                      GetKeyExchange                                    ();
     bool                                    KeyExchange_Generate                              (XWORD group, XBUFFER& publickey);
     bool                                    KeyExchange_SharedSecret                          (XWORD group, XBUFFER& publickey, XBUFFER& sharedsecret);
-    bool                                    KeyExchange_ServerGenerate                        (XWORD group, XBUFFER& peerpublickey,
-                                                                                               XBUFFER& publickey, XBUFFER& sharedsecret,
-                                                                                               bool& invalidpeershare);
+    bool                                    KeyExchange_ServerGenerate                        (XWORD group, XBUFFER& peerpublickey, XBUFFER& publickey, XBUFFER& sharedsecret, bool& invalidpeershare);
     void                                    KeyExchange_Delete                                ();
     bool                                    CipherSuite_Select                                (XWORD ciphersuite);
 

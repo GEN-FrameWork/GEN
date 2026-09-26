@@ -103,13 +103,12 @@
 #define DIOANDROIDSTREAMI2C_PEC                             0x0708      // != 0 to use PEC with SMBus
 #define DIOANDROIDSTREAMI2C_SMBUS                           0x0720      // SMBus transfer
 
-
 typedef struct
 {
-  XWORD                                     addr;                       // slave address
+  XWORD                                     addr;
   XWORD                                     flags;
-  XWORD                                     size;                       // msg length
-  XBYTE*                                    buffer;                     // pointer to msg data
+  XWORD                                     size;
+  XBYTE*                                    buffer;
 
 } DIOANDROIDSTREAMI2C_MSG;
 
@@ -131,7 +130,6 @@ typedef struct
 
 } DIOANDROIDSTREAMI2C_SMBUS_IOCTL_TICKET;
 
-
 typedef struct
 {
   DIOANDROIDSTREAMI2C_MSG*                  msgs;
@@ -139,14 +137,7 @@ typedef struct
 
 } DIOANDROIDSTREAMI2C_RDWR_IOCTL_TICKET;
 
-
-
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
-
-
-
-
 
 /*---- INLINE FUNCTIONS + PROTOTYPES ---------------------------------------------------------------------------------*/
 

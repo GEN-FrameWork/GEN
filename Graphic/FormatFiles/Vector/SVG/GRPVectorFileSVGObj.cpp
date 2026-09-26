@@ -545,14 +545,9 @@ GRPVECTORFILESVGOBJ* GRPVECTORFILESVGOBJ::FindByID(XCHAR* id)
 void GRPVECTORFILESVGOBJ::Trace(int level)
 {
   XSTRING indent;
-  for(int c=0; c<level; c++)  indent += __L("  ");
+  for(int c=0; c<level; c++)  indent += __L(" ");
 
-  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, __L("%s<%s> id=[%s] childs=%d  fill=%d stroke=%d"), indent.Get(),
-                                                                                          GetObjTypeName(type),
-                                                                                          id.Get(),
-                                                                                          (int)GetNChilds(),
-                                                                                          style.HasFill()  ?1:0,
-                                                                                          style.HasStroke()?1:0);
+  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, __L("%s<%s> id=[%s] childs=%d fill=%d stroke=%d"), indent.Get(), GetObjTypeName(type), id.Get(), (int)GetNChilds(), style.HasFill() ?1:0, style.HasStroke()?1:0);
 
   for(XDWORD c=0; c<GetNChilds(); c++)
     {

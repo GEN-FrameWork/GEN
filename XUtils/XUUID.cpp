@@ -224,11 +224,7 @@ bool XUUID::GetToBuffer(XBUFFER& data)
 * --------------------------------------------------------------------------------------------------------------------*/
 bool XUUID::GetToString(XSTRING& string)
 {
-  string.Format(__L("%08X-%04X-%04X-%02X%02X-%02X%02X%02X%02X%02X%02X"), data1
-                                                                       , data2
-                                                                       , data3
-                                                                       , data4, data5
-                                                                       , data6[0], data6[1], data6[2], data6[3], data6[4], data6[5]);
+  string.Format(__L("%08X-%04X-%04X-%02X%02X-%02X%02X%02X%02X%02X%02X"), data1, data2, data3, data4, data5, data6[0], data6[1], data6[2], data6[3], data6[4], data6[5]);
   return true;
 }
 
@@ -408,12 +404,7 @@ bool XUUID::SetFromString(XSTRING& string)
 
   string2.Insert(__L("-"), 28);
 
-  string2.UnFormat(__L("%08X-%04X-%04X-%04X-%04X-%08X")  , &_data[0]
-                                                         , &_data[1]
-                                                         , &_data[2] 
-                                                         , &_data[3]
-                                                         , &_data[4]
-                                                         , &_data[5]);
+  string2.UnFormat(__L("%08X-%04X-%04X-%04X-%04X-%08X"), &_data[0], &_data[1], &_data[2], &_data[3], &_data[4], &_data[5]);
   data1     = (XDWORD)_data[0];
   data2     = (XWORD)_data[1];
   data3     = (XWORD)_data[2];  

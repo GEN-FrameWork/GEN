@@ -61,7 +61,7 @@ class XSTM32FACTORY : public XFACTORY
     virtual XMUTEX*             Create_Mutex            ();
     virtual bool                Delete_Mutex            (XMUTEX* phone);
 
-    virtual XTHREAD*            CreateThread            (XTHREADGROUPID groupID, XCHAR* ID,XTHREADFUNCTION function = NULL,void* data = NULL);
+    virtual XTHREAD*            CreateThread            (XTHREADGROUPID groupID, XCHAR* ID, XTHREADFUNCTION function = NULL, void* data = NULL);
     virtual bool                DeleteThread            (XTHREADGROUPID groupID, XTHREAD* xthread);    
 };
 

@@ -46,7 +46,6 @@
 
 #include "MainProc.h"
 
-
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
 
 #ifndef APPMODE_SERVICE_NAME
@@ -83,7 +82,6 @@ class MAINPROCWINDOWS : public MAINPROC
 
     bool                            isrunningasservice;    
 };
-
 
 #if !defined(APPMODE_LIBRARY_STATIC_ACTIVE) && !defined(APPMODE_LIBRARY_DINAMIC_ACTIVE)
 

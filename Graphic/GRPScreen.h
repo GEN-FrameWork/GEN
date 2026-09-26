@@ -111,11 +111,7 @@ enum GRPSCREENROTATION
 // #define GRPSCREEN_CFGCHROMES_NOSYSTEMMOVE
 #endif
 
-
-
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
-
 
 class GRP2DCANVAS;
 class GRPVIEWPORT;
@@ -127,7 +123,6 @@ class GRPDESKTOPMANAGER;
 class UI_LAYOUT;
 class XTIMER;
 #endif
-
 
 class GRPSCREEN : public GRPPROPERTIES, public XSUBJECT
 {
@@ -208,43 +203,16 @@ class GRPSCREEN : public GRPPROPERTIES, public XSUBJECT
     bool                                  UpdateCFGChromesAutoHide      ();
     bool                                  UpdateCFGChromesButtonsPosition ();
 
-
-
-
-
-
     virtual bool                          GetCursorDesktopPosition      (int& x, int& y);
-
-
-
-
-
 
     virtual bool                          GetCFGChromesDragAnchor       (int& x, int& y);
 
-
-
-
-
     virtual bool                          SystemMove                    ();
-
-
-
-
 
     virtual bool                          BeginCFGChromesDrag           ();
     virtual bool                          EndCFGChromesDrag             ();
 
-
-
     bool                                  IsCFGChromesDragging          ();
-
-
-
-
-
-
-
 
     static bool                           UpdateAllCFGChromesDrag       ();
     #endif

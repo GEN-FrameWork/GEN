@@ -262,22 +262,12 @@ void DIOWINDOWSSTREAMBLUETOOTHREMOTEENUMDEVICES::ThreadEnumDevices(void* data)
 
                                                             device->SetIndex(index++);
 
-                                                            MAC.Format(__L("%02X:%02X:%02X:%02X:%02X:%02X") , (XBYTE)pwsaresults->lpcsaBuffer->RemoteAddr.lpSockaddr->sa_data[5]
-                                                                                                            , (XBYTE)pwsaresults->lpcsaBuffer->RemoteAddr.lpSockaddr->sa_data[4]
-                                                                                                            , (XBYTE)pwsaresults->lpcsaBuffer->RemoteAddr.lpSockaddr->sa_data[3]
-                                                                                                            , (XBYTE)pwsaresults->lpcsaBuffer->RemoteAddr.lpSockaddr->sa_data[2]
-                                                                                                            , (XBYTE)pwsaresults->lpcsaBuffer->RemoteAddr.lpSockaddr->sa_data[1]
-                                                                                                            , (XBYTE)pwsaresults->lpcsaBuffer->RemoteAddr.lpSockaddr->sa_data[0]);
+                                                            MAC.Format(__L("%02X:%02X:%02X:%02X:%02X:%02X"), (XBYTE)pwsaresults->lpcsaBuffer->RemoteAddr.lpSockaddr->sa_data[5], (XBYTE)pwsaresults->lpcsaBuffer->RemoteAddr.lpSockaddr->sa_data[4], (XBYTE)pwsaresults->lpcsaBuffer->RemoteAddr.lpSockaddr->sa_data[3], (XBYTE)pwsaresults->lpcsaBuffer->RemoteAddr.lpSockaddr->sa_data[2], (XBYTE)pwsaresults->lpcsaBuffer->RemoteAddr.lpSockaddr->sa_data[1], (XBYTE)pwsaresults->lpcsaBuffer->RemoteAddr.lpSockaddr->sa_data[0]);
                                                             device->GetMAC()->Set(MAC);
 
                                                             device->GetName()->Set(pwsaresults->lpszServiceInstanceName);
 
-                                                            device->GetServiceClass()->Set( pwsaresults->lpServiceClassId->Data1 ,
-                                                                                            pwsaresults->lpServiceClassId->Data2 ,
-                                                                                            pwsaresults->lpServiceClassId->Data3 ,
-                                                                                            pwsaresults->lpServiceClassId->Data4[0],
-                                                                                            pwsaresults->lpServiceClassId->Data4[1],
-                                                                                            &pwsaresults->lpServiceClassId->Data4[2]);
+                                                            device->GetServiceClass()->Set(pwsaresults->lpServiceClassId->Data1, pwsaresults->lpServiceClassId->Data2, pwsaresults->lpServiceClassId->Data3, pwsaresults->lpServiceClassId->Data4[0], pwsaresults->lpServiceClassId->Data4[1], &pwsaresults->lpServiceClassId->Data4[2]);
                                                             enumeration->devices.Add(device);
                                                           }
                                                           break;
@@ -463,7 +453,7 @@ BOOL __stdcall SDP_ServiceCallback(ULONG attribID, LPBYTE valuestream, ULONG cbs
       case DIOSTREAMDEVICEBLUETOOTHATTRTYPE_SERVICERECORDHANDLE                 : { SDP_ELEMENT_DATA  data;
                                                                                     int               result;
 
-                                                                                    result = BluetoothSdpGetElementData(valuestream,  cbstreamsize, &data);
+                                                                                    result = BluetoothSdpGetElementData(valuestream, cbstreamsize, &data);
                                                                                     if(result==ERROR_NO_MORE_ITEMS) break;
                                                                                      else
                                                                                       {
@@ -480,7 +470,7 @@ BOOL __stdcall SDP_ServiceCallback(ULONG attribID, LPBYTE valuestream, ULONG cbs
 
                                                                                     while(TRUE)
                                                                                       {
-                                                                                        result = BluetoothSdpGetContainerElementData(valuestream,  cbstreamsize, (HBLUETOOTH_CONTAINER_ELEMENT*)&element, &data);
+                                                                                        result = BluetoothSdpGetContainerElementData(valuestream, cbstreamsize, (HBLUETOOTH_CONTAINER_ELEMENT*)&element, &data);
                                                                                         if(result==ERROR_NO_MORE_ITEMS) break;
                                                                                           else
                                                                                            {
@@ -501,7 +491,7 @@ BOOL __stdcall SDP_ServiceCallback(ULONG attribID, LPBYTE valuestream, ULONG cbs
 
                                                                                     while(TRUE)
                                                                                       {
-                                                                                        int result = BluetoothSdpGetContainerElementData(valuestream,  cbstreamsize, (HBLUETOOTH_CONTAINER_ELEMENT*)&element, &data);
+                                                                                        int result = BluetoothSdpGetContainerElementData(valuestream, cbstreamsize, (HBLUETOOTH_CONTAINER_ELEMENT*)&element, &data);
 
                                                                                         if(result==ERROR_NO_MORE_ITEMS) break;
                                                                                           else
@@ -570,7 +560,7 @@ BOOL __stdcall SDP_ServiceCallback(ULONG attribID, LPBYTE valuestream, ULONG cbs
       case DIOSTREAMDEVICEBLUETOOTHATTRTYPE_PROVIDERNAMESERVICE                 : { SDP_ELEMENT_DATA data;
                                                                                     int              result;
 
-                                                                                    result = BluetoothSdpGetElementData(valuestream,  cbstreamsize, &data);
+                                                                                    result = BluetoothSdpGetElementData(valuestream, cbstreamsize, &data);
 
                                                                                     if(result==ERROR_NO_MORE_ITEMS) break;
                                                                                      else

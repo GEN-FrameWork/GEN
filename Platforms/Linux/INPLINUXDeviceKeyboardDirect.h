@@ -30,7 +30,6 @@
 
 /*---- INCLUDES ------------------------------------------------------------------------------------------------------*/
 
-
 #include <termios.h>
 
 #include "XVector.h"
@@ -40,17 +39,11 @@
 
 #include "INPLINUXDeviceID.h"
 
-
-
-
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
 
 #define INPLINUXDEVICEKEYBOARDDIRECT_OLDMAXBUFFER   16
 
-
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
-
 
 class INPLINUXDEVICEKEYBOARDDIRECT : public INPDEVICE
 {

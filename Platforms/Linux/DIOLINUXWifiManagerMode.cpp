@@ -521,7 +521,7 @@ bool DIOLINUXWIFIMANAGERMODE::WPA_SetValue(int indexnetwork, XCHAR* namevalue, X
     }
    else  
     {
-      command.Format(__L("%s set_network %d %s %s")       , prefixcommand.Get(), indexnetwork, namevalue, value);    
+      command.Format(__L("%s set_network %d %s %s"), prefixcommand.Get(), indexnetwork, namevalue, value);    
     }
 
   status = WPA_CLI_Command(command, output);

@@ -175,11 +175,6 @@ void DIOPROTOCOL_ANSWER::Clean()
 }
 
 
-
-
-
-
-
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         DIOPROTOCOL_COMMAND::DIOPROTOCOL_COMMAND(XDWORD type, XCHAR* inmask, XCHAR* outmask, DIOPROTOCOL_RECEIVEDFUNC receivedfunc, XCHAR* description)
@@ -359,10 +354,6 @@ void DIOPROTOCOL_COMMAND::Clean()
 
   description.Empty();
 }
-
-
-
-
 
 
 /**-------------------------------------------------------------------------------------------------------------------
@@ -766,7 +757,7 @@ bool DIOPROTOCOL_FILE::WriteBlock(XBYTE* buffer)
 
   if(position)
     {
-      if(!xfile->Open(targetname,false))
+      if(!xfile->Open(targetname, false))
         {
           if(!xfile->Create(targetname)) return false;
         }
@@ -782,7 +773,7 @@ bool DIOPROTOCOL_FILE::WriteBlock(XBYTE* buffer)
     {
       xfile->SetPosition((XDWORD)XFILE_SEEKEND);
 
-      status = xfile->Write(buffer,sizeblock);
+      status = xfile->Write(buffer, sizeblock);
       if(status)
         {
           xfile->GetPosition(position);
@@ -857,10 +848,6 @@ void DIOPROTOCOL_FILE::Clean()
 }
 
 
-
-
-
-
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         DIOPROTOCOL::DIOPROTOCOL(DIOSTREAM* diostream)
@@ -889,23 +876,23 @@ DIOPROTOCOL::DIOPROTOCOL(DIOSTREAM* diostream)
   xdir=GEN_XFACTORY.Create_Dir();
   timerfileprogress=GEN_XFACTORY.CreateTimer();
 
-  AddCommand(DIOPROTOCOL_CMDTYPE_SENDISINITSERVERPROTOCOL   , __L("O")                , __L("O")            , RCV_SendIsInitServerProtocol      , __L("SendIsInitServerProtocol")   );
-  AddCommand(DIOPROTOCOL_CMDTYPE_GETPROTOCOLVERSION         , __L("")                 , __L("WWW")          , RCV_GetProtocolVersion            , __L("GetProtocolVersion")         );
-  AddCommand(DIOPROTOCOL_CMDTYPE_GETAPPLICATIONVERSION      , __L("")                 , __L("WWW")          , RCV_Application_GetVersion         , __L("Application_GetVersion")      );
-  AddCommand(DIOPROTOCOL_CMDTYPE_GETAPPLICATIONNAME         , __L("")                 , __L("S")            , RCV_Application_GetName            , __L("Application_GetName")         );
-  AddCommand(DIOPROTOCOL_CMDTYPE_PING                       , __L("")                 , __L("O")            , RCV_Ping                          , __L("Ping")                       );
-  AddCommand(DIOPROTOCOL_CMDTYPE_GETDATETIME                , __L("")                 , __L("S")            , RCV_GetDateTime                   , __L("GetDateTime")                );
-  AddCommand(DIOPROTOCOL_CMDTYPE_SETDATETIME                , __L("S")                , __L("O")            , RCV_SetDateTime                   , __L("SetDateTime")                );
-  AddCommand(DIOPROTOCOL_CMDTYPE_INITFILEBLOCK              , __L("SSBD")             , __L("B")            , RCV_InitFileBlock                 , __L("FileInit")                   );
-  AddCommand(DIOPROTOCOL_CMDTYPE_GETFILEBLOCK               , __L("")                 , __L("BDDDBAX")      , RCV_GetFileBlock                  , __L("GetFileBlock")               );
-  AddCommand(DIOPROTOCOL_CMDTYPE_SENDFILEBLOCK              , __L("BDDDBAX")          , __L("B")            , RCV_SendFileBlock                 , __L("SendFileBlock")              );
-  AddCommand(DIOPROTOCOL_CMDTYPE_DELETEFILE                 , __L("SB")               , __L("O")            , RCV_DeleteFile                    , __L("DeleteFile")                 );
-  AddCommand(DIOPROTOCOL_CMDTYPE_MAKEDIR                    , __L("S")                , __L("O")            , RCV_MakeDir                       , __L("MakeDir")                    );
-  AddCommand(DIOPROTOCOL_CMDTYPE_DELETEDIR                  , __L("SB")               , __L("O")            , RCV_DeleteDir                     , __L("DeleteDir")                  );
-  AddCommand(DIOPROTOCOL_CMDTYPE_GETFIRSTDIRELEMENT         , __L("SS")               , __L("SBDD")         , RCV_GetDirElement                 , __L("GetFirstDirElement")         );
-  AddCommand(DIOPROTOCOL_CMDTYPE_GETNEXTDIRELEMENT          , __L("")                 , __L("SBDD")         , RCV_GetDirElement                 , __L("GetNextDirElement")          );
+  AddCommand(DIOPROTOCOL_CMDTYPE_SENDISINITSERVERPROTOCOL, __L("O"), __L("O"), RCV_SendIsInitServerProtocol, __L("SendIsInitServerProtocol"));
+  AddCommand(DIOPROTOCOL_CMDTYPE_GETPROTOCOLVERSION, __L(""), __L("WWW"), RCV_GetProtocolVersion, __L("GetProtocolVersion"));
+  AddCommand(DIOPROTOCOL_CMDTYPE_GETAPPLICATIONVERSION, __L(""), __L("WWW"), RCV_Application_GetVersion, __L("Application_GetVersion"));
+  AddCommand(DIOPROTOCOL_CMDTYPE_GETAPPLICATIONNAME, __L(""), __L("S"), RCV_Application_GetName, __L("Application_GetName"));
+  AddCommand(DIOPROTOCOL_CMDTYPE_PING, __L(""), __L("O"), RCV_Ping, __L("Ping"));
+  AddCommand(DIOPROTOCOL_CMDTYPE_GETDATETIME, __L(""), __L("S"), RCV_GetDateTime, __L("GetDateTime"));
+  AddCommand(DIOPROTOCOL_CMDTYPE_SETDATETIME, __L("S"), __L("O"), RCV_SetDateTime, __L("SetDateTime"));
+  AddCommand(DIOPROTOCOL_CMDTYPE_INITFILEBLOCK, __L("SSBD"), __L("B"), RCV_InitFileBlock, __L("FileInit"));
+  AddCommand(DIOPROTOCOL_CMDTYPE_GETFILEBLOCK, __L(""), __L("BDDDBAX"), RCV_GetFileBlock, __L("GetFileBlock"));
+  AddCommand(DIOPROTOCOL_CMDTYPE_SENDFILEBLOCK, __L("BDDDBAX"), __L("B"), RCV_SendFileBlock, __L("SendFileBlock"));
+  AddCommand(DIOPROTOCOL_CMDTYPE_DELETEFILE, __L("SB"), __L("O"), RCV_DeleteFile, __L("DeleteFile"));
+  AddCommand(DIOPROTOCOL_CMDTYPE_MAKEDIR, __L("S"), __L("O"), RCV_MakeDir, __L("MakeDir"));
+  AddCommand(DIOPROTOCOL_CMDTYPE_DELETEDIR, __L("SB"), __L("O"), RCV_DeleteDir, __L("DeleteDir"));
+  AddCommand(DIOPROTOCOL_CMDTYPE_GETFIRSTDIRELEMENT, __L("SS"), __L("SBDD"), RCV_GetDirElement, __L("GetFirstDirElement"));
+  AddCommand(DIOPROTOCOL_CMDTYPE_GETNEXTDIRELEMENT, __L(""), __L("SBDD"), RCV_GetDirElement, __L("GetNextDirElement"));
   #ifdef DIO_ALERTS_ACTIVE
-  AddCommand(DIOPROTOCOL_CMDTYPE_SENDALERT                  , __L("SSDDDDBSSS")       , __L("B")            , RCV_SendAlert                     , __L("SendAlert")                  );
+  AddCommand(DIOPROTOCOL_CMDTYPE_SENDALERT, __L("SSDDDDBSSS"), __L("B"), RCV_SendAlert, __L("SendAlert"));
   #endif
 
   fileprogress = GEN_NEW DIOPROTOCOL_FILE();
@@ -929,7 +916,7 @@ DIOPROTOCOL::DIOPROTOCOL(DIOSTREAM* diostream)
   xmutexfilesprogress=GEN_XFACTORY.Create_Mutex();
   if(!xmutexfilesprogress) return;
 
-  xthreadreceived = CREATEXTHREAD(XTHREADGROUPID_DIOPROTOCOL, __L("DIOPROTOCOL::DIOPROTOCOL received"),ThreadReceived,(void*)this);
+  xthreadreceived = CREATEXTHREAD(XTHREADGROUPID_DIOPROTOCOL, __L("DIOPROTOCOL::DIOPROTOCOL received"), ThreadReceived, (void*)this);
   if(xthreadreceived)
     {
       if(!xthreadreceived->Ini()) return;
@@ -1385,7 +1372,7 @@ XDATETIME* DIOPROTOCOL::GetDateTime()
 * --------------------------------------------------------------------------------------------------------------------*/
 bool DIOPROTOCOL::AddCommand(XDWORD type, XCHAR* inmask, XCHAR* outmask, DIOPROTOCOL_RECEIVEDFUNC receivedfunc, XCHAR* description)
 {
-  DIOPROTOCOL_COMMAND* cmd = GEN_NEW DIOPROTOCOL_COMMAND(type,inmask,outmask,receivedfunc,description);
+  DIOPROTOCOL_COMMAND* cmd = GEN_NEW DIOPROTOCOL_COMMAND(type, inmask, outmask, receivedfunc, description);
   if(!cmd) return false;
 
   commands.Add(cmd);
@@ -1673,7 +1660,7 @@ int DIOPROTOCOL::ReadCommand(XDWORD& type, XDWORD& ID, XBUFFER& xbuffer)
 
   XBYTE head[DIOPROTOCOL_SIZEOFHEAD];
 
-  memset(head ,0 , DIOPROTOCOL_SIZEOFHEAD);
+  memset(head, 0, DIOPROTOCOL_SIZEOFHEAD);
   diostream->GetInXBuffer()->Get(head, DIOPROTOCOL_SIZEOFHEAD);
 
   HASHCRC32 crc32;
@@ -2015,13 +2002,7 @@ bool DIOPROTOCOL::Command(XDWORD type, XBUFFER& xbuffer, int timeout)
 
           if(!status)
             {
-             XTRACE_PRINTCOLOR((status?1:4), __L("DIOPROTOCOL %s  : %08X %08X %02d %-35s (%8d)  %s") , GetDIOStream()->GetConfig()->IsServer()?__L("Server  "):__L("Client  ")
-                                                                                                              , this
-                                                                                                              , ID
-                                                                                                              , type
-                                                                                                              , cmd->GetDescription()
-                                                                                                              , xbuffer.GetSize()
-                                                                                                              , status?__L("Ok"):__L("ERROR!"));
+             XTRACE_PRINTCOLOR((status?1:4), __L("DIOPROTOCOL %s : %08X %08X %02d %-35s (%8d) %s"), GetDIOStream()->GetConfig()->IsServer()?__L("Server "):__L("Client "), this, ID, type, cmd->GetDescription(), xbuffer.GetSize(), status?__L("Ok"):__L("ERROR!"));
             }
         }
 
@@ -2047,7 +2028,7 @@ bool DIOPROTOCOL::Command(XDWORD type, XBUFFER& xbuffer, int timeout)
 * --------------------------------------------------------------------------------------------------------------------*/
 bool DIOPROTOCOL::SendEvent(DIOPROTOCOL_XEVENT_TYPE type, DIOPROTOCOL* protocol)
 {
-  DIOPROTOCOL_XEVENT xevent(this,type);
+  DIOPROTOCOL_XEVENT xevent(this, type);
 
   xevent.SetProtocol(protocol);
   PostEvent(&xevent);
@@ -2074,7 +2055,7 @@ bool DIOPROTOCOL::SendEvent(DIOPROTOCOL_XEVENT_TYPE type, DIOPROTOCOL* protocol)
 * --------------------------------------------------------------------------------------------------------------------*/
 bool DIOPROTOCOL::SendEventCommand(DIOPROTOCOL* protocol, DIOPROTOCOL_DIRECTION direction, XDWORD type, bool result, void* param1, XDWORD param2)
 {
-  DIOPROTOCOL_XEVENT xevent(this,DIOPROTOCOL_XEVENT_TYPE_COMMAND);
+  DIOPROTOCOL_XEVENT xevent(this, DIOPROTOCOL_XEVENT_TYPE_COMMAND);
 
   xevent.SetProtocol(protocol);
   xevent.SetDirection(direction);
@@ -2108,7 +2089,7 @@ bool DIOPROTOCOL::SendEventCommand(DIOPROTOCOL* protocol, DIOPROTOCOL_DIRECTION 
 * --------------------------------------------------------------------------------------------------------------------*/
 bool DIOPROTOCOL::SendEventFileBlock(DIOPROTOCOL_FILESTATUS filestatus, bool fileissend, XPATH* filesource, XPATH* filetarget, int filepercent, void* param)
 {
-  DIOPROTOCOL_XEVENT xevent(this,DIOPROTOCOL_XEVENT_TYPE_FILEBLOCK);
+  DIOPROTOCOL_XEVENT xevent(this, DIOPROTOCOL_XEVENT_TYPE_FILEBLOCK);
 
   xevent.SetFileStatus(filestatus);
   xevent.SetFileIsSend(fileissend);
@@ -2368,7 +2349,7 @@ int DIOPROTOCOL::RCV_GetProtocolVersion(DIOPROTOCOL* protocol, DIOPROTOCOL_COMMA
 {
   xbuffer.Delete();
 
-  return xbuffer.AddWithMask(cmd->GetSOUTMask(),  protocol->protocolversion,  protocol->protocolsubversion,  protocol->protocolsubversionerr);
+  return xbuffer.AddWithMask(cmd->GetSOUTMask(), protocol->protocolversion, protocol->protocolsubversion, protocol->protocolsubversionerr);
 }
 
 
@@ -2427,7 +2408,7 @@ int DIOPROTOCOL::RCV_Application_GetVersion(DIOPROTOCOL* protocol, DIOPROTOCOL_C
 {
   xbuffer.Delete();
 
-  return xbuffer.AddWithMask(cmd->GetSOUTMask(),  protocol->applicationversion,  protocol->applicationsubversion,  protocol->applicationsubversionerr);
+  return xbuffer.AddWithMask(cmd->GetSOUTMask(), protocol->applicationversion, protocol->applicationsubversion, protocol->applicationsubversionerr);
 }
 
 
@@ -2515,7 +2496,7 @@ bool DIOPROTOCOL::CMD_Ping(XDWORD& milliseconds, int timeout)
 
   milliseconds = (XDWORD)xtimer->GetMeasureMilliSeconds();
 
-  SendEventCommand(this, DIOPROTOCOL_DIRECTION_SEND, cmd->GetType(),result?true:false,NULL,milliseconds);
+  SendEventCommand(this, DIOPROTOCOL_DIRECTION_SEND, cmd->GetType(), result?true:false, NULL, milliseconds);
 
   return result?true:false;
 }
@@ -2578,6 +2559,7 @@ bool DIOPROTOCOL::CMD_SendIsInitServerProtocol(bool isinit)
   return result;
 }
 
+
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         int DIOPROTOCOL::RCV_SendIsInitServerProtocol(DIOPROTOCOL* protocol, DIOPROTOCOL_COMMAND* cmd, XBUFFER& xbuffer, XDWORD rID, XDWORD& param)
@@ -2638,7 +2620,7 @@ bool DIOPROTOCOL::CMD_GetDateTime(XSTRING& datestring)
       if(!datestring.IsEmpty()) result = 1;
     }
 
-  SendEventCommand(this, DIOPROTOCOL_DIRECTION_GET, cmd->GetType(),result?true:false, NULL, 0);
+  SendEventCommand(this, DIOPROTOCOL_DIRECTION_GET, cmd->GetType(), result?true:false, NULL, 0);
 
   return result?true:false;
 }
@@ -2772,17 +2754,13 @@ bool DIOPROTOCOL::CMD_File(DIOPROTOCOL_DIRECTION direction, XCHAR* sourcename, X
   if(_sourcename.IsEmpty()) return false;
   if(_targetname.IsEmpty()) return false;
 
-  if(!SetFileProgress(direction,_sourcename,_targetname,0)) return false;
+  if(!SetFileProgress(direction, _sourcename, _targetname, 0)) return false;
 
   if(!CMD_InitFileBlock(fileprogress)) return false;
 
   bool status  = false;
 
-  SendEventFileBlock(DIOPROTOCOL_FILESTATUS_REQUEST , fileprogress->IsActive()
-                                                    , fileprogress->GetSourceName()
-                                                    , fileprogress->GetTargetName()
-                                                    , fileprogress->GetPercent()
-                                                    , param);
+  SendEventFileBlock(DIOPROTOCOL_FILESTATUS_REQUEST, fileprogress->IsActive(), fileprogress->GetSourceName(), fileprogress->GetTargetName(), fileprogress->GetPercent(), param);
   xtimer->Reset();
 
   while(1)
@@ -2797,11 +2775,7 @@ bool DIOPROTOCOL::CMD_File(DIOPROTOCOL_DIRECTION direction, XCHAR* sourcename, X
             }
         }
 
-      SendEventFileBlock(DIOPROTOCOL_FILESTATUS_WAIT , fileprogress->IsActive()
-                                                     , fileprogress->GetSourceName()
-                                                     , fileprogress->GetTargetName()
-                                                     , fileprogress->GetPercent()
-                                                     , param);
+      SendEventFileBlock(DIOPROTOCOL_FILESTATUS_WAIT, fileprogress->IsActive(), fileprogress->GetSourceName(), fileprogress->GetTargetName(), fileprogress->GetPercent(), param);
 
       GEN_XSLEEP.MilliSeconds(10);
 
@@ -2815,11 +2789,7 @@ bool DIOPROTOCOL::CMD_File(DIOPROTOCOL_DIRECTION direction, XCHAR* sourcename, X
   DIOPROTOCOL_FILESTATUS fstatus = DIOPROTOCOL_FILESTATUS_END;
   if(!status) fstatus = DIOPROTOCOL_FILESTATUS_ERROR;
 
-  SendEventFileBlock(fstatus , fileprogress->IsActive()
-                             , fileprogress->GetSourceName()
-                             , fileprogress->GetTargetName()
-                             , fileprogress->GetPercent()
-                             , param);
+  SendEventFileBlock(fstatus, fileprogress->IsActive(), fileprogress->GetSourceName(), fileprogress->GetTargetName(), fileprogress->GetPercent(), param);
   return status;
 }
 
@@ -2889,7 +2859,7 @@ int DIOPROTOCOL::RCV_DeleteFile(DIOPROTOCOL* protocol, DIOPROTOCOL_COMMAND* cmd,
   XFILE* xfile=GEN_XFACTORY.Create_File();
   if(xfile)
     {
-      result = xfile->Erase(path,overwrite?true:false)?true:false;
+      result = xfile->Erase(path, overwrite?true:false)?true:false;
       GEN_XFACTORY.Delete_File(xfile);
     }
 
@@ -3028,7 +2998,7 @@ int DIOPROTOCOL::RCV_DeleteDir(DIOPROTOCOL* protocol, DIOPROTOCOL_COMMAND* cmd, 
 
   xbuffer.GetWithMask(cmd->GetSINMask(), 0, &path, &all);
 
-  result = protocol->GetXDir()->Delete(path.Get(),all?true:false);
+  result = protocol->GetXDir()->Delete(path.Get(), all?true:false);
 
   xbuffer.Delete();
   return xbuffer.AddWithMask(cmd->GetSOUTMask(), 0, result);
@@ -3228,10 +3198,7 @@ bool DIOPROTOCOL::CMD_InitFileBlock(DIOPROTOCOL_FILE* fp)
   XBUFFER xbuffer;
   bool    result = false;
 
-  xbuffer.AddWithMask(cmd->GetSINMask(), fp->GetSourceName()
-                                       , fp->GetTargetName()
-                                       , fp->GetDirection()
-                                       , fp->GetCRC32());
+  xbuffer.AddWithMask(cmd->GetSINMask(), fp->GetSourceName(), fp->GetTargetName(), fp->GetDirection(), fp->GetCRC32());
 
 
   if(Command(cmd->GetType(), xbuffer))
@@ -3398,13 +3365,7 @@ int DIOPROTOCOL::RCV_GetFileBlock(DIOPROTOCOL* protocol, DIOPROTOCOL_COMMAND* cm
           if(fp->GetSizeBlock())
             {
               xbuffer.Delete();
-              ssize = xbuffer.AddWithMask(cmd->GetSOUTMask(), islastblock
-                                                            , fp->GetSize()
-                                                            , fp->GetCRC32()
-                                                            , fp->GetSizeBlock()
-                                                            , fp->GetPercent()
-                                                            , filebuffer
-                                                            , fp->GetSizeBlock());
+              ssize = xbuffer.AddWithMask(cmd->GetSOUTMask(), islastblock, fp->GetSize(), fp->GetCRC32(), fp->GetSizeBlock(), fp->GetPercent(), filebuffer, fp->GetSizeBlock());
 
 
 
@@ -3463,13 +3424,7 @@ bool DIOPROTOCOL::CMD_SendFileBlock(DIOPROTOCOL_FILE* fp)
       if(fp->GetSizeBlock())
         {
           xbuffer.Delete();
-          XDWORD size = xbuffer.AddWithMask(cmd->GetSINMask(), islastblock
-                                                             , fp->GetSize()
-                                                             , fp->GetCRC32()
-                                                             , fp->GetSizeBlock()
-                                                             , fp->GetPercent()
-                                                             , filebuffer
-                                                             , fp->GetSizeBlock());
+          XDWORD size = xbuffer.AddWithMask(cmd->GetSINMask(), islastblock, fp->GetSize(), fp->GetCRC32(), fp->GetSizeBlock(), fp->GetPercent(), filebuffer, fp->GetSizeBlock());
 
 
           if(Command(cmd->GetType(), xbuffer))
@@ -3523,15 +3478,9 @@ int DIOPROTOCOL::RCV_SendFileBlock(DIOPROTOCOL* protocol, DIOPROTOCOL_COMMAND* c
     {
       XBYTE islastblock = 0;
 
-      memset(filebuffer,0,DIOPROTOCOL_MAXFILEBLOCK);
+      memset(filebuffer, 0, DIOPROTOCOL_MAXFILEBLOCK);
 
-      xbuffer.GetWithMask(cmd->GetSINMask(), 0, &islastblock
-                                              , &filesize
-                                              , &crc32
-                                              , &sizeblock
-                                              , &percent
-                                              , filebuffer
-                                              , &sizeblock);
+      xbuffer.GetWithMask(cmd->GetSINMask(), 0, &islastblock, &filesize, &crc32, &sizeblock, &percent, filebuffer, &sizeblock);
 
       DIOPROTOCOL_FILE* fp = protocol->GetFileProgress();
       if(fp)
@@ -3599,16 +3548,7 @@ bool DIOPROTOCOL::CMD_SendAlert(DIOALERT* alert)
   alert->GetDateTime()->GetDateTimeToString(XDATETIME_FORMAT_STANDARD, datetimestr);
   alert->Application_GetVersion(applicationversion, applicationsubversion, applicationsubversionerr);
 
-  xbuffer.AddWithMask(cmd->GetSINMask() , &datetimestr
-                                        , alert->Application_GetID()
-                                        , applicationversion
-                                        , applicationsubversion
-                                        , applicationsubversionerr
-                                        , alert->GetID()                                        
-                                        , (XBYTE)alert->GetLevel()
-                                        , alert->GetOrigin()
-                                        , alert->GetTitle()
-                                        , alert->Get_Message());
+  xbuffer.AddWithMask(cmd->GetSINMask(), &datetimestr, alert->Application_GetID(), applicationversion, applicationsubversion, applicationsubversionerr, alert->GetID(), (XBYTE)alert->GetLevel(), alert->GetOrigin(), alert->GetTitle(), alert->Get_Message());
 
   if(Command(cmd->GetType(), xbuffer))
     {
@@ -3657,17 +3597,7 @@ int DIOPROTOCOL::RCV_SendAlert(DIOPROTOCOL* protocol, DIOPROTOCOL_COMMAND* cmd, 
   title.AdjustSize(_MAXSTR);
   message.AdjustSize(2048);
 
-  xbuffer.GetWithMask(cmd->GetSINMask(), 0, &datetimestr
-                                          , &applicationID
-                                          , &applicationversion
-                                          , &applicationsubversion
-                                          , &applicationsubversionerr
-                                          , &ID
-                                          , &type
-                                          , &level
-                                          , &origin
-                                          , &title
-                                          , &message);
+  xbuffer.GetWithMask(cmd->GetSINMask(), 0, &datetimestr, &applicationID, &applicationversion, &applicationsubversion, &applicationsubversionerr, &ID, &type, &level, &origin, &title, &message);
 
   datetimestr.AdjustSize();
   applicationID.AdjustSize();

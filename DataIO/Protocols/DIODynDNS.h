@@ -63,11 +63,7 @@ enum DIODYNDNS_STATUSCODE
 
 #define DIODYNDNS_DEFAULTTIMEOUT  10
 
-
-
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
-
 
 class DIOWEBCLIENT;
 

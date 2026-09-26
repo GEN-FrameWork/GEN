@@ -58,7 +58,6 @@ enum DIOWINDOWSUARTFSMEVENTS
   DIOWINDOWSUART_LASTEVENT
 };
 
-
 enum DIOWINDOWSUARTFSMSTATES
 {
   DIOWINDOWSUARTFSMSTATE_NONE               = 0 ,
@@ -69,11 +68,7 @@ enum DIOWINDOWSUARTFSMSTATES
   DIOWINDOWSUART_LASTSTATE
 };
 
-
-
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
-
 
 class DIOWINDOWSSTREAMUART : public DIOSTREAMUART , public XFSMACHINE
 {
@@ -87,8 +82,8 @@ class DIOWINDOWSSTREAMUART : public DIOSTREAMUART , public XFSMACHINE
 
     bool                  Config                          (XWORD mask = DIOSTREAMUARTMASK_ALL);
 
-    XDWORD                ReadDirect                      (XBYTE* buffer,XDWORD size);
-    XDWORD                WriteDirect                     (XBYTE* buffer,XDWORD size);
+    XDWORD                ReadDirect                      (XBYTE* buffer, XDWORD size);
+    XDWORD                WriteDirect                     (XBYTE* buffer, XDWORD size);
 
     bool                  Disconnect                      ();
     bool                  Close                           ();

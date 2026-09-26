@@ -139,7 +139,6 @@ bool SNDOPENALPLAYITEM::IniFSMachine()
 }
 
 
-
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         SNDITEM* SNDOPENALPLAYITEM::GetItem()

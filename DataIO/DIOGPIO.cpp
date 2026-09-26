@@ -395,15 +395,15 @@ void DIOGPIO_ENTRY::SetIntPriority(XDWORD int_priority)
 void DIOGPIO_ENTRY::DebugTrace()
 {
   XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, __L("-- GPIO Entry ---------------------------------"));
-  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, __L("ID            : [%d]")    , ID);
-  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, __L("GPIO          : [%lld]")  , GPIO);
-  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, __L("Pin           : [%d]")    , pin);
-  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, __L("Group         : [%d]")    , group);    
-  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, __L("Mode          : [%08X]")  , mode);
-  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, __L("Pull Mode     : [%d]")    , pullmode); 
-  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, __L("Int Func      : [%X08]")  , int_funcptr);                                                          
-  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, __L("Int IRQ       : [%X08]")  , int_IRQ);                                                          
-  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, __L("Int Priority  : [%X08]")  , int_priority);                                                          
+  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, __L("ID : [%d]"), ID);
+  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, __L("GPIO : [%lld]"), GPIO);
+  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, __L("Pin : [%d]"), pin);
+  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, __L("Group : [%d]"), group);    
+  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, __L("Mode : [%08X]"), mode);
+  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, __L("Pull Mode : [%d]"), pullmode); 
+  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, __L("Int Func : [%X08]"), int_funcptr);                                                          
+  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, __L("Int IRQ : [%X08]"), int_IRQ);                                                          
+  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, __L("Int Priority : [%X08]"), int_priority);                                                          
 }
 
 
@@ -429,10 +429,6 @@ void DIOGPIO_ENTRY::Clean()
   int_IRQ          = 0;
   int_priority     = 0;                                                              
 }
-
-
-
-
 
 
 /**-------------------------------------------------------------------------------------------------------------------

@@ -54,7 +54,6 @@
 #define CIPHERKEYSFILEPEM_PRIVATE             __L("PRIVATE")
 #define CIPHERKEYSFILEPEM_CERTIFICATE         __L("CERTIFICATE")
 
-
 #define  CIPHERKEYSFILETYPE_CERTIFICATEX509   CIPHERKEYTYPE_LASTTYPE + 1
 
 
@@ -62,12 +61,10 @@
 
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
 
-
 class XFACTORY;
 class XFILETXT;
 class XBER_XEVENT;
 class CIPHERCERTIFICATEX509;
-
 
 class CIPHERKEYSFILEPEM_ENTRYBUFFER
 {
@@ -83,7 +80,6 @@ class CIPHERKEYSFILEPEM_ENTRYBUFFER
    XBUFFER                  data;  
 
 };
-
 
 class CIPHERKEYSFILEPEM : public XOBSERVER
 {

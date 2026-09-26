@@ -140,7 +140,6 @@ void XWINDOWSWMIINTERFACE_RESULT::DeleteAllResults()
 }
 
 
-
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         XWINDOWSWMIINTERFACE_ERROR XWINDOWSWMIINTERFACE_RESULT::GetError()
@@ -198,10 +197,6 @@ void XWINDOWSWMIINTERFACE_RESULT::Clean()
 {
   error = XWINDOWSWMIINTERFACE_ERROR_NONE;
 }
-
-
-
-
 
 
 /**-------------------------------------------------------------------------------------------------------------------
@@ -273,16 +268,15 @@ bool XWINDOWSWMIINTERFACE::Ini()
       //-----------------------------------------------------------------------------------------
       // Step 2: Set general COM security levels
 
-      hres = CoInitializeSecurity( NULL,
-                                   -1,                          // COM authentication
-                                   NULL,                        // Authentication services
-                                   NULL,                        // Reserved
-                                   RPC_C_AUTHN_LEVEL_DEFAULT,   // Default authentication
-                                   RPC_C_IMP_LEVEL_IMPERSONATE, // Default Impersonation
-                                   NULL,                        // Authentication info
-                                   EOAC_NONE,                   // Additional capabilities
-                                   NULL                         // Reserved
-                                 );
+      hres = CoInitializeSecurity(NULL,
+                                  -1,                            // COM authentication
+                                  NULL,                          // Authentication services
+                                  NULL,                          // Reserved
+                                  RPC_C_AUTHN_LEVEL_DEFAULT,     // Default authentication
+                                  RPC_C_IMP_LEVEL_IMPERSONATE,   // Default Impersonation
+                                  NULL,                          // Authentication info
+                                  EOAC_NONE,                     // Additional capabilities
+                                  NULL);                         // Reserved
       if(hres == RPC_E_TOO_LATE)
         {
           return true;
@@ -330,11 +324,7 @@ XWINDOWSWMIINTERFACE_RESULT* XWINDOWSWMIINTERFACE::DoQuery(XCHAR* query, XCHAR* 
 
   ploc = NULL;
 
-  hres = CoCreateInstance(CLSID_WbemLocator,
-                          0,
-                          CLSCTX_INPROC_SERVER,
-                          IID_IWbemLocator,
-                          (LPVOID *)&ploc);
+  hres = CoCreateInstance(CLSID_WbemLocator, 0, CLSCTX_INPROC_SERVER, IID_IWbemLocator, (LPVOID *)&ploc);
   if(FAILED(hres))
     {
       result->SetError(XWINDOWSWMIINTERFACE_ERROR_IWBEMLOCATORFAILURE);
@@ -349,15 +339,14 @@ XWINDOWSWMIINTERFACE_RESULT* XWINDOWSWMIINTERFACE::DoQuery(XCHAR* query, XCHAR* 
 
       // Connect to the root\cimv2 namespace with the current user and obtain pointer pSvc
       // to make IWbemServices calls.
-      hres = ploc->ConnectServer( rootdir.Get(),           // Object path of WMI namespace             
-                                  NULL,                    // User name. NULL = current user
-                                  NULL,                    // User password. NULL = current
-                                  NULL,                    // Locale. NULL indicates current
-                                  0,                       // Security flags.
-                                  NULL,                    // Authority (for example, Kerberos)
-                                  NULL,                    // Context object
-                                  &psvc                    // pointer to IWbemServices proxy
-                                );
+      hres = ploc->ConnectServer(rootdir.Get(),  // Object path of WMI namespace
+                                 NULL,           // User name. NULL = current user
+                                 NULL,           // User password. NULL = current
+                                 NULL,           // Locale. NULL indicates current
+                                 0,              // Security flags
+                                 NULL,           // Authority (for example, Kerberos)
+                                 NULL,           // Context object
+                                 &psvc);         // pointer to IWbemServices proxy
 
         // Connected to ROOT\\CIMV2 WMI namespace
         if(FAILED(hres))
@@ -370,15 +359,14 @@ XWINDOWSWMIINTERFACE_RESULT* XWINDOWSWMIINTERFACE::DoQuery(XCHAR* query, XCHAR* 
             //-----------------------------------------------------------------------------------------
             // Step 5: Set security levels on the proxy
 
-            hres = CoSetProxyBlanket( psvc,                        // Indicates the proxy to set
-                                      RPC_C_AUTHN_WINNT,           // RPC_C_AUTHN_xxx
-                                      RPC_C_AUTHZ_NONE,            // RPC_C_AUTHZ_xxx
-                                      NULL,                        // Server principal name
-                                      RPC_C_AUTHN_LEVEL_CALL,      // RPC_C_AUTHN_LEVEL_xxx
-                                      RPC_C_IMP_LEVEL_IMPERSONATE, // RPC_C_IMP_LEVEL_xxx
-                                      NULL,                        // client identity
-                                      EOAC_NONE                    // proxy capabilities
-                                    );
+            hres = CoSetProxyBlanket(psvc,                        // Indicates the proxy to set
+                                     RPC_C_AUTHN_WINNT,           // RPC_C_AUTHN_xxx
+                                     RPC_C_AUTHZ_NONE,            // RPC_C_AUTHZ_xxx
+                                     NULL,                        // Server principal name
+                                     RPC_C_AUTHN_LEVEL_CALL,      // RPC_C_AUTHN_LEVEL_xxx
+                                     RPC_C_IMP_LEVEL_IMPERSONATE, // RPC_C_IMP_LEVEL_xxx
+                                     NULL,                        // client identity
+                                     EOAC_NONE);                  // proxy capabilities
 
             if(FAILED(hres))
               {
@@ -391,11 +379,7 @@ XWINDOWSWMIINTERFACE_RESULT* XWINDOWSWMIINTERFACE::DoQuery(XCHAR* query, XCHAR* 
                 // Step 6: Use the IWbemServices pointer to make requests of WMI
 
                 penumerator = NULL;
-                hres = psvc->ExecQuery( bstr_t("WQL"),
-                                        bstr_t(query),
-                                        WBEM_FLAG_FORWARD_ONLY | WBEM_FLAG_RETURN_IMMEDIATELY,
-                                        NULL,
-                                        &penumerator);
+                hres = psvc->ExecQuery(bstr_t("WQL"), bstr_t(query), WBEM_FLAG_FORWARD_ONLY | WBEM_FLAG_RETURN_IMMEDIATELY, NULL, &penumerator);
 
                 if(FAILED(hres))
                   {
@@ -659,7 +643,7 @@ XWINDOWSWMIINTERFACE_RESULT* XWINDOWSWMIINTERFACE::DoQuery(XCHAR* query, XCHAR* 
 * @return     bool : true if the operation is successful; otherwise false.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-bool XWINDOWSWMIINTERFACE::DoQuery(XCHAR* _class, XCHAR* namedata,  XSTRING& answer)
+bool XWINDOWSWMIINTERFACE::DoQuery(XCHAR* _class, XCHAR* namedata, XSTRING& answer)
 {
   XWINDOWSWMIINTERFACE_RESULT*  result       = NULL;
   bool                          status       = false;
@@ -702,7 +686,7 @@ bool XWINDOWSWMIINTERFACE::DoQuery(XCHAR* _class, XCHAR* namedata,  XSTRING& ans
 * @return     bool : true if the operation is successful; otherwise false.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-bool XWINDOWSWMIINTERFACE::DoQuery(XCHAR* _class, XCHAR* namedata,  XVECTOR<XSTRING*>* answers)
+bool XWINDOWSWMIINTERFACE::DoQuery(XCHAR* _class, XCHAR* namedata, XVECTOR<XSTRING*>* answers)
 {
   XWINDOWSWMIINTERFACE_RESULT*  result       = NULL;
   bool                          status       = false;
@@ -752,7 +736,7 @@ bool XWINDOWSWMIINTERFACE::DoQuery(XCHAR* _class, XCHAR* namedata,  XVECTOR<XSTR
 * @return     bool : true if the operation is successful; otherwise false.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-bool XWINDOWSWMIINTERFACE::DoQuery(XCHAR* _class, XCHAR* namedata,  XVARIANT& answer)
+bool XWINDOWSWMIINTERFACE::DoQuery(XCHAR* _class, XCHAR* namedata, XVARIANT& answer)
 {
   XWINDOWSWMIINTERFACE_RESULT*  result       = NULL;
   bool                          status       = false;
@@ -795,7 +779,7 @@ bool XWINDOWSWMIINTERFACE::DoQuery(XCHAR* _class, XCHAR* namedata,  XVARIANT& an
 * @return     bool : true if the operation is successful; otherwise false.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-bool XWINDOWSWMIINTERFACE::DoQuery(XCHAR* _class, XCHAR* namedata,  XVECTOR<XVARIANT*>* answers)
+bool XWINDOWSWMIINTERFACE::DoQuery(XCHAR* _class, XCHAR* namedata, XVECTOR<XVARIANT*>* answers)
 {
   XWINDOWSWMIINTERFACE_RESULT*  result = NULL;
   bool                          status = false;
@@ -858,30 +842,28 @@ bool XWINDOWSWMIINTERFACE::NetWorkInterfaceEnable(int ID, bool enable)
 
   // Connect to the root\\CIMV2 namespace
   // and obtain pointer pSvc to make IWbemServices calls.
-  hres = ploc->ConnectServer( _bstr_t(L"ROOT\\CIMV2"),    // Object path of WMI namespace
-                              NULL,                       // User name. NULL = current user
-                              NULL,                       // User password. NULL = current
-                              0,                          // Locale. NULL indicates current
-                              NULL,                       // Security flags.
-                              0,                          // Authority (e.g. Kerberos)
-                              0,                          // Context object
-                              &psvc                       // pointer to IWbemServices proxy
-                              );
+  hres = ploc->ConnectServer(_bstr_t(L"ROOT\\CIMV2"), // Object path of WMI namespace
+                             NULL,                      // User name. NULL = current user
+                             NULL,                      // User password. NULL = current
+                             0,                         // Locale. NULL indicates current
+                             NULL,                      // Security flags
+                             0,                         // Authority (e.g. Kerberos)
+                             0,                         // Context object
+                             &psvc);                    // pointer to IWbemServices proxy
   if(FAILED(hres))
     {
       ploc->Release();
       return false;
     }
 
-  hres = CoSetProxyBlanket( psvc,                         // Indicates the proxy to set
-                            RPC_C_AUTHN_WINNT,            // RPC_C_AUTHN_xxx
-                            RPC_C_AUTHZ_NONE,             // RPC_C_AUTHZ_xxx
-                            NULL,                         // Server principal name
-                            RPC_C_AUTHN_LEVEL_CALL,       // RPC_C_AUTHN_LEVEL_xxx
-                            RPC_C_IMP_LEVEL_IMPERSONATE,  // RPC_C_IMP_LEVEL_xxx
-                            NULL,                         // client identity
-                            EOAC_NONE                     // proxy capabilities
-                          );
+  hres = CoSetProxyBlanket(psvc,                        // Indicates the proxy to set
+                           RPC_C_AUTHN_WINNT,           // RPC_C_AUTHN_xxx
+                           RPC_C_AUTHZ_NONE,            // RPC_C_AUTHZ_xxx
+                           NULL,                        // Server principal name
+                           RPC_C_AUTHN_LEVEL_CALL,      // RPC_C_AUTHN_LEVEL_xxx
+                           RPC_C_IMP_LEVEL_IMPERSONATE, // RPC_C_IMP_LEVEL_xxx
+                           NULL,                        // client identity
+                           EOAC_NONE);                  // proxy capabilities
 
 
   if(FAILED(hres))
@@ -905,11 +887,7 @@ bool XWINDOWSWMIINTERFACE::NetWorkInterfaceEnable(int ID, bool enable)
 
   devicename.Format(__L("Win32_NetworkAdapter.DeviceID=\"%d\""), ID);
 
-  hres = psvc->ExecMethod(devicename.Get() , methodname
-                                           , 0
-                                           , NULL
-                                           , NULL /*pClassInstance*/
-                                           , &poutparams, NULL);
+  hres = psvc->ExecMethod(devicename.Get(), methodname, 0, NULL, NULL /*pClassInstance*/, &poutparams, NULL);
   if(FAILED(hres)) status = false;
 
   SysFreeString(classname);
@@ -951,30 +929,28 @@ bool XWINDOWSWMIINTERFACE::NetWorkInterfaceSetMetric(int ID, int metric)
 
   // Connect to the root\\CIMV2 namespace
   // and obtain pointer pSvc to make IWbemServices calls.
-  hres = ploc->ConnectServer( _bstr_t(L"ROOT\\CIMV2"),    // Object path of WMI namespace
-                              NULL,                       // User name. NULL = current user
-                              NULL,                       // User password. NULL = current
-                              0,                          // Locale. NULL indicates current
-                              NULL,                       // Security flags.
-                              0,                          // Authority (e.g. Kerberos)
-                              0,                          // Context object
-                              &psvc                       // pointer to IWbemServices proxy
-                              );
+  hres = ploc->ConnectServer(_bstr_t(L"ROOT\\CIMV2"), // Object path of WMI namespace
+                             NULL,                      // User name. NULL = current user
+                             NULL,                      // User password. NULL = current
+                             0,                         // Locale. NULL indicates current
+                             NULL,                      // Security flags
+                             0,                         // Authority (e.g. Kerberos)
+                             0,                         // Context object
+                             &psvc);                    // pointer to IWbemServices proxy
   if(FAILED(hres))
     {
       ploc->Release();
       return false;
     }
 
-  hres = CoSetProxyBlanket( psvc,                         // Indicates the proxy to set
-                            RPC_C_AUTHN_WINNT,            // RPC_C_AUTHN_xxx
-                            RPC_C_AUTHZ_NONE,             // RPC_C_AUTHZ_xxx
-                            NULL,                         // Server principal name
-                            RPC_C_AUTHN_LEVEL_CALL,       // RPC_C_AUTHN_LEVEL_xxx
-                            RPC_C_IMP_LEVEL_IMPERSONATE,  // RPC_C_IMP_LEVEL_xxx
-                            NULL,                         // client identity
-                            EOAC_NONE                     // proxy capabilities
-                          );
+  hres = CoSetProxyBlanket(psvc,                        // Indicates the proxy to set
+                           RPC_C_AUTHN_WINNT,           // RPC_C_AUTHN_xxx
+                           RPC_C_AUTHZ_NONE,            // RPC_C_AUTHZ_xxx
+                           NULL,                        // Server principal name
+                           RPC_C_AUTHN_LEVEL_CALL,      // RPC_C_AUTHN_LEVEL_xxx
+                           RPC_C_IMP_LEVEL_IMPERSONATE, // RPC_C_IMP_LEVEL_xxx
+                           NULL,                        // client identity
+                           EOAC_NONE);                  // proxy capabilities
 
 
   if(FAILED(hres))
@@ -1021,11 +997,7 @@ bool XWINDOWSWMIINTERFACE::NetWorkInterfaceSetMetric(int ID, int metric)
   	
       if(status)
         {
-          hres = psvc->ExecMethod(devicename.Get()  , methodname
-                                                    , 0
-                                                    , NULL
-                                                    , pinparams
-                                                    , &poutparams, NULL); 
+          hres = psvc->ExecMethod(devicename.Get(), methodname, 0, NULL, pinparams, &poutparams, NULL); 
           if(FAILED(hres)) 
             {
               status = false;
@@ -1089,13 +1061,7 @@ bool XWINDOWSWMIINTERFACE::NetWorkInterfaceSetMetric(int metric)
 	// setting security for WMI
   // Set the proxy so that impersonation of the client occurs.
 
-  hr = CoSetProxyBlanket(pSvc,  RPC_C_AUTHN_WINNT   ,
-                                RPC_C_AUTHZ_NONE,
-                                NULL,
-                                RPC_C_AUTHN_LEVEL_CALL,
-                                RPC_C_IMP_LEVEL_IMPERSONATE,
-                                NULL,
-                                EOAC_NONE);
+  hr = CoSetProxyBlanket(pSvc, RPC_C_AUTHN_WINNT, RPC_C_AUTHZ_NONE, NULL, RPC_C_AUTHN_LEVEL_CALL, RPC_C_IMP_LEVEL_IMPERSONATE, NULL, EOAC_NONE);
   if(FAILED(hr))
     {
       XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, __L("Could not set proxy blanket. Error code [0x%08X]"), hr);
@@ -1105,7 +1071,7 @@ bool XWINDOWSWMIINTERFACE::NetWorkInterfaceSetMetric(int metric)
 	// retreive all the interfaces.
 
 	BSTR                  Language = SysAllocString(L"WQL");
-  BSTR                  Query    = SysAllocString(L"Select * From Win32_NetworkAdapterConfiguration Where IPEnabled  = True");
+  BSTR                  Query    = SysAllocString(L"Select * From Win32_NetworkAdapterConfiguration Where IPEnabled = True");
 	IEnumWbemClassObject* pEnum    = 0;
 
 	hr = pSvc->ExecQuery(Language, Query, WBEM_FLAG_FORWARD_ONLY, 0, &pEnum);
@@ -1351,9 +1317,9 @@ bool XWINDOWSWMIINTERFACE::ConvertDateTimeToXDateTime(XSTRING& datetime, XDATETI
       return false;
     }
 
-  datetime.Copy( 0,  4, year);
-  datetime.Copy( 4,  6, month);
-  datetime.Copy( 6,  8, day);  
+  datetime.Copy(0, 4, year);
+  datetime.Copy(4, 6, month);
+  datetime.Copy(6, 8, day);  
   datetime.Copy( 8, 10, hour);
   datetime.Copy(10, 12, min);
   datetime.Copy(12, 14, sec);

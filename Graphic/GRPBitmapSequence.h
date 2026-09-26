@@ -47,13 +47,10 @@ enum GRPBITMAPSEQUENCESTATUS
   GRPBITMAPSEQUENCESTATUS_END
 };
 
-
 #define GRPBITMAPSEQUENCE_INFINITE      0
 #define GRPBITMAPSEQUENCE_FRAMESSECOND  12
 
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
-
 
 class XTIMER;
 class GRPRECT;
@@ -84,7 +81,6 @@ class GRPBITMAPFRAME
     int                           ajusty;
 };
 
-
 class GRPBITMAPSEQUENCE
 {
   public:
@@ -105,7 +101,7 @@ class GRPBITMAPSEQUENCE
     bool                          SetNLoops                     (int nloops);
     bool                          SetNLoopsMade                 (int nloopsmade);
 
-    bool                          AjustAllSequence              (int ajustx = 0,int ajusty = 0);
+    bool                          AjustAllSequence              (int ajustx = 0, int ajusty = 0);
 
     GRPBITMAPFRAME*               Play                          (int nloops = GRPBITMAPSEQUENCE_INFINITE, bool ajusttimeauto = true, bool reverse = false);
     bool                          Stop                          ();
@@ -117,7 +113,7 @@ class GRPBITMAPSEQUENCE
 
     GRPBITMAPFRAME*               Update                        ();
 
-    bool                          AjustTime                     (int  framebysec);
+    bool                          AjustTime                     (int framebysec);
 
     GRPBITMAPSEQUENCE*            Copy                          ();
 

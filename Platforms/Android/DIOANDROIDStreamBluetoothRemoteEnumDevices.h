@@ -73,24 +73,18 @@ enum DIOANDROIDBTENUMFSMSTATES
   DIOANDROIDBTENUM_LASTSTATE
 };
 
-
-
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
-
 
 struct search_context
 {
-  char*       svc;      /* Service */
-  uuid_t      group;    /* Browse group */
-  int         tree;     /* Display full attribute tree */
-  uint32_t    handle;   /* Service record handle */
+  char*       svc;
+  uuid_t      group;
+  int         tree;
+  uint32_t    handle;
 };
-
 
 class XTHREAD;
 class DIOSTREAMDEVICEBLUETOOTH;
-
 
 class DIOANDROIDSTREAMBLUETOOTHREMOTEENUMDEVICES :  public DIOSTREAMBLUETOOTHREMOTEENUMDEVICES, public XFSMACHINE
 {

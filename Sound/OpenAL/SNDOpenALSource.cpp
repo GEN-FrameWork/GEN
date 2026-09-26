@@ -68,7 +68,7 @@ SNDOPENALSOURCE::SNDOPENALSOURCE()
 {
   Clean();
 
-  alGenSources(1    , &source);
+  alGenSources(1, &source);
   alSourcef(source  , AL_PITCH, 1);
   alSourcef(source  , AL_GAIN, 1);
   alSource3f(source , AL_POSITION, 0, 0, 0);

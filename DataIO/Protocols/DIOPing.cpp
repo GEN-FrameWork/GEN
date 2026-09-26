@@ -253,10 +253,6 @@ void DIOPINGREPLY::Clean()
 }
 
 
-
-
-
-
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         DIOPING::DIOPING()
@@ -428,7 +424,7 @@ DIOURL* DIOPING::GetTarget()
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         bool DIOPING::Set(XCHAR* urltarget , XCHAR* IPLocal)
+* @fn         bool DIOPING::Set(XCHAR* urltarget, XCHAR* IPLocal)
 * @brief      Set value
 * @ingroup    DATAIO
 * 
@@ -649,10 +645,7 @@ bool DIOPING::Do(XDWORD nretries, XDWORD timebetweenchecks, bool exitfirstgoodre
 
                       //  Calculate elapsed time
 
-                      ip.Set(echoreply.iphdr.iasource.INADDR_UNION.addrbyte.s_b1,
-                             echoreply.iphdr.iasource.INADDR_UNION.addrbyte.s_b2,
-                             echoreply.iphdr.iasource.INADDR_UNION.addrbyte.s_b3,
-                             echoreply.iphdr.iasource.INADDR_UNION.addrbyte.s_b4);
+                      ip.Set(echoreply.iphdr.iasource.INADDR_UNION.addrbyte.s_b1, echoreply.iphdr.iasource.INADDR_UNION.addrbyte.s_b2, echoreply.iphdr.iasource.INADDR_UNION.addrbyte.s_b3, echoreply.iphdr.iasource.INADDR_UNION.addrbyte.s_b4);
 
                       ip.GetXString(fromIP);
 

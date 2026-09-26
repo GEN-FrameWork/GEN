@@ -71,7 +71,6 @@ DIOSTM32STREAMSPIPORT::DIOSTM32STREAMSPIPORT()
 }
 
 
-
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         DIOSTM32STREAMSPIPORT::~DIOSTM32STREAMSPIPORT()
@@ -84,7 +83,6 @@ DIOSTM32STREAMSPIPORT::~DIOSTM32STREAMSPIPORT()
 {
   Clean();
 }
-
 
 
 /**-------------------------------------------------------------------------------------------------------------------
@@ -102,7 +100,6 @@ XDWORD DIOSTM32STREAMSPIPORT::GetCounterRef()
 }
 
 
-
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         void DIOSTM32STREAMSPIPORT::SetCounterRef(XDWORD counterref)
@@ -116,7 +113,6 @@ void DIOSTM32STREAMSPIPORT::SetCounterRef(XDWORD counterref)
 {
   this->counterref = counterref;
 }
-
 
 
 /**-------------------------------------------------------------------------------------------------------------------
@@ -134,7 +130,6 @@ SPI_HandleTypeDef* DIOSTM32STREAMSPIPORT::GetHandleSPI()
 }
 
 
-
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         void DIOSTM32STREAMSPIPORT::SetHandleSPI(SPI_HandleTypeDef* hspi)
@@ -148,7 +143,6 @@ void DIOSTM32STREAMSPIPORT::SetHandleSPI(SPI_HandleTypeDef* hspi)
 {
   this->hspi = hspi;
 }
-
 
 
 /**-------------------------------------------------------------------------------------------------------------------
@@ -228,7 +222,6 @@ DIOSTM32STREAMSPI::~DIOSTM32STREAMSPI()
 }
 
 
-
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         DIOSTREAMSTATUS DIOSTM32STREAMSPI::GetStatus()
@@ -244,7 +237,6 @@ DIOSTREAMSTATUS DIOSTM32STREAMSPI::GetStatus()
 
   return status;
 }
-
 
 
 /**-------------------------------------------------------------------------------------------------------------------
@@ -339,7 +331,6 @@ bool DIOSTM32STREAMSPI::Open()
 }
 
 
-
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         bool DIOSTM32STREAMSPI::WaitToFilledReadingBuffer(int filledto, int timeout)
@@ -367,7 +358,6 @@ bool DIOSTM32STREAMSPI::WaitToFilledReadingBuffer(int filledto, int timeout)
 
   return DIOSTREAM::WaitToFilledReadingBuffer(sizebufferdata, timeout);
 }
-
 
 
 /**-------------------------------------------------------------------------------------------------------------------
@@ -400,7 +390,6 @@ XDWORD DIOSTM32STREAMSPI::ReadDirect(XBYTE* buffer, XDWORD size)
 
   return br;
 }
-
 
 
 /**-------------------------------------------------------------------------------------------------------------------
@@ -437,7 +426,6 @@ XDWORD DIOSTM32STREAMSPI::WriteDirect(XBYTE* buffer, XDWORD size)
 }
 
 
-
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         XDWORD DIOSTM32STREAMSPI::Write(XBYTE* buffer, XDWORD size)
@@ -459,7 +447,7 @@ XDWORD DIOSTM32STREAMSPI::Write(XBYTE* buffer, XDWORD size)
 
     }
 
-  if(!outbuffer->Add(buffer,size))  return 0;
+  if(!outbuffer->Add(buffer, size))  return 0;
 
   nbyteswrite+=size;
   if(xtimernotactivity) xtimernotactivity->Reset();
@@ -468,7 +456,6 @@ XDWORD DIOSTM32STREAMSPI::Write(XBYTE* buffer, XDWORD size)
 
   return size;
 }
-
 
 
 /**-------------------------------------------------------------------------------------------------------------------
@@ -484,7 +471,6 @@ bool DIOSTM32STREAMSPI::Disconnect()
 {
   return false;
 }
-
 
 
 /**-------------------------------------------------------------------------------------------------------------------
@@ -524,7 +510,6 @@ bool DIOSTM32STREAMSPI::Close()
 
   return true;
 }
-
 
 
 /**-------------------------------------------------------------------------------------------------------------------
@@ -678,7 +663,7 @@ void DIOSTM32STREAMSPI::ThreadConnection(void* param)
             {
               case DIOSTREAMSPI_FSMSTATE_NONE               : break;
 
-              case DIOSTREAMSPI_FSMSTATE_CONNECTED          : { DIOSTREAM_XEVENT xevent(diostream,DIOSTREAM_XEVENT_TYPE_CONNECTED);
+              case DIOSTREAMSPI_FSMSTATE_CONNECTED          : { DIOSTREAM_XEVENT xevent(diostream, DIOSTREAM_XEVENT_TYPE_CONNECTED);
                                                                 xevent.SetDIOStream(diostream);
                                                                 diostream->PostEvent(&xevent);
 
@@ -688,7 +673,7 @@ void DIOSTM32STREAMSPI::ThreadConnection(void* param)
 
               case DIOSTREAMSPI_FSMSTATE_WAITINGTOREAD      : break;
 
-              case DIOSTREAMSPI_FSMSTATE_DISCONNECTING      : { DIOSTREAM_XEVENT xevent(diostream,DIOSTREAM_XEVENT_TYPE_DISCONNECTED);
+              case DIOSTREAMSPI_FSMSTATE_DISCONNECTING      : { DIOSTREAM_XEVENT xevent(diostream, DIOSTREAM_XEVENT_TYPE_DISCONNECTED);
                                                                 xevent.SetDIOStream(diostream);
                                                                 diostream->PostEvent(&xevent);
 
@@ -701,7 +686,6 @@ void DIOSTM32STREAMSPI::ThreadConnection(void* param)
 
   //HAL_NVIC_EnableIRQ(TIM3_IRQn);
 }
-
 
 
 /**-------------------------------------------------------------------------------------------------------------------

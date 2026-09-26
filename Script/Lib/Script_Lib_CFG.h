@@ -32,12 +32,9 @@
 
 #include "Script_Lib.h"
 
-
-
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
 
 #define SCRIPT_LIB_NAME_CFG   __L("CFG")
-
 
 #define SCRIPT_SET_LIB_CFG(script, config)        { SCRIPT_LIB_CFG* lib = (SCRIPT_LIB_CFG*)script->GetLibrary(SCRIPT_LIB_NAME_CFG); \
                                                     if(lib)                                                                         \

@@ -98,18 +98,12 @@ enum DIOANDROIDBTFSMSTATES
   DIOANDROIDBT_LASTSTATE
 };
 
-
 #define DIOANDROIDSTREAMBLUETOOTH_SCANBLOCKING
 #define DIOANDROIDSTREAMBLUETOOTH_DBUSAGENTPATH     "/org/bluez"
 
-
-
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
 
-
 class XTHREAD;
-
 
 class DIOANDROIDSTREAMBLUETOOTH : public DIOSTREAMBLUETOOTH , public XFSMACHINE
 {
@@ -125,7 +119,7 @@ class DIOANDROIDSTREAMBLUETOOTH : public DIOSTREAMBLUETOOTH , public XFSMACHINE
 
   protected:
 
-    sdp_session_t*            SDP_RegisterService                 (char* service_name,char* service_dsc,char* service_prov,int rfcomm_channel);
+    sdp_session_t*            SDP_RegisterService                 (char* service_name, char* service_dsc, char* service_prov, int rfcomm_channel);
 
   private:
 

@@ -389,13 +389,13 @@ bool CIPHERPEMCODEC::Ed25519PrivateKey_Decode(XBUFFER& der, XBUFFER& privatekey)
 
   // RFC 8410 CurvePrivateKey ::= OCTET STRING.  The outer PKCS#8 privateKey OCTET STRING
   // has already been removed by PKCS8PrivateKey_Decode(), leaving this exact 32-byte wrapper.
-  if(!data || !DER_ReadTagLength(data,size,index,tag,offset,length) || tag!=0x04 ||
+  if(!data || !DER_ReadTagLength(data, size, index, tag, offset, length) || tag!=0x04 ||
      length!=32 || index!=size)
     {
       return false;
     }
 
-  return privatekey.Add(&data[offset],length);
+  return privatekey.Add(&data[offset], length);
 }
 
 
@@ -416,8 +416,7 @@ bool CIPHERPEMCODEC::Ed25519PrivateKey_Decode(XBUFFER& der, XBUFFER& privatekey)
 * @return     bool : true if the operation is successful; otherwise false.
 *
 * --------------------------------------------------------------------------------------------------------------------*/
-bool CIPHERPEMCODEC::PKCS8PrivateKey_Decode(XBUFFER& der, bool& isrsa, bool& isec,
-                                             bool& ised25519, XBUFFER& innerkey)
+bool CIPHERPEMCODEC::PKCS8PrivateKey_Decode(XBUFFER& der, bool& isrsa, bool& isec, bool& ised25519, XBUFFER& innerkey)
 {
   XBYTE* data = der.Get();
   XDWORD size = der.GetSize();
@@ -505,7 +504,7 @@ static bool CIPHERPEMCODEC_IntegerToDWORD(XBYTE* data, XDWORD size, XDWORD& valu
   return true;
 }
 
-static bool CIPHERPEMCODEC_PKCS12KDF(XSTRING& password,XBYTE id,XBUFFER& salt,XDWORD iterations,HASHTYPE type,XDWORD outputsize,XSECUREBUFFER& output);
+static bool CIPHERPEMCODEC_PKCS12KDF(XSTRING& password, XBYTE id, XBUFFER& salt, XDWORD iterations, HASHTYPE type, XDWORD outputsize, XSECUREBUFFER& output);
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
@@ -523,8 +522,7 @@ static bool CIPHERPEMCODEC_PKCS12KDF(XSTRING& password,XBYTE id,XBUFFER& salt,XD
 * @return     bool : true if the operation is successful; otherwise false.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-static bool CIPHERPEMCODEC_PBKDF2(XBUFFER& password, XBUFFER& salt, XDWORD iterations,
-                                   HASHTYPE hashtype, XDWORD keysize, XSECUREBUFFER& key)
+static bool CIPHERPEMCODEC_PBKDF2(XBUFFER& password, XBUFFER& salt, XDWORD iterations, HASHTYPE hashtype, XDWORD keysize, XSECUREBUFFER& key)
 {
   key.SecureDelete();
   if(!iterations || !keysize) return false;
@@ -609,95 +607,96 @@ bool CIPHERPEMCODEC::PKCS8EncryptedPrivateKey_Decode(XBUFFER& der, XSTRING& pass
 
   privatekeyinfo.SecureDelete();
   XBYTE* data=der.Get(); XDWORD size=der.GetSize(), index=0, offset=0, length=0; XBYTE tag=0;
-  if(!DER_ReadTagLength(data,size,index,tag,offset,length) || tag!=0x30 || index!=size) return false;
+  if(!DER_ReadTagLength(data, size, index, tag, offset, length) || tag!=0x30 || index!=size) return false;
   XDWORD top=offset, topend=offset+length, algoff=0, alglen=0, encdataoff=0, encdatalen=0;
-  if(!DER_ReadTagLength(data,topend,top,tag,algoff,alglen) || tag!=0x30 ||
-     !DER_ReadTagLength(data,topend,top,tag,encdataoff,encdatalen) || tag!=0x04 || top!=topend) return false;
+  if(!DER_ReadTagLength(data, topend, top, tag, algoff, alglen) || tag!=0x30 ||
+     !DER_ReadTagLength(data, topend, top, tag, encdataoff, encdatalen) || tag!=0x04 || top!=topend) return false;
 
   XDWORD ai=algoff, aiend=algoff+alglen, oidoff=0, oidlen=0, paramoff=0, paramlen=0;
-  if(!DER_ReadTagLength(data,aiend,ai,tag,oidoff,oidlen) || tag!=0x06 ||
-     !DER_ReadTagLength(data,aiend,ai,tag,paramoff,paramlen) || tag!=0x30 || ai!=aiend) return false;
+  if(!DER_ReadTagLength(data, aiend, ai, tag, oidoff, oidlen) || tag!=0x06 ||
+     !DER_ReadTagLength(data, aiend, ai, tag, paramoff, paramlen) || tag!=0x30 || ai!=aiend) return false;
 
-  if(oidlen==sizeof(OIDPKCS12PBE3DES) && !memcmp(data+oidoff,OIDPKCS12PBE3DES,oidlen))
+  if(oidlen==sizeof(OIDPKCS12PBE3DES) && !memcmp(data+oidoff, OIDPKCS12PBE3DES, oidlen))
     {
       XDWORD li=paramoff,liend=paramoff+paramlen,saltoff=0,saltlen=0,iteroff=0,iterlen=0,iterations=0;
-      if(!DER_ReadTagLength(data,liend,li,tag,saltoff,saltlen)||tag!=0x04||!saltlen||
-         !DER_ReadTagLength(data,liend,li,tag,iteroff,iterlen)||tag!=0x02||li!=liend||
-         !CIPHERPEMCODEC_IntegerToDWORD(data+iteroff,iterlen,iterations)||!iterations)return false;
-      XBUFFER salt;salt.Add(data+saltoff,saltlen);XSECUREBUFFER keybytes;XSECUREBUFFER ivbytes;
-      bool status=CIPHERPEMCODEC_PKCS12KDF(password,1,salt,iterations,HASHTYPE_SHA1,24,keybytes)&&
-                  CIPHERPEMCODEC_PKCS12KDF(password,2,salt,iterations,HASHTYPE_SHA1,8,ivbytes);
+      if(!DER_ReadTagLength(data, liend, li, tag, saltoff, saltlen)||tag!=0x04||!saltlen||
+         !DER_ReadTagLength(data, liend, li, tag, iteroff, iterlen)||tag!=0x02||li!=liend||
+         !CIPHERPEMCODEC_IntegerToDWORD(data+iteroff, iterlen, iterations)||!iterations)return false;
+      XBUFFER salt;salt.Add(data+saltoff, saltlen);XSECUREBUFFER keybytes;XSECUREBUFFER ivbytes;
+      bool status=CIPHERPEMCODEC_PKCS12KDF(password, 1, salt, iterations, HASHTYPE_SHA1, 24, keybytes)&&
+                  CIPHERPEMCODEC_PKCS12KDF(password, 2, salt, iterations, HASHTYPE_SHA1, 8, ivbytes);
       if(status)
         {
           CIPHERKEYSYMMETRICAL key;CIPHER3DES cipher;status=key.Set(keybytes)&&cipher.SetKey(&key)&&cipher.SetInitVector(ivbytes);
           cipher.SetChainingMode(CIPHERCHAININGMODE_CBC);cipher.SetPaddingType(XBUFFER_PADDINGTYPE_PKCS7);cipher.SetPaddingAdjustSize(8);
-          if(status)status=cipher.Uncipher(data+encdataoff,encdatalen)&&privatekeyinfo.Add((*cipher.GetResult()));
+          if(status)status=cipher.Uncipher(data+encdataoff, encdatalen)&&privatekeyinfo.Add((*cipher.GetResult()));
         }
       keybytes.SecureDelete();ivbytes.SecureDelete();if(!status)privatekeyinfo.SecureDelete();return status;
     }
 
-  if(oidlen!=sizeof(OIDPBES2) || memcmp(data+oidoff,OIDPBES2,oidlen)) return false;
+  if(oidlen!=sizeof(OIDPBES2) || memcmp(data+oidoff, OIDPBES2, oidlen)) return false;
 
   XDWORD pi=paramoff, piend=paramoff+paramlen, kdfoff=0,kdflen=0, esoff=0,eslen=0;
-  if(!DER_ReadTagLength(data,piend,pi,tag,kdfoff,kdflen) || tag!=0x30 ||
-     !DER_ReadTagLength(data,piend,pi,tag,esoff,eslen) || tag!=0x30 || pi!=piend) return false;
+  if(!DER_ReadTagLength(data, piend, pi, tag, kdfoff, kdflen) || tag!=0x30 ||
+     !DER_ReadTagLength(data, piend, pi, tag, esoff, eslen) || tag!=0x30 || pi!=piend) return false;
 
   XDWORD ki=kdfoff, kiend=kdfoff+kdflen, kdfOIDoff=0,kdfOIDlen=0,kdfparamoff=0,kdfparamlen=0;
-  if(!DER_ReadTagLength(data,kiend,ki,tag,kdfOIDoff,kdfOIDlen) || tag!=0x06 || kdfOIDlen!=sizeof(OIDPBKDF2) || memcmp(data+kdfOIDoff,OIDPBKDF2,kdfOIDlen) ||
-     !DER_ReadTagLength(data,kiend,ki,tag,kdfparamoff,kdfparamlen) || tag!=0x30 || ki!=kiend) return false;
+  if(!DER_ReadTagLength(data, kiend, ki, tag, kdfOIDoff, kdfOIDlen) || tag!=0x06 || kdfOIDlen!=sizeof(OIDPBKDF2) || memcmp(data+kdfOIDoff, OIDPBKDF2, kdfOIDlen) ||
+     !DER_ReadTagLength(data, kiend, ki, tag, kdfparamoff, kdfparamlen) || tag!=0x30 || ki!=kiend) return false;
 
   XDWORD kpi=kdfparamoff,kpiend=kdfparamoff+kdfparamlen,saltoff=0,saltlen=0,iteroff=0,iterlen=0;
-  if(!DER_ReadTagLength(data,kpiend,kpi,tag,saltoff,saltlen) || tag!=0x04 || !saltlen ||
-     !DER_ReadTagLength(data,kpiend,kpi,tag,iteroff,iterlen) || tag!=0x02) return false;
+  if(!DER_ReadTagLength(data, kpiend, kpi, tag, saltoff, saltlen) || tag!=0x04 || !saltlen ||
+     !DER_ReadTagLength(data, kpiend, kpi, tag, iteroff, iterlen) || tag!=0x02) return false;
   XDWORD iterations=0,keylength=0;
-  if(!CIPHERPEMCODEC_IntegerToDWORD(data+iteroff,iterlen,iterations) || !iterations) return false;
+  if(!CIPHERPEMCODEC_IntegerToDWORD(data+iteroff, iterlen, iterations) || !iterations) return false;
   HASHTYPE hashtype=HASHTYPE_SHA1;
   if(kpi<kpiend)
     {
       XDWORD save=kpi,vo=0,vl=0;
-      if(!DER_ReadTagLength(data,kpiend,kpi,tag,vo,vl)) return false;
-      if(tag==0x02) { if(!CIPHERPEMCODEC_IntegerToDWORD(data+vo,vl,keylength)) return false; }
+      if(!DER_ReadTagLength(data, kpiend, kpi, tag, vo, vl)) return false;
+      if(tag==0x02) { if(!CIPHERPEMCODEC_IntegerToDWORD(data+vo, vl, keylength)) return false; }
       else kpi=save;
     }
   if(kpi<kpiend)
     {
       XDWORD proff=0,prlen=0;
-      if(!DER_ReadTagLength(data,kpiend,kpi,tag,proff,prlen) || tag!=0x30) return false;
+      if(!DER_ReadTagLength(data, kpiend, kpi, tag, proff, prlen) || tag!=0x30) return false;
       XDWORD pri=proff,priend=proff+prlen,proidoff=0,proidlen=0;
-      if(!DER_ReadTagLength(data,priend,pri,tag,proidoff,proidlen) || tag!=0x06) return false;
-      if(proidlen==sizeof(OIDHMACSHA1) && !memcmp(data+proidoff,OIDHMACSHA1,proidlen)) hashtype=HASHTYPE_SHA1;
-      else if(proidlen==sizeof(OIDHMACSHA256) && !memcmp(data+proidoff,OIDHMACSHA256,proidlen)) hashtype=HASHTYPE_SHA256;
-      else if(proidlen==sizeof(OIDHMACSHA384) && !memcmp(data+proidoff,OIDHMACSHA384,proidlen)) hashtype=HASHTYPE_SHA384;
-      else if(proidlen==sizeof(OIDHMACSHA512) && !memcmp(data+proidoff,OIDHMACSHA512,proidlen)) hashtype=HASHTYPE_SHA512;
+      if(!DER_ReadTagLength(data, priend, pri, tag, proidoff, proidlen) || tag!=0x06) return false;
+      if(proidlen==sizeof(OIDHMACSHA1) && !memcmp(data+proidoff, OIDHMACSHA1, proidlen)) hashtype=HASHTYPE_SHA1;
+      else if(proidlen==sizeof(OIDHMACSHA256) && !memcmp(data+proidoff, OIDHMACSHA256, proidlen)) hashtype=HASHTYPE_SHA256;
+      else if(proidlen==sizeof(OIDHMACSHA384) && !memcmp(data+proidoff, OIDHMACSHA384, proidlen)) hashtype=HASHTYPE_SHA384;
+      else if(proidlen==sizeof(OIDHMACSHA512) && !memcmp(data+proidoff, OIDHMACSHA512, proidlen)) hashtype=HASHTYPE_SHA512;
       else return false;
     }
   if(kpi!=kpiend) return false;
 
   XDWORD esi=esoff,esiend=esoff+eslen,esoidoff=0,esoidlen=0,ivoff=0,ivlen=0,aeskeysize=0;
-  if(!DER_ReadTagLength(data,esiend,esi,tag,esoidoff,esoidlen) || tag!=0x06 ||
-     !DER_ReadTagLength(data,esiend,esi,tag,ivoff,ivlen) || tag!=0x04 || ivlen!=16 || esi!=esiend) return false;
-  if(esoidlen==sizeof(OIDAES128CBC) && !memcmp(data+esoidoff,OIDAES128CBC,esoidlen)) aeskeysize=16;
-  else if(esoidlen==sizeof(OIDAES192CBC) && !memcmp(data+esoidoff,OIDAES192CBC,esoidlen)) aeskeysize=24;
-  else if(esoidlen==sizeof(OIDAES256CBC) && !memcmp(data+esoidoff,OIDAES256CBC,esoidlen)) aeskeysize=32;
+  if(!DER_ReadTagLength(data, esiend, esi, tag, esoidoff, esoidlen) || tag!=0x06 ||
+     !DER_ReadTagLength(data, esiend, esi, tag, ivoff, ivlen) || tag!=0x04 || ivlen!=16 || esi!=esiend) return false;
+  if(esoidlen==sizeof(OIDAES128CBC) && !memcmp(data+esoidoff, OIDAES128CBC, esoidlen)) aeskeysize=16;
+  else if(esoidlen==sizeof(OIDAES192CBC) && !memcmp(data+esoidoff, OIDAES192CBC, esoidlen)) aeskeysize=24;
+  else if(esoidlen==sizeof(OIDAES256CBC) && !memcmp(data+esoidoff, OIDAES256CBC, esoidlen)) aeskeysize=32;
   else return false;
   if(keylength && keylength!=aeskeysize) return false;
 
   XSECUREBUFFER passwordbytes; XBUFFER salt; XBUFFER iv;
   for(XDWORD c=0;c<password.GetSize();c++) { if(password.Get()[c]>0x7F) return false; passwordbytes.Add((XBYTE)password.Get()[c]); }
-  salt.Add(data+saltoff,saltlen); iv.Add(data+ivoff,ivlen);
+  salt.Add(data+saltoff, saltlen); iv.Add(data+ivoff, ivlen);
   XSECUREBUFFER derivedkey;
-  bool status=CIPHERPEMCODEC_PBKDF2(passwordbytes,salt,iterations,hashtype,aeskeysize,derivedkey);
+  bool status=CIPHERPEMCODEC_PBKDF2(passwordbytes, salt, iterations, hashtype, aeskeysize, derivedkey);
   if(status)
     {
       CIPHERKEYSYMMETRICAL key; CIPHERAES aes;
       status=key.Set(derivedkey) && aes.SetKey(&key) && aes.SetInitVector(iv);
       aes.SetChainingMode(CIPHERCHAININGMODE_CBC); aes.SetPaddingType(XBUFFER_PADDINGTYPE_PKCS7); aes.SetPaddingAdjustSize(16);
-      if(status) status=aes.Uncipher(data+encdataoff,encdatalen) && privatekeyinfo.Add((*aes.GetResult()));
+      if(status) status=aes.Uncipher(data+encdataoff, encdatalen) && privatekeyinfo.Add((*aes.GetResult()));
     }
   passwordbytes.SecureDelete(); derivedkey.SecureDelete();
   if(!status) privatekeyinfo.SecureDelete();
   return status;
 }
+
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
@@ -716,25 +715,25 @@ bool CIPHERPEMCODEC::PKCS7Certificates_Decode(XBUFFER& der, XVECTOR<XBUFFER*>& c
   static const XBYTE OIDSIGNEDDATA[] = { 0x2A,0x86,0x48,0x86,0xF7,0x0D,0x01,0x07,0x02 };
   certificates.DeleteContents(); certificates.DeleteAll();
   XBYTE* data=der.Get(); XDWORD size=der.GetSize(),i=0,o=0,l=0; XBYTE tag=0;
-  if(!DER_ReadTagLength(data,size,i,tag,o,l) || tag!=0x30 || i!=size) return false;
+  if(!DER_ReadTagLength(data, size, i, tag, o, l) || tag!=0x30 || i!=size) return false;
   XDWORD ci=o,ciend=o+l,oido=0,oidl=0,contento=0,contentl=0;
-  if(!DER_ReadTagLength(data,ciend,ci,tag,oido,oidl) || tag!=0x06 || oidl!=sizeof(OIDSIGNEDDATA) || memcmp(data+oido,OIDSIGNEDDATA,oidl) ||
-     !DER_ReadTagLength(data,ciend,ci,tag,contento,contentl) || tag!=0xA0 || ci!=ciend) return false;
+  if(!DER_ReadTagLength(data, ciend, ci, tag, oido, oidl) || tag!=0x06 || oidl!=sizeof(OIDSIGNEDDATA) || memcmp(data+oido, OIDSIGNEDDATA, oidl) ||
+     !DER_ReadTagLength(data, ciend, ci, tag, contento, contentl) || tag!=0xA0 || ci!=ciend) return false;
   XDWORD ex=contento,exend=contento+contentl,sdo=0,sdl=0;
-  if(!DER_ReadTagLength(data,exend,ex,tag,sdo,sdl) || tag!=0x30 || ex!=exend) return false;
+  if(!DER_ReadTagLength(data, exend, ex, tag, sdo, sdl) || tag!=0x30 || ex!=exend) return false;
   XDWORD sd=sdo,sdend=sdo+sdl,vo=0,vl=0;
-  if(!DER_ReadTagLength(data,sdend,sd,tag,vo,vl) || tag!=0x02 ||
-     !DER_ReadTagLength(data,sdend,sd,tag,vo,vl) || tag!=0x31 ||
-     !DER_ReadTagLength(data,sdend,sd,tag,vo,vl) || tag!=0x30) return false;
+  if(!DER_ReadTagLength(data, sdend, sd, tag, vo, vl) || tag!=0x02 ||
+     !DER_ReadTagLength(data, sdend, sd, tag, vo, vl) || tag!=0x31 ||
+     !DER_ReadTagLength(data, sdend, sd, tag, vo, vl) || tag!=0x30) return false;
   if(sd>=sdend) return false;
   XDWORD certseto=0,certsetl=0;
-  if(!DER_ReadTagLength(data,sdend,sd,tag,certseto,certsetl) || tag!=0xA0) return false;
+  if(!DER_ReadTagLength(data, sdend, sd, tag, certseto, certsetl) || tag!=0xA0) return false;
   XDWORD cs=certseto,csend=certseto+certsetl;
   while(cs<csend)
     {
       XDWORD start=cs,co=0,cl=0;
-      if(!DER_ReadTagLength(data,csend,cs,tag,co,cl) || tag!=0x30) { certificates.DeleteContents(); certificates.DeleteAll(); return false; }
-      XBUFFER candidate; candidate.Add(data+start,cs-start);
+      if(!DER_ReadTagLength(data, csend, cs, tag, co, cl) || tag!=0x30) { certificates.DeleteContents(); certificates.DeleteAll(); return false; }
+      XBUFFER candidate; candidate.Add(data+start, cs-start);
       CIPHERCERTIFICATEX509 parsed;
       if(!parsed.Decode(candidate)) continue; // CertificateChoices can also contain tagged non-X.509 choices.
       XBUFFER* copy=GEN_NEW XBUFFER();
@@ -760,11 +759,11 @@ static bool CIPHERPEMCODEC_DERLength(XBUFFER& output, XDWORD length)
 {
   if(length<128) return output.Add((XBYTE)length);
   XBYTE bytes[4]; XDWORD n=0,value=length; while(value){bytes[3-n++]=(XBYTE)value;value>>=8;}
-  if(!output.Add((XBYTE)(0x80|n)))return false; return output.Add(bytes+4-n,n);
+  if(!output.Add((XBYTE)(0x80|n)))return false; return output.Add(bytes+4-n, n);
 }
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         static bool CIPHERPEMCODEC_DERWrap(XBYTE tag,XBUFFER& content,XBUFFER& output)
+* @fn         static bool CIPHERPEMCODEC_DERWrap(XBYTE tag, XBUFFER& content, XBUFFER& output)
 * @brief      Der wrap
 * @ingroup    CIPHER
 * 
@@ -775,13 +774,13 @@ static bool CIPHERPEMCODEC_DERLength(XBUFFER& output, XDWORD length)
 * @return     bool : true if the operation is successful; otherwise false.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-static bool CIPHERPEMCODEC_DERWrap(XBYTE tag,XBUFFER& content,XBUFFER& output)
+static bool CIPHERPEMCODEC_DERWrap(XBYTE tag, XBUFFER& content, XBUFFER& output)
 {
-  return output.Add(tag)&&CIPHERPEMCODEC_DERLength(output,content.GetSize())&&output.Add(content);
+  return output.Add(tag)&&CIPHERPEMCODEC_DERLength(output, content.GetSize())&&output.Add(content);
 }
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         static bool CIPHERPEMCODEC_PKCS12SafeContents(XBUFFER& safe,XSTRING& password,XVECTOR<XBUFFER*>& certificates,XSECUREBUFFER& privatekeyinfo)
+* @fn         static bool CIPHERPEMCODEC_PKCS12SafeContents(XBUFFER& safe, XSTRING& password, XVECTOR<XBUFFER*>& certificates, XSECUREBUFFER& privatekeyinfo)
 * @brief      Pkcs12 safe contents
 * @ingroup    CIPHER
 * 
@@ -793,35 +792,35 @@ static bool CIPHERPEMCODEC_DERWrap(XBYTE tag,XBUFFER& content,XBUFFER& output)
 * @return     bool : true if the operation is successful; otherwise false.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-static bool CIPHERPEMCODEC_PKCS12SafeContents(XBUFFER& safe,XSTRING& password,XVECTOR<XBUFFER*>& certificates,XSECUREBUFFER& privatekeyinfo)
+static bool CIPHERPEMCODEC_PKCS12SafeContents(XBUFFER& safe, XSTRING& password, XVECTOR<XBUFFER*>& certificates, XSECUREBUFFER& privatekeyinfo)
 {
   static const XBYTE OIDKEYBAG[]={0x2A,0x86,0x48,0x86,0xF7,0x0D,0x01,0x0C,0x0A,0x01,0x01};
   static const XBYTE OIDSHROUDED[]={0x2A,0x86,0x48,0x86,0xF7,0x0D,0x01,0x0C,0x0A,0x01,0x02};
   static const XBYTE OIDCERTBAG[]={0x2A,0x86,0x48,0x86,0xF7,0x0D,0x01,0x0C,0x0A,0x01,0x03};
   static const XBYTE OIDX509CERT[]={0x2A,0x86,0x48,0x86,0xF7,0x0D,0x01,0x09,0x16,0x01};
   XBYTE* data=safe.Get(); XDWORD size=safe.GetSize(),i=0,o=0,l=0; XBYTE tag=0;
-  if(!CIPHERPEMCODEC::DER_ReadTagLength(data,size,i,tag,o,l)||tag!=0x30||i!=size)return false;
+  if(!CIPHERPEMCODEC::DER_ReadTagLength(data, size, i, tag, o, l)||tag!=0x30||i!=size)return false;
   XDWORD si=o,siend=o+l;
   while(si<siend)
     {
-      XDWORD bago=0,bagl=0; if(!CIPHERPEMCODEC::DER_ReadTagLength(data,siend,si,tag,bago,bagl)||tag!=0x30)return false;
+      XDWORD bago=0,bagl=0; if(!CIPHERPEMCODEC::DER_ReadTagLength(data, siend, si, tag, bago, bagl)||tag!=0x30)return false;
       XDWORD bi=bago,biend=bago+bagl,oido=0,oidl=0,valueo=0,valuel=0;
-      if(!CIPHERPEMCODEC::DER_ReadTagLength(data,biend,bi,tag,oido,oidl)||tag!=0x06||
-         !CIPHERPEMCODEC::DER_ReadTagLength(data,biend,bi,tag,valueo,valuel)||tag!=0xA0)return false;
+      if(!CIPHERPEMCODEC::DER_ReadTagLength(data, biend, bi, tag, oido, oidl)||tag!=0x06||
+         !CIPHERPEMCODEC::DER_ReadTagLength(data, biend, bi, tag, valueo, valuel)||tag!=0xA0)return false;
       XDWORD vi=valueo,viend=valueo+valuel,innero=0,innerl=0,start=vi;
-      if(!CIPHERPEMCODEC::DER_ReadTagLength(data,viend,vi,tag,innero,innerl)||vi!=viend)return false;
-      XBUFFER encoded; encoded.Add(data+start,vi-start);
-      if(oidl==sizeof(OIDKEYBAG)&&!memcmp(data+oido,OIDKEYBAG,oidl))
+      if(!CIPHERPEMCODEC::DER_ReadTagLength(data, viend, vi, tag, innero, innerl)||vi!=viend)return false;
+      XBUFFER encoded; encoded.Add(data+start, vi-start);
+      if(oidl==sizeof(OIDKEYBAG)&&!memcmp(data+oido, OIDKEYBAG, oidl))
         { if(!privatekeyinfo.IsEmpty()||!privatekeyinfo.Add(encoded))return false; }
-      else if(oidl==sizeof(OIDSHROUDED)&&!memcmp(data+oido,OIDSHROUDED,oidl))
-        { if(!privatekeyinfo.IsEmpty()||!CIPHERPEMCODEC::PKCS8EncryptedPrivateKey_Decode(encoded,password,privatekeyinfo))return false; }
-      else if(oidl==sizeof(OIDCERTBAG)&&!memcmp(data+oido,OIDCERTBAG,oidl))
+      else if(oidl==sizeof(OIDSHROUDED)&&!memcmp(data+oido, OIDSHROUDED, oidl))
+        { if(!privatekeyinfo.IsEmpty()||!CIPHERPEMCODEC::PKCS8EncryptedPrivateKey_Decode(encoded, password, privatekeyinfo))return false; }
+      else if(oidl==sizeof(OIDCERTBAG)&&!memcmp(data+oido, OIDCERTBAG, oidl))
         {
           if(tag!=0x30)return false; XDWORD ci=innero,ciend=innero+innerl,cido=0,cidl=0,cvo=0,cvl=0;
-          if(!CIPHERPEMCODEC::DER_ReadTagLength(data,ciend,ci,tag,cido,cidl)||tag!=0x06||cidl!=sizeof(OIDX509CERT)||memcmp(data+cido,OIDX509CERT,cidl)||
-             !CIPHERPEMCODEC::DER_ReadTagLength(data,ciend,ci,tag,cvo,cvl)||tag!=0xA0||ci!=ciend)return false;
-          XDWORD cvi=cvo,cviend=cvo+cvl,co=0,cl=0; if(!CIPHERPEMCODEC::DER_ReadTagLength(data,cviend,cvi,tag,co,cl)||tag!=0x04||cvi!=cviend)return false;
-          XBUFFER candidate; candidate.Add(data+co,cl); CIPHERCERTIFICATEX509 cert; if(!cert.Decode(candidate))return false;
+          if(!CIPHERPEMCODEC::DER_ReadTagLength(data, ciend, ci, tag, cido, cidl)||tag!=0x06||cidl!=sizeof(OIDX509CERT)||memcmp(data+cido, OIDX509CERT, cidl)||
+             !CIPHERPEMCODEC::DER_ReadTagLength(data, ciend, ci, tag, cvo, cvl)||tag!=0xA0||ci!=ciend)return false;
+          XDWORD cvi=cvo,cviend=cvo+cvl,co=0,cl=0; if(!CIPHERPEMCODEC::DER_ReadTagLength(data, cviend, cvi, tag, co, cl)||tag!=0x04||cvi!=cviend)return false;
+          XBUFFER candidate; candidate.Add(data+co, cl); CIPHERCERTIFICATEX509 cert; if(!cert.Decode(candidate))return false;
           XBUFFER* copy=GEN_NEW XBUFFER(); if(!copy||!copy->Add(candidate)||!certificates.Add(copy)){if(copy)GEN_DELETE copy;return false;}
         }
     }
@@ -853,7 +852,7 @@ static HASH* CIPHERPEMCODEC_HashCreate(HASHTYPE type)
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         static bool CIPHERPEMCODEC_PKCS12KDF(XSTRING& password,XBYTE id,XBUFFER& salt,XDWORD iterations,HASHTYPE type,XDWORD outputsize,XSECUREBUFFER& output)
+* @fn         static bool CIPHERPEMCODEC_PKCS12KDF(XSTRING& password, XBYTE id, XBUFFER& salt, XDWORD iterations, HASHTYPE type, XDWORD outputsize, XSECUREBUFFER& output)
 * @brief      Pkcs12 kdf
 * @ingroup    CIPHER
 * 
@@ -868,7 +867,7 @@ static HASH* CIPHERPEMCODEC_HashCreate(HASHTYPE type)
 * @return     bool : true if the operation is successful; otherwise false.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-static bool CIPHERPEMCODEC_PKCS12KDF(XSTRING& password,XBYTE id,XBUFFER& salt,XDWORD iterations,HASHTYPE type,XDWORD outputsize,XSECUREBUFFER& output)
+static bool CIPHERPEMCODEC_PKCS12KDF(XSTRING& password, XBYTE id, XBUFFER& salt, XDWORD iterations, HASHTYPE type, XDWORD outputsize, XSECUREBUFFER& output)
 {
   output.SecureDelete(); HASH* hash=CIPHERPEMCODEC_HashCreate(type); if(!hash||!iterations||!outputsize){if(hash)GEN_DELETE hash;return false;}
   XDWORD u=(XDWORD)hash->GetDefaultSize(); XDWORD v=(type==HASHTYPE_SHA384||type==HASHTYPE_SHA512)?128:64;
@@ -886,14 +885,14 @@ static bool CIPHERPEMCODEC_PKCS12KDF(XSTRING& password,XBYTE id,XBUFFER& salt,XD
       XSECUREBUFFER B;if(status)for(XDWORD c=0;c<v;c++)B.Add(A.Get()[c%u]);
       for(XDWORD block=0;status&&block<I.GetSize();block+=v)
         {XDWORD carry=1;for(int n=(int)v-1;n>=0;n--){XDWORD sum=(XDWORD)I.Get()[block+n]+B.Get()[n]+carry;I.Get()[block+n]=(XBYTE)sum;carry=sum>>8;}}
-      if(status){XDWORD remaining=outputsize-output.GetSize();status=output.Add(A.Get(),remaining<u?remaining:u);}A.SecureDelete();B.SecureDelete();input.SecureDelete();
+      if(status){XDWORD remaining=outputsize-output.GetSize();status=output.Add(A.Get(), remaining<u?remaining:u);}A.SecureDelete();B.SecureDelete();input.SecureDelete();
     }
   passwordbytes.SecureDelete();I.SecureDelete();GEN_DELETE hash;if(!status)output.SecureDelete();return status;
 }
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         static bool CIPHERPEMCODEC_PKCS12MACVerify(XBYTE* authsafe,XDWORD authsafesize,XBYTE* data,XDWORD size,XSTRING& password)
+* @fn         static bool CIPHERPEMCODEC_PKCS12MACVerify(XBYTE* authsafe, XDWORD authsafesize, XBYTE* data, XDWORD size, XSTRING& password)
 * @brief      Pkcs12 mac verify
 * @ingroup    CIPHER
 * 
@@ -906,33 +905,33 @@ static bool CIPHERPEMCODEC_PKCS12KDF(XSTRING& password,XBYTE id,XBUFFER& salt,XD
 * @return     bool : true if the operation is successful; otherwise false.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-static bool CIPHERPEMCODEC_PKCS12MACVerify(XBYTE* authsafe,XDWORD authsafesize,XBYTE* data,XDWORD size,XSTRING& password)
+static bool CIPHERPEMCODEC_PKCS12MACVerify(XBYTE* authsafe, XDWORD authsafesize, XBYTE* data, XDWORD size, XSTRING& password)
 {
   static const XBYTE SHA1OID[]={0x2B,0x0E,0x03,0x02,0x1A};
   static const XBYTE SHA256OID[]={0x60,0x86,0x48,0x01,0x65,0x03,0x04,0x02,0x01};
   static const XBYTE SHA384OID[]={0x60,0x86,0x48,0x01,0x65,0x03,0x04,0x02,0x02};
   static const XBYTE SHA512OID[]={0x60,0x86,0x48,0x01,0x65,0x03,0x04,0x02,0x03};
-  XDWORD i=0,o=0,l=0;XBYTE tag=0;if(!CIPHERPEMCODEC::DER_ReadTagLength(data,size,i,tag,o,l)||tag!=0x30||i!=size)return false;
+  XDWORD i=0,o=0,l=0;XBYTE tag=0;if(!CIPHERPEMCODEC::DER_ReadTagLength(data, size, i, tag, o, l)||tag!=0x30||i!=size)return false;
   XDWORD mi=o,miend=o+l,dio=0,dil=0,salto=0,saltl=0,iterations=1;
-  if(!CIPHERPEMCODEC::DER_ReadTagLength(data,miend,mi,tag,dio,dil)||tag!=0x30||
-     !CIPHERPEMCODEC::DER_ReadTagLength(data,miend,mi,tag,salto,saltl)||tag!=0x04||!saltl)return false;
-  if(mi<miend){XDWORD ito=0,itl=0;if(!CIPHERPEMCODEC::DER_ReadTagLength(data,miend,mi,tag,ito,itl)||tag!=0x02||!CIPHERPEMCODEC_IntegerToDWORD(data+ito,itl,iterations)||!iterations)return false;}if(mi!=miend)return false;
-  XDWORD di=dio,diend=dio+dil,aio=0,ail=0,digesto=0,digestl=0;if(!CIPHERPEMCODEC::DER_ReadTagLength(data,diend,di,tag,aio,ail)||tag!=0x30||
-     !CIPHERPEMCODEC::DER_ReadTagLength(data,diend,di,tag,digesto,digestl)||tag!=0x04||di!=diend)return false;
-  XDWORD ai=aio,aiend=aio+ail,oido=0,oidl=0;if(!CIPHERPEMCODEC::DER_ReadTagLength(data,aiend,ai,tag,oido,oidl)||tag!=0x06)return false;
-  HASHTYPE type=HASHTYPE_NONE;if(oidl==sizeof(SHA1OID)&&!memcmp(data+oido,SHA1OID,oidl))type=HASHTYPE_SHA1;
-  else if(oidl==sizeof(SHA256OID)&&!memcmp(data+oido,SHA256OID,oidl))type=HASHTYPE_SHA256;
-  else if(oidl==sizeof(SHA384OID)&&!memcmp(data+oido,SHA384OID,oidl))type=HASHTYPE_SHA384;
-  else if(oidl==sizeof(SHA512OID)&&!memcmp(data+oido,SHA512OID,oidl))type=HASHTYPE_SHA512;else return false;
-  HASH* hash=CIPHERPEMCODEC_HashCreate(type);if(!hash)return false;XBUFFER salt;salt.Add(data+salto,saltl);XSECUREBUFFER key;
-  bool status=CIPHERPEMCODEC_PKCS12KDF(password,3,salt,iterations,type,(XDWORD)hash->GetDefaultSize(),key);
-  if(status){HASHHMAC hmac(hash);status=hmac.SetKey(key)&&hmac.Do(authsafe,authsafesize)&&hmac.GetResult()->GetSize()==digestl&&CIPHER::CompareConstantTime(hmac.GetResult()->Get(),data+digesto,digestl);}
+  if(!CIPHERPEMCODEC::DER_ReadTagLength(data, miend, mi, tag, dio, dil)||tag!=0x30||
+     !CIPHERPEMCODEC::DER_ReadTagLength(data, miend, mi, tag, salto, saltl)||tag!=0x04||!saltl)return false;
+  if(mi<miend){XDWORD ito=0,itl=0;if(!CIPHERPEMCODEC::DER_ReadTagLength(data, miend, mi, tag, ito, itl)||tag!=0x02||!CIPHERPEMCODEC_IntegerToDWORD(data+ito, itl, iterations)||!iterations)return false;}if(mi!=miend)return false;
+  XDWORD di=dio,diend=dio+dil,aio=0,ail=0,digesto=0,digestl=0;if(!CIPHERPEMCODEC::DER_ReadTagLength(data, diend, di, tag, aio, ail)||tag!=0x30||
+     !CIPHERPEMCODEC::DER_ReadTagLength(data, diend, di, tag, digesto, digestl)||tag!=0x04||di!=diend)return false;
+  XDWORD ai=aio,aiend=aio+ail,oido=0,oidl=0;if(!CIPHERPEMCODEC::DER_ReadTagLength(data, aiend, ai, tag, oido, oidl)||tag!=0x06)return false;
+  HASHTYPE type=HASHTYPE_NONE;if(oidl==sizeof(SHA1OID)&&!memcmp(data+oido, SHA1OID, oidl))type=HASHTYPE_SHA1;
+  else if(oidl==sizeof(SHA256OID)&&!memcmp(data+oido, SHA256OID, oidl))type=HASHTYPE_SHA256;
+  else if(oidl==sizeof(SHA384OID)&&!memcmp(data+oido, SHA384OID, oidl))type=HASHTYPE_SHA384;
+  else if(oidl==sizeof(SHA512OID)&&!memcmp(data+oido, SHA512OID, oidl))type=HASHTYPE_SHA512;else return false;
+  HASH* hash=CIPHERPEMCODEC_HashCreate(type);if(!hash)return false;XBUFFER salt;salt.Add(data+salto, saltl);XSECUREBUFFER key;
+  bool status=CIPHERPEMCODEC_PKCS12KDF(password, 3, salt, iterations, type, (XDWORD)hash->GetDefaultSize(), key);
+  if(status){HASHHMAC hmac(hash);status=hmac.SetKey(key)&&hmac.Do(authsafe, authsafesize)&&hmac.GetResult()->GetSize()==digestl&&CIPHER::CompareConstantTime(hmac.GetResult()->Get(), data+digesto, digestl);}
   key.SecureDelete();GEN_DELETE hash;return status;
 }
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         bool CIPHERPEMCODEC::PKCS12_Decode(XBUFFER& der,XSTRING& password,XVECTOR<XBUFFER*>& certificates,XSECUREBUFFER& privatekeyinfo)
+* @fn         bool CIPHERPEMCODEC::PKCS12_Decode(XBUFFER& der, XSTRING& password, XVECTOR<XBUFFER*>& certificates, XSECUREBUFFER& privatekeyinfo)
 * @brief      Decode
 * @ingroup    CIPHER
 * 
@@ -944,46 +943,46 @@ static bool CIPHERPEMCODEC_PKCS12MACVerify(XBYTE* authsafe,XDWORD authsafesize,X
 * @return     bool : true if the operation is successful; otherwise false.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-bool CIPHERPEMCODEC::PKCS12_Decode(XBUFFER& der,XSTRING& password,XVECTOR<XBUFFER*>& certificates,XSECUREBUFFER& privatekeyinfo)
+bool CIPHERPEMCODEC::PKCS12_Decode(XBUFFER& der, XSTRING& password, XVECTOR<XBUFFER*>& certificates, XSECUREBUFFER& privatekeyinfo)
 {
   static const XBYTE OIDDATA[]={0x2A,0x86,0x48,0x86,0xF7,0x0D,0x01,0x07,0x01};
   static const XBYTE OIDENCRYPTEDDATA[]={0x2A,0x86,0x48,0x86,0xF7,0x0D,0x01,0x07,0x06};
   certificates.DeleteContents();certificates.DeleteAll();privatekeyinfo.SecureDelete();
   XBYTE* data=der.Get();XDWORD size=der.GetSize(),i=0,o=0,l=0;XBYTE tag=0;
-  if(!DER_ReadTagLength(data,size,i,tag,o,l)||tag!=0x30||i!=size)return false;XDWORD p=o,pend=o+l,vo=0,vl=0;
-  if(!DER_ReadTagLength(data,pend,p,tag,vo,vl)||tag!=0x02||vl!=1||data[vo]!=3)return false;
-  XDWORD cio=0,cil=0;if(!DER_ReadTagLength(data,pend,p,tag,cio,cil)||tag!=0x30)return false;
+  if(!DER_ReadTagLength(data, size, i, tag, o, l)||tag!=0x30||i!=size)return false;XDWORD p=o,pend=o+l,vo=0,vl=0;
+  if(!DER_ReadTagLength(data, pend, p, tag, vo, vl)||tag!=0x02||vl!=1||data[vo]!=3)return false;
+  XDWORD cio=0,cil=0;if(!DER_ReadTagLength(data, pend, p, tag, cio, cil)||tag!=0x30)return false;
   XDWORD ci=cio,ciend=cio+cil,oido=0,oidl=0,co=0,cl=0;
-  if(!DER_ReadTagLength(data,ciend,ci,tag,oido,oidl)||tag!=0x06||oidl!=sizeof(OIDDATA)||memcmp(data+oido,OIDDATA,oidl)||
-     !DER_ReadTagLength(data,ciend,ci,tag,co,cl)||tag!=0xA0||ci!=ciend)return false;
-  XDWORD ex=co,exend=co+cl,aso=0,asl=0;if(!DER_ReadTagLength(data,exend,ex,tag,aso,asl)||tag!=0x04||ex!=exend)return false;
+  if(!DER_ReadTagLength(data, ciend, ci, tag, oido, oidl)||tag!=0x06||oidl!=sizeof(OIDDATA)||memcmp(data+oido, OIDDATA, oidl)||
+     !DER_ReadTagLength(data, ciend, ci, tag, co, cl)||tag!=0xA0||ci!=ciend)return false;
+  XDWORD ex=co,exend=co+cl,aso=0,asl=0;if(!DER_ReadTagLength(data, exend, ex, tag, aso, asl)||tag!=0x04||ex!=exend)return false;
   if(p>=pend)return false;XDWORD macstart=p,macvalueo=0,macvaluel=0;
-  if(!DER_ReadTagLength(data,pend,p,tag,macvalueo,macvaluel)||tag!=0x30||p!=pend||
-     !CIPHERPEMCODEC_PKCS12MACVerify(data+aso,asl,data+macstart,p-macstart,password))return false;
-  XBYTE* asdata=data+aso;XDWORD asi=0,asseqo=0,asseql=0;if(!DER_ReadTagLength(asdata,asl,asi,tag,asseqo,asseql)||tag!=0x30||asi!=asl)return false;
+  if(!DER_ReadTagLength(data, pend, p, tag, macvalueo, macvaluel)||tag!=0x30||p!=pend||
+     !CIPHERPEMCODEC_PKCS12MACVerify(data+aso, asl, data+macstart, p-macstart, password))return false;
+  XBYTE* asdata=data+aso;XDWORD asi=0,asseqo=0,asseql=0;if(!DER_ReadTagLength(asdata, asl, asi, tag, asseqo, asseql)||tag!=0x30||asi!=asl)return false;
   XDWORD aci=asseqo,aciend=asseqo+asseql;
   while(aci<aciend)
     {
-      XDWORD itemo=0,iteml=0;if(!DER_ReadTagLength(asdata,aciend,aci,tag,itemo,iteml)||tag!=0x30)goto error;
+      XDWORD itemo=0,iteml=0;if(!DER_ReadTagLength(asdata, aciend, aci, tag, itemo, iteml)||tag!=0x30)goto error;
       XDWORD ii=itemo,iiend=itemo+iteml,ioido=0,ioidl=0,ico=0,icl=0;
-      if(!DER_ReadTagLength(asdata,iiend,ii,tag,ioido,ioidl)||tag!=0x06||!DER_ReadTagLength(asdata,iiend,ii,tag,ico,icl)||tag!=0xA0)goto error;
+      if(!DER_ReadTagLength(asdata, iiend, ii, tag, ioido, ioidl)||tag!=0x06||!DER_ReadTagLength(asdata, iiend, ii, tag, ico, icl)||tag!=0xA0)goto error;
       XSECUREBUFFER safe;
-      if(ioidl==sizeof(OIDDATA)&&!memcmp(asdata+ioido,OIDDATA,ioidl))
-        { XDWORD di=ico,diend=ico+icl,doff=0,dlen=0;if(!DER_ReadTagLength(asdata,diend,di,tag,doff,dlen)||tag!=0x04||di!=diend||!safe.Add(asdata+doff,dlen))goto error; }
-      else if(ioidl==sizeof(OIDENCRYPTEDDATA)&&!memcmp(asdata+ioido,OIDENCRYPTEDDATA,ioidl))
+      if(ioidl==sizeof(OIDDATA)&&!memcmp(asdata+ioido, OIDDATA, ioidl))
+        { XDWORD di=ico,diend=ico+icl,doff=0,dlen=0;if(!DER_ReadTagLength(asdata, diend, di, tag, doff, dlen)||tag!=0x04||di!=diend||!safe.Add(asdata+doff, dlen))goto error; }
+      else if(ioidl==sizeof(OIDENCRYPTEDDATA)&&!memcmp(asdata+ioido, OIDENCRYPTEDDATA, ioidl))
         {
-          XDWORD ei=ico,eiend=ico+icl,eso=0,esl=0;if(!DER_ReadTagLength(asdata,eiend,ei,tag,eso,esl)||tag!=0x30||ei!=eiend)goto error;
-          XDWORD ed=eso,edend=eso+esl,tmpo=0,tmpl=0,ecio=0,ecil=0;if(!DER_ReadTagLength(asdata,edend,ed,tag,tmpo,tmpl)||tag!=0x02||!DER_ReadTagLength(asdata,edend,ed,tag,ecio,ecil)||tag!=0x30)goto error;
+          XDWORD ei=ico,eiend=ico+icl,eso=0,esl=0;if(!DER_ReadTagLength(asdata, eiend, ei, tag, eso, esl)||tag!=0x30||ei!=eiend)goto error;
+          XDWORD ed=eso,edend=eso+esl,tmpo=0,tmpl=0,ecio=0,ecil=0;if(!DER_ReadTagLength(asdata, edend, ed, tag, tmpo, tmpl)||tag!=0x02||!DER_ReadTagLength(asdata, edend, ed, tag, ecio, ecil)||tag!=0x30)goto error;
           XDWORD eci=ecio,eciend=ecio+ecil,ctoid=0,ctoidl=0,algo=0,algl=0,enco=0,encl=0,algstart=0;
-          if(!DER_ReadTagLength(asdata,eciend,eci,tag,ctoid,ctoidl)||tag!=0x06||ctoidl!=sizeof(OIDDATA)||memcmp(asdata+ctoid,OIDDATA,ctoidl))goto error;
-          algstart=eci;if(!DER_ReadTagLength(asdata,eciend,eci,tag,algo,algl)||tag!=0x30||!DER_ReadTagLength(asdata,eciend,eci,tag,enco,encl)||tag!=0x80)goto error;
-          XBUFFER algencoded;algencoded.Add(asdata+algstart,eci-algstart-encl-2); // rebuilt below if long-form made subtraction ambiguous
-          algencoded.Delete(); XDWORD algcursor=algstart,ignoreo=0,ignorel=0; DER_ReadTagLength(asdata,eciend,algcursor,tag,ignoreo,ignorel); algencoded.Add(asdata+algstart,algcursor-algstart);
-          XBUFFER encbytes;encbytes.Add(asdata+enco,encl);XBUFFER octet,body,wrapped;CIPHERPEMCODEC_DERWrap(0x04,encbytes,octet);body.Add(algencoded);body.Add(octet);CIPHERPEMCODEC_DERWrap(0x30,body,wrapped);
-          if(!PKCS8EncryptedPrivateKey_Decode(wrapped,password,safe))goto error;
+          if(!DER_ReadTagLength(asdata, eciend, eci, tag, ctoid, ctoidl)||tag!=0x06||ctoidl!=sizeof(OIDDATA)||memcmp(asdata+ctoid, OIDDATA, ctoidl))goto error;
+          algstart=eci;if(!DER_ReadTagLength(asdata, eciend, eci, tag, algo, algl)||tag!=0x30||!DER_ReadTagLength(asdata, eciend, eci, tag, enco, encl)||tag!=0x80)goto error;
+          XBUFFER algencoded;algencoded.Add(asdata+algstart, eci-algstart-encl-2); // rebuilt below if long-form made subtraction ambiguous
+          algencoded.Delete(); XDWORD algcursor=algstart,ignoreo=0,ignorel=0; DER_ReadTagLength(asdata, eciend, algcursor, tag, ignoreo, ignorel); algencoded.Add(asdata+algstart, algcursor-algstart);
+          XBUFFER encbytes;encbytes.Add(asdata+enco, encl);XBUFFER octet,body,wrapped;CIPHERPEMCODEC_DERWrap(0x04, encbytes, octet);body.Add(algencoded);body.Add(octet);CIPHERPEMCODEC_DERWrap(0x30, body, wrapped);
+          if(!PKCS8EncryptedPrivateKey_Decode(wrapped, password, safe))goto error;
         }
       else goto error;
-      if(!CIPHERPEMCODEC_PKCS12SafeContents(safe,password,certificates,privatekeyinfo))goto error;
+      if(!CIPHERPEMCODEC_PKCS12SafeContents(safe, password, certificates, privatekeyinfo))goto error;
       safe.SecureDelete();
     }
   if(certificates.IsEmpty()||privatekeyinfo.IsEmpty())goto error;

@@ -37,19 +37,12 @@
 #include "DIOURL.h"
 #include "DIOWebHeader.h"
 
-
-
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
-
-
-
 
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
 
-
 class DIOWEBSERVER_QUERYSTRINGS;
 class DIOWEBSERVER_REQUEST;
-
 
 class DIOWEBSERVER_PLUGIN
 {

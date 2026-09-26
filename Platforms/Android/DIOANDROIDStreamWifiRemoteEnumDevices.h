@@ -53,7 +53,6 @@ enum DIOANDROIDWIFIENUMFSMFSMEVENTS
   DIOANDROIDWIFIENUM_LASTEVENT
 };
 
-
 enum DIOANDROIDWIFIENUMFSMSTATES
 {
   DIOANDROIDWIFIENUMFSMSTATE_NONE             = 0 ,
@@ -62,8 +61,6 @@ enum DIOANDROIDWIFIENUMFSMSTATES
 
   DIOANDROIDWIFIENUM_LASTSTATE
 };
-
-
 
 
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/

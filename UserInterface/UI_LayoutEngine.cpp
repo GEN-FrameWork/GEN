@@ -87,20 +87,14 @@ UI_LAYOUTBOX* UI_LAYOUTENGINE::BuildTree(UI_ELEMENT* root)
 
   box->SetContentBox(cssbox.left, cssbox.top, contentwidth, contentheight);
 
-  box->SetPadding(root->GetPadding(UI_ELEMENT_TYPE_ALIGN_UP),
-                   root->GetPadding(UI_ELEMENT_TYPE_ALIGN_RIGHT),
-                   root->GetPadding(UI_ELEMENT_TYPE_ALIGN_DOWN),
-                   root->GetPadding(UI_ELEMENT_TYPE_ALIGN_LEFT));
+  box->SetPadding(root->GetPadding(UI_ELEMENT_TYPE_ALIGN_UP), root->GetPadding(UI_ELEMENT_TYPE_ALIGN_RIGHT), root->GetPadding(UI_ELEMENT_TYPE_ALIGN_DOWN), root->GetPadding(UI_ELEMENT_TYPE_ALIGN_LEFT));
 
   double borderwidth = root->GetBorderWidth();
   if(borderwidth < 0.0) borderwidth = 0.0;    // -1 means "skin default": a painting concern, not a layout one
 
   box->SetBorder(borderwidth, borderwidth, borderwidth, borderwidth);
 
-  box->SetMargin(root->GetMargin(UI_ELEMENT_TYPE_ALIGN_UP),
-                  root->GetMargin(UI_ELEMENT_TYPE_ALIGN_RIGHT),
-                  root->GetMargin(UI_ELEMENT_TYPE_ALIGN_DOWN),
-                  root->GetMargin(UI_ELEMENT_TYPE_ALIGN_LEFT));
+  box->SetMargin(root->GetMargin(UI_ELEMENT_TYPE_ALIGN_UP), root->GetMargin(UI_ELEMENT_TYPE_ALIGN_RIGHT), root->GetMargin(UI_ELEMENT_TYPE_ALIGN_DOWN), root->GetMargin(UI_ELEMENT_TYPE_ALIGN_LEFT));
 
   // Flexbox: CSS Lite wiring (see this file's SCOPE ADDENDUM on RunLayout()) -- "root"'s own Flexbox properties
   // are plain storage on UI_ELEMENT, one-for-one mirrors of UI_LAYOUTBOX's own (same enums/defaults), so this is
@@ -238,8 +232,7 @@ void UI_LAYOUTENGINE::ApplyRelativeOffset(UI_LAYOUTBOX* box)
   if(insets.top.specified)             verticaloffset =  insets.top.value;
   else if(insets.bottom.specified)     verticaloffset = -insets.bottom.value;
 
-  box->SetContentBox(box->GetContentLeft() + horizontaloffset, box->GetContentTop() + verticaloffset,
-                      box->GetContentWidth(), box->GetContentHeight());
+  box->SetContentBox(box->GetContentLeft() + horizontaloffset, box->GetContentTop() + verticaloffset, box->GetContentWidth(), box->GetContentHeight());
 }
 
 
@@ -369,12 +362,16 @@ void UI_LAYOUTENGINE::WriteBackRecursive(UI_ELEMENT* element, UI_LAYOUTBOX* box)
 
 
 /**-------------------------------------------------------------------------------------------------------------------
-*
+* 
 * @fn         bool UI_LAYOUTENGINE::SubtreeUsesCSSFlowLayout(UI_ELEMENT* element)
 * @brief      True if element or any compose-descendant is a flex or grid container.
 * @note       INTERNAL / STATIC
 * @ingroup    USERINTERFACE
-*
+* 
+* @param[in]  element : 
+* 
+* @return     bool : true if is succesful.
+* 
 * --------------------------------------------------------------------------------------------------------------------*/
 bool UI_LAYOUTENGINE::SubtreeUsesCSSFlowLayout(UI_ELEMENT* element)
 {
@@ -654,10 +651,7 @@ double UI_LAYOUTENGINE::FlexItemOuterCrossSize(UI_LAYOUTBOX* child, bool mainish
 * @param[in]  containeralignitems : The container's align-items, used for every child whose own align-self is AUTO.
 *
 * --------------------------------------------------------------------------------------------------------------------*/
-void UI_LAYOUTENGINE::PackFlexLine(XVECTOR<UI_LAYOUTBOX*>& children, XDWORD start, XDWORD count, bool mainishorizontal,
-                                     bool reversed, UI_JUSTIFY_CONTENT justifycontent, double maingap,
-                                     double linemainsize, double linemainstart, double linecrossstart,
-                                     double linecrosssize, UI_ALIGN_ITEMS containeralignitems)
+void UI_LAYOUTENGINE::PackFlexLine(XVECTOR<UI_LAYOUTBOX*>& children, XDWORD start, XDWORD count, bool mainishorizontal, bool reversed, UI_JUSTIFY_CONTENT justifycontent, double maingap, double linemainsize, double linemainstart, double linecrossstart, double linecrosssize, UI_ALIGN_ITEMS containeralignitems)
 {
   if(count == 0) return;
 
@@ -824,9 +818,7 @@ void UI_LAYOUTENGINE::ArrangeFlexChildren(UI_LAYOUTBOX* container)
       // single line spanning the container's whole cross size -- identical to the pre-wrap sub-step's behaviour
       // (see PackFlexLine's SCOPE note: for a single-line container, per CSS the line's cross size IS the
       // container's full cross size, regardless of how "tall" its items actually are)
-      PackFlexLine(children, 0, childcount, mainishorizontal, reversed, container->GetJustifyContent(), maingap,
-                    containermainsize, containermainstart, containercrossstart, containercrosssize,
-                    container->GetAlignItems());
+      PackFlexLine(children, 0, childcount, mainishorizontal, reversed, container->GetJustifyContent(), maingap, containermainsize, containermainstart, containercrossstart, containercrosssize, container->GetAlignItems());
       return;
     }
 
@@ -944,9 +936,7 @@ void UI_LAYOUTENGINE::ArrangeFlexChildren(UI_LAYOUTBOX* container)
     {
       XDWORD lineindex = wrapreverse ? (numlines - 1 - li) : li;
 
-      PackFlexLine(children, linestart.Get(lineindex), linecount.Get(lineindex), mainishorizontal, reversed,
-                    container->GetJustifyContent(), maingap, containermainsize, containermainstart, linecursor,
-                    linecrosssizes.Get(lineindex), container->GetAlignItems());
+      PackFlexLine(children, linestart.Get(lineindex), linecount.Get(lineindex), mainishorizontal, reversed, container->GetJustifyContent(), maingap, containermainsize, containermainstart, linecursor, linecrosssizes.Get(lineindex), container->GetAlignItems());
 
       linecursor += linecrosssizes.Get(lineindex) + linespacing;
     }
@@ -1043,8 +1033,7 @@ double UI_LAYOUTENGINE::ResolveGridTrackSize(UI_GRIDTRACK track, double containe
 * @param[out] outsizes : Receives exactly "count" resolved sizes, one per track, in the same order as "tracks".
 *
 * --------------------------------------------------------------------------------------------------------------------*/
-void UI_LAYOUTENGINE::ResolveTrackSizesWithFr(XVECTOR<UI_GRIDTRACK>& tracks, XDWORD count, double fullcontainersize,
-                                                double reservedspace, XVECTOR<double>& outsizes)
+void UI_LAYOUTENGINE::ResolveTrackSizesWithFr(XVECTOR<UI_GRIDTRACK>& tracks, XDWORD count, double fullcontainersize, double reservedspace, XVECTOR<double>& outsizes)
 {
   double fixedsum = 0.0;
   double frtotal  = 0.0;

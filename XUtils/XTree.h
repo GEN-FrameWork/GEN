@@ -33,25 +33,15 @@
 #include "XVector.h"
 #include "XStack.h"
 
-
-
 /*---- PRECOMPILATION INCLUDES ---------------------------------------------------------------------------------------*/
 
 #include "GEN_Control.h"
 
-
-
-
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
-
-
-
 
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
 
-
 template <typename T>  class XTREE;
-
 
 template <typename T>
 class XTREE_NODE
@@ -193,7 +183,6 @@ class XTREE_NODE
     T                                 data;
 };
 
-
 template <typename T>
 class XTREE_NODE_ITERATOR
 {
@@ -220,8 +209,6 @@ class XTREE_NODE_ITERATOR
     XTREE_NODE_ITERATOR<T>&           operator ++             ()
                                       {
 
-
-
                                         if(current)
                                           {
                                             for( int i = current->GetNChildren()-1; i>=0 ; i--)
@@ -245,7 +232,6 @@ class XTREE_NODE_ITERATOR
 
                                       operator bool           ()                              { return (current != NULL);                                 }
 
-
     const XTREE_NODE_ITERATOR<T>&     operator =              (const XTREE_NODE_ITERATOR<T>& iterator)
                                       {
                                         this->tree    = iterator.tree;
@@ -266,7 +252,6 @@ class XTREE_NODE_ITERATOR
                                             it.stack.Pop();
                                           }
 
-
                                         for(int i=vtree.GetSize()-1; i>=0; i--)
                                           {
                                             it.stack.Push(vtree.Get(i));
@@ -279,13 +264,10 @@ class XTREE_NODE_ITERATOR
     bool                              operator ==             (const XTREE_NODE_ITERATOR<T>& iterator) const
                                       {
 
-
-
                                         if ((current == iterator.current) && (tree == iterator.tree)  )
                                                 return true;
                                           else return false;
                                       }
-
 
     bool                              operator !=             (const XTREE_NODE_ITERATOR<T>& iterator) const
                                       {
@@ -295,10 +277,8 @@ class XTREE_NODE_ITERATOR
     T*                                operator ->             ()                              { return current?&current->GetData():NULL;                  }
     T&                                operator *              ()                              { return current->GetData();                                }
 
-
     XSTACK<XTREE_NODE<T>*>*           GetStack                ()                              { return &stack;                                            }
     XTREE_NODE<T>*                    GetCurrent              ()                              { return (current);                                         }
-
 
   private:
 
@@ -313,7 +293,6 @@ class XTREE_NODE_ITERATOR
     XTREE<T>*                         tree;
 
 };
-
 
 template <typename T>
 class XTREE

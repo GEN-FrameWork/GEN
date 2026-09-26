@@ -32,22 +32,15 @@
 
 #include "XBuffer.h"
 
-
-
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
 
-
-
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
-
 
 class DIOLEDNEOPIXELWS2812B
 {
   public:
                               DIOLEDNEOPIXELWS2812B     ();
     virtual                  ~DIOLEDNEOPIXELWS2812B     ();
-
 
     virtual bool              Ini                       (XDWORD nled);
     

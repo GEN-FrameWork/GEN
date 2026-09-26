@@ -111,7 +111,6 @@ enum DIOWEBSERVER_WEBSOCKET_OPCODE
 #define DIOWEBSERVER_LOGSECTIONID                 __L("WEB Server")
 #define DIOWEBSERVER_LOGSECTIONID_VERBOSE         __L("WEB Server Verbose")
 
-
 #define DIOWEBSERVER_AUTHENTICATION_ALLGUESTS     __L("*")
 #define DIOWEBSERVER_AUTHENTICATION_DEFAULTREALM  __L("GEN Web Server")
 
@@ -161,11 +160,7 @@ typedef struct
 
 } WEBSOCKET_HEADERFRAME;
 
-
-
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
-
 
 class XPATHS;
 class XBUFFER;
@@ -197,14 +192,12 @@ class DIOWEBSERVER_HEADER : public DIOWEBHEADER
 
     bool                                        AddWebSocketKey                         (XSTRING& websocketaccept, XSTRING& websocketprotocol);
 
-
   private:
 
     bool                                        GetDescriptionResult                    (DIOWEBHEADER_RESULT result, XSTRING& description);
 
     void                                        Clean                                   ();
 };
-
 
 class DIOWEBSOCKET_HEADER
 {
@@ -239,7 +232,6 @@ class DIOWEBSERVER_AUTHENTICATION
     XSTRING                                     login;
     XSTRING                                     password;
 };
-
 
 class DIOWEBSERVER_REQUEST
 {
@@ -335,7 +327,6 @@ class DIOWEBSERVER_REQUEST
     XBUFFER*                                    data;
 };
 
-
 class DIOWEBSERVER_CONNECTION
 {
   public:
@@ -357,7 +348,7 @@ class DIOWEBSERVER_CONNECTION
     DIOWEBSERVER_CONNECTION_MODE                GetMode                                 ();
     void                                        SetMode                                 (DIOWEBSERVER_CONNECTION_MODE mode);
 
-    bool                                        Receiver                                (XBYTE* buffer, XDWORD& size,int timeout = DIOWEBSERVER_DEFAULTCONNECTIONTIMEOUT);
+    bool                                        Receiver                                (XBYTE* buffer, XDWORD& size, int timeout = DIOWEBSERVER_DEFAULTCONNECTIONTIMEOUT);
 
     bool                                        Send                                    (XBYTE* buffer, XDWORD& size, int timeout = DIOWEBSERVER_DEFAULTCONNECTIONTIMEOUT);
     bool                                        Send                                    (XBUFFER& xbuffer, int timeout = DIOWEBSERVER_DEFAULTCONNECTIONTIMEOUT);
@@ -426,10 +417,8 @@ class DIOWEBSERVER_CONNECTION
 
     static void                                 ThreadRunFunction                       (void* param);
 
-
     void                                        Clean                                   ();
 };
-
 
 class DIOWEBSERVER :  public XOBSERVER, public XSUBJECT
 {
@@ -481,19 +470,17 @@ class DIOWEBSERVER :  public XOBSERVER, public XSUBJECT
     DIOWEBSERVER_CONNECTION*                    Websocket_GetConnection                 (XCHAR* protocol, int version, XCHAR* resource);
     DIOWEBSERVER_CONNECTION*                    Websocket_GetNextConnection             ();
 
-    bool                                        Websocket_Write                         (XCHAR* string   , int timeout = DIOWEBSERVER_DEFAULTCONNECTIONTIMEOUT, XCHAR* protocol = NULL, int version = 0, XCHAR* resource = NULL);
+    bool                                        Websocket_Write                         (XCHAR* string, int timeout = DIOWEBSERVER_DEFAULTCONNECTIONTIMEOUT, XCHAR* protocol = NULL, int version = 0, XCHAR* resource = NULL);
     bool                                        Websocket_Write                         (XSTRING& string , int timeout = DIOWEBSERVER_DEFAULTCONNECTIONTIMEOUT, XCHAR* protocol = NULL, int version = 0, XCHAR* resource = NULL);
-    bool                                        Websocket_Write                         (XBUFFER& data   , int timeout = DIOWEBSERVER_DEFAULTCONNECTIONTIMEOUT, XCHAR* protocol = NULL, int version = 0, XCHAR* resource = NULL);
-    bool                                        Websocket_Ping                          (XCHAR* string   , int timeout = DIOWEBSERVER_DEFAULTCONNECTIONTIMEOUT, XCHAR* protocol = NULL, int version = 0, XCHAR* resource = NULL);
+    bool                                        Websocket_Write                         (XBUFFER& data, int timeout = DIOWEBSERVER_DEFAULTCONNECTIONTIMEOUT, XCHAR* protocol = NULL, int version = 0, XCHAR* resource = NULL);
+    bool                                        Websocket_Ping                          (XCHAR* string, int timeout = DIOWEBSERVER_DEFAULTCONNECTIONTIMEOUT, XCHAR* protocol = NULL, int version = 0, XCHAR* resource = NULL);
     bool                                        Websocket_Ping                          (XSTRING& string , int timeout = DIOWEBSERVER_DEFAULTCONNECTIONTIMEOUT, XCHAR* protocol = NULL, int version = 0, XCHAR* resource = NULL);
-
 
     DIOWEBSERVER_PLUGINSMANAGER*                GetPluginsManager                       ();
 
     bool                                        IsExit                                  ();
 
     bool                                        End                                     ();
-
 
   protected:
 

@@ -186,13 +186,13 @@ bool APPFLOWEXTENDED::APPStart(APPFLOWCFG* appcfg, APPFLOWCONSOLE* appconsole)
 
   XTRACE_PRINT(__L(" "), NULL);
 
-  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, __L("%s"),  GEN_VERSION.GetAppVersion()->Get()); 
-  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, __L("%s: %s"), XT_L(XTRANSLATION_GEN_ID_APPFLOWEXTENDED_APPROOTPATH),  GEN_XPATHSMANAGER.GetPathSection(XPATHSMANAGERSECTIONTYPE_ROOT)->xpath->Get()); 
+  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, __L("%s"), GEN_VERSION.GetAppVersion()->Get()); 
+  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, __L("%s: %s"), XT_L(XTRANSLATION_GEN_ID_APPFLOWEXTENDED_APPROOTPATH), GEN_XPATHSMANAGER.GetPathSection(XPATHSMANAGERSECTIONTYPE_ROOT)->xpath->Get()); 
 
   XTRACE_PRINT(__L(" "), NULL);
   
-  XTRACE_PRINTMSGSTATUS(XT_L(XTRANSLATION_GEN_ID_APPFLOWEXTENDED_APPVERSION),  GEN_VERSION.GetAppVersion()->Get()); 
-  XTRACE_PRINTMSGSTATUS(XT_L(XTRANSLATION_GEN_ID_APPFLOWEXTENDED_SOVERSION),  SO_ID.Get()); 
+  XTRACE_PRINTMSGSTATUS(XT_L(XTRANSLATION_GEN_ID_APPFLOWEXTENDED_APPVERSION), GEN_VERSION.GetAppVersion()->Get()); 
+  XTRACE_PRINTMSGSTATUS(XT_L(XTRANSLATION_GEN_ID_APPFLOWEXTENDED_SOVERSION), SO_ID.Get()); 
 
   status = APPFLOW_LOG.Ini(appcfg, GEN_VERSION.GetAppExecName()->Get()); 
 
@@ -204,10 +204,10 @@ bool APPFLOWEXTENDED::APPStart(APPFLOWCFG* appcfg, APPFLOWCONSOLE* appconsole)
       XDWORD total = 0;
       XDWORD free  = 0;
 
-      GEN_XSYSTEM.GetMemoryInfo(total,free);
+      GEN_XSYSTEM.GetMemoryInfo(total, free);
 
       APPFLOW_LOG_ENTRY(XLOGLEVEL_INFO, APPFLOW_CFG_LOG_SECTIONID_INITIATION, false, __L("-------------------------------------------------------------------------------------------------------------"));    
-      APPFLOW_LOG_ENTRY(XLOGLEVEL_INFO, APPFLOW_CFG_LOG_SECTIONID_INITIATION, false,  __L("%s: %s"), XT_L(XTRANSLATION_GEN_ID_APPFLOWEXTENDED_SOVERSION), SO_ID.Get());
+      APPFLOW_LOG_ENTRY(XLOGLEVEL_INFO, APPFLOW_CFG_LOG_SECTIONID_INITIATION, false, __L("%s: %s"), XT_L(XTRANSLATION_GEN_ID_APPFLOWEXTENDED_SOVERSION), SO_ID.Get());
       APPFLOW_LOG_ENTRY(XLOGLEVEL_INFO, APPFLOW_CFG_LOG_SECTIONID_INITIATION, false, XT_L(XTRANSLATION_GEN_ID_APPFLOWEXTENDED_TOTALMEMORY), total, free, GEN_XSYSTEM.GetFreeMemoryPercent());
 
       APPFLOW_LOG_ENTRY(((status)?XLOGLEVEL_INFO:XLOGLEVEL_ERROR), APPFLOW_CFG_LOG_SECTIONID_INITIATION, false, __L("%s: %s") , string.Get(), stringresult.Get());       
@@ -330,7 +330,7 @@ bool APPFLOWEXTENDED::APPEnd()
       #ifdef APPFLOW_CONSOLE_ACTIVE
       if(appconsole)
         {        
-          appconsole->GetConsole()->PrintMessage(string.Get()       , 1, true, false);
+          appconsole->GetConsole()->PrintMessage(string.Get(), 1, true, false);
           appconsole->GetConsole()->PrintMessage(stringresult.Get() , 0, false, true);     
         }
       #endif
@@ -352,7 +352,7 @@ bool APPFLOWEXTENDED::APPEnd()
       #ifdef APPFLOW_CONSOLE_ACTIVE
       if(appconsole)
         {        
-          appconsole->GetConsole()->PrintMessage(string.Get()       , 1, true, false);
+          appconsole->GetConsole()->PrintMessage(string.Get(), 1, true, false);
           appconsole->GetConsole()->PrintMessage(stringresult.Get() , 0, false, true);     
         }
       #endif
@@ -360,7 +360,7 @@ bool APPFLOWEXTENDED::APPEnd()
   #endif
 
      
-  string.Format(APPFLOWCONSOLE_DEFAULT_MESSAGEMASK,  XT_L(XTRANSLATION_GEN_ID_APPFLOWEXTENDED_ENDLOG));
+  string.Format(APPFLOWCONSOLE_DEFAULT_MESSAGEMASK, XT_L(XTRANSLATION_GEN_ID_APPFLOWEXTENDED_ENDLOG));
   stringresult.Format(__L("%s."), XT_L(XTRANSLATION_GEN_ID_OK));
   
   APPFLOW_LOG_ENTRY(XLOGLEVEL_INFO, APPFLOW_CFG_LOG_SECTIONID_ENDING, false, __L("%s: %s") , string.Get(), stringresult.Get());       
@@ -371,7 +371,7 @@ bool APPFLOWEXTENDED::APPEnd()
   #ifdef APPFLOW_CONSOLE_ACTIVE
   if(appconsole)
     {     
-      appconsole->GetConsole()->PrintMessage(string.Get()       , 1, true, false);
+      appconsole->GetConsole()->PrintMessage(string.Get(), 1, true, false);
       appconsole->GetConsole()->PrintMessage(stringresult.Get() , 0, false, true);     
     }
   #endif
@@ -500,21 +500,21 @@ bool APPFLOWEXTENDED::ShowAll()
   #ifdef APPFLOW_EXTENDED_APPLICATIONHEADER_ACTIVE
   if(appconsole->Show_Header(false))      
     {
-      console->PrintMessage(__L(""),0, false, true);
+      console->PrintMessage(__L(""), 0, false, true);
     }
   #endif
 
   #ifdef APPFLOW_EXTENDED_APPLICATIONSTATUS_ACTIVE
   if(APPFLOW_EXTENDED.GetApplicationStatus()->Show(console))
     {
-      console->PrintMessage(__L(""),0, false, true);
+      console->PrintMessage(__L(""), 0, false, true);
     }
   #endif
 
   #ifdef APPFLOW_EXTENDED_INTERNETSTATUS_ACTIVE
   if(APPFLOW_EXTENDED.GetInternetStatus()->Show(console))
     {
-      console->PrintMessage(__L(""),0, false, true);
+      console->PrintMessage(__L(""), 0, false, true);
     }
   #endif
  

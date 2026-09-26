@@ -110,11 +110,11 @@ bool DIOLINUXPCAP::Capture_Start(DIOPCAPNETINTERFACE* netinterface, bool promisc
   
   (*netinterface->GetName()).ConvertToASCII(ni);
   
-  handle= pcap_open_live(ni.GetPtrChar()         , // name of the device
-                         65536                   , // portion of the packet to capture.  65536 grants that the whole packet will be captured on all the MACs.
-                         promiscuousmode?1:0     , // promiscuous mode (nonzero means promiscuous)
-                         timeout                 , // read timeout
-                         errbuf);                  // error buffer
+  handle = pcap_open_live(ni.GetPtrChar(),        // name of the device
+                          65536,                  // portion of the packet to capture
+                          promiscuousmode?1:0,    // promiscuous mode
+                          timeout,                // read timeout
+                          errbuf);                // error buffer
   
   if(handle == NULL) return false;
   
@@ -274,7 +274,7 @@ void DIOLINUXPCAP::PacketHandler(u_char* param, const struct pcap_pkthdr* header
   DIOLINUXPCAP* diopcap = (DIOLINUXPCAP*)param;
   if(!diopcap) return;
 
-  diopcap->Frames_Add((XBYTE*)data,header->len);
+  diopcap->Frames_Add((XBYTE*)data, header->len);
 }
 
 

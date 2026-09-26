@@ -122,11 +122,11 @@ bool HASHMD5::Do(XBYTE* input, XQWORD size)
 
   Ini();
 
-  Update(input,size);
+  Update(input, size);
 
   End();
 
-  result->Add(digest,16);
+  result->Add(digest, 16);
 
   return true;
 }
@@ -260,7 +260,7 @@ void HASHMD5::Transform(XBYTE block[HASHMD5_BLOCKSIZE])
   GG (c, d, a, b, x[11], S23, 0x265e5a51); // 19 
   GG (b, c, d, a, x[ 0], S24, 0xe9b6c7aa); // 20 
   GG (a, b, c, d, x[ 5], S21, 0xd62f105d); // 21 
-  GG (d, a, b, c, x[10], S22,  0x2441453); // 22 
+  GG (d, a, b, c, x[10], S22, 0x2441453); // 22 
   GG (c, d, a, b, x[15], S23, 0xd8a1e681); // 23 
   GG (b, c, d, a, x[ 4], S24, 0xe7d3fbc8); // 24 
   GG (a, b, c, d, x[ 9], S21, 0x21e1cde6); // 25 
@@ -284,7 +284,7 @@ void HASHMD5::Transform(XBYTE block[HASHMD5_BLOCKSIZE])
   HH (a, b, c, d, x[13], S31, 0x289b7ec6); // 41 
   HH (d, a, b, c, x[ 0], S32, 0xeaa127fa); // 42 
   HH (c, d, a, b, x[ 3], S33, 0xd4ef3085); // 43 
-  HH (b, c, d, a, x[ 6], S34,  0x4881d05); // 44 
+  HH (b, c, d, a, x[ 6], S34, 0x4881d05); // 44 
   HH (a, b, c, d, x[ 9], S31, 0xd9d4d039); // 45 
   HH (d, a, b, c, x[12], S32, 0xe6db99e5); // 46 
   HH (c, d, a, b, x[15], S33, 0x1fa27cf8); // 47 
@@ -515,7 +515,7 @@ inline XDWORD HASHMD5::RotateLeft(XDWORD x, int n)
 * --------------------------------------------------------------------------------------------------------------------*/
 inline void HASHMD5::FF(XDWORD& a, XDWORD b, XDWORD c, XDWORD d, XDWORD x, XDWORD s, XDWORD ac)
 {
-  a = RotateLeft(a+ F(b,c,d) + x + ac, s) + b;
+  a = RotateLeft(a+ F(b, c, d) + x + ac, s) + b;
 }
 
 
@@ -537,7 +537,7 @@ inline void HASHMD5::FF(XDWORD& a, XDWORD b, XDWORD c, XDWORD d, XDWORD x, XDWOR
 * --------------------------------------------------------------------------------------------------------------------*/
 inline void HASHMD5::GG(XDWORD& a, XDWORD b, XDWORD c, XDWORD d, XDWORD x, XDWORD s, XDWORD ac)
 {
-  a = RotateLeft(a + G(b,c,d) + x + ac, s) + b;
+  a = RotateLeft(a + G(b, c, d) + x + ac, s) + b;
 }
 
 
@@ -559,7 +559,7 @@ inline void HASHMD5::GG(XDWORD& a, XDWORD b, XDWORD c, XDWORD d, XDWORD x, XDWOR
 * --------------------------------------------------------------------------------------------------------------------*/
 inline void HASHMD5::HH(XDWORD& a, XDWORD b, XDWORD c, XDWORD d, XDWORD x, XDWORD s, XDWORD ac)
 {
-  a = RotateLeft(a + H(b,c,d) + x + ac, s) + b;
+  a = RotateLeft(a + H(b, c, d) + x + ac, s) + b;
 }
 
 
@@ -581,7 +581,7 @@ inline void HASHMD5::HH(XDWORD& a, XDWORD b, XDWORD c, XDWORD d, XDWORD x, XDWOR
 * --------------------------------------------------------------------------------------------------------------------*/
 inline void HASHMD5::II(XDWORD& a, XDWORD b, XDWORD c, XDWORD d, XDWORD x, XDWORD s, XDWORD ac)
 {
-  a = RotateLeft(a + I(b,c,d) + x + ac, s) + b;
+  a = RotateLeft(a + I(b, c, d) + x + ac, s) + b;
 }
 
 

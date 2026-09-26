@@ -65,18 +65,15 @@ enum DIOSTM32UARTFSMSTATES
   DIOSTM32UART_LASTSTATE
 };
 
-
 #define DIOSTM32STREAMIUART_MAXHANDLES   8
 
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
-
 
 class XFACTORY;
 class XPUBLISHER;
 class DIOFACTORY;
 class DIOSTREAMCONFIG;
 class XTHREADCOLLECTED;
-
 
 class DIOSTM32STREAMUART : public DIOSTREAMUART, public XFSMACHINE
 {

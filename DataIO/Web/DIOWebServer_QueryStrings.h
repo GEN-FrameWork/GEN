@@ -35,15 +35,9 @@
 
 #include "DIOURL.h"
 
-
-
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
 
-
-
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
-
 
 class DIOWEBSERVER_QUERYSTRINGS
 {
@@ -55,10 +49,10 @@ class DIOWEBSERVER_QUERYSTRINGS
     XMAP<XSTRING*, XSTRING*>*       GetParams                         ();
 
     bool                            AddParam                          (XSTRING& ID, XSTRING& value);
-    bool                            AddParam                          (XCHAR* ID  , XSTRING& value);
+    bool                            AddParam                          (XCHAR* ID, XSTRING& value);
     bool                            AddParam                          (XSTRING& ID, XCHAR* value);
-    bool                            AddParam                          (XCHAR* ID  , XCHAR* value);
-    bool                            AddParam                          (XCHAR* ID  , int value);
+    bool                            AddParam                          (XCHAR* ID, XCHAR* value);
+    bool                            AddParam                          (XCHAR* ID, int value);
 
     XSTRING*                        GetParam                          (XSTRING& ID);
     XSTRING*                        GetParam                          (XCHAR* ID);

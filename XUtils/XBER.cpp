@@ -403,7 +403,7 @@ bool XBER::SetFromDump(XBUFFER& buffer, XOBSERVER* observer)
   if(observer)
     {
       observer->SubscribeEvent(XBERXEVENT_TYPE_DECODE_START , this, observer);
-      observer->SubscribeEvent(XBERXEVENT_TYPE_DECODE_END   , this, observer);
+      observer->SubscribeEvent(XBERXEVENT_TYPE_DECODE_END, this, observer);
 
       XBER_XEVENT xevent(this, XBERXEVENT_TYPE_DECODE_START); 
 
@@ -428,7 +428,7 @@ bool XBER::SetFromDump(XBUFFER& buffer, XOBSERVER* observer)
       PostEvent(&xevent);  
 
       observer->UnSubscribeEvent(XBERXEVENT_TYPE_DECODE_START , this, observer);
-      observer->UnSubscribeEvent(XBERXEVENT_TYPE_DECODE_END   , this, observer);
+      observer->UnSubscribeEvent(XBERXEVENT_TYPE_DECODE_END, this, observer);
     }
 
   return status;
@@ -745,18 +745,18 @@ bool XBER::SetOID(XCHAR* OIDstring)
   while(1)
     {
       XSTRING numberstring;
-      int     indexstring = string.Find(__L("."),true,start);
+      int     indexstring = string.Find(__L("."), true, start);
 
       if(indexstring != XSTRING_NOTFOUND)
         {
           end = indexstring;
-          string.Copy(start,end,numberstring);
+          string.Copy(start, end, numberstring);
           numbers.Add(numberstring.ConvertToInt());
           start = end+1;
         }
        else
         {
-          string.Copy(end+1,numberstring);
+          string.Copy(end+1, numberstring);
           numbers.Add(numberstring.ConvertToInt());
 
           break;
@@ -785,9 +785,9 @@ bool XBER::SetOID(XCHAR* OIDstring)
       size_t _number = (size_t)(numbers.Get(c));
       XDWORD number = (XDWORD)(_number);
 
-      if(CodeBigNumber((XDWORD)(number),_data))
+      if(CodeBigNumber((XDWORD)(number), _data))
         {
-          data.Add(_data.Get(),_data.GetSize());
+          data.Add(_data.Get(), _data.GetSize());
         }
     }
 
@@ -817,7 +817,7 @@ bool XBER::Copy(XBER* newxber)
   newxber->size     = size;
  
   newxber->data.Delete();
-  newxber->data.Add(data.Get(),data.GetSize());
+  newxber->data.Add(data.Get(), data.GetSize());
 
   for(XDWORD c=0;c<sequences.GetSize();c++)
     {
@@ -935,7 +935,7 @@ XDWORD XBER::Sequence_GetSize()
   // Size of size;
   XBUFFER sizedata;
 
-  CodeSize(size,sizedata);
+  CodeSize(size, sizedata);
   sizeall += sizedata.GetSize();
 
   sizeall += data.GetSize();
@@ -976,12 +976,13 @@ bool XBER::Sequence_DeleteAll()
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         bool XBER::SetFromDumpInternal(XBUFFER& buffer, XOBSERVER* observer)
+* @fn         bool XBER::SetFromDumpInternal(XBUFFER& buffer, XOBSERVER* observer, XBER* root)
 * @brief      Set from dump internal
 * @ingroup    XUTILS
 * 
 * @param[in]  buffer : Buffer to use.
 * @param[in]  observer : Observer pointer to use.
+* @param[in]  root : 
 * 
 * @return     bool : true if the operation is successful; otherwise false.
 * 
@@ -1374,7 +1375,6 @@ bool XBER::ConvertToBitString(XBUFFER& data, XVARIANT& variant)
 }
 
 
-
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         bool XBER::ConvertToNULL(XVARIANT& variant)
@@ -1644,7 +1644,6 @@ bool XBER::CodeBigNumber(XDWORD number, XBUFFER& data)
  }
 
 
-
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         bool XBER::CodeSize(XDWORD integer, XBUFFER& data)
@@ -1699,7 +1698,6 @@ bool XBER::CodeSize(XDWORD integer, XBUFFER& data)
 
   return true;
  }
-
 
 
 /**-------------------------------------------------------------------------------------------------------------------

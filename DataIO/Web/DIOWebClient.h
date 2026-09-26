@@ -130,11 +130,7 @@ enum DIOWEBCLIENT_ERROR
   DIOWEBCLIENT_ERROR_HTTPCONTENTENCODING              ,
 };
 
-
-
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
-
 
 class XTIMER;
 class XFILE;
@@ -144,7 +140,6 @@ class DIOSTREAMTCPIP;
 class DIOSTREAMTLSCONFIG;
 class DIOWEBCLIENT_XEVENT;
 class COMPRESSMANAGER;
-
 
 class DIOWEBCLIENT_OPERATIONERROR
 {
@@ -162,10 +157,7 @@ class DIOWEBCLIENT_OPERATIONERROR
 
     friend class DIOWEBCLIENT;
 
-    void                                      Set                               (DIOWEBCLIENT_ERRORSTAGE stage,
-                                                                                 DIOWEBCLIENT_ERROR error,
-                                                                                 DIOSTREAMERROR streamerror,
-                                                                                 int HTTPstatus = 0);
+    void                                      Set                               (DIOWEBCLIENT_ERRORSTAGE stage, DIOWEBCLIENT_ERROR error, DIOSTREAMERROR streamerror, int HTTPstatus = 0);
     void                                      Clean                             ();
 
     DIOWEBCLIENT_ERRORSTAGE                   stage;
@@ -201,7 +193,6 @@ class DIOWEBCLIENT_HEADER : public DIOWEBHEADER
     void                                      Clean                             ();
 };
 
-
 class DIOWEBCLIENT : public XSUBJECT
 {
   public:
@@ -215,7 +206,6 @@ class DIOWEBCLIENT : public XSUBJECT
     DIOSTREAMTCPIPPROXYCFG*                 GetProxyCFG                       ();
     int                                       GetProxyPort                      ();
     void                                      SetProxyPort                      (int port);
-
 
     DIOWEBCLIENT_AUTHENTICATION_METHOD        GetAuthenticationMethod           ();
     void                                      SetAuthenticationMethod           (DIOWEBCLIENT_AUTHENTICATION_METHOD authenticationmethod);
@@ -242,10 +232,6 @@ class DIOWEBCLIENT : public XSUBJECT
     DIOWEBCLIENT_OPERATIONERROR*              GetLastHTTPSAttemptError          ();
     bool                                      WasHTTPFallbackUsed               ();
 
-
-
-
-
     bool                                      IsActiveContentEncoding           ();
     void                                      ContentEncoding_Activate          (bool activate);
 
@@ -253,23 +239,22 @@ class DIOWEBCLIENT : public XSUBJECT
     void                                      CompressRequestBody_Activate      (bool activate);
 
     bool                                      Get                               (DIOURL& url, XBUFFER& tobuffer , XCHAR* addheader = NULL, int timeout = DIOWEBCLIENT_TIMEOUT, XSTRING* localIP = NULL);
-    bool                                      Get                               (XCHAR*  url, XBUFFER& tobuffer , XCHAR* addheader = NULL, int timeout = DIOWEBCLIENT_TIMEOUT, XSTRING* localIP = NULL);
-    bool                                      Get                               (DIOURL& url, XPATH& pathfile   , XCHAR* addheader = NULL, int timeout = DIOWEBCLIENT_TIMEOUT, XSTRING* localIP = NULL);
-    bool                                      Get                               (XCHAR*  url, XPATH& pathfile   , XCHAR* addheader = NULL, int timeout = DIOWEBCLIENT_TIMEOUT, XSTRING* localIP = NULL);
+    bool                                      Get                               (XCHAR* url, XBUFFER& tobuffer, XCHAR* addheader = NULL, int timeout = DIOWEBCLIENT_TIMEOUT, XSTRING* localIP = NULL);
+    bool                                      Get                               (DIOURL& url, XPATH& pathfile, XCHAR* addheader = NULL, int timeout = DIOWEBCLIENT_TIMEOUT, XSTRING* localIP = NULL);
+    bool                                      Get                               (XCHAR* url, XPATH& pathfile, XCHAR* addheader = NULL, int timeout = DIOWEBCLIENT_TIMEOUT, XSTRING* localIP = NULL);
 
     bool                                      Put                               (DIOURL& url, XBUFFER& tobuffer , XCHAR* addheader = NULL, int timeout = DIOWEBCLIENT_TIMEOUT, XSTRING* localIP = NULL);
-    bool                                      Put                               (XCHAR*  url, XBUFFER& tobuffer , XCHAR* addheader = NULL, int timeout = DIOWEBCLIENT_TIMEOUT, XSTRING* localIP = NULL);
-    bool                                      Put                               (DIOURL& url, XPATH& pathfile   , XCHAR* addheader = NULL, int timeout = DIOWEBCLIENT_TIMEOUT, XSTRING* localIP = NULL);
-    bool                                      Put                               (XCHAR*  url, XPATH& pathfile   , XCHAR* addheader = NULL, int timeout = DIOWEBCLIENT_TIMEOUT, XSTRING* localIP = NULL);
+    bool                                      Put                               (XCHAR* url, XBUFFER& tobuffer, XCHAR* addheader = NULL, int timeout = DIOWEBCLIENT_TIMEOUT, XSTRING* localIP = NULL);
+    bool                                      Put                               (DIOURL& url, XPATH& pathfile, XCHAR* addheader = NULL, int timeout = DIOWEBCLIENT_TIMEOUT, XSTRING* localIP = NULL);
+    bool                                      Put                               (XCHAR* url, XPATH& pathfile, XCHAR* addheader = NULL, int timeout = DIOWEBCLIENT_TIMEOUT, XSTRING* localIP = NULL);
 
     bool                                      Post                              (DIOURL& url, XBUFFER& tobuffer , XBUFFER* postdata = NULL, XCHAR* addheader = NULL, int timeout = DIOWEBCLIENT_TIMEOUT, XSTRING* localIP = NULL);
-    bool                                      Post                              (XCHAR*  url, XBUFFER& tobuffer , XBUFFER* postdata = NULL, XCHAR* addheader = NULL, int timeout = DIOWEBCLIENT_TIMEOUT, XSTRING* localIP = NULL);
-    bool                                      Post                              (DIOURL& url, XPATH& pathfile   , XBUFFER* postdata = NULL, XCHAR* addheader = NULL, int timeout = DIOWEBCLIENT_TIMEOUT, XSTRING* localIP = NULL);
-    bool                                      Post                              (XCHAR*  url, XPATH& pathfile   , XBUFFER* postdata = NULL, XCHAR* addheader = NULL, int timeout = DIOWEBCLIENT_TIMEOUT, XSTRING* localIP = NULL);
+    bool                                      Post                              (XCHAR* url, XBUFFER& tobuffer, XBUFFER* postdata = NULL, XCHAR* addheader = NULL, int timeout = DIOWEBCLIENT_TIMEOUT, XSTRING* localIP = NULL);
+    bool                                      Post                              (DIOURL& url, XPATH& pathfile, XBUFFER* postdata = NULL, XCHAR* addheader = NULL, int timeout = DIOWEBCLIENT_TIMEOUT, XSTRING* localIP = NULL);
+    bool                                      Post                              (XCHAR* url, XPATH& pathfile, XBUFFER* postdata = NULL, XCHAR* addheader = NULL, int timeout = DIOWEBCLIENT_TIMEOUT, XSTRING* localIP = NULL);
    
   private:
 
- 
     bool                                      MakeOperation                     (DIOWEBHEADER_METHOD method, DIOURL& url, XBUFFER* postdata, XCHAR* addhead, int timeout, XSTRING* localIP, bool istobuffer, void* to, int redirectcount = 0, bool internaloperation = false, XTIMER* operationtimer = NULL);
     bool                                      Header_Read                       (int timeout);
     bool                                      Body_Read                         (DIOWEBCLIENT_BODYMODE bodymode, bool isTLS, XQWORD contentlength, int timeout, bool istobuffer, void* to, DIOWEBCLIENT_XEVENT& xevent);

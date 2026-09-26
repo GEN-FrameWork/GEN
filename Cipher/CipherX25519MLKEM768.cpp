@@ -1,9 +1,31 @@
 /**-------------------------------------------------------------------------------------------------------------------
+*
 * @file       CipherX25519MLKEM768.cpp
+*
 * @class      CIPHERX25519MLKEM768
 * @brief      X25519MLKEM768 hybrid key agreement (RFC 10024)
 * @ingroup    CIPHER
+*
+* @copyright  EndoraSoft. All rights reserved.
+*
+* @cond
+* Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated
+* documentation files(the "Software"), to deal in the Software without restriction, including without limitation
+* the rights to use, copy, modify, merge, publish, distribute, sublicense, and/ or sell copies of the Software,
+* and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+*
+* The above copyright notice and this permission notice shall be included in all copies or substantial portions of
+* the Software.
+*
+* THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO
+* THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.IN NO EVENT SHALL THE
+* AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+* TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+* SOFTWARE.
+* @endcond
+*
 * --------------------------------------------------------------------------------------------------------------------*/
+
 #include "GEN_Defines.h"
 
 #include "CipherX25519MLKEM768.h"
@@ -22,6 +44,7 @@ CIPHERX25519MLKEM768::CIPHERX25519MLKEM768()
   Clean();
 }
 
+
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         CIPHERX25519MLKEM768::~CIPHERX25519MLKEM768()
@@ -34,6 +57,7 @@ CIPHERX25519MLKEM768::~CIPHERX25519MLKEM768()
   Delete();
   Clean();
 }
+
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
@@ -55,6 +79,7 @@ bool CIPHERX25519MLKEM768::X25519KeyPair_Create(CIPHERECDSAX25519& x25519, XBUFF
          publickey.Add(x25519.GetKey(CIPHERECDSAX25519_TYPEKEY_PUBLIC), CIPHERECDSAX25519_MAXKEY);
 }
 
+
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         bool CIPHERX25519MLKEM768::X25519SharedSecret_Create(CIPHERECDSAX25519& x25519, XBYTE* peerpublic, XBUFFER& sharedsecret, bool* invalidpeershare)
@@ -69,8 +94,7 @@ bool CIPHERX25519MLKEM768::X25519KeyPair_Create(CIPHERECDSAX25519& x25519, XBUFF
 * @return     bool : true if the operation is successful; otherwise false.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-bool CIPHERX25519MLKEM768::X25519SharedSecret_Create(CIPHERECDSAX25519& x25519, XBYTE* peerpublic, XBUFFER& sharedsecret,
-                                                      bool* invalidpeershare)
+bool CIPHERX25519MLKEM768::X25519SharedSecret_Create(CIPHERECDSAX25519& x25519, XBYTE* peerpublic, XBUFFER& sharedsecret, bool* invalidpeershare)
 {
   if(invalidpeershare) (*invalidpeershare) = false;
 
@@ -98,6 +122,7 @@ bool CIPHERX25519MLKEM768::X25519SharedSecret_Create(CIPHERECDSAX25519& x25519, 
 
   return sharedsecret.Add(secret, CIPHERECDSAX25519_MAXKEY);
 }
+
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
@@ -131,6 +156,7 @@ bool CIPHERX25519MLKEM768::ClientKeyShare_Create(XBUFFER& clientshare)
 
   return status;
 }
+
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
@@ -181,6 +207,7 @@ bool CIPHERX25519MLKEM768::ClientSharedSecret_Create(XBUFFER& servershare, XBUFF
   return status;
 }
 
+
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         bool CIPHERX25519MLKEM768::ServerKeyShare_Create(XBUFFER& clientshare, XBUFFER& servershare, XBUFFER& sharedsecret, bool* invalidpeershare)
@@ -195,8 +222,7 @@ bool CIPHERX25519MLKEM768::ClientSharedSecret_Create(XBUFFER& servershare, XBUFF
 * @return     bool : true if the operation is successful; otherwise false.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-bool CIPHERX25519MLKEM768::ServerKeyShare_Create(XBUFFER& clientshare, XBUFFER& servershare, XBUFFER& sharedsecret,
-                                                  bool* invalidpeershare)
+bool CIPHERX25519MLKEM768::ServerKeyShare_Create(XBUFFER& clientshare, XBUFFER& servershare, XBUFFER& sharedsecret, bool* invalidpeershare)
 {
   XBUFFER mlkempublic;
   XBUFFER ciphertext;
@@ -248,6 +274,7 @@ bool CIPHERX25519MLKEM768::ServerKeyShare_Create(XBUFFER& clientshare, XBUFFER& 
   return status;
 }
 
+
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         void CIPHERX25519MLKEM768::Delete()
@@ -260,6 +287,7 @@ void CIPHERX25519MLKEM768::Delete()
   x25519.CleanAllKeys();
   mlkemprivate.SecureDelete();
 }
+
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 

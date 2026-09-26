@@ -83,7 +83,7 @@ COMPRESS_LZRW1KH::~COMPRESS_LZRW1KH()
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         bool COMPRESS_LZRW1KH::Compress(XBYTE* origin,XDWORD size,XBUFFER* buffer)
+* @fn         bool COMPRESS_LZRW1KH::Compress(XBYTE* origin, XDWORD size, XBUFFER* buffer)
 * @brief      Compress
 * @ingroup    COMPRESS
 * 
@@ -94,11 +94,11 @@ COMPRESS_LZRW1KH::~COMPRESS_LZRW1KH()
 * @return     bool : true if the operation is successful; otherwise false.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-bool COMPRESS_LZRW1KH::Compress(XBYTE* origin,XDWORD size,XBUFFER* buffer)
+bool COMPRESS_LZRW1KH::Compress(XBYTE* origin, XDWORD size, XBUFFER* buffer)
 {
   param1  =  NULL;
 
-  buffer->SetSize(CompressionBuffer(origin, buffer->Get(),(XDWORD)size));
+  buffer->SetSize(CompressionBuffer(origin, buffer->Get(), (XDWORD)size));
 
   return true;
 }
@@ -106,7 +106,7 @@ bool COMPRESS_LZRW1KH::Compress(XBYTE* origin,XDWORD size,XBUFFER* buffer)
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         bool COMPRESS_LZRW1KH::Decompress(XBYTE* origin,XDWORD size,XBUFFER* buffer)
+* @fn         bool COMPRESS_LZRW1KH::Decompress(XBYTE* origin, XDWORD size, XBUFFER* buffer)
 * @brief      Decompress
 * @ingroup    COMPRESS
 * 
@@ -117,7 +117,7 @@ bool COMPRESS_LZRW1KH::Compress(XBYTE* origin,XDWORD size,XBUFFER* buffer)
 * @return     bool : true if the operation is successful; otherwise false.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-bool COMPRESS_LZRW1KH::Decompress(XBYTE* origin,XDWORD size,XBUFFER* buffer)
+bool COMPRESS_LZRW1KH::Decompress(XBYTE* origin, XDWORD size, XBUFFER* buffer)
 {
   param1  =  NULL;
 
@@ -129,7 +129,7 @@ bool COMPRESS_LZRW1KH::Decompress(XBYTE* origin,XDWORD size,XBUFFER* buffer)
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         bool COMPRESS_LZRW1KH::Compress(XBYTE* origin,XDWORD size,void* param1)
+* @fn         bool COMPRESS_LZRW1KH::Compress(XBYTE* origin, XDWORD size, void* param1)
 * @brief      Compress
 * @ingroup    COMPRESS
 * 
@@ -140,7 +140,7 @@ bool COMPRESS_LZRW1KH::Decompress(XBYTE* origin,XDWORD size,XBUFFER* buffer)
 * @return     bool : true if the operation is successful; otherwise false.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-bool COMPRESS_LZRW1KH::Compress(XBYTE* origin,XDWORD size,void* param1)
+bool COMPRESS_LZRW1KH::Compress(XBYTE* origin, XDWORD size, void* param1)
 {
   this->param1  =  param1;
 
@@ -152,7 +152,7 @@ bool COMPRESS_LZRW1KH::Compress(XBYTE* origin,XDWORD size,void* param1)
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         bool COMPRESS_LZRW1KH::Decompress(XBYTE* origin,XDWORD size,void* param1)
+* @fn         bool COMPRESS_LZRW1KH::Decompress(XBYTE* origin, XDWORD size, void* param1)
 * @brief      Decompress
 * @ingroup    COMPRESS
 * 
@@ -163,7 +163,7 @@ bool COMPRESS_LZRW1KH::Compress(XBYTE* origin,XDWORD size,void* param1)
 * @return     bool : true if the operation is successful; otherwise false.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-bool COMPRESS_LZRW1KH::Decompress(XBYTE* origin,XDWORD size,void* param1)
+bool COMPRESS_LZRW1KH::Decompress(XBYTE* origin, XDWORD size, void* param1)
 {
   this->param1  =  param1;
 
@@ -240,14 +240,14 @@ XDWORD COMPRESS_LZRW1KH::CompressionBuffer(XBYTE* source, XBYTE* target, XDWORD 
       hash[key] = 0x80000000;
     }
 
-  CMPTARGET(true,0,CMPFLAG_COMPRESS);
+  CMPTARGET(true, 0, CMPFLAG_COMPRESS);
 
   for(;(x<sourcesize) && (y<=sourcesize);)
     {
       if(bit>15)
         {
-          CMPTARGET(true,z++ ,(XBYTE)((command >> 8) & 0x00ff));
-          CMPTARGET(true,z   ,(XBYTE)(command & 0x00ff));
+          CMPTARGET(true, z++, (XBYTE)((command >> 8) & 0x00ff));
+          CMPTARGET(true, z, (XBYTE)(command & 0x00ff));
 
           z = y;
           bit = 0;
@@ -261,29 +261,29 @@ XDWORD COMPRESS_LZRW1KH::CompressionBuffer(XBYTE* source, XBYTE* target, XDWORD 
 
       if(size >= 16)
         {
-          CMPTARGET(true,y++,0);
-          CMPTARGET(true,y++,(XBYTE)(((size - 16) >> 8) & 0x00ff));
-          CMPTARGET(true,y++,(XBYTE)((size - 16) & 0x00ff));
-          CMPTARGET(true,y++,source[x]);
+          CMPTARGET(true, y++, 0);
+          CMPTARGET(true, y++, (XBYTE)(((size - 16) >> 8) & 0x00ff));
+          CMPTARGET(true, y++, (XBYTE)((size - 16) & 0x00ff));
+          CMPTARGET(true, y++, source[x]);
 
           x=(x+size);
           command = (XWORD)((command << 1) + 1);
         }
        else
         {
-          if(GetMatch(source,x,sourcesize,hash,&size,(XDWORD*)&pos))
+          if(GetMatch(source, x, sourcesize, hash, &size, (XDWORD*)&pos))
             {
               key = (((x-pos) << 4) + (size - 3));
 
-              CMPTARGET(true,y++,(XBYTE)((key >> 8) & 0x00ff));
-              CMPTARGET(true,y++,(XBYTE)(key & 0x00ff));
+              CMPTARGET(true, y++, (XBYTE)((key >> 8) & 0x00ff));
+              CMPTARGET(true, y++, (XBYTE)(key & 0x00ff));
 
               x = (x+size);
               command = (XWORD)((command << 1) + 1);
             }
            else
             {
-              CMPTARGET(true,y++,source[x++]);
+              CMPTARGET(true, y++, source[x++]);
 
               command = (XWORD)((command << 1));
             }
@@ -294,8 +294,8 @@ XDWORD COMPRESS_LZRW1KH::CompressionBuffer(XBYTE* source, XBYTE* target, XDWORD 
 
   command <<= (16-bit);
 
-  CMPTARGET(true,z++,(XBYTE)((command >> 8) & 0x00ff));
-  CMPTARGET(true,z   ,(XBYTE)(command & 0x00ff));
+  CMPTARGET(true, z++, (XBYTE)((command >> 8) & 0x00ff));
+  CMPTARGET(true, z, (XBYTE)(command & 0x00ff));
 
   if(y > sourcesize)
     {
@@ -313,7 +313,7 @@ XDWORD COMPRESS_LZRW1KH::CompressionBuffer(XBYTE* source, XBYTE* target, XDWORD 
           CMPTARGET(true, y+1, source[y]);
         }
 
-      CMPTARGET(true,0,CMPFLAG_COPIED);
+      CMPTARGET(true, 0, CMPFLAG_COPIED);
 
       return (sourcesize+1);
     }
@@ -324,7 +324,7 @@ XDWORD COMPRESS_LZRW1KH::CompressionBuffer(XBYTE* source, XBYTE* target, XDWORD 
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         XDWORD COMPRESS_LZRW1KH::DecompressionBuffer(XBYTE *source,XBYTE *target,XDWORD sourcesize)
+* @fn         XDWORD COMPRESS_LZRW1KH::DecompressionBuffer(XBYTE *source, XBYTE *target, XDWORD sourcesize)
 * @brief      Decompression buffer
 * @ingroup    COMPRESS
 * 
@@ -335,7 +335,7 @@ XDWORD COMPRESS_LZRW1KH::CompressionBuffer(XBYTE* source, XBYTE* target, XDWORD 
 * @return     XDWORD : Requested value.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-XDWORD COMPRESS_LZRW1KH::DecompressionBuffer(XBYTE *source,XBYTE *target,XDWORD sourcesize)
+XDWORD COMPRESS_LZRW1KH::DecompressionBuffer(XBYTE *source, XBYTE *target, XDWORD sourcesize)
 {
   XDWORD    x       = 3;
   XDWORD    y       = 0;
@@ -379,7 +379,7 @@ XDWORD COMPRESS_LZRW1KH::DecompressionBuffer(XBYTE *source,XBYTE *target,XDWORD 
 
               for(k=0;k<size;k++)
                 {
-                  CMPTARGET(false,y+k,target[y-pos+k]);
+                  CMPTARGET(false, y+k, target[y-pos+k]);
                 }
 
               y = (y+size);
@@ -389,7 +389,7 @@ XDWORD COMPRESS_LZRW1KH::DecompressionBuffer(XBYTE *source,XBYTE *target,XDWORD 
               size = (source[x++] << 8);
               size = (size + source[x++] + 16);
 
-              for (k=0;k<size;CMPTARGET(false,y+k++,source[x]))
+              for (k=0;k<size;CMPTARGET(false, y+k++, source[x]))
                 {
 
                 }
@@ -401,7 +401,7 @@ XDWORD COMPRESS_LZRW1KH::DecompressionBuffer(XBYTE *source,XBYTE *target,XDWORD 
         }
        else
         {
-          CMPTARGET(false,y++,source[x++]);
+          CMPTARGET(false, y++, source[x++]);
         }
 
        command <<= 1;

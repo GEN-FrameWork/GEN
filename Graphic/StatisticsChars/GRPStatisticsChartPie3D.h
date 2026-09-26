@@ -32,8 +32,6 @@
 
 #include "GRPStatisticsChart.h"
 
-
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
 
 class GRPSTATISTICSCHARTPIE3D : public GRPSTATISTICSCHART

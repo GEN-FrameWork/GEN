@@ -207,14 +207,14 @@ DIOATCMDS::DIOATCMDS(DIOSTREAM* diostream) : XFSMACHINE(0)
   xtimer=GEN_XFACTORY.CreateTimer();  
   mutexreadwriteprocess=GEN_XFACTORY.Create_Mutex();
   
-  threadconnection = CREATEXTHREAD(XTHREADGROUPID_DIOATCMS, __L("DIOATCMDS::DIOATCMDS"),ThreadConnection,(void*)this);
+  threadconnection = CREATEXTHREAD(XTHREADGROUPID_DIOATCMS, __L("DIOATCMDS::DIOATCMDS"), ThreadConnection, (void*)this);
 
   AddCommand(DIOATCMD_TYPE_BASIC      , __L(""));
-  AddCommand(DIOATCMD_TYPE_CHARACTER  , __L("S"));
-  AddCommand(DIOATCMD_TYPE_RESET      , __L("Z"));
-  AddCommand(DIOATCMD_TYPE_ECHO       , __L("E"));
-  AddCommand(DIOATCMD_TYPE_VERBOSE    , __L("V"));
-  AddCommand(DIOATCMD_TYPE_BAUDRATE   , __L("+IPR"));
+  AddCommand(DIOATCMD_TYPE_CHARACTER, __L("S"));
+  AddCommand(DIOATCMD_TYPE_RESET, __L("Z"));
+  AddCommand(DIOATCMD_TYPE_ECHO, __L("E"));
+  AddCommand(DIOATCMD_TYPE_VERBOSE, __L("V"));
+  AddCommand(DIOATCMD_TYPE_BAUDRATE, __L("+IPR"));
 }
 
 
@@ -326,9 +326,9 @@ bool DIOATCMDS::Ini(int timeout, bool echomode, bool verbosemode, int minimumbau
 
   if(!diostream->WaitToConnected(timeout)) return false;
 
-  if(SetVerboseMode(verbosemode,timeout)==DIOATCMD_ERROR_NONE)
+  if(SetVerboseMode(verbosemode, timeout)==DIOATCMD_ERROR_NONE)
     {
-      if(SetEchoMode(echomode,timeout)==DIOATCMD_ERROR_NONE)
+      if(SetEchoMode(echomode, timeout)==DIOATCMD_ERROR_NONE)
         {
           if(GetCharacter(DIOATCMD_CODECHARACTER_ESCAPE   , escapechar  , timeout) != DIOATCMD_ERROR_NONE) return false;
           if(GetCharacter(DIOATCMD_CODECHARACTER_ENDLINE  , endlinechar , timeout) != DIOATCMD_ERROR_NONE) return false;
@@ -374,13 +374,13 @@ bool DIOATCMDS::Ini(int timeout, bool echomode, bool verbosemode, int minimumbau
 * --------------------------------------------------------------------------------------------------------------------*/
 DIOATCMD_ERROR DIOATCMDS::Basic(int timeout)
 {
-  return MakeSimpleCommand(DIOATCMD_TYPE_BASIC,NULL,timeout);
+  return MakeSimpleCommand(DIOATCMD_TYPE_BASIC, NULL, timeout);
 }
 
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         DIOATCMD_ERROR DIOATCMDS::GetCharacter(DIOATCMD_CODECHARACTER code,XBYTE& character,int timeout)
+* @fn         DIOATCMD_ERROR DIOATCMDS::GetCharacter(DIOATCMD_CODECHARACTER code, XBYTE& character, int timeout)
 * @brief      Get character
 * @ingroup    DATAIO
 * 
@@ -391,11 +391,11 @@ DIOATCMD_ERROR DIOATCMDS::Basic(int timeout)
 * @return     DIOATCMD_ERROR : Requested value.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-DIOATCMD_ERROR DIOATCMDS::GetCharacter(DIOATCMD_CODECHARACTER code,XBYTE& character,int timeout)
+DIOATCMD_ERROR DIOATCMDS::GetCharacter(DIOATCMD_CODECHARACTER code, XBYTE& character, int timeout)
 {
   XSTRING param;
 
-  param.Format(__L("%d?"),code);
+  param.Format(__L("%d?"), code);
 
   DIOATCMD_ERROR error = SendCommand(DIOATCMD_TYPE_CHARACTER, param.Get());
   if(error!=DIOATCMD_ERROR_NONE) return error;
@@ -431,7 +431,7 @@ DIOATCMD_ERROR DIOATCMDS::GetCharacter(DIOATCMD_CODECHARACTER code,XBYTE& charac
 * --------------------------------------------------------------------------------------------------------------------*/
 DIOATCMD_ERROR DIOATCMDS::Reset(int timeout)
 {
-  return MakeSimpleCommand(DIOATCMD_TYPE_RESET,NULL,timeout);
+  return MakeSimpleCommand(DIOATCMD_TYPE_RESET, NULL, timeout);
 }
 
 
@@ -460,7 +460,7 @@ DIOATCMD_ERROR DIOATCMDS::SetEchoMode(bool echomode, int timeout)
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         DIOATCMD_ERROR DIOATCMDS::SetVerboseMode(bool verbosemode , int timeout)
+* @fn         DIOATCMD_ERROR DIOATCMDS::SetVerboseMode(bool verbosemode, int timeout)
 * @brief      Set verbose mode
 * @ingroup    DATAIO
 * 
@@ -470,7 +470,7 @@ DIOATCMD_ERROR DIOATCMDS::SetEchoMode(bool echomode, int timeout)
 * @return     DIOATCMD_ERROR : Requested value.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-DIOATCMD_ERROR DIOATCMDS::SetVerboseMode(bool verbosemode  , int timeout)
+DIOATCMD_ERROR DIOATCMDS::SetVerboseMode(bool verbosemode, int timeout)
 {
   DIOATCMD_ERROR error = SendCommand(DIOATCMD_TYPE_VERBOSE, verbosemode?__L("1"):__L("0"));
   if(error!=DIOATCMD_ERROR_NONE) return error;
@@ -508,7 +508,7 @@ DIOATCMD_ERROR DIOATCMDS::GetBaudRate(int& baudrate, int timeout)
 
           mask = GetCommandString(DIOATCMD_TYPE_BAUDRATE);
           mask += __L(":%d");
-          answer->UnFormat(mask.Get(),&baudrate);
+          answer->UnFormat(mask.Get(), &baudrate);
         }
 
       DeleteAnswer(index);
@@ -537,9 +537,9 @@ DIOATCMD_ERROR DIOATCMDS::SetBaudRate(int baudrate, int timeout)
 
   if(diostream->GetConfig()->GetType()!=DIOSTREAMTYPE_UART) return DIOATCMD_ERROR_INVALIDCMD;
 
-  param.Format(__L("=%d"),baudrate);
+  param.Format(__L("=%d"), baudrate);
 
-  error = SendCommand(DIOATCMD_TYPE_BAUDRATE,param.Get());
+  error = SendCommand(DIOATCMD_TYPE_BAUDRATE, param.Get());
   if(error!=DIOATCMD_ERROR_NONE) return error;
 
   error =  WaitToProcessAnswer(timeout);
@@ -687,7 +687,7 @@ int DIOATCMDS::CalculeBaudRateStreamUART(int timeout)
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         bool DIOATCMDS::AddCommand(XDWORD type, XCHAR* command,bool isunsolicited)
+* @fn         bool DIOATCMDS::AddCommand(XDWORD type, XCHAR* command, bool isunsolicited)
 * @brief      Add command
 * @ingroup    DATAIO
 * 
@@ -698,7 +698,7 @@ int DIOATCMDS::CalculeBaudRateStreamUART(int timeout)
 * @return     bool : true if the operation is successful; otherwise false.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-bool DIOATCMDS::AddCommand(XDWORD type, XCHAR* command,bool isunsolicited)
+bool DIOATCMDS::AddCommand(XDWORD type, XCHAR* command, bool isunsolicited)
 {
   DIOATCMD* ATcommand = GetCommand(type);
   if(ATcommand) return false;
@@ -706,7 +706,7 @@ bool DIOATCMDS::AddCommand(XDWORD type, XCHAR* command,bool isunsolicited)
   ATcommand = GEN_NEW DIOATCMD();
   if(!ATcommand) return false;
 
-  ATcommand->Set(type,command,isunsolicited);
+  ATcommand->Set(type, command, isunsolicited);
 
   ATcmds.Add(ATcommand);
 
@@ -785,7 +785,7 @@ bool DIOATCMDS::DeleteAllCommand()
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         DIOATCMD_ERROR DIOATCMDS::SendCommand(XDWORD type,XCHAR* param)
+* @fn         DIOATCMD_ERROR DIOATCMDS::SendCommand(XDWORD type, XCHAR* param)
 * @brief      Send command
 * @ingroup    DATAIO
 * 
@@ -795,7 +795,7 @@ bool DIOATCMDS::DeleteAllCommand()
 * @return     DIOATCMD_ERROR : Requested value.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-DIOATCMD_ERROR DIOATCMDS::SendCommand(XDWORD type,XCHAR* param)
+DIOATCMD_ERROR DIOATCMDS::SendCommand(XDWORD type, XCHAR* param)
 {
   DIOATCMD* ATcommand = GetCommand(type);
   if(!ATcommand) return DIOATCMD_ERROR_UNKNOWNCMD;
@@ -841,7 +841,7 @@ DIOATCMD_ERROR DIOATCMDS::SendCommand(XDWORD type,XCHAR* param)
 * --------------------------------------------------------------------------------------------------------------------*/
 DIOATCMD_ERROR DIOATCMDS::SendCommand(XDWORD type, XSTRING& param)
 {
-  return DIOATCMDS::SendCommand(type,param.Get());
+  return DIOATCMDS::SendCommand(type, param.Get());
 }
 
 
@@ -988,7 +988,7 @@ bool DIOATCMDS::AddSendCommand(XBUFFER& xbuffer)
 {
   XSTRING param;
 
-  param.Set(xbuffer.Get(),xbuffer.GetSize());
+  param.Set(xbuffer.Get(), xbuffer.GetSize());
 
   return AddSendCommand(&param);
 }
@@ -1088,7 +1088,7 @@ bool DIOATCMDS::DeleteAllSendCommand()
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         bool DIOATCMDS::ReadAnswer(XSTRING& answer,int timeout)
+* @fn         bool DIOATCMDS::ReadAnswer(XSTRING& answer, int timeout)
 * @brief      Read answer
 * @ingroup    DATAIO
 * 
@@ -1098,7 +1098,7 @@ bool DIOATCMDS::DeleteAllSendCommand()
 * @return     bool : true if the operation is successful; otherwise false.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-bool DIOATCMDS::ReadAnswer(XSTRING& answer,int timeout)
+bool DIOATCMDS::ReadAnswer(XSTRING& answer, int timeout)
 {
   if(!diostream) return false;
   if(!xtimer)    return false;
@@ -1116,7 +1116,7 @@ bool DIOATCMDS::ReadAnswer(XSTRING& answer,int timeout)
 
   do{ if(bufferread->GetSize()>index)
         {
-          if(bufferread->Get(data,index))
+          if(bufferread->Get(data, index))
             {
               if(data==endlinechar)
                 {
@@ -1124,7 +1124,7 @@ bool DIOATCMDS::ReadAnswer(XSTRING& answer,int timeout)
 
                   if(bufferread->GetSize()>index)
                     {
-                      if(bufferread->Get(data,index))
+                      if(bufferread->Get(data, index))
                         {
                           if(data==answerchar) index++;
                         }
@@ -1152,7 +1152,7 @@ bool DIOATCMDS::ReadAnswer(XSTRING& answer,int timeout)
           XBYTE byte;
           int   br;
 
-          br = diostream->Read((XBYTE*)&byte,1);
+          br = diostream->Read((XBYTE*)&byte, 1);
           if(br)
             {
               if((byte!=endlinechar) && (byte!=answerchar))  answer.Add(byte);
@@ -1205,7 +1205,7 @@ bool DIOATCMDS::ReadAnswerWithOutEndChar(XSTRING& answer, int timeout)
             {
               for(c=0;c<(int)bufferread->GetSize();c++)
                 {
-                  if(bufferread->Get(data,c))
+                  if(bufferread->Get(data, c))
                     {
                       if(data==answer[c]) index++; else break;
 
@@ -1233,7 +1233,7 @@ bool DIOATCMDS::ReadAnswerWithOutEndChar(XSTRING& answer, int timeout)
       XBYTE byte;
       int   br;
 
-      br = diostream->Read((XBYTE*)&byte,1);
+      br = diostream->Read((XBYTE*)&byte, 1);
       if(!br) status = false;
     }
 
@@ -1265,7 +1265,7 @@ bool DIOATCMDS::ReadAnswerWithOutEndChar(XCHAR* answer, int timeout)
 
   _answer = answer;
 
-  return ReadAnswerWithOutEndChar(_answer,timeout);
+  return ReadAnswerWithOutEndChar(_answer, timeout);
 }
 
 
@@ -1414,7 +1414,7 @@ int DIOATCMDS::SearchInAnswers(XCHAR* string, int timeout)
           XSTRING* answer = (XSTRING*)answers.Get(c);
           if(answer)
             {
-              if(answer->Find(string,true)!=XSTRING_NOTFOUND) return c;
+              if(answer->Find(string, true)!=XSTRING_NOTFOUND) return c;
             }
         }
 
@@ -1436,7 +1436,7 @@ int DIOATCMDS::SearchInAnswers(XCHAR* string, int timeout)
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         int DIOATCMDS::SearchInAnswers(XDWORD typecommand,int timeout)
+* @fn         int DIOATCMDS::SearchInAnswers(XDWORD typecommand, int timeout)
 * @brief      Search in answers
 * @ingroup    DATAIO
 * 
@@ -1446,7 +1446,7 @@ int DIOATCMDS::SearchInAnswers(XCHAR* string, int timeout)
 * @return     int : Requested value.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-int DIOATCMDS::SearchInAnswers(XDWORD typecommand,int timeout)
+int DIOATCMDS::SearchInAnswers(XDWORD typecommand, int timeout)
 {
   DIOATCMD* command = GetCommand(typecommand);
   if(!command) return DIOATCMDS_ANSWERNOTFOUND;
@@ -1456,7 +1456,7 @@ int DIOATCMDS::SearchInAnswers(XDWORD typecommand,int timeout)
   string = command->GetCommand();
   string += __L(":");
 
-  return SearchInAnswers(string.Get(),timeout);
+  return SearchInAnswers(string.Get(), timeout);
 }
 
 
@@ -1544,7 +1544,7 @@ DIOATCMD_ERROR DIOATCMDS::WaitToOneAnswerMore(int timeout)
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         DIOATCMD_ERROR DIOATCMDS::MakeSimpleCommand(XDWORD type,XCHAR* param,int timeout)
+* @fn         DIOATCMD_ERROR DIOATCMDS::MakeSimpleCommand(XDWORD type, XCHAR* param, int timeout)
 * @brief      Make simple command
 * @ingroup    DATAIO
 * 
@@ -1555,9 +1555,9 @@ DIOATCMD_ERROR DIOATCMDS::WaitToOneAnswerMore(int timeout)
 * @return     DIOATCMD_ERROR : Requested value.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-DIOATCMD_ERROR DIOATCMDS::MakeSimpleCommand(XDWORD type,XCHAR* param,int timeout)
+DIOATCMD_ERROR DIOATCMDS::MakeSimpleCommand(XDWORD type, XCHAR* param, int timeout)
 {
-  DIOATCMD_ERROR error = SendCommand(type,param);
+  DIOATCMD_ERROR error = SendCommand(type, param);
   if(error!=DIOATCMD_ERROR_NONE) return error;
 
   return WaitToProcessAnswer(timeout);
@@ -1585,7 +1585,7 @@ DIOATCMD_ERROR DIOATCMDS::MakeCommandWithSimpleAnswer(XDWORD type, XSTRING& answ
 
   int index=0;
 
-  error = WaitToProcessAnswer(timeout,&index);
+  error = WaitToProcessAnswer(timeout, &index);
   if(error!=DIOATCMD_ERROR_NONE) return error;
 
   XSTRING* _answer = GetAnswer(index-1);
@@ -1683,7 +1683,7 @@ bool DIOATCMDS::CheckUnsolicitedAnswer(XSTRING& answer)
         {
           if(atcmd->IsUnSolicited())
             {
-              int index = answer.Find(atcmd->GetCommand(),false);
+              int index = answer.Find(atcmd->GetCommand(), false);
               if(index!=XSTRING_NOTFOUND)
                 {
                   XSTRING                      param;
@@ -1691,16 +1691,16 @@ bool DIOATCMDS::CheckUnsolicitedAnswer(XSTRING& answer)
                   DIOATCMD_TYPEADDITIONALSIZE  typesize = DIOATCMD_TYPEADDITIONALSIZE_NONE;
                   int                          sizedata = 0;
 
-                  answer.Copy(index+atcmd->GetCommandString()->GetSize()+1,param);
+                  answer.Copy(index+atcmd->GetCommandString()->GetSize()+1, param);
 
-                  if(UnsolicitedCommandAddtionalSize(atcmd->GetType(),param,typesize,sizedata))
+                  if(UnsolicitedCommandAddtionalSize(atcmd->GetType(), param, typesize, sizedata))
                     {
                       switch(typesize)
                         {
                           case DIOATCMD_TYPEADDITIONALSIZE_NONE   : break;
 
                           case DIOATCMD_TYPEADDITIONALSIZE_BYTES  : additionalparam.Resize(sizedata);
-                                                                    diostream->Read((XBYTE*)additionalparam.Get(),sizedata);
+                                                                    diostream->Read((XBYTE*)additionalparam.Get(), sizedata);
                                                                     break;
 
                           case DIOATCMD_TYPEADDITIONALSIZE_LINES  : { XSTRING line;
@@ -1726,7 +1726,7 @@ bool DIOATCMDS::CheckUnsolicitedAnswer(XSTRING& answer)
                                                                     break;
                         }
 
-                      return UnsolicitedCommand(atcmd->GetType(),param,additionalparam);
+                      return UnsolicitedCommand(atcmd->GetType(), param, additionalparam);
 
                     } else return false;
                 }

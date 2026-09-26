@@ -401,7 +401,7 @@ bool DIOWEBHEADER::GetFormat(bool isserver, int type, void* data)
       int     code;
       XSTRING codestring(DIOWEBHEADER_MAXLINE);
 
-      line.UnFormat(__L("HTTP/%d.%d %d %s"),&version,&subversion,&code,codestring.Get());
+      line.UnFormat(__L("HTTP/%d.%d %d %s"), &version, &subversion, &code, codestring.Get());
       codestring.AdjustSize();
 
       switch(type)

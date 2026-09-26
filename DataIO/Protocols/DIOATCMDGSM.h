@@ -64,9 +64,6 @@ enum
 #define DIOATCMDGSM_SMSFORMAT_PDU                   0x01
 #define DIOATCMDGSM_SMSFORMAT_TXT                   0x02
 
-
-
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
 
 
@@ -76,7 +73,6 @@ class DIOATCMDGSM_ALPHABET
 
     virtual XWORD           Traslate                      (bool from, XWORD data) = 0;
 };
-
 
 class DIOATCMDGSM_ALPHABET_8859_1 : public DIOATCMDGSM_ALPHABET
 {
@@ -94,8 +90,6 @@ class DIOATCMDGSM_ALPHABET_8859_1 : public DIOATCMDGSM_ALPHABET
 
     XBYTE                   table[138][2];
 };
-
-
 
 class DIOATCMDGSM  : public DIOATCMDS
 {
@@ -120,12 +114,12 @@ class DIOATCMDGSM  : public DIOATCMDS
     DIOATCMD_ERROR          SetSMSFormat                  (XBYTE format, int timeout = DIOATCMDS_TIMEOUT);
     DIOATCMD_ERROR          GetSMSCenter                  (XSTRING& SMScenter, int timeout = DIOATCMDS_TIMEOUT);
     DIOATCMD_ERROR          SetSMSCenter                  (XCHAR* smscenter, int timeout = DIOATCMDS_TIMEOUT);
-    DIOATCMD_ERROR          SendSMS                       (XCHAR* number, XCHAR* message,int* mrID = NULL, int timeout = DIOATCMDS_TIMEOUT);
+    DIOATCMD_ERROR          SendSMS                       (XCHAR* number, XCHAR* message, int* mrID = NULL, int timeout = DIOATCMDS_TIMEOUT);
 
   private:
 
     void                    Clean                         ();
-    bool                    CodecPDUFormat                (XCHAR* number,XCHAR* message,bool inoctets,int validperiod,XSTRING& length, XSTRING& result);
+    bool                    CodecPDUFormat                (XCHAR* number, XCHAR* message, bool inoctets, int validperiod, XSTRING& length, XSTRING& result);
 
 };
 

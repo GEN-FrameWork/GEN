@@ -125,10 +125,6 @@ void GRPBITMAPFILEBMPCOLORPALETE::Clean()
 }
 
 
-
-
-
-
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         GRPBITMAPFILEBMPHEADER::GRPBITMAPFILEBMPHEADER()
@@ -228,10 +224,10 @@ bool GRPBITMAPFILEBMPHEADER::Load(XFILE* file)
           XBYTE blue;
           XBYTE alpha;
 
-          if(!file->Read(&blue  ,1)) return false;
-          if(!file->Read(&green ,1)) return false;
-          if(!file->Read(&red   ,1)) return false;
-          if(!file->Read(&alpha ,1)) return false;
+          if(!file->Read(&blue, 1)) return false;
+          if(!file->Read(&green, 1)) return false;
+          if(!file->Read(&red, 1)) return false;
+          if(!file->Read(&alpha, 1)) return false;
 
           GRPBITMAPFILEBMPCOLORPALETE* colorpalette = GEN_NEW GRPBITMAPFILEBMPCOLORPALETE(red, green, blue, alpha);
           if(colorpalette) palette.Add((XBYTE)c, colorpalette);
@@ -257,23 +253,23 @@ bool GRPBITMAPFILEBMPHEADER::Load(XFILE* file)
 * --------------------------------------------------------------------------------------------------------------------*/
 bool GRPBITMAPFILEBMPHEADER::Load(XBYTE* buffer, XDWORD size, XDWORD& indexbuffer)
 {
-  memcpy((XBYTE*)&headerinfo.type             , &buffer[indexbuffer]   , sizeof(XWORD));     indexbuffer += sizeof(XWORD);
-  memcpy((XBYTE*)&headerinfo.size             , &buffer[indexbuffer]   , sizeof(XDWORD));    indexbuffer += sizeof(XDWORD);
-  memcpy((XBYTE*)&headerinfo.reserved1        , &buffer[indexbuffer]   , sizeof(XWORD));     indexbuffer += sizeof(XWORD);
-  memcpy((XBYTE*)&headerinfo.reserved2        , &buffer[indexbuffer]   , sizeof(XWORD));     indexbuffer += sizeof(XWORD);
-  memcpy((XBYTE*)&headerinfo.offsetdata       , &buffer[indexbuffer]   , sizeof(XDWORD));    indexbuffer += sizeof(XDWORD);
+  memcpy((XBYTE*)&headerinfo.type, &buffer[indexbuffer], sizeof(XWORD));     indexbuffer += sizeof(XWORD);
+  memcpy((XBYTE*)&headerinfo.size, &buffer[indexbuffer], sizeof(XDWORD));    indexbuffer += sizeof(XDWORD);
+  memcpy((XBYTE*)&headerinfo.reserved1, &buffer[indexbuffer], sizeof(XWORD));     indexbuffer += sizeof(XWORD);
+  memcpy((XBYTE*)&headerinfo.reserved2, &buffer[indexbuffer], sizeof(XWORD));     indexbuffer += sizeof(XWORD);
+  memcpy((XBYTE*)&headerinfo.offsetdata, &buffer[indexbuffer], sizeof(XDWORD));    indexbuffer += sizeof(XDWORD);
 
-  memcpy((XBYTE*)&headerinfo.headersize       , &buffer[indexbuffer]   , sizeof(XDWORD));    indexbuffer += sizeof(XDWORD);
-  memcpy((XBYTE*)&headerinfo.width            , &buffer[indexbuffer]   , sizeof(XDWORD));    indexbuffer += sizeof(XDWORD);
-  memcpy((XBYTE*)&headerinfo.height           , &buffer[indexbuffer]   , sizeof(XDWORD));    indexbuffer += sizeof(XDWORD);
-  memcpy((XBYTE*)&headerinfo.planes           , &buffer[indexbuffer]   , sizeof(XWORD));     indexbuffer += sizeof(XWORD);
-  memcpy((XBYTE*)&headerinfo.bitsperpixel     , &buffer[indexbuffer]   , sizeof(XWORD));     indexbuffer += sizeof(XWORD);
-  memcpy((XBYTE*)&headerinfo.compression      , &buffer[indexbuffer]   , sizeof(XDWORD));    indexbuffer += sizeof(XDWORD);
-  memcpy((XBYTE*)&headerinfo.sizebmp          , &buffer[indexbuffer]   , sizeof(XDWORD));    indexbuffer += sizeof(XDWORD);
-  memcpy((XBYTE*)&headerinfo.xpixelspermeter  , &buffer[indexbuffer]   , sizeof(XDWORD));    indexbuffer += sizeof(XDWORD);
-  memcpy((XBYTE*)&headerinfo.ypixelspermeter  , &buffer[indexbuffer]   , sizeof(XDWORD));    indexbuffer += sizeof(XDWORD);
-  memcpy((XBYTE*)&headerinfo.colorused        , &buffer[indexbuffer]   , sizeof(XDWORD));    indexbuffer += sizeof(XDWORD);
-  memcpy((XBYTE*)&headerinfo.colorimportant   , &buffer[indexbuffer]   , sizeof(XDWORD));    indexbuffer += sizeof(XDWORD);
+  memcpy((XBYTE*)&headerinfo.headersize, &buffer[indexbuffer], sizeof(XDWORD));    indexbuffer += sizeof(XDWORD);
+  memcpy((XBYTE*)&headerinfo.width, &buffer[indexbuffer], sizeof(XDWORD));    indexbuffer += sizeof(XDWORD);
+  memcpy((XBYTE*)&headerinfo.height, &buffer[indexbuffer], sizeof(XDWORD));    indexbuffer += sizeof(XDWORD);
+  memcpy((XBYTE*)&headerinfo.planes, &buffer[indexbuffer], sizeof(XWORD));     indexbuffer += sizeof(XWORD);
+  memcpy((XBYTE*)&headerinfo.bitsperpixel, &buffer[indexbuffer], sizeof(XWORD));     indexbuffer += sizeof(XWORD);
+  memcpy((XBYTE*)&headerinfo.compression, &buffer[indexbuffer], sizeof(XDWORD));    indexbuffer += sizeof(XDWORD);
+  memcpy((XBYTE*)&headerinfo.sizebmp, &buffer[indexbuffer], sizeof(XDWORD));    indexbuffer += sizeof(XDWORD);
+  memcpy((XBYTE*)&headerinfo.xpixelspermeter, &buffer[indexbuffer], sizeof(XDWORD));    indexbuffer += sizeof(XDWORD);
+  memcpy((XBYTE*)&headerinfo.ypixelspermeter, &buffer[indexbuffer], sizeof(XDWORD));    indexbuffer += sizeof(XDWORD);
+  memcpy((XBYTE*)&headerinfo.colorused, &buffer[indexbuffer], sizeof(XDWORD));    indexbuffer += sizeof(XDWORD);
+  memcpy((XBYTE*)&headerinfo.colorimportant, &buffer[indexbuffer], sizeof(XDWORD));    indexbuffer += sizeof(XDWORD);
 
   // Check: "BM" signature in the file for WINDOWS NO OS/2 valid format.
   if(headerinfo.type!=0x4D42) return false;
@@ -284,7 +280,7 @@ bool GRPBITMAPFILEBMPHEADER::Load(XBYTE* buffer, XDWORD size, XDWORD& indexbuffe
                 break;
 
       case 16 : { XDWORD maskcolor[4];
-                  memcpy((XBYTE*)maskcolor, &buffer[indexbuffer],  16); indexbuffer += 16;
+                  memcpy((XBYTE*)maskcolor, &buffer[indexbuffer], 16); indexbuffer += 16;
 
                   if((maskcolor[0] == 0x00007c00) && (maskcolor[1] == 0x000003E0) && (maskcolor[2] == 0x0000001F) && (maskcolor[3] == 0x00008000)) mode = GRPPROPERTYMODE_16_RGBA_5551;
                   if((maskcolor[0] == 0x0000F800) && (maskcolor[1] == 0x000007E0) && (maskcolor[2] == 0x0000001F) && (maskcolor[3] == 0x00000000)) mode = GRPPROPERTYMODE_16_RGB_565;
@@ -313,9 +309,9 @@ bool GRPBITMAPFILEBMPHEADER::Load(XBYTE* buffer, XDWORD size, XDWORD& indexbuffe
           XBYTE blue;
           XBYTE alpha;
 
-          memcpy((XBYTE*)&blue  , &buffer[indexbuffer], 1);   indexbuffer++;
+          memcpy((XBYTE*)&blue, &buffer[indexbuffer], 1);   indexbuffer++;
           memcpy((XBYTE*)&green , &buffer[indexbuffer], 1);   indexbuffer++;
-          memcpy((XBYTE*)&red   , &buffer[indexbuffer], 1);   indexbuffer++;
+          memcpy((XBYTE*)&red, &buffer[indexbuffer], 1);   indexbuffer++;
           memcpy((XBYTE*)&alpha , &buffer[indexbuffer], 1);   indexbuffer++;
 
           GRPBITMAPFILEBMPCOLORPALETE* colorpalette = GEN_NEW GRPBITMAPFILEBMPCOLORPALETE(red, green, blue, alpha);
@@ -475,7 +471,7 @@ bool GRPBITMAPFILEBMPHEADER::DeleteAllPalette()
 void GRPBITMAPFILEBMPHEADER::Clean()
 {
   mode = GRPPROPERTYMODE_XX_UNKNOWN;
-  memset((XBYTE*)&headerinfo  ,0  ,sizeof(GRPBITMAPFILEBMPHEADERINFO));
+  memset((XBYTE*)&headerinfo, 0, sizeof(GRPBITMAPFILEBMPHEADERINFO));
 }
 
 

@@ -125,7 +125,7 @@ bool DIOLINUXSTREAMUARTLOCALENUMDEVICES::Search()
     {
       while(ndevices--)
         {
-          if(strcmp(namelist[ndevices]->d_name,"..") && strcmp(namelist[ndevices]->d_name,"."))
+          if(strcmp(namelist[ndevices]->d_name, "..") && strcmp(namelist[ndevices]->d_name, "."))
             {
               XSTRING     devicedir;
               struct stat st;

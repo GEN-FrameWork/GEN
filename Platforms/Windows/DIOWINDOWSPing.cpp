@@ -197,7 +197,7 @@ bool DIOWINDOWSPING::Do(XDWORD nretries, XDWORD timebetweenchecks, bool exitfirs
 
                           AddReply(nloop+1, fromIP.Get(), DIOPING_REQ_TICKETSIZE, (elapsed/1000), echoreply->Options.Ttl);
 
-                          DIOPING_XEVENT xevent(this,DIOPING_XEVENT_TYPE_DOPING);
+                          DIOPING_XEVENT xevent(this, DIOPING_XEVENT_TYPE_DOPING);
                           xevent.SetPingReply((DIOPINGREPLY*)replys.Get(replys.GetSize()-1));
                           PostEvent(&xevent);
 

@@ -249,10 +249,10 @@ bool XLINUXFILE::Read(XBYTE* buffer, XDWORD size, CIPHER* cipher)
 
   int _size;
 
-  _size=(int)fread((void *)buffer,1,(size_t)size, filehandle);
+  _size=(int)fread((void *)buffer, 1, (size_t)size, filehandle);
   if(_size!=size)  return false;
 
-  if(cipher) cipher->Uncipher(buffer,_size);
+  if(cipher) cipher->Uncipher(buffer, _size);
 
   return true;
 }
@@ -287,7 +287,7 @@ bool XLINUXFILE::Read(XBYTE* buffer, XDWORD* size, CIPHER* cipher)
 
   if(cipher)
     {
-      if(cipher->Uncipher(buffer,_size))
+      if(cipher->Uncipher(buffer, _size))
         {
           memcpy(buffer, cipher->GetResult()->Get(), _size);
 
@@ -318,12 +318,12 @@ bool XLINUXFILE::Write(XBYTE* buffer, XDWORD size, CIPHER* cipher)
 
   if(cipher)
     {
-      if(!cipher->Cipher(buffer,size)) return false;
+      if(!cipher->Cipher(buffer, size)) return false;
       if(fwrite((void *)cipher->GetResult()->Get(), 1, size, filehandle)!=(unsigned)size)  return false;
     }
    else
     {
-      if(fwrite((void *)buffer,1,size, filehandle)!=(unsigned)size)  return false;
+      if(fwrite((void *)buffer, 1, size, filehandle)!=(unsigned)size)  return false;
     }
 
   ActualizeSize();
@@ -386,7 +386,7 @@ bool XLINUXFILE::Close()
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         bool XLINUXFILE::Erase(XCHAR* xpath,bool overwrite)
+* @fn         bool XLINUXFILE::Erase(XCHAR* xpath, bool overwrite)
 * @brief      Erase
 * @ingroup    PLATFORM_LINUX
 * 
@@ -396,7 +396,7 @@ bool XLINUXFILE::Close()
 * @return     bool : true if the operation is successful; otherwise false.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-bool XLINUXFILE::Erase(XCHAR* xpath,bool overwrite)
+bool XLINUXFILE::Erase(XCHAR* xpath, bool overwrite)
 {
   if(Exist(xpath)!=true)  return false;
 
@@ -449,7 +449,7 @@ bool XLINUXFILE::Rename(XCHAR* xpathold, XCHAR* xpathnew)
     {
       XSTRING err;
       err.Set(strerror(errno));
-     XTRACE_PRINTCOLOR(4,__L("Error renaming file %s -> %s : %s"),xpathold,xpathnew,err.Get());
+     XTRACE_PRINTCOLOR(4, __L("Error renaming file %s -> %s : %s"), xpathold, xpathnew, err.Get());
     }
 
   return (!status)?true:false;

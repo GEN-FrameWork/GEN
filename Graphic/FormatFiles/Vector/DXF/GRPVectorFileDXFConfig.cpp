@@ -133,10 +133,10 @@ bool GRPVECTORFILEDXFCONFIG::SetHeader(GRPVECTORFILEDXFTEXTSECTIONHEADER* header
         {
           switch(variant->GetType())
             {         
-              case XVARIANT_TYPE_BOOLEAN        : fileCFG->AddValue(XFILECFG_VALUETYPE_BOOLEAN  , VECTORFILEDXFCONFIG_SECTION_DFX_CFG, namekey->Get(), (bool*)(variant->GetData()));      break;  
-              case XVARIANT_TYPE_INTEGER        : fileCFG->AddValue(XFILECFG_VALUETYPE_INT      , VECTORFILEDXFCONFIG_SECTION_DFX_CFG, namekey->Get(), (int*)(variant->GetData()));       break;  
-              case XVARIANT_TYPE_FLOAT          : fileCFG->AddValue(XFILECFG_VALUETYPE_FLOAT    , VECTORFILEDXFCONFIG_SECTION_DFX_CFG, namekey->Get(), (float*)(variant->GetData()));     break;  
-              case XVARIANT_TYPE_STRING         : fileCFG->AddValue(XFILECFG_VALUETYPE_STRING   , VECTORFILEDXFCONFIG_SECTION_DFX_CFG, namekey->Get(), (XSTRING*)(variant->GetData()));   break;
+              case XVARIANT_TYPE_BOOLEAN        : fileCFG->AddValue(XFILECFG_VALUETYPE_BOOLEAN, VECTORFILEDXFCONFIG_SECTION_DFX_CFG, namekey->Get(), (bool*)(variant->GetData()));      break;  
+              case XVARIANT_TYPE_INTEGER        : fileCFG->AddValue(XFILECFG_VALUETYPE_INT, VECTORFILEDXFCONFIG_SECTION_DFX_CFG, namekey->Get(), (int*)(variant->GetData()));       break;  
+              case XVARIANT_TYPE_FLOAT          : fileCFG->AddValue(XFILECFG_VALUETYPE_FLOAT, VECTORFILEDXFCONFIG_SECTION_DFX_CFG, namekey->Get(), (float*)(variant->GetData()));     break;  
+              case XVARIANT_TYPE_STRING         : fileCFG->AddValue(XFILECFG_VALUETYPE_STRING, VECTORFILEDXFCONFIG_SECTION_DFX_CFG, namekey->Get(), (XSTRING*)(variant->GetData()));   break;
   
               case XVARIANT_TYPE_NULL           :
               case XVARIANT_TYPE_DOUBLEINTEGER  :            

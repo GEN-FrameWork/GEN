@@ -34,21 +34,15 @@
 
 #include "DIOStreamEnumServers.h"
 
-
-
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
 
 #define DIOSTREAMUDPLOCALENUMSERVERSDEFAULTSEARCHTIMEOUT      30                                        // seconds
 #define DIOSTREAMUDPLOCALENUMSERVERSID                        __L("GEN Broadcast message ID [%08X]")
 
-
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
-
 
 class DIOSTREAMUDPCONFIG;
 class DIOSTREAMUDP;
-
 
 class DIOSTREAMUDPLOCALENUMSERVERS :  public DIOSTREAMENUMSERVERS
 {

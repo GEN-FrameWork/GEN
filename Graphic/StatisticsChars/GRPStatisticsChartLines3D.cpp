@@ -306,7 +306,7 @@ void GRPSTATISTICSCHARTLINES3D::DrawRibbonSegment(GRPSTATISTICSCHARTBUILDER& bui
   double topface[8]  = { fax, fay, fbx, fby, bbx, bby, bax, bay };               // top band
   double edgeface[8] = { fax, fay, fbx, fby, fbx, fby + thick, fax, fay + thick };// front edge (thickness)
 
-  builder.DrawPolygon(topface,  4, topstyle);
+  builder.DrawPolygon(topface, 4, topstyle);
   builder.DrawPolygon(edgeface, 4, edgestyle);
 }
 

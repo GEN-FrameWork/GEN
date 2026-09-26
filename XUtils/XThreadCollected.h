@@ -44,8 +44,6 @@
 #include "XThread.h"
 #include "XTrace.h"
 
-
-
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
 
 #define CREATEXTHREAD               XTHREADSCOLLECTEDMANAGER::GetInstance().CreateThread
@@ -54,10 +52,7 @@
 #define ACTIVATEXTHREADGROUP(id)    (void)XTHREADSCOLLECTEDMANAGER::GetInstance().ActivateGroup(id)
 #define DEACTIVATEXTHREADGROUP(id)  (void)XTHREADSCOLLECTEDMANAGER::GetInstance().DeactivateGroup(id)
 
-
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
-
 
 class XTHREADCOLLECTED
 {
@@ -111,7 +106,6 @@ class XTHREADCOLLECTED
 
     void                                    Clean                           ();
 
-
     XTHREADGROUPID                          groupID;
     XSTRING                                 ID;
     XTHREADFUNCTION                         function;
@@ -128,7 +122,6 @@ class XTHREADCOLLECTED
     XTIMER*                                 xtimerout;
     XTHREAD*                                directxthread;
 };
-
 
 class XTHREADSCOLLECTED
 {
@@ -154,13 +147,11 @@ class XTHREADSCOLLECTED
 
     void                                    Clean                           ();
 
-
     XTHREADGROUPID                          groupID;
     XMUTEX*                                 xthreadsvectormutex;
     XVECTOR<XTHREADCOLLECTED*>              xthreadsvector;
     XTHREAD*                                xthread;
 };
-
 
 class XTHREADSCOLLECTEDMANAGER
 {

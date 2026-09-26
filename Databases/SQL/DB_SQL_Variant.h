@@ -77,11 +77,7 @@ enum DB_SQL_VARIANT_FLAGS
 
 #define  DB_SQL_ROWHEADER       DB_SQL_VECTOR<DB_SQL_STRING*>
 
-
-
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
-
 
 #ifdef _MSC_VER
 #pragma warning(push)

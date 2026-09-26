@@ -32,8 +32,6 @@
 
 #include "XString.h"
 
-
-
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
 
 #define VERSIONFRAMEWORK_NAME         "GEN FrameWork"
@@ -42,10 +40,7 @@
 #define VERSIONFRAMEWORK_SUBERROR     0
 #define VERSIONFRAMEWORK_CODENAME     "Winder A2"
 
-
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
-
 
 class VERSIONFRAMEWORK
 {
@@ -70,7 +65,7 @@ class VERSIONFRAMEWORK
     XSTRING*                  GetAppVersion                 ();
     bool                      GetAppVersionStatus           (XDWORD app_version, XDWORD app_subversion, XDWORD app_versionerror, XSTRING& statusstr);
     bool                      GetAppVersion                 (XDWORD app_version, XDWORD app_subversion, XDWORD app_versionerror, XSTRING& versionstr);
-    bool                      SetAppVersion                 (XCHAR* app_name, XCHAR* app_execname, XDWORD app_version, XDWORD app_subversion, XDWORD app_versionerror,XCHAR* app_owner, XDWORD app_creationyear);
+    bool                      SetAppVersion                 (XCHAR* app_name, XCHAR* app_execname, XDWORD app_version, XDWORD app_subversion, XDWORD app_versionerror, XCHAR* app_owner, XDWORD app_creationyear);
     bool                      UpdateYearAppVersion          ();
     
   private:  

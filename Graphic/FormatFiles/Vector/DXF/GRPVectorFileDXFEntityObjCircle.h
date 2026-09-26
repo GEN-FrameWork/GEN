@@ -35,15 +35,9 @@
 #include "GRPVectorFileDXFEntityDefPoint.h"
 #include "GRPVectorFileDXFEntityObj.h"
 
-
-
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
 
-
-
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
-
 
 class GRPVECTORFILEDXFENTITYOBJCIRCLE : public GRPVECTORFILEDXFENTITYOBJ
 {  

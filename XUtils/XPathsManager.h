@@ -61,12 +61,9 @@ enum XPATHSMANAGERSECTIONTYPE
   XPATHSMANAGERSECTIONTYPE_GENERIC7           ,
 };
 
-
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
 
 class XPATH;
-
 
 class XPATHSMANAGERSECTION
 {
@@ -81,7 +78,6 @@ class XPATHSMANAGERSECTION
 
     void                              Clean                         ();
 };
-
 
 class XPATHSMANAGER
 {

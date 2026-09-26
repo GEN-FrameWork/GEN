@@ -142,7 +142,7 @@ bool GRPSTATISTICSCHARTBARS::DrawPlot(GRPSTATISTICSCHARTBUILDER& builder, double
   axisstyle.SetStroke(config.GetAxisColor(), 1.5);
 
   builder.DrawLine(x, y + height, x + width, y + height, axisstyle);            // X axis
-  builder.DrawLine(x, y,          x,         y + height, axisstyle);            // Y axis
+  builder.DrawLine(x, y, x, y + height, axisstyle);            // Y axis
 
   // grouped horizontal bars
 

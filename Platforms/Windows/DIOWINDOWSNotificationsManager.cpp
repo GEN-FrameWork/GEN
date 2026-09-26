@@ -84,7 +84,6 @@ void DIOWINDOWSNOTIFICATIONSMANAGER_HANDLER::toastActivated(int actionindex) con
 }
 
 
-
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         void DIOWINDOWSNOTIFICATIONSMANAGER_HANDLER::toastActivated(const char* response) const
@@ -139,10 +138,6 @@ void DIOWINDOWSNOTIFICATIONSMANAGER_HANDLER::toastFailed() const
 {
   // "Error showing current toast"   
 }
-
-
-
-
 
 
 /**-------------------------------------------------------------------------------------------------------------------

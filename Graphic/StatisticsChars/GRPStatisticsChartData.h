@@ -36,8 +36,6 @@
 
 #include "GRPStatisticsChartStyle.h"
 
-
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
 
 class GRPSTATISTICSCHARTSERIE
@@ -64,8 +62,6 @@ class GRPSTATISTICSCHARTSERIE
     GRPSTATISTICSCHARTCOLOR             color;
     XVECTOR<double>                     values;
 };
-
-
 
 class GRPSTATISTICSCHARTDATA
 {
@@ -122,7 +118,6 @@ class GRPSTATISTICSCHARTDATA
 
                                           return max;
                                         }
-
 
     double                              GetMinValue                       ()
                                         {

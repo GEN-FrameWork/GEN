@@ -36,8 +36,6 @@
 
 #include "DIODeviceI2C.h"
 
-
-
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
 
 #define DIOI2CTEMHUMSENSORSHT20_ADDRESS                               0x40
@@ -54,10 +52,7 @@
 
 #define DIOI2CTEMHUMSENSORSHT20_SHIFTED_DIVISOR                       0x988000
 
-
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
-
 
 class DIOI2CTEMHUMSENSORSHT20: public DIODEVICEI2C
 {

@@ -288,9 +288,9 @@ bool XWINDOWSCONSOLE::Maximize()
   csbi.dwSize.X = 150;
   csbi.dwSize.Y = 60;
 
-  SetConsoleScreenBufferSize(hconsole,csbi.dwSize);
+  SetConsoleScreenBufferSize(hconsole, csbi.dwSize);
 
-  ShowWindow(hwindow,SW_MAXIMIZE);
+  ShowWindow(hwindow, SW_MAXIMIZE);
 
   #endif
 
@@ -323,9 +323,9 @@ bool XWINDOWSCONSOLE::Minimize()
   csbi.dwSize.X = 120;
   csbi.dwSize.Y = 50;
 
-  SetConsoleScreenBufferSize(hconsole,csbi.dwSize);
+  SetConsoleScreenBufferSize(hconsole, csbi.dwSize);
 
-  ShowWindow(hwindow,SW_MINIMIZE);
+  ShowWindow(hwindow, SW_MINIMIZE);
 
   #endif
 
@@ -349,7 +349,7 @@ bool XWINDOWSCONSOLE::Hide()
   HWND hwindow  = GetConsoleWindow();
   if(!hwindow)  return false;
 
-  ShowWindow(hwindow,SW_HIDE);
+  ShowWindow(hwindow, SW_HIDE);
 
   #endif
 
@@ -399,7 +399,7 @@ bool XWINDOWSCONSOLE::UnHide()
   HWND hwindow  = GetConsoleWindow();
   if(!hwindow)  return false;
 
-  ShowWindow(hwindow,SW_SHOW);
+  ShowWindow(hwindow, SW_SHOW);
 
   #endif
 

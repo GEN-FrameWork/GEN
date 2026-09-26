@@ -158,11 +158,11 @@ bool XWINDOWSDATETIME::GetFileDateTime(XPATH& xpath, void* tmzip, XDWORD* dt)
   FILETIME         ftlocal;
   WIN32_FIND_DATA  ff32;
 
-  hfind = FindFirstFile(xpath.Get(),&ff32);
+  hfind = FindFirstFile(xpath.Get(), &ff32);
   if(hfind != INVALID_HANDLE_VALUE)
     {
-      FileTimeToLocalFileTime(&(ff32.ftLastWriteTime),&ftlocal);
-      FileTimeToDosDateTime(&ftlocal,((LPWORD)dt)+1,((LPWORD)dt)+0);
+      FileTimeToLocalFileTime(&(ff32.ftLastWriteTime), &ftlocal);
+      FileTimeToDosDateTime(&ftlocal, ((LPWORD)dt)+1, ((LPWORD)dt)+0);
       FindClose(hfind);
 
       return true;
@@ -190,10 +190,10 @@ bool XWINDOWSDATETIME::GetFileDateTime(XPATH& xpath)
   WIN32_FIND_DATA  ff32;
   SYSTEMTIME       systemtime;
 
-  hfind = FindFirstFile(xpath.Get(),&ff32);
+  hfind = FindFirstFile(xpath.Get(), &ff32);
   if(hfind != INVALID_HANDLE_VALUE)
     {
-      FileTimeToLocalFileTime(&(ff32.ftLastWriteTime),&ftlocal);
+      FileTimeToLocalFileTime(&(ff32.ftLastWriteTime), &ftlocal);
       FileTimeToSystemTime(&ftlocal, &systemtime);
       FindClose(hfind);
 

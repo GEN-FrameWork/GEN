@@ -36,12 +36,7 @@
 
 #include "GRPDesktopManager.h"
 
-
-
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
-
-
-
 
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
 
@@ -53,7 +48,7 @@ class  GRPWINDOWSDESKTOPMONITORS : public GRPDESKTOPMONITORS
     
   private:
     
-    static BOOL CALLBACK                  MonitorEnum                                 (HMONITOR hmon,HDC hdc,LPRECT rectmonitor,LPARAM pdata);
+    static BOOL CALLBACK                  MonitorEnum                                 (HMONITOR hmon, HDC hdc, LPRECT rectmonitor, LPARAM pdata);
     
     void                                  Clean                                       ();    
 };

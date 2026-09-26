@@ -90,15 +90,10 @@ enum DIOOBEXPUSHXFSMSTATES
 
 #define DIOOBEXPUSH_MAXANSWER       32
 
-
-
-
 /*---- INLINE FUNCTIONS + PROTOTYPES ---------------------------------------------------------------------------------*/
-
 
 class XTIMER;
 class DIOSTREAM;
-
 
 class DIOOBEXPUSHFILE
 {
@@ -133,7 +128,6 @@ class DIOOBEXPUSHFILE
     DIOOBEXPUSHERROR                error;
 };
 
-
 class DIOOBEXPUSH : public XFSMACHINE
 {
   public:
@@ -145,13 +139,13 @@ class DIOOBEXPUSH : public XFSMACHINE
     bool                            IsSending                         ();
     bool                            SetIsSending                      (bool issending);
 
-    bool                            SendFile                          (XPATH& xpath,XSTRING& namesend,XDWORD ID = 0,int asktimeout = DIOOBEXPUSH_MAXTIMEOUTASK);
+    bool                            SendFile                          (XPATH& xpath, XSTRING& namesend, XDWORD ID = 0, int asktimeout = DIOOBEXPUSH_MAXTIMEOUTASK);
     bool                            SendFiles                         (int asktimeout = DIOOBEXPUSH_MAXTIMEOUTASK);
 
     XTIMER*                         GetXTimer                         ();
     XQWORD                          GetAskTimeElapsed                 ();
 
-    bool                            SendFileList_AddFile              (XPATH& xpath,XSTRING& namesend,XDWORD ID = 0);
+    bool                            SendFileList_AddFile              (XPATH& xpath, XSTRING& namesend, XDWORD ID = 0);
     DIOOBEXPUSHFILE*                SendFileList_GetFile              (int index);
     DIOOBEXPUSHFILE*                SendFileList_GetActualFile        ();
     bool                            SendFileList_DeleteAll            ();

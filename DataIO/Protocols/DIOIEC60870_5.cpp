@@ -106,10 +106,6 @@ void DIOIEC60870_5_XEVENT::Clean()
 }
 
 
-
-
-
-
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         DIO_C_CI_NU_2_RESULT::DIO_C_CI_NU_2_RESULT()
@@ -198,9 +194,6 @@ void DIO_C_CI_NU_2_RESULT::Clean()
 {
   xdatetime   = NULL;
 }
-
-
-
 
 
 /**-------------------------------------------------------------------------------------------------------------------
@@ -336,7 +329,7 @@ int DIO_C_TR_AA_RESULT::GetReactiveQ(int index)
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         bool DIO_C_TR_AA_RESULT::SetReactiveQ(int index,int reactiveQ)
+* @fn         bool DIO_C_TR_AA_RESULT::SetReactiveQ(int index, int reactiveQ)
 * @brief      Set reactive q
 * @ingroup    DATAIO
 * 
@@ -346,7 +339,7 @@ int DIO_C_TR_AA_RESULT::GetReactiveQ(int index)
 * @return     bool : true if the operation is successful; otherwise false.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-bool DIO_C_TR_AA_RESULT::SetReactiveQ(int index,int reactiveQ)
+bool DIO_C_TR_AA_RESULT::SetReactiveQ(int index, int reactiveQ)
 {
   if((index<1)||(index>4))  return false;
   this->reactiveQ[index-1] = reactiveQ;
@@ -681,9 +674,6 @@ void DIO_C_TR_AA_RESULT::Clean()
 }
 
 
-
-
-
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         DIOIEC60870_5::DIOIEC60870_5(DIOSTREAM* diostream)
@@ -733,7 +723,7 @@ DIOIEC60870_5::~DIOIEC60870_5()
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         bool DIOIEC60870_5::Connect(XWORD addressfield,XBYTE addressPM, XDWORD keyPM, bool inlittleendian, bool havelongaddress, int timeout)
+* @fn         bool DIOIEC60870_5::Connect(XWORD addressfield, XBYTE addressPM, XDWORD keyPM, bool inlittleendian, bool havelongaddress, int timeout)
 * @brief      Connect
 * @ingroup    DATAIO
 * 
@@ -747,7 +737,7 @@ DIOIEC60870_5::~DIOIEC60870_5()
 * @return     bool : true if the operation is successful; otherwise false.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-bool DIOIEC60870_5::Connect(XWORD addressfield,XBYTE addressPM, XDWORD keyPM, bool inlittleendian, bool havelongaddress, int timeout)
+bool DIOIEC60870_5::Connect(XWORD addressfield, XBYTE addressPM, XDWORD keyPM, bool inlittleendian, bool havelongaddress, int timeout)
 {
   if(!diostream)                                                  return false;
   //if(diostream->GetStatus()!=DIOSTREAMSTATUS_DISCONNECTED) return false;
@@ -756,10 +746,10 @@ bool DIOIEC60870_5::Connect(XWORD addressfield,XBYTE addressPM, XDWORD keyPM, bo
 
   switch(diostream->GetConfig()->GetType())
     {
-      case DIOSTREAMTYPE_UART  : XTRACE_PRINTCOLOR(1,__L("IEC60870_5 Connection to UART: "));
+      case DIOSTREAMTYPE_UART  : XTRACE_PRINTCOLOR(1, __L("IEC60870_5 Connection to UART: "));
                                   break;
 
-      case DIOSTREAMTYPE_TCPIP : XTRACE_PRINTCOLOR(1,__L("IEC60870_5 Connection to TCP/IP: "));
+      case DIOSTREAMTYPE_TCPIP : XTRACE_PRINTCOLOR(1, __L("IEC60870_5 Connection to TCP/IP: "));
                                   break;
 
                        default :  break;
@@ -771,7 +761,7 @@ bool DIOIEC60870_5::Connect(XWORD addressfield,XBYTE addressPM, XDWORD keyPM, bo
 
   if(!diostream->WaitToConnected(timeout)) return false;
 
-  XTRACE_PRINTCOLOR(1,__L("IEC60870_5 Connected physical layer."));
+  XTRACE_PRINTCOLOR(1, __L("IEC60870_5 Connected physical layer."));
 
   this->addressfield      = addressfield;
   this->addressPM         = addressPM;
@@ -779,7 +769,7 @@ bool DIOIEC60870_5::Connect(XWORD addressfield,XBYTE addressPM, XDWORD keyPM, bo
   this->inlittleendian    = inlittleendian;
   this->havelongaddress   = havelongaddress;
 
-  XTRACE_PRINTCOLOR(1,__L("IEC60870_5 Meter Address Field: %d, Address PM: %d, Key PM: %d"), addressfield, addressPM, keyPM);
+  XTRACE_PRINTCOLOR(1, __L("IEC60870_5 Meter Address Field: %d, Address PM: %d, Key PM: %d"), addressfield, addressPM, keyPM);
 
   canceloperations = false;
 
@@ -804,7 +794,7 @@ bool DIOIEC60870_5::CMD_ResetRemoteLink(int timeout)
   bool retisfixmsg;
 
   if(!SendMsgFix(DIOIEC60870_5_MASTERFUNCRESETREMOTELINK))    return false;
-  if(!ReadMsg(retfunctioncode,retisfixmsg,NULL,timeout))      return false;
+  if(!ReadMsg(retfunctioncode, retisfixmsg, NULL, timeout))      return false;
 
   if(retfunctioncode==DIOIEC60870_5_SLAVEFUNCCONFIRMACK)    return true;
   if(retfunctioncode==DIOIEC60870_5_SLAVEFUNCNOCONFIRMACK)  return false;
@@ -830,7 +820,7 @@ bool DIOIEC60870_5::CMD_RequestStatusLink(int timeout)
   bool retisfixmsg;
 
   if(!SendMsgFix(DIOIEC60870_5_MASTERFUNCREQUESTSTATUSLINK))    return false;
-  if(!ReadMsg(retfunctioncode,retisfixmsg,NULL,timeout))        return false;
+  if(!ReadMsg(retfunctioncode, retisfixmsg, NULL, timeout))        return false;
 
   if(retfunctioncode==DIOIEC60870_5_SLAVEFUNCRESPONDSTATUSLINK) return true;
 
@@ -840,7 +830,7 @@ bool DIOIEC60870_5::CMD_RequestStatusLink(int timeout)
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         bool DIOIEC60870_5::CMD_RequestUserDataClass1(XBUFFER* asdu,int timeout)
+* @fn         bool DIOIEC60870_5::CMD_RequestUserDataClass1(XBUFFER* asdu, int timeout)
 * @brief      CMD request user data class1
 * @ingroup    DATAIO
 * 
@@ -850,13 +840,13 @@ bool DIOIEC60870_5::CMD_RequestStatusLink(int timeout)
 * @return     bool : true if the operation is successful; otherwise false.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-bool DIOIEC60870_5::CMD_RequestUserDataClass1(XBUFFER* asdu,int timeout)
+bool DIOIEC60870_5::CMD_RequestUserDataClass1(XBUFFER* asdu, int timeout)
 {
   XBYTE retfunctioncode;
   bool retisfixmsg;
 
   if(!SendMsgFix(DIOIEC60870_5_MASTERFUNCREQUESTUSERDATACLASS1))  return false;
-  if(!ReadMsg(retfunctioncode,retisfixmsg,asdu,timeout))          return false;
+  if(!ReadMsg(retfunctioncode, retisfixmsg, asdu, timeout))          return false;
 
   if(retisfixmsg)
     {
@@ -871,7 +861,7 @@ bool DIOIEC60870_5::CMD_RequestUserDataClass1(XBUFFER* asdu,int timeout)
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         bool DIOIEC60870_5::CMD_RequestUserDataClass2(XBUFFER* asdu,int timeout)
+* @fn         bool DIOIEC60870_5::CMD_RequestUserDataClass2(XBUFFER* asdu, int timeout)
 * @brief      CMD request user data class2
 * @ingroup    DATAIO
 * 
@@ -881,7 +871,7 @@ bool DIOIEC60870_5::CMD_RequestUserDataClass1(XBUFFER* asdu,int timeout)
 * @return     bool : true if the operation is successful; otherwise false.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-bool DIOIEC60870_5::CMD_RequestUserDataClass2(XBUFFER* asdu,int timeout)
+bool DIOIEC60870_5::CMD_RequestUserDataClass2(XBUFFER* asdu, int timeout)
 {
   if(!asdu) return false;
 
@@ -889,7 +879,7 @@ bool DIOIEC60870_5::CMD_RequestUserDataClass2(XBUFFER* asdu,int timeout)
   bool retisfixmsg;
 
   if(!SendMsgFix(DIOIEC60870_5_MASTERFUNCREQUESTUSERDATACLASS2))  return false;
-  if(!ReadMsg(retfunctioncode,retisfixmsg,asdu,timeout))          return false;
+  if(!ReadMsg(retfunctioncode, retisfixmsg, asdu, timeout))          return false;
 
   if(retisfixmsg)
     {
@@ -929,7 +919,7 @@ bool DIOIEC60870_5::CMD_C_AC_NA_2_IniSession(int timeout)
 
   XBUFFER asdu;
 
-  CMD_RequestUserDataClass1(&asdu,timeout);
+  CMD_RequestUserDataClass1(&asdu, timeout);
 
   asdu.Delete();
 
@@ -945,14 +935,14 @@ bool DIOIEC60870_5::CMD_C_AC_NA_2_IniSession(int timeout)
   if(inlittleendian) SWAPDWORD(_keyPM);
   asdu.Add((XDWORD)_keyPM);                                   // Meter Point Key
 
-  if(!SendMsgVar(DIOIEC60870_5_MASTERFUNCUSERDATA,&asdu))   return false;
-  if(!ReadMsg(retfunctioncode,retisfixmsg,NULL,timeout))    return false;
+  if(!SendMsgVar(DIOIEC60870_5_MASTERFUNCUSERDATA, &asdu))   return false;
+  if(!ReadMsg(retfunctioncode, retisfixmsg, NULL, timeout))    return false;
 
   if(retfunctioncode==DIOIEC60870_5_SLAVEFUNCCONFIRMACK)
     {
       XBUFFER retasdu;
 
-      if(CMD_RequestUserDataClass2(&retasdu,timeout))
+      if(CMD_RequestUserDataClass2(&retasdu, timeout))
         {
           XBYTE* buffer = retasdu.Get();
           if(!buffer) return false;
@@ -960,7 +950,7 @@ bool DIOIEC60870_5::CMD_C_AC_NA_2_IniSession(int timeout)
           if(buffer[0]!=DIOIEC60870_5_ASDUID_C_AC_NA_2_SESSIONINI)      return false;
           if(buffer[2]!=DIOIEC60870_5_ASDUCAUSETRANS_CONFIRMACTIVATION) return false;
 
-          DIOIEC60870_5_XEVENT xevent(this,DIOIEC60870_5_XEVENT_TYPE_C_AC_NA_2_INISESSION);
+          DIOIEC60870_5_XEVENT xevent(this, DIOIEC60870_5_XEVENT_TYPE_C_AC_NA_2_INISESSION);
           PostEvent(&xevent);
 
           return true;
@@ -999,14 +989,14 @@ bool DIOIEC60870_5::CMD_C_FS_NA_2_EndSession(int timeout)
   asdu.Add((XBYTE)addressPM);                                  // Meter Point Address
   asdu.Add((XWORD)0x0000);                                     // Register Address  = 0
 
-  if(!SendMsgVar(DIOIEC60870_5_MASTERFUNCUSERDATA,&asdu))   return false;
-  if(!ReadMsg(retfunctioncode,retisfixmsg,NULL,timeout))    return false;
+  if(!SendMsgVar(DIOIEC60870_5_MASTERFUNCUSERDATA, &asdu))   return false;
+  if(!ReadMsg(retfunctioncode, retisfixmsg, NULL, timeout))    return false;
 
   if(retfunctioncode==DIOIEC60870_5_SLAVEFUNCCONFIRMACK)
     {
       XBUFFER retasdu;
 
-      if(CMD_RequestUserDataClass2(&retasdu,timeout))
+      if(CMD_RequestUserDataClass2(&retasdu, timeout))
         {
           XBYTE* buffer = retasdu.Get();
           if(!buffer) return false;
@@ -1031,7 +1021,7 @@ bool DIOIEC60870_5::CMD_C_FS_NA_2_EndSession(int timeout)
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         bool DIOIEC60870_5::CMD_C_CI_NU_2_Init(int TM,XDATETIME& timestart,XDATETIME& timeend,int timeout)
+* @fn         bool DIOIEC60870_5::CMD_C_CI_NU_2_Init(int TM, XDATETIME& timestart, XDATETIME& timeend, int timeout)
 * @brief      CMDCCINU2 init
 * @ingroup    DATAIO
 * 
@@ -1043,7 +1033,7 @@ bool DIOIEC60870_5::CMD_C_FS_NA_2_EndSession(int timeout)
 * @return     bool : true if the operation is successful; otherwise false.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-bool DIOIEC60870_5::CMD_C_CI_NU_2_Init(int TM,XDATETIME& timestart,XDATETIME& timeend,int timeout)
+bool DIOIEC60870_5::CMD_C_CI_NU_2_Init(int TM, XDATETIME& timestart, XDATETIME& timeend, int timeout)
 {
   XBYTE retfunctioncode;
   bool retisfixmsg;
@@ -1061,16 +1051,16 @@ bool DIOIEC60870_5::CMD_C_CI_NU_2_Init(int TM,XDATETIME& timestart,XDATETIME& ti
 
   XBYTE resulttime[DIOIEC60870_5_SIZEMAXTIMELABELTYPEA];
 
-  SetTimeLabelTypeA(timestart,false,false,false,resulttime);    asdu.Add(resulttime,DIOIEC60870_5_SIZEMAXTIMELABELTYPEA);
-  SetTimeLabelTypeA(timeend  ,false,false,false,resulttime);    asdu.Add(resulttime,DIOIEC60870_5_SIZEMAXTIMELABELTYPEA);
+  SetTimeLabelTypeA(timestart, false, false, false, resulttime);    asdu.Add(resulttime, DIOIEC60870_5_SIZEMAXTIMELABELTYPEA);
+  SetTimeLabelTypeA(timeend, false, false, false, resulttime);    asdu.Add(resulttime, DIOIEC60870_5_SIZEMAXTIMELABELTYPEA);
 
-  if(!SendMsgVar(DIOIEC60870_5_MASTERFUNCUSERDATA,&asdu))   return false;
-  if(!ReadMsg(retfunctioncode,retisfixmsg,NULL,timeout))    return false;
+  if(!SendMsgVar(DIOIEC60870_5_MASTERFUNCUSERDATA, &asdu))   return false;
+  if(!ReadMsg(retfunctioncode, retisfixmsg, NULL, timeout))    return false;
 
   if(retfunctioncode==DIOIEC60870_5_SLAVEFUNCCONFIRMACK)
     {
       XBUFFER retasdu;
-      if(!CMD_RequestUserDataClass2(&retasdu,timeout)) return false;
+      if(!CMD_RequestUserDataClass2(&retasdu, timeout)) return false;
 
       return true;
     }
@@ -1083,7 +1073,7 @@ bool DIOIEC60870_5::CMD_C_CI_NU_2_Init(int TM,XDATETIME& timestart,XDATETIME& ti
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         bool DIOIEC60870_5::CMD_C_CI_NU_2_Read(DIO_C_CI_NU_2_RESULT* result,int timeout)
+* @fn         bool DIOIEC60870_5::CMD_C_CI_NU_2_Read(DIO_C_CI_NU_2_RESULT* result, int timeout)
 * @brief      CMDCCINU2 read
 * @ingroup    DATAIO
 * 
@@ -1093,15 +1083,15 @@ bool DIOIEC60870_5::CMD_C_CI_NU_2_Init(int TM,XDATETIME& timestart,XDATETIME& ti
 * @return     bool : true if the operation is successful; otherwise false.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-bool DIOIEC60870_5::CMD_C_CI_NU_2_Read(DIO_C_CI_NU_2_RESULT* result,int timeout)
+bool DIOIEC60870_5::CMD_C_CI_NU_2_Read(DIO_C_CI_NU_2_RESULT* result, int timeout)
 {
   if(!result) return false;
 
   XBUFFER retasdu;
 
-  if(!CMD_RequestUserDataClass2(&retasdu,timeout)) return false;
+  if(!CMD_RequestUserDataClass2(&retasdu, timeout)) return false;
 
-  DIOIEC60870_5_XEVENT xevent(this,DIOIEC60870_5_XEVENT_TYPE_C_CI_NU_2_READVALUE);
+  DIOIEC60870_5_XEVENT xevent(this, DIOIEC60870_5_XEVENT_TYPE_C_CI_NU_2_READVALUE);
   PostEvent(&xevent);
 
   XBYTE* buffer = retasdu.Get();
@@ -1111,7 +1101,7 @@ bool DIOIEC60870_5::CMD_C_CI_NU_2_Read(DIO_C_CI_NU_2_RESULT* result,int timeout)
   bool VI     = false;
   bool summer = false;
 
-  GetTimeLabelTypeA(&buffer[54],rate,VI,summer,(*result->GetDateTime()));
+  GetTimeLabelTypeA(&buffer[54], rate, VI, summer, (*result->GetDateTime()));
 
   for(int c=6;c<(int)retasdu.GetSize()-8;c+=6)
     {
@@ -1156,7 +1146,7 @@ bool DIOIEC60870_5::CMD_C_CI_NU_2_ReadAllValues(int TM, XDATETIME* timestart, XD
 
   if(CMD_C_AC_NA_2_IniSession(timeout))
     {
-      if(CMD_C_CI_NU_2_Init(TM,(*timestart),(*timeend),timeout))
+      if(CMD_C_CI_NU_2_Init(TM, (*timestart), (*timeend), timeout))
         {
           DIO_C_CI_NU_2_RESULT* result;
           bool                  status2 = true;
@@ -1211,7 +1201,7 @@ bool DIOIEC60870_5::CMD_C_CI_NU_2_DeleteResults(XVECTOR<DIO_C_CI_NU_2_RESULT*>* 
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         bool DIOIEC60870_5::CMD_C_TR_AA_ReadValues(DIO_C_TR_AA_RESULT* result,int timeout)
+* @fn         bool DIOIEC60870_5::CMD_C_TR_AA_ReadValues(DIO_C_TR_AA_RESULT* result, int timeout)
 * @brief      CMDCTRAA read values
 * @ingroup    DATAIO
 * 
@@ -1221,7 +1211,7 @@ bool DIOIEC60870_5::CMD_C_CI_NU_2_DeleteResults(XVECTOR<DIO_C_CI_NU_2_RESULT*>* 
 * @return     bool : true if the operation is successful; otherwise false.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-bool DIOIEC60870_5::CMD_C_TR_AA_ReadValues(DIO_C_TR_AA_RESULT* result,int timeout)
+bool DIOIEC60870_5::CMD_C_TR_AA_ReadValues(DIO_C_TR_AA_RESULT* result, int timeout)
 {
   if(!result) return false;
 
@@ -1244,9 +1234,9 @@ bool DIOIEC60870_5::CMD_C_TR_AA_ReadValues(DIO_C_TR_AA_RESULT* result,int timeou
       asdu.Add((XBYTE)0xC1);                                        // ????
       asdu.Add((XBYTE)0xC2);                                        // ????
 
-      if(SendMsgVar(DIOIEC60870_5_MASTERFUNCUSERDATA,&asdu))
+      if(SendMsgVar(DIOIEC60870_5_MASTERFUNCUSERDATA, &asdu))
         {
-          if(ReadMsg(retfunctioncode,retisfixmsg,NULL,timeout))
+          if(ReadMsg(retfunctioncode, retisfixmsg, NULL, timeout))
             {
               if(retfunctioncode!=DIOIEC60870_5_SLAVEFUNCNOCONFIRMACK)
                 {
@@ -1258,25 +1248,25 @@ bool DIOIEC60870_5::CMD_C_TR_AA_ReadValues(DIO_C_TR_AA_RESULT* result,int timeou
                       int   c;
 
                       XBUFFER retasdu;
-                      if(CMD_RequestUserDataClass2(&retasdu,timeout))
+                      if(CMD_RequestUserDataClass2(&retasdu, timeout))
                         {
                           XBYTE* buffer = retasdu.Get();
                           if(buffer)
                             {
-                              result->SetActiveImport(GetIntFromBuffer(&buffer[index],4));  index+=4;
-                              result->SetActiveExport(GetIntFromBuffer(&buffer[index],4));  index+=4;
+                              result->SetActiveImport(GetIntFromBuffer(&buffer[index], 4));  index+=4;
+                              result->SetActiveExport(GetIntFromBuffer(&buffer[index], 4));  index+=4;
 
-                              result->SetReactiveQ(1,GetIntFromBuffer(&buffer[index],4));   index+=4;
-                              result->SetReactiveQ(2,GetIntFromBuffer(&buffer[index],4));   index+=4;
-                              result->SetReactiveQ(3,GetIntFromBuffer(&buffer[index],4));   index+=4;
-                              result->SetReactiveQ(4,GetIntFromBuffer(&buffer[index],4));   index+=4;
+                              result->SetReactiveQ(1, GetIntFromBuffer(&buffer[index], 4));   index+=4;
+                              result->SetReactiveQ(2, GetIntFromBuffer(&buffer[index], 4));   index+=4;
+                              result->SetReactiveQ(3, GetIntFromBuffer(&buffer[index], 4));   index+=4;
+                              result->SetReactiveQ(4, GetIntFromBuffer(&buffer[index], 4));   index+=4;
 
                               index+=6;
 
-                              result->SetTotalActivePower  (GetIntFromBuffer(&buffer[index],3));      index+=3;
-                              result->SetTotalReactivePower(GetIntFromBuffer(&buffer[index],3));      index+=3;
+                              result->SetTotalActivePower  (GetIntFromBuffer(&buffer[index], 3));      index+=3;
+                              result->SetTotalReactivePower(GetIntFromBuffer(&buffer[index], 3));      index+=3;
 
-                              data  = (float)(GetIntFromBuffer(&buffer[index],2)&0x03FF);
+                              data  = (float)(GetIntFromBuffer(&buffer[index], 2)&0x03FF);
                               data /= 1000.0f;
                               result->SetTotalPowerFactor(data);
 
@@ -1288,16 +1278,16 @@ bool DIOIEC60870_5::CMD_C_TR_AA_ReadValues(DIO_C_TR_AA_RESULT* result,int timeou
 
                               for(c=0;c<3;c++)
                                 {
-                                  result->SetActivePowerPhase(c+1   , GetIntFromBuffer(&buffer[index],3));      index+=3;
-                                  result->SetReactivePowerPhase(c+1 , GetIntFromBuffer(&buffer[index],3));      index+=3;
+                                  result->SetActivePowerPhase(c+1, GetIntFromBuffer(&buffer[index], 3));      index+=3;
+                                  result->SetReactivePowerPhase(c+1, GetIntFromBuffer(&buffer[index], 3));      index+=3;
 
-                                  data  = (float)(GetIntFromBuffer(&buffer[index],2)&0x03FF);
+                                  data  = (float)(GetIntFromBuffer(&buffer[index], 2)&0x03FF);
                                   data /= 1000.0f;
-                                  result->SetPowerFactorPhase(c+1   , data);
+                                  result->SetPowerFactorPhase(c+1, data);
 
                                   datasigned = buffer[index+1];
-                                  if(datasigned&0x04) result->SetActivePowerPhase  (c+1,-result->GetActivePowerPhase(c+1));
-                                  if(datasigned&0x08) result->SetReactivePowerPhase(c+1,-result->GetReactivePowerPhase(c+1));
+                                  if(datasigned&0x04) result->SetActivePowerPhase  (c+1, -result->GetActivePowerPhase(c+1));
+                                  if(datasigned&0x08) result->SetReactivePowerPhase(c+1, -result->GetReactivePowerPhase(c+1));
 
                                   index+=2;
                                 }
@@ -1308,12 +1298,12 @@ bool DIOIEC60870_5::CMD_C_TR_AA_ReadValues(DIO_C_TR_AA_RESULT* result,int timeou
                                 {
                                   data = 0.0f;
 
-                                  data = (float)GetIntFromBuffer(&buffer[index],3);
+                                  data = (float)GetIntFromBuffer(&buffer[index], 3);
                                   data/=10.0f; index+=3;
 
                                   result->SetCurrentPhase(c+1 , data);
 
-                                  data = (float)GetIntFromBuffer(&buffer[index],4);
+                                  data = (float)GetIntFromBuffer(&buffer[index], 4);
                                   data/=10.0f; index+=4;
 
                                   result->SetVoltagePhase(c+1 , data);
@@ -1323,7 +1313,7 @@ bool DIOIEC60870_5::CMD_C_TR_AA_ReadValues(DIO_C_TR_AA_RESULT* result,int timeou
                               bool VI     = false;
                               bool summer = false;
 
-                              GetTimeLabelTypeA(&buffer[index],rate,VI,summer,(*result->GetDateTime()));
+                              GetTimeLabelTypeA(&buffer[index], rate, VI, summer, (*result->GetDateTime()));
 
                             } else status = false;
 
@@ -1331,7 +1321,7 @@ bool DIOIEC60870_5::CMD_C_TR_AA_ReadValues(DIO_C_TR_AA_RESULT* result,int timeou
 
                     } else status = false;
 
-                  DIOIEC60870_5_XEVENT xevent(this,DIOIEC60870_5_XEVENT_TYPE_C_TR_AA_READVALUES);
+                  DIOIEC60870_5_XEVENT xevent(this, DIOIEC60870_5_XEVENT_TYPE_C_TR_AA_READVALUES);
                   PostEvent(&xevent);
 
                   if(!CMD_C_FS_NA_2_EndSession(timeout)) status = false;
@@ -1350,7 +1340,7 @@ bool DIOIEC60870_5::CMD_C_TR_AA_ReadValues(DIO_C_TR_AA_RESULT* result,int timeou
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         bool DIOIEC60870_5::SetTimeLabelTypeA(XDATETIME& time, bool rate, bool VI, bool summer,XBYTE* result)
+* @fn         bool DIOIEC60870_5::SetTimeLabelTypeA(XDATETIME& time, bool rate, bool VI, bool summer, XBYTE* result)
 * @brief      Set time label type a
 * @ingroup    DATAIO
 * 
@@ -1363,9 +1353,9 @@ bool DIOIEC60870_5::CMD_C_TR_AA_ReadValues(DIO_C_TR_AA_RESULT* result,int timeou
 * @return     bool : true if the operation is successful; otherwise false.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-bool DIOIEC60870_5::SetTimeLabelTypeA(XDATETIME& time, bool rate, bool VI, bool summer,XBYTE* result)
+bool DIOIEC60870_5::SetTimeLabelTypeA(XDATETIME& time, bool rate, bool VI, bool summer, XBYTE* result)
 {
-  memset(result,0,DIOIEC60870_5_SIZEMAXTIMELABELTYPEA);
+  memset(result, 0, DIOIEC60870_5_SIZEMAXTIMELABELTYPEA);
 
   result[0] = time.GetMinutes() & 0x00FF;       // add valid flag and genuine flag
   result[1] = time.GetHours()   & 0x00FF;       // add summer flag
@@ -1379,7 +1369,7 @@ bool DIOIEC60870_5::SetTimeLabelTypeA(XDATETIME& time, bool rate, bool VI, bool 
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         bool DIOIEC60870_5::SetTimeLabelTypeB(XDATETIME& time, bool rate, bool VI, bool summer,XBYTE* result)
+* @fn         bool DIOIEC60870_5::SetTimeLabelTypeB(XDATETIME& time, bool rate, bool VI, bool summer, XBYTE* result)
 * @brief      Set time label type b
 * @ingroup    DATAIO
 * 
@@ -1392,9 +1382,9 @@ bool DIOIEC60870_5::SetTimeLabelTypeA(XDATETIME& time, bool rate, bool VI, bool 
 * @return     bool : true if the operation is successful; otherwise false.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-bool DIOIEC60870_5::SetTimeLabelTypeB(XDATETIME& time, bool rate, bool VI, bool summer,XBYTE* result)
+bool DIOIEC60870_5::SetTimeLabelTypeB(XDATETIME& time, bool rate, bool VI, bool summer, XBYTE* result)
 {
-  memset(result,0,DIOIEC60870_5_SIZEMAXTIMELABELTYPEB);
+  memset(result, 0, DIOIEC60870_5_SIZEMAXTIMELABELTYPEB);
 
   XDWORD m = time.GetMilliSeconds() + 1000 * time.GetSeconds();
 
@@ -1412,7 +1402,7 @@ bool DIOIEC60870_5::SetTimeLabelTypeB(XDATETIME& time, bool rate, bool VI, bool 
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         bool DIOIEC60870_5::GetTimeLabelTypeA(XBYTE* result, bool& rate, bool& VI,bool& summer,XDATETIME& time)
+* @fn         bool DIOIEC60870_5::GetTimeLabelTypeA(XBYTE* result, bool& rate, bool& VI, bool& summer, XDATETIME& time)
 * @brief      Get time label type a
 * @ingroup    DATAIO
 * 
@@ -1425,7 +1415,7 @@ bool DIOIEC60870_5::SetTimeLabelTypeB(XDATETIME& time, bool rate, bool VI, bool 
 * @return     bool : true if the operation is successful; otherwise false.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-bool DIOIEC60870_5::GetTimeLabelTypeA(XBYTE* result, bool& rate, bool& VI,bool& summer,XDATETIME& time)
+bool DIOIEC60870_5::GetTimeLabelTypeA(XBYTE* result, bool& rate, bool& VI, bool& summer, XDATETIME& time)
 {
   time.SetToZero();
 
@@ -1447,7 +1437,7 @@ bool DIOIEC60870_5::GetTimeLabelTypeA(XBYTE* result, bool& rate, bool& VI,bool& 
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         bool DIOIEC60870_5::GetTimeLabelTypeB(XBYTE* result, bool& rate, bool& VI,bool& summer,XDATETIME& time)
+* @fn         bool DIOIEC60870_5::GetTimeLabelTypeB(XBYTE* result, bool& rate, bool& VI, bool& summer, XDATETIME& time)
 * @brief      Get time label type b
 * @ingroup    DATAIO
 * 
@@ -1460,7 +1450,7 @@ bool DIOIEC60870_5::GetTimeLabelTypeA(XBYTE* result, bool& rate, bool& VI,bool& 
 * @return     bool : true if the operation is successful; otherwise false.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-bool DIOIEC60870_5::GetTimeLabelTypeB(XBYTE* result, bool& rate, bool& VI,bool& summer,XDATETIME& time)
+bool DIOIEC60870_5::GetTimeLabelTypeB(XBYTE* result, bool& rate, bool& VI, bool& summer, XDATETIME& time)
 {
   time.SetToZero();
 
@@ -1619,7 +1609,7 @@ bool DIOIEC60870_5::SendMsgVar(XBYTE functioncode, XBUFFER* dataASDU)
 
   xbuffer.Set(CalculateCheckSum(xbuffer), (xbuffer.GetSize()-2));
 
-  if(!diostream->Write(xbuffer.Get(),xbuffer.GetSize())) return false;
+  if(!diostream->Write(xbuffer.Get(), xbuffer.GetSize())) return false;
 
   return true;
 }
@@ -1679,7 +1669,7 @@ bool DIOIEC60870_5::SendMsgFix(XBYTE functioncode)
 
   xbuffer.Get()[4] = CalculateCheckSum(xbuffer);
 
-  if(!diostream->Write(xbuffer.Get(),xbuffer.GetSize())) return false;
+  if(!diostream->Write(xbuffer.Get(), xbuffer.GetSize())) return false;
 
   return true;
 }
@@ -1687,7 +1677,7 @@ bool DIOIEC60870_5::SendMsgFix(XBYTE functioncode)
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         bool DIOIEC60870_5::WaitToReadMsg(XDWORD size,int timeout)
+* @fn         bool DIOIEC60870_5::WaitToReadMsg(XDWORD size, int timeout)
 * @brief      Wait to read msg
 * @ingroup    DATAIO
 * 
@@ -1697,7 +1687,7 @@ bool DIOIEC60870_5::SendMsgFix(XBYTE functioncode)
 * @return     bool : true if the operation is successful; otherwise false.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-bool DIOIEC60870_5::WaitToReadMsg(XDWORD size,int timeout)
+bool DIOIEC60870_5::WaitToReadMsg(XDWORD size, int timeout)
 {
   XDWORD actualsize = 0;
 
@@ -1727,7 +1717,7 @@ bool DIOIEC60870_5::WaitToReadMsg(XDWORD size,int timeout)
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         bool DIOIEC60870_5::ReadMsg(XBYTE& retfunctioncode,bool& retisfixmsg,XBUFFER* retASDU,int timeout)
+* @fn         bool DIOIEC60870_5::ReadMsg(XBYTE& retfunctioncode, bool& retisfixmsg, XBUFFER* retASDU, int timeout)
 * @brief      Read msg
 * @ingroup    DATAIO
 * 
@@ -1739,7 +1729,7 @@ bool DIOIEC60870_5::WaitToReadMsg(XDWORD size,int timeout)
 * @return     bool : true if the operation is successful; otherwise false.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-bool DIOIEC60870_5::ReadMsg(XBYTE& retfunctioncode,bool& retisfixmsg,XBUFFER* retASDU,int timeout)
+bool DIOIEC60870_5::ReadMsg(XBYTE& retfunctioncode, bool& retisfixmsg, XBUFFER* retASDU, int timeout)
 {
   if(!diostream) return false;
   if(diostream->GetStatus()!=DIOSTREAMSTATUS_CONNECTED) return false;
@@ -1749,7 +1739,7 @@ bool DIOIEC60870_5::ReadMsg(XBYTE& retfunctioncode,bool& retisfixmsg,XBUFFER* re
 
   XBUFFER xbuffer((XDWORD)DIOIEC60870_5_MAXSIZE, true);
 
-  if(!WaitToReadMsg(DIOIEC60870_5_MAXSIZE,timeout))
+  if(!WaitToReadMsg(DIOIEC60870_5_MAXSIZE, timeout))
     {
       return false;
     }
@@ -1770,7 +1760,7 @@ bool DIOIEC60870_5::ReadMsg(XBYTE& retfunctioncode,bool& retisfixmsg,XBUFFER* re
 
       switch(buffer[0])
         {
-          case DIOIEC60870_5_MARKSTARTFIX : { XBYTE checksum = CalculateCheckSum(buffer,DIOIEC60870_5_SIZEMSGFIX);
+          case DIOIEC60870_5_MARKSTARTFIX : { XBYTE checksum = CalculateCheckSum(buffer, DIOIEC60870_5_SIZEMSGFIX);
                                               if(checksum!=buffer[4])  break;
 
                                               XWORD _addressfield;
@@ -1792,14 +1782,14 @@ bool DIOIEC60870_5::ReadMsg(XBYTE& retfunctioncode,bool& retisfixmsg,XBUFFER* re
 
                                               retfunctioncode   = (controlfield&0x0f);
                                               retisfixmsg       = true;
-                                              diostream->GetInXBuffer()->Extract(NULL,indexbufferread,DIOIEC60870_5_SIZEMSGFIX);
+                                              diostream->GetInXBuffer()->Extract(NULL, indexbufferread, DIOIEC60870_5_SIZEMSGFIX);
                                             }
 
                                             status = true;
                                             break;
 
           case DIOIEC60870_5_MARKSTARTVAR : { XBYTE sizeasdu  = buffer[1];
-                                              XBYTE checksum = CalculateCheckSum(buffer,sizeasdu+4+2);
+                                              XBYTE checksum = CalculateCheckSum(buffer, sizeasdu+4+2);
                                               if(checksum!=buffer[sizeasdu+4])  break;
 
                                               XWORD _addressfield;
@@ -1822,9 +1812,9 @@ bool DIOIEC60870_5::ReadMsg(XBYTE& retfunctioncode,bool& retisfixmsg,XBUFFER* re
                                               retfunctioncode   = (controlfield&0x0f);
                                               retisfixmsg       = false;
 
-                                              if(retASDU) retASDU->Add(&buffer[7],sizeasdu-3);
+                                              if(retASDU) retASDU->Add(&buffer[7], sizeasdu-3);
 
-                                              diostream->GetInXBuffer()->Extract(NULL,indexbufferread,sizeasdu+4+2);
+                                              diostream->GetInXBuffer()->Extract(NULL, indexbufferread, sizeasdu+4+2);
                                             }
 
                                             status = true;
@@ -1838,7 +1828,7 @@ bool DIOIEC60870_5::ReadMsg(XBYTE& retfunctioncode,bool& retisfixmsg,XBUFFER* re
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         XBYTE DIOIEC60870_5::CalculateCheckSum(XBYTE* buffer,XDWORD sizebuffer)
+* @fn         XBYTE DIOIEC60870_5::CalculateCheckSum(XBYTE* buffer, XDWORD sizebuffer)
 * @brief      Calculate check sum
 * @ingroup    DATAIO
 * 
@@ -1848,7 +1838,7 @@ bool DIOIEC60870_5::ReadMsg(XBYTE& retfunctioncode,bool& retisfixmsg,XBUFFER* re
 * @return     XBYTE : Requested value.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-XBYTE DIOIEC60870_5::CalculateCheckSum(XBYTE* buffer,XDWORD sizebuffer)
+XBYTE DIOIEC60870_5::CalculateCheckSum(XBYTE* buffer, XDWORD sizebuffer)
 {
   if(!buffer)       return 0;
 
@@ -1902,13 +1892,13 @@ XBYTE DIOIEC60870_5::CalculateCheckSum(XBYTE* buffer,XDWORD sizebuffer)
 * --------------------------------------------------------------------------------------------------------------------*/
 XBYTE DIOIEC60870_5::CalculateCheckSum(XBUFFER& xbuffer)
 {
-  return CalculateCheckSum(xbuffer.Get(),xbuffer.GetSize());
+  return CalculateCheckSum(xbuffer.Get(), xbuffer.GetSize());
 }
 
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         int DIOIEC60870_5::GetIntFromBuffer(XBYTE* buffer,XDWORD size)
+* @fn         int DIOIEC60870_5::GetIntFromBuffer(XBYTE* buffer, XDWORD size)
 * @brief      Get int from buffer
 * @ingroup    DATAIO
 * 
@@ -1918,7 +1908,7 @@ XBYTE DIOIEC60870_5::CalculateCheckSum(XBUFFER& xbuffer)
 * @return     int : Requested value.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-int DIOIEC60870_5::GetIntFromBuffer(XBYTE* buffer,XDWORD size)
+int DIOIEC60870_5::GetIntFromBuffer(XBYTE* buffer, XDWORD size)
 {
   XDWORD value = 0;
 

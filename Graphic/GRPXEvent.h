@@ -50,10 +50,7 @@ enum GRPXEVENT_TYPE
   GRPXEVENT_TYPE_SCREEN_CHANGEFOCUS                              ,
 };
 
-
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
-
 
 class GRPSCENE;
 class GRPSCREEN;

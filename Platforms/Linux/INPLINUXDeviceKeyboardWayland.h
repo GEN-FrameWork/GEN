@@ -35,7 +35,6 @@
 #include "INPButton.h"
 #include "INPDevice.h"
 
-
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
 
 #define INPLINUXDEVICEKEYBOARDWAYLAND_EVRELEASED    0

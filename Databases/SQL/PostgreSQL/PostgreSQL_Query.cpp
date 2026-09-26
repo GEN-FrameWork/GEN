@@ -153,7 +153,7 @@ bool POSTGRESQL_QUERY::Execute()
    else
     {
       if( value.FindCharacter(__C('*'))     !=  NOTFOUND          &&
-          value.Find(__L("COUNT(*)"),true)  ==  XSTRING_NOTFOUND)
+          value.Find(__L("COUNT(*)"), true)  ==  XSTRING_NOTFOUND)
         {
           DB_SQL_STRING error;
           database->ClearPreviousErrors();
@@ -179,14 +179,14 @@ bool POSTGRESQL_QUERY::Execute()
       if(!querystringbuffer) return false;
 
       query.ConvertToUTF8(*querystringbuffer );
-      buffers.Add(querystringbuffer  );
+      buffers.Add(querystringbuffer);
 
       if(!BindParametersToQuery()) return false;
 
       PGresult* res     = NULL;
       int       nparams = statementbindings.GetSize();
 
-      res = PQexecParams(conn,(char*)querystringbuffer->Get(),nparams,NULL,paramvalues,NULL,NULL,1);
+      res = PQexecParams(conn, (char*)querystringbuffer->Get(), nparams, NULL, paramvalues, NULL, NULL, 1);
       ExecStatusType exec=PQresultStatus(res);
 
       if((exec != PGRES_COMMAND_OK) && (exec != PGRES_TUPLES_OK))
@@ -288,7 +288,7 @@ bool POSTGRESQL_QUERY::ClearCursor()
   if(hascursor && cursorname.GetSize()>0)
     {
       DB_SQL_STRING close;
-      close.Format(__L("CLOSE %s"),this->cursorname.Get());
+      close.Format(__L("CLOSE %s"), this->cursorname.Get());
 
       XBUFFER oem;
       

@@ -1647,14 +1647,14 @@ void UI_ELEMENT::UpdateTransition()
       style_transition_active = false;
     }
 
-  color.SetRed  (style_transition_color_from.GetRed()   + (int)((style_transition_color_to.GetRed()   - style_transition_color_from.GetRed())   * t));
+  color.SetRed  (style_transition_color_from.GetRed() + (int)((style_transition_color_to.GetRed() - style_transition_color_from.GetRed()) * t));
   color.SetGreen(style_transition_color_from.GetGreen() + (int)((style_transition_color_to.GetGreen() - style_transition_color_from.GetGreen()) * t));
-  color.SetBlue (style_transition_color_from.GetBlue()  + (int)((style_transition_color_to.GetBlue()  - style_transition_color_from.GetBlue())  * t));
+  color.SetBlue (style_transition_color_from.GetBlue() + (int)((style_transition_color_to.GetBlue() - style_transition_color_from.GetBlue()) * t));
   color.SetAlpha(style_transition_color_from.GetAlpha() + (int)((style_transition_color_to.GetAlpha() - style_transition_color_from.GetAlpha()) * t));
 
-  backgroundcolor.SetRed  (style_transition_backgroundcolor_from.GetRed()   + (int)((style_transition_backgroundcolor_to.GetRed()   - style_transition_backgroundcolor_from.GetRed())   * t));
+  backgroundcolor.SetRed  (style_transition_backgroundcolor_from.GetRed() + (int)((style_transition_backgroundcolor_to.GetRed() - style_transition_backgroundcolor_from.GetRed()) * t));
   backgroundcolor.SetGreen(style_transition_backgroundcolor_from.GetGreen() + (int)((style_transition_backgroundcolor_to.GetGreen() - style_transition_backgroundcolor_from.GetGreen()) * t));
-  backgroundcolor.SetBlue (style_transition_backgroundcolor_from.GetBlue()  + (int)((style_transition_backgroundcolor_to.GetBlue()  - style_transition_backgroundcolor_from.GetBlue())  * t));
+  backgroundcolor.SetBlue (style_transition_backgroundcolor_from.GetBlue() + (int)((style_transition_backgroundcolor_to.GetBlue() - style_transition_backgroundcolor_from.GetBlue()) * t));
   backgroundcolor.SetAlpha(style_transition_backgroundcolor_from.GetAlpha() + (int)((style_transition_backgroundcolor_to.GetAlpha() - style_transition_backgroundcolor_from.GetAlpha()) * t));
 
   mustredraw = true;
@@ -2522,12 +2522,30 @@ void UI_ELEMENT::SetStyleHasStateRules(bool has)
 }
 
 
+/**-------------------------------------------------------------------------------------------------------------------
+* 
+* @fn         UI_STYLE* UI_ELEMENT::GetComputedStyle()
+* @brief      Get Computed Style
+* @ingroup    USERINTERFACE
+* 
+* @return     UI_STYLE* : 
+* 
+* --------------------------------------------------------------------------------------------------------------------*/
 UI_STYLE* UI_ELEMENT::GetComputedStyle()
 {
   return computed_style;
 }
 
 
+/**-------------------------------------------------------------------------------------------------------------------
+* 
+* @fn         void UI_ELEMENT::StoreComputedStyle(UI_STYLE& style)
+* @brief      Store Computed Style
+* @ingroup    USERINTERFACE
+* 
+* @param[in]  style : 
+* 
+* --------------------------------------------------------------------------------------------------------------------*/
 void UI_ELEMENT::StoreComputedStyle(UI_STYLE& style)
 {
   if(computed_style)
@@ -2550,84 +2568,206 @@ void UI_ELEMENT::StoreComputedStyle(UI_STYLE& style)
 }
 
 
+/**-------------------------------------------------------------------------------------------------------------------
+* 
+* @fn         bool UI_ELEMENT::IsGridContainer()
+* @brief      Is Grid Container
+* @ingroup    USERINTERFACE
+* 
+* @return     bool : true if the operation is successful; otherwise false.
+* 
+* --------------------------------------------------------------------------------------------------------------------*/
 bool UI_ELEMENT::IsGridContainer()
 {
   return css_gridcontainer;
 }
 
 
+/**-------------------------------------------------------------------------------------------------------------------
+* 
+* @fn         void UI_ELEMENT::SetGridContainer(bool isgridcontainer)
+* @brief      Set Grid Container
+* @ingroup    USERINTERFACE
+* 
+* @param[in]  isgridcontainer : 
+* 
+* --------------------------------------------------------------------------------------------------------------------*/
 void UI_ELEMENT::SetGridContainer(bool isgridcontainer)
 {
   css_gridcontainer = isgridcontainer;
 }
 
 
+/**-------------------------------------------------------------------------------------------------------------------
+* 
+* @fn         void UI_ELEMENT::ClearGridColumnTracks()
+* @brief      Clear Grid Column Tracks
+* @ingroup    USERINTERFACE
+* 
+* --------------------------------------------------------------------------------------------------------------------*/
 void UI_ELEMENT::ClearGridColumnTracks()
 {
   css_gridcolumntracks.DeleteAll();
 }
 
 
+/**-------------------------------------------------------------------------------------------------------------------
+* 
+* @fn         void UI_ELEMENT::AddGridColumnTrack(UI_GRIDTRACK track)
+* @brief      Add Grid Column Track
+* @ingroup    USERINTERFACE
+* 
+* @param[in]  track : 
+* 
+* --------------------------------------------------------------------------------------------------------------------*/
 void UI_ELEMENT::AddGridColumnTrack(UI_GRIDTRACK track)
 {
   css_gridcolumntracks.Add(track);
 }
 
 
+/**-------------------------------------------------------------------------------------------------------------------
+* 
+* @fn         XVECTOR<UI_GRIDTRACK>& UI_ELEMENT::GetGridColumnTracks()
+* @brief      Get Grid Column Tracks
+* @ingroup    USERINTERFACE
+* 
+* @return     XVECTOR<UI_GRIDTRACK>& : 
+* 
+* --------------------------------------------------------------------------------------------------------------------*/
 XVECTOR<UI_GRIDTRACK>& UI_ELEMENT::GetGridColumnTracks()
 {
   return css_gridcolumntracks;
 }
 
 
+/**-------------------------------------------------------------------------------------------------------------------
+* 
+* @fn         void UI_ELEMENT::ClearGridRowTracks()
+* @brief      Clear Grid Row Tracks
+* @ingroup    USERINTERFACE
+* 
+* --------------------------------------------------------------------------------------------------------------------*/
 void UI_ELEMENT::ClearGridRowTracks()
 {
   css_gridrowtracks.DeleteAll();
 }
 
 
+/**-------------------------------------------------------------------------------------------------------------------
+* 
+* @fn         void UI_ELEMENT::AddGridRowTrack(UI_GRIDTRACK track)
+* @brief      Add Grid Row Track
+* @ingroup    USERINTERFACE
+* 
+* @param[in]  track : 
+* 
+* --------------------------------------------------------------------------------------------------------------------*/
 void UI_ELEMENT::AddGridRowTrack(UI_GRIDTRACK track)
 {
   css_gridrowtracks.Add(track);
 }
 
 
+/**-------------------------------------------------------------------------------------------------------------------
+* 
+* @fn         XVECTOR<UI_GRIDTRACK>& UI_ELEMENT::GetGridRowTracks()
+* @brief      Get Grid Row Tracks
+* @ingroup    USERINTERFACE
+* 
+* @return     XVECTOR<UI_GRIDTRACK>& : 
+* 
+* --------------------------------------------------------------------------------------------------------------------*/
 XVECTOR<UI_GRIDTRACK>& UI_ELEMENT::GetGridRowTracks()
 {
   return css_gridrowtracks;
 }
 
 
+/**-------------------------------------------------------------------------------------------------------------------
+* 
+* @fn         XDWORD UI_ELEMENT::GetGridColumnSpan()
+* @brief      Get Grid Column Span
+* @ingroup    USERINTERFACE
+* 
+* @return     XDWORD : 
+* 
+* --------------------------------------------------------------------------------------------------------------------*/
 XDWORD UI_ELEMENT::GetGridColumnSpan()
 {
   return css_gridcolumnspan;
 }
 
 
+/**-------------------------------------------------------------------------------------------------------------------
+* 
+* @fn         void UI_ELEMENT::SetGridColumnSpan(XDWORD span)
+* @brief      Set Grid Column Span
+* @ingroup    USERINTERFACE
+* 
+* @param[in]  span : 
+* 
+* --------------------------------------------------------------------------------------------------------------------*/
 void UI_ELEMENT::SetGridColumnSpan(XDWORD span)
 {
   css_gridcolumnspan = (span < 1) ? 1 : span;
 }
 
 
+/**-------------------------------------------------------------------------------------------------------------------
+* 
+* @fn         XDWORD UI_ELEMENT::GetGridRowSpan()
+* @brief      Get Grid Row Span
+* @ingroup    USERINTERFACE
+* 
+* @return     XDWORD : 
+* 
+* --------------------------------------------------------------------------------------------------------------------*/
 XDWORD UI_ELEMENT::GetGridRowSpan()
 {
   return css_gridrowspan;
 }
 
 
+/**-------------------------------------------------------------------------------------------------------------------
+* 
+* @fn         void UI_ELEMENT::SetGridRowSpan(XDWORD span)
+* @brief      Set Grid Row Span
+* @ingroup    USERINTERFACE
+* 
+* @param[in]  span : 
+* 
+* --------------------------------------------------------------------------------------------------------------------*/
 void UI_ELEMENT::SetGridRowSpan(XDWORD span)
 {
   css_gridrowspan = (span < 1) ? 1 : span;
 }
 
 
+/**-------------------------------------------------------------------------------------------------------------------
+* 
+* @fn         bool UI_ELEMENT::IsPressed()
+* @brief      Is Pressed
+* @ingroup    USERINTERFACE
+* 
+* @return     bool : true if the operation is successful; otherwise false.
+* 
+* --------------------------------------------------------------------------------------------------------------------*/
 bool UI_ELEMENT::IsPressed()
 {
   return ispressed;
 }
 
 
+/**-------------------------------------------------------------------------------------------------------------------
+* 
+* @fn         void UI_ELEMENT::SetPressed(bool ispressed)
+* @brief      Set Pressed
+* @ingroup    USERINTERFACE
+* 
+* @param[in]  ispressed : 
+* 
+* --------------------------------------------------------------------------------------------------------------------*/
 void UI_ELEMENT::SetPressed(bool ispressed)
 {
   bool changed = (this->ispressed != ispressed);

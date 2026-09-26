@@ -64,7 +64,6 @@ typedef bool (*XMPINTEGER_FUNCRANDOM)   (XBYTE* buffer, XDWORD size, void* param
                                       b0 = ( b << XMPINTEGER_HALFLIMBSIZE ) >> XMPINTEGER_HALFLIMBSIZE;   \
                                       b1 = ( b >> XMPINTEGER_HALFLIMBSIZE );
 
-
 #define XMPINTEGER_MULADDC_CORE       \
                                       s0 = ( *s << XMPINTEGER_HALFLIMBSIZE ) >> XMPINTEGER_HALFLIMBSIZE;  \
                                       s1 = ( *s >> XMPINTEGER_HALFLIMBSIZE ); s++;                        \
@@ -80,9 +79,6 @@ typedef bool (*XMPINTEGER_FUNCRANDOM)   (XBYTE* buffer, XDWORD size, void* param
                                       c = r1; *(d++) = r0;
 
 #define XMPINTEGER_MULADDC_STOP       \
-
-
-
 
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
 

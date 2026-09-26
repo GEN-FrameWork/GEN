@@ -176,7 +176,7 @@ void XINTERPOLATOR::Get(XDWORD& current, XDWORD& target, float& speed)
 * @param[in]  speed : Speed value.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-void XINTERPOLATOR::Set(XDWORD current,  XDWORD target, float speed)
+void XINTERPOLATOR::Set(XDWORD current, XDWORD target, float speed)
 {
   this->current = current;
   this->target  = target;

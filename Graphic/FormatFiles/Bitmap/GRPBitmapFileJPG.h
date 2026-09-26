@@ -43,8 +43,6 @@ extern "C"
  #include "jpeglib.h"
 }
 
-
-
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
 
 struct GRPBITMAPFILEJPG_ERROR
@@ -55,13 +53,9 @@ struct GRPBITMAPFILEJPG_ERROR
 
 typedef struct GRPBITMAPFILEJPG_ERROR*  GRPBITMAPFILEJPG_ERROR_PTR;
 
-
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
 
-
 class GRPBITMAP;
-
 
 class GRPBITMAPFILEJPGHEADER
 {
@@ -71,7 +65,6 @@ class GRPBITMAPFILEJPGHEADER
     XDWORD                          height;
     XDWORD                          size;
 };
-
 
 class GRPBITMAPFILEJPG : public GRPBITMAPFILEBASE
 {

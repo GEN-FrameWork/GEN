@@ -28,9 +28,7 @@
 
 #pragma once
 
-
 #if defined(DIO_ACTIVE) && defined(DIO_STREAMSPI_ACTIVE)
-
 
 /*---- INCLUDES ------------------------------------------------------------------------------------------------------*/
 
@@ -38,8 +36,6 @@
 #include "XANDROIDThread.h"
 
 #include "DIOStreamSPI.h"
-
-
 
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
 

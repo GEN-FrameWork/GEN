@@ -32,12 +32,7 @@
 
 #include "XString.h"
 
-
-
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
-
-
-
 
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
 
@@ -67,7 +62,6 @@ class DIONOTIFICATION
     void*                           applicationhandle;
     void*                           applicationicon;
 };
-
 
 class DIONOTIFICATIONSMANAGER
 {

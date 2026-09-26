@@ -61,10 +61,7 @@ enum XFILEZIP_ERROR
 
 #define XFILEZIP_DEFAULT_MAXBLOCKFILE  1024*100
 
-
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
-
 
 class XDATETIME;
 
@@ -116,7 +113,6 @@ class XFILECMPZIP
     bool                      open;
 };
 
-
 class XFILEZIP : public XSUBJECT
 {
   public:
@@ -131,7 +127,7 @@ class XFILEZIP : public XSUBJECT
     XFILECMPZIP*              CreateFileCmp             (XPATH& xpath);
     XDWORD                    GetFileCRC                (XFILE* xfile);
 
-    bool                      AddFile                   (XPATH& xpath,XPATH& xpathnew,XCHAR* password = NULL);
+    bool                      AddFile                   (XPATH& xpath, XPATH& xpathnew, XCHAR* password = NULL);
     bool                      Close                     ();
 
     float                     GetLastOperationPercent   ();
@@ -149,7 +145,6 @@ class XFILEZIP : public XSUBJECT
     float                     lastoperationpercent;
     XFILEZIP_ERROR            lasterror;
 };
-
 
 class XFILEUNZIP : public XSUBJECT
 {
@@ -170,9 +165,9 @@ class XFILEUNZIP : public XSUBJECT
 
     bool                      DelFile                   (int index, XCHAR* password = NULL);
 
-    bool                      DecompressFile            (int sourceindex ,XPATH& xpathtarget,XCHAR* nametarget = NULL ,XCHAR* password = NULL);
-    bool                      DecompressFile            (XSTRING& namesource,XPATH& xpathtarget,XCHAR* nametarget = NULL ,XCHAR* password = NULL);
-    bool                      DecompressFile            (XFILECMPZIP* filecmp,XPATH& xpathtarget,XCHAR* nametarget = NULL,XCHAR* password = NULL);
+    bool                      DecompressFile            (int sourceindex, XPATH& xpathtarget, XCHAR* nametarget = NULL, XCHAR* password = NULL);
+    bool                      DecompressFile            (XSTRING& namesource, XPATH& xpathtarget, XCHAR* nametarget = NULL, XCHAR* password = NULL);
+    bool                      DecompressFile            (XFILECMPZIP* filecmp, XPATH& xpathtarget, XCHAR* nametarget = NULL, XCHAR* password = NULL);
 
     bool                      Close                     ();
 

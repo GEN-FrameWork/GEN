@@ -595,10 +595,6 @@ void XTHREADCOLLECTED::Clean()
 }
 
 
-
-
-
-
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         XTHREADSCOLLECTED::XTHREADSCOLLECTED(XTHREADGROUPID groupID)
@@ -973,10 +969,6 @@ void XTHREADSCOLLECTED::Clean()
   xthreadsvectormutex = NULL;
   xthread             = NULL;
 }
-
-
-
-
 
 
 /**-------------------------------------------------------------------------------------------------------------------

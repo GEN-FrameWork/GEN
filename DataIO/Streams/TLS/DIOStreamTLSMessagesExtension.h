@@ -55,7 +55,6 @@
 #define DIOSTREAMTLS_MSG_EXTENSION_TYPE_PRESHAREDKEY         0x0029 // 1.3	  Session resumption (PSK)
 #define DIOSTREAMTLS_MSG_EXTENSION_TYPE_RENEGOTIATIONINFO     0xFF01 // 1.2   Secure renegotiation indication
 
-
 enum DIOSTREAMTLS_MSG_EXTENSION_CONTEXT
 {
   DIOSTREAMTLS_MSG_EXTENSION_CONTEXT_UNKNOWN                    = 0 ,
@@ -67,8 +66,6 @@ enum DIOSTREAMTLS_MSG_EXTENSION_CONTEXT
   DIOSTREAMTLS_MSG_EXTENSION_CONTEXT_CERTIFICATEENTRY                ,
   DIOSTREAMTLS_MSG_EXTENSION_CONTEXT_NEWSESSIONTICKET                ,
 };
-
-
 
 
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
@@ -96,7 +93,6 @@ class DIOSTREAMTLS_MSG_EXTENSION : public DIOSTREAMTLS_MSG_INTERFACE
     XWORD                                                 type;
     XWORD                                                 length;    
 };   
-
 
 template<typename T, typename S>
 class DIOSTREAMTLS_MSG_EXTENSION_LIST : public DIOSTREAMTLS_MSG_EXTENSION
@@ -296,7 +292,6 @@ class DIOSTREAMTLS_MSG_EXTENSION_LIST : public DIOSTREAMTLS_MSG_EXTENSION
     XVECTOR<T>                                            list;
 };   
 
-
 class DIOSTREAMTLS_MSG_EXTENSION_SNI_SERVERNAME : public DIOSTREAMTLS_MSG_INTERFACE
 {
   public:
@@ -325,7 +320,6 @@ class DIOSTREAMTLS_MSG_EXTENSION_SNI_SERVERNAME : public DIOSTREAMTLS_MSG_INTERF
     XWORD                                                 name_length;     
     XSTRING                                               hostname;                                
 };
-
 
 class DIOSTREAMTLS_MSG_EXTENSION_SNI : public DIOSTREAMTLS_MSG_EXTENSION
 {
@@ -372,7 +366,6 @@ class DIOSTREAMTLS_MSG_EXTENSION_ECPOINTFORMATS : public DIOSTREAMTLS_MSG_EXTENS
                                                 
 };
 
-
 class DIOSTREAMTLS_MSG_EXTENSION_SIGNATUREALGORITHMS : public DIOSTREAMTLS_MSG_EXTENSION_LIST<XWORD, XWORD>
 {
   public:
@@ -381,7 +374,6 @@ class DIOSTREAMTLS_MSG_EXTENSION_SIGNATUREALGORITHMS : public DIOSTREAMTLS_MSG_E
                                                 
 };
 
-
 class DIOSTREAMTLS_MSG_EXTENSION_SIGNATUREALGORITHMSCERT : public DIOSTREAMTLS_MSG_EXTENSION_LIST<XWORD, XWORD>
 {
   public:
@@ -389,7 +381,6 @@ class DIOSTREAMTLS_MSG_EXTENSION_SIGNATUREALGORITHMSCERT : public DIOSTREAMTLS_M
     virtual                                              ~DIOSTREAMTLS_MSG_EXTENSION_SIGNATUREALGORITHMSCERT();
 
 };
-
 
 class DIOSTREAMTLS_MSG_EXTENSION_ALPN : public DIOSTREAMTLS_MSG_EXTENSION
 {
@@ -442,7 +433,6 @@ class DIOSTREAMTLS_MSG_EXTENSION_EMS : public DIOSTREAMTLS_MSG_EXTENSION
     void                                                  Clean                                             ();   
 };
 
-
 class DIOSTREAMTLS_MSG_EXTENSION_SUPPORTEDVERSIONS : public DIOSTREAMTLS_MSG_EXTENSION_LIST<XWORD, XBYTE>
 {
   public:
@@ -450,7 +440,6 @@ class DIOSTREAMTLS_MSG_EXTENSION_SUPPORTEDVERSIONS : public DIOSTREAMTLS_MSG_EXT
     virtual                                              ~DIOSTREAMTLS_MSG_EXTENSION_SUPPORTEDVERSIONS      ();
                                                 
 };
-
 
 class DIOSTREAMTLS_MSG_EXTENSION_SUPPORTEDVERSIONS_SERVER : public DIOSTREAMTLS_MSG_EXTENSION
 {
@@ -471,7 +460,6 @@ class DIOSTREAMTLS_MSG_EXTENSION_SUPPORTEDVERSIONS_SERVER : public DIOSTREAMTLS_
     XWORD                                                 version;
 };
 
-
 class DIOSTREAMTLS_MSG_EXTENSION_PSKKEYEXCHANGEMODES : public DIOSTREAMTLS_MSG_EXTENSION_LIST<XBYTE, XBYTE>
 {
   public:
@@ -479,7 +467,6 @@ class DIOSTREAMTLS_MSG_EXTENSION_PSKKEYEXCHANGEMODES : public DIOSTREAMTLS_MSG_E
     virtual                                              ~DIOSTREAMTLS_MSG_EXTENSION_PSKKEYEXCHANGEMODES    ();
                                                 
 };
-
 
 class DIOSTREAMTLS_MSG_EXTENSION_KEY
 {
@@ -512,7 +499,6 @@ class DIOSTREAMTLS_MSG_EXTENSION_KEY
     XBUFFER                                               keydata;
 };
 
-
 class DIOSTREAMTLS_MSG_EXTENSION_KEYSHARE : public DIOSTREAMTLS_MSG_EXTENSION
 {
   public:
@@ -540,7 +526,6 @@ class DIOSTREAMTLS_MSG_EXTENSION_KEYSHARE : public DIOSTREAMTLS_MSG_EXTENSION
     XVECTOR<DIOSTREAMTLS_MSG_EXTENSION_KEY*>              list;
 };
 
-
 class DIOSTREAMTLS_MSG_EXTENSION_KEYSHARE_SERVER : public DIOSTREAMTLS_MSG_EXTENSION
 {
   public:
@@ -558,7 +543,6 @@ class DIOSTREAMTLS_MSG_EXTENSION_KEYSHARE_SERVER : public DIOSTREAMTLS_MSG_EXTEN
 
     DIOSTREAMTLS_MSG_EXTENSION_KEY                        key;
 };
-
 
 class DIOSTREAMTLS_MSG_EXTENSION_KEYSHARE_HELLORETRYREQUEST : public DIOSTREAMTLS_MSG_EXTENSION
 {
@@ -578,7 +562,6 @@ class DIOSTREAMTLS_MSG_EXTENSION_KEYSHARE_HELLORETRYREQUEST : public DIOSTREAMTL
 
     XWORD                                                 selectedgroup;
 };
-
 
 class DIOSTREAMTLS_MSG_EXTENSION_PSKIDENTITY
 {
@@ -608,7 +591,6 @@ class DIOSTREAMTLS_MSG_EXTENSION_PSKIDENTITY
     XBUFFER                                               identity;
     XDWORD                                                obfuscatedticketage;
 };
-
 
 // ClientHello shape (RFC 8446 4.2.11): a list of PskIdentity entries plus a list of PskBinderEntry entries, each
 // its own independently length-prefixed vector. The server only ever sends the single-value form below.
@@ -646,7 +628,6 @@ class DIOSTREAMTLS_MSG_EXTENSION_PRESHAREDKEY : public DIOSTREAMTLS_MSG_EXTENSIO
     XWORD                                                 binders_length;
     XVECTOR<XBUFFER*>                                     binders;
 };
-
 
 class DIOSTREAMTLS_MSG_EXTENSION_PRESHAREDKEY_SERVER : public DIOSTREAMTLS_MSG_EXTENSION
 {

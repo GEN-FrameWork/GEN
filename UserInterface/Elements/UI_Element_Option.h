@@ -50,18 +50,13 @@ enum UI_ELEMENT_OPTION_ALLOCATION_TEXT_TYPE
   UI_ELEMENT_OPTION_ALLOCATION_TEXT_TYPE_CENTER       ,
 };
 
-
 #define UI_ELEMENT_OPTION_VISIBLE_LIMIT_NONE          0x0000
 #define UI_ELEMENT_OPTION_VISIBLE_LIMIT_ACTIVE        0x0001
 #define UI_ELEMENT_OPTION_VISIBLE_LIMIT_DEACTIVE      0x0002
 #define UI_ELEMENT_OPTION_VISIBLE_LIMIT_PRESELECT     0x0004
 #define UI_ELEMENT_OPTION_VISIBLE_LIMIT_SELECT        0x0008
 
-
-
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
-
 
 class UI_ELEMENT_OPTION : public UI_ELEMENT, public UI_PROPERTY_SELECTABLE
 {

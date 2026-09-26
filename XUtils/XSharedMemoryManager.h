@@ -33,15 +33,9 @@
 #include "XBase.h"
 #include "XString.h"
 
-
-
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
 
-
-
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
-
 
 class XSHAREDMEMORYMANAGER
 {
@@ -54,8 +48,7 @@ class XSHAREDMEMORYMANAGER
     static bool                   SetInstance                 (XSHAREDMEMORYMANAGER* instance);
     static bool                   DelInstance                 ();
 
-
-    virtual XBYTE*                Create                      (XCHAR* ID, XDWORD size,  bool ispublic = true);
+    virtual XBYTE*                Create                      (XCHAR* ID, XDWORD size, bool ispublic = true);
     XBYTE*                        Create                      (XSTRING& ID, XDWORD size, bool ispublic = true);
 
     virtual XBYTE*                Open                        (XCHAR* ID, XDWORD& size);

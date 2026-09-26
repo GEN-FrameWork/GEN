@@ -35,8 +35,6 @@
 
 #include "DIOGPIO.h"
 
-
-
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
 
 #define DIOWINDOWSGPIOPCPARALLEL_PORT1                0x378
@@ -46,8 +44,6 @@ typedef void  (__stdcall* DIOWGPIOOUT)               (short, short);
 typedef short (__stdcall* DIOWGPIOINP)               (short);
 typedef BOOL  (__stdcall* DIOWGPIOISDRIVEROPEN)      (void);
 typedef BOOL  (__stdcall* DIOWGPIOISDRIVER64BITS)    (void);
-
-
 
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
 
@@ -59,14 +55,12 @@ class DIOWINDOWSGPIOPCPARALLEL : public DIOGPIO
                                 DIOWINDOWSGPIOPCPARALLEL      ();
     virtual                    ~DIOWINDOWSGPIOPCPARALLEL      ();
 
-    
     XPATH*                      GetPath                       ();
     void                        SetPath                       (XPATH* xpath);
 
     XWORD                       GetParallelPort               ();
     void                        SetParallelPort               (XWORD port = DIOWINDOWSGPIOPCPARALLEL_PORT1);
     
-
     bool                        Ini                           ();   
     
     XWORD                       GetMode                       (DIOGPIO_ENTRY* entry);  

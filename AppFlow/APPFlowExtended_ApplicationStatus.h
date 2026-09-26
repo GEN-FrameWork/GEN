@@ -32,12 +32,7 @@
 
 #include "DIOWebServer_ResolveEndPoint.h"
 
-
-
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
-
-
-
 
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
 
@@ -45,7 +40,6 @@ class XCONSOLE;
 class XTIMER;
 class APPFLOWCFG;
 class APPFLOWCHECKRESOURCESHARDWARE;
-
 
 class APPFLOWEXTENDED_APPLICATIONSTATUS : public DIOWEBSERVER_RESOLVEENDPOINT
 {

@@ -139,7 +139,7 @@ float DIOI2CLSM303DLHCVECTOR::Dot(const DIOI2CLSM303DLHCVECTOR& a, const DIOI2CL
 * --------------------------------------------------------------------------------------------------------------------*/
 void DIOI2CLSM303DLHCVECTOR::Normalize(DIOI2CLSM303DLHCVECTOR& a)
 {
-  float mag = (float)sqrt(Dot(a,a));
+  float mag = (float)sqrt(Dot(a, a));
 
   a.x /= float(mag);
   a.y /= float(mag);
@@ -345,10 +345,6 @@ void DIOI2CLSM303DLHC::Clean()
 }
 
 
-
-
-
-
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         DIOI2C3DCOMPASSLSM303DLHC::DIOI2C3DCOMPASSLSM303DLHC()
@@ -434,10 +430,6 @@ bool DIOI2C3DACCELEROMETERLSM303DLHC::Read(XWORD& a_x, XWORD& a_y, XWORD& a_z)
 
   return true;
 }
-
-
-
-
 
 
 /**-------------------------------------------------------------------------------------------------------------------
@@ -527,9 +519,6 @@ bool DIOI2C3DCOMPASSLSM303DLHC::Read(XWORD& c_x, XWORD& c_y, XWORD& c_z)
 }
 
 
-
-
-
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         DIOI2C6AXISTRACKINGLSM303DLHC::DIOI2C6AXISTRACKINGLSM303DLHC()
@@ -606,7 +595,7 @@ bool DIOI2C6AXISTRACKINGLSM303DLHC::Ini(XCHAR* localdevicename, int remotedevice
 * @return     bool : true if the operation is successful; otherwise false.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-bool DIOI2C6AXISTRACKINGLSM303DLHC::Ini(int port,  int remotedeviceaddressaccelerometer, int remotedeviceaddresscompass, int timeout)
+bool DIOI2C6AXISTRACKINGLSM303DLHC::Ini(int port, int remotedeviceaddressaccelerometer, int remotedeviceaddresscompass, int timeout)
 {
   if(!accelerometer)  return false;
   if(!compass)        return false;
@@ -788,7 +777,7 @@ float DIOI2C6AXISTRACKINGLSM303DLHC::Heading(DIOI2CLSM303DLHCVECTOR& from)
   DIOI2CLSM303DLHCVECTOR e;
   DIOI2CLSM303DLHCVECTOR n;
 
-  DIOI2CLSM303DLHCVECTOR::Cross(c ,temp_a, e);
+  DIOI2CLSM303DLHCVECTOR::Cross(c, temp_a, e);
 
   DIOI2CLSM303DLHCVECTOR::Normalize(e);
 

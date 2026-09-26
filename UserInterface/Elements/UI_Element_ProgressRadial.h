@@ -35,8 +35,6 @@
 #include "UI_Element.h"
 #include "UI_Element_Option.h"
 
-
-
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
 
 #define UI_ELEMENT_PROGRESS_RADIAL_DEFAULT_STARTANGLE      (-90.0)     // 12 o'clock (top of the ring)
@@ -44,10 +42,7 @@
 #define UI_ELEMENT_PROGRESS_RADIAL_DEFAULT_THICKNESS       (0.0)       // 0 => auto (a fraction of the radius)
 #define UI_ELEMENT_PROGRESS_RADIAL_AUTOTHICKNESS_FACTOR    (0.16)      // ring width when thickness is auto (fraction of radius)
 
-
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
-
 
 /**
 * @class   UI_ELEMENT_PROGRESS_RADIAL
@@ -69,7 +64,6 @@
 #define UI_ELEMENT_PROGRESS_GRADIENTMODE_FILL    0                                   // gradient maps to the current value arc (leading edge = end color)
 #define UI_ELEMENT_PROGRESS_GRADIENTMODE_TRACK   1                                   // gradient maps to the full sweep; the value arc reveals part of it
 #endif
-
 
 class UI_ELEMENT_PROGRESS_RADIAL : public UI_ELEMENT_OPTION
 {

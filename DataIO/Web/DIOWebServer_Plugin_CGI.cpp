@@ -175,11 +175,11 @@ bool DIOWEBSERVER_PLUGIN_CGI::PageExtension(XPATH& pathfile, DIOWEBSERVER_REQUES
 
 
   GEN_XSYSTEM.SetEnviromentVariable(__L("GATEWAY_INTERFACE") , __L("CGI/1.1"));
-  GEN_XSYSTEM.SetEnviromentVariable(__L("REQUEST_METHOD")    , __L("POST"));
-  GEN_XSYSTEM.SetEnviromentVariable(__L("SCRIPT_FILENAME")   , pathfile.Get());
-  GEN_XSYSTEM.SetEnviromentVariable(__L("CONTENT_LENGTH")    , sizeinstr.Get());
-  GEN_XSYSTEM.SetEnviromentVariable(__L("REDIRECT_STATUS")   , __L("true"));
-  GEN_XSYSTEM.SetEnviromentVariable(__L("CONTENT_TYPE")      , __L("application/x-www-form-urlencoded"));
+  GEN_XSYSTEM.SetEnviromentVariable(__L("REQUEST_METHOD"), __L("POST"));
+  GEN_XSYSTEM.SetEnviromentVariable(__L("SCRIPT_FILENAME"), pathfile.Get());
+  GEN_XSYSTEM.SetEnviromentVariable(__L("CONTENT_LENGTH"), sizeinstr.Get());
+  GEN_XSYSTEM.SetEnviromentVariable(__L("REDIRECT_STATUS"), __L("true"));
+  GEN_XSYSTEM.SetEnviromentVariable(__L("CONTENT_TYPE"), __L("application/x-www-form-urlencoded"));
 
   // Standard CGI/1.1 convention (also followed by PHP's $_SERVER['HTTPS']): only set, and only to "on", when the
   // request arrived over TLS -- absent entirely for plain HTTP, never set to "off".

@@ -62,9 +62,7 @@
 
 #include "XString.h"
 
-
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
-
 
 enum UI_LENGTH_TYPE
 {
@@ -86,11 +84,11 @@ enum UI_LENGTH_TYPE
 */
 struct UI_LENGTH_CONTEXT
 {
-  double basis;             // percentage basis (the relevant containing-block dimension), for PERCENT
-  double fontsize;          // this element's own resolved font-size in pixels, for EM
-  double rootfontsize;      // the document root's resolved font-size in pixels, for REM
-  double viewportwidth;     // viewport width in pixels, for VW
-  double viewportheight;    // viewport height in pixels, for VH
+  double basis;
+  double fontsize;
+  double rootfontsize;
+  double viewportwidth;
+  double viewportheight;
 };
 
 
@@ -109,31 +107,16 @@ class UI_LENGTH
                                     UI_LENGTH                   ();
     virtual                        ~UI_LENGTH                  ();
 
-    // Classifies "raw" into UNDEFINED / NUMBER / PERCENT / KEYWORD / EM / REM / VW / VH / CALC. Always succeeds
-    // (an unparseable numeric string is treated the same way XSTRING::ConvertToDouble() already treats it
-    // elsewhere in this subsystem, and a malformed calc() falls back to KEYWORD -- see the class banner above);
-    // returns false only for an empty "raw", exactly like UI_STYLE::Get() returning false for an absent key.
     bool                            Parse                       (XSTRING& raw);
 
     UI_LENGTH_TYPE                  GetType                     ();
 
-    // Raw magnitude for NUMBER/EM/REM/VW/VH (the number before the unit; pixels for NUMBER, GEN's only unit
-    // without one) and PERCENT (0..100, NOT 0..1). Meaningless for KEYWORD/UNDEFINED/CALC -- always 0.0 there
-    // (a CALC value has no single magnitude until Resolve(UI_LENGTH_CONTEXT&,double&) evaluates its expression).
     double                          GetValue                    ();
 
-    // Case-insensitive match against the keyword text. False (never a crash) when GetType() is not KEYWORD.
     bool                            IsKeyword                   (XCHAR* keyword);
 
-    // Resolves NUMBER (basis ignored) or PERCENT (value/100 * basis) into "out". False for KEYWORD/UNDEFINED
-    // and equally false for EM/REM/VW/VH/CALC -- those need more context than a bare basis, see the overload
-    // below. The caller is expected to have already handled its own keyword set via IsKeyword() before falling
-    // back to Resolve(), exactly the order GetLayoutElement_Base() already used before this type existed.
     bool                            Resolve                     (double basis, double& out);
 
-    // Resolves any of NUMBER / PERCENT / EM / REM / VW / VH / CALC into "out" using the given context. False
-    // for KEYWORD/UNDEFINED, and false for a CALC expression that itself resolves an inner KEYWORD/UNDEFINED
-    // node (never happens today -- calc() operands are always numeric -- but kept honest rather than assumed).
     bool                            Resolve                     (UI_LENGTH_CONTEXT& context, double& out);
 
   private:
@@ -143,11 +126,8 @@ class UI_LENGTH
     UI_LENGTH_TYPE                   type;
     double                           value;
     XSTRING                          keyword;
-    UI_LENGTHCALCNODE*               calcroot;      // owned; set only when type == UI_LENGTH_TYPE_CALC
+    UI_LENGTHCALCNODE*               calcroot;
 
-    // calc() parsing (recursive descent: Expression := Term (('+'|'-') Term)* ; Term := Factor (('*'|'/') Factor)* ;
-    // Factor := '(' Expression ')' | number-with-optional-unit) and evaluation. Implemented in UI_Length.cpp,
-    // alongside UI_LENGTHCALCNODE's definition.
     UI_LENGTHCALCNODE*               ParseCalcExpression         (XSTRING& text, int& pos, int end);
     UI_LENGTHCALCNODE*               ParseCalcTerm               (XSTRING& text, int& pos, int end);
     UI_LENGTHCALCNODE*               ParseCalcFactor             (XSTRING& text, int& pos, int end);

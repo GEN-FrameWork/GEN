@@ -377,8 +377,8 @@ bool GRPVECTORFILESVGTRANSFORM::ParsePrimitive(XSTRING& name, XSTRING& args)
           double cy = values[2];
 
           // T(cx,cy) * R * T(-cx,-cy)
-          GRPVECTORFILESVGTRANSFORM t1;  t1.Set(1.0, 0.0, 0.0, 1.0,  cx,  cy);
-          GRPVECTORFILESVGTRANSFORM r;   r.Set (co,  si, -si,  co, 0.0, 0.0);
+          GRPVECTORFILESVGTRANSFORM t1;  t1.Set(1.0, 0.0, 0.0, 1.0, cx, cy);
+          GRPVECTORFILESVGTRANSFORM r;   r.Set (co, si, -si, co, 0.0, 0.0);
           GRPVECTORFILESVGTRANSFORM t2;  t2.Set(1.0, 0.0, 0.0, 1.0, -cx, -cy);
 
           prim.CopyFrom(t1);

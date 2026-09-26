@@ -40,8 +40,6 @@
 
 #include "DIOStreamTLSMessages.h"
 
-
-
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
 
 
@@ -51,9 +49,7 @@
 
 // RFC 5246 section 7.4.3: pre_master_secret size is fixed once the ECDHE exchange is done.
 
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
-
 
 class DIOSTREAMTLS12_MSG_SERVERHELLODONE : public DIOSTREAMTLS_MSG_INTERFACE
 {
@@ -68,7 +64,6 @@ class DIOSTREAMTLS12_MSG_SERVERHELLODONE : public DIOSTREAMTLS_MSG_INTERFACE
 
     void                                    Clean                                             ();
 };
-
 
 class DIOSTREAMTLS12_MSG_SERVERKEYEXCHANGE_ECDHE : public DIOSTREAMTLS_MSG_INTERFACE
 {
@@ -88,9 +83,6 @@ class DIOSTREAMTLS12_MSG_SERVERKEYEXCHANGE_ECDHE : public DIOSTREAMTLS_MSG_INTER
 
     XBUFFER*                                GetSignature                                      ();
 
-    
-    
-    
     bool                                    GetSignedParams                                   (XBUFFER& params);
 
     bool                                    SetToBuffer                                       (XBUFFER& buffer, bool showdebug);
@@ -106,7 +98,6 @@ class DIOSTREAMTLS12_MSG_SERVERKEYEXCHANGE_ECDHE : public DIOSTREAMTLS_MSG_INTER
     XWORD                                   signaturealgorithm;
     XBUFFER                                 signature;
 };
-
 
 class DIOSTREAMTLS12_MSG_CLIENTKEYEXCHANGE_ECDHE : public DIOSTREAMTLS_MSG_INTERFACE
 {

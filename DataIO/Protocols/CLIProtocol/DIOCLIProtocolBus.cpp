@@ -122,7 +122,7 @@ bool DIOCLIPROTOCOLBUS::Ini(DIOSTREAM* diostream, XCHAR* ID, int timeout)
   threadsendenumrequest	= CREATEXTHREAD(XTHREADGROUPID_DIOPROTOCOL_CLI_BUS, __L("DIOCLIPROTOCOLBUS::Ini2"), ThreadSendEnumRequest, (void*)this);
   if(!threadsendenumrequest) return false;
 
-	threadreceivedcommand	= CREATEXTHREAD(XTHREADGROUPID_DIOPROTOCOL_CLI_BUS, __L("DIOCLIPROTOCOLBUS::Ini"), ThreadReceivedCommand,	(void*)this);
+	threadreceivedcommand	= CREATEXTHREAD(XTHREADGROUPID_DIOPROTOCOL_CLI_BUS, __L("DIOCLIPROTOCOLBUS::Ini"), ThreadReceivedCommand, (void*)this);
   if(!threadreceivedcommand) return false;
 
   enum_timer = GEN_XFACTORY.CreateTimer();
@@ -282,7 +282,6 @@ void DIOCLIPROTOCOLBUS::SetNRetries(int nretries)
 {
   this->nretries = nretries;
 }
-
 
 
 /**-------------------------------------------------------------------------------------------------------------------

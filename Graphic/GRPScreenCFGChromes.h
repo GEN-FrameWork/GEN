@@ -36,13 +36,9 @@
 #include "XString.h"
 #endif
 
-
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
 
-
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
-
 
 class GRPSCREENCFGCHROMES
 {
@@ -75,17 +71,11 @@ class GRPSCREENCFGCHROMES
 
     #ifdef GRP_SCREEN_CUSTOMCHROMES_ACTIVE
 
-
-
-
     XSTRING*                              GetCustomLayoutFile           ();
     void                                  SetCustomLayoutFile           (XCHAR* namelayoutfile);
 
     XSTRING*                              GetCustomLayoutName           ();
     void                                  SetCustomLayoutName           (XCHAR* namelayout);
-
-
-
 
     XDWORD                                GetCustomAutoHide             ();
     void                                  SetCustomAutoHide             (XDWORD timehidden);

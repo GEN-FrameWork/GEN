@@ -32,12 +32,7 @@
 
 #include "CompressBase.h"
 
-
-
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
-
-
-
 
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
 
@@ -57,15 +52,15 @@ class COMPRESS_GZ : public COMPRESSBASE
                             COMPRESS_GZ           ();
     virtual                ~COMPRESS_GZ           ();
 
-    bool                    Compress              (XBYTE* source,XDWORD size,XBUFFER* buffer);
-    bool                    Decompress            (XBYTE* source,XDWORD size,XBUFFER* buffer);
+    bool                    Compress              (XBYTE* source, XDWORD size, XBUFFER* buffer);
+    bool                    Decompress            (XBYTE* source, XDWORD size, XBUFFER* buffer);
 
   private:
 
     void                    Clean                 ();
 
-    int                     ZCompress             (XBUFFER* target,XBYTE* source,XDWORD sourcesize);
-    int                     ZDecompress           (XBUFFER* target,XBYTE* source,XDWORD sourcesize);
+    int                     ZCompress             (XBUFFER* target, XBYTE* source, XDWORD sourcesize);
+    int                     ZDecompress           (XBUFFER* target, XBYTE* source, XDWORD sourcesize);
 
 };
 

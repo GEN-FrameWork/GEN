@@ -424,13 +424,13 @@ UI_LAYOUTBOX* UI_LAYOUTBOX::GetParent()
 
 
 /**-------------------------------------------------------------------------------------------------------------------
-*
-* @fn         void UI_LAYOUTBOX::SetPosition(UI_POSITION position)
+* 
+* @fn         void UI_LAYOUTBOX::SetPosition(UI_POSITION _position)
 * @brief      Set position
 * @ingroup    USERINTERFACE
-*
-* @param[in]  position : CSS "position" tag for this box (STATIC/RELATIVE/ABSOLUTE).
-*
+* 
+* @param[in]  _position : 
+* 
 * --------------------------------------------------------------------------------------------------------------------*/
 void UI_LAYOUTBOX::SetPosition(UI_POSITION _position)
 {
@@ -454,13 +454,13 @@ UI_POSITION UI_LAYOUTBOX::GetPosition()
 
 
 /**-------------------------------------------------------------------------------------------------------------------
-*
-* @fn         void UI_LAYOUTBOX::SetInsets(UI_LAYOUTBOX_INSETS& insets)
+* 
+* @fn         void UI_LAYOUTBOX::SetInsets(UI_LAYOUTBOX_INSETS& _insets)
 * @brief      Set insets
 * @ingroup    USERINTERFACE
-*
-* @param[in]  insets : Inset set to copy in (each edge independently specified-or-not).
-*
+* 
+* @param[in]  _insets : 
+* 
 * --------------------------------------------------------------------------------------------------------------------*/
 void UI_LAYOUTBOX::SetInsets(UI_LAYOUTBOX_INSETS& _insets)
 {
@@ -544,13 +544,13 @@ UI_FLEX_DIRECTION UI_LAYOUTBOX::GetFlexDirection()
 
 
 /**-------------------------------------------------------------------------------------------------------------------
-*
-* @fn         void UI_LAYOUTBOX::SetJustifyContent(UI_JUSTIFY_CONTENT justifycontent)
+* 
+* @fn         void UI_LAYOUTBOX::SetJustifyContent(UI_JUSTIFY_CONTENT _justifycontent)
 * @brief      Set justify content
 * @ingroup    USERINTERFACE
-*
-* @param[in]  justifycontent : How free main-axis space is distributed among this container's children.
-*
+* 
+* @param[in]  _justifycontent : 
+* 
 * --------------------------------------------------------------------------------------------------------------------*/
 void UI_LAYOUTBOX::SetJustifyContent(UI_JUSTIFY_CONTENT _justifycontent)
 {
@@ -574,15 +574,14 @@ UI_JUSTIFY_CONTENT UI_LAYOUTBOX::GetJustifyContent()
 
 
 /**-------------------------------------------------------------------------------------------------------------------
-*
-* @fn         void UI_LAYOUTBOX::SetGap(double rowgap, double columngap)
+* 
+* @fn         void UI_LAYOUTBOX::SetGap(double _rowgap, double _columngap)
 * @brief      Set gap
 * @ingroup    USERINTERFACE
-*
-* @param[in]  rowgap : CSS "row-gap" -- space between children along the VERTICAL axis (rows), whatever the
-*                      current flex-direction is.
-* @param[in]  columngap : CSS "column-gap" -- space between children along the HORIZONTAL axis (columns).
-*
+* 
+* @param[in]  _rowgap : 
+* @param[in]  _columngap : 
+* 
 * --------------------------------------------------------------------------------------------------------------------*/
 void UI_LAYOUTBOX::SetGap(double _rowgap, double _columngap)
 {
@@ -757,13 +756,13 @@ UI_FLEX_WRAP UI_LAYOUTBOX::GetFlexWrap()
 
 
 /**-------------------------------------------------------------------------------------------------------------------
-*
-* @fn         void UI_LAYOUTBOX::SetAlignContent(UI_ALIGN_CONTENT aligncontent)
+* 
+* @fn         void UI_LAYOUTBOX::SetAlignContent(UI_ALIGN_CONTENT _aligncontent)
 * @brief      Set align content
 * @ingroup    USERINTERFACE
-*
-* @param[in]  aligncontent : How free cross-axis space is distributed among this container's lines.
-*
+* 
+* @param[in]  _aligncontent : 
+* 
 * --------------------------------------------------------------------------------------------------------------------*/
 void UI_LAYOUTBOX::SetAlignContent(UI_ALIGN_CONTENT _aligncontent)
 {
@@ -787,13 +786,13 @@ UI_ALIGN_CONTENT UI_LAYOUTBOX::GetAlignContent()
 
 
 /**-------------------------------------------------------------------------------------------------------------------
-*
-* @fn         void UI_LAYOUTBOX::SetAlignItems(UI_ALIGN_ITEMS alignitems)
+* 
+* @fn         void UI_LAYOUTBOX::SetAlignItems(UI_ALIGN_ITEMS _alignitems)
 * @brief      Set align items
 * @ingroup    USERINTERFACE
-*
-* @param[in]  alignitems : How this container aligns its DIRECT children on the cross axis, within their own line.
-*
+* 
+* @param[in]  _alignitems : 
+* 
 * --------------------------------------------------------------------------------------------------------------------*/
 void UI_LAYOUTBOX::SetAlignItems(UI_ALIGN_ITEMS _alignitems)
 {
@@ -817,13 +816,13 @@ UI_ALIGN_ITEMS UI_LAYOUTBOX::GetAlignItems()
 
 
 /**-------------------------------------------------------------------------------------------------------------------
-*
-* @fn         void UI_LAYOUTBOX::SetAlignSelf(UI_ALIGN_SELF alignself)
+* 
+* @fn         void UI_LAYOUTBOX::SetAlignSelf(UI_ALIGN_SELF _alignself)
 * @brief      Set align self
 * @ingroup    USERINTERFACE
-*
-* @param[in]  alignself : This box's own cross-axis alignment override; AUTO defers to the parent's align-items.
-*
+* 
+* @param[in]  _alignself : 
+* 
 * --------------------------------------------------------------------------------------------------------------------*/
 void UI_LAYOUTBOX::SetAlignSelf(UI_ALIGN_SELF _alignself)
 {

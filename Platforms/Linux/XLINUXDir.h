@@ -30,16 +30,10 @@
 
 /*---- INCLUDES ------------------------------------------------------------------------------------------------------*/
 
-
 #include "XBase.h"
 #include "XDir.h"
 
-
-
-
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
-
-
 
 
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
@@ -58,7 +52,7 @@ class XLINUXDIR : public XDIR
 
     bool                GetActual           (XPATH& path);
 
-    bool                FirstSearch         (XCHAR* path,XCHAR* patternsearch,XDIRELEMENT* searchelement);
+    bool                FirstSearch         (XCHAR* path, XCHAR* patternsearch, XDIRELEMENT* searchelement);
     bool                NextSearch          (XDIRELEMENT* searchelement);
 
   private:

@@ -345,11 +345,7 @@ bool XMEMORY_CONTROL::DisplayAll(bool displaydata)
               size_t ptr = (size_t)assignlist[c].ptr;
               XDWORD address = (XDWORD)ptr;
 
-              XTRACE_PRINTCOLOR(level, __L("%08d %08X %07d %05d %s")   , c
-                                                                       , address
-                                                                       , assignlist[c].size
-                                                                       , assignlist[c].linemodule
-                                                                       , namemodule.Get());
+              XTRACE_PRINTCOLOR(level, __L("%08d %08X %07d %05d %s"), c, address, assignlist[c].size, assignlist[c].linemodule, namemodule.Get());
 
               //-----------------------------------------------------------------
 

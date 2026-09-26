@@ -42,15 +42,9 @@
 
 #include "XSerializationMethod.h"
 
-
-
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
 
-
-
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
-
 
 class XSERIALIZABLE
 {
@@ -156,8 +150,6 @@ class XSERIALIZABLE
                                            {
                                              element->SetSerializationMethod(serializationmethod);
 
-
-
                                              if(!serializationmethod->ExtractArrayElement(c, name, true)) return false;
                                              bool status = element->Deserialize();
                                              if(!serializationmethod->ExtractArrayElement(c, name, false) || !status) return false;
@@ -202,8 +194,6 @@ class XSERIALIZABLE
                                          if(element)
                                            {
                                              element->SetSerializationMethod(serializationmethod);
-
-
 
                                              if(!serializationmethod->ExtractArrayElement(c, name, true)) return false;
                                              bool status = element->Deserialize();

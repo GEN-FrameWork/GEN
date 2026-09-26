@@ -170,8 +170,8 @@ bool DIOLINUXSTREAMBLUETOOTHLEREMOTEENUMDEVICES::Search()
   // Setup GEN_NEW HCI filter
 
   hci_filter_clear(&new_hcifilter);
-  hci_filter_set_ptype(HCI_EVENT_PKT       , &new_hcifilter);
-  hci_filter_set_event(EVT_LE_META_EVENT   , &new_hcifilter);
+  hci_filter_set_ptype(HCI_EVENT_PKT, &new_hcifilter);
+  hci_filter_set_event(EVT_LE_META_EVENT, &new_hcifilter);
 
   setsockopt(hcisocket, SOL_HCI, HCI_FILTER, &new_hcifilter, sizeof(new_hcifilter));
 
@@ -334,7 +334,7 @@ void DIOLINUXSTREAMBLUETOOTHLEREMOTEENUMDEVICES::ThreadEnumDevices(void* param)
               device->GetMAC()->Set(LEMACdevicestring);
               device->SetRSSI(rssi);
               device->GetAdvertisingData()->Delete();
-              device->GetAdvertisingData()->Add(LEadvertisinginfo->data,+ LEadvertisinginfo->length);
+              device->GetAdvertisingData()->Add(LEadvertisinginfo->data, + LEadvertisinginfo->length);
 
               //XTRACE_PRINTCOLOR((isnewdevice?XTRACE_COLOR_PURPLE:XTRACE_COLOR_BLUE), __L("MAC %s RSSI: %d"), LEMACdevicestring.Get(), rssi);
               //XTRACE_PRINTDATABLOCKCOLOR((isnewdevice?XTRACE_COLOR_PURPLE:XTRACE_COLOR_BLUE), (*device->GetAdvertisingData()));
@@ -356,7 +356,7 @@ void DIOLINUXSTREAMBLUETOOTHLEREMOTEENUMDEVICES::ThreadEnumDevices(void* param)
               
               device_event->GetMAC()->Set(LEMACdevicestring);
               device_event->SetRSSI(rssi);              
-              device_event->GetAdvertisingData()->Add(LEadvertisinginfo->data,+ LEadvertisinginfo->length);
+              device_event->GetAdvertisingData()->Add(LEadvertisinginfo->data, + LEadvertisinginfo->length);
 
               if(LEremotedevices->xmutexdevicesevent)  
                 {                           

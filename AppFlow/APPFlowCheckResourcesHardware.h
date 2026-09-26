@@ -34,8 +34,6 @@
 #include "XObserver.h"
 #include "XSubject.h"
 
-
-
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
 
 enum APPFLOWCHECKRESOURCESHARDWARE_TASKID
@@ -45,8 +43,6 @@ enum APPFLOWCHECKRESOURCESHARDWARE_TASKID
   APPFLOWCHECKRESOURCESHARDWARE_TASKID_TOTALCPUUSAGE                  ,
   APPFLOWCHECKRESOURCESHARDWARE_TASKID_APPCPUUSAGE                    ,
 };
-
-
 
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
 

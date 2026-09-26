@@ -35,24 +35,18 @@
 #include "UI_Element.h"
 #include "UI_Element_Option.h"
 
-
-
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
 
 #define UI_ELEMENT_PROGRESSBAR_CCYCLE_DEFAULTSIZESEGMENT          33        // Percent of size of segment in continuous cycle
 #define UI_ELEMENT_PROGRESSBAR_CCYCLE_DEFAULTSTEPSEGMENT          10        // Step of segment in continuous cycle
 #define UI_ELEMENT_PROGRESSBAR_CCYCLE_DEFAULTTIMESTEP             10        // Time (milliseconds) of step segment (redraw) in continuous cycle
 
-
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
-
 
 #ifndef UI_ELEMENT_PROGRESS_GRADIENTMODE_FILL
 #define UI_ELEMENT_PROGRESS_GRADIENTMODE_FILL    0                                   // gradient maps to the current fill (leading edge = end color)
 #define UI_ELEMENT_PROGRESS_GRADIENTMODE_TRACK   1                                   // gradient maps to the full bar; the fill reveals part of it
 #endif
-
 
 class UI_ELEMENT_PROGRESSBAR : public UI_ELEMENT_OPTION
 {
@@ -73,7 +67,7 @@ class UI_ELEMENT_PROGRESSBAR : public UI_ELEMENT_OPTION
     void                    SetProgressRect                   (UI_ELEMENT* progressrect);
 
     bool                    ContinuousCycle_Is                ();
-    void                    ContinuousCycle_Set               (bool iscontinuouscycle, XDWORD sizesegment = UI_ELEMENT_PROGRESSBAR_CCYCLE_DEFAULTSIZESEGMENT, XDWORD stepsegment = UI_ELEMENT_PROGRESSBAR_CCYCLE_DEFAULTSTEPSEGMENT,  XDWORD timestep = UI_ELEMENT_PROGRESSBAR_CCYCLE_DEFAULTTIMESTEP);    
+    void                    ContinuousCycle_Set               (bool iscontinuouscycle, XDWORD sizesegment = UI_ELEMENT_PROGRESSBAR_CCYCLE_DEFAULTSIZESEGMENT, XDWORD stepsegment = UI_ELEMENT_PROGRESSBAR_CCYCLE_DEFAULTSTEPSEGMENT, XDWORD timestep = UI_ELEMENT_PROGRESSBAR_CCYCLE_DEFAULTTIMESTEP);    
     XDWORD                  ContinuousCycle_GetSizeSegment    ();
     XDWORD                  ContinuousCycle_GetStepSegment    ();    
     XDWORD                  ContinuousCycle_GetNSteps         ();

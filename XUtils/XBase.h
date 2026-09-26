@@ -237,15 +237,15 @@ float     RoundFloat          (float x);
 float     AdjustFloat         (float valor, int decimals);
 double    AdjustDouble        (double valor, int decimals);
 
-XBYTE     HighWORD            (XWORD  data);
+XBYTE     HighWORD            (XWORD data);
 XWORD     HighDWORD           (XDWORD data);
 XDWORD    HighQWORD           (XQWORD data);
 
-XBYTE     LowWORD             (XWORD  data);
+XBYTE     LowWORD             (XWORD data);
 XWORD     LowDWORD            (XDWORD data);
 XDWORD    LowQWORD            (XQWORD data);
 
-XWORD     SwapWORD            (XWORD  data);
+XWORD     SwapWORD            (XWORD data);
 XDWORD    SwapDWORD           (XDWORD data);
 XQWORD    SwapQWORD           (XQWORD data);
 

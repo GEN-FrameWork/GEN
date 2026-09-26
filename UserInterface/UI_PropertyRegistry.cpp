@@ -192,11 +192,17 @@ void UI_PROPERTYREGISTRY::ExpandCSSShorthand4(XSTRING& raw, double out[4])
 
 
 /**-------------------------------------------------------------------------------------------------------------------
-*
+* 
 * @fn         bool UI_PROPERTYREGISTRY::ResolveLengthToken(XSTRING& raw, UI_LENGTH_CONTEXT& context, double& out)
 * @brief      Resolve one CSS length token through UI_LENGTH
 * @ingroup    USERINTERFACE
-*
+* 
+* @param[in]  raw : 
+* @param[in]  context : 
+* @param[in]  out : 
+* 
+* @return     bool : true if is succesful.
+* 
 * --------------------------------------------------------------------------------------------------------------------*/
 bool UI_PROPERTYREGISTRY::ResolveLengthToken(XSTRING& raw, UI_LENGTH_CONTEXT& context, double& out)
 {
@@ -213,11 +219,17 @@ bool UI_PROPERTYREGISTRY::ResolveLengthToken(XSTRING& raw, UI_LENGTH_CONTEXT& co
 
 
 /**-------------------------------------------------------------------------------------------------------------------
-*
+* 
 * @fn         bool UI_PROPERTYREGISTRY::ExpandCSSShorthand4Lengths(XSTRING& raw, UI_LENGTH_CONTEXT& context, double out[4])
 * @brief      Expand 1..4 length tokens (rem/vw/vh/%/em/px) into CSS TRBL slots
 * @ingroup    USERINTERFACE
-*
+* 
+* @param[in]  raw : 
+* @param[in]  context : 
+* @param[in]  out : 
+* 
+* @return     bool : true if is succesful.
+* 
 * --------------------------------------------------------------------------------------------------------------------*/
 bool UI_PROPERTYREGISTRY::ExpandCSSShorthand4Lengths(XSTRING& raw, UI_LENGTH_CONTEXT& context, double out[4])
 {

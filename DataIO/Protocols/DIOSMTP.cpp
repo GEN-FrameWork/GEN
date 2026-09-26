@@ -164,10 +164,6 @@ void DIOSMTPRECIPIENT::Clean()
 }
 
 
-
-
-
-
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         DIOSMTPATTACHMENT::DIOSMTPATTACHMENT()
@@ -300,10 +296,6 @@ void DIOSMTPATTACHMENT::Clean()
   size        = 0;
   sizelimit   = 0;
 }
-
-
-
-
 
 
 /**-------------------------------------------------------------------------------------------------------------------
@@ -1012,7 +1004,7 @@ bool DIOSMTP::Send()
   XSTRING domain;
   senderemail.GetDomain(domain);
 
-  response.Format(__L("EHLO %s\r\n") ,domain.Get());
+  response.Format(__L("EHLO %s\r\n"), domain.Get());
   if(!SendResponse(response, 250))
     {
       diostream->Close();
@@ -1475,13 +1467,13 @@ bool DIOSMTP::CreateHeader(XSTRING& header)
   header+= string;
   */
 
-  string.Format(__L("From: %s <%s>\r\n"),   GetSenderName()->Get(), GetSenderEmail()->Get());
+  string.Format(__L("From: %s <%s>\r\n"), GetSenderName()->Get(), GetSenderEmail()->Get());
   header+= string;
 
 
   if(!GetReplytoEmail()->IsEmpty())
     {
-      string.Format(__L("Reply-To: %s\r\n"),  GetReplytoEmail()->Get());
+      string.Format(__L("Reply-To: %s\r\n"), GetReplytoEmail()->Get());
       header+= string;
     }
 
@@ -1491,7 +1483,7 @@ bool DIOSMTP::CreateHeader(XSTRING& header)
   defaultxmailer += __L(" ");
   defaultxmailer += GEN_VERSION.GetVersion()->Get();
 
-  string.Format(__L("X-Mailer: %s\r\n"),  GetXMailer()->IsEmpty()? defaultxmailer.Get() : GetXMailer()->Get());
+  string.Format(__L("X-Mailer: %s\r\n"), GetXMailer()->IsEmpty()? defaultxmailer.Get() : GetXMailer()->Get());
   header+= string;
 
   switch(xpriority)
@@ -1507,13 +1499,13 @@ bool DIOSMTP::CreateHeader(XSTRING& header)
 
   if(!to_line.IsEmpty())
     {
-      string.Format(__L("To: %s\r\n"),  to_line.Get());
+      string.Format(__L("To: %s\r\n"), to_line.Get());
       header+= string;
     }
 
   if(!cc_line.IsEmpty())
     {
-      string.Format(__L("Cc: %s\r\n"),  cc_line.Get());
+      string.Format(__L("Cc: %s\r\n"), cc_line.Get());
       header+= string;
     }
 

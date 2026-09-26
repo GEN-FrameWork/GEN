@@ -154,18 +154,18 @@ bool GRPBITMAPFILETGAHEADER::Load(XFILE* file)
 * --------------------------------------------------------------------------------------------------------------------*/
 bool GRPBITMAPFILETGAHEADER::Load(XBYTE* buffer, XDWORD size, XDWORD& indexbuffer)
 {
-  memcpy((XBYTE*)&headerinfo.IDlength         , &buffer[indexbuffer]   , sizeof(XBYTE));     indexbuffer += sizeof(XBYTE);
-  memcpy((XBYTE*)&headerinfo.colourmaptype    , &buffer[indexbuffer]   , sizeof(XBYTE));     indexbuffer += sizeof(XBYTE);
-  memcpy((XBYTE*)&headerinfo.datatypecode     , &buffer[indexbuffer]   , sizeof(XBYTE));     indexbuffer += sizeof(XBYTE);
-  memcpy((XBYTE*)&headerinfo.colourmaporigin  , &buffer[indexbuffer]   , sizeof(XWORD));     indexbuffer += sizeof(XWORD);
-  memcpy((XBYTE*)&headerinfo.colourmaplength  , &buffer[indexbuffer]   , sizeof(XWORD));     indexbuffer += sizeof(XWORD);
-  memcpy((XBYTE*)&headerinfo.colourmapdepth   , &buffer[indexbuffer]   , sizeof(XBYTE));     indexbuffer += sizeof(XBYTE);
-  memcpy((XBYTE*)&headerinfo.xorigin          , &buffer[indexbuffer]   , sizeof(XWORD));     indexbuffer += sizeof(XWORD);
-  memcpy((XBYTE*)&headerinfo.yorigin          , &buffer[indexbuffer]   , sizeof(XWORD));     indexbuffer += sizeof(XWORD);
-  memcpy((XBYTE*)&headerinfo.width            , &buffer[indexbuffer]   , sizeof(XWORD));     indexbuffer += sizeof(XWORD);
-  memcpy((XBYTE*)&headerinfo.height           , &buffer[indexbuffer]   , sizeof(XWORD));     indexbuffer += sizeof(XWORD);
-  memcpy((XBYTE*)&headerinfo.bitsperpixel     , &buffer[indexbuffer]   , sizeof(XBYTE));     indexbuffer += sizeof(XBYTE);
-  memcpy((XBYTE*)&headerinfo.imagedescriptor  , &buffer[indexbuffer]   , sizeof(XBYTE));     indexbuffer += sizeof(XBYTE);
+  memcpy((XBYTE*)&headerinfo.IDlength, &buffer[indexbuffer], sizeof(XBYTE));     indexbuffer += sizeof(XBYTE);
+  memcpy((XBYTE*)&headerinfo.colourmaptype, &buffer[indexbuffer], sizeof(XBYTE));     indexbuffer += sizeof(XBYTE);
+  memcpy((XBYTE*)&headerinfo.datatypecode, &buffer[indexbuffer], sizeof(XBYTE));     indexbuffer += sizeof(XBYTE);
+  memcpy((XBYTE*)&headerinfo.colourmaporigin, &buffer[indexbuffer], sizeof(XWORD));     indexbuffer += sizeof(XWORD);
+  memcpy((XBYTE*)&headerinfo.colourmaplength, &buffer[indexbuffer], sizeof(XWORD));     indexbuffer += sizeof(XWORD);
+  memcpy((XBYTE*)&headerinfo.colourmapdepth, &buffer[indexbuffer], sizeof(XBYTE));     indexbuffer += sizeof(XBYTE);
+  memcpy((XBYTE*)&headerinfo.xorigin, &buffer[indexbuffer], sizeof(XWORD));     indexbuffer += sizeof(XWORD);
+  memcpy((XBYTE*)&headerinfo.yorigin, &buffer[indexbuffer], sizeof(XWORD));     indexbuffer += sizeof(XWORD);
+  memcpy((XBYTE*)&headerinfo.width, &buffer[indexbuffer], sizeof(XWORD));     indexbuffer += sizeof(XWORD);
+  memcpy((XBYTE*)&headerinfo.height, &buffer[indexbuffer], sizeof(XWORD));     indexbuffer += sizeof(XWORD);
+  memcpy((XBYTE*)&headerinfo.bitsperpixel, &buffer[indexbuffer], sizeof(XBYTE));     indexbuffer += sizeof(XBYTE);
+  memcpy((XBYTE*)&headerinfo.imagedescriptor, &buffer[indexbuffer], sizeof(XBYTE));     indexbuffer += sizeof(XBYTE);
 
   // Only RGB format valid.
   if((headerinfo.datatypecode != GRPBITMAPFILETGATYPE_UNCOMPRESS_RGB) &&

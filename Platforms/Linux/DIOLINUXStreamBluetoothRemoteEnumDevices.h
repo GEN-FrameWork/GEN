@@ -62,7 +62,6 @@ enum DIOLINUXBTENUMFSMFSMEVENTS
   DIOLINUXBTENUM_LASTEVENT
 };
 
-
 enum DIOLINUXBTENUMFSMSTATES
 {
   DIOLINUXBTENUMFSMSTATE_NONE             = 0 ,
@@ -74,22 +73,17 @@ enum DIOLINUXBTENUMFSMSTATES
   DIOLINUXBTENUM_LASTSTATE
 };
 
-
-
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
-
 
 class DIOSTREAMDEVICEBLUETOOTH;
 
 struct search_context
 {
-  char*       svc;      /* Service */
-  uuid_t      group;    /* Browse group */
-  int         tree;     /* Display full attribute tree */
-  uint32_t    handle;   /* Service record handle */
+  char*       svc;
+  uuid_t      group;
+  int         tree;
+  uint32_t    handle;
 };
-
 
 class DIOLINUXSTREAMBLUETOOTHREMOTEENUMDEVICES :  public DIOSTREAMBLUETOOTHREMOTEENUMDEVICES, public XFSMACHINE
 {

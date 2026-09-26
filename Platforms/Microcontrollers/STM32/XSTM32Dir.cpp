@@ -88,7 +88,6 @@ XSTM32DIR::~XSTM32DIR()
 }
 
 
-
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         bool XSTM32DIR::Exist(XCHAR* path)
@@ -120,7 +119,6 @@ bool XSTM32DIR::Exist(XCHAR* path)
   
   return (fresult == FR_OK)?true:false;  
 }
-
 
 
 /**-------------------------------------------------------------------------------------------------------------------
@@ -157,7 +155,7 @@ bool XSTM32DIR::Make(XCHAR* path, bool recursive)
       xpathsequence.Empty();
     
       do{
-          if(xpath.GetPathInSequence(index,pathpart))
+          if(xpath.GetPathInSequence(index, pathpart))
             {
               xpathsequence.Slash_Add();
               xpathsequence.Slash_Normalize(true);
@@ -197,7 +195,6 @@ bool XSTM32DIR::Make(XCHAR* path, bool recursive)
 }
 
 
-
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         bool XSTM32DIR::ChangeTo(XCHAR* path)
@@ -231,7 +228,6 @@ bool XSTM32DIR::ChangeTo(XCHAR* path)
 }
 
 
-
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         bool XSTM32DIR::Delete(XCHAR* path, bool all)
@@ -255,7 +251,7 @@ bool XSTM32DIR::Delete(XCHAR* path, bool all)
       xpathname     = path;
       patternsearch = __L("*");
 
-      if(FirstSearch(xpathname.Get(),patternsearch.Get(),&search))
+      if(FirstSearch(xpathname.Get(), patternsearch.Get(), &search))
         {
           do{ xpathname  = path;
               xpathname.Slash_Add();
@@ -295,7 +291,6 @@ bool XSTM32DIR::Delete(XCHAR* path, bool all)
 }
 
 
-
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         bool XSTM32DIR::GetActual(XPATH& xpath)
@@ -322,7 +317,6 @@ bool XSTM32DIR::GetActual(XPATH& xpath)
     
   return true;
 }
-
 
 
 /**-------------------------------------------------------------------------------------------------------------------
@@ -395,7 +389,6 @@ bool XSTM32DIR::FirstSearch(XCHAR* xpath, XCHAR* patternsearch, XDIRELEMENT* sea
 }
 
 
-
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         bool XSTM32DIR::NextSearch(XDIRELEMENT* searchelement)
@@ -438,7 +431,6 @@ bool XSTM32DIR::NextSearch(XDIRELEMENT* searchelement)
 
   return true;
 }
-
 
 
 /**-------------------------------------------------------------------------------------------------------------------
@@ -487,8 +479,6 @@ bool XSTM32DIR::ReconvertSearchData(XDIRELEMENT* searchelement, FILINFO* fileinf
  
   return true;
 }
-
-
 
 
 /**-------------------------------------------------------------------------------------------------------------------

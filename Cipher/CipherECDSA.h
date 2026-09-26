@@ -52,13 +52,9 @@
 
 #define CIPHERECDSA_MAXCOORDINATE_SIZE        CIPHERECDSA_P521_COORDINATE_SIZE
 
-
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
 
-
 class HASH;
-
 
 class CIPHERECDSA : public CIPHER
 {

@@ -1,8 +1,29 @@
 /**-------------------------------------------------------------------------------------------------------------------
+*
 * @file       CipherCertificateX509PathBuilder.cpp
+*
 * @class      CIPHERCERTIFICATEX509PATHBUILDER
 * @brief      X.509 certification path discovery, independent from validation policy
 * @ingroup    CIPHER
+*
+* @copyright  EndoraSoft. All rights reserved.
+*
+* @cond
+* Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated
+* documentation files(the "Software"), to deal in the Software without restriction, including without limitation
+* the rights to use, copy, modify, merge, publish, distribute, sublicense, and/ or sell copies of the Software,
+* and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+*
+* The above copyright notice and this permission notice shall be included in all copies or substantial portions of
+* the Software.
+*
+* THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO
+* THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.IN NO EVENT SHALL THE
+* AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+* TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+* SOFTWARE.
+* @endcond
+*
 * --------------------------------------------------------------------------------------------------------------------*/
 
 #include "GEN_Defines.h"
@@ -22,8 +43,7 @@
 * @return     bool : true if the operation is successful; otherwise false.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-static bool CIPHERCERTIFICATEX509PATHBUILDER_IssuerIdentifierMatches(CIPHERCERTIFICATEX509* certificate,
-                                                                       CIPHERCERTIFICATEX509* issuer)
+static bool CIPHERCERTIFICATEX509PATHBUILDER_IssuerIdentifierMatches(CIPHERCERTIFICATEX509* certificate, CIPHERCERTIFICATEX509* issuer)
 {
   if(!certificate || !issuer) return false;
 
@@ -45,6 +65,8 @@ static bool CIPHERCERTIFICATEX509PATHBUILDER_IssuerIdentifierMatches(CIPHERCERTI
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
 CIPHERCERTIFICATEX509PATHBUILDER::CIPHERCERTIFICATEX509PATHBUILDER() {}
+
+
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         CIPHERCERTIFICATEX509PATHBUILDER::~CIPHERCERTIFICATEX509PATHBUILDER()
@@ -53,6 +75,7 @@ CIPHERCERTIFICATEX509PATHBUILDER::CIPHERCERTIFICATEX509PATHBUILDER() {}
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
 CIPHERCERTIFICATEX509PATHBUILDER::~CIPHERCERTIFICATEX509PATHBUILDER() {}
+
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
@@ -68,6 +91,7 @@ void CIPHERCERTIFICATEX509PATHBUILDER::Path_Delete(XVECTOR<XBUFFER*>& path)
   path.DeleteContents();
   path.DeleteAll();
 }
+
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
@@ -91,6 +115,7 @@ void CIPHERCERTIFICATEX509PATHBUILDER::Paths_Delete(XVECTOR<XVECTOR<XBUFFER*>*>&
   paths.DeleteAll();
 }
 
+
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         bool CIPHERCERTIFICATEX509PATHBUILDER::IsTrusted(CIPHERCERTIFICATEX509* certificate, XVECTOR<CIPHERCERTIFICATEX509*>& roots)
@@ -103,8 +128,7 @@ void CIPHERCERTIFICATEX509PATHBUILDER::Paths_Delete(XVECTOR<XVECTOR<XBUFFER*>*>&
 * @return     bool : true if the condition is met; otherwise false.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-bool CIPHERCERTIFICATEX509PATHBUILDER::IsTrusted(CIPHERCERTIFICATEX509* certificate,
-                                                  XVECTOR<CIPHERCERTIFICATEX509*>& roots)
+bool CIPHERCERTIFICATEX509PATHBUILDER::IsTrusted(CIPHERCERTIFICATEX509* certificate, XVECTOR<CIPHERCERTIFICATEX509*>& roots)
 {
   if(!certificate) return false;
   for(XDWORD c=0; c<roots.GetSize(); c++)
@@ -118,6 +142,7 @@ bool CIPHERCERTIFICATEX509PATHBUILDER::IsTrusted(CIPHERCERTIFICATEX509* certific
     }
   return false;
 }
+
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
@@ -137,14 +162,7 @@ bool CIPHERCERTIFICATEX509PATHBUILDER::IsTrusted(CIPHERCERTIFICATEX509* certific
 * @return     bool : true if the operation is successful; otherwise false.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-bool CIPHERCERTIFICATEX509PATHBUILDER::SearchAll(CIPHERCERTIFICATEX509* current,
-                                                  XVECTOR<CIPHERCERTIFICATEX509*>& candidates,
-                                                  XVECTOR<CIPHERCERTIFICATEX509*>& roots,
-                                                  XVECTOR<XDWORD>& selected,
-                                                  XVECTOR<XVECTOR<XDWORD>*>& results,
-                                                  XDWORD maximumdepth,
-                                                  XDWORD maximumpaths,
-                                                  XDWORD& searchednodes)
+bool CIPHERCERTIFICATEX509PATHBUILDER::SearchAll(CIPHERCERTIFICATEX509* current, XVECTOR<CIPHERCERTIFICATEX509*>& candidates, XVECTOR<CIPHERCERTIFICATEX509*>& roots, XVECTOR<XDWORD>& selected, XVECTOR<XVECTOR<XDWORD>*>& results, XDWORD maximumdepth, XDWORD maximumpaths, XDWORD& searchednodes)
 {
   if(!current || !maximumdepth || !maximumpaths) return false;
   if(results.GetSize() >= maximumpaths) return true;
@@ -211,6 +229,7 @@ bool CIPHERCERTIFICATEX509PATHBUILDER::SearchAll(CIPHERCERTIFICATEX509* current,
   return true;
 }
 
+
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         bool CIPHERCERTIFICATEX509PATHBUILDER::Build(XBUFFER& leaf, XVECTOR<XBUFFER*>* intermediates, XVECTOR<XBUFFER*>* trustedroots, XVECTOR<XBUFFER*>& path, XDWORD maximumdepth)
@@ -226,11 +245,7 @@ bool CIPHERCERTIFICATEX509PATHBUILDER::SearchAll(CIPHERCERTIFICATEX509* current,
 * @return     bool : true if the operation is successful; otherwise false.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-bool CIPHERCERTIFICATEX509PATHBUILDER::Build(XBUFFER& leaf,
-                                              XVECTOR<XBUFFER*>* intermediates,
-                                              XVECTOR<XBUFFER*>* trustedroots,
-                                              XVECTOR<XBUFFER*>& path,
-                                              XDWORD maximumdepth)
+bool CIPHERCERTIFICATEX509PATHBUILDER::Build(XBUFFER& leaf, XVECTOR<XBUFFER*>* intermediates, XVECTOR<XBUFFER*>* trustedroots, XVECTOR<XBUFFER*>& path, XDWORD maximumdepth)
 {
   Path_Delete(path);
   XVECTOR<XVECTOR<XBUFFER*>*> paths;
@@ -274,12 +289,7 @@ bool CIPHERCERTIFICATEX509PATHBUILDER::Build(XBUFFER& leaf,
 * @return     bool : true if the operation is successful; otherwise false.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-bool CIPHERCERTIFICATEX509PATHBUILDER::BuildAll(XBUFFER& leaf,
-                                                 XVECTOR<XBUFFER*>* intermediates,
-                                                 XVECTOR<XBUFFER*>* trustedroots,
-                                                 XVECTOR<XVECTOR<XBUFFER*>*>& paths,
-                                                 XDWORD maximumdepth,
-                                                 XDWORD maximumpaths)
+bool CIPHERCERTIFICATEX509PATHBUILDER::BuildAll(XBUFFER& leaf, XVECTOR<XBUFFER*>* intermediates, XVECTOR<XBUFFER*>* trustedroots, XVECTOR<XVECTOR<XBUFFER*>*>& paths, XDWORD maximumdepth, XDWORD maximumpaths)
 {
   Paths_Delete(paths);
   if(leaf.IsEmpty() || !trustedroots || trustedroots->IsEmpty() || !maximumdepth || !maximumpaths) return false;

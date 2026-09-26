@@ -115,7 +115,7 @@ bool XFILEHASH::Open(XPATH& pathname, bool readonly, bool checkhash, bool checkv
 
   if(file->Exist(pathname)!=true) return false;
 
-  bool status = file->Open(pathname,readonly);
+  bool status = file->Open(pathname, readonly);
 
   XSTRING IDini(16);
   XWORD   _ID      = 0;
@@ -132,7 +132,7 @@ bool XFILEHASH::Open(XPATH& pathname, bool readonly, bool checkhash, bool checkv
   if(!file->Read((XBYTE*)&_type, sizeof(XWORD))) return false;
   if(_type!=type) return false;
 
-  if(!file->Read((XBYTE*)&_version,sizeof(XWORD))) return false;
+  if(!file->Read((XBYTE*)&_version, sizeof(XWORD))) return false;
   if(checkversion)
     {
       if(version!=_version)  return false;
@@ -297,7 +297,6 @@ XWORD XFILEHASH::GetType()
 {
   return type;
 }
-
 
 
 /**-------------------------------------------------------------------------------------------------------------------

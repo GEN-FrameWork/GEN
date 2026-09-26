@@ -33,10 +33,7 @@
 #include "DIOURL.h"
 #include "DIOScraperWeb.h"
 
-
-
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
-
 
 enum DIOSCRAPERWEBSEXNAMETYPE
 {
@@ -53,7 +50,6 @@ enum DIOSCRAPERWEBSEXNAMETYPE
 
 
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
-
 
 class DIOSEXNAME_RESULT :  public DIOSCRAPERWEBCACHE_RESULT
 {
@@ -83,8 +79,8 @@ class DIOSCRAPERWEBSEXNAME : public DIOSCRAPERWEB
 
     bool                        ChangeURL                         (XCHAR* maskurl, DIOURL& url);
 
-    bool                        Get                               (XCHAR* name  , DIOSCRAPERWEBSEXNAMETYPE& sexnametype, XSTRING* nameclear = NULL, int timeoutforurl = DIOSCRAPERWEB_MAXTIMEOUTFORURL, XSTRING* localIP = NULL, bool usecache = true);
-    bool                        Get                               (XSTRING& name, DIOSCRAPERWEBSEXNAMETYPE& sexnametype, XSTRING* nameclear = NULL, int timeoutforurl = DIOSCRAPERWEB_MAXTIMEOUTFORURL,  XSTRING* localIP = NULL, bool usecache = true);
+    bool                        Get                               (XCHAR* name, DIOSCRAPERWEBSEXNAMETYPE& sexnametype, XSTRING* nameclear = NULL, int timeoutforurl = DIOSCRAPERWEB_MAXTIMEOUTFORURL, XSTRING* localIP = NULL, bool usecache = true);
+    bool                        Get                               (XSTRING& name, DIOSCRAPERWEBSEXNAMETYPE& sexnametype, XSTRING* nameclear = NULL, int timeoutforurl = DIOSCRAPERWEB_MAXTIMEOUTFORURL, XSTRING* localIP = NULL, bool usecache = true);
 
   private:
 

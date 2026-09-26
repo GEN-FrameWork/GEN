@@ -32,23 +32,16 @@
 
 #include "XList.h"
 
-
-
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
 
-
-
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
-
 
 template <class T>
 class XCOMPARATOR
 {
   public:
-    virtual int     Compare           (T* a,T* b)  = 0;
+    virtual int     Compare           (T* a, T* b)  = 0;
 };
-
 
 template <class T, class Compare>
 class XORDEREDLIST : public XLIST<T>
@@ -74,7 +67,7 @@ class XORDEREDLIST : public XLIST<T>
                               int result = comparator.Compare(element, current->data);
 
                               if(!result) return false;
-                              if(result < 0) return this->Insert(current,element);
+                              if(result < 0) return this->Insert(current, element);
 
                               current = current->next;
                             }

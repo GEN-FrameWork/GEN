@@ -61,7 +61,6 @@ enum DIOSTM32USBFSMEVENTS
 
 };
 
-
 enum DIOSTM32USBFSMSTATES
 {
   DIOSTM32USBFSMSTATE_NONE               = 0  ,
@@ -73,7 +72,6 @@ enum DIOSTM32USBFSMSTATES
   DIOSTM32USB_LASTSTATE
 };
 
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
 
 class XFACTORY;
@@ -81,7 +79,6 @@ class XPUBLISHER;
 class DIOFACTORY;
 class DIOSTREAMCONFIG;
 class XTHREADCOLLECTED;
-
 
 class DIOSTM32STREAMUSB : public DIOSTREAMUSB, public XFSMACHINE
 {

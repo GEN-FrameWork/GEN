@@ -114,8 +114,8 @@ bool DIOWINDOWSSTREAMUARTLOCALENUMDEVICES::Search()
 
       if((value)&&(name))
         {
-          memset(name  ,0 ,sizeof(XCHAR)*_MAXSTR);
-          memset(value ,0 ,sizeof(XCHAR)*_MAXSTR);
+          memset(name, 0, sizeof(XCHAR)*_MAXSTR);
+          memset(value, 0, sizeof(XCHAR)*_MAXSTR);
 
           do{ name[0]   = 0;
               sizename  = _MAXSTR;

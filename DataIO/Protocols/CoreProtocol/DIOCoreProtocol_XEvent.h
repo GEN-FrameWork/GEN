@@ -33,8 +33,6 @@
 #include "XEvent.h"
 #include "DIOCoreProtocol.h"
 
-
-
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
 
 #include "XEvent.h"

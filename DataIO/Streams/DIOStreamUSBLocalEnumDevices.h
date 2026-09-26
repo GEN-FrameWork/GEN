@@ -35,17 +35,12 @@
 
 #include "DIOStreamEnumDevices.h"
 
-
-
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
 
 #define DIOSTREAMUSBLOCALENUMDEVICES_PORTKEY  __L("Port_")
 #define DIOSTREAMUSBLOCALENUMDEVICES_PORTHUB  __L("Hub_")
 
-
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
-
 
 class DIOSTREAMUSBLOCALENUMDEVICES : public DIOSTREAMENUMDEVICES
 {

@@ -109,8 +109,8 @@ bool CIPHER3DES::Cipher(XBYTE* input, XDWORD size)
   CIPHER3DES_CONTEXT  ctx;
   XBYTE               iv[8];
 
-  memset(iv,0,8);
-  if(inivector && inivector->GetSize()>=8) memcpy(iv, inivector->Get() ,8);
+  memset(iv, 0, 8);
+  if(inivector && inivector->GetSize()>=8) memcpy(iv, inivector->Get(), 8);
 
   inputpadding.Add(input, size);
   inputpadding.Padding_Add(paddingadjustsize, paddingtype);
@@ -130,8 +130,8 @@ bool CIPHER3DES::Cipher(XBYTE* input, XDWORD size)
   bool status;
 
   if(this->GetChainingMode() == CIPHERCHAININGMODE_ECB)
-         status = DES3Cipher_ECB(&ctx, CIPHERDES_ENCRYPT, result->GetSize(), iv, inputpadding.Get(),  result->Get());
-    else status = DES3Cipher_CBC(&ctx, CIPHERDES_ENCRYPT, result->GetSize(), iv, inputpadding.Get(),  result->Get());
+         status = DES3Cipher_ECB(&ctx, CIPHERDES_ENCRYPT, result->GetSize(), iv, inputpadding.Get(), result->Get());
+    else status = DES3Cipher_CBC(&ctx, CIPHERDES_ENCRYPT, result->GetSize(), iv, inputpadding.Get(), result->Get());
 
   return status;
 }
@@ -156,8 +156,8 @@ bool CIPHER3DES::Uncipher(XBYTE* input, XDWORD size)
   CIPHER3DES_CONTEXT ctx;
   XBYTE               iv[8];
 
-  memset(iv,0,8);
-  if(inivector && inivector->GetSize()>=8) memcpy(iv, inivector->Get() ,8);
+  memset(iv, 0, 8);
+  if(inivector && inivector->GetSize()>=8) memcpy(iv, inivector->Get(), 8);
 
   result->Delete();
   result->Add(input, size);
@@ -173,8 +173,8 @@ bool CIPHER3DES::Uncipher(XBYTE* input, XDWORD size)
   bool status;
 
   if(this->GetChainingMode() == CIPHERCHAININGMODE_ECB)
-         status = DES3Cipher_ECB(&ctx,  CIPHERDES_DECRYPT, size, iv, input,  result->Get());
-    else status = DES3Cipher_CBC(&ctx,  CIPHERDES_DECRYPT, size, iv, input,  result->Get());
+         status = DES3Cipher_ECB(&ctx, CIPHERDES_DECRYPT, size, iv, input, result->Get());
+    else status = DES3Cipher_CBC(&ctx, CIPHERDES_DECRYPT, size, iv, input, result->Get());
 
   result->Padding_Delete();
 
@@ -234,7 +234,7 @@ int CIPHER3DES::DES3Set2KeyCipher(CIPHER3DES_CONTEXT* ctx, XBYTE key[CIPHERDES_K
 
   DES3Set2Key(ctx->sk, sk, key);
 
-  memset(sk,  0, sizeof(sk));
+  memset(sk, 0, sizeof(sk));
 
   return 0;
 }
@@ -258,7 +258,7 @@ int CIPHER3DES::DES3Set2KeyUncipher(CIPHER3DES_CONTEXT *ctx, XBYTE key[CIPHERDES
 
   DES3Set2Key(sk, ctx->sk, key);
 
-  memset(sk,  0, sizeof(sk));
+  memset(sk, 0, sizeof(sk));
 
   return 0;
 }

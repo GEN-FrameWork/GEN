@@ -77,11 +77,7 @@ enum DIOALERTSENDER
 #define DIOALERTS_QSPARAM_ORIGIN          __L("origin")
 #define DIOALERTS_QSPARAM_MESSAGE         __L("message")
 
-
-
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
-
 
 class XTIMER;
 class XDATETIME;
@@ -92,7 +88,6 @@ class DIOURL;
 class DIOSTREAMUDPCONFIG;
 class DIOSTREAMUDPACKNOWLEDGE;
 class DIOIP;
-
 
 class DIOALERT_CONDITION
 {
@@ -125,7 +120,6 @@ class DIOALERT_CONDITION
     int                                             nsended;
     int                                             ntimessended;
 };
-
 
 class DIOALERT
 {
@@ -168,7 +162,6 @@ class DIOALERT
     XSTRING                                         title;
     XSTRING                                         message;
 };
-
 
 class DIOALERTS
 {

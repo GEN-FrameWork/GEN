@@ -226,7 +226,6 @@ DIOPUBLICINTERNETIP::~DIOPUBLICINTERNETIP()
 }
 
 
-
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         void DIOPUBLICINTERNETIP::Clean()

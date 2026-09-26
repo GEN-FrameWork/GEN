@@ -103,10 +103,6 @@ void XFILEDBF_FIELD::Clean()
 }
 
 
-
-
-
-
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         XFILEDBF_RECORD::XFILEDBF_RECORD(XVECTOR<XFILEDBF_FIELD*>* fields)
@@ -135,7 +131,7 @@ XFILEDBF_RECORD::XFILEDBF_RECORD(XVECTOR<XFILEDBF_FIELD*>* fields)
   if(size)
     {
       datarec = GEN_NEW XBYTE [size];
-      if(datarec) memset(datarec,' ',size);
+      if(datarec) memset(datarec, ' ', size);
     }
 }
 
@@ -261,7 +257,7 @@ bool XFILEDBF_RECORD::SetData(int indexfield, XBYTE* data, int limitsize)
   if(!field)     return false;
   XDWORD size = field->size;
 
-  memset((XBYTE*)(&datarec[offset]), ' '  , field->size);
+  memset((XBYTE*)(&datarec[offset]), ' ', field->size);
   memcpy((XBYTE*)(&datarec[offset]), data , (limitsize==-1)?size:limitsize);
 
   return true;
@@ -356,7 +352,7 @@ bool XFILEDBF_RECORD::SetDataString(int indexfield, XSTRING& string)
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         bool XFILEDBF_RECORD::SetCharacterType(int indexfield,XCHAR* data)
+* @fn         bool XFILEDBF_RECORD::SetCharacterType(int indexfield, XCHAR* data)
 * @brief      Set character type
 * @ingroup    XUTILS
 * 
@@ -366,7 +362,7 @@ bool XFILEDBF_RECORD::SetDataString(int indexfield, XSTRING& string)
 * @return     bool : true if the operation is successful; otherwise false.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-bool XFILEDBF_RECORD::SetCharacterType(int indexfield,XCHAR* data)
+bool XFILEDBF_RECORD::SetCharacterType(int indexfield, XCHAR* data)
 {
   int offset = GetOffset(indexfield);
   if(offset==-1) return false;
@@ -390,7 +386,7 @@ bool XFILEDBF_RECORD::SetCharacterType(int indexfield,XCHAR* data)
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         bool XFILEDBF_RECORD::SetData(XBYTE* data,XDWORD size)
+* @fn         bool XFILEDBF_RECORD::SetData(XBYTE* data, XDWORD size)
 * @brief      Set data
 * @ingroup    XUTILS
 * 
@@ -400,9 +396,9 @@ bool XFILEDBF_RECORD::SetCharacterType(int indexfield,XCHAR* data)
 * @return     bool : true if the operation is successful; otherwise false.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-bool XFILEDBF_RECORD::SetData(XBYTE* data,XDWORD size)
+bool XFILEDBF_RECORD::SetData(XBYTE* data, XDWORD size)
 {
-  memcpy(datarec,data,size);
+  memcpy(datarec, data, size);
 
   return true;
 }
@@ -496,10 +492,6 @@ void XFILEDBF_RECORD::Clean()
 }
 
 
-
-
-
-
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         XFILEDBF_HEADER::XFILEDBF_HEADER()
@@ -569,7 +561,7 @@ bool XFILEDBF_HEADER::Load(XFILE* xfile)
   // Read header
   if(!xfile->SetPosition(8)) return false;
 
-  if(!xfile->Read((XBYTE*)&headersize,2)) return false;
+  if(!xfile->Read((XBYTE*)&headersize, 2)) return false;
   if(!headersize) return 0;
 
   if(headerdata)
@@ -582,7 +574,7 @@ bool XFILEDBF_HEADER::Load(XFILE* xfile)
   if(!headerdata) return false;
 
   if(!xfile->SetPosition(0)) return false;
-  if(!xfile->Read(headerdata,headersize)) return false;
+  if(!xfile->Read(headerdata, headersize)) return false;
 
   int index=XFILEDBF_FIELDSTART;
 
@@ -640,7 +632,7 @@ bool XFILEDBF_HEADER::Create(XFILE* fileb)
   headerdata = GEN_NEW XBYTE [headersize];
   if(!headerdata) return false;
 
-  memset(headerdata,0,headersize);
+  memset(headerdata, 0, headersize);
 
   headerdata[0] = 0x03;
 
@@ -675,7 +667,7 @@ bool XFILEDBF_HEADER::Create(XFILE* fileb)
 
       if(field)
         {
-          memset(&headerdata[index],0,XFILEDBF_FIELDSIZE);
+          memset(&headerdata[index], 0, XFILEDBF_FIELDSIZE);
 
 
           XBUFFER charstr;
@@ -714,7 +706,7 @@ bool XFILEDBF_HEADER::Create(XFILE* fileb)
   headerdata[headersize-1] = 0x0D;
 
   if(!fileb->SetPosition(0)) return false;
-  if(!fileb->Write(headerdata,headersize)) return false;
+  if(!fileb->Write(headerdata, headersize)) return false;
 
   return true;
 }
@@ -736,10 +728,10 @@ bool XFILEDBF_HEADER::Update(XFILE* fileb)
   XDWORD nrecords = GetNRecords();
 
   if(!fileb->SetPosition(4)) return false;
-  if(!fileb->Write((XBYTE*)&nrecords,sizeof(XDWORD)))               return false;
+  if(!fileb->Write((XBYTE*)&nrecords, sizeof(XDWORD)))               return false;
 
   if(!fileb->SetPosition(12)) return false;
-  if(!fileb->Write((XBYTE*)&headerdata[12],XFILEDBF_HEADRESERVED)) return false;
+  if(!fileb->Write((XBYTE*)&headerdata[12], XFILEDBF_HEADRESERVED)) return false;
 
   return true;
 }
@@ -972,7 +964,7 @@ XFILEDBF_FIELD* XFILEDBF_HEADER::GetField(int indexfield)
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         bool XFILEDBF_HEADER::CreateField(XFILEDBF_FIELDTYPE type,XCHAR* name,XBYTE size)
+* @fn         bool XFILEDBF_HEADER::CreateField(XFILEDBF_FIELDTYPE type, XCHAR* name, XBYTE size)
 * @brief      Create field
 * @ingroup    XUTILS
 * 
@@ -983,7 +975,7 @@ XFILEDBF_FIELD* XFILEDBF_HEADER::GetField(int indexfield)
 * @return     bool : true if the operation is successful; otherwise false.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-bool XFILEDBF_HEADER::CreateField(XFILEDBF_FIELDTYPE type,XCHAR* name,XBYTE size)
+bool XFILEDBF_HEADER::CreateField(XFILEDBF_FIELDTYPE type, XCHAR* name, XBYTE size)
 {
   XFILEDBF_FIELD* field;
 
@@ -1095,10 +1087,6 @@ void XFILEDBF_HEADER::Clean()
 }
 
 
-
-
-
-
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         XFILEDBF::XFILEDBF()
@@ -1182,7 +1170,7 @@ XFILEDBF::~XFILEDBF()
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         bool XFILEDBF::Open(XPATH& xpath,bool readonly)
+* @fn         bool XFILEDBF::Open(XPATH& xpath, bool readonly)
 * @brief      Open
 * @ingroup    XUTILS
 * 
@@ -1192,7 +1180,7 @@ XFILEDBF::~XFILEDBF()
 * @return     bool : true if the operation is successful; otherwise false.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-bool XFILEDBF::Open(XPATH& xpath,bool readonly)
+bool XFILEDBF::Open(XPATH& xpath, bool readonly)
 {
   if(!header)         return false;
   if(!file)           return false;
@@ -1200,7 +1188,7 @@ bool XFILEDBF::Open(XPATH& xpath,bool readonly)
 
   this->xpath = xpath;
 
-  if(!file->Open(xpath,readonly)) return false;
+  if(!file->Open(xpath, readonly)) return false;
 
   return true;
 }
@@ -1341,7 +1329,7 @@ XFILEDBF_RECORD* XFILEDBF::ReadRecord(XDWORD nrecord)
 
   file->SetPosition(position);
 
-  if(!file->Read(data,sizerecord))
+  if(!file->Read(data, sizerecord))
     {
       GEN_DELETE record;
       GEN_DELETE_ARRAY data;
@@ -1349,7 +1337,7 @@ XFILEDBF_RECORD* XFILEDBF::ReadRecord(XDWORD nrecord)
       return NULL;
     }
 
-  record->SetData(data,sizerecord);
+  record->SetData(data, sizerecord);
 
   GEN_DELETE_ARRAY data;
 
@@ -1359,7 +1347,7 @@ XFILEDBF_RECORD* XFILEDBF::ReadRecord(XDWORD nrecord)
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         bool XFILEDBF::WriteRecord(XDWORD nrecord,XFILEDBF_RECORD* record)
+* @fn         bool XFILEDBF::WriteRecord(XDWORD nrecord, XFILEDBF_RECORD* record)
 * @brief      Write record
 * @ingroup    XUTILS
 * 
@@ -1369,7 +1357,7 @@ XFILEDBF_RECORD* XFILEDBF::ReadRecord(XDWORD nrecord)
 * @return     bool : true if the operation is successful; otherwise false.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-bool XFILEDBF::WriteRecord(XDWORD nrecord,XFILEDBF_RECORD* record)
+bool XFILEDBF::WriteRecord(XDWORD nrecord, XFILEDBF_RECORD* record)
 {
   if(!IsOpen()) return false;
   if(!header)   return false;
@@ -1380,8 +1368,8 @@ bool XFILEDBF::WriteRecord(XDWORD nrecord,XFILEDBF_RECORD* record)
 
   XBYTE delflag=record->IsDelete()?'*':' ';
 
-  if(!file->Write(&delflag,1)) return false;
-  if(!file->Write(record->GetData(0),header->GetSizeRecord()-1)) return false;
+  if(!file->Write(&delflag, 1)) return false;
+  if(!file->Write(record->GetData(0), header->GetSizeRecord()-1)) return false;
 
   return true;
 }
@@ -1449,15 +1437,15 @@ bool XFILEDBF::AddRecord(XFILEDBF_RECORD* record)
   file->GetPosition(position);
   file->SetPosition(position-1);
 
-  if(file->Read(&specialend,1))
+  if(file->Read(&specialend, 1))
     {
       if(specialend == 0x1A) file->SetPosition(position-1);
     }
 
   XBYTE delflag=record->IsDelete()?'*':' ';
 
-  if(!file->Write(&delflag,1)) return false;
-  if(!file->Write(record->GetData(0),size)) return false;
+  if(!file->Write(&delflag, 1)) return false;
+  if(!file->Write(record->GetData(0), size)) return false;
 
   specialend = 0x1A;
   if(!file->Write(&specialend, 1)) return false;
@@ -1492,7 +1480,7 @@ bool XFILEDBF::DeleteRecord(XDWORD nrecord)
   data = GEN_NEW char[size+10];
   if(!data) return false;
 
-  memset(data,0,size+10);
+  memset(data, 0, size+10);
 
   int position = header->GetHeaderSize()+(header->GetSizeRecord()*nrecord);
 
@@ -1500,8 +1488,8 @@ bool XFILEDBF::DeleteRecord(XDWORD nrecord)
 
   XBYTE delflag='*';
 
-  if(!file->Write(&delflag,1)) return false;
-  if(!file->Write((XBYTE*)data,size)) return false;
+  if(!file->Write(&delflag, 1)) return false;
+  if(!file->Write((XBYTE*)data, size)) return false;
 
   GEN_DELETE_ARRAY data;
 

@@ -211,7 +211,7 @@
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         define SHA512_EXP(a, b, c, d, e, f, g ,h, j)
+* @fn         define SHA512_EXP(a, b, c, d, e, f, g, h, j)
 * @brief      SHA512 EXP
 * @ingroup    CIPHER
 * 
@@ -384,19 +384,19 @@ bool HASHSHA2::Do(XBYTE* input, XQWORD size)
       case HASHSHA2TYPE_UNKNOWN : return false;
 
       case HASHSHA2TYPE_224     : Sha2_224(input, (XDWORD)size, digest);
-                                  result->Add(digest,  HASHSHA2_224_DIGEST_SIZE);
+                                  result->Add(digest, HASHSHA2_224_DIGEST_SIZE);
                                   break;
 
       case HASHSHA2TYPE_256     : Sha2_256(input, (XDWORD)size, digest);
-                                  result->Add(digest,  HASHSHA2_256_DIGEST_SIZE);
+                                  result->Add(digest, HASHSHA2_256_DIGEST_SIZE);
                                   break;
 
       case HASHSHA2TYPE_384     : Sha2_384(input, (XDWORD)size, digest);
-                                  result->Add(digest,  HASHSHA2_384_DIGEST_SIZE);
+                                  result->Add(digest, HASHSHA2_384_DIGEST_SIZE);
                                   break;
 
       case HASHSHA2TYPE_512     : Sha2_512(input, (XDWORD)size, digest);
-                                  result->Add(digest,  HASHSHA2_512_DIGEST_SIZE);
+                                  result->Add(digest, HASHSHA2_512_DIGEST_SIZE);
                                   break;
 
                     default     : return false;

@@ -38,8 +38,6 @@
 #include "GRPStatisticsChartConfig.h"
 #include "GRPStatisticsChartBuilder.h"
 
-
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
 
 class GRPSTATISTICSCHART

@@ -37,15 +37,9 @@
 
 #include "DIODNSProtocol.h"
 
-
-
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
 
-
-
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
-
 
 class XTIMER;
 class DIOSTREAMUDPCONFIG;
@@ -69,7 +63,7 @@ class DIODNSPROTOCOLCLIENT
     static bool                             DecodeDNSFormat                 (XBUFFER& EncodedURL, XSTRING& URL);
     static bool                             DecodeDNSFormat                 (XBYTE* EncodedURL, XSTRING& URL); 
 
-    static XBYTE*                           GetBufferName                   (XBYTE* reader, XBYTE* buffer,int* count);
+    static XBYTE*                           GetBufferName                   (XBYTE* reader, XBYTE* buffer, int* count);
 
   private:
 

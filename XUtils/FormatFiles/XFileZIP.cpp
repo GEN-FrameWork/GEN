@@ -88,7 +88,7 @@ XFILECMPZIP::XFILECMPZIP(bool compress, void* filehdl)
       if(_name && _comment)
         {
 
-          int err = unzGetCurrentFileInfo64(filehdl, &info, _name, _MAXPATH,NULL, 0, _comment, _MAXSTR);
+          int err = unzGetCurrentFileInfo64(filehdl, &info, _name, _MAXPATH, NULL, 0, _comment, _MAXSTR);
           if(err == UNZ_OK)
             {
               name           = _name;
@@ -198,14 +198,7 @@ bool XFILECMPZIP::Create(XDWORD crcfile, zip_fileinfo* zfinfo, XCHAR* password)
   name.ConvertToASCII(namestr); 
   _password.ConvertToASCII(passwordstr);
   
-  err = zipOpenNewFileInZip3(filehdl, namestr.GetPtrChar()
-                                    , zfinfo
-                                    , NULL,0,NULL,0,NULL /* comment*/
-                                    ,(opt_compress_level != 0) ? Z_DEFLATED : 0
-                                    , opt_compress_level,0
-                                    , -MAX_WBITS, DEF_MEM_LEVEL, Z_DEFAULT_STRATEGY
-                                    , password?passwordstr.GetPtrChar():NULL
-                                    , crcfile);
+  err = zipOpenNewFileInZip3(filehdl, namestr.GetPtrChar(), zfinfo, NULL, 0, NULL, 0, NULL /* comment*/, (opt_compress_level != 0) ? Z_DEFLATED : 0, opt_compress_level, 0, -MAX_WBITS, DEF_MEM_LEVEL, Z_DEFAULT_STRATEGY, password?passwordstr.GetPtrChar():NULL, crcfile);
 
  
   if(err!=ZIP_OK) return false;
@@ -379,7 +372,7 @@ bool XFILECMPZIP::Read(XBYTE* buffer, XDWORD size)
   if(!on)     return false;
   if(zipoper) return false;
 
-  if(unzReadCurrentFile(filehdl,buffer,size) != (int)size) return false;
+  if(unzReadCurrentFile(filehdl, buffer, size) != (int)size) return false;
 
   return true;
 }
@@ -405,7 +398,7 @@ bool XFILECMPZIP::Read(XBYTE* buffer, int* size)
   if(!on)     return false;
   if(zipoper) return false;
 
-  _size=unzReadCurrentFile(filehdl,buffer,(*size));
+  _size=unzReadCurrentFile(filehdl, buffer, (*size));
   if(_size!=(*size))  status=false;
   (*size)=_size;
 
@@ -430,7 +423,7 @@ bool XFILECMPZIP::Write(XBYTE* buffer, XDWORD size)
   if(!on)      return false;
   if(!zipoper) return false;
 
-  if(zipWriteInFileInZip(filehdl,buffer,size)!=ZIP_OK) return false;
+  if(zipWriteInFileInZip(filehdl, buffer, size)!=ZIP_OK) return false;
 
   return true;
 }
@@ -536,10 +529,6 @@ bool XFILECMPZIP::SelectCurrenFile()
   
   return true;
 }
-
-
-
-
 
 
 /**-------------------------------------------------------------------------------------------------------------------
@@ -663,7 +652,7 @@ bool XFILEZIP::Open(XPATH& xpath)
 * --------------------------------------------------------------------------------------------------------------------*/
 XFILECMPZIP* XFILEZIP::CreateFileCmp(XPATH& xpath)
 {
-  XFILECMPZIP* filecmp = GEN_NEW XFILECMPZIP(true,filehdl);
+  XFILECMPZIP* filecmp = GEN_NEW XFILECMPZIP(true, filehdl);
   if(filecmp) filecmp->SetName(xpath);
 
   return filecmp;
@@ -681,7 +670,7 @@ XFILECMPZIP* XFILEZIP::CreateFileCmp(XPATH& xpath)
 * @return     XDWORD : Requested value.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-XDWORD XFILEZIP::GetFileCRC(XFILE*  xfile)
+XDWORD XFILEZIP::GetFileCRC(XFILE* xfile)
 {
   if(!xfile)           return 0;
   if(!xfile->IsOpen()) return 0;
@@ -698,8 +687,8 @@ XDWORD XFILEZIP::GetFileCRC(XFILE*  xfile)
 
   do{ size = maxsizebuffer;
 
-      xfile->Read(buffer,&size);
-      if(size) crcfile = crc32(crcfile,buffer,size);
+      xfile->Read(buffer, &size);
+      if(size) crcfile = crc32(crcfile, buffer, size);
 
     } while(size == maxsizebuffer);
 
@@ -741,7 +730,7 @@ bool XFILEZIP::AddFile(XPATH& xpath, XPATH& xpathnew, XCHAR* password)
           zip_fileinfo   zfinfo;
           XDWORD         crcfile = GetFileCRC(xfile);
 
-          memset(&zfinfo,0,sizeof(zip_fileinfo));
+          memset(&zfinfo, 0, sizeof(zip_fileinfo));
 
           if(xdatetime) xdatetime->GetFileDateTime(xpath, &zfinfo.tmz_date, (XDWORD*)&zfinfo.dosDate);
 
@@ -812,7 +801,7 @@ bool XFILEZIP::Close()
 {
   if(!filehdl) return false;
 
-  bool status = (zipClose(filehdl ,NULL) == ZIP_OK)?true:false;
+  bool status = (zipClose(filehdl, NULL) == ZIP_OK)?true:false;
 
   lastoperationpercent  = status ? 100.0f : 0.0f;
   lasterror             = status ? XFILEZIP_ERROR_NONE : XFILEZIP_ERROR_ZIP_CLOSE;
@@ -879,10 +868,6 @@ void XFILEZIP::Clean()
   lastoperationpercent  = 0.0f;
   lasterror             = XFILEZIP_ERROR_NONE;
 }
-
-
-
-
 
 
 /**-------------------------------------------------------------------------------------------------------------------
@@ -1222,7 +1207,7 @@ bool XFILEUNZIP::DelFile(int index, XCHAR* password)
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         bool XFILEUNZIP::DecompressFile(int sourceindex ,XPATH& xpathtarget, XCHAR* nametarget, XCHAR* password)
+* @fn         bool XFILEUNZIP::DecompressFile(int sourceindex, XPATH& xpathtarget, XCHAR* nametarget, XCHAR* password)
 * @brief      Decompress file
 * @ingroup    XUTILS
 * 
@@ -1234,7 +1219,7 @@ bool XFILEUNZIP::DelFile(int index, XCHAR* password)
 * @return     bool : true if the operation is successful; otherwise false.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-bool XFILEUNZIP::DecompressFile(int sourceindex ,XPATH& xpathtarget, XCHAR* nametarget, XCHAR* password)
+bool XFILEUNZIP::DecompressFile(int sourceindex, XPATH& xpathtarget, XCHAR* nametarget, XCHAR* password)
 {
   XFILECMPZIP* filecmp = GotoFile(true);
 
@@ -1250,7 +1235,7 @@ bool XFILEUNZIP::DecompressFile(int sourceindex ,XPATH& xpathtarget, XCHAR* name
 
   if(!filecmp) return false;
 
-  bool status = DecompressFile(filecmp,xpathtarget,nametarget,password);
+  bool status = DecompressFile(filecmp, xpathtarget, nametarget, password);
 
   GEN_DELETE filecmp;
 
@@ -1260,7 +1245,7 @@ bool XFILEUNZIP::DecompressFile(int sourceindex ,XPATH& xpathtarget, XCHAR* name
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         bool XFILEUNZIP::DecompressFile(XSTRING& namesource,XPATH& xpathtarget,XCHAR* nametarget, XCHAR* password)
+* @fn         bool XFILEUNZIP::DecompressFile(XSTRING& namesource, XPATH& xpathtarget, XCHAR* nametarget, XCHAR* password)
 * @brief      Decompress file
 * @ingroup    XUTILS
 * 
@@ -1272,14 +1257,14 @@ bool XFILEUNZIP::DecompressFile(int sourceindex ,XPATH& xpathtarget, XCHAR* name
 * @return     bool : true if the operation is successful; otherwise false.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-bool XFILEUNZIP::DecompressFile(XSTRING& namesource,XPATH& xpathtarget,XCHAR* nametarget, XCHAR* password)
+bool XFILEUNZIP::DecompressFile(XSTRING& namesource, XPATH& xpathtarget, XCHAR* nametarget, XCHAR* password)
 {
   XPATH xpath(namesource);
 
   XFILECMPZIP* filecmp = GotoFile(xpath);
   if(!filecmp) return false;
 
-  bool status = DecompressFile(filecmp,xpathtarget,nametarget,password);
+  bool status = DecompressFile(filecmp, xpathtarget, nametarget, password);
 
   GEN_DELETE filecmp;
 
@@ -1470,7 +1455,7 @@ XFILECMPZIP* XFILEUNZIP::CreateCurrentFile()
 
   if(!filehdl) return NULL;
 
-  filecmp = GEN_NEW XFILECMPZIP(false,(void*)filehdl);
+  filecmp = GEN_NEW XFILECMPZIP(false, (void*)filehdl);
   if(!filecmp) return NULL;
 
   if(!filecmp->IsActive()) return NULL;

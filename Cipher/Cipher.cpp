@@ -315,7 +315,7 @@ bool CIPHER::SetInitVector(XBYTE* vector, XDWORD size)
   if(!inivector) return false;
 
   inivector->Delete();
-  inivector->Add(vector,size);
+  inivector->Add(vector, size);
 
   return true;
 }
@@ -343,7 +343,7 @@ bool CIPHER::SetInitVector(XBUFFER& vector)
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         bool CIPHER::Cipher(XBYTE* input,XDWORD size)
+* @fn         bool CIPHER::Cipher(XBYTE* input, XDWORD size)
 * @brief      Cipher
 * @ingroup    CIPHER
 * 
@@ -353,7 +353,7 @@ bool CIPHER::SetInitVector(XBUFFER& vector)
 * @return     bool : true if the operation is successful; otherwise false.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-bool CIPHER::Cipher(XBYTE* input,XDWORD size)
+bool CIPHER::Cipher(XBYTE* input, XDWORD size)
 {
   result->Delete();
   result->Add(input, size);
@@ -395,7 +395,7 @@ bool CIPHER::Cipher(XBUFFER& input)
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         bool CIPHER::Uncipher(XBYTE* input,XDWORD size)
+* @fn         bool CIPHER::Uncipher(XBYTE* input, XDWORD size)
 * @brief      Uncipher
 * @ingroup    CIPHER
 * 
@@ -405,9 +405,9 @@ bool CIPHER::Cipher(XBUFFER& input)
 * @return     bool : true if the operation is successful; otherwise false.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-bool CIPHER::Uncipher(XBYTE* input,XDWORD size)
+bool CIPHER::Uncipher(XBYTE* input, XDWORD size)
 {
-  return Cipher(input,size);
+  return Cipher(input, size);
 }
 
 
@@ -620,7 +620,7 @@ bool CIPHER::GetResultString(XSTRING& stringhex)
     {
       XSTRING strbyte;
 
-      strbyte.Format(__L("%02x"),xbuffer->GetByte(c));
+      strbyte.Format(__L("%02x"), xbuffer->GetByte(c));
 
       stringhex += strbyte;
     }

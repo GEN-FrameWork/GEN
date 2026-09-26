@@ -71,8 +71,7 @@
 * @return     bool : true if the operation is successful; otherwise false.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-static bool XSERIALIZATIONMETHODBINARY_ReadType(XBUFFER* buffer, XDWORD& position,
-                                                 XSERIALIZATIONMETHODBINARY_TYPEELEMENT expected)
+static bool XSERIALIZATIONMETHODBINARY_ReadType(XBUFFER* buffer, XDWORD& position, XSERIALIZATIONMETHODBINARY_TYPEELEMENT expected)
 {
   XBYTE type = 0;
   if(!buffer || !buffer->Get(type, position) || type != (XBYTE)expected) return false;
@@ -117,9 +116,7 @@ static bool XSERIALIZATIONMETHODBINARY_ReadValue(XBUFFER* buffer, XDWORD& positi
 * @return     bool : true if the operation is successful; otherwise false.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-static bool XSERIALIZATIONMETHODBINARY_AddData(XBUFFER* target,
-                                                XSERIALIZATIONMETHODBINARY_TYPEELEMENT type,
-                                                XBUFFER& data)
+static bool XSERIALIZATIONMETHODBINARY_AddData(XBUFFER* target, XSERIALIZATIONMETHODBINARY_TYPEELEMENT type, XBUFFER& data)
 {
   if(!target) return false;
   return target->Add((XBYTE)type) && target->Add((XDWORD)data.GetSize()) &&
@@ -141,9 +138,7 @@ static bool XSERIALIZATIONMETHODBINARY_AddData(XBUFFER* target,
 * @return     bool : true if the operation is successful; otherwise false.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-static bool XSERIALIZATIONMETHODBINARY_ReadData(XBUFFER* source, XDWORD& position,
-                                                 XSERIALIZATIONMETHODBINARY_TYPEELEMENT type,
-                                                 XBUFFER& data)
+static bool XSERIALIZATIONMETHODBINARY_ReadData(XBUFFER* source, XDWORD& position, XSERIALIZATIONMETHODBINARY_TYPEELEMENT type, XBUFFER& data)
 {
   XDWORD size = 0;
   if(!XSERIALIZATIONMETHODBINARY_ReadType(source, position, type) ||

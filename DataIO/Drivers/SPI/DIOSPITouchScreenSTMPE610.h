@@ -155,17 +155,12 @@
 #define DIOSPITOUCHSCREENSTMPE610_GPIO_DIR                0x13
 #define DIOSPITOUCHSCREENSTMPE610_GPIO_ALT_FUNCT          0x17
 
-
-
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
-
 
 class XBUFFER;
 class XTIMER;
 class DIOSTREAMSPICONFIG;
 class DIOSTREAMSPI;
-
 
 class DIOSPITOUCHSCREENSTMPE610 : public DIODEVICE
 {

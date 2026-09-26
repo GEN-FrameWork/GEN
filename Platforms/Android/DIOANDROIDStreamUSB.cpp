@@ -276,7 +276,7 @@ void DIOANDROIDSTREAMUSB::ThreadConnection(void* data)
                                                                       if(br)
                                                                         {
                                                                           //XTRACE_PRINTDATABLOCKCOLOR(XTRACE_COLOR_BLUE, (XBYTE*)diostream->buffer, (int)br);
-                                                                          diostream->inbuffer->Add(buffer,br);
+                                                                          diostream->inbuffer->Add(buffer, br);
                                                                         }
                                                                     }
 
@@ -322,7 +322,7 @@ void DIOANDROIDSTREAMUSB::ThreadConnection(void* data)
             {
               case DIOANDROIDUSBFSMSTATE_NONE               : break;
 
-              case DIOANDROIDUSBFSMSTATE_CONNECTED            : { DIOSTREAM_XEVENT xevent(diostream,DIOSTREAM_XEVENT_TYPE_CONNECTED);
+              case DIOANDROIDUSBFSMSTATE_CONNECTED            : { DIOSTREAM_XEVENT xevent(diostream, DIOSTREAM_XEVENT_TYPE_CONNECTED);
                                                                 xevent.SetDIOStream(diostream);
                                                                 if(diostream->PostEvent(&xevent, true)) xevent.WaitForCompleted(5);
 
@@ -334,7 +334,7 @@ void DIOANDROIDSTREAMUSB::ThreadConnection(void* data)
 
               case DIOANDROIDUSBFSMSTATE_SENDINGDATA          : break;
 
-              case DIOANDROIDUSBFSMSTATE_DISCONNECTING        : { DIOSTREAM_XEVENT xevent(diostream,DIOSTREAM_XEVENT_TYPE_DISCONNECTED);
+              case DIOANDROIDUSBFSMSTATE_DISCONNECTING        : { DIOSTREAM_XEVENT xevent(diostream, DIOSTREAM_XEVENT_TYPE_DISCONNECTED);
                                                                 xevent.SetDIOStream(diostream);
                                                                 if(diostream->PostEvent(&xevent, true)) xevent.WaitForCompleted(5);
 
@@ -350,7 +350,7 @@ void DIOANDROIDSTREAMUSB::ThreadConnection(void* data)
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         XDWORD DIOANDROIDSTREAMUSB::ReadBuffer(XBYTE* buffer,XDWORD size)
+* @fn         XDWORD DIOANDROIDSTREAMUSB::ReadBuffer(XBYTE* buffer, XDWORD size)
 * @brief      Read buffer
 * @ingroup    PLATFORM_ANDROID
 * 
@@ -360,7 +360,7 @@ void DIOANDROIDSTREAMUSB::ThreadConnection(void* data)
 * @return     XDWORD : Requested value.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-XDWORD DIOANDROIDSTREAMUSB::ReadBuffer(XBYTE* buffer,XDWORD size)
+XDWORD DIOANDROIDSTREAMUSB::ReadBuffer(XBYTE* buffer, XDWORD size)
 {
   if(GetStatus()==DIOSTREAMSTATUS_DISCONNECTED) return 0;
 

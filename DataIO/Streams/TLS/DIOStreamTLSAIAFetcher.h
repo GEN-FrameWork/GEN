@@ -52,7 +52,6 @@
                                                                      // completion will chase, independent of CIPHERCERTIFICATEX509VALIDATOR's
                                                                      // own CIPHERCERTIFICATEX509VALIDATOR_MAXCHAINSIZE cap on the final size
 
-
 enum DIOSTREAMTLSAIAFETCHER_CHUNKRESULT
 {
   DIOSTREAMTLSAIAFETCHER_CHUNKRESULT_ERROR           = -1 ,
@@ -60,10 +59,7 @@ enum DIOSTREAMTLSAIAFETCHER_CHUNKRESULT
   DIOSTREAMTLSAIAFETCHER_CHUNKRESULT_COMPLETE             ,
 };
 
-
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
-
 
 class DIOSTREAMTCPIP;
 class DIOIP;
@@ -75,10 +71,7 @@ class DIOSTREAMTLSAIAFETCHER
                                             DIOSTREAMTLSAIAFETCHER          ();
     virtual                                ~DIOSTREAMTLSAIAFETCHER          ();
 
-    bool                                    Fetch                           (XSTRING& url, XBUFFER& tobuffer,
-                                                                            int timeout = DIOSTREAMTLSAIAFETCHER_TIMEOUT,
-                                                                            XDWORD maximumheadersize = DIOSTREAMTLSAIAFETCHER_MAXHEADERSIZE,
-                                                                            XDWORD maximumbodysize = DIOSTREAMTLSAIAFETCHER_MAXBODYSIZE);
+    bool                                    Fetch                           (XSTRING& url, XBUFFER& tobuffer, int timeout = DIOSTREAMTLSAIAFETCHER_TIMEOUT, XDWORD maximumheadersize = DIOSTREAMTLSAIAFETCHER_MAXHEADERSIZE, XDWORD maximumbodysize = DIOSTREAMTLSAIAFETCHER_MAXBODYSIZE);
 
   private:
 

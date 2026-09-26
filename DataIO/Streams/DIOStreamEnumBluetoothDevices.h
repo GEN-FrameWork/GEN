@@ -37,8 +37,6 @@
 #include "DIOStreamDeviceBluetooth.h"
 #include "DIOStreamEnumDevices.h"
 
-
-
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
 
 

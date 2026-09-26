@@ -35,20 +35,14 @@
 
 #include "DIOStream.h"
 
-
-
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
 
 #define DIOSTREAMUDP_NOTFOUND             -1
 
-
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
-
 
 class DIOSTREAMUDPCONFIG;
 class DIOURL;
-
 
 class DIOSTREAMUDPDATAGRAM
 {
@@ -82,7 +76,6 @@ class DIOSTREAMUDPDATAGRAM
     XWORD                             port;
     XBUFFER*                          data;
 };
-
 
 class DIOSTREAMUDP : public DIOSTREAM
 {

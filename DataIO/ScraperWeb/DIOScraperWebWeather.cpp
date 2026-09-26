@@ -174,7 +174,7 @@ bool DIOSCRAPERWEBWEATHER::Get(XCHAR* location, bool iscelsius, XSTRING& conditi
 * @return     bool : true if the operation is successful; otherwise false.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-bool DIOSCRAPERWEBWEATHER::Get(XSTRING& location, bool iscelsius,  XSTRING& condition, float& temperature, float& humidity, int timeout, XSTRING* localIP, bool usecache)
+bool DIOSCRAPERWEBWEATHER::Get(XSTRING& location, bool iscelsius, XSTRING& condition, float& temperature, float& humidity, int timeout, XSTRING* localIP, bool usecache)
 {
   return Get(location.Get(), iscelsius, condition, temperature, humidity, timeout, localIP, usecache);
 }

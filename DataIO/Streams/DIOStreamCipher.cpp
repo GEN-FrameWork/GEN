@@ -344,11 +344,11 @@ void DIOSTREAMCIPHER::ThreadRunFunction(void* param)
       diostreamcipher->hashcrc32->ResetResult();
       CRC32[0] = diostreamcipher->hashcrc32->Do(input.Get(), DIOSTREAMCIPHER_HEAD_SIZE - sizeof(XDWORD));
 
-      input.Extract(magicnumber   , 0);
-      input.Extract(ciphertype    , 0);
+      input.Extract(magicnumber, 0);
+      input.Extract(ciphertype, 0);
       input.Extract(cipherpadding , 0);
-      input.Extract(sizebuffer    , 0);
-      input.Extract(CRC32[1]      , 0);
+      input.Extract(sizebuffer, 0);
+      input.Extract(CRC32[1], 0);
 
       if((magicnumber == DIOSTREAMCIPHER_HEAD_MAGICNUMBER) &&  (CRC32[0] == CRC32[1]))
         {

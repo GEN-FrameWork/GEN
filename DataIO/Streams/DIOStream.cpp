@@ -312,7 +312,7 @@ XDWORD DIOSTREAM::Read(XBYTE* buffer, XDWORD size)
 {
   if(!inbuffer) return false;
 
-  XDWORD esize = inbuffer->Extract(buffer,0,size);
+  XDWORD esize = inbuffer->Extract(buffer, 0, size);
 
   if(esize)
     {
@@ -339,7 +339,7 @@ XDWORD DIOSTREAM::Read(XBYTE* buffer, XDWORD size)
 XDWORD DIOSTREAM::Write(XBYTE* buffer, XDWORD size)
 {
   if(!outbuffer)                    return 0;
-  if(!outbuffer->Add(buffer,size))  return 0;
+  if(!outbuffer->Add(buffer, size))  return 0;
 
   nbyteswrite+=size;
   if(xtimernotactivity) xtimernotactivity->Reset();
@@ -390,7 +390,7 @@ XDWORD DIOSTREAM::Read(XBUFFER& xbuffer)
 * --------------------------------------------------------------------------------------------------------------------*/
 XDWORD DIOSTREAM::Write(XBUFFER& xbuffer)
 {
-  return Write(xbuffer.Get(),xbuffer.GetSize());
+  return Write(xbuffer.Get(), xbuffer.GetSize());
 }
 
 
@@ -598,7 +598,7 @@ bool DIOSTREAM::WriteStr(const char* str)
 {
   if(!str) return false;
 
-  if(!Write((XBYTE*)str,(XDWORD)strlen(str))) return false;
+  if(!Write((XBYTE*)str, (XDWORD)strlen(str))) return false;
 
   return true;
 }

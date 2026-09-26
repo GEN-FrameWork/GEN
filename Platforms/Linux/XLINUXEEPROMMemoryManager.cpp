@@ -236,7 +236,7 @@ bool XLINUXEEPROMMEMORYMANAGER::Write(XDWORD offset, XWORD data)
 * --------------------------------------------------------------------------------------------------------------------*/
 bool XLINUXEEPROMMEMORYMANAGER::Write(XDWORD offset, XDWORD data)
 {
-  return Write(offset,(XBYTE*)&data, sizeof(XDWORD));
+  return Write(offset, (XBYTE*)&data, sizeof(XDWORD));
 }
 
 

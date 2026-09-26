@@ -37,15 +37,11 @@
 
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
 
-
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
-
 
 class DIOWEBSERVER_REQUEST;
 class DIOWEBSERVER_QUERYSTRINGS;
 class DIOWEBSERVER_XEVENT;
-
 
 class DIOWEBSERVER_ENDPOINT
 {

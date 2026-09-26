@@ -145,7 +145,6 @@ DIOMAC* DIOSTREAMBLUETOOTHCONFIG::GetRemoteMAC()
 }
 
 
-
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         int DIOSTREAMBLUETOOTHCONFIG::GetRemoteChannel()

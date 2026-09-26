@@ -34,8 +34,6 @@
 #include "XPath.h"
 #include "XEvent.h"
 
-
-
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
 
 enum DIOWEBPAGEHTMLCREATOR_XEVENT_TYPE
@@ -43,7 +41,6 @@ enum DIOWEBPAGEHTMLCREATOR_XEVENT_TYPE
   DIOWEBPAGEHTMLCREATOR_XEVENT_TYPE_UNKNOW                = XEVENT_TYPE_WEBSERVER  ,
   DIOWEBPAGEHTMLCREATOR_XEVENT_TYPE_XTAGFOUND
 };
-
 
 
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/

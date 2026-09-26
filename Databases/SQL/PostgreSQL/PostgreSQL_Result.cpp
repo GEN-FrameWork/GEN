@@ -244,7 +244,7 @@ bool POSTGRESQL_RESULT::ProcessRow()
 
       Oid type     = PQftype    (this->resultset, e);
       int isBinary = PQfformat  (this->resultset, e);
-      int isNull   = PQgetisnull(this->resultset, (int)currentrow,e);
+      int isNull   = PQgetisnull(this->resultset, (int)currentrow, e);
 
       if(isNull != 1)
         {
@@ -254,7 +254,7 @@ bool POSTGRESQL_RESULT::ProcessRow()
               case BYTEAOID             :
               case CHAROID              : break;
 
-              case NAMEOID              : { char* data = PQgetvalue(resultset, (int)currentrow,e);
+              case NAMEOID              : { char* data = PQgetvalue(resultset, (int)currentrow, e);
                                             (*variant) = data;
                                             XCHAR* value= ((XSTRING*)(variant->GetData()))->Get();
                                             (*variant) = data;
@@ -266,7 +266,7 @@ bool POSTGRESQL_RESULT::ProcessRow()
 
                                             if (!isNull)
                                             {
-                                              XBYTE* data    = (XBYTE*)PQgetvalue(resultset, (int)currentrow,e);
+                                              XBYTE* data    = (XBYTE*)PQgetvalue(resultset, (int)currentrow, e);
                                               memcpy(&number, (void*)data, sizeof(XQWORD));
                                               if(is_le) SWAPQWORD(number);
                                             }
@@ -283,7 +283,7 @@ bool POSTGRESQL_RESULT::ProcessRow()
                                             if (!isNull)
                                             {
                                               XBYTE* data   = (XBYTE*)PQgetvalue(resultset, (int)currentrow, e);
-                                              memcpy(&integer,(void*)data,sizeof(integer));
+                                              memcpy(&integer, (void*)data, sizeof(integer));
                                               if(is_le) SWAPWORD(integer);
                                             }
 
@@ -296,7 +296,7 @@ bool POSTGRESQL_RESULT::ProcessRow()
                                             if (!isNull)
                                             {
                                               XBYTE* data   = (XBYTE*)PQgetvalue(resultset, (int)currentrow, e);
-                                              memcpy(&integer,(void*)data,sizeof(integer));
+                                              memcpy(&integer, (void*)data, sizeof(integer));
                                               if(is_le) SWAPDWORD(integer);
                                             }
 
@@ -349,11 +349,11 @@ bool POSTGRESQL_RESULT::ProcessRow()
                                             if (!isNull)
                                             {
                                             char*   data = PQgetvalue(resultset, (int)currentrow, e);
-                                            if(data) memcpy(&dat,(void*)data,sizeof(dat));
+                                            if(data) memcpy(&dat, (void*)data, sizeof(dat));
                                             XDWORD dword;
-                                            if(data) memcpy(&dword,(void*)data,sizeof(dword));
+                                            if(data) memcpy(&dword, (void*)data, sizeof(dword));
                                             if(is_le) SWAPDWORD(dword);
-                                            memcpy(&dat,(void*)&dword,sizeof(float));
+                                            memcpy(&dat, (void*)&dword, sizeof(float));
                                             }
 
                                             (*variant) = (float)dat;
@@ -364,12 +364,12 @@ bool POSTGRESQL_RESULT::ProcessRow()
                                             double dat = 0.0;
                                             if (!isNull)
                                             {
-                                            char* data = PQgetvalue(resultset, (int)currentrow,e);
+                                            char* data = PQgetvalue(resultset, (int)currentrow, e);
                                             memcpy(&dat, (void*)data, sizeof(dat));
                                             XQWORD qword;
                                             memcpy(&qword, (void*)data, sizeof(qword));
                                             if(is_le) SWAPQWORD(qword);
-                                            memcpy(&dat,(void*)&qword,sizeof(double));
+                                            memcpy(&dat, (void*)&qword, sizeof(double));
                                             }
 
                                             (*variant) = (float)dat;
@@ -400,10 +400,10 @@ bool POSTGRESQL_RESULT::ProcessRow()
               case BPCHAROID            : break;
 
               case VARCHAROID           : { char* data        = PQgetvalue  (this->resultset, (int)this->currentrow, e);
-                                            int   length      = PQgetlength(this->resultset,(int)this->currentrow, e);
+                                            int   length      = PQgetlength(this->resultset, (int)this->currentrow, e);
 
                                             XSTRING received;
-                                            received.ConvertFromUTF8((XBYTE*)data,length);
+                                            received.ConvertFromUTF8((XBYTE*)data, length);
                                             (*variant) = received;
                                           }
                                           break;
@@ -417,7 +417,7 @@ bool POSTGRESQL_RESULT::ProcessRow()
                                             {
                                             XQWORD qword;
 
-                                            memcpy(&qword,(void*)data,sizeof(qword));
+                                            memcpy(&qword, (void*)data, sizeof(qword));
                                             if(is_le)
                                               SWAPQWORD(qword);
 
@@ -447,7 +447,7 @@ bool POSTGRESQL_RESULT::ProcessRow()
                                             {
                                             XDWORD dword;
 
-                                            memcpy(&dword,(void*)data,sizeof(dword));
+                                            memcpy(&dword, (void*)data, sizeof(dword));
                                             if(is_le)
                                               SWAPDWORD(dword);
 
@@ -469,7 +469,7 @@ bool POSTGRESQL_RESULT::ProcessRow()
                                             if (!isNull)
                                             {
                                             XQWORD qword;
-                                            memcpy(&qword,(void*)data,sizeof(qword));
+                                            memcpy(&qword, (void*)data, sizeof(qword));
                                             if(is_le) SWAPQWORD(qword);
 
                                             qword/=1000000;
@@ -480,7 +480,7 @@ bool POSTGRESQL_RESULT::ProcessRow()
                                                       start.SetYear   (2000);
 
                                             XQWORD secstoposix=start.GetSeconsFromDate(false);
-                                            datetime.SetDateFromSeconds(secstoposix+qword,false);
+                                            datetime.SetDateFromSeconds(secstoposix+qword, false);
                                             }
                                             (*variant) = datetime;
                                           }

@@ -37,8 +37,6 @@
 #include "XVector.h"
 #include "XString.h"
 
-
-
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
 
 enum XERRORMSG_RETURN
@@ -49,21 +47,18 @@ enum XERRORMSG_RETURN
   XERRORMSG_RETURN_RETRY  = 0x04 ,
 };
 
-
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
-
 
 class XERRORMSG
 {
   public:
                                 XERRORMSG             ();
-                                XERRORMSG             (int code,XCHAR* title,XCHAR* msg);
+                                XERRORMSG             (int code, XCHAR* title, XCHAR* msg);
     virtual                    ~XERRORMSG             ();
 
     XERRORMSG*                  Get                   ();
     bool                        Set                   (int code, XCHAR* title, XCHAR* msg);
-    bool                        Set                   (int code,int level,int image,int sound,XCHAR* title,XCHAR* msg);
+    bool                        Set                   (int code, int level, int image, int sound, XCHAR* title, XCHAR* msg);
 
     int                         GetCode               ();
     bool                        SetCode               (int code);
@@ -98,14 +93,12 @@ class XERRORMSG
 
 };
 
-
 class XERRORSMSG
 {
   public:
                                 XERRORSMSG            ();
-                                XERRORSMSG            (XCHAR* titleApp,XCHAR* version);
+                                XERRORSMSG            (XCHAR* titleApp, XCHAR* version);
     virtual                    ~XERRORSMSG            ();
-
 
     XSTRING*                    GetTitleApplication   ();
     XSTRING*                    GetVersion            ();
@@ -117,11 +110,11 @@ class XERRORSMSG
     bool                        SetVersion            (XSTRING& version);
 
     XERRORMSG*                  FindMsg               (int code);
-    bool                        AddMsg                (int code,int level,int image,int sound,XCHAR* title,XCHAR* msg);
+    bool                        AddMsg                (int code, int level, int image, int sound, XCHAR* title, XCHAR* msg);
     bool                        EraseMsg              (int code);
     bool                        EraseAllMsg           ();
 
-    virtual XERRORMSG_RETURN    ShowMsg               (int code,bool statusline=false,XBYTE returns=0x01,XCHAR* addstr=NULL,bool sound=false);
+    virtual XERRORMSG_RETURN    ShowMsg               (int code, bool statusline=false, XBYTE returns=0x01, XCHAR* addstr=NULL, bool sound=false);
 
   private:
 

@@ -56,7 +56,6 @@ enum DIOANDROIDUARTFSMEVENTS
   DIOANDROIDUART_LASTEVENT
 };
 
-
 enum DIOANDROIDUARTFSMSTATES
 {
   DIOANDROIDUARTFSMSTATE_NONE              = 0  ,
@@ -68,11 +67,7 @@ enum DIOANDROIDUARTFSMSTATES
   DIOANDROIDUART_LASTSTATE
 };
 
-
-
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
-
 
 class DIOANDROIDSTREAMUART : public DIOSTREAMUART , public XFSMACHINE
 {

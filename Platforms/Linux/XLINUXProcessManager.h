@@ -34,11 +34,7 @@
 #include "XString.h"
 #include "XProcessManager.h"
 
-
-
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
-
-
 
 
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
@@ -60,7 +56,7 @@ class XLINUXPROCESSMANAGER : public XPROCESSMANAGER
 
     bool                    Application_IsRunning           (XCHAR* command, XDWORD* ID = NULL);
     bool                    Application_GetRunningList      (XVECTOR<XPROCESS*>& applist, bool onlywithvalidwindow = false);
-    bool                    Application_Terminate           (XDWORD processID, XDWORD  exitcode = 0);
+    bool                    Application_Terminate           (XDWORD processID, XDWORD exitcode = 0);
 
   private:
 

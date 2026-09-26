@@ -34,8 +34,6 @@
 #include "XPath.h"
 #include "XFileTXT.h"
 
-
-
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
 
 enum XFILEHEX_ENTRYTYPE
@@ -50,10 +48,7 @@ enum XFILEHEX_ENTRYTYPE
   XFILEHEX_ENTRYTYPE_NODEFINED                = 0xFF
 };
 
-
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
-
 
 class XFILEHEX_ENTRY
 {
@@ -83,7 +78,6 @@ class XFILEHEX_ENTRY
     XFILEHEX_ENTRYTYPE          entrytype;
     XBUFFER                     data;
 };
-
 
 class XFILEHEX : public XFILETXT
 {

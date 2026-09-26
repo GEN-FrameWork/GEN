@@ -110,7 +110,6 @@ DIOESP32STREAMUSB::~DIOESP32STREAMUSB()
 }
 
 
-
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         DIOSTREAMSTATUS DIOESP32STREAMUSB::GetStatus()
@@ -126,7 +125,6 @@ DIOSTREAMSTATUS DIOESP32STREAMUSB::GetStatus()
 
   return status;
 }
-
 
 
 /**-------------------------------------------------------------------------------------------------------------------
@@ -157,7 +155,6 @@ bool DIOESP32STREAMUSB::Open()
 }
 
 
-
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         XDWORD DIOESP32STREAMUSB::WriteDirect(XBYTE* buffer, XDWORD size)
@@ -178,7 +175,6 @@ XDWORD DIOESP32STREAMUSB::WriteDirect(XBYTE* buffer, XDWORD size)
 
   return (XDWORD)0;
 }
-
 
 
 /**-------------------------------------------------------------------------------------------------------------------
@@ -202,7 +198,7 @@ XDWORD DIOESP32STREAMUSB::Write(XBYTE* buffer, XDWORD size)
 
     }
 
-  if(!outbuffer->Add(buffer,size))  return 0;
+  if(!outbuffer->Add(buffer, size))  return 0;
 
   nbyteswrite+=size;
   if(xtimernotactivity) xtimernotactivity->Reset();
@@ -211,7 +207,6 @@ XDWORD DIOESP32STREAMUSB::Write(XBYTE* buffer, XDWORD size)
 
   return size;
 }
-
 
 
 /**-------------------------------------------------------------------------------------------------------------------
@@ -227,7 +222,6 @@ bool DIOESP32STREAMUSB::Disconnect()
 {
   return false;
 }
-
 
 
 /**-------------------------------------------------------------------------------------------------------------------
@@ -253,7 +247,6 @@ bool DIOESP32STREAMUSB::Close()
 }
 
 
-
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         bool DIOESP32STREAMUSB::CleanBuffers()
@@ -269,7 +262,6 @@ bool DIOESP32STREAMUSB::CleanBuffers()
 
   return false;
 }
-
 
 
 /**-------------------------------------------------------------------------------------------------------------------
@@ -302,7 +294,6 @@ void DIOESP32STREAMUSB::HAL_USB_RxCpltCallback(uint8_t* buffer, uint32_t *len)
       readcache.Add((XBYTE*)buffer, (XDWORD)(*len));
     }
 }
-
 
 
 /**-------------------------------------------------------------------------------------------------------------------
@@ -373,7 +364,7 @@ void DIOESP32STREAMUSB::ThreadConnection(void* param)
             {
               case DIOESP32USBFSMSTATE_NONE               : break;
 
-              case DIOESP32USBFSMSTATE_CONNECTED            : { DIOSTREAM_XEVENT xevent(diostream,DIOSTREAM_XEVENT_TYPE_CONNECTED);
+              case DIOESP32USBFSMSTATE_CONNECTED            : { DIOSTREAM_XEVENT xevent(diostream, DIOSTREAM_XEVENT_TYPE_CONNECTED);
                                                                     xevent.SetDIOStream(diostream);
                                                                     diostream->PostEvent(&xevent);
 
@@ -383,7 +374,7 @@ void DIOESP32STREAMUSB::ThreadConnection(void* param)
 
               case DIOESP32USBFSMSTATE_WAITINGTOREAD        : break;
 
-              case DIOESP32USBFSMSTATE_DISCONNECTING        : { DIOSTREAM_XEVENT xevent(diostream,DIOSTREAM_XEVENT_TYPE_DISCONNECTED);
+              case DIOESP32USBFSMSTATE_DISCONNECTING        : { DIOSTREAM_XEVENT xevent(diostream, DIOSTREAM_XEVENT_TYPE_DISCONNECTED);
                                                                     xevent.SetDIOStream(diostream);
                                                                     diostream->PostEvent(&xevent);
 
@@ -394,7 +385,6 @@ void DIOESP32STREAMUSB::ThreadConnection(void* param)
         }
     }
 }
-
 
 
 /**-------------------------------------------------------------------------------------------------------------------

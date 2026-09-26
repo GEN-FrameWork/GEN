@@ -32,12 +32,7 @@
 
 #include "XBase.h"
 
-
-
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
-
-
-
 
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
 
@@ -57,7 +52,6 @@ class XBUFFERBITS
     XDWORD                  GetBytePosition                 ();
     XDWORD                  GetBitPosition                  ();
     void                    SetPosition                     (XDWORD index, XDWORD bitindex = 0);
-
 
     void                    SkipU1                          ();
     XDWORD                  PeekU1                          ();

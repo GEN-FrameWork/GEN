@@ -39,10 +39,7 @@
 #include "GRP2DColor.h"
 #include "GRPBitmapFile.h"
 
-
-
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
-
 
 enum GRPBITMAPFILEBMPCOMPRESSION
 {
@@ -56,25 +53,25 @@ enum GRPBITMAPFILEBMPCOMPRESSION
 #pragma pack(push, r1, 1)
 typedef struct
 {
-    XWORD       type;             // Signature - 'BM'
-    XDWORD      size;             // File size in bytes
-    XWORD       reserved1;        // 0
-    XWORD       reserved2;        // 0
-    XDWORD      offsetdata;       // Offset to data of bitmap
+    XWORD       type;
+    XDWORD      size;
+    XWORD       reserved1;
+    XWORD       reserved2;
+    XDWORD      offsetdata;
 
-    XDWORD      headersize;       // size of this struct (40)
-    XDWORD      width;            // bmap width in pixels
-    XDWORD      height;           // bmap height in pixels
+    XDWORD      headersize;
+    XDWORD      width;
+    XDWORD      height;
 
-    XWORD       planes;           // num planes - always 1
-    XWORD       bitsperpixel;     // bits per pixel
+    XWORD       planes;
+    XWORD       bitsperpixel;
 
-    XDWORD      compression;      // compression flag
-    XDWORD      sizebmp;          // image size in bytes
-    XDWORD      xpixelspermeter;  // horz resolution
-    XDWORD      ypixelspermeter;  // vert resolution
-    XDWORD      colorused;        // 0 -> color table size
-    XDWORD      colorimportant;   // important color count
+    XDWORD      compression;
+    XDWORD      sizebmp;
+    XDWORD      xpixelspermeter;
+    XDWORD      ypixelspermeter;
+    XDWORD      colorused;
+    XDWORD      colorimportant;
 
 } GRPBITMAPFILEBMPHEADERINFO;
 
@@ -82,9 +79,7 @@ typedef struct
 
 
 
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
-
 
 class GRPBITMAPFILEBMPCOLORPALETE
 {
@@ -103,7 +98,6 @@ class GRPBITMAPFILEBMPCOLORPALETE
 
     void                                        Clean                             ();
 };
-
 
 class GRPBITMAPFILEBMPHEADER
 {

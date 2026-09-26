@@ -198,7 +198,7 @@ bool DIOLINUXPING::Do(XDWORD nretries, XDWORD timebetweenchecks, bool exitfirstg
       echorequest.time              = (XDWORD)xtimer->GetMicroSecondsTickCounter();                           // Save tick count when sent
       echorequest.icmphdr.checksum  = CalculeCheckSum((XWORD *)&echorequest, sizeof(DIOPING_ECHOREQUEST));    // Put data in packet and compute checksum
 
-      XDWORD size = sendto(handle,(char*)&echorequest, sizeof(DIOPING_ECHOREQUEST), 0, (sockaddr*)&targetaddr, sizeof(struct sockaddr_in));
+      XDWORD size = sendto(handle, (char*)&echorequest, sizeof(DIOPING_ECHOREQUEST), 0, (sockaddr*)&targetaddr, sizeof(struct sockaddr_in));
       if(size != sizeof(DIOPING_ECHOREQUEST))
         {
           XTRACE_PRINTCOLOR(4, __L("Ping: not write packet! %s"), targetIP.Get());
@@ -213,7 +213,7 @@ bool DIOLINUXPING::Do(XDWORD nretries, XDWORD timebetweenchecks, bool exitfirstg
       XSTRING             fromIP;
       bool                isreplypacket = false;
 
-      memset(&echoreply,  0, sizeof(DIOPING_ECHOREPLY));
+      memset(&echoreply, 0, sizeof(DIOPING_ECHOREPLY));
       memset(&originaddr, 0, sizeaddr);
 
       xtimer->Reset();
@@ -229,10 +229,7 @@ bool DIOLINUXPING::Do(XDWORD nretries, XDWORD timebetweenchecks, bool exitfirstg
                if(echoreply.echorequest.icmphdr.type == DIOPING_ICMP_ECHOREPLY)
                  {
                    DIOIP    ip;
-                   ip.Set(echoreply.iphdr.iasource.INADDR_UNION.addrbyte.s_b1,
-                          echoreply.iphdr.iasource.INADDR_UNION.addrbyte.s_b2,
-                          echoreply.iphdr.iasource.INADDR_UNION.addrbyte.s_b3,
-                          echoreply.iphdr.iasource.INADDR_UNION.addrbyte.s_b4);
+                   ip.Set(echoreply.iphdr.iasource.INADDR_UNION.addrbyte.s_b1, echoreply.iphdr.iasource.INADDR_UNION.addrbyte.s_b2, echoreply.iphdr.iasource.INADDR_UNION.addrbyte.s_b3, echoreply.iphdr.iasource.INADDR_UNION.addrbyte.s_b4);
 
                    ip.GetXString(fromIP);
 
@@ -260,7 +257,7 @@ bool DIOLINUXPING::Do(XDWORD nretries, XDWORD timebetweenchecks, bool exitfirstg
 
                       AddReply(nloop+1, fromIP.Get(), DIOPING_REQ_TICKETSIZE, (elapsed/1000), echoreply.iphdr.TTL);
 
-                      DIOPING_XEVENT xevent(this,DIOPING_XEVENT_TYPE_DOPING);
+                      DIOPING_XEVENT xevent(this, DIOPING_XEVENT_TYPE_DOPING);
                       xevent.SetPingReply((DIOPINGREPLY*)replys.Get(replys.GetSize()-1));
                       PostEvent(&xevent);
 

@@ -96,16 +96,12 @@ enum DIOAPPLICATIONUPDATE_ERROR
 
 #define DIOAPPLICATIONUPDATE_LOG_SECTIONID_APPFLOWUPDATE            __L("AppUpdate")
 
-
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
-
 
 class XFACTORY;
 class XDIR;
 class DIOFACTORY;
 class DIOWEBCLIENT;
-
 
 class DIOAPPLICATIONUPDATE_VERSIONDATA
 {
@@ -157,13 +153,11 @@ class DIOAPPLICATIONUPDATE_FILE
 
     void                                  Clean                                 ();
 
-
     XPATH                                 xpathfile;
     XDWORD                                CRC32;
     XQWORD                                size;
     bool                                  specialcontrolupdate;
 };
-
 
 class DIOAPPLICATIONUPDATE : public XSUBJECT
 {
@@ -176,7 +170,7 @@ class DIOAPPLICATIONUPDATE : public XSUBJECT
     bool                                  Download                              (DIOURL& url, int port, XCHAR* addtargetpath, DIOAPPLICATIONUPDATE_VERSIONDATA& updateversiondata, int timeout, DIOAPPLICATIONUPDATE_ERROR& error);
     bool                                  Download                              (DIOURL& url, int port, XPATH& addtargetpath, DIOAPPLICATIONUPDATE_VERSIONDATA& updateversiondata, int timeout, DIOAPPLICATIONUPDATE_ERROR& error);
 
-    bool                                  CopyOriginalFilesToBackup             (XPATH& xpathbackup,  DIOAPPLICATIONUPDATE_ERROR& error);
+    bool                                  CopyOriginalFilesToBackup             (XPATH& xpathbackup, DIOAPPLICATIONUPDATE_ERROR& error);
     bool                                  CopyUpdateFilesToOriginal             (XPATH& xpathupdate, DIOAPPLICATIONUPDATE_ERROR& error, bool restore);
 
     bool                                  DeleteFilesRenamed                    (XPATH& xpathtocheck);

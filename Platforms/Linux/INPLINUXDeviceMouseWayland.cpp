@@ -158,7 +158,7 @@ bool INPLINUXDEVICEMOUSEWAYLAND::Update()
               // XQueryPointer() uses on X11 -- so INPLINUXDEVICEMOUSEX11's Y-flip (into GEN's
               // bottom-up cursor space) applies here unchanged.
               mousey = (grpscreenwayland->GetHeight()-mousey);
-              cursor->Set(mousex,mousey);
+              cursor->Set(mousex, mousey);
               cursor->SetIsChanged(true);
             }
         }
@@ -167,7 +167,7 @@ bool INPLINUXDEVICEMOUSEWAYLAND::Update()
           mousex = -1;
           mousey = -1;
 
-          cursor->Set(mousex,mousey);
+          cursor->Set(mousex, mousey);
           cursor->SetIsChanged(true);
         }
 
@@ -302,9 +302,9 @@ bool INPLINUXDEVICEMOUSEWAYLAND::CreateAllButtons()
   // Keyed on Linux evdev BTN_* codes (from <linux/input.h>), not X11's Button1/2/3 index -- see
   // the Pointer_Button() comment in GRPLINUXScreenWayland.cpp. BTN_LEFT/BTN_RIGHT/BTN_MIDDLE are
   // the same physical buttons INPLINUXDEVICEMOUSEX11::CreateAllButtons() maps via Button1/3/2.
-  INPBUTTON::CreateButton( &buttons, BTN_RIGHT    , INPBUTTON_ID_MOUSE_RIGHT      , __C('\x0'));
-  INPBUTTON::CreateButton( &buttons, BTN_LEFT     , INPBUTTON_ID_MOUSE_LEFT       , __C('\x0'));
-  INPBUTTON::CreateButton( &buttons, BTN_MIDDLE   , INPBUTTON_ID_MOUSE_MIDDLE     , __C('\x0'));
+  INPBUTTON::CreateButton(&buttons, BTN_RIGHT, INPBUTTON_ID_MOUSE_RIGHT, __C('\x0'));
+  INPBUTTON::CreateButton(&buttons, BTN_LEFT, INPBUTTON_ID_MOUSE_LEFT, __C('\x0'));
+  INPBUTTON::CreateButton(&buttons, BTN_MIDDLE, INPBUTTON_ID_MOUSE_MIDDLE, __C('\x0'));
 
   return true;
 }

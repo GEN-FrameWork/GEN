@@ -176,7 +176,7 @@ bool DIOANDROIDSTREAMUART::Open()
     }
    else
     {
-      ttyS.Format(__L("/dev/ttyS%d"),config->GetPort());
+      ttyS.Format(__L("/dev/ttyS%d"), config->GetPort());
     }
 
   XBUFFER charstr;
@@ -692,7 +692,7 @@ void DIOANDROIDSTREAMUART::ThreadConnection(void* param)
             {
               case DIOANDROIDUARTFSMSTATE_NONE                : break;
 
-              case DIOANDROIDUARTFSMSTATE_CONNECTED           : { DIOSTREAM_XEVENT xevent(diostream,DIOSTREAM_XEVENT_TYPE_CONNECTED);
+              case DIOANDROIDUARTFSMSTATE_CONNECTED           : { DIOSTREAM_XEVENT xevent(diostream, DIOSTREAM_XEVENT_TYPE_CONNECTED);
                                                                 xevent.SetDIOStream(diostream);
                                                                 diostream->PostEvent(&xevent);
 
@@ -702,7 +702,7 @@ void DIOANDROIDSTREAMUART::ThreadConnection(void* param)
 
               case DIOANDROIDUARTFSMSTATE_WAITINGTOREAD       : break;
 
-              case DIOANDROIDUARTFSMSTATE_DISCONNECTING       : { DIOSTREAM_XEVENT xevent(diostream,DIOSTREAM_XEVENT_TYPE_DISCONNECTED);
+              case DIOANDROIDUARTFSMSTATE_DISCONNECTING       : { DIOSTREAM_XEVENT xevent(diostream, DIOSTREAM_XEVENT_TYPE_DISCONNECTED);
                                                                 xevent.SetDIOStream(diostream);
                                                                 diostream->PostEvent(&xevent);
 

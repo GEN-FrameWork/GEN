@@ -34,17 +34,12 @@
 
 /*---- INCLUDES ------------------------------------------------------------------------------------------------------*/
 
-
 #include "INPCursor.h"
 #include "INPDevice.h"
 
 #include "GRPLINUXScreenWayland.h"
 
-
-
-
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
-
 
 #define INPLINUXDEVICEMOUSEWAYLAND_EVRELEASED    0
 #define INPLINUXDEVICEMOUSEWAYLAND_EVPRESSED     1

@@ -96,14 +96,11 @@ enum XFILEJSONCONTROLCHAR
                                                             }                                                           \
                                                         }
 
-
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
 
 class XVARIANT;
 class XFILEJSONOBJECT;
 class XFILEJSONARRAY;
-
 
 class XFILEJSONVALUE
 {
@@ -133,7 +130,6 @@ class XFILEJSONVALUE
     XFILEJSONARRAY*             GetValueArray                 ();
     void*                       GetValuePointer               ();
     
-        
     bool                        Set                           (void);
     bool                        Set                           (bool boolean); 
     bool                        Set                           (short number);
@@ -163,7 +159,6 @@ class XFILEJSONVALUE
     XVARIANT                    value;
 };
 
-
 class XFILEJSONOBJECT
 {
   public:
@@ -174,10 +169,10 @@ class XFILEJSONOBJECT
     void                        SetIsArray                    (bool isarray);
 
     bool                        Add                           (XFILEJSONVALUE* value);
-    bool                        Add                           (XCHAR* name,XFILEJSONARRAY* array);
-    bool                        Add                           (XSTRING& name,XFILEJSONARRAY* array);
-    bool                        Add                           (XCHAR* name,XFILEJSONOBJECT* object);
-    bool                        Add                           (XSTRING& name,XFILEJSONOBJECT* object);
+    bool                        Add                           (XCHAR* name, XFILEJSONARRAY* array);
+    bool                        Add                           (XSTRING& name, XFILEJSONARRAY* array);
+    bool                        Add                           (XCHAR* name, XFILEJSONOBJECT* object);
+    bool                        Add                           (XSTRING& name, XFILEJSONOBJECT* object);
 
     XFILEJSONOBJECT*            GetFather                     ();  
     void                        SetFather                     (XFILEJSONOBJECT* father);  
@@ -198,7 +193,6 @@ class XFILEJSONOBJECT
     void                        Clean                         ();
 };
 
-
 class XFILEJSONARRAY  : public XFILEJSONOBJECT
 {
   public:
@@ -218,7 +212,6 @@ class XFILEJSONARRAY  : public XFILEJSONOBJECT
     XSTRING                     name;
 };
 
-
 class XFILEJSON : public XFILETXT
 {
   public:
@@ -232,7 +225,7 @@ class XFILEJSON : public XFILETXT
     bool                        EncodeAllLines                (bool istabulatedline = true);
 
     bool                        ReadAndDecodeAllLines         ();
-    bool                        WriteAndEncodeAllLines        (bool istabulatedline, XFILETXTFORMATCHAR formatchar, XFILETXTTYPELF  typeLF = XFILETXTTYPELF_0D0A);
+    bool                        WriteAndEncodeAllLines        (bool istabulatedline, XFILETXTFORMATCHAR formatchar, XFILETXTTYPELF typeLF = XFILETXTTYPELF_0D0A);
     bool                        WriteAndEncodeAllLines        (bool istabulatedline = true);
 
     bool                        DeleteAllObjects              ();
@@ -257,12 +250,12 @@ class XFILEJSON : public XFILETXT
     bool                        AddControlCharacter           (XFILEJSONCONTROLCHAR ctrlchar, XSTRING& line);
 
     XFILEJSONCONTROLCHAR        SearchNextControlCharacter    (int& position);
-    bool                        SearchControlCharacter        (XFILEJSONCONTROLCHAR ctrlchar,int& position);
+    bool                        SearchControlCharacter        (XFILEJSONCONTROLCHAR ctrlchar, int& position);
 
     long long                   ConvertStringToLongLong       (XSTRING& string);
 
-    bool                        GetNumber                     (int& position, XSTRING& string,bool& special);
-    bool                        GetText                       (int& position,XSTRING& string);
+    bool                        GetNumber                     (int& position, XSTRING& string, bool& special);
+    bool                        GetText                       (int& position, XSTRING& string);
     bool                        GetString                     (int& position, XSTRING& string);
 
     bool                        AddTabs                       (int level, int spacetabs, XSTRING& string);

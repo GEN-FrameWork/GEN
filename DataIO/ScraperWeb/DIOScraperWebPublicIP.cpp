@@ -159,7 +159,7 @@ DIOSCRAPERWEBPUBLICIP::~DIOSCRAPERWEBPUBLICIP()
 * @return     bool : true if the operation is successful; otherwise false.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-bool DIOSCRAPERWEBPUBLICIP::Get(DIOIP& IP, int timeoutforurl,  XSTRING* localIP, bool usecache)
+bool DIOSCRAPERWEBPUBLICIP::Get(DIOIP& IP, int timeoutforurl, XSTRING* localIP, bool usecache)
 {
   XSTRING publicIPID;
   bool    status = false;
@@ -187,7 +187,7 @@ bool DIOSCRAPERWEBPUBLICIP::Get(DIOIP& IP, int timeoutforurl,  XSTRING* localIP,
 
   if(Load(DIOSCRAPERWEBPUBLICIP_NAMEFILE))
     {      
-      if(Do(DIOSCRAPERWEBPUBLICIP_NAMESERVICE, timeoutforurl,  localIP))
+      if(Do(DIOSCRAPERWEBPUBLICIP_NAMESERVICE, timeoutforurl, localIP))
         {
           XSTRING stringIP;
 

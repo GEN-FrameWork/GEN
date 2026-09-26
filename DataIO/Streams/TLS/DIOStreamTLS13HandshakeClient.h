@@ -53,7 +53,6 @@ enum DIOSTREAMTLS13HANDSHAKECLIENT_STATE
   DIOSTREAMTLS13HANDSHAKECLIENT_STATE_ERROR                          ,
 };
 
-
 enum DIOSTREAMTLS13HANDSHAKECLIENT_AUTHENTICATIONERROR
 {
   DIOSTREAMTLS13HANDSHAKECLIENT_AUTHENTICATIONERROR_NONE             = 0 ,
@@ -62,14 +61,9 @@ enum DIOSTREAMTLS13HANDSHAKECLIENT_AUTHENTICATIONERROR
   DIOSTREAMTLS13HANDSHAKECLIENT_AUTHENTICATIONERROR_CERTIFICATEVERIFY    ,
 };
 
-
-
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
 
-
 class DIOSTREAMTLSCONFIG;
-
 
 class DIOSTREAMTLS13HANDSHAKECLIENT
 {
@@ -89,14 +83,6 @@ class DIOSTREAMTLS13HANDSHAKECLIENT
 
     bool                                    Capabilities_Set                                 (DIOSTREAMTLSCONFIG* config);
 
-    
-    
-    
-    
-    
-    
-    
-    
     bool                                    SignatureSchemes_WidenECDSA                      ();
     bool                                    IsApplicationProtocolNegotiated                  ();
     bool                                    IsSessionResumed                                 ();

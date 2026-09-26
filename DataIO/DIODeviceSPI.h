@@ -33,19 +33,12 @@
 #include "DIODevice.h"
 #include "DIOStreamSPIConfig.h"
 
-
-
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
-
-
-
 
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
 
-
 class DIOSTREAMSPICONFIG;
 class DIOSTREAMSPI;
-
 
 class DIODEVICESPI : public DIODEVICE
 {

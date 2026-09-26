@@ -39,10 +39,7 @@
 #include "DIOStreamConfig.h"
 #include "DIOStreamConfigString.h"
 
-
-
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
-
 
 class DIOSTREAMUDPCONFIG : public DIOSTREAMCONFIG, public DIOSTREAMCONFIGSTRING
 {

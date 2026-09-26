@@ -36,20 +36,15 @@
 #include "DIODevice.h"
 #include "DIOGPIO.h"
 
-
-
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
 
 #define DIOTEMHUMSENSORAM2301_HIGH    true
 #define DIOTEMHUMSENSORAM2301_LOW     false
 
-
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
 
 class XTIMER;
 class XMUTEX;
-
 
 class DIOTEMHUMSENSORAM2301 : public DIODEVICE
 {

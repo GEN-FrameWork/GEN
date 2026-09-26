@@ -477,6 +477,7 @@ void DIOSTREAMTLS12HANDSHAKECLIENT::AIAFetch_Set(bool active, int timeout)
   aiafetchtimeout = (timeout > 0)?timeout:DIOSTREAMTLSAIAFETCHER_TIMEOUT;
 }
 
+
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         void DIOSTREAMTLS12HANDSHAKECLIENT::ValidationPolicy_Set(CIPHERCERTIFICATEX509VALIDATIONPOLICY& policy)
@@ -491,6 +492,7 @@ void DIOSTREAMTLS12HANDSHAKECLIENT::ValidationPolicy_Set(CIPHERCERTIFICATEX509VA
   certificatevalidator.SetPolicy(policy);
 }
 
+
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         void DIOSTREAMTLS12HANDSHAKECLIENT::RevocationLists_Set(XVECTOR<XBUFFER*>* CRLs)
@@ -504,6 +506,7 @@ void DIOSTREAMTLS12HANDSHAKECLIENT::RevocationLists_Set(XVECTOR<XBUFFER*>* CRLs)
 {
   revocationlists = CRLs;
 }
+
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
@@ -1285,7 +1288,7 @@ bool DIOSTREAMTLS12HANDSHAKECLIENT::Certificate_Process(XBUFFER& message)
             {
               XBUFFER* CRL=revocationlists->Get(c);
               if(!CRL || (config && CRL->GetSize() > config->GetMemoryPolicy()->GetMaximumCRLSize())) continue;
-              CIPHERCERTIFICATEX509REVOCATION_RESULT result=CIPHERCERTIFICATEX509REVOCATION::ValidateCRL((*CRL),(*chain->Get(certindex)),(*chain->Get(certindex+1)));
+              CIPHERCERTIFICATEX509REVOCATION_RESULT result=CIPHERCERTIFICATEX509REVOCATION::ValidateCRL((*CRL), (*chain->Get(certindex)), (*chain->Get(certindex+1)));
               if(result==CIPHERCERTIFICATEX509REVOCATION_RESULT_REVOKED)
                 { certificatevalidationerror=CIPHERCERTIFICATEX509VALIDATOR_ERROR_REVOKED; SetAuthenticationError(DIOSTREAMTLS12HANDSHAKECLIENT_AUTHENTICATIONERROR_CERTIFICATE); return SetError(); }
               if(result==CIPHERCERTIFICATEX509REVOCATION_RESULT_GOOD) valid=true;
@@ -1305,9 +1308,9 @@ bool DIOSTREAMTLS12HANDSHAKECLIENT::Certificate_Process(XBUFFER& message)
           XBUFFER response;
           CIPHERCERTIFICATEX509REVOCATION_RESULT result=CIPHERCERTIFICATEX509REVOCATION_RESULT_INVALID;
           if(chain->Get(certindex)->HasOCSPURL() &&
-             ocspdirectfetcher((*chain->Get(certindex)->GetOCSPURL()),(*chain->Get(certindex)),(*chain->Get(certindex+1)),response,ocspdirectcontext) &&
+             ocspdirectfetcher((*chain->Get(certindex)->GetOCSPURL()), (*chain->Get(certindex)), (*chain->Get(certindex+1)), response, ocspdirectcontext) &&
              (!config || response.GetSize() <= config->GetMemoryPolicy()->GetMaximumOCSPResponseSize()))
-            result=CIPHERCERTIFICATEX509REVOCATION::ValidateOCSP(response,(*chain->Get(certindex)),(*chain->Get(certindex+1)));
+            result=CIPHERCERTIFICATEX509REVOCATION::ValidateOCSP(response, (*chain->Get(certindex)), (*chain->Get(certindex+1)));
           if(result==CIPHERCERTIFICATEX509REVOCATION_RESULT_REVOKED ||
              (!config || config->GetRevocationPolicy()!=DIOSTREAMTLS_REVOCATIONPOLICY_SOFT_FAIL) &&
              result!=CIPHERCERTIFICATEX509REVOCATION_RESULT_GOOD)

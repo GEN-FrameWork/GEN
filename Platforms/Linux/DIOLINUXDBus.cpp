@@ -379,10 +379,6 @@ void DIOLINUXDBUS_MESSAGE::Clean()
 }
 
 
-
-
-
-
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         DIOLINUXDBUS_ARGUMENTS::DIOLINUXDBUS_ARGUMENTS(bool in, DIOLINUXDBUS_MESSAGE* message)
@@ -624,10 +620,6 @@ void DIOLINUXDBUS_ARGUMENTS::Clean()
 }
 
 
-
-
-
-
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         DIOLINUXDBUS_SIGNAL::DIOLINUXDBUS_SIGNAL()
@@ -698,10 +690,6 @@ void DIOLINUXDBUS_SIGNAL::Clean()
   type.Empty();
   name.Empty();
 }
-
-
-
-
 
 
 /**-------------------------------------------------------------------------------------------------------------------

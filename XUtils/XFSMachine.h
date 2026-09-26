@@ -33,8 +33,6 @@
 #include "XBase.h"
 #include "XMap.h"
 
-
-
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
 
 #define XFSMACHINESTATE_EVENTDEFEND  -1
@@ -43,7 +41,6 @@
 
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
 
-
 class XFSMACHINESTATE
 {
   public:
@@ -51,7 +48,7 @@ class XFSMACHINESTATE
     virtual                        ~XFSMACHINESTATE               ();
 
     int                             GetID                         ();
-    bool                            AddTransition                 (int input,int outputID);
+    bool                            AddTransition                 (int input, int outputID);
     int                             GetOutput                     (int input);
     bool                            DeleteTransition              (int outputID);
 
@@ -64,7 +61,6 @@ class XFSMACHINESTATE
     int*                            inputs;
     int*                            outputstates;
 };
-
 
 class XFSMACHINE
 {
@@ -80,8 +76,8 @@ class XFSMACHINE
 
     XFSMACHINESTATE*                GetState                      (int stateID);
     bool                            AddState                      (XFSMACHINESTATE* state);
-    bool                            AddSecuencialStates           (int state,int maxsecuencialtransitions);
-    bool                            AddState                      (int state,int event,int tostate,...);
+    bool                            AddSecuencialStates           (int state, int maxsecuencialtransitions);
+    bool                            AddState                      (int state, int event, int tostate, ...);
     bool                            DeleteState                   (int stateID);
     bool                            DeleteAllStates               ();
 

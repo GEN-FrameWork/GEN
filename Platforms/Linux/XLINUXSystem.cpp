@@ -577,7 +577,7 @@ float XLINUXSYSTEM::GetCPUTemperature()
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         bool XLINUXSYSTEM::GetMemoryInfo(XDWORD& total,XDWORD& free)
+* @fn         bool XLINUXSYSTEM::GetMemoryInfo(XDWORD& total, XDWORD& free)
 * @brief      Get memory info
 * @ingroup    PLATFORM_LINUX
 * 
@@ -587,7 +587,7 @@ float XLINUXSYSTEM::GetCPUTemperature()
 * @return     bool : true if the operation is successful; otherwise false.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-bool XLINUXSYSTEM::GetMemoryInfo(XDWORD& total,XDWORD& free)
+bool XLINUXSYSTEM::GetMemoryInfo(XDWORD& total, XDWORD& free)
 {
   struct sysinfo meminfo;
 
@@ -1008,15 +1008,15 @@ bool XLINUXSYSTEM::ShutDown(XSYSTEM_CHANGESTATUSTYPE type)
   whom = getlogin();
 
   setpriority(PRIO_PROCESS, 0, PRIO_MIN);
-	signal(SIGINT,  int_handler);
-	signal(SIGHUP,  int_handler);
+	signal(SIGINT, int_handler);
+	signal(SIGHUP, int_handler);
 	signal(SIGQUIT, int_handler);
 	signal(SIGTERM, int_handler);
 
 	chdir("/");
 
 	signal(SIGPIPE, SIG_IGN);	
-	signal(SIGINT,  SIG_IGN);   // now there's no turning back... 
+	signal(SIGINT, SIG_IGN);   // now there's no turning back... 
 
 	kill(1, SIGTSTP);	          // tell init not to spawn more getty's 
 		
@@ -1192,8 +1192,8 @@ void swap_off()
 	if(!pid) 
     {
 		  execl("/sbin/swapoff" , SWAPOFF_ARGS, NULL);
-		  execl("/etc/swapoff"  , SWAPOFF_ARGS, NULL);
-		  execl("/bin/swapoff"  , SWAPOFF_ARGS, NULL);
+		  execl("/etc/swapoff", SWAPOFF_ARGS, NULL);
+		  execl("/bin/swapoff", SWAPOFF_ARGS, NULL);
 
 		  execlp("swapoff"      , SWAPOFF_ARGS, NULL);
 
@@ -1278,8 +1278,7 @@ void unmount_disks_ourselves()
 	n = 0;
 	while (n < 100 && (mnt = getmntent(mtab))) 
     {
-		  mntlist[n++] = strdup(mnt->mnt_fsname[0] == '/' ?
-			mnt->mnt_fsname : mnt->mnt_dir);
+		  mntlist[n++] = strdup(mnt->mnt_fsname[0] == '/' ? mnt->mnt_fsname : mnt->mnt_dir);
 	  }
 
 	endmntent(mtab);
@@ -1358,7 +1357,7 @@ bool XLINUXSYSTEM::Sound_SetLevel(bool read, long* level)
   snd_mixer_selem_id_alloca(&sid);
 
   //sets simple-mixer index and name
-  snd_mixer_selem_id_set_index(sid  , mix_index);
+  snd_mixer_selem_id_set_index(sid, mix_index);
   snd_mixer_selem_id_set_name(sid   , mix_name1);
 
   elem = snd_mixer_find_selem(handle, sid);

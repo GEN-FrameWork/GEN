@@ -32,8 +32,6 @@
 
 #include "GRPProperties.h"
 
-
-
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
 
 #define GRPFACTORY_GENERATECANVAS(newcanvas, canvas)    if(newcanvas)                               \
@@ -43,10 +41,7 @@
                                                             canvas = (GRP2DCANVAS*)newcanvas;       \
                                                           }
 
-
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
-
 
 class GRPSCREEN;
 class GRP2DCANVAS;

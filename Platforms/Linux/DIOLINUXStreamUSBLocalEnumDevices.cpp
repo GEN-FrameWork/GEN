@@ -268,7 +268,7 @@ bool DIOLINUXSTREAMUSBLOCALENUMDEVICES::GetDescriptor(struct udev_device* udevde
    string = udev_device_get_sysattr_value(udevdevice, "bDeviceClass");        string.UnFormat(__L("%02X"), &databyte);   descriptor->SetDeviceClass(databyte);
    string = udev_device_get_sysattr_value(udevdevice, "bDeviceSubClass");     string.UnFormat(__L("%02X"), &databyte);   descriptor->SetDeviceSubClass(databyte);
    string = udev_device_get_sysattr_value(udevdevice, "bDeviceProtocol");     string.UnFormat(__L("%02X"), &databyte);   descriptor->SetDeviceProtocol(databyte);
-   string = udev_device_get_sysattr_value(udevdevice, "bMaxPacketSize0");     string.UnFormat(__L("%d")  , &databyte);   descriptor->SetMaxPacketSize(databyte);
+   string = udev_device_get_sysattr_value(udevdevice, "bMaxPacketSize0");     string.UnFormat(__L("%d"), &databyte);   descriptor->SetMaxPacketSize(databyte);
    string = udev_device_get_sysattr_value(udevdevice, "idVendor");            string.UnFormat(__L("%04X"), &dataword);   descriptor->SetIDVendor(dataword);
    string = udev_device_get_sysattr_value(udevdevice, "idProduct");           string.UnFormat(__L("%04X"), &dataword);   descriptor->SetIDProduct(dataword);
    string = udev_device_get_sysattr_value(udevdevice, "bcdDevice");           string.UnFormat(__L("%04X"), &dataword);   descriptor->SetBCDDevice(dataword);

@@ -41,8 +41,6 @@
 #include "DIOWebClient.h"
 #include "DIOPublicInternetIP.h"
 
-
-
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
 
 #define DIOREMOTEFILECFG_PREFIXNAMEFILE    __L("remote_")
@@ -50,10 +48,7 @@
 #define DIOREMOTEFILECFG_SECTIONGENERAL    __L("general")
 #define DIOREMOTEFILECFG_URLREMOTECFG      __L("urlremotecfg")
 
-
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
-
 
 class DIOREMOTEFILECFG : public XFILECFG
 {
@@ -190,8 +185,6 @@ class DIOREMOTEFILECFG : public XFILECFG
                                               return false;
                                             }
   
-
-
                                           for(XDWORD c=1; c<GetValues()->GetSize()+1; c++)
                                             {  
                                               XFILECFGVALUE* localvalue = GetValues()->Get(c);
@@ -323,11 +316,7 @@ class DIOREMOTEFILECFG : public XFILECFG
 
                                                                               if(_value)
                                                                                 {
-                                                                                  AddValue(localvalue->GetType(), remotevalue->GetGroup()->Get()
-                                                                                                                , key.Get()
-                                                                                                                , _value
-                                                                                                                , remotevalue->GetRemarkText()->IsEmpty()?NULL:remotevalue->GetRemarkText()->Get()
-                                                                                                                , remotevalue->GetRemarkXPos()); 
+                                                                                  AddValue(localvalue->GetType(), remotevalue->GetGroup()->Get(), key.Get(), _value, remotevalue->GetRemarkText()->IsEmpty()?NULL:remotevalue->GetRemarkText()->Get(), remotevalue->GetRemarkXPos()); 
                                                                                 }
 
                                                                               delete value;                                                                              

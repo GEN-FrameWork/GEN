@@ -32,23 +32,18 @@
 
 #include "Cipher.h"
 
-
-
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
 
 #define CIPHERAES_ENCRYPT     1
 #define CIPHERAES_DECRYPT     0
 
-
 typedef struct  
 { 
-  int       nr;                     // number of rounds
-  XDWORD*   rk;                     // AES round keys
-  XDWORD    buf[68];                // unaligned data
+  int       nr;
+  XDWORD*   rk;
+  XDWORD    buf[68];
 
 } CIPHERAES_CONTEXT;
-
-
 
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
 
@@ -62,8 +57,8 @@ class CIPHERAES : public CIPHER
     using                 CIPHER::Cipher;
     using                 CIPHER::Uncipher;
 
-    bool                  Cipher                  (XBYTE* input,  XDWORD size);
-    bool                  Uncipher                (XBYTE* input,  XDWORD size);
+    bool                  Cipher                  (XBYTE* input, XDWORD size);
+    bool                  Uncipher                (XBYTE* input, XDWORD size);
 
   protected:
 
@@ -77,7 +72,7 @@ class CIPHERAES : public CIPHER
     bool                  AESCipher_ECB           (CIPHERAES_CONTEXT* ctx, int mode, XDWORD size, XBYTE* input, XBYTE* output);
     bool                  AESCipher_CBC           (CIPHERAES_CONTEXT* ctx, int mode, XDWORD size, XBYTE iv[16], XBYTE* input, XBYTE* output);
     bool                  AESCipher_CFB128        (CIPHERAES_CONTEXT* ctx, int mode, XDWORD size, int* iv_off, XBYTE iv[16], XBYTE* input, XBYTE* output);
-    bool                  AESCipher_CTR           (CIPHERAES_CONTEXT* ctx, XDWORD size, int*  nc_off, XBYTE nonce_counter[16], XBYTE stream_block[16], XBYTE* input, XBYTE* output);
+    bool                  AESCipher_CTR           (CIPHERAES_CONTEXT* ctx, XDWORD size, int* nc_off, XBYTE nonce_counter[16], XBYTE stream_block[16], XBYTE* input, XBYTE* output);
 
     void                  Clean                   ();
 

@@ -1346,9 +1346,6 @@ typedef XBYTESIG (*bmi2_wake_up_fptr_t)(void *wake_up, void *bmi2_dev);
  */
 typedef XBYTESIG (*bmi2_tap_fptr_t)(void *tap, void *bmi2_dev);
 
-
-
-
 // Enum Declarations                                  
 
 // Enum to define BMI2 sensor interfaces */
@@ -1412,179 +1409,172 @@ enum bmi2_act_recog_stat
 // Structure to store the compensated user-gain data of gyroscope 
 struct bmi2_gyro_user_gain_data
 {   
-  XBYTESIG                                      x;                                                                          // x-axis      
-  XBYTESIG                                      y;                                                                          // y-axis     
-  XBYTESIG                                      z;                                                                          // z-axis 
+  XBYTESIG                                      x;
+  XBYTESIG                                      y;
+  XBYTESIG                                      z;
 };
-
 
 // Structure to store the re-mapped axis 
 struct bmi2_remap
 {    
-  XBYTE                                         x;                                                                          // Re-mapped x-axis    
-  XBYTE                                         y;                                                                          // Re-mapped y-axis    
-  XBYTE                                         z;                                                                          // Re-mapped z-axis 
+  XBYTE                                         x;
+  XBYTE                                         y;
+  XBYTE                                         z;
 };
-
 
 // Structure to store the value of re-mapped axis and its sign 
 struct bmi2_axes_remap
 {  
-  XBYTE                                         x_axis;                                                                     // Re-mapped x-axis     
-  XBYTE                                         y_axis;                                                                     // Re-mapped y-axis     
-  XBYTE                                         z_axis;                                                                     // Re-mapped z-axis     
-  XBYTESIG                                      x_axis_sign;                                                                // Re-mapped x-axis sign    
-  XBYTESIG                                      y_axis_sign;                                                                // Re-mapped y-axis sign  
-  XBYTESIG                                      z_axis_sign;                                                                // Re-mapped z-axis sign 
+  XBYTE                                         x_axis;
+  XBYTE                                         y_axis;
+  XBYTE                                         z_axis;
+  XBYTESIG                                      x_axis_sign;
+  XBYTESIG                                      y_axis_sign;
+  XBYTESIG                                      z_axis_sign;
 };
-
 
 // Structure to define the type of sensor and its interrupt pin 
 struct bmi2_sens_int_config
 {
-  XBYTE                                         type;                                                                       // Defines the type of sensor     
-  enum bmi2_hw_int_pin                          hw_int_pin;                                                                 // Type of interrupt pin 
+  XBYTE                                         type;
+  enum bmi2_hw_int_pin                          hw_int_pin;
 };
-
 
 // Structure to define output for activity recognition 
 struct bmi2_act_recog_output
 {   
-  XDWORD                                        time_stamp;                                                                 // Time stamp   
-  XBYTE                                         curr_act;                                                                   // current activity      
-  XBYTE                                         prev_act;                                                                   // previous activity 
+  XDWORD                                        time_stamp;
+  XBYTE                                         curr_act;
+  XBYTE                                         prev_act;
 };
-
 
 // Structure to define FIFO frame configuration 
 struct bmi2_fifo_frame
 {   
-  XBYTE*                                        data;                                                                       // Pointer to FIFO data     
-  XWORD                                         length;                                                                     // Number of user defined bytes of FIFO to be read 
-  XBYTE                                         header_enable;                                                              // Defines header/header-less mode 
-  XWORD                                         data_enable;                                                                // Enables type of data to be streamed - accelerometer, auxiliary or gyroscope 
-  XWORD                                         acc_byte_start_idx;                                                         // To index accelerometer bytes 
-  XWORD                                         act_recog_byte_start_idx;                                                   // To index activity output bytes 
-  XWORD                                         aux_byte_start_idx;                                                         // To index auxiliary bytes 
-  XWORD                                         gyr_byte_start_idx;                                                         // To index gyroscope bytes 
-  XDWORD                                        sensor_time;                                                                // FIFO sensor time 
-  XBYTE                                         skipped_frame_count;                                                        // Skipped frame count 
-  XBYTE                                         data_int_map;                                                               // Type of data interrupt to be mapped 
-  XWORD                                         wm_lvl;                                                                     // Water-mark level for water-mark interrupt 
-  XBYTE                                         acc_frm_len;                                                                // Accelerometer frame length 
-  XBYTE                                         gyr_frm_len;                                                                // Gyroscope frame length 
-  XBYTE                                         aux_frm_len;                                                                // Auxiliary frame length 
-  XBYTE                                         acc_gyr_frm_len;                                                            // Accelerometer and gyroscope frame length 
-  XBYTE                                         acc_aux_frm_len;                                                            // Accelerometer and auxiliary frame length 
-  XBYTE                                         aux_gyr_frm_len;                                                            // Gyroscope and auxiliary frame length 
-  XBYTE                                         all_frm_len;                                                                // Accelerometer, Gyroscope and auxiliary frame length 
+  XBYTE*                                        data;
+  XWORD                                         length;
+  XBYTE                                         header_enable;
+  XWORD                                         data_enable;
+  XWORD                                         acc_byte_start_idx;
+  XWORD                                         act_recog_byte_start_idx;
+  XWORD                                         aux_byte_start_idx;
+  XWORD                                         gyr_byte_start_idx;
+  XDWORD                                        sensor_time;
+  XBYTE                                         skipped_frame_count;
+  XBYTE                                         data_int_map;
+  XWORD                                         wm_lvl;
+  XBYTE                                         acc_frm_len;
+  XBYTE                                         gyr_frm_len;
+  XBYTE                                         aux_frm_len;
+  XBYTE                                         acc_gyr_frm_len;
+  XBYTE                                         acc_aux_frm_len;
+  XBYTE                                         aux_gyr_frm_len;
+  XBYTE                                         all_frm_len;
 };
 
 
 // Structure to define Interrupt pin configuration 
 struct bmi2_int_pin_cfg
 {   
-  XBYTE                                         lvl;                                                                        // Configure level of interrupt pin   
-  XBYTE                                         od;                                                                         // Configure behavior of interrupt pin        
-  XBYTE                                         output_en;                                                                  // Output enable for interrupt pin     
-  XBYTE                                         input_en;                                                                   // Input enable for interrupt pin 
+  XBYTE                                         lvl;
+  XBYTE                                         od;
+  XBYTE                                         output_en;
+  XBYTE                                         input_en;
 };
 
 
 // Structure to define interrupt pin type, mode and configurations 
 struct bmi2_int_pin_config
 {    
-  XBYTE                                         pin_type;                                                                   // Interrupt pin type: INT1 or INT2 or BOTH        
-  XBYTE                                         int_latch;                                                                  // Latched or non-latched mode  
-  struct bmi2_int_pin_cfg                       pin_cfg[BMI2_INT_PIN_MAX_NUM];                                              // Structure to define Interrupt pin configuration 
+  XBYTE                                         pin_type;
+  XBYTE                                         int_latch;
+  struct bmi2_int_pin_cfg                       pin_cfg[BMI2_INT_PIN_MAX_NUM];
 };
 
 
 // Structure to define an array of 8 auxiliary data bytes 
 struct bmi2_aux_fifo_data
 {  
-  XBYTE                                         data[8];                                                                    // Auxiliary data      
-  XDWORD                                        virt_sens_time;                                                             // Sensor time for virtual frames 
+  XBYTE                                         data[8];
+  XDWORD                                        virt_sens_time;
 };
 
 
 // Structure to define accelerometer and gyroscope sensor axes and sensor time for virtual frames 
 struct bmi2_sens_axes_data
 {  
-  XWORDSIG                                      x;                                                                          // Data in x-axis 
-  XWORDSIG                                      y;                                                                          // Data in y-axis 
-  XWORDSIG                                      z;                                                                          // Data in z-axis 
-  XDWORD                                        virt_sens_time;                                                             // Sensor time for virtual frames 
+  XWORDSIG                                      x;
+  XWORDSIG                                      y;
+  XWORDSIG                                      z;
+  XDWORD                                        virt_sens_time;
 };
 
 
 // Structure to define gyroscope saturation status of user gain 
 struct bmi2_gyr_user_gain_status
 {   
-  XBYTE                                         sat_x;                                                                      // Status in x-axis 
-  XBYTE                                         sat_y;                                                                      // Status in y-axis 
-  XBYTE                                         sat_z;                                                                      // Status in z-axis 
-  XBYTE                                         g_trigger_status;                                                           // G trigger status 
+  XBYTE                                         sat_x;
+  XBYTE                                         sat_y;
+  XBYTE                                         sat_z;
+  XBYTE                                         g_trigger_status;
 };
 
 
 // Structure to store the status of gyro self test result 
 struct bmi2_gyro_self_test_status
 {    
-  XBYTE                                         gyr_st_axes_done  : 1;                                                      // gyro self test axes done 
-  XBYTE                                         gyr_axis_x_ok     : 1;                                                      // status of gyro X-axis self test 
-  XBYTE                                         gyr_axis_y_ok     : 1;                                                      // status of gyro Y-axis self test 
-  XBYTE                                         gyr_axis_z_ok     : 1;                                                      // status of gyro Z-axis self test 
+  XBYTE                                         gyr_st_axes_done  : 1;
+  XBYTE                                         gyr_axis_x_ok     : 1;
+  XBYTE                                         gyr_axis_y_ok     : 1;
+  XBYTE                                         gyr_axis_z_ok     : 1;
 };
 
 
 // Structure to define NVM error status 
 struct bmi2_nvm_err_status
 {   
-  XBYTE                                         load_error;                                                                 // NVM load action error 
-  XBYTE                                         prog_error;                                                                 // NVM program action error 
-  XBYTE                                         erase_error;                                                                // NVM erase action error
-  XBYTE                                         exceed_error;                                                               // NVM program limit exceeded
-  XBYTE                                         privil_error;                                                               // NVM privilege error 
+  XBYTE                                         load_error;
+  XBYTE                                         prog_error;
+  XBYTE                                         erase_error;
+  XBYTE                                         exceed_error;
+  XBYTE                                         privil_error;
 };
-
 
 // Structure to define VFRM error status 
 struct bmi2_vfrm_err_status
 {
-  XBYTE                                         lock_error;                                                                 // VFRM lock acquire error 
-  XBYTE                                         write_error;                                                                // VFRM write error 
-  XBYTE                                         fatal_error;                                                                // VFRM fatal err 
+  XBYTE                                         lock_error;
+  XBYTE                                         write_error;
+  XBYTE                                         fatal_error;
 };
-
 
 // Structure to define accelerometer self test feature status 
 struct bmi2_acc_self_test_status
 {    
-  XBYTE                                         acc_self_test_done;                                                         // Accelerometer test completed 
-  XBYTE                                         acc_x_ok;                                                                   // Bit is set to 1 when accelerometer X-axis test passed 
-  XBYTE                                         acc_y_ok;                                                                   // Bit is set to 1 when accelerometer y-axis test passed 
-  XBYTE                                         acc_z_ok;                                                                   // Bit is set to 1 when accelerometer z-axis test passed 
+  XBYTE                                         acc_self_test_done;
+  XBYTE                                         acc_x_ok;
+  XBYTE                                         acc_y_ok;
+  XBYTE                                         acc_z_ok;
 };
 
 
 // Structure to define orientation output 
 struct bmi2_orientation_output
 {    
-  XBYTE                                         portrait_landscape;                                                         // Orientation portrait landscape 
-  XBYTE                                         faceup_down;                                                                // Orientation face-up down  
+  XBYTE                                         portrait_landscape;
+  XBYTE                                         faceup_down;
 };
 
 
 // Structure to define OIS output 
 struct bmi2_ois_output
 {    
-  XWORDSIG                                      ois_acc_x;                                                                  // OIS accel x axis
-  XWORDSIG                                      ois_acc_y;                                                                  // OIS accel y axis 
-  XWORDSIG                                      ois_acc_z;                                                                  // OIS accel z axis 
-  XWORDSIG                                      ois_gyro_x;                                                                 // OIS gyro x axis
-  XWORDSIG                                      ois_gyro_y;                                                                 // OIS gyro y axis
-  XWORDSIG                                      ois_gyro_z;                                                                 // OIS gyro z axis 
+  XWORDSIG                                      ois_acc_x;
+  XWORDSIG                                      ois_acc_y;
+  XWORDSIG                                      ois_acc_z;
+  XWORDSIG                                      ois_gyro_x;
+  XWORDSIG                                      ois_gyro_y;
+  XWORDSIG                                      ois_gyro_z;
 };
 
 
@@ -1611,219 +1601,207 @@ union bmi2_sens_data
 // Structure to define type of sensor and their respective data 
 struct bmi2_sensor_data
 {   
-  XBYTE                                         type;                                                                       // Defines the type of sensor     
-  union bmi2_sens_data                          sens_data;                                                                  // Defines various sensor data 
+  XBYTE                                         type;
+  union bmi2_sens_data                          sens_data;
 };
 
 
 // Structure to define accelerometer configuration 
 struct bmi2_accel_config
 {   
-  XBYTE                                         odr;                                                                        // Output data rate in Hz   
-  XBYTE                                         bwp;                                                                        // Bandwidth parameter     
-  XBYTE                                         filter_perf;                                                                // Filter performance mode 
-  XBYTE                                         range;                                                                      // g-range 
+  XBYTE                                         odr;
+  XBYTE                                         bwp;
+  XBYTE                                         filter_perf;
+  XBYTE                                         range;
 };
-
 
 // Structure to define gyroscope configuration 
 struct bmi2_gyro_config
 {    
-  XBYTE                                         odr;                                                                        // Output data rate in Hz      
-  XBYTE                                         bwp;                                                                        // Bandwidth parameter
-  XBYTE                                         filter_perf;                                                                // Filter performance mode
-  XBYTE                                         ois_range;                                                                  // OIS Range
-  XBYTE                                         range;                                                                      // Gyroscope Range
-  XBYTE                                         noise_perf;                                                                 // Selects noise performance 
+  XBYTE                                         odr;
+  XBYTE                                         bwp;
+  XBYTE                                         filter_perf;
+  XBYTE                                         ois_range;
+  XBYTE                                         range;
+  XBYTE                                         noise_perf;
 };
-
 
 // Structure to define auxiliary sensor configuration 
 struct bmi2_aux_config
 {  
-  XBYTE                                         aux_en;                                                                     // Enable/Disable auxiliary interface     
-  XBYTE                                         manual_en;                                                                  // Manual or Auto mode    
-  XBYTE                                         fcu_write_en;                                                               // Enables FCU write command on auxiliary interface
-  XBYTE                                         man_rd_burst;                                                               // Read burst length for manual mode   
-  XBYTE                                         aux_rd_burst;                                                               // Read burst length for data mode
-  XBYTE                                         odr;                                                                        // Output data rate
-  XBYTE                                         offset;                                                                     // Read-out offset 
-  XBYTE                                         i2c_device_addr;                                                            // I2c address of auxiliary sensor
-  XBYTE                                         read_addr;                                                                  // Read address of auxiliary sensor 
+  XBYTE                                         aux_en;
+  XBYTE                                         manual_en;
+  XBYTE                                         fcu_write_en;
+  XBYTE                                         man_rd_burst;
+  XBYTE                                         aux_rd_burst;
+  XBYTE                                         odr;
+  XBYTE                                         offset;
+  XBYTE                                         i2c_device_addr;
+  XBYTE                                         read_addr;
 };
-
 
 // Structure to define any-motion configuration 
 struct bmi2_any_motion_config
 {   
-  XWORD                                         duration;                                                                   // Duration in 50Hz samples(20msec)
-  XWORD                                         threshold;                                                                  // Acceleration slope threshold
-  XWORD                                         select_x;                                                                   // To select per x-axis
-  XWORD                                         select_y;                                                                   // To select per y-axis
-  XWORD                                         select_z;                                                                   // To select per z-axis 
+  XWORD                                         duration;
+  XWORD                                         threshold;
+  XWORD                                         select_x;
+  XWORD                                         select_y;
+  XWORD                                         select_z;
 };
-
 
 // Structure to define no-motion configuration 
 struct bmi2_no_motion_config
 {   
-  XWORD                                         duration;                                                                   // Duration in 50Hz samples(20msec)
-  XWORD                                         threshold;                                                                  // Acceleration slope threshold
-  XWORD                                         select_x;                                                                   // To select per x-axis
-  XWORD                                         select_y;                                                                   // To select per y-axis 
-  XWORD                                         select_z;                                                                   // To select per z-axis 
+  XWORD                                         duration;
+  XWORD                                         threshold;
+  XWORD                                         select_x;
+  XWORD                                         select_y;
+  XWORD                                         select_z;
 };
-
 
 // Structure to define sig-motion configuration 
 struct bmi2_sig_motion_config
 {  
-  XWORD                                         block_size;                                                                 // Block size
-  XWORD                                         param_2;                                                                    // Parameter 2
-  XWORD                                         param_3;                                                                    // Parameter 3
-  XWORD                                         param_4;                                                                    // Parameter 4
-  XWORD                                         param_5;                                                                    // Parameter 5 
+  XWORD                                         block_size;
+  XWORD                                         param_2;
+  XWORD                                         param_3;
+  XWORD                                         param_4;
+  XWORD                                         param_5;
 };
 
 
 // Structure to define step counter/detector/activity configuration 
 struct bmi2_step_config
 {    
-  XWORD                                         watermark_level;                                                            // Water-mark level
-  XWORD                                         reset_counter;                                                              // Reset counter
-  XBYTE                                         step_buffer_size;                                                           // Step buffer size 
+  XWORD                                         watermark_level;
+  XWORD                                         reset_counter;
+  XBYTE                                         step_buffer_size;
 };
-
 
 // Structure to define gyroscope user gain configuration 
 struct bmi2_gyro_user_gain_config
 {
-  XWORD                                         ratio_x;                                                                    // Gain update value for x-axis
-  XWORD                                         ratio_y;                                                                    // Gain update value for y-axis 
-  XWORD                                         ratio_z;                                                                    // Gain update value for z-axis 
+  XWORD                                         ratio_x;
+  XWORD                                         ratio_y;
+  XWORD                                         ratio_z;
 };
-
 
 // Structure to define wake-up configuration 
 struct bmi2_wake_up_config
 {    
-  XWORD                                         sensitivity;                                                                // Wake-up sensitivity for bmi261
-  XWORD                                         single_tap_en;                                                              // Tap feature for BMI261 For Single tap, single_tap_en = 1, For Double tap, single_tap_en = 0
-  XWORD                                         data_reg_en;                                                                // Enable -> Filtered tap data, Disable -> Unfiltered data
-  XWORD                                         tap_sens_thres;                                                             // Scaling factor of threshold
-  XWORD                                         max_gest_dur;                                                               // Maximum duration between each taps
-  XWORD                                         quite_time_after_gest;                                                      // Minimum quite time between the two gesture detection
-  XWORD                                         wait_for_timeout;                                                           // Wait time 
-  XWORD                                         axis_sel;                                                                   // Axis selection 
+  XWORD                                         sensitivity;
+  XWORD                                         single_tap_en;
+  XWORD                                         data_reg_en;
+  XWORD                                         tap_sens_thres;
+  XWORD                                         max_gest_dur;
+  XWORD                                         quite_time_after_gest;
+  XWORD                                         wait_for_timeout;
+  XWORD                                         axis_sel;
 };
-
 
 // Structure to define tap configuration 
 struct bmi2_tap_config
 {   
-  XWORD                                         sensitivity;                                                                // Tap sensitivity 
-  XWORD                                         single_tap_en;                                                              // Tap feature. For Single tap, single_tap_en = 1, For Double tap, single_tap_en = 0
-  XWORD                                         data_reg_en;                                                                // Enable -> Filtered tap data, Disable -> Unfiltered data 
-  XWORD                                         tap_sens_thres;                                                             // Scaling factor of threshold 
-  XWORD                                         max_gest_dur;                                                               // Maximum duration between each taps 
-  XWORD                                         quite_time_after_gest;                                                      // Minimum quite time between the two gesture detection
-  XWORD                                         wait_for_timeout;                                                           // Wait time 
-  XWORD                                         axis_sel;                                                                   // Axis selection 
+  XWORD                                         sensitivity;
+  XWORD                                         single_tap_en;
+  XWORD                                         data_reg_en;
+  XWORD                                         tap_sens_thres;
+  XWORD                                         max_gest_dur;
+  XWORD                                         quite_time_after_gest;
+  XWORD                                         wait_for_timeout;
+  XWORD                                         axis_sel;
 };
-
 
 // Structure to define orientation configuration 
 struct bmi2_orient_config
 {   
-  XWORD                                         ud_en;                                                                      // Upside/down detection 
-  XWORD                                         mode;                                                                       // Symmetrical, high or low Symmetrical
-  XWORD                                         blocking;                                                                   // Blocking mode 
-  XWORD                                         theta;                                                                      // Threshold angle 
-  XWORD                                         hysteresis;                                                                 // Acceleration hysteresis for orientation detection 
+  XWORD                                         ud_en;
+  XWORD                                         mode;
+  XWORD                                         blocking;
+  XWORD                                         theta;
+  XWORD                                         hysteresis;
 };
-
 
 // Structure to define high-g configuration 
 struct bmi2_high_g_config
 {    
-  XWORD                                         threshold;                                                                  // Acceleration threshold 
-  XWORD                                         hysteresis;                                                                 // Hysteresis
-  XWORD                                         select_x;                                                                   // To select per x-axis
-  XWORD                                         select_y;                                                                   // To select per y-axis
-  XWORD                                         select_z;                                                                   // To select per z-axis
-  XWORD                                         duration;                                                                   // Duration interval 
+  XWORD                                         threshold;
+  XWORD                                         hysteresis;
+  XWORD                                         select_x;
+  XWORD                                         select_y;
+  XWORD                                         select_z;
+  XWORD                                         duration;
 };
 
 
 // Structure to define low-g configuration 
 struct bmi2_low_g_config
 {    
-  XWORD                                         threshold;                                                                  // Acceleration threshold
-  XWORD                                         hysteresis;                                                                 // Hysteresis
-  XWORD                                         duration;                                                                   // Duration interval 
+  XWORD                                         threshold;
+  XWORD                                         hysteresis;
+  XWORD                                         duration;
 };
 
 
 // Structure to define flat configuration 
 struct bmi2_flat_config
 {    
-  XWORD                                         theta;                                                                      // Theta angle for flat detection
-  XWORD                                         blocking;                                                                   // Blocking mode
-  XWORD                                         hysteresis;                                                                 // Hysteresis for theta flat detection
-  XWORD                                         hold_time;                                                                  // Holds the duration in 50Hz samples(20msec) 
+  XWORD                                         theta;
+  XWORD                                         blocking;
+  XWORD                                         hysteresis;
+  XWORD                                         hold_time;
 };
 
 
 // Structure to define wrist gesture configuration 
 struct bmi2_wrist_gest_config
 {    
-  XWORD                                         wearable_arm;                                                               // Wearable arm (left or right)
-  XWORD                                         min_flick_peak;                                                             // Sine of the minimum tilt angle in portrait down direction of the device when wrist is rolled away from user. The configuration parameter is scaled by 2048 i.e. 2048 * sin(angle). Range is 1448 to 1774. Default value is 1774.  
-  XWORD                                         min_flick_samples;                                                          // Value of minimum time difference between wrist roll-out and roll-in movement during flick gesture. Range is 3 to 5 samples at 50Hz. Default value is 4 (i.e. 0.08 seconds).  
-  XWORD                                         max_duration;                                                               // Maximum time within which gesture movement has to be completed. Range is 150 to 250 samples at 50Hz. Default value is 200 (i.e. 4 seconds).  
+  XWORD                                         wearable_arm;
+  XWORD                                         min_flick_peak;
+  XWORD                                         min_flick_samples;
+  XWORD                                         max_duration;
 };
 
 
 // Structure to define wrist wear wake-up configuration 
 struct bmi2_wrist_wear_wake_up_config
 {    
-  XWORD                                         min_angle_focus;                                                            // Cosine of min expected attitude change of the device within 1 second time window when moving within focus position. The parameter is scaled by 2048 i.e. 2048 * cos(angle). Range is 1024 to 1774. Default is 1448.  
-  XWORD                                         min_angle_nonfocus;                                                         // Cosine of min expected attitude change of the device within 1 second time window when moving from non-focus to focus position. The parameter is scaled by 2048 i.e. 2048 * cos(angle). Range is 1448 to 1856. Default value is 1774.  
-  XWORD                                         max_tilt_lr;                                                                // Sine of the max allowed downward tilt angle in landscape right direction of the device, when it is in focus position (i.e. user is able to comfortably look at the dial of wear device). The configuration parameter is scaled by 2048 i.e. 2048 * sin(angle). Range is 700 to 1024. Default value is 1024.  
-  XWORD                                         max_tilt_ll;                                                                // Sine of the max allowed downward tilt angle in landscape left direction of the device, when it is in focus position  (i.e. user is able to comfortably look at the dial of wear device).  The configuration parameter is scaled by 2048 i.e. 2048 * sin(angle). Range is 700 to 1024. Default value is 700.  
-  XWORD                                         max_tilt_pd;                                                                // Sine of the max allowed backward tilt angle in portrait down direction of the device,  when it is in focus position (i.e. user is able to comfortably look at the dial of wear device). The configuration parameter is scaled by 2048 i.e. 2048 * sin(angle). Range is 0 to179. Default value is 179. 
-  XWORD                                         max_tilt_pu;                                                                // Sine of the maximum allowed forward tilt angle in portrait up direction of the device, when it is in focus position (i.e. user is able to comfortably look at the dial of wear device).  The configuration parameter is scaled by 2048 i.e. 2048 * sin(angle). Range is 1774 to 1978. Default value is 1925. 
+  XWORD                                         min_angle_focus;
+  XWORD                                         min_angle_nonfocus;
+  XWORD                                         max_tilt_lr;
+  XWORD                                         max_tilt_ll;
+  XWORD                                         max_tilt_pd;
+  XWORD                                         max_tilt_pu;
 };
-
 
 // Structure to define wrist gesture configuration for wearable variant 
 struct bmi2_wrist_gest_w_config
 {   
-  XBYTE                                         device_position;                                                            // Wearable arm (left or right) 
-  XWORD                                         min_flick_peak_y_threshold;                                                 // Minimum threshold for flick peak on y-axis 
-  XWORD                                         min_flick_peak_z_threshold;                                                 // Minimum threshold for flick peak on z-axis 
-  XWORD                                         gravity_bounds_x_pos;                                                       // Maximum expected value of positive gravitational acceleration on x-axis when arm is in focus pose 
-  XWORD                                         gravity_bounds_x_neg;                                                       // Maximum expected value of negative gravitational acceleration on x-axis when arm is in focus pose 
-  XWORD                                         gravity_bounds_y_neg;                                                       // Maximum expected value of negative gravitational acceleration on y-axis when arm is in focus pose 
-  XWORD                                         gravity_bounds_z_neg;                                                       // Maximum expected value of negative gravitational acceleration on z-axis when arm is in focus pose 
-  XWORD                                         flick_peak_decay_coeff;                                                     // Exponential smoothing coefficient for adaptive peak threshold decay 
-  XWORD                                         lp_mean_filter_coeff;                                                       // Exponential smoothing coefficient for acceleration mean estimation 
-  XWORD                                         max_duration_jiggle_peaks;                                                  // Maximum duration between 2 peaks of jiggle in samples @50Hz  
+  XBYTE                                         device_position;
+  XWORD                                         min_flick_peak_y_threshold;
+  XWORD                                         min_flick_peak_z_threshold;
+  XWORD                                         gravity_bounds_x_pos;
+  XWORD                                         gravity_bounds_x_neg;
+  XWORD                                         gravity_bounds_y_neg;
+  XWORD                                         gravity_bounds_z_neg;
+  XWORD                                         flick_peak_decay_coeff;
+  XWORD                                         lp_mean_filter_coeff;
+  XWORD                                         max_duration_jiggle_peaks;
 };
 
 // Structure to define wrist wear wake-up configuration for wearable configuration 
 struct bmi2_wrist_wear_wake_up_wh_config
 {    
-  XWORD                                         min_angle_focus;                                                            // Cosine of min expected attitude change of the device within 1 second time window when moving within focus position. The parameter is scaled by 2048 i.e. 2048 * cos(angle). Range is 1024 to 1774. Default is 1448.  
-  XWORD                                         min_angle_nonfocus;                                                         // Cosine of min expected attitude change of the device within 1 second time window when moving from non-focus to focus position. The parameter is scaled by 2048 i.e. 2048 * cos(angle). Range is 1448 to 1856. Default value is 1774.  
-  XBYTE                                         angle_lr;                                                                   // Sine of the max allowed downward tilt angle in landscape right direction of the device, when it is in focus position  (i.e. user is able to comfortably look at the dial of wear device). The configuration parameter is scaled by 256 i.e. 256 * sin(angle). Range is 88 to 128.Default value is 128.  
-  XBYTE                                         angle_ll;                                                                   // Sine of the max allowed downward tilt angle in landscape left direction of the device, when it is in focus position (i.e. user is able to comfortably look at the dial of wear device).  The configuration parameter is scaled by 256 i.e. 256 * sin(angle). Range is 88 to 128. Default value is 128.  
-  XBYTE                                         angle_pd;                                                                   // Sine of the max allowed backward tilt angle in portrait down direction of the device, when it is in focus position (i.e. user is able to comfortably look at the dial of wear device). The configuration parameter is scaled by 256 i.e. 256 * sin(angle). Range is 0 to 179. Default value is 22. 
-  XBYTE                                         angle_pu;                                                                   // Sine of the maximum allowed forward tilt angle in portrait up direction of the device, when it is in focus position (i.e. user is able to comfortably look at the dial of wear device). The configuration parameter is scaled by 256 i.e. 256 * sin(angle). Range is 222 to 247. Default value is 241. 
-  XBYTE                                         min_dur_mov;                                                                // Minimum duration the arm should be moved while performing gesture. Range: 1 to 10, resolution = 20 ms. Default 2(40 ms)
-  XBYTE                                         min_dur_quite;                                                              // Minimum duration the arm should be static between two consecutive gestures. Range: 1 to 10, resolution = 20 ms. Default 2(40 ms)
+  XWORD                                         min_angle_focus;
+  XWORD                                         min_angle_nonfocus;
+  XBYTE                                         angle_lr;
+  XBYTE                                         angle_ll;
+  XBYTE                                         angle_pd;
+  XBYTE                                         angle_pu;
+  XBYTE                                         min_dur_mov;
+  XBYTE                                         min_dur_quite;
 };
-
 
 // Structure to define primary OIS configuration 
 struct bmi2_primary_ois_config
@@ -1835,11 +1813,10 @@ struct bmi2_primary_ois_config
   XBYTE                                         primary_ois_accel_en;
 };
 
-
 // Structure to configure free-fall detection settings 
 struct bmi2_free_fall_det_config
 {
-  XWORD                                         freefall_accel_settings[BMI2_FREE_FALL_ACCEL_SET_PARAMS];                   // free-fall accel settings 
+  XWORD                                         freefall_accel_settings[BMI2_FREE_FALL_ACCEL_SET_PARAMS];
 };
 
 
@@ -1869,143 +1846,130 @@ union bmi2_sens_config_types
   struct bmi2_free_fall_det_config              free_fall_det;                                                              // Free-fall detection configurations 
 };
 
-
 // Structure to define the type of the sensor and its configurations  
 struct bmi2_sens_config
 {    
-  XBYTE                                         type;                                                                       // Defines the type of sensor     
-  union bmi2_sens_config_types                  cfg;                                                                        // Defines various sensor configurations 
+  XBYTE                                         type;
+  union bmi2_sens_config_types                  cfg;
 };
 
 
 // Structure to define the feature configuration 
 struct bmi2_feature_config
 {    
-  XBYTE                                         type;                                                                       // Defines the type of sensor    
-  XBYTE                                         page;                                                                       // Page to where the feature is mapped     
-  XBYTE                                         start_addr;                                                                 // Address of the feature 
+  XBYTE                                         type;
+  XBYTE                                         page;
+  XBYTE                                         start_addr;
 };
 
 
 // Structure to define the feature interrupt configurations 
 struct bmi2_map_int
 {
-  XBYTE                                         type;                                                                       // Defines the type of sensor    
-  XBYTE                                         sens_map_int;                                                               // Defines the feature interrupt 
+  XBYTE                                         type;
+  XBYTE                                         sens_map_int;
 };
 
 
 // Structure to define BMI2 sensor configurations 
 struct bmi2_dev
 {   
-  XBYTE                                         chip_id;                                                                    // Chip id of BMI2    
-  void*                                         intf_ptr;                                                                   // The interface pointer is used to enable the user to link their interface descriptors for reference during the implementation of the read and write interfaces to the hardware. 
-  XBYTE                                         info;                                                                       // To store warnings 
-  enum bmi2_intf                                intf;                                                                       // Type of Interface  
-  BMI2_INTF_RETURN_TYPE                         intf_rslt;                                                                  // To store interface pointer error 
-  XBYTE                                         dummy_byte;                                                                 // For switching from I2C to SPI 
-  XBYTE                                         resolution;                                                                 // Resolution for FOC 
-  XWORD                                         read_write_len;                                                             // User set read/write length 
-  const XBYTE*                                  config_file_ptr;                                                            // Pointer to the configuration data buffer address 
-  XBYTE                                         page_max;                                                                   // To define maximum page number 
-  XBYTE                                         input_sens;                                                                 // To define maximum number of input sensors/features 
-  XBYTE                                         out_sens;                                                                   // To define maximum number of output sensors/features 
-  XBYTE                                         aux_man_en;                                                                 // Indicate manual enable for auxiliary communication 
-  XBYTE                                         aux_man_rd_burst_len;                                                       // Defines manual read burst length for auxiliary communication 
-  const struct bmi2_feature_config*             feat_config;                                                                // Array of feature input configuration structure   
-  const struct bmi2_feature_config*             feat_output;                                                                // Array of feature output configuration structure     
-  struct bmi2_axes_remap                        remap;                                                                      // Structure to maintain a copy of the re-mapped axis     
-  XQWORD                                        sens_en_stat;                                                               // Flag to hold enable status of sensors   
-  //bmi2_read_fptr_t                            read;                                                                       // Read function pointer     
-  //bmi2_write_fptr_t                           write;                                                                      // Write function pointer     
-  //bmi2_delay_fptr_t                           delay_us;                                                                   // Delay function pointer 
-  XWORDSIG                                      gyr_cross_sens_zx;                                                          // To store the gyroscope cross sensitivity value 
-  XBYTE                                         gyro_en             : 1;                                                    // gyro enable status, used as a flag in CRT enabling and aborting 
-  XBYTE                                         aps_status;                                                                 // advance power saving mode status, used as a flag in CRT enabling and aborting 
-  XWORD                                         variant_feature;                                                            // used as a flag to enable variant specific features like crt 
-  XWORD                                         config_size;                                                                // To store hold the size of config file 
-  bmi2_wake_up_fptr_t                           get_wakeup_config;                                                          // Function pointer to get wakeup configurations 
-  bmi2_wake_up_fptr_t                           set_wakeup_config;                                                          // Function pointer to set wakeup configurations 
-  bmi2_tap_fptr_t                               get_tap_config;                                                             // Function pointer to get tap configurations 
-  bmi2_tap_fptr_t                               set_tap_config;                                                             // Function pointer to set tap configurations 
-  struct bmi2_map_int*                          map_int;                                                                    // Array of feature interrupts configuration structure 
-  XBYTE                                         sens_int_map;                                                               // To define maximum number of interrupts 
+  XBYTE                                         chip_id;
+  void*                                         intf_ptr;
+  XBYTE                                         info;
+  enum bmi2_intf                                intf;
+  BMI2_INTF_RETURN_TYPE                         intf_rslt;
+  XBYTE                                         dummy_byte;
+  XBYTE                                         resolution;
+  XWORD                                         read_write_len;
+  const XBYTE*                                  config_file_ptr;
+  XBYTE                                         page_max;
+  XBYTE                                         input_sens;
+  XBYTE                                         out_sens;
+  XBYTE                                         aux_man_en;
+  XBYTE                                         aux_man_rd_burst_len;
+  const struct bmi2_feature_config*             feat_config;
+  const struct bmi2_feature_config*             feat_output;
+  struct bmi2_axes_remap                        remap;
+  XQWORD                                        sens_en_stat;
+  XWORDSIG                                      gyr_cross_sens_zx;
+  XBYTE                                         gyro_en             : 1;
+  XBYTE                                         aps_status;
+  XWORD                                         variant_feature;
+  XWORD                                         config_size;
+  bmi2_wake_up_fptr_t                           get_wakeup_config;
+  bmi2_wake_up_fptr_t                           set_wakeup_config;
+  bmi2_tap_fptr_t                               get_tap_config;
+  bmi2_tap_fptr_t                               set_tap_config;
+  struct bmi2_map_int*                          map_int;
+  XBYTE                                         sens_int_map;
 };
-
 
 // Structure to enable an accel axis for foc 
 struct bmi2_accel_foc_g_value
 {    
-  XBYTE                                         x;                                                                          // '0' to disable x axis and '1' to enable x axis    
-  XBYTE                                         y;                                                                          // '0' to disable y axis and '1' to enable y axis      
-  XBYTE                                         z;                                                                          // '0' to disable z axis and '1' to enable z axis     
-  XBYTE                                         sign;                                                                       // '0' for positive input and '1' for negative input 
+  XBYTE                                         x;
+  XBYTE                                         y;
+  XBYTE                                         z;
+  XBYTE                                         sign;
 };
-
 
 // Structure to configure activity recognition settings 
 struct bmi2_act_recg_sett
 {   
-  XBYTE                                         act_rec_1       : 1;                                                        // Activity recognition register 1 
-  XWORD                                         act_rec_2;                                                                  // Activity recognition register 2 
-  XWORD                                         act_rec_3;                                                                  // Activity recognition register 3 
-  XBYTE                                         act_rec_4       : 4;                                                        // Activity recognition register 4 
-  XBYTE                                         act_rec_5       : 4;                                                        // Activity recognition register 5 
+  XBYTE                                         act_rec_1       : 1;
+  XWORD                                         act_rec_2;
+  XWORD                                         act_rec_3;
+  XBYTE                                         act_rec_4       : 4;
+  XBYTE                                         act_rec_5       : 4;
 };
-
 
 // Structure to configure activity recognition settings for bmi270hc 
 struct bmi2_hc_act_recg_sett
 {    
-  XBYTE                                         segment_size;                                                               // Static segment size for activity classification. 
-  XBYTE                                         pp_en;                                                                      // Enable/Disable post processing of the activity detected   
-  XWORD                                         min_gdi_thres;                                                              // Minimum threshold of the Gini's diversity index (GDI)     
-  XWORD                                         max_gdi_thres;                                                              // Maximum threshold of the Gini's diversity index (GDI)     
-  XWORD                                         buf_size;                                                                   // Buffer size for post processing of the activity detected   
-  XWORD                                         min_seg_conf;                                                               // Minimum segments belonging to a certain activity type 
+  XBYTE                                         segment_size;
+  XBYTE                                         pp_en;
+  XWORD                                         min_gdi_thres;
+  XWORD                                         max_gdi_thres;
+  XWORD                                         buf_size;
+  XWORD                                         min_seg_conf;
 };
-
 
 // Local structures
 
 // Structure to define the difference in accelerometer values  
 struct bmi2_selftest_delta_limit
 {  
-  XDWORDSIG                                     x;                                                                          // X  data    
-  XDWORDSIG                                     y;                                                                          // Y  data     
-  XDWORDSIG                                     z;                                                                          // Z  data 
+  XDWORDSIG                                     x;
+  XDWORDSIG                                     y;
+  XDWORDSIG                                     z;
 };
-
 
 // Structure to store temporary accelerometer/gyroscope values 
 struct bmi2_foc_temp_value
 {   
-  XDWORDSIG                                     x;                                                                          // X data 
-  XDWORDSIG                                     y;                                                                          // Y data 
-  XDWORDSIG                                     z;                                                                          // Z data 
+  XDWORDSIG                                     x;
+  XDWORDSIG                                     y;
+  XDWORDSIG                                     z;
 };
 
 // Structure to store accelerometer data deviation from ideal value 
 struct bmi2_offset_delta
 {   
-  XWORDSIG                                      x;                                                                          // X axis     
-  XWORDSIG                                      y;                                                                          // Y axis   
-  XWORDSIG                                      z;                                                                          // Z axis 
+  XWORDSIG                                      x;
+  XWORDSIG                                      y;
+  XWORDSIG                                      z;
 };
 
 // Structure to store accelerometer offset values 
 struct bmi2_accel_offset
 {    
-  XBYTE                                         x;                                                                          // offset X data 
-  XBYTE                                         y;                                                                          // offset Y data 
-  XBYTE                                         z;                                                                          // offset Z data 
+  XBYTE                                         x;
+  XBYTE                                         y;
+  XBYTE                                         z;
 };
 
-
-
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
-
 
 class DIOI2C6AXISTRACKINGBMI270: public DIODEVICEI2C
 {
@@ -2138,13 +2102,13 @@ class DIOI2C6AXISTRACKINGBMI270: public DIODEVICEI2C
     XBYTESIG                  extract_accel_header_mode             (struct bmi2_sens_axes_data *acc, XWORD *accel_length, struct bmi2_fifo_frame *fifo, const struct bmi2_dev *dev);
     XBYTESIG                  unpack_accel_frame                    (struct bmi2_sens_axes_data *acc, XWORD *idx, XWORD *acc_idx, XBYTE frame, const struct bmi2_fifo_frame *fifo, const struct bmi2_dev *dev);
     void                      unpack_accel_data                     (struct bmi2_sens_axes_data *acc, XWORD data_start_index, const struct bmi2_fifo_frame *fifo, const struct bmi2_dev *dev);
-    XBYTESIG                  parse_fifo_gyro_len                   (XWORD *start_idx,XWORD(*len),const XWORD *gyr_count,const struct bmi2_fifo_frame *fifo);
+    XBYTESIG                  parse_fifo_gyro_len                   (XWORD *start_idx, XWORD(*len), const XWORD *gyr_count, const struct bmi2_fifo_frame *fifo);
     XBYTESIG                  extract_gyro_header_mode              (struct bmi2_sens_axes_data *gyr, XWORD *gyro_length, struct bmi2_fifo_frame *fifo, const struct bmi2_dev *dev);
     XBYTESIG                  unpack_gyro_frame                     (struct bmi2_sens_axes_data *gyr, XWORD *idx, XWORD *gyr_idx, XBYTE frame, const struct bmi2_fifo_frame *fifo, const struct bmi2_dev *dev);
     void                      unpack_gyro_data                      (struct bmi2_sens_axes_data *gyr, XWORD data_start_index, const struct bmi2_fifo_frame *fifo, const struct bmi2_dev *dev);
 
-    XBYTESIG                  parse_fifo_aux_len                    (XWORD *start_idx,XWORD(*len),const XWORD *aux_count,const struct bmi2_fifo_frame *fifo);
-    XBYTESIG                  extract_aux_header_mode               (struct bmi2_aux_fifo_data *aux,XWORD *aux_len,struct bmi2_fifo_frame *fifo,const struct bmi2_dev *dev);
+    XBYTESIG                  parse_fifo_aux_len                    (XWORD *start_idx, XWORD(*len), const XWORD *aux_count, const struct bmi2_fifo_frame *fifo);
+    XBYTESIG                  extract_aux_header_mode               (struct bmi2_aux_fifo_data *aux, XWORD *aux_len, struct bmi2_fifo_frame *fifo, const struct bmi2_dev *dev);
     XBYTESIG                  unpack_aux_frame                      (struct bmi2_aux_fifo_data *aux, XWORD *idx, XWORD *aux_idx, XBYTE frame, const struct bmi2_fifo_frame *fifo, const struct bmi2_dev *dev);
     void                      unpack_aux_data                       (struct bmi2_aux_fifo_data *aux, XWORD data_start_index, const struct bmi2_fifo_frame *fifo);
     void                      parse_if_virtual_header               (XBYTE *frame_header, XWORD *data_index, const struct bmi2_fifo_frame *fifo);

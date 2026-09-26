@@ -33,7 +33,6 @@
 #include "CompressBase.h"
 
 
-
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
 
 
@@ -49,15 +48,15 @@ class COMPRESS_ZIP : public COMPRESSBASE
                             COMPRESS_ZIP          ();
     virtual                ~COMPRESS_ZIP          ();
 
-    bool                    Compress              (XBYTE* source,XDWORD size,XBUFFER* buffer);
-    bool                    Decompress            (XBYTE* source,XDWORD size,XBUFFER* buffer);
+    bool                    Compress              (XBYTE* source, XDWORD size, XBUFFER* buffer);
+    bool                    Decompress            (XBYTE* source, XDWORD size, XBUFFER* buffer);
 
   private:
 
     void                    Clean                 ();
 
-    int                     ZCompress             (XBYTE* target,XDWORD* targetsize,XBYTE* source,XDWORD sourcesize);
-    int                     ZDecompress           (XBYTE* target,XDWORD* targetsize,XBYTE* source,XDWORD sourcesize);
+    int                     ZCompress             (XBYTE* target, XDWORD* targetsize, XBYTE* source, XDWORD sourcesize);
+    int                     ZDecompress           (XBYTE* target, XDWORD* targetsize, XBYTE* source, XDWORD sourcesize);
 };
 
 

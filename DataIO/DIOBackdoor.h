@@ -46,14 +46,10 @@
 #include "DIOStreamTCPIPConfig.h"
 #include "DIOWebClient.h"
 
-
-
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
 
 #define DIOBACKDOOR_CFGREMOTENAMEFILE       __L("backdoor.ini")
 #define DIOBACKDOOR_DEFAULTPORT             3540
-
-
 
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
 
@@ -85,7 +81,6 @@ class DIOBACKDOOR
 
                                       return false;
                                     }
-
 
     XSTRING*                      GetURLTarget          ()                                                { return &URLtarget;                                            }
     XDWORD                        GetPort               ()                                                { return port;                                                  }
@@ -161,7 +156,6 @@ class DIOBACKDOOR
                                                                               }
                                                                           }
 
-
                                                                         if(validaccess)
                                                                           {
 
@@ -199,7 +193,7 @@ class DIOBACKDOOR
                                     return DownloadCFG(URL.Get(), publicIP, localIP);
                                   }
 
-    bool                          DownloadCFG           (DIOURL&  URL, XSTRING& publicIP, XSTRING& localIP)
+    bool                          DownloadCFG           (DIOURL& URL, XSTRING& publicIP, XSTRING& localIP)
                                   {
                                     return DownloadCFG(URL.Get(), publicIP, localIP);
                                   }
@@ -222,12 +216,11 @@ class DIOBACKDOOR
                                         if(!diostream->WaitToConnected(10)) return false;
                                       }
 
-                                    xthreadconnection = CREATEXTHREAD(XTHREADGROUPID_UNGROUP,__L("DIOBACKDOOR::DIOBACKDOOR"), ThreadRunFunction, (void*)this);
+                                    xthreadconnection = CREATEXTHREAD(XTHREADGROUPID_UNGROUP, __L("DIOBACKDOOR::DIOBACKDOOR"), ThreadRunFunction, (void*)this);
                                     if(xthreadconnection) xthreadconnection->Ini();
 
                                     return true;
                                   }
-
 
     bool                          DeActivateServer      ()
                                   {
@@ -252,7 +245,6 @@ class DIOBACKDOOR
                                     return status;
                                   }
 
-
     bool                          IsRunning             ()
                                   {
                                     bool status = false;
@@ -261,8 +253,6 @@ class DIOBACKDOOR
 
                                     return diostream->IsConnected();
                                   }
-
-
 
   private:
                                   DIOBACKDOOR           ()

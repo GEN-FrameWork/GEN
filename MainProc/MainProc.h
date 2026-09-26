@@ -67,8 +67,6 @@ typedef bool (*MAIN_FUNCTION_TYPE)(MAINPROC* main);
 #define MAIN_FUNCTION_PLATFORMEND   NULL
 #endif
 
-
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
 
 class XSTRING;
@@ -92,7 +90,6 @@ class MAINPROC
     bool                          CreateParams            (int nparams, XCHAR* params[]);
     bool                          CreateParams            (int nparams, XCHAR* params);
     bool                          CreateParams            (XCHAR* commandline);
-
 
     XVECTOR<XSTRING*>*            GetExecParams           ();
     bool                          DeleteAllExecParams     ();

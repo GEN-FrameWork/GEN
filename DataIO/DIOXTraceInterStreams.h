@@ -32,8 +32,6 @@
 
 #include "XTrace.h"
 
-
-
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
 
 #define DIOXTRACEINTERSTREAMS_LOGSECTIONID    __L("Debug")

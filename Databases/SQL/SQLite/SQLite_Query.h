@@ -36,7 +36,6 @@
 #define SQLITE_CORE
 #endif
 
-
 /*---- INCLUDES ------------------------------------------------------------------------------------------------------*/
 
 #include <sqlite3.h>
@@ -45,15 +44,9 @@
 #include "DB_SQL_Database.h"
 #include "SQLite_Result.h"
 
-
-
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
 
-
-
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
-
 
 class SQLITE_QUERY : public DB_SQL_QUERY
 {
@@ -81,7 +74,7 @@ class SQLITE_QUERY : public DB_SQL_QUERY
     virtual DB_SQL_RESULT*  ConstructResult           ();
     virtual bool            BindParametersToQuery     ();
 
-    int                     Exec                      (const char* zsql,XDWORD size);
+    int                     Exec                      (const char* zsql, XDWORD size);
 
     sqlite3_stmt*           ppstmt;
 

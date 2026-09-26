@@ -34,27 +34,19 @@
 
 #include "GRPScreen.h"
 
-
 #ifdef GRP_OPENGL_ACTIVE
 class GRPANDROIDBLITGLES;
 #endif
 
-
-
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
 
-
-
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
-
 
 class GRPANDROIDSCREEN : public GRPSCREEN
 {
   public:
                                           GRPANDROIDSCREEN            ();
     virtual                              ~GRPANDROIDSCREEN            ();
-
 
     bool                                  Create                      (bool show);
 

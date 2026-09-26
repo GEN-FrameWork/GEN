@@ -34,8 +34,6 @@
 #include "XSubject.h"
 #include "XDriveImageManager.h"
 
-
-
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
 
 enum XDRIVEIMAGEMANAGER_XEVENT_TYPE
@@ -47,8 +45,6 @@ enum XDRIVEIMAGEMANAGER_XEVENT_TYPE
   XDRIVEIMAGEMANAGER_XEVENT_TYPE_READTOIMGFILE                                    ,
   XDRIVEIMAGEMANAGER_XEVENT_TYPE_WRITEFROMIMGFILE
 };
-
-
 
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
 

@@ -50,8 +50,6 @@ enum XFILEXMLELEMENTTYPE
   XFILEXMLELEMENTTYPE_NORMAL            ,
 };
 
-
-
 enum XFILEXMLELEMENTTYPELINE
 {
   XFILEXMLELEMENTTYPELINE_UNKNOWN   = 0 ,
@@ -62,8 +60,6 @@ enum XFILEXMLELEMENTTYPELINE
 
 #define XFILEXML_SPACETABS      2
 
-
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
 
 class XFILEXMLATTRIBUTE
@@ -72,8 +68,8 @@ class XFILEXMLATTRIBUTE
                                     XFILEXMLATTRIBUTE           ();
                                     XFILEXMLATTRIBUTE           (XSTRING& name);
                                     XFILEXMLATTRIBUTE           (XCHAR* name);
-                                    XFILEXMLATTRIBUTE           (XSTRING& name,XSTRING& value);
-                                    XFILEXMLATTRIBUTE           (XCHAR* name,XCHAR* value);
+                                    XFILEXMLATTRIBUTE           (XSTRING& name, XSTRING& value);
+                                    XFILEXMLATTRIBUTE           (XCHAR* name, XCHAR* value);
     virtual                        ~XFILEXMLATTRIBUTE           ();
 
     XSTRING&                        GetName                     ();
@@ -92,23 +88,22 @@ class XFILEXMLATTRIBUTE
     XSTRING                         value;
 };
 
-
 class XFILEXMLELEMENT
 {
   public:
                                     XFILEXMLELEMENT             ();
-                                    XFILEXMLELEMENT             (XSTRING& name,XFILEXMLELEMENTTYPE type = XFILEXMLELEMENTTYPE_NORMAL);
-                                    XFILEXMLELEMENT             (XCHAR* name,XFILEXMLELEMENTTYPE type = XFILEXMLELEMENTTYPE_NORMAL);
-                                    XFILEXMLELEMENT             (XSTRING& name,XSTRING& value,XFILEXMLELEMENTTYPE type = XFILEXMLELEMENTTYPE_NORMAL);
-                                    XFILEXMLELEMENT             (XCHAR* name,XCHAR* value,XFILEXMLELEMENTTYPE type = XFILEXMLELEMENTTYPE_NORMAL);
+                                    XFILEXMLELEMENT             (XSTRING& name, XFILEXMLELEMENTTYPE type = XFILEXMLELEMENTTYPE_NORMAL);
+                                    XFILEXMLELEMENT             (XCHAR* name, XFILEXMLELEMENTTYPE type = XFILEXMLELEMENTTYPE_NORMAL);
+                                    XFILEXMLELEMENT             (XSTRING& name, XSTRING& value, XFILEXMLELEMENTTYPE type = XFILEXMLELEMENTTYPE_NORMAL);
+                                    XFILEXMLELEMENT             (XCHAR* name, XCHAR* value, XFILEXMLELEMENTTYPE type = XFILEXMLELEMENTTYPE_NORMAL);
     virtual                        ~XFILEXMLELEMENT             ();
 
     XSTRING&                        GetName                     ();
     bool                            SetName                     (XSTRING& name);
     bool                            SetName                     (XCHAR* name);
 
-    XFILEXMLATTRIBUTE*              AddAtribute                 (XSTRING& name,XSTRING& value);
-    XFILEXMLATTRIBUTE*              AddAtribute                 (XCHAR* name,XCHAR* value);
+    XFILEXMLATTRIBUTE*              AddAtribute                 (XSTRING& name, XSTRING& value);
+    XFILEXMLATTRIBUTE*              AddAtribute                 (XCHAR* name, XCHAR* value);
 
     int                             GetNAttributes              ();
 
@@ -116,7 +111,7 @@ class XFILEXMLELEMENT
     XCHAR*                          GetValueAttribute           (XSTRING& name);
     XCHAR*                          GetValueAttribute           (XCHAR* name);
     bool                            GetValueAttribute           (XSTRING& name, XSTRING& value);
-    bool                            GetValueAttribute           (XCHAR* name, XSTRING&  value);
+    bool                            GetValueAttribute           (XCHAR* name, XSTRING& value);
     int                             GetIntValueAttribute        (XSTRING& name);
     int                             GetIntValueAttribute        (XCHAR* name);
     bool                            GetBoolValueAttribute       (XCHAR* name);
@@ -132,8 +127,8 @@ class XFILEXMLELEMENT
     XFILEXMLELEMENT*                AddElement                  ();
     XFILEXMLELEMENT*                AddElement                  (XSTRING& name);
     XFILEXMLELEMENT*                AddElement                  (XCHAR* name);
-    XFILEXMLELEMENT*                AddElement                  (XSTRING& name,XSTRING& value);
-    XFILEXMLELEMENT*                AddElement                  (XCHAR* name,XCHAR* value);
+    XFILEXMLELEMENT*                AddElement                  (XSTRING& name, XSTRING& value);
+    XFILEXMLELEMENT*                AddElement                  (XCHAR* name, XCHAR* value);
     int                             GetNElements                ();
     XFILEXMLELEMENT*                GetElement                  (int index);
     bool                            DeleteElement               (int index);
@@ -157,7 +152,6 @@ class XFILEXMLELEMENT
     XVECTOR<XFILEXMLELEMENT*>       elements;
 };
 
-
 class XFILEXML : public XFILETXT
 {
   public:
@@ -171,18 +165,18 @@ class XFILEXML : public XFILETXT
     virtual bool                    EncodeAllLines              (bool istabulatedline = true);
 
     virtual bool                    ReadAndDecodeAllLines       ();
-    bool                            WriteAndEncodeAllLines      (bool istabulatedline, XFILETXTFORMATCHAR formatchar, XFILETXTTYPELF  typeLF = XFILETXTTYPELF_0D0A);
+    bool                            WriteAndEncodeAllLines      (bool istabulatedline, XFILETXTFORMATCHAR formatchar, XFILETXTTYPELF typeLF = XFILETXTTYPELF_0D0A);
     bool                            WriteAndEncodeAllLines      (bool istabulatedline = true);
 
     XFILEXMLELEMENT*                SearchChild                 (XCHAR* name, XFILEXMLELEMENT* father = NULL);
 
     XFILEXMLELEMENT*                SearchElement               (XSTRING& name, int& index, XFILEXMLELEMENT* father = NULL);
-    XFILEXMLELEMENT*                SearchElement               (XCHAR*   name, int& index, XFILEXMLELEMENT* father = NULL);
-    XFILEXMLELEMENT*                SearchElement               (XCHAR*   name, int& index, XSTRING& namefather);
-    XFILEXMLELEMENT*                SearchElement               (XCHAR*   name, int& index, XCHAR* namefather);
+    XFILEXMLELEMENT*                SearchElement               (XCHAR* name, int& index, XFILEXMLELEMENT* father = NULL);
+    XFILEXMLELEMENT*                SearchElement               (XCHAR* name, int& index, XSTRING& namefather);
+    XFILEXMLELEMENT*                SearchElement               (XCHAR* name, int& index, XCHAR* namefather);
 
-    bool                            SearchAttributeValue        (XFILEXMLELEMENT* element,XSTRING& nameattribute,XSTRING& value);
-    bool                            SearchAttributeValue        (XFILEXMLELEMENT* element,XCHAR* nameattribute,XSTRING& value);
+    bool                            SearchAttributeValue        (XFILEXMLELEMENT* element, XSTRING& nameattribute, XSTRING& value);
+    bool                            SearchAttributeValue        (XFILEXMLELEMENT* element, XCHAR* nameattribute, XSTRING& value);
 
     XVECTOR<XFILEXMLATTRIBUTE*>*    GetCFGAtributes             ();
 
@@ -193,14 +187,14 @@ class XFILEXML : public XFILETXT
 
 protected:
 
-    int                             DecodeLine                  (XSTRING& string,bool iselement);
+    int                             DecodeLine                  (XSTRING& string, bool iselement);
 
     bool                            DecodeConfig                (XSTRING& string);
     bool                            DecodeComent                (XSTRING& string);
     bool                            DecodeCDATA                 (XSTRING& string);
-    bool                            DecodeElement               (XSTRING& string,XFILEXMLELEMENTTYPELINE typeline);
+    bool                            DecodeElement               (XSTRING& string, XFILEXMLELEMENTTYPELINE typeline);
 
-    bool                            AddTabs                     (int level,int spacetabs,XSTRING& string);
+    bool                            AddTabs                     (int level, int spacetabs, XSTRING& string);
 
     bool                            EncodeConfig                (XSTRING& string);
     bool                            EncodeElements              (bool istabulatedline, XFILEXMLELEMENT* element);

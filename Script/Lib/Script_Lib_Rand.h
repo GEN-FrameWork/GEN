@@ -32,8 +32,6 @@
 
 #include "Script_Lib.h"
 
-
-
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
 
 #define SCRIPT_LIB_NAME_RANDOM  __L("Random")

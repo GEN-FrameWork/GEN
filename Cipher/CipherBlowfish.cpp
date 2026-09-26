@@ -61,7 +61,7 @@
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         define PUT_UINT32_BE(n,b,i)
+* @fn         define PUT_UINT32_BE(n, b, i)
 * @brief      PUT UINT32 BE
 * @ingroup    CIPHER
 * 
@@ -382,7 +382,7 @@ CIPHERBLOWFISH::~CIPHERBLOWFISH()
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         bool CIPHERBLOWFISH::Cipher(XBYTE* input,XDWORD size)
+* @fn         bool CIPHERBLOWFISH::Cipher(XBYTE* input, XDWORD size)
 * @brief      Cipher
 * @ingroup    CIPHER
 * 
@@ -392,7 +392,7 @@ CIPHERBLOWFISH::~CIPHERBLOWFISH()
 * @return     bool : true if the operation is successful; otherwise false.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-bool CIPHERBLOWFISH::Cipher(XBYTE* input,XDWORD size)
+bool CIPHERBLOWFISH::Cipher(XBYTE* input, XDWORD size)
 {
   if(!size) return false;
 
@@ -421,10 +421,10 @@ bool CIPHERBLOWFISH::Cipher(XBYTE* input,XDWORD size)
   bool  status  = false;
   int   offset  = 0;
 
-  memset(stream_block  ,0 , 16);
-  memset(nonce_counter ,0 , 16);
+  memset(stream_block, 0, 16);
+  memset(nonce_counter, 0, 16);
 
-  memcpy(nonce_counter,iv,16);
+  memcpy(nonce_counter, iv, 16);
 
   switch(this->GetChainingMode())
     {
@@ -432,13 +432,13 @@ bool CIPHERBLOWFISH::Cipher(XBYTE* input,XDWORD size)
       case CIPHERCHAININGMODE_ECB     : status =false;
                                         break;
 
-      case CIPHERCHAININGMODE_CBC     : status = BlowfishCipher_CBC(&ctx, CIPHERBLOWFISH_ENCRYPT , result->GetSize(), iv, inputpadding.Get(),  result->Get());
+      case CIPHERCHAININGMODE_CBC     : status = BlowfishCipher_CBC(&ctx, CIPHERBLOWFISH_ENCRYPT, result->GetSize(), iv, inputpadding.Get(), result->Get());
                                         break;
 
-      case CIPHERCHAININGMODE_CFB     : status = BlowfishCipher_CFB64(&ctx, CIPHERBLOWFISH_ENCRYPT , result->GetSize(), &offset, iv, inputpadding.Get(),  result->Get());
+      case CIPHERCHAININGMODE_CFB     : status = BlowfishCipher_CFB64(&ctx, CIPHERBLOWFISH_ENCRYPT, result->GetSize(), &offset, iv, inputpadding.Get(), result->Get());
                                         break;
 
-      case CIPHERCHAININGMODE_CTR     : status = BlowfishCipher_CTR(&ctx, result->GetSize(), &offset, nonce_counter, stream_block, inputpadding.Get(),  result->Get());
+      case CIPHERCHAININGMODE_CTR     : status = BlowfishCipher_CTR(&ctx, result->GetSize(), &offset, nonce_counter, stream_block, inputpadding.Get(), result->Get());
                                         break;
 
       case CIPHERCHAININGMODE_GCM     :                                             // Not applicable to this cipher
@@ -452,7 +452,7 @@ bool CIPHERBLOWFISH::Cipher(XBYTE* input,XDWORD size)
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         bool CIPHERBLOWFISH::Uncipher(XBYTE* input,XDWORD size)
+* @fn         bool CIPHERBLOWFISH::Uncipher(XBYTE* input, XDWORD size)
 * @brief      Uncipher
 * @ingroup    CIPHER
 * 
@@ -462,14 +462,14 @@ bool CIPHERBLOWFISH::Cipher(XBYTE* input,XDWORD size)
 * @return     bool : true if the operation is successful; otherwise false.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-bool CIPHERBLOWFISH::Uncipher(XBYTE* input,XDWORD size)
+bool CIPHERBLOWFISH::Uncipher(XBYTE* input, XDWORD size)
 {
   if(!size) return false;
 
   CIPHERBLOWFISH_CONTEXT  ctx;
   XBYTE                   iv[16];
 
-  memset(iv,0,16);
+  memset(iv, 0, 16);
   if(inivector && inivector->GetSize()>=8) memcpy(iv, inivector->Get(), 16);
 
   result->Delete();
@@ -486,8 +486,8 @@ bool CIPHERBLOWFISH::Uncipher(XBYTE* input,XDWORD size)
   bool  status  = false;
   int   offset  = 0;
 
-  memset(stream_block  ,0 , 16);
-  memset(nonce_counter ,0 , 16);
+  memset(stream_block, 0, 16);
+  memset(nonce_counter, 0, 16);
 
   switch(this->GetChainingMode())
     {
@@ -495,13 +495,13 @@ bool CIPHERBLOWFISH::Uncipher(XBYTE* input,XDWORD size)
       case CIPHERCHAININGMODE_ECB     : status =false;
                                         break;
 
-      case CIPHERCHAININGMODE_CBC     : status = BlowfishCipher_CBC(&ctx, CIPHERBLOWFISH_DECRYPT , size, iv, input,  result->Get());
+      case CIPHERCHAININGMODE_CBC     : status = BlowfishCipher_CBC(&ctx, CIPHERBLOWFISH_DECRYPT, size, iv, input, result->Get());
                                         break;
 
-      case CIPHERCHAININGMODE_CFB     : status = BlowfishCipher_CFB64(&ctx, CIPHERBLOWFISH_DECRYPT , size, &offset, iv, input,  result->Get());
+      case CIPHERCHAININGMODE_CFB     : status = BlowfishCipher_CFB64(&ctx, CIPHERBLOWFISH_DECRYPT, size, &offset, iv, input, result->Get());
                                         break;
 
-      case CIPHERCHAININGMODE_CTR     : status = BlowfishCipher_CTR(&ctx, size, &offset, nonce_counter, stream_block, input,  result->Get());
+      case CIPHERCHAININGMODE_CTR     : status = BlowfishCipher_CTR(&ctx, size, &offset, nonce_counter, stream_block, input, result->Get());
                                         break;
 
       case CIPHERCHAININGMODE_GCM     :                                             // Not applicable to this cipher
@@ -726,8 +726,8 @@ bool CIPHERBLOWFISH::BlowfishCipher_ECB(CIPHERBLOWFISH_CONTEXT* ctx, int mode, X
   XDWORD X0;
   XDWORD X1;
 
-  GET_UINT32_BE( X0, input,  0 );
-  GET_UINT32_BE( X1, input,  4 );
+  GET_UINT32_BE(X0, input, 0);
+  GET_UINT32_BE(X1, input, 4);
 
   if(mode == CIPHERBLOWFISH_DECRYPT)
     {
@@ -738,8 +738,8 @@ bool CIPHERBLOWFISH::BlowfishCipher_ECB(CIPHERBLOWFISH_CONTEXT* ctx, int mode, X
       BlowfishCipher(ctx, &X0, &X1);
     }
 
-  PUT_UINT32_BE( X0, output,  0 );
-  PUT_UINT32_BE( X1, output,  4 );
+  PUT_UINT32_BE(X0, output, 0);
+  PUT_UINT32_BE(X1, output, 4);
 
   return true;
 }

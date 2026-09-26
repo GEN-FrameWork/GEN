@@ -45,13 +45,10 @@
 #include "DIOStreamTLS12Record.h"
 
 
-
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
-
 
 #define DIOSTREAMTLS12SESSION_MAXHANDSHAKESIZE                  DIOSTREAMTLS_MSG_MAXHANDSHAKESIZE
 #define DIOSTREAMTLS12SESSION_MAXRECORDINPUTSIZE                (4*1024*1024)
-
 
 enum DIOSTREAMTLS12SESSION_RESULT
 {
@@ -62,11 +59,7 @@ enum DIOSTREAMTLS12SESSION_RESULT
 
 class DIOSTREAMTLSMEMORYPOLICY;
 
-
-
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
-
 
 class DIOSTREAMTLS12SESSION
 {
@@ -88,9 +81,6 @@ class DIOSTREAMTLS12SESSION
     bool                                    KeyExchange_SharedSecret                          (XWORD group, XBUFFER& publickey, XBUFFER& sharedsecret);
     void                                    KeyExchange_Delete                                ();
 
-    
-    
-    
     bool                                    Keys_Activate                                     (XBUFFER& premastersecret, XBUFFER& clientrandom, XBUFFER& serverrandom, XBUFFER* sessionhash = NULL);
 
     XBUFFER*                                GetRecordInput                                    ();
@@ -108,8 +98,6 @@ class DIOSTREAMTLS12SESSION
     bool                                    Transcript_Add                                   (XBUFFER& message);
     bool                                    TranscriptHash                                   (XBUFFER& transcripthash);
 
-    
-    
     XBUFFER*                                GetApplicationInput                              ();
     bool                                    ApplicationData_CanProtect                       (XDWORD size);
     bool                                    ApplicationData_Protect                          (XBYTE* data, XDWORD size, XBUFFER& records);

@@ -188,10 +188,7 @@ bool GRPEGLCONTEXT::ChooseConfig(EGLNativeDisplayType native_display, bool with_
   eglGetError();
   display = eglGetDisplay(EGL_DEFAULT_DISPLAY);
   err     = eglGetError();
-  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE,
-    __L("[EGL] (Android) eglGetDisplay(EGL_DEFAULT_DISPLAY) -> %s (err=%s)"),
-    (display != EGL_NO_DISPLAY) ? __L("OK") : __L("NO_DISPLAY"),
-    EGLErrorToString(err));
+  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, __L("[EGL] (Android) eglGetDisplay(EGL_DEFAULT_DISPLAY) -> %s (err=%s)"), (display != EGL_NO_DISPLAY) ? __L("OK") : __L("NO_DISPLAY"), EGLErrorToString(err));
 
 #else
 
@@ -212,11 +209,7 @@ bool GRPEGLCONTEXT::ChooseConfig(EGLNativeDisplayType native_display, bool with_
           eglGetError();  // clear any previous error
           display = fn(EGL_PLATFORM_X11_KHR, (void*)native_display, NULL);
           err     = eglGetError();
-          XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE,
-            __L("[EGL] (1) eglGetPlatformDisplay(X11_KHR, native=0x%lx) -> %s (err=%s)"),
-            (long long)(uintptr_t)native_display,
-            (display != EGL_NO_DISPLAY) ? __L("OK") : __L("NO_DISPLAY"),
-            EGLErrorToString(err));
+          XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, __L("[EGL] (1) eglGetPlatformDisplay(X11_KHR, native=0x%lx) -> %s (err=%s)"), (long long)(uintptr_t)native_display, (display != EGL_NO_DISPLAY) ? __L("OK") : __L("NO_DISPLAY"), EGLErrorToString(err));
         }
        else
         {
@@ -245,11 +238,7 @@ bool GRPEGLCONTEXT::ChooseConfig(EGLNativeDisplayType native_display, bool with_
           eglGetError();  // clear any previous error
           display = fn(EGL_PLATFORM_WAYLAND_KHR, (void*)native_display, NULL);
           err     = eglGetError();
-          XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE,
-            __L("[EGL] (1b) eglGetPlatformDisplay(WAYLAND_KHR, native=0x%lx) -> %s (err=%s)"),
-            (long long)(uintptr_t)native_display,
-            (display != EGL_NO_DISPLAY) ? __L("OK") : __L("NO_DISPLAY"),
-            EGLErrorToString(err));
+          XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, __L("[EGL] (1b) eglGetPlatformDisplay(WAYLAND_KHR, native=0x%lx) -> %s (err=%s)"), (long long)(uintptr_t)native_display, (display != EGL_NO_DISPLAY) ? __L("OK") : __L("NO_DISPLAY"), EGLErrorToString(err));
         }
        else
         {
@@ -271,11 +260,7 @@ bool GRPEGLCONTEXT::ChooseConfig(EGLNativeDisplayType native_display, bool with_
           eglGetError();
           display = fn(EGL_PLATFORM_X11_EXT, (void*)native_display, NULL);
           err     = eglGetError();
-          XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE,
-            __L("[EGL] (2) eglGetPlatformDisplayEXT(X11_EXT, native=0x%lx) -> %s (err=%s)"),
-            (long long)(uintptr_t)native_display,
-            (display != EGL_NO_DISPLAY) ? __L("OK") : __L("NO_DISPLAY"),
-            EGLErrorToString(err));
+          XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, __L("[EGL] (2) eglGetPlatformDisplayEXT(X11_EXT, native=0x%lx) -> %s (err=%s)"), (long long)(uintptr_t)native_display, (display != EGL_NO_DISPLAY) ? __L("OK") : __L("NO_DISPLAY"), EGLErrorToString(err));
         }
        else
         {
@@ -298,11 +283,7 @@ bool GRPEGLCONTEXT::ChooseConfig(EGLNativeDisplayType native_display, bool with_
           eglGetError();
           display = fn(EGL_PLATFORM_WAYLAND_EXT, (void*)native_display, NULL);
           err     = eglGetError();
-          XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE,
-            __L("[EGL] (2c) eglGetPlatformDisplayEXT(WAYLAND_EXT, native=0x%lx) -> %s (err=%s)"),
-            (long long)(uintptr_t)native_display,
-            (display != EGL_NO_DISPLAY) ? __L("OK") : __L("NO_DISPLAY"),
-            EGLErrorToString(err));
+          XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, __L("[EGL] (2c) eglGetPlatformDisplayEXT(WAYLAND_EXT, native=0x%lx) -> %s (err=%s)"), (long long)(uintptr_t)native_display, (display != EGL_NO_DISPLAY) ? __L("OK") : __L("NO_DISPLAY"), EGLErrorToString(err));
         }
        else
         {
@@ -319,11 +300,7 @@ bool GRPEGLCONTEXT::ChooseConfig(EGLNativeDisplayType native_display, bool with_
       eglGetError();
       display = eglGetDisplay(native_display);
       err     = eglGetError();
-      XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE,
-        __L("[EGL] (3) eglGetDisplay(native=0x%lx) -> %s (err=%s)"),
-        (long long)(uintptr_t)native_display,
-        (display != EGL_NO_DISPLAY) ? __L("OK") : __L("NO_DISPLAY"),
-        EGLErrorToString(err));
+      XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, __L("[EGL] (3) eglGetDisplay(native=0x%lx) -> %s (err=%s)"), (long long)(uintptr_t)native_display, (display != EGL_NO_DISPLAY) ? __L("OK") : __L("NO_DISPLAY"), EGLErrorToString(err));
     }
 
   // Attempt 4 - last resort, EGL_DEFAULT_DISPLAY
@@ -332,10 +309,7 @@ bool GRPEGLCONTEXT::ChooseConfig(EGLNativeDisplayType native_display, bool with_
       eglGetError();
       display = eglGetDisplay(EGL_DEFAULT_DISPLAY);
       err     = eglGetError();
-      XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE,
-        __L("[EGL] (4) eglGetDisplay(EGL_DEFAULT_DISPLAY) -> %s (err=%s)"),
-        (display != EGL_NO_DISPLAY) ? __L("OK") : __L("NO_DISPLAY"),
-        EGLErrorToString(err));
+      XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, __L("[EGL] (4) eglGetDisplay(EGL_DEFAULT_DISPLAY) -> %s (err=%s)"), (display != EGL_NO_DISPLAY) ? __L("OK") : __L("NO_DISPLAY"), EGLErrorToString(err));
     }
 
   // Attempt 5 - ANGLE platform via EGL_EXT_platform_base.
@@ -357,10 +331,7 @@ bool GRPEGLCONTEXT::ChooseConfig(EGLNativeDisplayType native_display, bool with_
           eglGetError();
           display = fn((EGLenum)EGL_PLATFORM_ANGLE_ANGLE, EGL_DEFAULT_DISPLAY, angle_attribs);
           err     = eglGetError();
-          XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE,
-            __L("[EGL] (5) eglGetPlatformDisplayEXT(ANGLE_ANGLE, type=DEFAULT) -> %s (err=%s)"),
-            (display != EGL_NO_DISPLAY) ? __L("OK") : __L("NO_DISPLAY"),
-            EGLErrorToString(err));
+          XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, __L("[EGL] (5) eglGetPlatformDisplayEXT(ANGLE_ANGLE, type=DEFAULT) -> %s (err=%s)"), (display != EGL_NO_DISPLAY) ? __L("OK") : __L("NO_DISPLAY"), EGLErrorToString(err));
 
           // If DEFAULT didn't work, ask explicitly for the OpenGL backend.
           if(display == EGL_NO_DISPLAY)
@@ -372,10 +343,7 @@ bool GRPEGLCONTEXT::ChooseConfig(EGLNativeDisplayType native_display, bool with_
               eglGetError();
               display = fn((EGLenum)EGL_PLATFORM_ANGLE_ANGLE, EGL_DEFAULT_DISPLAY, angle_attribs_gl);
               err     = eglGetError();
-              XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE,
-                __L("[EGL] (5b) eglGetPlatformDisplayEXT(ANGLE_ANGLE, type=OPENGL) -> %s (err=%s)"),
-                (display != EGL_NO_DISPLAY) ? __L("OK") : __L("NO_DISPLAY"),
-                EGLErrorToString(err));
+              XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, __L("[EGL] (5b) eglGetPlatformDisplayEXT(ANGLE_ANGLE, type=OPENGL) -> %s (err=%s)"), (display != EGL_NO_DISPLAY) ? __L("OK") : __L("NO_DISPLAY"), EGLErrorToString(err));
             }
         }
     }
@@ -399,8 +367,7 @@ bool GRPEGLCONTEXT::ChooseConfig(EGLNativeDisplayType native_display, bool with_
   EGLint major = 0, minor = 0;
   if(eglInitialize(display, &major, &minor) != EGL_TRUE)
     {
-      XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, __L("[EGL] eglInitialize failed: %s"),
-                                          EGLErrorToString(eglGetError()));
+      XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, __L("[EGL] eglInitialize failed: %s"), EGLErrorToString(eglGetError()));
       display = EGL_NO_DISPLAY;
       return false;
     }
@@ -422,15 +389,13 @@ bool GRPEGLCONTEXT::ChooseConfig(EGLNativeDisplayType native_display, bool with_
   EGLint nconfig = 0;
   if(eglChooseConfig(display, config_attribs, &config, 1, &nconfig) != EGL_TRUE || nconfig <= 0)
     {
-      XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, __L("[EGL] eglChooseConfig (ES3) failed: %s"),
-                                          EGLErrorToString(eglGetError()));
+      XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, __L("[EGL] eglChooseConfig (ES3) failed: %s"), EGLErrorToString(eglGetError()));
       return false;
     }
 
   if(eglGetConfigAttrib(display, config, EGL_NATIVE_VISUAL_ID, &out_native_visual_id) != EGL_TRUE)
     {
-      XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, __L("[EGL] eglGetConfigAttrib EGL_NATIVE_VISUAL_ID failed: %s"),
-                                          EGLErrorToString(eglGetError()));
+      XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, __L("[EGL] eglGetConfigAttrib EGL_NATIVE_VISUAL_ID failed: %s"), EGLErrorToString(eglGetError()));
       return false;
     }
 
@@ -461,16 +426,14 @@ bool GRPEGLCONTEXT::Create(EGLNativeDisplayType native_display, EGLNativeWindowT
 
   if(eglBindAPI(EGL_OPENGL_ES_API) != EGL_TRUE)
     {
-      XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, __L("[EGL] eglBindAPI(EGL_OPENGL_ES_API) failed: %s"),
-                                          EGLErrorToString(eglGetError()));
+      XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, __L("[EGL] eglBindAPI(EGL_OPENGL_ES_API) failed: %s"), EGLErrorToString(eglGetError()));
       return false;
     }
 
   surface = eglCreateWindowSurface(display, config, native_window, NULL);
   if(surface == EGL_NO_SURFACE)
     {
-      XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, __L("[EGL] eglCreateWindowSurface failed: %s"),
-                                          EGLErrorToString(eglGetError()));
+      XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, __L("[EGL] eglCreateWindowSurface failed: %s"), EGLErrorToString(eglGetError()));
       return false;
     }
 
@@ -478,16 +441,14 @@ bool GRPEGLCONTEXT::Create(EGLNativeDisplayType native_display, EGLNativeWindowT
   context = eglCreateContext(display, config, EGL_NO_CONTEXT, context_attribs_es3);
   if(context == EGL_NO_CONTEXT)
     {
-      XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, __L("[EGL] eglCreateContext(ES3) failed (%s); trying ES2 fallback"),
-                                          EGLErrorToString(eglGetError()));
+      XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, __L("[EGL] eglCreateContext(ES3) failed (%s); trying ES2 fallback"), EGLErrorToString(eglGetError()));
 
       // Fallback to ES2 (should rarely happen on the target platforms but keep it as a safety net)
       const EGLint context_attribs_es2[] = { EGL_CONTEXT_CLIENT_VERSION, 2, EGL_NONE };
       context = eglCreateContext(display, config, EGL_NO_CONTEXT, context_attribs_es2);
       if(context == EGL_NO_CONTEXT)
         {
-          XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, __L("[EGL] eglCreateContext(ES2) fallback failed: %s"),
-                                              EGLErrorToString(eglGetError()));
+          XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, __L("[EGL] eglCreateContext(ES2) fallback failed: %s"), EGLErrorToString(eglGetError()));
           eglDestroySurface(display, surface);
           surface = EGL_NO_SURFACE;
           return false;
@@ -534,16 +495,14 @@ bool GRPEGLCONTEXT::RecreateSurface(EGLNativeWindowType native_window)
   surface = eglCreateWindowSurface(display, config, native_window, NULL);
   if(surface == EGL_NO_SURFACE)
     {
-      XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, __L("[EGL] RecreateSurface: eglCreateWindowSurface failed: %s"),
-                                          EGLErrorToString(eglGetError()));
+      XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, __L("[EGL] RecreateSurface: eglCreateWindowSurface failed: %s"), EGLErrorToString(eglGetError()));
       isvalid = false;
       return false;
     }
 
   if(eglMakeCurrent(display, surface, surface, context) != EGL_TRUE)
     {
-      XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, __L("[EGL] RecreateSurface: eglMakeCurrent failed: %s"),
-                                          EGLErrorToString(eglGetError()));
+      XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, __L("[EGL] RecreateSurface: eglMakeCurrent failed: %s"), EGLErrorToString(eglGetError()));
       return false;
     }
 
@@ -704,6 +663,8 @@ bool GRPEGLCONTEXT::HasExtension(const char* name)
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
 EGLDisplay GRPEGLCONTEXT::GetEGLDisplay() { return display; }
+
+
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         EGLContext GRPEGLCONTEXT::GetEGLContext()
@@ -714,6 +675,8 @@ EGLDisplay GRPEGLCONTEXT::GetEGLDisplay() { return display; }
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
 EGLContext GRPEGLCONTEXT::GetEGLContext() { return context; }
+
+
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         EGLSurface GRPEGLCONTEXT::GetEGLSurface()
@@ -724,6 +687,8 @@ EGLContext GRPEGLCONTEXT::GetEGLContext() { return context; }
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
 EGLSurface GRPEGLCONTEXT::GetEGLSurface() { return surface; }
+
+
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         EGLConfig GRPEGLCONTEXT::GetEGLConfig()

@@ -38,8 +38,6 @@
 
 #include "DIOStreamDevice.h"
 
-
-
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
 
 enum DIOSTREAMIPDEVICE_TYPE
@@ -52,10 +50,7 @@ enum DIOSTREAMIPDEVICE_TYPE
   DIOSTREAMIPDEVICE_TYPE_LOOPBACK               ,
 };
 
-
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
-
 
 class DIOSTREAMDEVICEIP : public DIOSTREAMDEVICE
 {

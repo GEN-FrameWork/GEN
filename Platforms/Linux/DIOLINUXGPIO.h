@@ -32,18 +32,13 @@
 
 #include "DIOGPIO.h"
 
-
-
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
 
 #define DIOLINUXGPIO_PATH                     __L("/sys/class/gpio")
 
 #define DIOLINUXGPIO_BANK_BIT(BANK, BIT)      ((BANK - 1) * 32 + BIT)
 
-
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
-
 
 class DIOLINUXGPIO : public DIOGPIO
 {
@@ -69,7 +64,7 @@ class DIOLINUXGPIO : public DIOGPIO
     bool                        GPIOExport_DeleteAll        ();    
     
     bool                        GPIO_Export                 (XDWORD GPIO, bool isexport = false);
-    bool                        GPIO_SetDirection           (XDWORD GPIO, bool isinput  = true);
+    bool                        GPIO_SetDirection           (XDWORD GPIO, bool isinput = true);
     bool                        GPIO_GetData                (XDWORD GPIO);
     bool                        GPIO_SetData                (XDWORD GPIO, bool on);
    

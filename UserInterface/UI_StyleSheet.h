@@ -112,9 +112,7 @@
 
 #include "UI_Style.h"
 
-
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
-
 
 /**
 * @brief  Phase 2 ("combinadores descendiente/hijo"): the combinator tying one compound in a selector sequence
@@ -126,9 +124,7 @@ enum UI_CSSCOMBINATORTYPE
   UI_CSSCOMBINATOR_CHILD      = 1,   // '>': the IMMEDIATE parent only
 };
 
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
-
 
 /**
 * @brief  Phase 2 ("combinadores descendiente/hijo"): ancestor-identity accessor a caller implements once
@@ -143,15 +139,8 @@ class UI_CSSANCESTORPROVIDER
   public:
     virtual                        ~UI_CSSANCESTORPROVIDER     () {}
 
-    // Returns false once there is no ancestor at `depth` (root reached) -- callers stop walking there. On
-    // success, the three out-pointers are set to the ancestor's own identity data, borrowed (NOT owned) for
-    // the duration of the call -- mirroring UI_ELEMENT::GetTypeString()/GetName()/GetClassNames(), any of
-    // which may legitimately come back NULL (no type string, no id, no classes) exactly as they do today.
     virtual bool                    GetAncestor                 (int depth, XSTRING** outtype, XSTRING** outid, XVECTOR<XSTRING*>** outclasses) = 0;
 
-    // Optional: append the ancestor's live pseudo names into `outpseudos` (caller owns any XSTRING* added;
-    // default no-op keeps combinator matching structural-only for test doubles). Real UI_ELEMENT providers
-    // fill from GetActivePseudos() so selectors like `form.nav-row:selected .nav-label` work.
     virtual bool                    FillAncestorPseudos         (int depth, XVECTOR<XSTRING*>& outpseudos)
                                       {
                                         (void)depth;
@@ -162,7 +151,6 @@ class UI_CSSANCESTORPROVIDER
 
 
 class UI_CSSANCESTORSTEP;
-
 
 /**
 * @brief  One parsed compound selector (single alternative inside a comma-separated list). Empty type/id/class
@@ -183,29 +171,16 @@ class UI_CSSSELECTOR
     void                            AddClass                    (XCHAR* classname);
     void                            AddPseudo                   (XCHAR* pseudoname);
 
-
     int                             GetSpecificity              () const { return specificity; }
     void                            RecomputeSpecificity        ();
 
-
-
-
     bool                            IsRootOnly                  ();
-
-
-
 
     bool                            HasPseudos                  ()    { return pseudos.GetSize() > 0; }
 
-
-    // Phase 2 ("combinadores descendiente/hijo"): ancestor requirements, ordered CLOSEST-ancestor-first (index
-    // 0 is the compound tied to THIS selector by the combinator immediately to its left). Empty for any
-    // combinator-free selector -- i.e. every selector parsed before this phase existed, unchanged. See the
-    // class banner ("DESCENDANT/CHILD COMBINATORS") for the full model.
     XVECTOR<UI_CSSANCESTORSTEP*>&   GetAncestorSteps            ()    { return ancestorsteps; }
     void                            AddAncestorStep             (UI_CSSSELECTOR* compound, UI_CSSCOMBINATORTYPE combinator);
     bool                            HasAncestorSteps            ()    { return ancestorsteps.GetSize() > 0; }
-
 
     bool                            Match                       (XSTRING& elementtype, XSTRING& elementid, XVECTOR<XSTRING*>& elementclasses, XVECTOR<XSTRING*>& activepseudos, UI_CSSANCESTORPROVIDER* ancestors = NULL);
 
@@ -219,9 +194,8 @@ class UI_CSSSELECTOR
     XVECTOR<XSTRING*>               pseudos;
     int                             specificity;
 
-    XVECTOR<UI_CSSANCESTORSTEP*>    ancestorsteps;   // owned
+    XVECTOR<UI_CSSANCESTORSTEP*>    ancestorsteps;
 };
-
 
 /**
 * @brief  Phase 2 ("combinadores descendiente/hijo"): one link in a UI_CSSSELECTOR's ancestor chain -- a
@@ -235,7 +209,7 @@ class UI_CSSANCESTORSTEP
                                     UI_CSSANCESTORSTEP          ();
     virtual                        ~UI_CSSANCESTORSTEP          ();
 
-    UI_CSSSELECTOR*                 compound;      // owned
+    UI_CSSSELECTOR*                 compound;
     UI_CSSCOMBINATORTYPE            combinator;
 };
 
@@ -258,7 +232,6 @@ class UI_CSSRULE
     int                             GetSourceIndex              () const { return sourceindex; }
     void                            SetSourceIndex              (int idx)                     { sourceindex = idx; }
 
-    // Track B: optional @media (min/max-width). has_media=false → unconditional rule.
     bool                            HasMedia                    () const { return has_media; }
     void                            ClearMedia                  ();
     void                            SetMediaWidthRange          (int min_width_px, int max_width_px);
@@ -273,8 +246,8 @@ class UI_CSSRULE
     int                             sourceindex;
 
     bool                            has_media;
-    int                             media_min_width;   // -1 = no min
-    int                             media_max_width;   // -1 = no max
+    int                             media_min_width;
+    int                             media_max_width;
 };
 
 
@@ -323,10 +296,8 @@ class UI_STYLESHEET
 
 
     void                            ExpandVariables             ();
-    // Phase 4: expand var(--x[, fallback]) in a single value string against this sheet's :root table.
     bool                            ExpandValueVars             (XSTRING& in, XSTRING& out);
 
-    // Track B: design viewport gates @media rules in Resolve()/HasPseudoRulesFor().
     void                            SetMediaViewport            (int width_px, int height_px);
     int                             GetMediaViewportWidth       () const { return media_viewport_w; }
     int                             GetMediaViewportHeight      () const { return media_viewport_h; }
@@ -335,10 +306,6 @@ class UI_STYLESHEET
 
 
 
-    // Phase 2 ("combinadores descendiente/hijo"): `ancestors` is optional (NULL by default, preserving every
-    // pre-existing call site unchanged) -- see UI_CSSANCESTORPROVIDER's doc comment. Only selectors that
-    // actually use a descendant/child combinator need it; a NULL provider simply means those specific
-    // selectors can never match, everything else behaves exactly as before.
     bool                            Resolve                     (XSTRING& elementtype, XSTRING& elementid, XVECTOR<XSTRING*>& elementclasses, XVECTOR<XSTRING*>& activepseudos, UI_STYLE& out, UI_CSSANCESTORPROVIDER* ancestors = NULL);
 
 
@@ -351,18 +318,6 @@ class UI_STYLESHEET
     void                            Clean                       ();
 
 
-    // Phase 2 ("índice de reglas por id/tipo/clase"): Resolve()/HasPseudoRulesFor() used to scan every rule in
-    // the sheet for every element, an O(rules * elements) cost. These three indices bucket rules by each axis a
-    // selector can be restricted on (type/id/class -- pseudos are NOT indexed, see IndexRule() note), built
-    // incrementally in Rules_Add() since a rule's full selector list is already known then. A selector with
-    // none of type/id/class set (the universal selector "*", or a bare pseudo like ":hover") cannot be bucketed
-    // on any axis and goes into `index_unrestricted` instead, so it is still considered for every element.
-    // CollectCandidateRules() is the single read path both callers share: the union of `index_unrestricted`
-    // plus the type/id/each-class bucket hits is a SUPERSET of every rule that could possibly Match() the
-    // element (never a subset), because Match()'s own type/id/class checks are exactly what decided which
-    // buckets a selector was filed under -- so this is a pure candidate-set optimization, never a behavior
-    // change; UI_CSSSELECTOR::Match() still makes the final accept/reject call on each candidate exactly as
-    // before.
     UI_CSSINDEXBUCKET*              IndexFindBucket             (XVECTOR<UI_CSSINDEXBUCKET*>& index, XSTRING& key);
     void                            IndexAddRule                (XVECTOR<UI_CSSINDEXBUCKET*>& index, XSTRING& key, UI_CSSRULE* rule);
     void                            IndexRule                   (UI_CSSRULE* rule);
@@ -376,12 +331,12 @@ class UI_STYLESHEET
     XVECTOR<UI_CSSRULE*>            rules;
     UI_STYLE                        variables;
 
-    XVECTOR<UI_CSSINDEXBUCKET*>     index_bytype;         // owned buckets, keyed by selector type name
-    XVECTOR<UI_CSSINDEXBUCKET*>     index_byid;            // owned buckets, keyed by selector id
-    XVECTOR<UI_CSSINDEXBUCKET*>     index_byclass;         // owned buckets, keyed by selector class name
-    XVECTOR<UI_CSSRULE*>            index_unrestricted;    // borrowed; rules with a selector with no type/id/class
+    XVECTOR<UI_CSSINDEXBUCKET*>     index_bytype;
+    XVECTOR<UI_CSSINDEXBUCKET*>     index_byid;
+    XVECTOR<UI_CSSINDEXBUCKET*>     index_byclass;
+    XVECTOR<UI_CSSRULE*>            index_unrestricted;
 
-    int                             media_viewport_w;      // Track B; 0 = unset (media-conditioned rules do not match)
+    int                             media_viewport_w;
     int                             media_viewport_h;
 };
 

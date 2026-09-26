@@ -34,16 +34,11 @@
 
 #include "XString.h"
 
-
-
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
 
 #define XWINDOWSSERVICEBASE_LOG_SECTIONID_SERVICE  __L("Service")
 
-
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
-
 
 class XWINDOWSSERVICEBASE
 {
@@ -73,7 +68,6 @@ class XWINDOWSSERVICEBASE
 
     XCHAR*                              GetServiceName              ();
 
-
   protected:
 
     virtual void                        On_Start                    (DWORD argc, XCHAR** args);
@@ -96,9 +90,9 @@ class XWINDOWSSERVICEBASE
     static bool                         GetServiceFaiilureActions   (XCHAR* servicename);
 
     static void WINAPI                  ServiceMain                 (DWORD argc, LPWSTR* argv);
-    static void WINAPI                  ServiceCtrlHandler          (DWORD control, DWORD eventtype, LPVOID eventdata,  LPVOID context);
+    static void WINAPI                  ServiceCtrlHandler          (DWORD control, DWORD eventtype, LPVOID eventdata, LPVOID context);
 
-    void                                Start                       (XDWORD argc,  XCHAR** args);
+    void                                Start                       (XDWORD argc, XCHAR** args);
     void                                Pause                       ();
     void                                Continue                    ();
     void                                Shutdown                    ();

@@ -223,10 +223,6 @@ void DIOCHECKTCPIPCONNECTION_CUT::Clean()
 }
 
 
-
-
-
-
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         DIOCHECKTCPIPCONNECTION::DIOCHECKTCPIPCONNECTION()
@@ -496,10 +492,6 @@ void DIOCHECKTCPIPCONNECTION::Clean()
   elapsedtime           = 0;
   timerconnexion        = NULL;
 }
-
-
-
-
 
 
 /**-------------------------------------------------------------------------------------------------------------------

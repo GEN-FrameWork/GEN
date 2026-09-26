@@ -281,10 +281,6 @@ void XFILEXMLATTRIBUTE::Clean()
 }
 
 
-
-
-
-
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         XFILEXMLELEMENT::XFILEXMLELEMENT()
@@ -338,7 +334,7 @@ XFILEXMLELEMENT::XFILEXMLELEMENT(XCHAR* name, XFILEXMLELEMENTTYPE type)
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         XFILEXMLELEMENT::XFILEXMLELEMENT(XSTRING& name,XSTRING& value, XFILEXMLELEMENTTYPE type)
+* @fn         XFILEXMLELEMENT::XFILEXMLELEMENT(XSTRING& name, XSTRING& value, XFILEXMLELEMENTTYPE type)
 * @brief      Constructor of class
 * @ingroup    XUTILS
 * 
@@ -347,7 +343,7 @@ XFILEXMLELEMENT::XFILEXMLELEMENT(XCHAR* name, XFILEXMLELEMENTTYPE type)
 * @param[in]  type : Type value.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-XFILEXMLELEMENT::XFILEXMLELEMENT(XSTRING& name,XSTRING& value, XFILEXMLELEMENTTYPE type)
+XFILEXMLELEMENT::XFILEXMLELEMENT(XSTRING& name, XSTRING& value, XFILEXMLELEMENTTYPE type)
 {
   Clean();
 
@@ -359,7 +355,7 @@ XFILEXMLELEMENT::XFILEXMLELEMENT(XSTRING& name,XSTRING& value, XFILEXMLELEMENTTY
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         XFILEXMLELEMENT::XFILEXMLELEMENT(XCHAR* name,XCHAR* value, XFILEXMLELEMENTTYPE type)
+* @fn         XFILEXMLELEMENT::XFILEXMLELEMENT(XCHAR* name, XCHAR* value, XFILEXMLELEMENTTYPE type)
 * @brief      Constructor of class
 * @ingroup    XUTILS
 * 
@@ -368,7 +364,7 @@ XFILEXMLELEMENT::XFILEXMLELEMENT(XSTRING& name,XSTRING& value, XFILEXMLELEMENTTY
 * @param[in]  type : Type value.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-XFILEXMLELEMENT::XFILEXMLELEMENT(XCHAR* name,XCHAR* value, XFILEXMLELEMENTTYPE type)
+XFILEXMLELEMENT::XFILEXMLELEMENT(XCHAR* name, XCHAR* value, XFILEXMLELEMENTTYPE type)
 {
   Clean();
 
@@ -462,7 +458,7 @@ bool XFILEXMLELEMENT::SetName(XCHAR* name)
 * --------------------------------------------------------------------------------------------------------------------*/
 XFILEXMLATTRIBUTE* XFILEXMLELEMENT::AddAtribute(XSTRING& name, XSTRING& value)
 {
-  XFILEXMLATTRIBUTE* attribute = GEN_NEW XFILEXMLATTRIBUTE(name,value);
+  XFILEXMLATTRIBUTE* attribute = GEN_NEW XFILEXMLATTRIBUTE(name, value);
   if(!attribute) return NULL;
 
   attributes.Add(attribute);
@@ -485,7 +481,7 @@ XFILEXMLATTRIBUTE* XFILEXMLELEMENT::AddAtribute(XSTRING& name, XSTRING& value)
 * --------------------------------------------------------------------------------------------------------------------*/
 XFILEXMLATTRIBUTE* XFILEXMLELEMENT::AddAtribute(XCHAR* name, XCHAR* value)
 {
-  XFILEXMLATTRIBUTE* attribute = GEN_NEW XFILEXMLATTRIBUTE(name,value);
+  XFILEXMLATTRIBUTE* attribute = GEN_NEW XFILEXMLATTRIBUTE(name, value);
   if(!attribute) return NULL;
 
   attributes.Add(attribute);
@@ -591,13 +587,13 @@ XCHAR* XFILEXMLELEMENT::GetValueAttribute(XCHAR* name)
 * --------------------------------------------------------------------------------------------------------------------*/
 bool XFILEXMLELEMENT::GetValueAttribute(XSTRING& name, XSTRING& value)
 {
-  return GetValueAttribute(name.Get(),value);
+  return GetValueAttribute(name.Get(), value);
 }
 
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         bool XFILEXMLELEMENT::GetValueAttribute(XCHAR* name,XSTRING& value)
+* @fn         bool XFILEXMLELEMENT::GetValueAttribute(XCHAR* name, XSTRING& value)
 * @brief      Get value attribute
 * @ingroup    XUTILS
 * 
@@ -607,7 +603,7 @@ bool XFILEXMLELEMENT::GetValueAttribute(XSTRING& name, XSTRING& value)
 * @return     bool : true if the operation is successful; otherwise false.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-bool XFILEXMLELEMENT::GetValueAttribute(XCHAR* name,XSTRING& value)
+bool XFILEXMLELEMENT::GetValueAttribute(XCHAR* name, XSTRING& value)
 {
   for(int c=0;c<GetNAttributes();c++)
     {
@@ -659,7 +655,7 @@ int XFILEXMLELEMENT::GetIntValueAttribute(XCHAR* name)
 {
   XSTRING value;
 
-  if(GetValueAttribute(name,value)) return value.ConvertToInt();
+  if(GetValueAttribute(name, value)) return value.ConvertToInt();
 
   return 0;
 }
@@ -680,7 +676,7 @@ bool XFILEXMLELEMENT::GetBoolValueAttribute(XCHAR* name)
 {
   XSTRING value;
 
-  if(GetValueAttribute(name,value))
+  if(GetValueAttribute(name, value))
     return value.ConvertToBoolean();
 
   return false;
@@ -702,7 +698,7 @@ double XFILEXMLELEMENT::GetFloatValueAttribute(XCHAR* name)
 {
   XSTRING value;
 
-  if(GetValueAttribute(name,value))
+  if(GetValueAttribute(name, value))
     return value.ConvertToDouble();
 
   return 0.0;
@@ -879,7 +875,7 @@ XFILEXMLELEMENT* XFILEXMLELEMENT::AddElement(XCHAR* name)
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         XFILEXMLELEMENT* XFILEXMLELEMENT::AddElement(XSTRING& name,XSTRING& value)
+* @fn         XFILEXMLELEMENT* XFILEXMLELEMENT::AddElement(XSTRING& name, XSTRING& value)
 * @brief      Add element
 * @ingroup    XUTILS
 * 
@@ -889,9 +885,9 @@ XFILEXMLELEMENT* XFILEXMLELEMENT::AddElement(XCHAR* name)
 * @return     XFILEXMLELEMENT* : Pointer to the requested object; NULL if it is not available.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-XFILEXMLELEMENT* XFILEXMLELEMENT::AddElement(XSTRING& name,XSTRING& value)
+XFILEXMLELEMENT* XFILEXMLELEMENT::AddElement(XSTRING& name, XSTRING& value)
 {
-  XFILEXMLELEMENT* element = GEN_NEW XFILEXMLELEMENT(name,value);
+  XFILEXMLELEMENT* element = GEN_NEW XFILEXMLELEMENT(name, value);
   if(!element) return NULL;
 
   element->SetFather(this);
@@ -904,7 +900,7 @@ XFILEXMLELEMENT* XFILEXMLELEMENT::AddElement(XSTRING& name,XSTRING& value)
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         XFILEXMLELEMENT* XFILEXMLELEMENT::AddElement(XCHAR* name,XCHAR* value)
+* @fn         XFILEXMLELEMENT* XFILEXMLELEMENT::AddElement(XCHAR* name, XCHAR* value)
 * @brief      Add element
 * @ingroup    XUTILS
 * 
@@ -914,9 +910,9 @@ XFILEXMLELEMENT* XFILEXMLELEMENT::AddElement(XSTRING& name,XSTRING& value)
 * @return     XFILEXMLELEMENT* : Pointer to the requested object; NULL if it is not available.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-XFILEXMLELEMENT* XFILEXMLELEMENT::AddElement(XCHAR* name,XCHAR* value)
+XFILEXMLELEMENT* XFILEXMLELEMENT::AddElement(XCHAR* name, XCHAR* value)
 {
-  XFILEXMLELEMENT* element = GEN_NEW XFILEXMLELEMENT(name,value);
+  XFILEXMLELEMENT* element = GEN_NEW XFILEXMLELEMENT(name, value);
   if(!element) return NULL;
 
   element->SetFather(this);
@@ -1187,7 +1183,7 @@ bool XFILEXML::EncodeAllLines(bool istabulatedline)
 
   encodelevel  = -1;
 
-  if(root) EncodeElements(istabulatedline,root);
+  if(root) EncodeElements(istabulatedline, root);
 
   return true;
 }
@@ -1283,7 +1279,7 @@ bool XFILEXML::DecodeAllLines()
 
               if(XFILEXML_IsCommentClose(string))
                 {
-                  DecodeLine(string,true);                              // typed as COMMENT by DecodeLine()
+                  DecodeLine(string, true);                              // typed as COMMENT by DecodeLine()
                   string.Empty();
                   comment = false;
                 }
@@ -1295,11 +1291,11 @@ bool XFILEXML::DecodeAllLines()
 
           if((*stringml)[d]==__C('<')&&(!quote))
             {
-              if(string.Find(__L("[CDATA["),false)!=XSTRING_NOTFOUND) cdata=true;
+              if(string.Find(__L("[CDATA["), false)!=XSTRING_NOTFOUND) cdata=true;
 
               if(!string.IsEmpty() && string.HaveCharacters() && (!cdata))
                 {
-                  DecodeLine(string,false);
+                  DecodeLine(string, false);
                   string.Empty();
                 }
 
@@ -1310,12 +1306,12 @@ bool XFILEXML::DecodeAllLines()
             {
               if(((*stringml)[d]==__C('>'))&&(!quote))
                 {
-                  if(string.Find(__L("]]"),false)!=XSTRING_NOTFOUND) cdata=false;
+                  if(string.Find(__L("]]"), false)!=XSTRING_NOTFOUND) cdata=false;
 
                   string += letter;
                   if(!string.IsEmpty() && string.HaveCharacters() && (!cdata))
                     {
-                      DecodeLine(string,true);
+                      DecodeLine(string, true);
                       string.Empty();
                     }
                 }
@@ -1370,7 +1366,7 @@ bool XFILEXML::ReadAndDecodeAllLines()
 * @return     bool : true if the operation is successful; otherwise false.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-bool XFILEXML::WriteAndEncodeAllLines(bool istabulatedline, XFILETXTFORMATCHAR formatchar, XFILETXTTYPELF  typeLF)
+bool XFILEXML::WriteAndEncodeAllLines(bool istabulatedline, XFILETXTFORMATCHAR formatchar, XFILETXTTYPELF typeLF)
 {
   SetFormatChar(formatchar);
   SetTypeLF(typeLF);
@@ -1556,13 +1552,13 @@ XFILEXMLELEMENT* XFILEXML::SearchElement(XCHAR* name, int& index, XCHAR* namefat
 * --------------------------------------------------------------------------------------------------------------------*/
 bool XFILEXML::SearchAttributeValue(XFILEXMLELEMENT* element, XSTRING& nameattribute, XSTRING& value)
 {
-  return SearchAttributeValue(element,nameattribute.Get(),value);
+  return SearchAttributeValue(element, nameattribute.Get(), value);
 }
 
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         bool XFILEXML::SearchAttributeValue(XFILEXMLELEMENT* element,XCHAR* nameattribute,XSTRING& value)
+* @fn         bool XFILEXML::SearchAttributeValue(XFILEXMLELEMENT* element, XCHAR* nameattribute, XSTRING& value)
 * @brief      Search attribute value
 * @ingroup    XUTILS
 * 
@@ -1573,7 +1569,7 @@ bool XFILEXML::SearchAttributeValue(XFILEXMLELEMENT* element, XSTRING& nameattri
 * @return     bool : true if the operation is successful; otherwise false.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-bool XFILEXML::SearchAttributeValue(XFILEXMLELEMENT* element,XCHAR* nameattribute,XSTRING& value)
+bool XFILEXML::SearchAttributeValue(XFILEXMLELEMENT* element, XCHAR* nameattribute, XSTRING& value)
 {
   if(!element)                   return false;
   if(!element->GetNAttributes()) return false;
@@ -1656,7 +1652,7 @@ bool XFILEXML::DeleteAllElements()
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         int XFILEXML::DecodeLine(XSTRING& string,bool iselement)
+* @fn         int XFILEXML::DecodeLine(XSTRING& string, bool iselement)
 * @brief      Decode line
 * @ingroup    XUTILS
 * 
@@ -1666,7 +1662,7 @@ bool XFILEXML::DeleteAllElements()
 * @return     int : Requested value.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-int XFILEXML::DecodeLine(XSTRING& string,bool iselement)
+int XFILEXML::DecodeLine(XSTRING& string, bool iselement)
 {
   XFILEXMLELEMENTTYPE     elementtype  = XFILEXMLELEMENTTYPE_UNKNOWN;
   XFILEXMLELEMENTTYPELINE typeline     = XFILEXMLELEMENTTYPELINE_UNKNOWN;
@@ -1678,7 +1674,7 @@ int XFILEXML::DecodeLine(XSTRING& string,bool iselement)
       str.DeleteNoCharacters(XSTRINGCONTEXT_ALLSTRING);
 
       int iini = str.FindCharacter(__C('<'));
-      int iend = str.FindCharacter(__C('>'),0,true);
+      int iend = str.FindCharacter(__C('>'), 0, true);
 
       if(iini!=XSTRING_NOTFOUND) iini++;
       if(iend!=XSTRING_NOTFOUND) iend--;
@@ -1695,7 +1691,7 @@ int XFILEXML::DecodeLine(XSTRING& string,bool iselement)
           case __C('!') : if((str[iini+1]==__C('-')) && (str[iini+2]==__C('-')) && (str[iend]  ==__C('-')) && (str[iend-1]==__C('-')))
                             elementtype = XFILEXMLELEMENTTYPE_COMMENT;
                           else
-                          if(str.Find(__L("[CDATA["),false)!=XSTRING_NOTFOUND)
+                          if(str.Find(__L("[CDATA["), false)!=XSTRING_NOTFOUND)
                             elementtype = XFILEXMLELEMENTTYPE_CDATA;
                           else
                           {
@@ -1717,7 +1713,7 @@ int XFILEXML::DecodeLine(XSTRING& string,bool iselement)
           case XFILEXMLELEMENTTYPE_CONFIG   : DecodeConfig(string);             break;
           case XFILEXMLELEMENTTYPE_COMMENT  : DecodeComent(string);             break;
           case XFILEXMLELEMENTTYPE_CDATA    : DecodeCDATA(string);              break;
-          case XFILEXMLELEMENTTYPE_NORMAL   : DecodeElement(string,typeline);   break;
+          case XFILEXMLELEMENTTYPE_NORMAL   : DecodeElement(string, typeline);   break;
         }
     }
    else
@@ -1731,7 +1727,6 @@ int XFILEXML::DecodeLine(XSTRING& string,bool iselement)
 
   return 0;
 }
-
 
 
 /**-------------------------------------------------------------------------------------------------------------------
@@ -1749,7 +1744,7 @@ bool XFILEXML::DecodeConfig(XSTRING& string)
 {
   XSTRING values;
 
-  if(string.Copy(__L("<?xml"),__L("?>"),false,0,values)==XSTRING_NOTFOUND)  return false;
+  if(string.Copy(__L("<?xml"), __L("?>"), false, 0, values)==XSTRING_NOTFOUND)  return false;
 
   XSTRING name;
   XSTRING value;
@@ -1758,15 +1753,15 @@ bool XFILEXML::DecodeConfig(XSTRING& string)
 
   while(1)
     {
-      indexname = values.Copy(indexname, __L("="),false,name);
+      indexname = values.Copy(indexname, __L("="), false, name);
       if(indexname==XSTRING_NOTFOUND) break;
 
       name.DeleteNoCharacters(XSTRINGCONTEXT_ALLSTRING);
 
-      indexname = values.Copy(__L("\""),__L("\""),false,indexname,value);
+      indexname = values.Copy(__L("\""), __L("\""), false, indexname, value);
       if(indexname==XSTRING_NOTFOUND) break;
 
-      XFILEXMLATTRIBUTE* attribute = GEN_NEW XFILEXMLATTRIBUTE(name,value);
+      XFILEXMLATTRIBUTE* attribute = GEN_NEW XFILEXMLATTRIBUTE(name, value);
       if(!attribute) break;
 
       cfgattributes.Add(attribute);
@@ -1794,7 +1789,7 @@ bool XFILEXML::DecodeComent(XSTRING& string)
 
   XSTRING value;
 
-  if(string.Copy(__L("<!--"),__L("-->"),false,0,value)==XSTRING_NOTFOUND)  return false;
+  if(string.Copy(__L("<!--"), __L("-->"), false, 0, value)==XSTRING_NOTFOUND)  return false;
 
   XFILEXMLELEMENT* element = actualelement->AddElement();
   if(!element) return false;
@@ -1823,7 +1818,7 @@ bool XFILEXML::DecodeCDATA(XSTRING& string)
 
   XSTRING value;
 
-  if(string.Copy(__L("[CDATA["),__L("]]"),false,0,value)==XSTRING_NOTFOUND)  return false;
+  if(string.Copy(__L("[CDATA["), __L("]]"), false, 0, value)==XSTRING_NOTFOUND)  return false;
 
   XFILEXMLELEMENT* element = actualelement->AddElement();
   if(!element) return false;
@@ -1858,15 +1853,15 @@ bool XFILEXML::DecodeElement(XSTRING& string, XFILEXMLELEMENTTYPELINE typeline)
                                                 XSTRING name;
                                                 XSTRING value;
 
-                                                if(string.Copy(__L("<"),__L(" "),false,0,name)==XSTRING_NOTFOUND) return false;
+                                                if(string.Copy(__L("<"), __L(" "), false, 0, name)==XSTRING_NOTFOUND) return false;
 
                                                 //name.Set(string);
-                                                name.DeleteCharacter(__C('<'),XSTRINGCONTEXT_ALLSTRING);
-                                                name.DeleteCharacter(__C('>'),XSTRINGCONTEXT_ALLSTRING);
+                                                name.DeleteCharacter(__C('<'), XSTRINGCONTEXT_ALLSTRING);
+                                                name.DeleteCharacter(__C('>'), XSTRINGCONTEXT_ALLSTRING);
 
                                                 name.DeleteNoCharacters();
-                                                name.DeleteNoCharacters(__L("\20"),0, XSTRINGCONTEXT_FROM_FIRST);
-                                                name.DeleteNoCharacters(__L("\20"),0, XSTRINGCONTEXT_TO_END);
+                                                name.DeleteNoCharacters(__L("\20"), 0, XSTRINGCONTEXT_FROM_FIRST);
+                                                name.DeleteNoCharacters(__L("\20"), 0, XSTRINGCONTEXT_TO_END);
 
 
                                                 XFILEXMLELEMENT* element;
@@ -1896,10 +1891,10 @@ bool XFILEXML::DecodeElement(XSTRING& string, XFILEXMLELEMENTTYPELINE typeline)
 
                                                         name.DeleteNoCharacters(XSTRINGCONTEXT_ALLSTRING);
 
-                                                        indexname = values.Copy(__L("\""),__L("\""),false,indexname,value);
+                                                        indexname = values.Copy(__L("\""), __L("\""), false, indexname, value);
                                                         if(indexname==XSTRING_NOTFOUND) break;
 
-                                                        element->AddAtribute(name,value);
+                                                        element->AddAtribute(name, value);
 
                                                         name.Empty();
                                                         value.Empty();
@@ -1922,7 +1917,7 @@ bool XFILEXML::DecodeElement(XSTRING& string, XFILEXMLELEMENTTYPELINE typeline)
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         bool XFILEXML::AddTabs(int level,int spacetabs,XSTRING& string)
+* @fn         bool XFILEXML::AddTabs(int level, int spacetabs, XSTRING& string)
 * @brief      Add tabs
 * @ingroup    XUTILS
 * 
@@ -1933,7 +1928,7 @@ bool XFILEXML::DecodeElement(XSTRING& string, XFILEXMLELEMENTTYPELINE typeline)
 * @return     bool : true if the operation is successful; otherwise false.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-bool XFILEXML::AddTabs(int level,int spacetabs,XSTRING& string)
+bool XFILEXML::AddTabs(int level, int spacetabs, XSTRING& string)
 {
   if(spacetabs<=0) return false;
 
@@ -2008,7 +2003,7 @@ bool XFILEXML::EncodeElements(bool istabulatedline, XFILEXMLELEMENT* element)
   if(istabulatedline)
     {
       encodelevel++;
-      AddTabs(encodelevel,XFILEXML_SPACETABS,string);
+      AddTabs(encodelevel, XFILEXML_SPACETABS, string);
     }
 
   switch(element->GetType())
@@ -2065,7 +2060,7 @@ bool XFILEXML::EncodeElements(bool istabulatedline, XFILEXMLELEMENT* element)
                                             if(!value.IsEmpty())
                                               {
                                                 string.Empty();
-                                                if(istabulatedline) AddTabs(encodelevel+1,XFILEXML_SPACETABS,string);
+                                                if(istabulatedline) AddTabs(encodelevel+1, XFILEXML_SPACETABS, string);
                                                 string+=value;
 
                                                 AddLine(string);
@@ -2075,14 +2070,14 @@ bool XFILEXML::EncodeElements(bool istabulatedline, XFILEXMLELEMENT* element)
                                             for(c=0;c<(int)element->GetNElements();c++)
                                               {
                                                 XFILEXMLELEMENT* subelement = element->GetElement(c);
-                                                if(subelement)  EncodeElements(istabulatedline,subelement);
+                                                if(subelement)  EncodeElements(istabulatedline, subelement);
                                               }
 
                                             if(!isclose)
                                               {
                                                 string.Empty();
 
-                                                if(istabulatedline) AddTabs(encodelevel,XFILEXML_SPACETABS,string);
+                                                if(istabulatedline) AddTabs(encodelevel, XFILEXML_SPACETABS, string);
 
                                                 string += __L("</");
                                                 string += element->GetName();

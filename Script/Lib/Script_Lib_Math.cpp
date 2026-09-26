@@ -104,7 +104,7 @@ bool SCRIPT_LIB_MATH::AddLibraryFunctions(SCRIPT* script)
 
   this->script = script;
 
-  script->AddLibraryFunction(this, __L("Abs")                      , Call_Abs);
+  script->AddLibraryFunction(this, __L("Abs"), Call_Abs);
 
   return true;
 }

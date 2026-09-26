@@ -327,6 +327,8 @@ bool GRPVECTORFILESVGOBJGRADIENT::IsRadial()   { return (GetObjType() == GRPVECT
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
 GRPVECTORFILESVGGRADIENTUNITS GRPVECTORFILESVGOBJGRADIENT::GetUnits()              { return units;              }
+
+
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         GRPVECTORFILESVGTRANSFORM* GRPVECTORFILESVGOBJGRADIENT::GetGradientTransform()
@@ -338,6 +340,7 @@ GRPVECTORFILESVGGRADIENTUNITS GRPVECTORFILESVGOBJGRADIENT::GetUnits()           
 * --------------------------------------------------------------------------------------------------------------------*/
 GRPVECTORFILESVGTRANSFORM*    GRPVECTORFILESVGOBJGRADIENT::GetGradientTransform()  { return &gradienttransform; }
 
+
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         double GRPVECTORFILESVGOBJGRADIENT::GetX1()
@@ -348,6 +351,8 @@ GRPVECTORFILESVGTRANSFORM*    GRPVECTORFILESVGOBJGRADIENT::GetGradientTransform(
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
 double GRPVECTORFILESVGOBJGRADIENT::GetX1()   { return x1; }
+
+
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         double GRPVECTORFILESVGOBJGRADIENT::GetY1()
@@ -358,6 +363,8 @@ double GRPVECTORFILESVGOBJGRADIENT::GetX1()   { return x1; }
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
 double GRPVECTORFILESVGOBJGRADIENT::GetY1()   { return y1; }
+
+
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         double GRPVECTORFILESVGOBJGRADIENT::GetX2()
@@ -368,6 +375,8 @@ double GRPVECTORFILESVGOBJGRADIENT::GetY1()   { return y1; }
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
 double GRPVECTORFILESVGOBJGRADIENT::GetX2()   { return x2; }
+
+
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         double GRPVECTORFILESVGOBJGRADIENT::GetY2()
@@ -379,6 +388,7 @@ double GRPVECTORFILESVGOBJGRADIENT::GetX2()   { return x2; }
 * --------------------------------------------------------------------------------------------------------------------*/
 double GRPVECTORFILESVGOBJGRADIENT::GetY2()   { return y2; }
 
+
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         double GRPVECTORFILESVGOBJGRADIENT::GetCX()
@@ -389,6 +399,8 @@ double GRPVECTORFILESVGOBJGRADIENT::GetY2()   { return y2; }
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
 double GRPVECTORFILESVGOBJGRADIENT::GetCX()   { return cx; }
+
+
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         double GRPVECTORFILESVGOBJGRADIENT::GetCY()
@@ -399,6 +411,8 @@ double GRPVECTORFILESVGOBJGRADIENT::GetCX()   { return cx; }
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
 double GRPVECTORFILESVGOBJGRADIENT::GetCY()   { return cy; }
+
+
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         double GRPVECTORFILESVGOBJGRADIENT::GetR()
@@ -409,6 +423,8 @@ double GRPVECTORFILESVGOBJGRADIENT::GetCY()   { return cy; }
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
 double GRPVECTORFILESVGOBJGRADIENT::GetR()    { return r;  }
+
+
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         double GRPVECTORFILESVGOBJGRADIENT::GetFX()
@@ -419,6 +435,8 @@ double GRPVECTORFILESVGOBJGRADIENT::GetR()    { return r;  }
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
 double GRPVECTORFILESVGOBJGRADIENT::GetFX()   { return fx; }
+
+
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         double GRPVECTORFILESVGOBJGRADIENT::GetFY()
@@ -430,6 +448,7 @@ double GRPVECTORFILESVGOBJGRADIENT::GetFX()   { return fx; }
 * --------------------------------------------------------------------------------------------------------------------*/
 double GRPVECTORFILESVGOBJGRADIENT::GetFY()   { return fy; }
 
+
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         GRP2DGRADIENTSTOP* GRPVECTORFILESVGOBJGRADIENT::GetStops()
@@ -440,6 +459,8 @@ double GRPVECTORFILESVGOBJGRADIENT::GetFY()   { return fy; }
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
 GRP2DGRADIENTSTOP* GRPVECTORFILESVGOBJGRADIENT::GetStops()   { return stops;  }
+
+
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         int GRPVECTORFILESVGOBJGRADIENT::GetNStops()
@@ -450,6 +471,8 @@ GRP2DGRADIENTSTOP* GRPVECTORFILESVGOBJGRADIENT::GetStops()   { return stops;  }
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
 int                GRPVECTORFILESVGOBJGRADIENT::GetNStops()  { return nstops; }
+
+
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         XSTRING* GRPVECTORFILESVGOBJGRADIENT::GetHRef()

@@ -81,7 +81,7 @@ DELETEFUNC(XSTM32FACTORY  , XMUTEX          , XSTM32MUTEX            , Delete_Mu
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         XTHREAD* XSTM32FACTORY::CreateThread(XTHREADGROUPID groupID, XCHAR* ID,XTHREADFUNCTION function,void* data)
+* @fn         XTHREAD* XSTM32FACTORY::CreateThread(XTHREADGROUPID groupID, XCHAR* ID, XTHREADFUNCTION function, void* data)
 * @brief      Create thread
 * @ingroup    PLATFORM_STM32
 * 
@@ -93,12 +93,11 @@ DELETEFUNC(XSTM32FACTORY  , XMUTEX          , XSTM32MUTEX            , Delete_Mu
 * @return     XTHREAD* : Pointer to the requested object; NULL if it is not available.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-XTHREAD* XSTM32FACTORY::CreateThread(XTHREADGROUPID groupID, XCHAR* ID,XTHREADFUNCTION function,void* data)
+XTHREAD* XSTM32FACTORY::CreateThread(XTHREADGROUPID groupID, XCHAR* ID, XTHREADFUNCTION function, void* data)
 {
-  XSTM32THREAD* _class =  GEN_NEW XSTM32THREAD(groupID, ID,function,data);
+  XSTM32THREAD* _class =  GEN_NEW XSTM32THREAD(groupID, ID, function, data);
   return (XTHREAD*)_class;
 }
-
 
 
 /**-------------------------------------------------------------------------------------------------------------------

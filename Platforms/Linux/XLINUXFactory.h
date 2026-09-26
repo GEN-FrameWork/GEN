@@ -32,15 +32,9 @@
 
 #include "XFactory.h"
 
-
-
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
 
-
-
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
-
 
 class XLINUXFACTORY : public XFACTORY
 {
@@ -69,7 +63,7 @@ class XLINUXFACTORY : public XFACTORY
     XMUTEX*             Create_Mutex            ();
     bool                Delete_Mutex            (XMUTEX* phone);
 
-    XTHREAD*            CreateThread            (XTHREADGROUPID groupID, XCHAR* ID,XTHREADFUNCTION function = NULL,void* data = NULL);
+    XTHREAD*            CreateThread            (XTHREADGROUPID groupID, XCHAR* ID, XTHREADFUNCTION function = NULL, void* data = NULL);
     bool                DeleteThread            (XTHREADGROUPID groupID, XTHREAD* xthread);
 };
 

@@ -34,8 +34,6 @@
 #include "XBuffer.h"
 #include "XSubject.h"
 
-
-
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
 
 typedef struct

@@ -58,7 +58,6 @@ enum DIOANDROIDICMPFSMEVENTS
   DIOANDROIDICMP_LASTEVENT
 };
 
-
 enum DIOANDROIDICMPFSMSTATES
 {
   DIOANDROIDICMPFSMSTATE_NONE               = 0 ,
@@ -72,11 +71,7 @@ enum DIOANDROIDICMPFSMSTATES
   DIOANDROIDICMP_LASTSTATE
 };
 
-
-
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
-
 
 class XTHREADCOLLECTED;
 

@@ -57,13 +57,10 @@ enum SCRIPT_TYPE
   SCRIPT_TYPE_JAVASCRIPT    ,
 };
 
-
 class SCRIPT;
 class SCRIPT_LIB;
 
 typedef void (*SCRFUNCADJUSTLIBRARYS)             (SCRIPT* script);
-
-
 
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
 
@@ -72,7 +69,6 @@ class XPUBLISHER;
 class XTHREADCOLLECTED;
 class XFILETXT;
 class SCRIPTVAR;
-
 
 class SCRIPT : public XSUBJECT
 {
@@ -104,7 +100,7 @@ class SCRIPT : public XSUBJECT
 
     bool                                RunWithThread                 ();
     bool                                IsRunWithThread               ();
-    bool                                IsRunThread                   (int* error = NULL,int* returnvalue = NULL);
+    bool                                IsRunThread                   (int* error = NULL, int* returnvalue = NULL);
 
     bool                                CancelExecution               ();
 

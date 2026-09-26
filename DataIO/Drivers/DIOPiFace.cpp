@@ -98,10 +98,10 @@ DIOPIFACE::~DIOPIFACE()
 bool DIOPIFACE::Configure()
 {         
   Write_Register(DIOSPIGPIOMCP23S17_WRITE_CMD, DIOSPIGPIOMCP23S17_IOCON   , 8);     // Enable hardware addressing
-  Write_Register(DIOSPIGPIOMCP23S17_WRITE_CMD, DIOSPIGPIOMCP23S17_GPIOA   , 0x00);  // Turn on port A
-  Write_Register(DIOSPIGPIOMCP23S17_WRITE_CMD, DIOSPIGPIOMCP23S17_IODIRA  , 0);     // Set port A as an output
-  Write_Register(DIOSPIGPIOMCP23S17_WRITE_CMD, DIOSPIGPIOMCP23S17_IODIRB  , 0xFF);  // Set port B as an input
-  Write_Register(DIOSPIGPIOMCP23S17_WRITE_CMD, DIOSPIGPIOMCP23S17_GPPUB   , 0xFF);  // Turn on port B pullups
+  Write_Register(DIOSPIGPIOMCP23S17_WRITE_CMD, DIOSPIGPIOMCP23S17_GPIOA, 0x00);  // Turn on port A
+  Write_Register(DIOSPIGPIOMCP23S17_WRITE_CMD, DIOSPIGPIOMCP23S17_IODIRA, 0);     // Set port A as an output
+  Write_Register(DIOSPIGPIOMCP23S17_WRITE_CMD, DIOSPIGPIOMCP23S17_IODIRB, 0xFF);  // Set port B as an input
+  Write_Register(DIOSPIGPIOMCP23S17_WRITE_CMD, DIOSPIGPIOMCP23S17_GPPUB, 0xFF);  // Turn on port B pullups
 
   return true;
 }

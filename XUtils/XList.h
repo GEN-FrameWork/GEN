@@ -35,21 +35,13 @@
 
 #include "XBase.h"
 
-
 /*---- PRECOMPILATION INCLUDES ---------------------------------------------------------------------------------------*/
 
 #include "GEN_Control.h"
 
-
-
-
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
 
-
-
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
-
 
 template <class T>
 class XLISTDATA
@@ -62,7 +54,6 @@ class XLISTDATA
                                     {
                                       Clean();
                                     }
-
 
     virtual                        ~XLISTDATA                                 ()
                                     {
@@ -79,7 +70,6 @@ class XLISTDATA
 
                                       return true;
                                     }
-
 
     bool                            Delete                                    ()
                                     {
@@ -124,23 +114,17 @@ XLISTDATA<T>* Decrement(XLISTDATA<T>* data)
   return data->prev;
 }
 
-
-
 template <class T>
 bool IsFirst(XLISTDATA<T>* data)
 {
   return data->prev == NULL;
 }
 
-
-
 template <class T>
 bool IsLast(XLISTDATA<T>* data)
 {
   return data == NULL;
 }
-
-
 
 template <class T>
 class XLIST
@@ -171,7 +155,6 @@ class XLIST
 
                                       return *this;
                                     }
-
 
     bool                            IsEmpty                                   ()                  { return nelements == 0;                  }
     XDWORD                          GetSize                                   ()                  { return nelements;                       }
@@ -238,11 +221,9 @@ class XLIST
                                             }
                                         }
 
-
                                       XLISTDATA<T>* data = GEN_NEW XLISTDATA<T>();
                                       data->active = true;
                                       data->data = element;
-
 
                                       if(nelements == 0)
                                         {
@@ -251,7 +232,6 @@ class XLIST
                                           nelements++;
                                           return true;
                                         }
-
 
                                       lastelement->next = data;
                                       data->prev = lastelement;
@@ -279,7 +259,6 @@ class XLIST
 
                                       return NOTFOUND;
                                     }
-
 
     XLISTDATA<T>*                   FindData                                  (T element)
                                     {
@@ -370,7 +349,6 @@ class XLIST
                                             }
                                         }
 
-
                                       if(index == 0)
                                         {
                                           Insert(firstelement, element);
@@ -382,7 +360,6 @@ class XLIST
                                           Insert(lastelement, element);
                                           return true;
                                         }
-
 
                                       XLISTDATA<T>* data = firstelement;
 
@@ -413,12 +390,10 @@ class XLIST
                                           return true;
                                         }
 
-
                                       if(position == NULL)
                                         {
                                           Add(element);
                                         }
-
 
                                       if(position == firstelement)
                                         {
@@ -474,7 +449,6 @@ class XLIST
                                             {
                                               data->Delete();
 
-
                                               if(data == firstelement)
                                                 {
                                                   firstelement = firstelement->next;
@@ -512,7 +486,6 @@ class XLIST
                                           return DeleteAll();
                                         }
 
-
                                       if(element == firstelement)
                                         {
                                           firstelement = firstelement->next;
@@ -543,7 +516,6 @@ class XLIST
 
                                       return true;
                                     }
-
 
     bool                            DeleteLast                                ()
                                     {
@@ -605,7 +577,6 @@ class XLIST
                                         {
                                           data = data->next;
                                         }
-
 
                                       XLISTDATA<T>* prev = data->prev;
                                       XLISTDATA<T>* next = data->next;
@@ -759,10 +730,6 @@ class XLIST
                                       it.data = NULL;
                                       return it;
                                     }
-
-
-
-
 
 class XITERATOR
 {

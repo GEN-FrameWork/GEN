@@ -206,7 +206,7 @@ bool APPFLOWCONSOLE::Show_Header(bool separator)
 
   header = GEN_VERSION.GetAppTitle()->Get();
   
-  console->Printf(__L(" %s"),header.Get());
+  console->Printf(__L(" %s"), header.Get());
   console->Printf(__L("\n"));
   if(separator) console->Printf(__L("\n"));
 
@@ -304,9 +304,9 @@ bool APPFLOWCONSOLE::PrintExitMessage(XSTRING& exitmessage)
   if(!console)              return false;
   if(exitmessage.IsEmpty()) return false;
 
-  console->PrintMessage(exitmessage.Get(), 1 ,true, true);
+  console->PrintMessage(exitmessage.Get(), 1, true, true);
 
-  console->PrintMessage(__L(" "), 0 ,false, true);
+  console->PrintMessage(__L(" "), 0, false, true);
 
   return true;
 }

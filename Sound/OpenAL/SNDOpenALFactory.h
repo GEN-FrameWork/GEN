@@ -53,7 +53,6 @@ enum SNDOPENALPLAYITEM_XFSMEVENTS
   SNDOPENALPLAYITEM_LASTEVENT
 };
 
-
 enum DEVTESTSCONSOLEXFSMSTATES
 {
   SNDOPENALPLAYITEM_XFSMSTATE_NONE              = 0 ,
@@ -65,9 +64,6 @@ enum DEVTESTSCONSOLEXFSMSTATES
 
   SNDOPENALPLAYITEM_LASTSTATE
 };
-
-
-
 
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
 
@@ -99,7 +95,6 @@ class SNDOPENALPLAYITEM : public XFSMACHINE
     SNDITEM*                                  item;
     SNDOPENALSOURCE*                          source;
 };
-
 
 class SNDOPENALFACTORY : public SNDFACTORY
 {

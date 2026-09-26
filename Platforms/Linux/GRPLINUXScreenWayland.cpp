@@ -738,9 +738,7 @@ bool GRPLINUXSCREENWAYLAND::Update(GRP2DCANVAS* canvas)
             {
               for(int y=0; y<bh; y++)
                 {
-                  memcpy(croppedbuffer + (size_t)y * (size_t)bw    * 4,
-                         srcbuffer      + (size_t)y * (size_t)width * 4,
-                         (size_t)bw * 4);
+                  memcpy(croppedbuffer + (size_t)y * (size_t)bw * 4, srcbuffer + (size_t)y * (size_t)width * 4, (size_t)bw * 4);
                 }
 
               blitbuffer = croppedbuffer;
@@ -2393,8 +2391,7 @@ void GRPLINUXSCREENWAYLAND::Buffer_Release(void* data, struct wl_buffer* buffer)
 * --------------------------------------------------------------------------------------------------------------------*/
 void GRPLINUXSCREENWAYLAND::Decoration_Configure(void* data, struct zxdg_toplevel_decoration_v1* decoration, XDWORD mode)
 {
-  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, __L("[Screen Wayland] xdg-decoration: compositor granted mode %s"),
-    (mode == ZXDG_TOPLEVEL_DECORATION_V1_MODE_SERVER_SIDE) ? __L("SERVER_SIDE (native)") : __L("CLIENT_SIDE (app must draw its own)"));
+  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, __L("[Screen Wayland] xdg-decoration: compositor granted mode %s"), (mode == ZXDG_TOPLEVEL_DECORATION_V1_MODE_SERVER_SIDE) ? __L("SERVER_SIDE (native)") : __L("CLIENT_SIDE (app must draw its own)"));
 }
 #endif
 

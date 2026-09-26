@@ -128,11 +128,11 @@ bool GRPVECTORFILESVGOBJCIRCLE::BuildPath(GRP2DPATH& path)
 
   double o = r * GRPVECTORFILESVGOBJCIRCLE_KAPPA;
 
-  path.MoveTo (cx + r, cy        );
-  path.CurveTo(cx + r, cy + o,  cx + o, cy + r,  cx    , cy + r);
-  path.CurveTo(cx - o, cy + r,  cx - r, cy + o,  cx - r, cy    );
-  path.CurveTo(cx - r, cy - o,  cx - o, cy - r,  cx    , cy - r);
-  path.CurveTo(cx + o, cy - r,  cx + r, cy - o,  cx + r, cy    );
+  path.MoveTo (cx + r, cy);
+  path.CurveTo(cx + r, cy + o, cx + o, cy + r, cx, cy + r);
+  path.CurveTo(cx - o, cy + r, cx - r, cy + o, cx - r, cy);
+  path.CurveTo(cx - r, cy - o, cx - o, cy - r, cx, cy - r);
+  path.CurveTo(cx + o, cy - r, cx + r, cy - o, cx + r, cy);
   path.Close();
 
   return true;

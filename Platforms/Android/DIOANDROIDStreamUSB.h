@@ -55,7 +55,6 @@ enum DIOANDROIDUSBFSMEVENTS
   DIOANDROIDUSB_LASTEVENT
 };
 
-
 enum DIOANDROIDUSBFSMSTATES
 {
   DIOANDROIDUSBFSMSTATE_NONE               = 0  ,
@@ -68,14 +67,9 @@ enum DIOANDROIDUSBFSMSTATES
   DIOANDROIDUSB_LASTSTATE
 };
 
-
-
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
 
-
 class XTHREAD;
-
 
 class DIOANDROIDSTREAMUSB : public DIOSTREAMUSB , public XFSMACHINE
 {
@@ -96,8 +90,8 @@ class DIOANDROIDSTREAMUSB : public DIOSTREAMUSB , public XFSMACHINE
    
     static void           ThreadConnection              (void* data);
 
-    XDWORD                ReadBuffer                    (XBYTE* buffer,XDWORD size);
-    XDWORD                WriteBuffer                   (XBYTE* buffer,XDWORD size);
+    XDWORD                ReadBuffer                    (XBYTE* buffer, XDWORD size);
+    XDWORD                WriteBuffer                   (XBYTE* buffer, XDWORD size);
 
     void                  Clean                         ();
 

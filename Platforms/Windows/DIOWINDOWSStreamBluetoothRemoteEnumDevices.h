@@ -100,9 +100,6 @@ enum DIOWINDOWSBTENUMPROTOCOLUUID
   DIOWINDOWSBTENUMPROTOCOLUUID_L2CAP        = 0X0100
 };
 
-
-
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
 
 

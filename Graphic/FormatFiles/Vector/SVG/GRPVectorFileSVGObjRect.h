@@ -32,17 +32,12 @@
 
 #include "GRPVectorFileSVGObj.h"
 
-
-
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
-
-
 
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
 
 class XFILEXMLELEMENT;
 class GRP2DPATH;
-
 
 class GRPVECTORFILESVGOBJRECT : public GRPVECTORFILESVGOBJ
 {

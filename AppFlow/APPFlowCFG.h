@@ -220,15 +220,11 @@
 
 #endif
 
-
-
 #ifdef XTRACE_ACTIVE
   #define   APPFLOW_CFG_SETAUTOMATICTRACETARGETS                                      APPFLOW_CFG.SetAutomaticTraceTargets();
 #else
   #define   APPFLOW_CFG_SETAUTOMATICTRACETARGETS             
 #endif
-
-
 
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
 
@@ -253,7 +249,6 @@ class APPFLOWCFG
 
     virtual bool         End                                                      ();  
 
-
     #ifdef APPFLOW_CFG_GENERAL_ACTIVE
     XSTRING*             GetScraperWebScriptURLDownload                           ();
     XWORD                GetShowDetailInfo                                        ();
@@ -266,7 +261,6 @@ class APPFLOWCFG
     #endif
     #endif
 
-
     #ifdef APPFLOW_CFG_CHECKRESOURCESHARDWARE_ACTIVE
     int                  CheckResourcesHardware_GetMemStatusCheckCadence          ();
     int                  CheckResourcesHardware_GetMemStatusLimitPercent          ();
@@ -277,7 +271,6 @@ class APPFLOWCFG
     int                  CheckResourcesHardware_GetAppCPUUsageCheckCadence        ();
     int                  CheckResourcesHardware_GetAppCPUUsageLimitPercent        ();
     #endif
-
 
     #ifdef APPFLOW_CFG_INTERNETSERVICES_ACTIVE
     int                  InternetServices_GetCheckInternetStatusCadence           ();
@@ -299,7 +292,6 @@ class APPFLOWCFG
     #endif
     #endif
 
-
     #ifdef APPFLOW_CFG_DIOLOCATION_ACTIVE
     XSTRING*             Location_GetStreet                                       ();
     XSTRING*             Location_GetCity                                         ();
@@ -307,7 +299,6 @@ class APPFLOWCFG
     XSTRING*             Location_GetCountry                                      ();
     int                  Location_GetPostalCode                                   ();
     #endif
-
 
     #ifdef APPFLOW_CFG_APPUPDATE_ACTIVE
     bool                 ApplicationUpdate_IsActive                               ();
@@ -317,7 +308,6 @@ class APPFLOWCFG
     XSTRING*             ApplicationUpdate_GetCheckTime                           ();
     int                  ApplicationUpdate_GetMaxRestorations                     ();
     #endif
-
 
     #ifdef APPFLOW_CFG_ALERTS_ACTIVE
     bool                 Alerts_IsActive                                          ();
@@ -345,7 +335,6 @@ class APPFLOWCFG
     XSTRING*             Alerts_GetUDPRecipient                                   (int index);
     #endif
 
-
     #ifdef APPFLOW_CFG_WEBSERVER_ACTIVE
     XSTRING*             WebServer_GetLocalAddress                                ();
     int                  WebServer_GetPort                                        ();
@@ -356,7 +345,6 @@ class APPFLOWCFG
     XPATH*               WebServer_PathResources                                  ();
     XPATH*               WebServer_PathPHP                                        ();
     #ifdef DIO_STREAMTLS_ACTIVE
-    
     
     bool                 WebServer_IsTLS                                          ();
     XPATH*               WebServer_PathPrivateKey                                 ();
@@ -392,7 +380,6 @@ class APPFLOWCFG
     #endif
     #endif
 
-
     #ifdef APPFLOW_CFG_CHECKRESOURCESHARDWARE_ACTIVE
     int                  checkresourceshardware_memstatuscheckcadence;
     int                  checkresourceshardware_memstatuslimitpercent;
@@ -402,7 +389,6 @@ class APPFLOWCFG
     int                  checkresourceshardware_appcpuusagecheckcadence;
     int                  checkresourceshardware_appcpuusagelimitpercent;
     #endif
-
 
     #ifdef APPFLOW_CFG_INTERNETSERVICES_ACTIVE
     int                  internetservices_checkinternetstatuscadence;
@@ -425,7 +411,6 @@ class APPFLOWCFG
     #endif
     #endif
 
-
     #ifdef APPFLOW_CFG_DIOLOCATION_ACTIVE
     XSTRING              location_street;
     XSTRING              location_city;
@@ -433,7 +418,6 @@ class APPFLOWCFG
     XSTRING              location_country;
     int                  location_postalcode;
     #endif
-
 
     #ifdef APPFLOW_CFG_APPUPDATE_ACTIVE
     bool                 applicationupdate_isactive;
@@ -443,7 +427,6 @@ class APPFLOWCFG
     XSTRING              applicationupdate_checktime;
     int                  applicationupdate_maxrestorations;
     #endif
-
 
     #ifdef APPFLOW_CFG_WEBSERVER_ACTIVE
     XSTRING              webserver_localaddr;
@@ -460,7 +443,6 @@ class APPFLOWCFG
     XSTRING              webserver_privatekey_password;
     #endif
     #endif
-
 
     #ifdef APPFLOW_CFG_ALERTS_ACTIVE
     bool                 alerts_isactive;

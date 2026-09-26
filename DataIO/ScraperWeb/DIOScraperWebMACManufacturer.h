@@ -41,10 +41,7 @@
 #define DIOSCRAPERWEBMACMANUFACTURER_NAMEFILE     __L("ws_publicip.xml")
 #define DIOSCRAPERWEBMACMANUFACTURER_NAMESERVICE  __L("MACMANUFACTURED")
 
-
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
-
 
 class DIOMACMANUFACTURED_RESULT :  public DIOSCRAPERWEBCACHE_RESULT
 {
@@ -70,7 +67,7 @@ class DIOSCRAPERWEBMACMANUFACTURER : public DIOSCRAPERWEB
 
     bool                      ChangeURL                         (XCHAR* maskurl, DIOURL& url);
 
-    bool                      Get                               (DIOMAC& MAC, XSTRING& manufactured, int timeoutforurl  = DIOSCRAPERWEB_MAXTIMEOUTFORURL, XSTRING* localIP = NULL, bool usecache = true);
+    bool                      Get                               (DIOMAC& MAC, XSTRING& manufactured, int timeoutforurl = DIOSCRAPERWEB_MAXTIMEOUTFORURL, XSTRING* localIP = NULL, bool usecache = true);
 
   private:
 

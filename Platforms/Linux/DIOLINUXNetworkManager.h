@@ -52,23 +52,15 @@ enum DIOLINUXNETWORKMANAGER_STATE
   DIOLINUXNETWORKMANAGER_STATE_CONNECTED_GLOBAL       ,  // there is global IPv4 and/or IPv6 Internet connectivity
 };
 
-
 #define DIOLINUXNETWORKMANAGER_DEFAULT_DBUS_DESTINATION        __L("org.freedesktop.NetworkManager")
 #define DIOLINUXNETWORKMANAGER_DEFAULT_DBUS_PATH               __L("/org/freedesktop/NetworkManager")
 #define DIOLINUXNETWORKMANAGER_DEFAULT_DBUS_IFACE_MAIN         __L("org.freedesktop.NetworkManager")
 #define DIOLINUXNETWORKMANAGER_DEFAULT_DBUS_IFACE_DEVICE       __L("org.freedesktop.NetworkManager.Device")
 #define DIOLINUXNETWORKMANAGER_DEFAULT_DBUS_IFACE_IP4CONFIG    __L("org.freedesktop.NetworkManager.IP4Config")
 
-
-
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
 
-
-
-
 /*---- INLINE FUNCTIONS + PROTOTYPES ---------------------------------------------------------------------------------*/
-
 
 class DIOLINUXDBUS_XEVENT;
 class DIOLINUXDBUS;

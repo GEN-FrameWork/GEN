@@ -100,14 +100,9 @@ typedef struct
 } GRPBITMAPFILETGAHEADERINFO;
 #pragma pack(pop, r1)
 
-
-
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
 
-
 class GRPBITMAP;
-
 
 class GRPBITMAPFILETGAHEADER
 {
@@ -117,7 +112,6 @@ class GRPBITMAPFILETGAHEADER
 
     bool                                Load                      (XFILE* file);
     bool                                Load                      (XBYTE* buffer, XDWORD size, XDWORD& indexbuffer);
-
 
     GRPBITMAPFILETGAHEADERINFO*         GetHeaderInfo             ();
 

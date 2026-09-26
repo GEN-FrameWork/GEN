@@ -33,12 +33,7 @@
 #include "XString.h"
 #include "XFileTXT.h"
 
-
-
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
-
-
-
 
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
 
@@ -68,7 +63,6 @@ class XFILECSV_RECORD
     XVECTOR<XSTRING*>             elements;
 };
 
-
 class XFILECSV : public XFILETXT
 {
   public:
@@ -76,7 +70,6 @@ class XFILECSV : public XFILETXT
                                   XFILECSV                (XPATH& xpath);
                                   XFILECSV                (XFILE* file);
     virtual                      ~XFILECSV                ();
-
 
     virtual bool                  Open                    (XPATH& xpath, bool readonly = true);
     virtual bool                  Close                   (void);
@@ -91,7 +84,7 @@ class XFILECSV : public XFILETXT
     int                           GetNRecords             ();
 
     XFILECSV_RECORD*              ReadRecord              (XDWORD nrecord);
-    bool                          WriteRecord             (XDWORD nrecord,XFILECSV_RECORD* record);
+    bool                          WriteRecord             (XDWORD nrecord, XFILECSV_RECORD* record);
 
     bool                          AddRecord               (XFILECSV_RECORD* record);
 
@@ -100,10 +93,10 @@ class XFILECSV : public XFILETXT
 
   private:
 
-    bool                          Serialization           (bool read,bool haveheader = false);
+    bool                          Serialization           (bool read, bool haveheader = false);
 
-    bool                          CreateRecordOfLine      (XSTRING& line,XFILECSV_RECORD* record);
-    bool                          CreateLineOfRecord      (XFILECSV_RECORD* record,XSTRING& line);
+    bool                          CreateRecordOfLine      (XSTRING& line, XFILECSV_RECORD* record);
+    bool                          CreateLineOfRecord      (XFILECSV_RECORD* record, XSTRING& line);
 
     void                          Clean                   ();
 

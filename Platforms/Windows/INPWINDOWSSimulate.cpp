@@ -524,7 +524,6 @@ bool INPWINDOWSSIMULATE::IsScrollLockActive()
 }
 
 
-
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         void INPWINDOWSSIMULATE::Clean()

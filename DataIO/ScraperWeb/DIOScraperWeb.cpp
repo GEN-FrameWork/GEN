@@ -309,7 +309,7 @@ bool DIOSCRAPERWEB::Do(XCHAR* namewebservice, int timeoutforurl, XSTRING* localI
 
                       format = nodeweb->GetValueAttribute(__L("format"));
 
-                      if(!format.Compare(__L("JSON"),true))
+                      if(!format.Compare(__L("JSON"), true))
                         {
                           XFILEJSON* json = GEN_NEW XFILEJSON();
                           if(json)
@@ -335,7 +335,7 @@ bool DIOSCRAPERWEB::Do(XCHAR* namewebservice, int timeoutforurl, XSTRING* localI
 
                                       namevalue      = nodevalue->GetValueAttribute(__L("namevalue"));
 
-                                      XFILEJSONVALUE* jsonvalue = json->GetValue(namevalue,NULL);
+                                      XFILEJSONVALUE* jsonvalue = json->GetValue(namevalue, NULL);
                                       if(jsonvalue)
                                         {
                                           switch(jsonvalue->GetType())
@@ -343,7 +343,7 @@ bool DIOSCRAPERWEB::Do(XCHAR* namewebservice, int timeoutforurl, XSTRING* localI
                                               case XFILEJSONVALUETYPE_INTEGER           : { int     pvalue = (int)jsonvalue->GetValueInteger();
                                                                                             XSTRING string;
 
-                                                                                            string.Format(__L("%d"),pvalue);
+                                                                                            string.Format(__L("%d"), pvalue);
 
                                                                                             AddValue(name, string);
                                                                                           }
@@ -352,7 +352,7 @@ bool DIOSCRAPERWEB::Do(XCHAR* namewebservice, int timeoutforurl, XSTRING* localI
                                               case XFILEJSONVALUETYPE_DOUBLEINTEGER     : { long pvalue = (long)jsonvalue->GetValueDoubleInteger();
                                                                                             XSTRING string;
 
-                                                                                            string.Format(__L("%ld"),pvalue);
+                                                                                            string.Format(__L("%ld"), pvalue);
 
                                                                                             AddValue(name, string);
                                                                                           }
@@ -361,7 +361,7 @@ bool DIOSCRAPERWEB::Do(XCHAR* namewebservice, int timeoutforurl, XSTRING* localI
                                               case XFILEJSONVALUETYPE_FLOAT             : { float   pvalue = (float)jsonvalue->GetValueFloating();
                                                                                             XSTRING string;
 
-                                                                                            string.Format(__L("%f"),pvalue);
+                                                                                            string.Format(__L("%f"), pvalue);
 
                                                                                             AddValue(name, string);
                                                                                           }
@@ -370,7 +370,7 @@ bool DIOSCRAPERWEB::Do(XCHAR* namewebservice, int timeoutforurl, XSTRING* localI
                                               case XFILEJSONVALUETYPE_DOUBLEFLOAT       : { double  pvalue = (float)jsonvalue->GetValueDoubleFloat();
                                                                                             XSTRING string;
 
-                                                                                            string.Format(__L("%f"),pvalue);
+                                                                                            string.Format(__L("%f"), pvalue);
 
                                                                                             AddValue(name, string);
                                                                                           }
@@ -400,7 +400,7 @@ bool DIOSCRAPERWEB::Do(XCHAR* namewebservice, int timeoutforurl, XSTRING* localI
                             }
                         }
 
-                      if(!format.Compare(__L("HTML"),true))
+                      if(!format.Compare(__L("HTML"), true))
                         {
                           for(int d=0; d<nodeweb->GetNElements(); d++)
                             {
@@ -525,7 +525,7 @@ bool DIOSCRAPERWEB::AddValue(XCHAR* name, XCHAR* value)
   (*_name)  = name;
   (*_value) = value;
 
-  values.Add(_name,_value);
+  values.Add(_name, _value);
 
   return true;
 }
@@ -551,7 +551,7 @@ bool DIOSCRAPERWEB::AddValue(XCHAR* name, XSTRING& value)
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         bool DIOSCRAPERWEB::AddValue(XSTRING& name,XCHAR* value)
+* @fn         bool DIOSCRAPERWEB::AddValue(XSTRING& name, XCHAR* value)
 * @brief      Add value
 * @ingroup    DATAIO
 * 
@@ -561,7 +561,7 @@ bool DIOSCRAPERWEB::AddValue(XCHAR* name, XSTRING& value)
 * @return     bool : true if the operation is successful; otherwise false.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-bool DIOSCRAPERWEB::AddValue(XSTRING& name,XCHAR*  value)
+bool DIOSCRAPERWEB::AddValue(XSTRING& name, XCHAR* value)
 {
   return AddValue(name.Get(), value);
 }
@@ -677,7 +677,7 @@ DIOWEBCLIENT* DIOSCRAPERWEB::GetWebClient()
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         bool DIOSCRAPERWEB::ExtractString(XCHAR* searchini,XCHAR* searchend,XBUFFER* xbuffer,bool usebufferpos,XSTRING& result)
+* @fn         bool DIOSCRAPERWEB::ExtractString(XCHAR* searchini, XCHAR* searchend, XBUFFER* xbuffer, bool usebufferpos, XSTRING& result)
 * @brief      Extract string
 * @ingroup    DATAIO
 * 
@@ -690,7 +690,7 @@ DIOWEBCLIENT* DIOSCRAPERWEB::GetWebClient()
 * @return     bool : true if the operation is successful; otherwise false.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-bool DIOSCRAPERWEB::ExtractString(XCHAR* searchini,XCHAR* searchend,XBUFFER* xbuffer,bool usebufferpos,XSTRING& result)
+bool DIOSCRAPERWEB::ExtractString(XCHAR* searchini, XCHAR* searchend, XBUFFER* xbuffer, bool usebufferpos, XSTRING& result)
 {
   if((!searchini) || (!searchend)) return false;
 
@@ -700,7 +700,7 @@ bool DIOSCRAPERWEB::ExtractString(XCHAR* searchini,XCHAR* searchend,XBUFFER* xbu
   _searchini = searchini;
   _searchend = searchend;
 
-  return ExtractString(_searchini,_searchend,xbuffer,usebufferpos,result);
+  return ExtractString(_searchini, _searchend, xbuffer, usebufferpos, result);
 }
 
 
@@ -727,13 +727,13 @@ bool DIOSCRAPERWEB::ExtractString(XCHAR* searchini, XSTRING& searchend, XBUFFER*
 
   _searchini = searchini;
 
-  return ExtractString(_searchini,searchend,xbuffer,usebufferpos,result);
+  return ExtractString(_searchini, searchend, xbuffer, usebufferpos, result);
 }
 
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         bool DIOSCRAPERWEB::ExtractString(XSTRING& searchini,XCHAR* searchend,XBUFFER* xbuffer,bool usebufferpos,XSTRING& result)
+* @fn         bool DIOSCRAPERWEB::ExtractString(XSTRING& searchini, XCHAR* searchend, XBUFFER* xbuffer, bool usebufferpos, XSTRING& result)
 * @brief      Extract string
 * @ingroup    DATAIO
 * 
@@ -746,7 +746,7 @@ bool DIOSCRAPERWEB::ExtractString(XCHAR* searchini, XSTRING& searchend, XBUFFER*
 * @return     bool : true if the operation is successful; otherwise false.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-bool DIOSCRAPERWEB::ExtractString(XSTRING& searchini,XCHAR* searchend,XBUFFER* xbuffer,bool usebufferpos,XSTRING& result)
+bool DIOSCRAPERWEB::ExtractString(XSTRING& searchini, XCHAR* searchend, XBUFFER* xbuffer, bool usebufferpos, XSTRING& result)
 {
   if(!searchend) return false;
 
@@ -754,7 +754,7 @@ bool DIOSCRAPERWEB::ExtractString(XSTRING& searchini,XCHAR* searchend,XBUFFER* x
 
   _searchend = searchend;
 
-  return ExtractString(searchini,_searchend,xbuffer,usebufferpos,result);
+  return ExtractString(searchini, _searchend, xbuffer, usebufferpos, result);
 }
 
 
@@ -789,18 +789,18 @@ bool DIOSCRAPERWEB::ExtractString(XSTRING& searchini, XSTRING& searchend, XBUFFE
   //html = (char*)xbuffer->Get();
   html = *xbuffer; // #Imanol, changed to avoid a buffer overrun
 
-  indexini = html.Find(searchini,false,usebufferpos?xbuffer->GetPosition():0);
+  indexini = html.Find(searchini, false, usebufferpos?xbuffer->GetPosition():0);
   if(indexini==XSTRING_NOTFOUND) return false;
 
-  indexend = html.Find(searchend,false,indexini + searchini.GetSize());
+  indexend = html.Find(searchend, false, indexini + searchini.GetSize());
   if(indexend==XSTRING_NOTFOUND) return false;
 
   if((int)(indexini + searchini.GetSize())>=indexend) return false;
 
-  html.Copy(indexini + searchini.GetSize(),indexend,result);
+  html.Copy(indexini + searchini.GetSize(), indexend, result);
 
-  result.DeleteCharacter(__C(' '),XSTRINGCONTEXT_FROM_FIRST);
-  result.DeleteCharacter(__C(' '),XSTRINGCONTEXT_TO_END);
+  result.DeleteCharacter(__C(' '), XSTRINGCONTEXT_FROM_FIRST);
+  result.DeleteCharacter(__C(' '), XSTRINGCONTEXT_TO_END);
 
   if(result.IsEmpty()) return false;
 

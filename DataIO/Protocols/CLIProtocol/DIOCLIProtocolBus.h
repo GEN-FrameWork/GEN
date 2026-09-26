@@ -36,8 +36,6 @@
 
 #include "DIOCLIProtocol.h"
 
-
-
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
 
 #define DIOCLIPROTOCOLBUS_ENUM_DEFAULTMAXTIME     30
@@ -48,10 +46,7 @@
 #define DIOCLIPROTOCOLBUS_COMMAND_ENUM  			    __L("enum")
 #define DIOCLIPROTOCOLBUS_COMMAND_ENUMREQUEST     __L("enumrequest")
 
-
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
-
 
 class DIOCLIPROTOCOLBUS : public DIOCLIPROTOCOL
 {

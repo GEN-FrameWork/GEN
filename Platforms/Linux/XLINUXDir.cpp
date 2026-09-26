@@ -179,7 +179,7 @@ bool XLINUXDIR::Make(XCHAR* path, bool recursive)
       xpathsequence.Empty();
 
       do{
-          if(xpath.GetPathInSequence(index,pathpart))
+          if(xpath.GetPathInSequence(index, pathpart))
             {
               xpathsequence.Slash_Add();
               xpathsequence += pathpart;
@@ -258,7 +258,7 @@ bool XLINUXDIR::ChangeTo(XCHAR* path)
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         bool XLINUXDIR::Delete(XCHAR* path,bool all)
+* @fn         bool XLINUXDIR::Delete(XCHAR* path, bool all)
 * @brief      Delete resource
 * @ingroup    PLATFORM_LINUX
 * 
@@ -268,7 +268,7 @@ bool XLINUXDIR::ChangeTo(XCHAR* path)
 * @return     bool : true if the operation is successful; otherwise false.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-bool XLINUXDIR::Delete(XCHAR* path,bool all)
+bool XLINUXDIR::Delete(XCHAR* path, bool all)
 {
   XDIRELEMENT search;
   XPATH       pathfile;
@@ -277,7 +277,7 @@ bool XLINUXDIR::Delete(XCHAR* path,bool all)
 
   if(all)
     {
-      if(FirstSearch(path,__L("*"),&search))
+      if(FirstSearch(path, __L("*"), &search))
         {
           do { pathfile = path;
                pathfile.Slash_Add();
@@ -285,7 +285,7 @@ bool XLINUXDIR::Delete(XCHAR* path,bool all)
 
                if(search.GetType()==XDIRELEMENTTYPE_DIR)
                  {
-                   Delete(pathfile.Get(),all);
+                   Delete(pathfile.Get(), all);
                  }
                 else
                  {
@@ -413,7 +413,7 @@ bool XLINUXDIR::NextSearch(XDIRELEMENT* searchelement)
       if((name.Compare(__L("."))) && (name.Compare(__L(".."))))
         {
           searchelement->GetPatternSearch()->ConvertToUTF8(patternsearch);
-          if(!fnmatch((char*)patternsearch.Get(), entry->d_name,0))
+          if(!fnmatch((char*)patternsearch.Get(), entry->d_name, 0))
             {
               searchelement->SetType(XDIRELEMENTTYPE_NONE);
               searchelement->GetNameFile()->Set(name.Get());

@@ -179,7 +179,6 @@
 
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
 
-
 class DIOSTREAMDEVICEBLUETOOTHSDPSERVICEPROTOCOL
 {
   public:
@@ -199,7 +198,6 @@ class DIOSTREAMDEVICEBLUETOOTHSDPSERVICEPROTOCOL
     XDWORD                                          type;
     XWORD                                           channel;
 };
-
 
 class DIOSTREAMDEVICEBLUETOOTHSDPSERVICE
 {
@@ -237,7 +235,6 @@ class DIOSTREAMDEVICEBLUETOOTHSDPSERVICE
     DIOSTREAMDEVICEBLUETOOTHSDPSERVICEPROTOCOL      protocols[DIOSTREAMDEVICEBLUETOOTHSDPSERVICE_MAXPROTOCOLS];
 
 };
-
 
 class DIOSTREAMDEVICEBLUETOOTH : public DIOSTREAMDEVICE
 {

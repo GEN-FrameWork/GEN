@@ -127,15 +127,10 @@ enum DIOCOREPROTOCOL_HEADER_CONTENTTYPE
 
 #endif
 
-
-
-
 /*---- CLASS ---------------------------------------------------------c------------------------------------------------*/
-
 
 class COMPRESSMANAGER;
 class COMPRESSBASE;    	
-
 
 class DIOCOREPROTOCOL_HEADER : public XSERIALIZABLE
 {

@@ -433,7 +433,7 @@ bool DIOOBEXPUSH::Ini(int timeout)
         {
           if(diostream->WaitToConnected(timeout))
             {
-              xthreadobex = CREATEXTHREAD(XTHREADGROUPID_DIOSTREAM, __L("DIOOBEXPUSH::Ini"),ThreadSend,(void*)this);
+              xthreadobex = CREATEXTHREAD(XTHREADGROUPID_DIOSTREAM, __L("DIOOBEXPUSH::Ini"), ThreadSend, (void*)this);
               if(xthreadobex)
                 {
                   xthreadobex->Ini(false);
@@ -498,7 +498,7 @@ bool DIOOBEXPUSH::SetIsSending(bool issending)
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         bool DIOOBEXPUSH::SendFile(XPATH& xpath,XSTRING& namesend,XDWORD ID,int timeoutask)
+* @fn         bool DIOOBEXPUSH::SendFile(XPATH& xpath, XSTRING& namesend, XDWORD ID, int timeoutask)
 * @brief      Send file
 * @ingroup    DATAIO
 * 
@@ -510,10 +510,10 @@ bool DIOOBEXPUSH::SetIsSending(bool issending)
 * @return     bool : true if the operation is successful; otherwise false.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-bool DIOOBEXPUSH::SendFile(XPATH& xpath,XSTRING& namesend,XDWORD ID,int timeoutask)
+bool DIOOBEXPUSH::SendFile(XPATH& xpath, XSTRING& namesend, XDWORD ID, int timeoutask)
 {
   SendFileList_DeleteAll();
-  if(!SendFileList_AddFile(xpath,namesend,ID)) return false;
+  if(!SendFileList_AddFile(xpath, namesend, ID)) return false;
 
   return SendFiles(timeoutask);
 }
@@ -581,7 +581,7 @@ XQWORD DIOOBEXPUSH::GetAskTimeElapsed()
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         bool DIOOBEXPUSH::SendFileList_AddFile(XPATH& xpath,XSTRING& namesend,XDWORD ID)
+* @fn         bool DIOOBEXPUSH::SendFileList_AddFile(XPATH& xpath, XSTRING& namesend, XDWORD ID)
 * @brief      Send file list add file
 * @ingroup    DATAIO
 * 
@@ -592,7 +592,7 @@ XQWORD DIOOBEXPUSH::GetAskTimeElapsed()
 * @return     bool : true if the operation is successful; otherwise false.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-bool DIOOBEXPUSH::SendFileList_AddFile(XPATH& xpath,XSTRING& namesend,XDWORD ID)
+bool DIOOBEXPUSH::SendFileList_AddFile(XPATH& xpath, XSTRING& namesend, XDWORD ID)
 {
   DIOOBEXPUSHFILE* obexpushfile = GEN_NEW DIOOBEXPUSHFILE();
   if(!obexpushfile) return false;
@@ -930,7 +930,7 @@ bool DIOOBEXPUSH::CheckSending()
 
                                                           { XBUFFER datafile((XDWORD)readfilesizeblock, true);
 
-                                                            xfile->Read(datafile.Get(),(XDWORD*)&readfilesizeblock);
+                                                            xfile->Read(datafile.Get(), (XDWORD*)&readfilesizeblock);
                                                             if(!readfilesizeblock)
                                                               {
                                                                 haveerror = true;
@@ -944,11 +944,11 @@ bool DIOOBEXPUSH::CheckSending()
                                                           if(inlittleendian)
                                                                   wsize = SwapWORD((XWORD)sendbuffer->GetSize());
                                                             else  wsize = (XWORD)sendbuffer->GetSize();
-                                                          sendbuffer->Set((XBYTE*)&wsize,2,1);
+                                                          sendbuffer->Set((XBYTE*)&wsize, 2, 1);
 
                                                           //XTRACE_PRINTDATABLOCKCOLOR(XTRACE_COLOR_GREEN, (*sendbuffer));
 
-                                                          sio->Write(sendbuffer->Get(),sendbuffer->GetSize());
+                                                          sio->Write(sendbuffer->Get(), sendbuffer->GetSize());
                                                           sio->WaitToFlushOutXBuffer(5);
 
                                                           if(filesize) obexpushfile->SetSendPercent((XBYTE)((readfilesize*100)/filesize));
@@ -1016,7 +1016,7 @@ bool DIOOBEXPUSH::CheckSending()
 
                                                           //XTRACE_PRINTDATABLOCKCOLOR(XTRACE_COLOR_GREEN, (*sendbuffer));
 
-                                                          sio->Write(sendbuffer->Get(),sendbuffer->GetSize());
+                                                          sio->Write(sendbuffer->Get(), sendbuffer->GetSize());
                                                           sio->WaitToFlushOutXBuffer(5);
                                                           break;
 
@@ -1027,7 +1027,7 @@ bool DIOOBEXPUSH::CheckSending()
 
                                                             xpath = (*obexpushfile->GetXPath());
 
-                                                            if((!xfile)||(!xfile->Open(xpath,true))||(!sendbuffer))
+                                                            if((!xfile)||(!xfile->Open(xpath, true))||(!sendbuffer))
                                                               {
                                                                 haveerror = true;
                                                                 SetEvent(DIOOBEXPUSH_XFSMEVENT_ENDPUSH);
@@ -1066,11 +1066,11 @@ bool DIOOBEXPUSH::CheckSending()
                                                           if(inlittleendian)
                                                                   wsize = SwapWORD((XWORD)sendbuffer->GetSize());
                                                             else  wsize = (XWORD)sendbuffer->GetSize();
-                                                          sendbuffer->Set((XBYTE*)&wsize,2,1);
+                                                          sendbuffer->Set((XBYTE*)&wsize, 2, 1);
 
                                                           //XTRACE_PRINTDATABLOCKCOLOR(XTRACE_COLOR_GREEN, (*sendbuffer));
 
-                                                          sio->Write(sendbuffer->Get(),sendbuffer->GetSize());
+                                                          sio->Write(sendbuffer->Get(), sendbuffer->GetSize());
                                                           sio->WaitToFlushOutXBuffer(5);
                                                           break;
 

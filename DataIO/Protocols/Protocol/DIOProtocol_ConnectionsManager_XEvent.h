@@ -33,7 +33,6 @@
 #include "XEvent.h"
 
 
-
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
 
 enum DIOPROTOCOL_CONNECTIONSMANAGER_XEVENT_TYPE
@@ -44,17 +43,13 @@ enum DIOPROTOCOL_CONNECTIONSMANAGER_XEVENT_TYPE
   DIOPROTOCOL_CONNECTIONSMANAGER_XEVENT_TYPE_DISCONNECTEDCONNECTION                                        ,
 };
 
-
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
-
 
 class DIOSTREAMENUMSERVERS;
 class DIOSTREAMCONFIG;
 class DIOPROTOCOL;
 class DIOPROTOCOL_CONNECTION;
 class DIOPROTOCOL_CONNECTIONSMANAGER;
-
 
 class DIOPROTOCOL_CONNECTIONSMANAGER_XEVENT : public XEVENT
 {

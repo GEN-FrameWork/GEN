@@ -32,8 +32,6 @@
 
 #include "Hash.h"
 
-
-
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
 
 #define HASHCOMP128V1_RAND_SIZE     16
@@ -42,8 +40,6 @@
 #define HASHCOMP128V1_SRES_SIZE     4
 #define HASHCOMP128V1_KC_SIZE       8
 #define HASHCOMP128V1_RESULT_SIZE   (HASHCOMP128V1_SRES_SIZE + HASHCOMP128V1_KC_SIZE)
-
-
 
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
 

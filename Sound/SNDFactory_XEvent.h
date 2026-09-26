@@ -33,8 +33,6 @@
 #include "XEvent.h"
 #include "XString.h"
 
-
-
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
 
 enum SNDFACTORY_XEVENT_TYPE

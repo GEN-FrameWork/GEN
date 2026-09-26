@@ -185,10 +185,6 @@ void DIOCOREPROTOCOL_COMMAND::Clean()
 }
 
 
-
-
-
-
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         DIOCOREPROTOCOL_UPDATECLASS::DIOCOREPROTOCOL_UPDATECLASS()
@@ -485,9 +481,6 @@ void DIOCOREPROTOCOL_UPDATECLASS::Clean()
  }
 
 
-
-
-
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         DIOCOREPROTOCOL::DIOCOREPROTOCOL(DIOCOREPROTOCOL_CFG* protocolCFG, DIOSTREAM* diostream)
@@ -512,10 +505,7 @@ DIOCOREPROTOCOL::DIOCOREPROTOCOL(DIOCOREPROTOCOL_CFG* protocolCFG, DIOSTREAM* di
         }
     }  
 
-  base64headermagic.Format(__L("%c%c%c%c")  , ((DIOCOREPROTOCOL_HEADER_MAGIC_ID >> 24) & 0x000000FF)
-                                            , ((DIOCOREPROTOCOL_HEADER_MAGIC_ID >> 16) & 0x000000FF) 
-                                            , ((DIOCOREPROTOCOL_HEADER_MAGIC_ID >>  8) & 0x000000FF) 
-                                            ,  (DIOCOREPROTOCOL_HEADER_MAGIC_ID        & 0x000000FF));
+  base64headermagic.Format(__L("%c%c%c%c"), ((DIOCOREPROTOCOL_HEADER_MAGIC_ID >> 24) & 0x000000FF), ((DIOCOREPROTOCOL_HEADER_MAGIC_ID >> 16) & 0x000000FF), ((DIOCOREPROTOCOL_HEADER_MAGIC_ID >> 8) & 0x000000FF), (DIOCOREPROTOCOL_HEADER_MAGIC_ID & 0x000000FF));
  
 
   this->protocolCFG = protocolCFG;
@@ -758,19 +748,19 @@ XDWORD DIOCOREPROTOCOL::ReceivedMsg(DIOCOREPROTOCOL_HEADER& header, XBUFFER& con
       base64headermask.Format(__L("%s"), base64headermagic.Get()); 
       base64senddata.Copy(0, sizeprelude, base64header);
     
-      base64header.Copy(0,4, extract);
+      base64header.Copy(0, 4, extract);
       if(extract.Compare(base64headermask, true))
         {
           return 0;
         }
 
-      base64header.Copy(4,14, extract);
+      base64header.Copy(4, 14, extract);
       if(!extract.UnFormat(__L("%10d"), &base64size))
         {
           return 0;
         }
 
-      base64header.Copy(14,22, extract);
+      base64header.Copy(14, 22, extract);
       if(!extract.UnFormat(__L("%08x"), &CRC32value))
         {
           return 0;
@@ -802,7 +792,7 @@ XDWORD DIOCOREPROTOCOL::ReceivedMsg(DIOCOREPROTOCOL_HEADER& header, XBUFFER& con
       */           
       // ------------------------------------------------------------------------------------------------------------------------
 
-      base64senddata.DeleteCharacters(base64size,  base64senddata.GetSize() - base64size); 
+      base64senddata.DeleteCharacters(base64size, base64senddata.GetSize() - base64size); 
       if(base64senddata.GetSize() != base64size)
         {
           return 0;
@@ -1003,7 +993,7 @@ XDWORD DIOCOREPROTOCOL::ReceivedMsg(DIOCOREPROTOCOL_HEADER& header, XBUFFER& con
                             }
                            else 
                             {
-                              status = readbuffer->Extract(NULL, 0, sizeread +  offsetini);  
+                              status = readbuffer->Extract(NULL, 0, sizeread + offsetini);  
                               if(!status)
                                 {
                                   XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, __L("[DIO Core Protocol Header] Error to read msg: eliminate buffer used: %d + %d"), sizeread, index);
@@ -1696,7 +1686,7 @@ bool DIOCOREPROTOCOL::ShowDebug(bool send, DIOCOREPROTOCOL_HEADER* header, XBUFF
     {
       colormsg = XTRACE_COLOR_GREEN;
   
-      title.Format(__L("[CoreProtocol] Read  message [%5d bytes] : "), sizeallmessage); 
+      title.Format(__L("[CoreProtocol] Read message [%5d bytes] : "), sizeallmessage); 
     }  
    else 
     {
@@ -1714,7 +1704,7 @@ bool DIOCOREPROTOCOL::ShowDebug(bool send, DIOCOREPROTOCOL_HEADER* header, XBUFF
       header->GetOperationToString(operationstring);
       title.AddFormat(__L("%-20s %-15s [%s] "), ID_message.Get(), operationstring.Get(), header->GetOperationParam()->Get()); 
       #else
-      title.AddFormat(__L("%-20s %03d [%s] "), ID_message.Get(),  header->GetOperation(), header->GetOperationParam()->Get()); 
+      title.AddFormat(__L("%-20s %03d [%s] "), ID_message.Get(), header->GetOperation(), header->GetOperationParam()->Get()); 
       #endif
 
       XTRACE_PRINTCOLOR(colormsg, title.Get()); 
@@ -1940,9 +1930,7 @@ bool DIOCOREPROTOCOL::SendData(XBUFFER& senddata)
 
       base64senddata.ConvertBinaryToBase64(senddata);   
 
-      base64header.Format(__L("%s%010d%08X")  , base64headermagic.Get()
-                                              , base64senddata.GetSize() 
-                                              , CRC32value); 
+      base64header.Format(__L("%s%010d%08X"), base64headermagic.Get(), base64senddata.GetSize(), CRC32value); 
       base64senddata.Insert(base64header, 0);          
       base64senddata.ConvertToUTF8(senddata, false);
     }
@@ -1985,7 +1973,7 @@ bool DIOCOREPROTOCOL::SendData(XBUFFER& senddata)
 * @return     bool : true if the operation is successful; otherwise false.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-bool DIOCOREPROTOCOL::CompressContent(DIOCOREPROTOCOL_HEADER* header, XBUFFER& content,  XBUFFER& contentresult)
+bool DIOCOREPROTOCOL::CompressContent(DIOCOREPROTOCOL_HEADER* header, XBUFFER& content, XBUFFER& contentresult)
 {
   bool status = false;
 

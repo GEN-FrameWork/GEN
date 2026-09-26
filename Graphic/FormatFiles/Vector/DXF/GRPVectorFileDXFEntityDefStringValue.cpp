@@ -254,10 +254,6 @@ void GRPVECTORFILEDXFENTITYDEFSTRINGVALUE::Clean()
 }
 
 
-
-
-
-
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         GRPVECTORFILEDXFENTITYDEFSTRINGLIST::GRPVECTORFILEDXFENTITYDEFSTRINGLIST()

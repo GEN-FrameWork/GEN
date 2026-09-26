@@ -363,7 +363,7 @@ bool DIOSSHREVERSE::DownloadCFG(XSTRING& URL, XSTRING& publicIP, XSTRING& localI
 * @return     bool : true if the operation is successful; otherwise false.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-bool DIOSSHREVERSE::DownloadCFG(DIOURL&  URL, XSTRING& publicIP, XSTRING& localIP)
+bool DIOSSHREVERSE::DownloadCFG(DIOURL& URL, XSTRING& publicIP, XSTRING& localIP)
 {
   return DownloadCFG(URL.Get(), publicIP, localIP);
 }
@@ -386,7 +386,7 @@ bool DIOSSHREVERSE::Activate()
   int     returncode = 0;
 
   //command.AddFormat(__L("%s -p %s ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -o ExitOnForwardFailure=yes -N -R %d:%s:%d %s@%s &"), DIOSSHREVERSE_DEFAULTAPPLICATION, password.Get(), port, localIP.Get() ,DIOSSHREVERSE_DEFAULTPORTSSH, login.Get(), URLtarget.Get());
-  command.AddFormat(__L("%s -p %s autossh -M 0 -o \"ServerAliveInterval 30\" -o \"ServerAliveCountMax 3\" -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -o ExitOnForwardFailure=yes -N -R %d:%s:%d %s@%s &"), DIOSSHREVERSE_DEFAULTAPPLICATION, password.Get(), port, localIP.Get() ,DIOSSHREVERSE_DEFAULTPORTSSH, login.Get(), URLtarget.Get());
+  command.AddFormat(__L("%s -p %s autossh -M 0 -o \"ServerAliveInterval 30\" -o \"ServerAliveCountMax 3\" -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -o ExitOnForwardFailure=yes -N -R %d:%s:%d %s@%s &"), DIOSSHREVERSE_DEFAULTAPPLICATION, password.Get(), port, localIP.Get(), DIOSSHREVERSE_DEFAULTPORTSSH, login.Get(), URLtarget.Get());
   status = GEN_XPROCESSMANAGER.MakeCommand(command.Get(), output, &returncode);
 
   XTIMER* xtimerout=GEN_XFACTORY.CreateTimer();
@@ -432,7 +432,7 @@ bool DIOSSHREVERSE::DeActivate()
   status = GEN_XPROCESSMANAGER.MakeCommand(command.Get(), output, &returncode);
 
   command.Format(__L("killall -9 %s > /dev/null"), DIOSSHREVERSE_DEFAULTAPPLICATION2);
-  status = GEN_XPROCESSMANAGER.MakeCommand(command.Get(), output,&returncode);
+  status = GEN_XPROCESSMANAGER.MakeCommand(command.Get(), output, &returncode);
 
   GEN_XLOG.AddEntry((status?XLOGLEVEL_INFO:XLOGLEVEL_ERROR), DIOSSHREVERSE_LOGSECTIONID, false, __L("Deactivate service return code [%d]"), returncode);
 
@@ -602,7 +602,7 @@ bool DIOSSHREVERSE::Exec(XSTRING& URL, XSTRING& publicIP, XSTRING& localIP)
 * @return     bool : true if the operation is successful; otherwise false.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-bool DIOSSHREVERSE::Exec(DIOURL&  URL, XSTRING& publicIP, XSTRING& localIP)
+bool DIOSSHREVERSE::Exec(DIOURL& URL, XSTRING& publicIP, XSTRING& localIP)
 {
   return Exec(URL.Get(), publicIP, localIP);
 }

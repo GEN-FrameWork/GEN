@@ -164,7 +164,7 @@ HASHCOMP128V1::~HASHCOMP128V1()
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         bool HASHCOMP128V1::SetInput(XBYTE* rand, XBYTE* ki,XBUFFER& xbuffer)
+* @fn         bool HASHCOMP128V1::SetInput(XBYTE* rand, XBYTE* ki, XBUFFER& xbuffer)
 * @brief      Set input
 * @ingroup    CIPHER
 * 
@@ -175,10 +175,10 @@ HASHCOMP128V1::~HASHCOMP128V1()
 * @return     bool : true if the operation is successful; otherwise false.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-bool HASHCOMP128V1::SetInput(XBYTE* rand, XBYTE* ki,XBUFFER& xbuffer)
+bool HASHCOMP128V1::SetInput(XBYTE* rand, XBYTE* ki, XBUFFER& xbuffer)
 {
-  xbuffer.Add(rand  , HASHCOMP128V1_RAND_SIZE);
-  xbuffer.Add(ki    , HASHCOMP128V1_KI_SIZE);
+  xbuffer.Add(rand, HASHCOMP128V1_RAND_SIZE);
+  xbuffer.Add(ki, HASHCOMP128V1_KI_SIZE);
 
   return true;
 }
@@ -245,7 +245,7 @@ bool HASHCOMP128V1::GetSRES(XBUFFER& SRES)
 
   if(result->GetSize()!=HASHCOMP128V1_RESULT_SIZE) return false;
 
-  SRES.Add(result->Get(),HASHCOMP128V1_SRES_SIZE);
+  SRES.Add(result->Get(), HASHCOMP128V1_SRES_SIZE);
 
   return true;
 }

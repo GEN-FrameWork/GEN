@@ -57,13 +57,10 @@ enum CIPHERRSAPKCS1VERSION
 
 //#define CIPHERRSA_RSANOCRT
 
-
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
 
 class XRAND;
 class HASH;
-
 
 class CIPHERRSA_CONTEXT
 {
@@ -75,7 +72,6 @@ class CIPHERRSA_CONTEXT
     
     void                            End                               ();
     
-
     void                            Clean                             ();
                                     
     size_t                          len;
@@ -103,7 +99,6 @@ class CIPHERRSA_CONTEXT
     int                             hashID;
 };
 
-
 class CIPHERRSA : public CIPHER
 {
   public:
@@ -128,18 +123,16 @@ class CIPHERRSA : public CIPHER
     bool                            Verify                            (XBYTE* input, XDWORD size, XBUFFER& signature, HASH* hash, CIPHERRSAPKCS1VERSION pkcs1version = CIPHERRSAPKCS1VERSIONV15, XDWORD saltsize = 0);
     bool                            Verify                            (XBUFFER& input, XBUFFER& signature, HASH* hash, CIPHERRSAPKCS1VERSION pkcs1version = CIPHERRSAPKCS1VERSIONV15, XDWORD saltsize = 0);
 
-
     XRAND*                          GetXRand                          ();
     bool                            GenerateKeys                      (XDWORD nbits, int exponent, CIPHERKEYPUBLICRSA& publickey, CIPHERKEYPRIVATERSA& privatekey, XMPINTEGER_FUNCRANDOM funcrandom = NULL, void* paramrandom = NULL);
 
   private:
 
-
     bool                            CheckContextPublicKey             ();
     bool                            CheckContextPrivateKey            ();
 
-    bool                            Cipher_PKCS1_V15                  (XBYTE* buffer, XDWORD size, XBUFFER& output, CIPHERKEYTYPE keytypetouse, CIPHERRSAPKCS1VERSION pkcs1version,  XMPINTEGER_FUNCRANDOM funcrandom, void* paramrandom);
-    bool                            Uncipher_PKCS1_V15                (XBYTE* buffer, XDWORD size, XBUFFER& output, CIPHERKEYTYPE keytypetouse, CIPHERRSAPKCS1VERSION pkcs1version,  XMPINTEGER_FUNCRANDOM funcrandom, void* paramrandom);
+    bool                            Cipher_PKCS1_V15                  (XBYTE* buffer, XDWORD size, XBUFFER& output, CIPHERKEYTYPE keytypetouse, CIPHERRSAPKCS1VERSION pkcs1version, XMPINTEGER_FUNCRANDOM funcrandom, void* paramrandom);
+    bool                            Uncipher_PKCS1_V15                (XBYTE* buffer, XDWORD size, XBUFFER& output, CIPHERKEYTYPE keytypetouse, CIPHERRSAPKCS1VERSION pkcs1version, XMPINTEGER_FUNCRANDOM funcrandom, void* paramrandom);
 
     bool                            Sign_PKCS1_V15                     (XBYTE* input, XDWORD size, CIPHERKEYTYPE keytouse, HASH* hash);
     bool                            Sign_PKCS1_V21                     (XBYTE* input, XDWORD size, HASH* hash, XDWORD saltsize);

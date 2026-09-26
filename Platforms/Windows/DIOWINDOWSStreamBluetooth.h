@@ -71,16 +71,11 @@ enum DIOWINDOWSBTFSMSTATES
   DIOWINDOWSBT_LASTSTATE
 };
 
-
 #define BTHNS_RESULT_DEVICE_CONNECTED      0x00010000
 #define BTHNS_RESULT_DEVICE_REMEMBERED     0x00020000
 #define BTHNS_RESULT_DEVICE_AUTHENTICATED  0x00040000
 
-
-
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
-
 
 class DIOWINDOWSSTREAMBLUETOOTH : public DIOSTREAMBLUETOOTH , public XFSMACHINE
 {
@@ -96,7 +91,7 @@ class DIOWINDOWSSTREAMBLUETOOTH : public DIOSTREAMBLUETOOTH , public XFSMACHINE
 
   protected:
 
-    bool                      SDP_RegisterService                 (bool reg,char* service_name,char* service_dsc,char* service_prov,void* addr);
+    bool                      SDP_RegisterService                 (bool reg, char* service_name, char* service_dsc, char* service_prov, void* addr);
 
   private:
 

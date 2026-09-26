@@ -276,7 +276,7 @@ void DIOANDROIDSTREAMI2C::ThreadConnection(void* data)
             {
               case DIOSTREAMI2C_FSMSTATE_NONE                 : break;
 
-              case DIOSTREAMI2C_FSMSTATE_CONNECTED            : { DIOSTREAM_XEVENT xevent(diostream,DIOSTREAM_XEVENT_TYPE_CONNECTED);
+              case DIOSTREAMI2C_FSMSTATE_CONNECTED            : { DIOSTREAM_XEVENT xevent(diostream, DIOSTREAM_XEVENT_TYPE_CONNECTED);
                                                                   xevent.SetDIOStream(diostream);
 
                                                                   diostream->PostEvent(&xevent);
@@ -289,7 +289,7 @@ void DIOANDROIDSTREAMI2C::ThreadConnection(void* data)
 
               case DIOSTREAMI2C_FSMSTATE_SENDINGDATA          : break;
 
-              case DIOSTREAMI2C_FSMSTATE_DISCONNECTING        : { DIOSTREAM_XEVENT xevent(diostream,DIOSTREAM_XEVENT_TYPE_DISCONNECTED);
+              case DIOSTREAMI2C_FSMSTATE_DISCONNECTING        : { DIOSTREAM_XEVENT xevent(diostream, DIOSTREAM_XEVENT_TYPE_DISCONNECTED);
                                                                   xevent.SetDIOStream(diostream);
                                                                   diostream->PostEvent(&xevent);
 
@@ -379,7 +379,7 @@ bool DIOANDROIDSTREAMI2C::I2C_Write(XWORD address, XBYTE* buffer, XWORD size)
 
   if(ioctl(handle, DIOANDROIDSTREAMI2C_RDWR, &msg_rdwr) < 0)
     {
-      XTRACE_PRINTCOLOR(4,__L("IOCTL ERROR : %d"),errno);
+      XTRACE_PRINTCOLOR(4, __L("IOCTL ERROR : %d"), errno);
       return false;
     }
 

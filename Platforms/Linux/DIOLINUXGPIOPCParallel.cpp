@@ -226,7 +226,7 @@ bool DIOLINUXGPIOPCPARALLEL::End()
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         bool DIOLINUXGPIOPCPARALLEL::PC_Get(XDWORD nport,XBYTE& data)
+* @fn         bool DIOLINUXGPIOPCPARALLEL::PC_Get(XDWORD nport, XBYTE& data)
 * @brief      PC get
 * @ingroup    PLATFORM_LINUX
 * 
@@ -236,15 +236,15 @@ bool DIOLINUXGPIOPCPARALLEL::End()
 * @return     bool : true if the operation is successful; otherwise false.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-bool DIOLINUXGPIOPCPARALLEL::PC_Get(XDWORD nport,XBYTE& data)
+bool DIOLINUXGPIOPCPARALLEL::PC_Get(XDWORD nport, XBYTE& data)
 {
   XDWORD val = 0;
 
-  if(ioperm(nport,1,1)) return false;
+  if(ioperm(nport, 1, 1)) return false;
 
   val = inb(nport);
 
-  if(ioperm(nport,1,0)) return false;
+  if(ioperm(nport, 1, 0)) return false;
 
   data = (XBYTE)(val & 0x0FF);
 
@@ -254,7 +254,7 @@ bool DIOLINUXGPIOPCPARALLEL::PC_Get(XDWORD nport,XBYTE& data)
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         bool DIOLINUXGPIOPCPARALLEL::PC_Set(XDWORD nport,XBYTE data)
+* @fn         bool DIOLINUXGPIOPCPARALLEL::PC_Set(XDWORD nport, XBYTE data)
 * @brief      PC set
 * @ingroup    PLATFORM_LINUX
 * 
@@ -264,13 +264,13 @@ bool DIOLINUXGPIOPCPARALLEL::PC_Get(XDWORD nport,XBYTE& data)
 * @return     bool : true if the operation is successful; otherwise false.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-bool DIOLINUXGPIOPCPARALLEL::PC_Set(XDWORD nport,XBYTE data)
+bool DIOLINUXGPIOPCPARALLEL::PC_Set(XDWORD nport, XBYTE data)
 {
-  if(ioperm(nport,1,1)) return false;
+  if(ioperm(nport, 1, 1)) return false;
 
   outb(data, nport);
 
-  if(ioperm(nport,1,0)) return false;
+  if(ioperm(nport, 1, 0)) return false;
 
   return true;
 }

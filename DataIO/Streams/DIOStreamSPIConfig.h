@@ -62,10 +62,7 @@ enum DIOSTREAMSPI_GPIO
 #define DIOSTREAMSPI_NO_CS          0x40
 #define DIOSTREAMSPI_READY          0x80
 
-
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
-
 
 class DIOSTREAMSPICONFIG : public DIOSTREAMCONFIG
 {

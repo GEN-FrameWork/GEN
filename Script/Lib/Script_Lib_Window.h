@@ -49,9 +49,6 @@
 
 //#define SCRIPT_LIB_WINDOWS_DEBUG
 
-
-
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
 
 class XVARIANT;
@@ -111,7 +108,7 @@ bool        IsSimilarPixel                (XDWORD origin, XDWORD target, XBYTE m
 bool        FindSubBitmap                 (GRPBITMAP* bitmapscreen, GRPBITMAP* bitmapref, int& x, int& y, XBYTE difflimitpercent = 2, XBYTE pixelmargin = 25);
 bool        PutBitmap                     (int x, int y, GRPBITMAP* bitmap);
 GRPBITMAP*  GetBitmap                     (int x, int y, int sizex, int sizey);
-void        FillLineDebug                 (GRPBITMAP* bitmapscreen, XDWORD*  bufferscreen, XDWORD scrpos, XDWORD linesize, XDWORD color);
+void        FillLineDebug                 (GRPBITMAP* bitmapscreen, XDWORD* bufferscreen, XDWORD scrpos, XDWORD linesize, XDWORD color);
 
 #endif
 

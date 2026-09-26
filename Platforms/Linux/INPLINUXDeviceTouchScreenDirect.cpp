@@ -231,7 +231,7 @@ bool INPLINUXDEVICETOUCHSCREENDIRECT::Update()
 * --------------------------------------------------------------------------------------------------------------------*/
 bool INPLINUXDEVICETOUCHSCREENDIRECT::CreateAllButtons()
 {
-  INPBUTTON::CreateButton( &buttons, BTN_TOUCH    , INPBUTTON_ID_TOUCHSCREEN              , __C('\x0'));
+  INPBUTTON::CreateButton(&buttons, BTN_TOUCH, INPBUTTON_ID_TOUCHSCREEN, __C('\x0'));
 
   return true;
 }

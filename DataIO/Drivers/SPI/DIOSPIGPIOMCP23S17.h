@@ -82,15 +82,10 @@
 #define DIOSPIGPIOMCP23S17_INTPOL_HIGH    0x02  // interupt polarity
 #define DIOSPIGPIOMCP23S17_INTPOL_LOW     0x00
 
-
-
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
-
 
 class DIOSTREAMSPICONFIG;
 class DIOSTREAMSPI;
-
 
 class DIOSPIGPIOMCP23S17 : public DIODEVICESPI
 {

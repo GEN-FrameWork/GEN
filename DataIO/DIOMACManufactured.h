@@ -37,10 +37,7 @@
 #include "DIOWebClient.h"
 #include "DIOScraperWeb.h"
 
-
-
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
-
 
 #define DIOMACMANUFACTURED_URL             __L("http://standards.ieee.org/develop/regauth/oui/")
 #define DIOMACMANUFACTURED_URLNAMEFILE     __L("oui.txt")

@@ -317,11 +317,11 @@ bool DIOGEOLOCATIONIP_RESULT::Set(XCHAR* country, XCHAR* state, XCHAR* city, XCH
 
   for(int c=0;c<3;c++)
     {
-      this->country.DeleteCharacter(character[c],XSTRINGCONTEXT_ALLSTRING);
-      this->state.DeleteCharacter(character[c],XSTRINGCONTEXT_ALLSTRING);
-      this->city.DeleteCharacter(character[c],XSTRINGCONTEXT_ALLSTRING);
-      this->ISP.DeleteCharacter(character[c],XSTRINGCONTEXT_ALLSTRING);
-      this->organization.DeleteCharacter(character[c],XSTRINGCONTEXT_ALLSTRING);
+      this->country.DeleteCharacter(character[c], XSTRINGCONTEXT_ALLSTRING);
+      this->state.DeleteCharacter(character[c], XSTRINGCONTEXT_ALLSTRING);
+      this->city.DeleteCharacter(character[c], XSTRINGCONTEXT_ALLSTRING);
+      this->ISP.DeleteCharacter(character[c], XSTRINGCONTEXT_ALLSTRING);
+      this->organization.DeleteCharacter(character[c], XSTRINGCONTEXT_ALLSTRING);
     }
 
   return true;

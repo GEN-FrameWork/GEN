@@ -126,8 +126,8 @@ bool SCRIPT_LIB_RAND::AddLibraryFunctions(SCRIPT* script)
 
   this->script = script;
 
-  script->AddLibraryFunction(this, __L("RandMax")                  , Call_RandMax);
-  script->AddLibraryFunction(this, __L("RandBetween")              , Call_RandBetween);
+  script->AddLibraryFunction(this, __L("RandMax"), Call_RandMax);
+  script->AddLibraryFunction(this, __L("RandBetween"), Call_RandBetween);
 
   return true;
 }
@@ -154,7 +154,7 @@ void SCRIPT_LIB_RAND::Clean()
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         void Call_RandMax(SCRIPT_LIB* library, SCRIPT* script , XVECTOR<XVARIANT*>* params, XVARIANT* returnvalue)
+* @fn         void Call_RandMax(SCRIPT_LIB* library, SCRIPT* script, XVECTOR<XVARIANT*>* params, XVARIANT* returnvalue)
 * @brief      Call_RandMax
 * @ingroup    SCRIPT
 * 
@@ -197,7 +197,7 @@ void Call_RandMax(SCRIPT_LIB* library, SCRIPT* script , XVECTOR<XVARIANT*>* para
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         void Call_RandBetween(SCRIPT_LIB* library, SCRIPT* script , XVECTOR<XVARIANT*>* params, XVARIANT* returnvalue)
+* @fn         void Call_RandBetween(SCRIPT_LIB* library, SCRIPT* script, XVECTOR<XVARIANT*>* params, XVARIANT* returnvalue)
 * @brief      Call_RandBetween
 * @ingroup    SCRIPT
 * 

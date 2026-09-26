@@ -201,7 +201,7 @@ void DIOI2CBATTERYCHARGERBQ24295::SetChargerEnable(bool enable)
 void DIOI2CBATTERYCHARGERBQ24295::SetShippingModeEnable(bool enable)
 {
   // Shipping Mode On
-  GEN_DIOGPIO.SetValue(GPIOentryID[DIOI2CBATTERYCHARGERBQ24295_GPIOENTRYID_QON]      , true);     
+  GEN_DIOGPIO.SetValue(GPIOentryID[DIOI2CBATTERYCHARGERBQ24295_GPIOENTRYID_QON], true);     
 }
 
 
@@ -318,11 +318,11 @@ bool DIOI2CBATTERYCHARGERBQ24295::IniDevice()
 bool DIOI2CBATTERYCHARGERBQ24295::Initialize()
 {
   // Charger GPIO Inputs
-  GEN_DIOGPIO.SetMode(GPIOentryID[DIOI2CBATTERYCHARGERBQ24295_GPIOENTRYID_STAT]  , DIOGPIO_MODE_INPUT);          
+  GEN_DIOGPIO.SetMode(GPIOentryID[DIOI2CBATTERYCHARGERBQ24295_GPIOENTRYID_STAT], DIOGPIO_MODE_INPUT);          
             
   // Charger GPIO Outputs
-  GEN_DIOGPIO.SetMode(GPIOentryID[DIOI2CBATTERYCHARGERBQ24295_GPIOENTRYID_QON]   , DIOGPIO_MODE_OUTPUT);
-  GEN_DIOGPIO.SetMode(GPIOentryID[DIOI2CBATTERYCHARGERBQ24295_GPIOENTRYID_CE]    , DIOGPIO_MODE_OUTPUT);
+  GEN_DIOGPIO.SetMode(GPIOentryID[DIOI2CBATTERYCHARGERBQ24295_GPIOENTRYID_QON], DIOGPIO_MODE_OUTPUT);
+  GEN_DIOGPIO.SetMode(GPIOentryID[DIOI2CBATTERYCHARGERBQ24295_GPIOENTRYID_CE], DIOGPIO_MODE_OUTPUT);
           
   // Charger GPIO Interrupts
   DIOGPIO_ENTRY* interrupt = GEN_DIOGPIO.GPIOEntry_GetByID(GPIOentryID[DIOI2CBATTERYCHARGERBQ24295_GPIOENTRYID_INT]);
@@ -334,10 +334,10 @@ bool DIOI2CBATTERYCHARGERBQ24295::Initialize()
     }
           
   // Charger disabled
-  GEN_DIOGPIO.SetValue(GPIOentryID[DIOI2CBATTERYCHARGERBQ24295_GPIOENTRYID_CE]  , true);                     
+  GEN_DIOGPIO.SetValue(GPIOentryID[DIOI2CBATTERYCHARGERBQ24295_GPIOENTRYID_CE], true);                     
           
   // Shipping Mode off
-  GEN_DIOGPIO.SetValue(GPIOentryID[DIOI2CBATTERYCHARGERBQ24295_GPIOENTRYID_QON]  , false);           
+  GEN_DIOGPIO.SetValue(GPIOentryID[DIOI2CBATTERYCHARGERBQ24295_GPIOENTRYID_QON], false);           
           
   charging    = false;
   fault       = 0;
@@ -381,7 +381,6 @@ bool DIOI2CBATTERYCHARGERBQ24295::ReadRegister(XBYTE offset, XBYTE& data)
 {
   return ReadRegister(offset, &data, 1);
 }
-
 
 
 /**-------------------------------------------------------------------------------------------------------------------

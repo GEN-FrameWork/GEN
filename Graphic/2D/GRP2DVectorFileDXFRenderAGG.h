@@ -48,8 +48,6 @@
 #define GRP2DVECTORFILEDXFRENDERAGG_USERECURSIONGUARD   64                        // POLYLINE -> VERTEX scan safety bound
 #define GRP2DVECTORFILEDXFRENDERAGG_MAXINSERTDEPTH      16                        // nested INSERT (block in block) recursion bound
 
-
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
 
 class GRP2DCANVAS;
@@ -58,10 +56,7 @@ class GRPVECTORFILEDXF;
 class GRPVECTORFILEDXFENTITY;
 class GRPVECTORFILEDXFTEXTSECTIONENTITIES;
 
-
-
 /*---- INLINE FUNCTIONS + PROTOTYPES ---------------------------------------------------------------------------------*/
-
 
 class GRP2DVECTORFILEDXFRENDERAGG
 {

@@ -1260,7 +1260,7 @@ bool GRPSCREEN::UpdateCFGChromesDrag()
 
       BeginCFGChromesDrag();
 
-      GRPSCREEN_CHROMESDRAGTRACE(__L("[Chromes drag] START: in-process. window (%d,%d)  cursor desktop (%d,%d)  UI (%d,%d)"), anchorx, anchory, desktopcursorx, desktopcursory, uix, uiy);
+      GRPSCREEN_CHROMESDRAGTRACE(__L("[Chromes drag] START: in-process. window (%d,%d) cursor desktop (%d,%d) UI (%d,%d)"), anchorx, anchory, desktopcursorx, desktopcursory, uix, uiy);
 
       return true;
     }
@@ -1307,7 +1307,7 @@ bool GRPSCREEN::UpdateCFGChromesDrag()
 
   (void)moved;   // only read by the trace below, which compiles away unless diagnostics are enabled
 
-  GRPSCREEN_CHROMESDRAGTRACEMOVE(__L("[Chromes drag] MOVE to (%d,%d)  delta (%d,%d)  Set_Position=%s  real (%d,%d)"), newpositionx, newpositiony, deltax, deltay, moved?__L("ok"):__L("FAILED"), GetPositionX(), GetPositionY());
+  GRPSCREEN_CHROMESDRAGTRACEMOVE(__L("[Chromes drag] MOVE to (%d,%d) delta (%d,%d) Set_Position=%s real (%d,%d)"), newpositionx, newpositiony, deltax, deltay, moved?__L("ok"):__L("FAILED"), GetPositionX(), GetPositionY());
 
   return true;
 }

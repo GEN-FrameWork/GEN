@@ -103,11 +103,11 @@ bool SCRIPT_LIB_STRING::AddLibraryFunctions(SCRIPT* script)
 
   this->script = script;
 
-  script->AddLibraryFunction(this, __L("AddString")                   , Call_AddString);
-  script->AddLibraryFunction(this, __L("FindString")                  , Call_FindString);
-  script->AddLibraryFunction(this, __L("CompareString")               , Call_CompareString);
-  script->AddLibraryFunction(this, __L("ReplaceString")               , Call_ReplaceString);
-  script->AddLibraryFunction(this, __L("SPrintf")                     , Call_SPrintf);
+  script->AddLibraryFunction(this, __L("AddString"), Call_AddString);
+  script->AddLibraryFunction(this, __L("FindString"), Call_FindString);
+  script->AddLibraryFunction(this, __L("CompareString"), Call_CompareString);
+  script->AddLibraryFunction(this, __L("ReplaceString"), Call_ReplaceString);
+  script->AddLibraryFunction(this, __L("SPrintf"), Call_SPrintf);
 
   return true;
 }
@@ -351,7 +351,7 @@ void Call_SPrintf(SCRIPT_LIB* library, SCRIPT* script, XVECTOR<XVARIANT*>* param
                         int  nparam = 1;
                         bool end    = false;
 
-                        memset(param,0,MAXTEMPOSTR*sizeof(XCHAR));
+                        memset(param, 0, MAXTEMPOSTR*sizeof(XCHAR));
                         param[0] = '%';
 
                         c++;

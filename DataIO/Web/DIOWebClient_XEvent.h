@@ -35,8 +35,6 @@
 #include "DIOURL.h"
 #include "DIOWebHeader.h"
 
-
-
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
 
 enum DIOWEBCLIENT_XEVENT_TYPE
@@ -51,10 +49,7 @@ enum DIOWEBCLIENT_XEVENT_TYPE
   DIOWEBCLIENT_XEVENT_TYPE_CLOSEWEB
 };
 
-
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
-
 
 class DIOWEBCLIENT_XEVENT : public XEVENT
 {

@@ -31,7 +31,6 @@
 
 #if defined(DB_SQL_ACTIVE) && defined(DB_POSTGRESQL_ACTIVE)
 
-
 /*---- INCLUDES ------------------------------------------------------------------------------------------------------*/
 
 #include "XTrace.h"
@@ -42,15 +41,9 @@
 #include "PostgreSQL_Query.h"
 #include "PostgreSQL_Connection.h"
 
-
-
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
 
-
-
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
-
 
 class POSTGRESQL_DATABASE : public DB_SQL_DATABASE
 {

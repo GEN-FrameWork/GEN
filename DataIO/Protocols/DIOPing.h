@@ -49,10 +49,7 @@
 #define DIOPING_ICMP_ECHOREQ                8
 #define DIOPING_REQ_TICKETSIZE              32        // Echo Request Data size
 
-
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
-
 
 typedef struct
 {
@@ -63,14 +60,12 @@ typedef struct
 
 } DIOPING_ADDR_BYTE;
 
-
 typedef struct
 {
   XWORD s_w1;
   XWORD s_w2;
 
 } DIOPING_ADDR_WORD;
-
 
 typedef struct
 {
@@ -84,20 +79,19 @@ typedef struct
 
 } DIOPING_INADDR;
 
-
 // IP Header -- RFC 791
 typedef struct
 {
-  XBYTE                           VIHL;          // Version and IHL
-  XBYTE                           typeservice;   // Type Of Service
-  short                           fulllen;       // Total Length
-  short                           ID;            // Identification
-  short                           flagoff;       // Flags and Fragment Offset
-  XBYTE                           TTL;           // Time To Live
-  XBYTE                           protocol;      // Protocol
-  XWORD                           checksum;      // Checksum
-  DIOPING_INADDR                  iasource;      // Internet Address - Source
-  DIOPING_INADDR                  iatarget;      // Internet Address - Destination
+  XBYTE                           VIHL;
+  XBYTE                           typeservice;
+  short                           fulllen;
+  short                           ID;
+  short                           flagoff;
+  XBYTE                           TTL;
+  XBYTE                           protocol;
+  XWORD                           checksum;
+  DIOPING_INADDR                  iasource;
+  DIOPING_INADDR                  iatarget;
 
 } DIOPING_IPHDR;
 
@@ -105,12 +99,12 @@ typedef struct
 // ICMP Header - RFC 792
 typedef struct
 {
-  XBYTE                           type;          // Type
-  XBYTE                           code;          // Code
-  XWORD                           checksum;      // Checksum
-  XWORD                           ID;            // Identification
-  XWORD                           seq;           // Sequence
-  char                            data;          // Data
+  XBYTE                           type;
+  XBYTE                           code;
+  XWORD                           checksum;
+  XWORD                           ID;
+  XWORD                           seq;
+  char                            data;
 
 } DIOPING_ICMPHDR;
 
@@ -125,23 +119,18 @@ typedef struct
 
 } DIOPING_ECHOREQUEST;
 
-
 // ICMP Echo Reply
 typedef struct
 {
   DIOPING_IPHDR                   iphdr;
   DIOPING_ECHOREQUEST             echorequest;
-//char                            cfiller[256];
 
 } DIOPING_ECHOREPLY;
-
-
 
 class XTIMER;
 class XPUBLISHER;
 class DIOSTREAMICMPCONFIG;
 class DIOSTREAMICMP;
-
 
 class DIOPINGREPLY
 {
@@ -174,7 +163,6 @@ class DIOPINGREPLY
     XBYTE                         TTL;
 };
 
-
 class DIOPING :  public XSUBJECT
 {
   public:
@@ -193,7 +181,6 @@ class DIOPING :  public XSUBJECT
     bool                          Set                         (DIOURL& urltarget, XCHAR* IPLocal = NULL);
 
     virtual bool                  Do                          (XDWORD nretries = DIOPING_DEFAULTNRETRYS, XDWORD timebetweenchecks = DIOPING_DEFAULTTIMEBETWEENCHECKS, bool exitfirstgoodreply = false);
-
 
     XVECTOR<DIOPINGREPLY*>*       GetReplys                   ();
     bool                          WasConnected                ();

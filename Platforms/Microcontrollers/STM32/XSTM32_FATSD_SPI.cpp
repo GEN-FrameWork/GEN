@@ -57,7 +57,6 @@ XSTM32_FATSD_SPI::XSTM32_FATSD_SPI()
 }
 
 
-
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         XSTM32_FATSD_SPI::~XSTM32_FATSD_SPI()
@@ -70,7 +69,6 @@ XSTM32_FATSD_SPI::~XSTM32_FATSD_SPI()
 { 
   Clean();
 }
-
 
 
 /**-------------------------------------------------------------------------------------------------------------------
@@ -94,7 +92,7 @@ bool XSTM32_FATSD_SPI::Ini(SPI_HandleTypeDef* handleSPI, XDWORD GPIOentryID_CS, 
   this->GPIOentryID_CS      = GPIOentryID_CS; 
   this->GPIOentryID_switch  = GPIOentryID_switch;
 
-  if(GPIOentryID_CS     != DIOGPIO_ID_NOTDEFINED)   GEN_DIOGPIO.SetMode(GPIOentryID_CS     , DIOGPIO_MODE_OUTPUT);  
+  if(GPIOentryID_CS     != DIOGPIO_ID_NOTDEFINED)   GEN_DIOGPIO.SetMode(GPIOentryID_CS, DIOGPIO_MODE_OUTPUT);  
   if(GPIOentryID_switch != DIOGPIO_ID_NOTDEFINED)   GEN_DIOGPIO.SetMode(GPIOentryID_switch , DIOGPIO_MODE_INPUT);
 
   this->handleSPI = handleSPI;
@@ -102,7 +100,6 @@ bool XSTM32_FATSD_SPI::Ini(SPI_HandleTypeDef* handleSPI, XDWORD GPIOentryID_CS, 
 
   return true;
 }
-
 
 
 /**-------------------------------------------------------------------------------------------------------------------
@@ -120,7 +117,6 @@ XDWORD XSTM32_FATSD_SPI::GetGPIOEntryID_CS()
 }
 
 
-
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         void XSTM32_FATSD_SPI::SetGPIOEntryID_CS(XDWORD GPIOentryID)
@@ -135,7 +131,6 @@ void XSTM32_FATSD_SPI::SetGPIOEntryID_CS(XDWORD GPIOentryID)
   GPIOentryID_CS = GPIOentryID;
 }
 
-    
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
@@ -150,8 +145,6 @@ XDWORD XSTM32_FATSD_SPI::GetGPIOEntryID_Switch()
 {
   return GPIOentryID_switch; 
 }
-
-
 
 
 /**-------------------------------------------------------------------------------------------------------------------
@@ -169,7 +162,6 @@ void XSTM32_FATSD_SPI::SetGPIOEntryID_Switch(XDWORD GPIOentryID)
 }
 
 
-
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         SPI_HandleTypeDef* XSTM32_FATSD_SPI::GetHandleSPI()
@@ -183,8 +175,6 @@ SPI_HandleTypeDef* XSTM32_FATSD_SPI::GetHandleSPI()
 {
   return handleSPI;
 }
-
-
 
 
 /**-------------------------------------------------------------------------------------------------------------------
@@ -202,7 +192,6 @@ void XSTM32_FATSD_SPI::SetHandleSPI(SPI_HandleTypeDef* handleSPI)
 }
 
 
-
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         bool XSTM32_FATSD_SPI::Disk_IsInserted()
@@ -218,7 +207,6 @@ bool XSTM32_FATSD_SPI::Disk_IsInserted()
 
   return GEN_DIOGPIO.GetValue(GPIOentryID_switch);
 }
-
 
 
 /**-------------------------------------------------------------------------------------------------------------------
@@ -325,8 +313,6 @@ DSTATUS XSTM32_FATSD_SPI::Disk_Initialize(XBYTE drive)
 }
 
 
-
-
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         DSTATUS XSTM32_FATSD_SPI::Disk_Status(XBYTE drive)
@@ -344,7 +330,6 @@ DSTATUS XSTM32_FATSD_SPI::Disk_Status(XBYTE drive)
 
   return status;
 }
-
 
 
 /**-------------------------------------------------------------------------------------------------------------------
@@ -395,7 +380,6 @@ DRESULT XSTM32_FATSD_SPI::Disk_Read(XBYTE pdrive, XBYTE* buffer, XDWORD sector, 
 
   return count?RES_ERROR:RES_OK;
 }
-
 
 
 /**-------------------------------------------------------------------------------------------------------------------
@@ -456,8 +440,6 @@ DRESULT XSTM32_FATSD_SPI::Disk_Write(XBYTE pdrive, const XBYTE* buffer, XDWORD s
 
   return (count?RES_ERROR:RES_OK);
 }
-
-
 
 
 /**-------------------------------------------------------------------------------------------------------------------
@@ -573,7 +555,6 @@ DRESULT XSTM32_FATSD_SPI::Disk_IOTCL(XBYTE drive, XBYTE ctrl, void* buffer)
 }
 
 
-
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         bool XSTM32_FATSD_SPI::End()
@@ -587,7 +568,6 @@ bool XSTM32_FATSD_SPI::End()
 {
   return true;
 }
-
 
 
 /**-------------------------------------------------------------------------------------------------------------------
@@ -605,7 +585,6 @@ void XSTM32_FATSD_SPI::CS_Select()
 }
 
 
-
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         void XSTM32_FATSD_SPI::CS_Deselect()
@@ -619,8 +598,6 @@ void XSTM32_FATSD_SPI::CS_Deselect()
 
   GEN_DIOGPIO.SetValue(GPIOentryID_CS, true);
 }
-
-
 
 
 /**-------------------------------------------------------------------------------------------------------------------
@@ -646,7 +623,6 @@ XBYTE XSTM32_FATSD_SPI::SPI_ReadByte()
 
   return data;
 }
-
 
 
 /**-------------------------------------------------------------------------------------------------------------------
@@ -687,8 +663,6 @@ void XSTM32_FATSD_SPI::SPI_ReadBytePtr(XBYTE* buffer)
 }
 
 
-
-
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         XBYTE XSTM32_FATSD_SPI::SD_ReadyWait()
@@ -714,7 +688,6 @@ XBYTE XSTM32_FATSD_SPI::SD_ReadyWait()
 
   return resultult;
 }
-
 
 
 /**-------------------------------------------------------------------------------------------------------------------
@@ -766,8 +739,6 @@ void XSTM32_FATSD_SPI::SD_PowerOn()
 }
 
 
-
-
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         void XSTM32_FATSD_SPI::SD_PowerOff()
@@ -779,7 +750,6 @@ void XSTM32_FATSD_SPI::SD_PowerOff()
 {
   powerflag = false;
 }
-
 
 
 /**-------------------------------------------------------------------------------------------------------------------
@@ -795,8 +765,6 @@ bool XSTM32_FATSD_SPI::SD_CheckPower()
 {
   return powerflag;
 }
-
-
 
 
 /**-------------------------------------------------------------------------------------------------------------------
@@ -835,8 +803,6 @@ bool XSTM32_FATSD_SPI::SD_ReadDataBlock(XBYTE* buffer, XDWORD btr)
 
   return TRUE;
 }
-
-
 
 
 /**-------------------------------------------------------------------------------------------------------------------
@@ -939,7 +905,6 @@ XBYTE XSTM32_FATSD_SPI::SD_SendCmd(XBYTE cmd, XDWORD arg)
 
   return resultult;
 }
-
 
 
 /**-------------------------------------------------------------------------------------------------------------------

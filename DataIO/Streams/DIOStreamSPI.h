@@ -64,21 +64,15 @@ enum  DIOSTREAMSPI_FSMSTATES
   DIOSTREAMSPI_LASTSTATE
 };
 
-
 #define DIOSTREAMSPI_MAXSIZEBUFFER        4*1024
 #define DIOSTREAMSPI_SLEEP                Sleep(timedelay)
 #define DIOSTREAMSPI_SLEEPDOUBLE          Sleep(timedelaydouble)
 
-
-
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
-
 
 class XBUFFER;
 class DIOGPIO;
 class DIOSTREAMSPICONFIG;
-
 
 class DIOSTREAMSPI : public DIOSTREAM , public XFSMACHINE
 {
@@ -105,7 +99,7 @@ class DIOSTREAMSPI : public DIOSTREAM , public XFSMACHINE
 
     void                          Clean                                     ();
 
-    bool                          TransferOneData                           (XWORD writedata,XWORD& readdata);
+    bool                          TransferOneData                           (XWORD writedata, XWORD& readdata);
 
     static void                   ThreadConnection                          (void* data);
 

@@ -111,14 +111,14 @@ bool DIOWINDOWSSTREAMIPLOCALENUMDEVICES::Search()
 
   IP_ADAPTER_INFO adapterinfo[16];
   DWORD           size        = sizeof(adapterinfo);
-  ULONG           status      = GetAdaptersInfo(adapterinfo,&size);
+  ULONG           status      = GetAdaptersInfo(adapterinfo, &size);
   int             index       = 0;
 
   if(status != ERROR_SUCCESS) return false;
 
   PIP_ADAPTER_INFO padapterinfo = adapterinfo;
   do {  // Eliminate the virtual Wifi Adapter
-        if(strcmp(padapterinfo->Description,"Microsoft Virtual WiFi Miniport Adapter"))
+        if(strcmp(padapterinfo->Description, "Microsoft Virtual WiFi Miniport Adapter"))
           {
             DIOSTREAMDEVICEIP* device = GEN_NEW DIOSTREAMDEVICEIP();
             if(device)
@@ -242,13 +242,13 @@ bool DIOWINDOWSSTREAMIPLOCALENUMDEVICES::Search()
 
                   memset(buffer, 0, BUFSIZ);
 
-	                if(!getnameinfo(ua->Address.lpSockaddr, ua->Address.iSockaddrLength, buffer, sizeof(buffer), NULL, 0,NI_NUMERICHOST))
+	                if(!getnameinfo(ua->Address.lpSockaddr, ua->Address.iSockaddrLength, buffer, sizeof(buffer), NULL, 0, NI_NUMERICHOST))
                     {
                       ConvertLengthToIpv4Mask(ua->OnLinkPrefixLength, (ULONG*)&mask);                  
 
                       SWAPDWORD(mask);
                       device->GetIP()->Set(buffer);
-                      device->GetIP()->GetMask()->Set((XBYTE)(mask >> 24),(XBYTE)(mask >> 16),(XBYTE)(mask >> 8),(XBYTE)(mask));   
+                      device->GetIP()->GetMask()->Set((XBYTE)(mask >> 24), (XBYTE)(mask >> 16), (XBYTE)(mask >> 8), (XBYTE)(mask));   
                       break;
                     }
                 }
@@ -260,7 +260,7 @@ bool DIOWINDOWSSTREAMIPLOCALENUMDEVICES::Search()
 	            if(family == AF_INET)
                 {
                   memset(buffer, 0, BUFSIZ);
-	                if(!getnameinfo(dnsa->Address.lpSockaddr, dnsa->Address.iSockaddrLength, buffer, sizeof(buffer), NULL, 0,NI_NUMERICHOST))
+	                if(!getnameinfo(dnsa->Address.lpSockaddr, dnsa->Address.iSockaddrLength, buffer, sizeof(buffer), NULL, 0, NI_NUMERICHOST))
                     {
                       XSTRING* DNSserver = GEN_NEW XSTRING();
                       if(DNSserver)

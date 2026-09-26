@@ -35,13 +35,9 @@
 
 #include "GRPStatisticsChartStyle.h"
 
-
-
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
 
 #define GRPSTATISTICSCHARTCONFIG_PALETTESIZE    8
-
-
 
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
 
@@ -112,18 +108,18 @@ class GRPSTATISTICSCHARTCONFIG
 
                                         hasbackground   = true;
                                         backgroundcolor.Set(255, 255, 255);
-                                        axiscolor.Set      ( 60,  60,  60);
+                                        axiscolor.Set      (60, 60, 60);
                                         gridcolor.Set      (220, 220, 220);
-                                        textcolor.Set      ( 40,  40,  40);
+                                        textcolor.Set      (40, 40, 40);
 
                                         palette[0].Set( 79, 129, 189);
-                                        palette[1].Set(192,  80,  77);
-                                        palette[2].Set(155, 187,  89);
+                                        palette[1].Set(192, 80, 77);
+                                        palette[2].Set(155, 187, 89);
                                         palette[3].Set(128, 100, 162);
                                         palette[4].Set( 75, 172, 198);
-                                        palette[5].Set(247, 150,  70);
+                                        palette[5].Set(247, 150, 70);
                                         palette[6].Set(119, 119, 119);
-                                        palette[7].Set(193, 165,  90);
+                                        palette[7].Set(193, 165, 90);
                                       }
 
     XSTRING                         title;

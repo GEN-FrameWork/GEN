@@ -146,20 +146,14 @@ bool UI_SKINCANVAS_FLAT::Draw_Form(UI_ELEMENT* element)
       UI_COLOR* fillsrc = element_form->IsBackgroundColorSet() ? element_form->GetBackgroundColor()
                                                                : element_form->GetColor();
 
-      GRP2DCOLOR_RGBA8    color(fillsrc->GetRed(),
-                                fillsrc->GetGreen(),
-                                fillsrc->GetBlue(),
-                                fillsrc->GetAlpha());
+      GRP2DCOLOR_RGBA8    color(fillsrc->GetRed(), fillsrc->GetGreen(), fillsrc->GetBlue(), fillsrc->GetAlpha());
 
       // Border: prefer base-level border-color when authored, else fall back to the historical per-type
       // linecolor member -- same precedence as UI_SKINCANVAS::Draw_Form.
       UI_COLOR* bcsrc = element_form->IsBorderColorSet() ? element_form->GetBorderColor()
                                                          : element_form->GetLineColor();
 
-      GRP2DCOLOR_RGBA8    linecolor(bcsrc->GetRed(),
-                                    bcsrc->GetGreen(),
-                                    bcsrc->GetBlue(),
-                                    bcsrc->GetAlpha());
+      GRP2DCOLOR_RGBA8    linecolor(bcsrc->GetRed(), bcsrc->GetGreen(), bcsrc->GetBlue(), bcsrc->GetAlpha());
 
       canvas->SetLineColor(&linecolor);
       canvas->SetFillColor(&color);

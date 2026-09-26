@@ -36,18 +36,13 @@
 #include "DIOWebClient.h"
 #include "DIOScraperWebCache.h"
 
-
-
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
 
 #define DIOSCRAPERWEB_MAXTIMEOUTFORURL         10
 #define DIOSCRAPERWEB_NAMEFILE                 __L("scraperweb.xml")
 #define DIOSCRAPERWEB_DEFAULTUSERAGENT         DIOWEBCLIENT_DEFAULTUSERAGENT
 
-
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
-
 
 class XDATETIME;
 class XTIMER;
@@ -56,7 +51,6 @@ class XBUFFER;
 class XFILEXML;
 class XPATHS;
 class DIOCHECKINTERNETCONNECTION;
-
 
 class DIOSCRAPERWEB
 {
@@ -71,14 +65,14 @@ class DIOSCRAPERWEB
 
     bool                            Download                              (DIOURL& URL, XPATH& xpath);
 
-    bool                            Do                                    (XCHAR* namewebservice  , int timeoutforurl = DIOSCRAPERWEB_MAXTIMEOUTFORURL, XSTRING* localIP = NULL);
+    bool                            Do                                    (XCHAR* namewebservice, int timeoutforurl = DIOSCRAPERWEB_MAXTIMEOUTFORURL, XSTRING* localIP = NULL);
     bool                            Do                                    (XSTRING& namewebservice, int timeoutforurl = DIOSCRAPERWEB_MAXTIMEOUTFORURL, XSTRING* localIP = NULL);
 
     virtual bool                    ChangeURL                             (XCHAR* maskurl, DIOURL& url);
 
     bool                            AddValue                              (XCHAR* name, XCHAR* value);
     bool                            AddValue                              (XCHAR* name, XSTRING& value);
-    bool                            AddValue                              (XSTRING& name,XCHAR*  value);
+    bool                            AddValue                              (XSTRING& name, XCHAR* value);
     bool                            AddValue                              (XSTRING& name, XSTRING& value);
     XCHAR*                          GetValue                              (XCHAR* namevalue);
     XCHAR*                          GetValue                              (XSTRING& namevalue);
@@ -88,7 +82,7 @@ class DIOSCRAPERWEB
 
     bool                            ExtractString                         (XCHAR* searchini, XCHAR* searchend, XBUFFER* xbuffer, bool usebufferpos, XSTRING& result);
     bool                            ExtractString                         (XCHAR* searchini, XSTRING& searchend, XBUFFER* xbuffer, bool usebufferpos, XSTRING& result);
-    bool                            ExtractString                         (XSTRING& searchini,XCHAR* searchend, XBUFFER* xbuffer, bool usebufferpos, XSTRING& result);
+    bool                            ExtractString                         (XSTRING& searchini, XCHAR* searchend, XBUFFER* xbuffer, bool usebufferpos, XSTRING& result);
     bool                            ExtractString                         (XSTRING& searchini, XSTRING& searchend, XBUFFER* xbuffer, bool usebufferpos, XSTRING& result);
 
   protected:

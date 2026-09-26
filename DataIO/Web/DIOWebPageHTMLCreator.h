@@ -47,7 +47,6 @@ enum DIOWEBPAGEHTMLCREATORALIGN
   DIOWEBPAGEHTMLCREATORALIGN_CENTER                          ,
 };
 
-
 enum DIOWEBPAGEHTMLCREATORTAGXENGINESTATUS
 {
   DIOWEBPAGEHTMLCREATORTAGXENGINESTATUS_NOTFOUND        =  0 ,
@@ -57,10 +56,7 @@ enum DIOWEBPAGEHTMLCREATORTAGXENGINESTATUS
 
 #define DIOWEBPAGEHTMLCREATOR_TAGXENGINE   __L("GEN")
 
-
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
-
 
 class DIOWEBPAGEHTMLCREATOR : public XSTRING, public XSUBJECT
 {
@@ -96,12 +92,12 @@ class DIOWEBPAGEHTMLCREATOR : public XSTRING, public XSUBJECT
 
     XCHAR                                   operator []                   (int position);
 
-    bool                                    Printf                        (XCHAR* mask,...);
+    bool                                    Printf                        (XCHAR* mask, ...);
     bool                                    Print                         (XCHAR* text);
 
     bool                                    Table_Ini                     (int border = false, XCHAR* addstype = NULL);
-    bool                                    Table_Line                    (int ncolumns,...);
-    bool                                    Table_Line                    (XCHAR* colorbackground, int ncolumns,...);
+    bool                                    Table_Line                    (int ncolumns, ...);
+    bool                                    Table_Line                    (XCHAR* colorbackground, int ncolumns, ...);
     bool                                    Table_LineColor               (int ncolumns, ...);
     bool                                    Table_End                     ();
 
@@ -116,7 +112,7 @@ class DIOWEBPAGEHTMLCREATOR : public XSTRING, public XSUBJECT
                                               tableborder = false;
                                             }
 
-    DIOWEBPAGEHTMLCREATORTAGXENGINESTATUS   CheckXTAG                     (XSTRING* originalline,bool& intag, XSTRING& inioutputline,XSTRING& endoutputline);
+    DIOWEBPAGEHTMLCREATORTAGXENGINESTATUS   CheckXTAG                     (XSTRING* originalline, bool& intag, XSTRING& inioutputline, XSTRING& endoutputline);
 
     XSTRING                                 lastXTAG;
     int                                     tableborder;

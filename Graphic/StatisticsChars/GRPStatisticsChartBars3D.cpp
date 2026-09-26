@@ -286,8 +286,8 @@ void GRPSTATISTICSCHARTBARS3D::DrawPrism(GRPSTATISTICSCHARTBUILDER& builder, dou
   double sideface[8]  = { frtx, frty, frbx, frby, brbx, brby, brtx, brty };     // right face (bar end)
   double frontface[8] = { flbx, flby, frbx, frby, frtx, frty, fltx, flty };     // front face
 
-  builder.DrawPolygon(topface,   4, topstyle);
-  builder.DrawPolygon(sideface,  4, sidestyle);
+  builder.DrawPolygon(topface, 4, topstyle);
+  builder.DrawPolygon(sideface, 4, sidestyle);
   builder.DrawPolygon(frontface, 4, frontstyle);
 }
 

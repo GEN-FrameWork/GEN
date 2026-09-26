@@ -28,9 +28,7 @@
 
 #pragma once
 
-
 #if defined(DB_SQL_ACTIVE) && defined(DB_POSTGRESQL_ACTIVE)
-
 
 /*---- INCLUDES ------------------------------------------------------------------------------------------------------*/
 
@@ -40,10 +38,7 @@
 #include "PostgreSQL_Query.h"
 #include "PostgreSQL_Database.h"
 
-
-
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
-
 
 
 

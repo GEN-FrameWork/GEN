@@ -197,7 +197,7 @@ void DIOWINDOWSSTREAMI2C::ThreadConnection(void* data)
             {
               case DIOSTREAMI2C_FSMSTATE_NONE                 : break;
 
-              case DIOSTREAMI2C_FSMSTATE_CONNECTED            : { DIOSTREAM_XEVENT xevent(diostream,DIOSTREAM_XEVENT_TYPE_CONNECTED);
+              case DIOSTREAMI2C_FSMSTATE_CONNECTED            : { DIOSTREAM_XEVENT xevent(diostream, DIOSTREAM_XEVENT_TYPE_CONNECTED);
                                                                   xevent.SetDIOStream(diostream);
                                                                   diostream->PostEvent(&xevent);
 
@@ -209,7 +209,7 @@ void DIOWINDOWSSTREAMI2C::ThreadConnection(void* data)
 
               case DIOSTREAMI2C_FSMSTATE_SENDINGDATA          : break;
 
-              case DIOSTREAMI2C_FSMSTATE_DISCONNECTING        : { DIOSTREAM_XEVENT xevent(diostream,DIOSTREAM_XEVENT_TYPE_DISCONNECTED);
+              case DIOSTREAMI2C_FSMSTATE_DISCONNECTING        : { DIOSTREAM_XEVENT xevent(diostream, DIOSTREAM_XEVENT_TYPE_DISCONNECTED);
                                                                   xevent.SetDIOStream(diostream);
                                                                   diostream->PostEvent(&xevent);
 

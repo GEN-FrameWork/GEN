@@ -89,7 +89,6 @@
 #define DIOLINUXSTREAMI2C_SMBUS_BLOCK_PROC_CALL         7          // SMBus 2.0
 #define DIOLINUXSTREAMI2C_SMBUS_I2C_BLOCK_TICKET        8
 
-
 #define DIOLINUXSTREAMI2C_RETRIES                       0x0701    // number of times a device address should be polled when not acknowledging
 #define DIOLINUXSTREAMI2C_TIMEOUT                       0x0702    // set timeout in units of 10 ms
 
@@ -105,17 +104,14 @@
 #define DIOLINUXSTREAMI2C_SMBUS                         0x0720    // SMBus transfer
 
 
-
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
-
 
 typedef struct
 {
-  XWORD                                 addr;         // slave address
+  XWORD                                 addr;
   XWORD                                 flags;
-  XWORD                                 size;         // msg length
-  XBYTE*                                buffer;       // pointer to msg data
+  XWORD                                 size;
+  XBYTE*                                buffer;
 
 } DIOLINUXSTREAMI2C_MSG;
 
@@ -127,7 +123,6 @@ union DIOLINUXSTREAMI2C_SMBUS_TICKET
   XBYTE                                 block[DIOLINUXSTREAMI2C_SMBUS_BLOCK_MAX+2] ;  // block [0] is used for length + one more for PEC
 };
 
-
 typedef struct
 {
   XBYTE                                 read_write;
@@ -136,7 +131,6 @@ typedef struct
   union DIOLINUXSTREAMI2C_SMBUS_TICKET* data;
 
 } DIOLINUXSTREAMI2C_SMBUS_IOCTL_TICKET;
-
 
 typedef struct
 {

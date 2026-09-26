@@ -116,7 +116,7 @@ bool MYSQL_CONNECTION::Connect()
   DB_SQL_STRING databasetimeout;
   DB_SQL_STRING reconnect;
 
-  if(!FindOption(__L("URL"),  &databaseurl))
+  if(!FindOption(__L("URL"), &databaseurl))
     {
       database->Error(__L("DATABASE URL argument not supplied"));
       return false;
@@ -134,8 +134,8 @@ bool MYSQL_CONNECTION::Connect()
       return false;
     }
 
-  FindOption(__L("DATABASE")  , &databasename);
-  FindOption(__L("PORT")      , &databaseport);
+  FindOption(__L("DATABASE"), &databasename);
+  FindOption(__L("PORT"), &databaseport);
   
   XBUFFER url;
   XBUFFER user;
@@ -165,7 +165,7 @@ bool MYSQL_CONNECTION::Connect()
   if (FindOption(__L("TIMEOUT"), &databasetimeout))
   {
       int timeoutseconds=databasetimeout.ConvertToInt();
-      mysql_options(connection,MYSQL_OPT_CONNECT_TIMEOUT ,&timeoutseconds);
+      mysql_options(connection, MYSQL_OPT_CONNECT_TIMEOUT, &timeoutseconds);
   }
 
   if(mysql_real_connect(connection, url.GetPtrChar(), user.GetPtrChar(), pswd.GetPtrChar(), name.GetPtrChar(), port, NULL, 0) == NULL)

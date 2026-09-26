@@ -39,15 +39,9 @@
 #include "DIOCoreProtocol_CFG.h"
 #include "DIOCoreProtocol.h"
 
-
-
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
 
-
-
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
-
 
 class XTIMER;
 class XMUTEX;
@@ -59,7 +53,6 @@ class DIOCOREPROTOCOL;
 class DIOCOREPROTOCOL_CONNECTION;
 class DIOCOREPROTOCOL_CONNECTIONSMANAGER_XEVENT;
 class DIOCOREPROTOCOL_MESSAGE;
-
 
 class DIOCOREPROTOCOL_CONNECTIONSMANAGER : public XOBSERVER, public XSUBJECT
 {

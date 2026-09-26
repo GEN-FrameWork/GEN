@@ -54,11 +54,7 @@
 #define XSCHEDULER_DAYWEEK_ISWORKDAY      (XSCHEDULER_DAYWEEK_ISMONDAY   | XSCHEDULER_DAYWEEK_ISTUESDAY |  XSCHEDULER_DAYWEEK_ISWEDNESDAY | XSCHEDULER_DAYWEEK_ISTHURSDAY | XSCHEDULER_DAYWEEK_ISFRIDAY)
 #define XSCHEDULER_DAYWEEK_ISWEEKEND      (XSCHEDULER_DAYWEEK_ISSATURDAY | XSCHEDULER_DAYWEEK_ISSUNDAY)
 
-
-
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
-
 
 class XPUBLISHER;
 class XMUTEX;
@@ -66,7 +62,6 @@ class XTHREADCOLLECTED;
 class XTIMER;
 class XSCHEDULERTASK;
 class XSCHEDULER;
-
 
 class XSCHEDULERTASK
 {
@@ -104,7 +99,6 @@ class XSCHEDULERTASK
     
     virtual bool                CheckCondition                  (XDATETIME* xtimeactual, XTIMER* xtimeractual);
 
-
   private:
 
     XBYTE                       GetDayOfWeekMask                (XDATETIME* xtimeactual);
@@ -132,7 +126,6 @@ class XSCHEDULERTASK
 
     XBYTE                       conditiondayweekmask;
 };
-
 
 class XSCHEDULER  : public XSUBJECT
 {

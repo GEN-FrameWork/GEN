@@ -220,13 +220,13 @@ bool DIOSTREAMDEVICEIP::DebugPrintInfo()
       case DIOSTREAMIPDEVICE_TYPE_LOOPBACK    : data = __L("Loopback");     break;
     }
 
-  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, __L("Type             : %s") , data.Get());
+  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, __L("Type : %s"), data.Get());
 
   GetMAC()->GetXString(data);
-  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, __L("MAC              : %s") , data.Get());
+  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, __L("MAC : %s"), data.Get());
 
   GetIP()->GetXString(data);
-  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, __L("IP               : %s") , data.Get());
+  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, __L("IP : %s"), data.Get());
 
  
   return true;

@@ -33,22 +33,13 @@
 #include "XBase.h"
 #include "XSTL.h"
 
-
-
 /*---- PRECOMPILATION INCLUDES ---------------------------------------------------------------------------------------*/
 
 #include "GEN_Control.h"
 
-
-
-
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
 
-
-
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
-
 
 template <class T>
 class XVECTORSTL : public std::vector<T>
@@ -70,24 +61,20 @@ class XVECTORSTL : public std::vector<T>
                                       Clean();
                                     }
 
-
     bool                            IsEmpty                               ()                                              
                                     { 
                                       return this->empty();                          
                                     }
-
 
     XDWORD                          GetSize                               ()                                              
                                     { 
                                       return (XDWORD)this->size();                                     
                                     }
 
-    
     bool                            Resize                                (XDWORD newsize)
                                     {                                      
                                       return this->resize(newsize);
                                     }
-
 
     virtual bool                    Add                                   (T element)
                                     {
@@ -103,37 +90,31 @@ class XVECTORSTL : public std::vector<T>
                                       return true;
                                     }
 
-
     int                             Find                                  (T element)
                                     {
                                        
                                       return NOTFOUND;
                                     }
 
-
     T                               Get                                   (XDWORD index)
                                     {                                       
                                       return this->at(index);
                                     }
-
 
     T                               GetLast                               ()                                              
                                     { 
                                       return this->back();                              
                                     }
 
-
     bool                            Set                                   (XDWORD index, T element)
                                     {                                    
                                       return true;
                                     }
 
-
     bool                            Insert                                (XDWORD index, T element)
                                     {                                      
                                       return true;
                                     }
-
 
     virtual bool                    Delete                                (T element)
                                     {
@@ -148,7 +129,6 @@ class XVECTORSTL : public std::vector<T>
                                       return false;
                                     }
 
-
     bool                            DeleteLast                            ()
                                     {
                                       if(!this->GetSize()) return false;
@@ -157,7 +137,6 @@ class XVECTORSTL : public std::vector<T>
 
                                       return true;
                                     }
-
 
     virtual bool                    DeleteIndex                           (XDWORD index)
                                     {      
@@ -168,7 +147,6 @@ class XVECTORSTL : public std::vector<T>
                                       return true;
                                     }
     
-
     bool                            DeleteContents                        ()
                                     {
                                       if(this->empty()) return false;
@@ -190,7 +168,6 @@ class XVECTORSTL : public std::vector<T>
 
                                       return true;
                                     }
-
 
     bool                            Swap                                  (XDWORD firstindex, XDWORD secondindex)
                                     {

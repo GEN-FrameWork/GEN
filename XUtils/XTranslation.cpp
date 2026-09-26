@@ -224,8 +224,8 @@ bool XTRANSLATION::Translate_Add(XDWORD ID, XCHAR* sentence, XDWORD fixed)
   XCHAR* newsentence = GEN_NEW XCHAR[sizesentence+1];
   if(newsentence)
     {
-      memset(newsentence, 0        , (sizesentence+1) * sizeof(XCHAR));
-      memcpy(newsentence, sentence ,  sizesentence    * sizeof(XCHAR));
+      memset(newsentence, 0, (sizesentence+1) * sizeof(XCHAR));
+      memcpy(newsentence, sentence, sizesentence * sizeof(XCHAR));
 
       if(sentences[ID]) GEN_DELETE_ARRAY sentences[ID];
       sentences[ID] = newsentence;

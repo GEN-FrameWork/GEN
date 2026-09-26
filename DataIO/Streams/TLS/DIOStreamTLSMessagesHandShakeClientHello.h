@@ -33,16 +33,9 @@
 #include "DIOStreamTLSMessages.h"
 #include "DIOStreamTLSMessagesExtension.h"
 
-
-
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
 
-
-
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
-
-
 
 class DIOSTREAMTLS_MSG_HANDSHAKE_CLIENTHELLO : public DIOSTREAMTLS_MSG_INTERFACE
 {
@@ -50,7 +43,6 @@ class DIOSTREAMTLS_MSG_HANDSHAKE_CLIENTHELLO : public DIOSTREAMTLS_MSG_INTERFACE
                                             DIOSTREAMTLS_MSG_HANDSHAKE_CLIENTHELLO            ();
     virtual                                ~DIOSTREAMTLS_MSG_HANDSHAKE_CLIENTHELLO            ();
                                             
-
     XWORD                                   GetClientVersion                                  ();    
     void                                    SetClientVersion                                  (XWORD clientversion);
                                             

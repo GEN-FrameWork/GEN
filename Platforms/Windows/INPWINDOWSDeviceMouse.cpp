@@ -149,7 +149,7 @@ bool INPWINDOWSDEVICEMOUSE::Update()
       int screenw;
       int screenh;
 
-      if(GetWindowPosition(screenx,screeny,screenw,screenh))
+      if(GetWindowPosition(screenx, screeny, screenw, screenh))
         {
           x = (float)(point.x - screenx);
           y = (float)(screeny - point.y);
@@ -233,7 +233,7 @@ void INPWINDOWSDEVICEMOUSE::Clean()
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         bool INPWINDOWSDEVICEMOUSE::GetWindowPosition(int& screenx,int& screeny,int& screenw,int& screenh)
+* @fn         bool INPWINDOWSDEVICEMOUSE::GetWindowPosition(int& screenx, int& screeny, int& screenw, int& screenh)
 * @brief      Get window position
 * @note       INTERNAL. screenx/screeny are the reference point Update() subtracts the raw cursor
 *             screen position from (screeny using the bottom-up convention the canvas is stored in --
@@ -259,7 +259,7 @@ void INPWINDOWSDEVICEMOUSE::Clean()
 * @return     bool : true if the operation is successful; otherwise false.
 *
 * --------------------------------------------------------------------------------------------------------------------*/
-bool INPWINDOWSDEVICEMOUSE::GetWindowPosition(int& screenx,int& screeny,int& screenw,int& screenh)
+bool INPWINDOWSDEVICEMOUSE::GetWindowPosition(int& screenx, int& screeny, int& screenw, int& screenh)
 {
   if(!grpscreen) return false;
 
@@ -268,7 +268,7 @@ bool INPWINDOWSDEVICEMOUSE::GetWindowPosition(int& screenx,int& screeny,int& scr
   memset(&info, 0, sizeof(WINDOWINFO));
   info.cbSize = sizeof(WINDOWINFO);
 
-  if(!GetWindowInfo((HWND)grpscreen->GetHandle(),&info))
+  if(!GetWindowInfo((HWND)grpscreen->GetHandle(), &info))
     {
       return false;
     }
@@ -295,9 +295,9 @@ bool INPWINDOWSDEVICEMOUSE::GetWindowPosition(int& screenx,int& screeny,int& scr
 * --------------------------------------------------------------------------------------------------------------------*/
 bool INPWINDOWSDEVICEMOUSE::CreateAllButtons()
 { 
-  INPBUTTON::CreateButton( &buttons, VK_LBUTTON , INPBUTTON_ID_MOUSE_LEFT      , __C('\x0'));
-  INPBUTTON::CreateButton( &buttons, VK_RBUTTON , INPBUTTON_ID_MOUSE_RIGHT     , __C('\x0')); 
-  INPBUTTON::CreateButton( &buttons, VK_MBUTTON , INPBUTTON_ID_MOUSE_MIDDLE    , __C('\x0'));
+  INPBUTTON::CreateButton(&buttons, VK_LBUTTON, INPBUTTON_ID_MOUSE_LEFT, __C('\x0'));
+  INPBUTTON::CreateButton(&buttons, VK_RBUTTON, INPBUTTON_ID_MOUSE_RIGHT, __C('\x0')); 
+  INPBUTTON::CreateButton(&buttons, VK_MBUTTON, INPBUTTON_ID_MOUSE_MIDDLE, __C('\x0'));
 
   return true;
 }

@@ -41,7 +41,6 @@
 
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
 
-
 #define DIOI2CPWMCONTROLERPCA9685_ADDR          0x40
 
 #define DIOI2CPWMCONTROLERPCA9685_MODE1         0x00
@@ -56,9 +55,6 @@
 #define DIOI2CPWMCONTROLERPCA9685_ALLLED_ON_H   0xFB
 #define DIOI2CPWMCONTROLERPCA9685_ALLLED_OFF_L  0xFC
 #define DIOI2CPWMCONTROLERPCA9685_ALLLED_OFF_H  0xFD
-
-
-
 
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
 

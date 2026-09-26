@@ -38,8 +38,6 @@
 #include "XFile.h"
 #include "XPath.h"
 
-
-
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
 
 enum XWINDOWSFILEMODE
@@ -49,10 +47,7 @@ enum XWINDOWSFILEMODE
   XWINDOWSFILEMODE_CREATE             ,
 };
 
-
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
-
 
 class CIPHER;
 

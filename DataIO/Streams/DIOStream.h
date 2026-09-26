@@ -65,8 +65,6 @@ enum DIOSTREAMERROR
   DIOSTREAMERROR_TLSPROTOCOL                ,
 };
 
-
-
 #ifndef MICROCONTROLLER
 #define DIOSTREAM_MAXBUFFER             1024*10  // 10k
 #else
@@ -77,16 +75,11 @@ enum DIOSTREAMERROR
 
 #define DIOSTREAM_TIMEINWAITFUNCTIONS   10       // milliseconds
 
-
-
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
-
 
 class XBUFFER;
 class DIOSTREAMCONFIG;
 class CIPHER;
-
 
 class DIOSTREAM : public XSUBJECT
 {

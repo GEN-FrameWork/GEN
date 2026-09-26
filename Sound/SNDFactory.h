@@ -34,8 +34,6 @@
 #include "XPath.h"
 #include "XSubject.h"
 
-
-
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
 
 #define SNDFACTORY_UNDEFINED              -1
@@ -44,8 +42,6 @@
 
 class SNDITEM;
 typedef bool (*SNDFACTORY_WAITFUNCTION)(SNDITEM* item);
-
-
 
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
 

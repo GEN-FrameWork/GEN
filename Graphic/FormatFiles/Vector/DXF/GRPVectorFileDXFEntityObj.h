@@ -56,11 +56,7 @@ enum GRPVECTORFILEDXFENTITYOBJTYPE
   GRPVECTORFILEDXFENTITYOBJTYPE_MAXELEMENTS
 };
 
-
-
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
-
 
 class GRPVECTORFILEDXFENTITYOBJ
 {  

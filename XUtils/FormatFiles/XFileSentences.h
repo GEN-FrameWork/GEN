@@ -56,7 +56,7 @@ class XFILESENTENCES : public XFILEXDB
     bool                  ConvertFileFromDBF        (XPATH& xpath);
 
     int                   GetNumberSentences        ();
-    bool                  GetSentence               (XDWORD index,XSTRING& sentence);
+    bool                  GetSentence               (XDWORD index, XSTRING& sentence);
 };
 
 

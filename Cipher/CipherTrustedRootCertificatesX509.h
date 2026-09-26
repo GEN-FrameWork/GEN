@@ -34,8 +34,6 @@
 #include "XBuffer.h"
 #include "XPath.h"
 
-
-
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
 
 typedef XCHAR* _CIPHERTRUSTEDROOTCERTIFICATESX509[];
@@ -43,8 +41,6 @@ typedef XCHAR* _CIPHERTRUSTEDROOTCERTIFICATESX509[];
 #define CIPHERTRUSTPROVIDERX509_DEFAULT_MAXROOTS              2048
 #define CIPHERTRUSTPROVIDERX509_DEFAULT_MAXCERTIFICATESIZE    (1024*1024)
 #define CIPHERTRUSTPROVIDERX509_DEFAULT_MAXTOTALSIZE          (32*1024*1024)
-
-
 
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
 
@@ -75,19 +71,12 @@ class CIPHERTRUSTPROVIDERX509
     XDWORD                totalsize;
 };
 
-
 class CIPHERTRUSTPROVIDERX509GEN : public CIPHERTRUSTPROVIDERX509
 {
   public:
                           CIPHERTRUSTPROVIDERX509GEN         ();
     virtual              ~CIPHERTRUSTPROVIDERX509GEN         ();
 
-    bool                  Load                               ();
-};
-
-class CIPHERTRUSTPROVIDERX509WINDOWS : public CIPHERTRUSTPROVIDERX509
-{
-  public:
     bool                  Load                               ();
 };
 

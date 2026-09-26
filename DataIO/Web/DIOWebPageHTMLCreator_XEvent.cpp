@@ -66,7 +66,7 @@
 * @param[in]  type : Type value.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-DIOWEBPAGEHTMLCREATOR_XEVENT::DIOWEBPAGEHTMLCREATOR_XEVENT(XSUBJECT* subject, XDWORD type)  : XEVENT(subject,type)
+DIOWEBPAGEHTMLCREATOR_XEVENT::DIOWEBPAGEHTMLCREATOR_XEVENT(XSUBJECT* subject, XDWORD type)  : XEVENT(subject, type)
 {
   Clean();
 }

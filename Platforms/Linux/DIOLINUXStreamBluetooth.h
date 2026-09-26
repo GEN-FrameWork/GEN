@@ -101,16 +101,11 @@ enum DIOLINUXBTFSMSTATES
   DIOLINUXBT_LASTSTATE
 };
 
-
 #define DIOLINUXSTREAMBLUETOOTH_SCANBLOCKING
 
 #define DIOLINUXSTREAMBLUETOOTH_DBUSAGENTPATH     "/org/bluez"
 
-
-
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
-
 
 class DIOLINUXSTREAMBLUETOOTH : public DIOSTREAMBLUETOOTH , public XFSMACHINE
 {
@@ -126,7 +121,7 @@ class DIOLINUXSTREAMBLUETOOTH : public DIOSTREAMBLUETOOTH , public XFSMACHINE
 
   protected:
 
-    sdp_session_t*            SDP_RegisterService                 (char* service_name,char* service_dsc,char* service_prov,int rfcomm_channel);
+    sdp_session_t*            SDP_RegisterService                 (char* service_name, char* service_dsc, char* service_prov, int rfcomm_channel);
 
   private:
     

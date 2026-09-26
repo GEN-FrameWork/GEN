@@ -58,7 +58,6 @@ XSTM32EEPROMMEMORYMANAGER::XSTM32EEPROMMEMORYMANAGER()
 }
 
 
-
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         XSTM32EEPROMMEMORYMANAGER::~XSTM32EEPROMMEMORYMANAGER()
@@ -71,7 +70,6 @@ XSTM32EEPROMMEMORYMANAGER::~XSTM32EEPROMMEMORYMANAGER()
 {
 
 }
-
 
 
 /**-------------------------------------------------------------------------------------------------------------------
@@ -89,7 +87,6 @@ bool XSTM32EEPROMMEMORYMANAGER::Ini()
 }
 
 
-
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         bool XSTM32EEPROMMEMORYMANAGER::End()
@@ -103,7 +100,6 @@ bool XSTM32EEPROMMEMORYMANAGER::End()
 {
   return false;
 }
-
 
 
 /**-------------------------------------------------------------------------------------------------------------------
@@ -136,7 +132,6 @@ bool XSTM32EEPROMMEMORYMANAGER::Read(XDWORD offset, XBYTE* data, XDWORD size)
 }
 
 
-
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         bool XSTM32EEPROMMEMORYMANAGER::Write(XDWORD offset, XBYTE* data, XDWORD size)
@@ -165,7 +160,6 @@ bool XSTM32EEPROMMEMORYMANAGER::Write(XDWORD offset, XBYTE* data, XDWORD size)
 
   return true;
 }
-
 
 
 /**-------------------------------------------------------------------------------------------------------------------

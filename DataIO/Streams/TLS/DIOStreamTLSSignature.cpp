@@ -224,51 +224,36 @@ bool DIOSTREAMTLSSIGNATURE::Verify(XWORD signaturescheme, CIPHERKEY* key, XBUFFE
   switch(signaturescheme)
     {
       case DIOSTREAMTLS_MSG_SIGNATURESCHEME_RSA_PSS_RSAE_SHA256 : { HASHSHA2 hash(HASHSHA2TYPE_256);
-                                                                    return RSA.Verify(content, signature, &hash,
-                                                                                      CIPHERRSAPKCS1VERSIONV21,
-                                                                                      HASHSHA2_256_DIGEST_SIZE);
+                                                                    return RSA.Verify(content, signature, &hash, CIPHERRSAPKCS1VERSIONV21, HASHSHA2_256_DIGEST_SIZE);
                                                                   }
       case DIOSTREAMTLS_MSG_SIGNATURESCHEME_RSA_PSS_PSS_SHA256  : { HASHSHA2 hash(HASHSHA2TYPE_256);
-                                                                    return RSA.Verify(content, signature, &hash,
-                                                                                      CIPHERRSAPKCS1VERSIONV21,
-                                                                                      HASHSHA2_256_DIGEST_SIZE);
+                                                                    return RSA.Verify(content, signature, &hash, CIPHERRSAPKCS1VERSIONV21, HASHSHA2_256_DIGEST_SIZE);
                                                                   }
 
       case DIOSTREAMTLS_MSG_SIGNATURESCHEME_RSA_PSS_RSAE_SHA384 : { HASHSHA2 hash(HASHSHA2TYPE_384);
-                                                                    return RSA.Verify(content, signature, &hash,
-                                                                                      CIPHERRSAPKCS1VERSIONV21,
-                                                                                      HASHSHA2_384_DIGEST_SIZE);
+                                                                    return RSA.Verify(content, signature, &hash, CIPHERRSAPKCS1VERSIONV21, HASHSHA2_384_DIGEST_SIZE);
                                                                   }
       case DIOSTREAMTLS_MSG_SIGNATURESCHEME_RSA_PSS_PSS_SHA384  : { HASHSHA2 hash(HASHSHA2TYPE_384);
-                                                                    return RSA.Verify(content, signature, &hash,
-                                                                                      CIPHERRSAPKCS1VERSIONV21,
-                                                                                      HASHSHA2_384_DIGEST_SIZE);
+                                                                    return RSA.Verify(content, signature, &hash, CIPHERRSAPKCS1VERSIONV21, HASHSHA2_384_DIGEST_SIZE);
                                                                   }
 
       case DIOSTREAMTLS_MSG_SIGNATURESCHEME_RSA_PSS_RSAE_SHA512 : { HASHSHA2 hash(HASHSHA2TYPE_512);
-                                                                    return RSA.Verify(content, signature, &hash,
-                                                                                      CIPHERRSAPKCS1VERSIONV21,
-                                                                                      HASHSHA2_512_DIGEST_SIZE);
+                                                                    return RSA.Verify(content, signature, &hash, CIPHERRSAPKCS1VERSIONV21, HASHSHA2_512_DIGEST_SIZE);
                                                                   }
       case DIOSTREAMTLS_MSG_SIGNATURESCHEME_RSA_PSS_PSS_SHA512  : { HASHSHA2 hash(HASHSHA2TYPE_512);
-                                                                    return RSA.Verify(content, signature, &hash,
-                                                                                      CIPHERRSAPKCS1VERSIONV21,
-                                                                                      HASHSHA2_512_DIGEST_SIZE);
+                                                                    return RSA.Verify(content, signature, &hash, CIPHERRSAPKCS1VERSIONV21, HASHSHA2_512_DIGEST_SIZE);
                                                                   }
 
       case DIOSTREAMTLS_MSG_SIGNATURESCHEME_RSA_PKCS1_SHA256     : { HASHSHA2 hash(HASHSHA2TYPE_256);
-                                                                    return RSA.Verify(content, signature, &hash,
-                                                                                      CIPHERRSAPKCS1VERSIONV15);
+                                                                    return RSA.Verify(content, signature, &hash, CIPHERRSAPKCS1VERSIONV15);
                                                                   }
 
       case DIOSTREAMTLS_MSG_SIGNATURESCHEME_RSA_PKCS1_SHA384     : { HASHSHA2 hash(HASHSHA2TYPE_384);
-                                                                    return RSA.Verify(content, signature, &hash,
-                                                                                      CIPHERRSAPKCS1VERSIONV15);
+                                                                    return RSA.Verify(content, signature, &hash, CIPHERRSAPKCS1VERSIONV15);
                                                                   }
 
       case DIOSTREAMTLS_MSG_SIGNATURESCHEME_RSA_PKCS1_SHA512     : { HASHSHA2 hash(HASHSHA2TYPE_512);
-                                                                    return RSA.Verify(content, signature, &hash,
-                                                                                      CIPHERRSAPKCS1VERSIONV15);
+                                                                    return RSA.Verify(content, signature, &hash, CIPHERRSAPKCS1VERSIONV15);
                                                                   }
 
                                                         default : break;

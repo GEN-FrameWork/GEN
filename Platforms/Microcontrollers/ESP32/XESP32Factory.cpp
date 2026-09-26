@@ -89,7 +89,7 @@ DELETEFUNC(XESP32FACTORY  , XMUTEX          , XESP32MUTEX            , Delete_Mu
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         XTHREAD* XESP32FACTORY::CreateThread(XTHREADGROUPID groupID, XCHAR* ID,XTHREADFUNCTION function,void* data)
+* @fn         XTHREAD* XESP32FACTORY::CreateThread(XTHREADGROUPID groupID, XCHAR* ID, XTHREADFUNCTION function, void* data)
 * @brief      Create thread
 * @ingroup    PLATFORM_ESP32
 * 
@@ -101,9 +101,9 @@ DELETEFUNC(XESP32FACTORY  , XMUTEX          , XESP32MUTEX            , Delete_Mu
 * @return     XTHREAD* : Pointer to the requested object; NULL if it is not available.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-XTHREAD* XESP32FACTORY::CreateThread(XTHREADGROUPID groupID, XCHAR* ID,XTHREADFUNCTION function,void* data)
+XTHREAD* XESP32FACTORY::CreateThread(XTHREADGROUPID groupID, XCHAR* ID, XTHREADFUNCTION function, void* data)
 {
-  XESP32THREAD* _class =  GEN_NEW XESP32THREAD(groupID, ID,function,data);
+  XESP32THREAD* _class =  GEN_NEW XESP32THREAD(groupID, ID, function, data);
   return (XTHREAD*)_class;
 }
 

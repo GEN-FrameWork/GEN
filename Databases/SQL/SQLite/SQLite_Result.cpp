@@ -245,7 +245,7 @@ bool SQLITE_RESULT::ProcessRow()
 
           case SQLITE_TEXT      : { XSTRING received;
 
-                                    received.ConvertFromUTF8((XBYTE*)text,len);
+                                    received.ConvertFromUTF8((XBYTE*)text, len);
                                     (*variant) = received;
                                   }
                                   break;

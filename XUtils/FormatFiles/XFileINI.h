@@ -46,7 +46,6 @@ enum XFILEINI_TYPEREMARK
   XFILEINI_TYPEREMARK_IN_KEY   
 };
 
-
 typedef struct
 {
   XSTRING key;
@@ -59,7 +58,6 @@ typedef struct
 
 
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
-
 
 class XFILEINIKEY
 {
@@ -81,7 +79,6 @@ class XFILEINIKEY
     XSTRING                         value;
 };
 
-
 class XFILEINISECTION
 {
   public:
@@ -93,12 +90,12 @@ class XFILEINISECTION
 
     XFILEINIKEY*                    FindKey                     (XSTRING& key);
 
-    bool                            GetKey                      (XSTRING& key,XSTRING& value);
-    bool                            SetKey                      (XSTRING& key,XSTRING& value);
+    bool                            GetKey                      (XSTRING& key, XSTRING& value);
+    bool                            SetKey                      (XSTRING& key, XSTRING& value);
 
     bool                            DeleteKey                   (XSTRING& key);
 
-    bool                            GetNextKey                  (XSTRING& key,XSTRING& value);
+    bool                            GetNextKey                  (XSTRING& key, XSTRING& value);
     bool                            ResetSelectionKey           ();    
 
     void                            Clean                       ();
@@ -109,7 +106,6 @@ class XFILEINISECTION
     XVECTOR<XFILEINIKEY*>           keys;
     XDWORD                          selectkey;
 };
-
 
 class XFILEINIREMARK
 {
@@ -151,7 +147,6 @@ class XFILEINIREMARK
     XSTRING                         textremark;    
 };
 
-
 class XFILEINI : public XFILETXT
 {
   public:
@@ -160,7 +155,7 @@ class XFILEINI : public XFILETXT
                                     XFILEINI                    (XFILE* file);
     virtual                        ~XFILEINI                    ();
 
-    bool                            Open                        (XPATH& xpath,bool readonly=true);
+    bool                            Open                        (XPATH& xpath, bool readonly=true);
     bool                            Close                       (void);
 
     XFILEINISECTION*                GetSection                  (XSTRING& section);
@@ -175,31 +170,31 @@ class XFILEINI : public XFILETXT
     bool                            DeleteSection               (XSTRING& section);
     bool                            DeleteSection               (XCHAR* section);
 
-    XFILEINIKEY*                    GetKey                      (XSTRING& section,XSTRING& key);
+    XFILEINIKEY*                    GetKey                      (XSTRING& section, XSTRING& key);
 
-    bool                            DeleteKey                   (XSTRING& section,XSTRING& key);
-    bool                            DeleteKey                   (XCHAR* section,XSTRING& key);
-    bool                            DeleteKey                   (XSTRING& section,XCHAR* key);
-    bool                            DeleteKey                   (XCHAR* section,XCHAR* key);
+    bool                            DeleteKey                   (XSTRING& section, XSTRING& key);
+    bool                            DeleteKey                   (XCHAR* section, XSTRING& key);
+    bool                            DeleteKey                   (XSTRING& section, XCHAR* key);
+    bool                            DeleteKey                   (XCHAR* section, XCHAR* key);
 
-    bool                            ReadValue                   (XSTRING& section,XSTRING& key,XSTRING& value);
-    bool                            ReadValue                   (XCHAR* section,XSTRING& key,XSTRING& value);
-    bool                            ReadValue                   (XSTRING& section,XCHAR* key,XSTRING& value);
-    bool                            ReadValue                   (XCHAR* section,XCHAR* key,XSTRING& value);
-    bool                            ReadValue                   (XSTRING& key,XSTRING& value);
-    bool                            ReadValue                   (XCHAR* key,XSTRING& value);
+    bool                            ReadValue                   (XSTRING& section, XSTRING& key, XSTRING& value);
+    bool                            ReadValue                   (XCHAR* section, XSTRING& key, XSTRING& value);
+    bool                            ReadValue                   (XSTRING& section, XCHAR* key, XSTRING& value);
+    bool                            ReadValue                   (XCHAR* section, XCHAR* key, XSTRING& value);
+    bool                            ReadValue                   (XSTRING& key, XSTRING& value);
+    bool                            ReadValue                   (XCHAR* key, XSTRING& value);
 
-    bool                            WriteValue                  (XSTRING& section,XSTRING& key,XSTRING& value);
-    bool                            WriteValue                  (XCHAR* section,XSTRING& key,XSTRING& value);
-    bool                            WriteValue                  (XSTRING& section,XCHAR* key,XSTRING& value);
-    bool                            WriteValue                  (XCHAR* section,XCHAR* key,XSTRING& value);
-    bool                            WriteValue                  (XSTRING& key,XSTRING& value);
-    bool                            WriteValue                  (XCHAR* key,XSTRING& value);
+    bool                            WriteValue                  (XSTRING& section, XSTRING& key, XSTRING& value);
+    bool                            WriteValue                  (XCHAR* section, XSTRING& key, XSTRING& value);
+    bool                            WriteValue                  (XSTRING& section, XCHAR* key, XSTRING& value);
+    bool                            WriteValue                  (XCHAR* section, XCHAR* key, XSTRING& value);
+    bool                            WriteValue                  (XSTRING& key, XSTRING& value);
+    bool                            WriteValue                  (XCHAR* key, XSTRING& value);
 
-    bool                            GetNextKey                  (XSTRING& key,XSTRING& value);
+    bool                            GetNextKey                  (XSTRING& key, XSTRING& value);
 
-    bool                            ReadKeyMap                  (XSTRING& section,XFILEINIKEYMAP* keymap,int nkeymap);
-    bool                            ReadKeyMap                  (XCHAR* section,XFILEINIKEYMAP* keymap,int nkeymap);
+    bool                            ReadKeyMap                  (XSTRING& section, XFILEINIKEYMAP* keymap, int nkeymap);
+    bool                            ReadKeyMap                  (XCHAR* section, XFILEINIKEYMAP* keymap, int nkeymap);
 
     bool                            ConvertFromLines            ();
     bool                            ConvertToLines              ();
@@ -215,7 +210,7 @@ class XFILEINI : public XFILETXT
   private:
 
     bool                            Line_IsSection              (XSTRING& line, XSTRING& section);
-    bool                            Line_IsKey                  (XSTRING& line, XSTRING& key,XSTRING& value);
+    bool                            Line_IsKey                  (XSTRING& line, XSTRING& key, XSTRING& value);
     bool                            Line_GetRemark              (XSTRING& line, XFILEINIREMARK& remark);
 
     void                            Clean                       ();

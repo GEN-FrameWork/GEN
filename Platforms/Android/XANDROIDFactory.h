@@ -33,15 +33,9 @@
 #include "XFactory.h"
 #include "XThread.h"
 
-
-
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
 
-
-
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
-
 
 class XTIMER;
 class XDATETIME;
@@ -52,7 +46,6 @@ class XSYSTEM;
 #ifdef XCONSOLE_ACTIVE
 class XCONSOLE;
 #endif
-
 
 class XANDROIDFACTORY : public XFACTORY
 {
@@ -81,7 +74,7 @@ class XANDROIDFACTORY : public XFACTORY
     XMUTEX*                 Create_Mutex            ();
     bool                    Delete_Mutex            (XMUTEX* phone);
 
-    XTHREAD*                CreateThread            (XTHREADGROUPID groupID, XCHAR* ID,XTHREADFUNCTION function = NULL,void* data = NULL);
+    XTHREAD*                CreateThread            (XTHREADGROUPID groupID, XCHAR* ID, XTHREADFUNCTION function = NULL, void* data = NULL);
     bool                    DeleteThread            (XTHREADGROUPID groupID, XTHREAD* xthread);
 };
 

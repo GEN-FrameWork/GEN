@@ -57,7 +57,6 @@ enum DIOWINDOWSUDPFSMEVENTS
   DIOWINDOWSUDP_LASTEVENT
 };
 
-
 enum DIOWINDOWSUDPFSMSTATES
 {
   DIOWINDOWSUDPFSMSTATE_NONE              = 0 ,
@@ -70,8 +69,6 @@ enum DIOWINDOWSUDPFSMSTATES
 
   DIOWINDOWSUDP_LASTSTATE
 };
-
-
 
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
 

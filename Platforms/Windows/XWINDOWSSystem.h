@@ -42,7 +42,6 @@
 #include "XSystem.h"
 
 
-
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
 
 #define XWINDOWSSYSTEM_MAXNETADDRIP															16
@@ -55,9 +54,6 @@
 
 #define XWINDOWSSYSTEM_TOTALBYTES																100*1024
 #define XWINDOWSSYSTEM_BYTEINCREMENT														10*1024
-
-
-
 
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
 
@@ -73,12 +69,10 @@ class XWINDOWSSYSTEM_PERFCOUNTERS
 																
 																								}
 
-
 																							 ~XWINDOWSSYSTEM_PERFCOUNTERS												()
 																								{
 
 																								}
-
 
 		T																						GetCounterValue																		(PERF_DATA_BLOCK** perfdata, DWORD objectindex, DWORD counterindex, LPCTSTR instancename = NULL)
 																								{
@@ -87,10 +81,7 @@ class XWINDOWSSYSTEM_PERFCOUNTERS
 																									PPERF_OBJECT_TYPE perfobj = NULL;
 																									T									value		= { 0 };
 
-
 																									perfobj = FirstObject(*perfdata);
-
-
 
 																									for(DWORD i=0; i<(*perfdata)->NumObjectTypes; i++ )
 																										{
@@ -107,7 +98,6 @@ class XWINDOWSSYSTEM_PERFCOUNTERS
 																									return value;
 																								}
 
-
 		T																						GetCounterValueForProcessID											(PERF_DATA_BLOCK** perfdata, DWORD objectindex, DWORD counterindex, DWORD processID)
 																								{
 																									QueryPerformanceData(perfdata, objectindex, counterindex);
@@ -115,10 +105,7 @@ class XWINDOWSSYSTEM_PERFCOUNTERS
 																									PPERF_OBJECT_TYPE perfobj		= NULL;
 																									T									value			= { 0 };
 
-
 																									perfobj = FirstObject(*perfdata);
-
-
 
 																									for(DWORD i=0; i<(*perfdata)->NumObjectTypes; i++ )
 																										{
@@ -181,14 +168,8 @@ class XWINDOWSSYSTEM_PERFCOUNTERS
 					UINT																	_size;
 		};
 
-	
-
 		void																				QueryPerformanceData															(PERF_DATA_BLOCK** perfdata, DWORD objectindex, DWORD counterindex)
 																								{
-
-
-
-
 
 																									static CBUFFER		buffer(XWINDOWSSYSTEM_TOTALBYTES);
 																									DWORD							buffersize = buffer.GetSize();
@@ -205,7 +186,6 @@ class XWINDOWSSYSTEM_PERFCOUNTERS
 																																																					, &buffersize )) == ERROR_MORE_DATA )
 																										{
 
-
 																											buffersize += XWINDOWSSYSTEM_BYTEINCREMENT;
 																											buffer.Realloc(buffersize);
 																										}
@@ -213,21 +193,17 @@ class XWINDOWSSYSTEM_PERFCOUNTERS
 																									*perfdata = (PPERF_DATA_BLOCK) buffer.buffer;
 																								}
 
-	
 		T																						GetCounterValue																		(PPERF_OBJECT_TYPE perfobj, DWORD counterindex, LPCTSTR instancename)
 																								{
 																									PPERF_COUNTER_DEFINITION		perfcntr			= NULL;
 																									PPERF_INSTANCE_DEFINITION		perfinst			= NULL;
 																									PPERF_COUNTER_BLOCK					counterblock	= NULL;
 
-
-
 																									perfcntr = FirstCounter( perfobj );
 
 																									for(DWORD j=0; j<perfobj->NumCounters; j++ )
 																										{
 																											if (perfcntr->CounterNameTitleIndex == counterindex)  break;
-
 
 																											perfcntr = NextCounter( perfcntr );
 																										}
@@ -240,10 +216,6 @@ class XWINDOWSSYSTEM_PERFCOUNTERS
 																										{
 																											perfinst = FirstInstance( perfobj );
 		
-
-
-
-
 																											XSTRING instancenamestr;
 																											XSTRING instancenamestr2;
 
@@ -259,8 +231,6 @@ class XWINDOWSSYSTEM_PERFCOUNTERS
 																															break;
 																														}
 				
-
-
 																													perfinst = NextInstance( perfinst );
 																												}
 																										}
@@ -276,7 +246,6 @@ class XWINDOWSSYSTEM_PERFCOUNTERS
 																									return -1;
 																								}
 
-
 		T																						GetCounterValueForProcessID												(PPERF_OBJECT_TYPE perfobj, DWORD counterindex, DWORD processID)
 																								{
 																									int													PROC_ID_COUNTER				= 784;
@@ -286,8 +255,6 @@ class XWINDOWSSYSTEM_PERFCOUNTERS
 																									PPERF_COUNTER_DEFINITION		procIDperfcntr				= NULL;
 																									PPERF_INSTANCE_DEFINITION		perfinst							= NULL;
 																									PPERF_COUNTER_BLOCK					counterblock					= NULL;
-
-
 
 																									perfcntr = FirstCounter(perfobj);
 
@@ -304,8 +271,6 @@ class XWINDOWSSYSTEM_PERFCOUNTERS
 																													therequestedperfcntr = perfcntr;
 																													if(procIDperfcntr) break;
 																												}
-
-
 
 																											perfcntr = NextCounter( perfcntr );
 																										}
@@ -333,8 +298,6 @@ class XWINDOWSSYSTEM_PERFCOUNTERS
 																																}
 																														}
 				
-
-
 																													perfinst = NextInstance( perfinst );
 																												}
 																										}
@@ -350,9 +313,6 @@ class XWINDOWSSYSTEM_PERFCOUNTERS
 																								}
 
 
-	
-
-	 
 		PPERF_OBJECT_TYPE														FirstObject																				(PPERF_DATA_BLOCK perfdata)						{	return( (PPERF_OBJECT_TYPE)((PBYTE)perfdata + perfdata->HeaderLength));												}
 		PPERF_OBJECT_TYPE														NextObject																				(PPERF_OBJECT_TYPE perfobj)						{	return( (PPERF_OBJECT_TYPE)((PBYTE)perfobj + perfobj->TotalByteLength));											}
 		PPERF_COUNTER_DEFINITION										FirstCounter																			(PPERF_OBJECT_TYPE perfobj)						{	return( (PPERF_COUNTER_DEFINITION) ((PBYTE)perfobj + perfobj->HeaderLength));									}
@@ -371,7 +331,6 @@ class XWINDOWSSYSTEM_PERFCOUNTERS
 #pragma pack(pop)
 
 #endif
-
 
 class XWINDOWSSYSTEM_CPUUSAGESTATUS
 {
@@ -416,7 +375,6 @@ class XWINDOWSSYSTEM_CPUUSAGE
     ULONGLONG																		lastprocesstime;		
 };
 
-
 class XWINDOWSSYSTEM : public XSYSTEM
 {
   public:
@@ -437,7 +395,7 @@ class XWINDOWSSYSTEM : public XSYSTEM
 
 		float																				GetCPUTemperature																	();
 
-    bool																				GetMemoryInfo																			(XDWORD& total,XDWORD& free);
+    bool																				GetMemoryInfo																			(XDWORD& total, XDWORD& free);
 
     bool																				GetVolumesInfo																		(XVECTOR<XSYSTEM_VOLUMEINFO*>& volumes);
 		

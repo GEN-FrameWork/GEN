@@ -98,7 +98,7 @@ DIOSTREAMSPI::DIOSTREAMSPI() : DIOSTREAM(), XFSMACHINE(0)
             XFSMACHINESTATE_EVENTDEFEND);
 
 
-  threadconnection = CREATEXTHREAD(XTHREADGROUPID_DIOSTREAMSPI, __L("DIOSTREAMSPI::DIOSTREAMSPI"),ThreadConnection,(void*)this);
+  threadconnection = CREATEXTHREAD(XTHREADGROUPID_DIOSTREAMSPI, __L("DIOSTREAMSPI::DIOSTREAMSPI"), ThreadConnection, (void*)this);
   threadconnection->SetPriority(XTHREADPRIORITY_HIGH);
 
   xtimer=GEN_XFACTORY.CreateTimer();
@@ -186,10 +186,10 @@ bool DIOSTREAMSPI::Open()
       GPIO_Entry[DIOSTREAMSPI_GPIO_CS]      = GEN_DIOGPIO.GPIOEntry_GetByID(config->GetPinsDirectAccess()[DIOSTREAMSPI_GPIO_CS]);
 
 
-      if(GPIO_Entry[DIOSTREAMSPI_GPIO_CLK])   GEN_DIOGPIO.SetMode(GPIO_Entry[DIOSTREAMSPI_GPIO_CLK]   , DIOGPIO_MODE_INPUT);
-      if(GPIO_Entry[DIOSTREAMSPI_GPIO_MISO])  GEN_DIOGPIO.SetMode(GPIO_Entry[DIOSTREAMSPI_GPIO_MISO]  , DIOGPIO_MODE_OUTPUT);
-      if(GPIO_Entry[DIOSTREAMSPI_GPIO_MOSI])  GEN_DIOGPIO.SetMode(GPIO_Entry[DIOSTREAMSPI_GPIO_MOSI]  , DIOGPIO_MODE_INPUT);
-      if(GPIO_Entry[DIOSTREAMSPI_GPIO_CS])    GEN_DIOGPIO.SetMode(GPIO_Entry[DIOSTREAMSPI_GPIO_CS]    , DIOGPIO_MODE_INPUT);     
+      if(GPIO_Entry[DIOSTREAMSPI_GPIO_CLK])   GEN_DIOGPIO.SetMode(GPIO_Entry[DIOSTREAMSPI_GPIO_CLK], DIOGPIO_MODE_INPUT);
+      if(GPIO_Entry[DIOSTREAMSPI_GPIO_MISO])  GEN_DIOGPIO.SetMode(GPIO_Entry[DIOSTREAMSPI_GPIO_MISO], DIOGPIO_MODE_OUTPUT);
+      if(GPIO_Entry[DIOSTREAMSPI_GPIO_MOSI])  GEN_DIOGPIO.SetMode(GPIO_Entry[DIOSTREAMSPI_GPIO_MOSI], DIOGPIO_MODE_INPUT);
+      if(GPIO_Entry[DIOSTREAMSPI_GPIO_CS])    GEN_DIOGPIO.SetMode(GPIO_Entry[DIOSTREAMSPI_GPIO_CS], DIOGPIO_MODE_INPUT);     
     }
 
   bufferread   = GEN_NEW XBYTE[DIOSTREAMSPI_MAXSIZEBUFFER];
@@ -206,7 +206,7 @@ bool DIOSTREAMSPI::Open()
       switch(mode)
         {
           case DIOSTREAMSPI_MODE_0:
-          case DIOSTREAMSPI_MODE_1: GEN_DIOGPIO.SetValue(GPIO_Entry[DIOSTREAMSPI_GPIO_CLK],  false);
+          case DIOSTREAMSPI_MODE_1: GEN_DIOGPIO.SetValue(GPIO_Entry[DIOSTREAMSPI_GPIO_CLK], false);
                                     break;
 
           case DIOSTREAMSPI_MODE_2:
@@ -373,7 +373,7 @@ void DIOSTREAMSPI::Clean()
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         bool DIOSTREAMSPI::TransferOneData(XWORD writedata,XWORD& readdata)
+* @fn         bool DIOSTREAMSPI::TransferOneData(XWORD writedata, XWORD& readdata)
 * @brief      Transfer one data
 * @ingroup    DATAIO
 * 
@@ -383,7 +383,7 @@ void DIOSTREAMSPI::Clean()
 * @return     bool : true if the operation is successful; otherwise false.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-bool DIOSTREAMSPI::TransferOneData(XWORD writedata,XWORD& readdata)
+bool DIOSTREAMSPI::TransferOneData(XWORD writedata, XWORD& readdata)
 {
   if(!config->IsDirectAccess()) return false;
 
@@ -469,7 +469,7 @@ void DIOSTREAMSPI::ThreadConnection(void* data)
                                                                         {
                                                                           if(!diostream->config->IsOnlyWrite())
                                                                             {
-                                                                              diostream->inbuffer->Add(diostream->bufferread,size);
+                                                                              diostream->inbuffer->Add(diostream->bufferread, size);
                                                                             }
 
                                                                           diostream->outbuffer->Extract(NULL, 0, size);
@@ -495,7 +495,7 @@ void DIOSTREAMSPI::ThreadConnection(void* data)
             {
               case DIOSTREAMSPI_FSMSTATE_NONE                 : break;
 
-              case DIOSTREAMSPI_FSMSTATE_CONNECTED            : { DIOSTREAM_XEVENT xevent(diostream,DIOSTREAM_XEVENT_TYPE_CONNECTED);
+              case DIOSTREAMSPI_FSMSTATE_CONNECTED            : { DIOSTREAM_XEVENT xevent(diostream, DIOSTREAM_XEVENT_TYPE_CONNECTED);
                                                                   xevent.SetDIOStream(diostream);
                                                                   diostream->PostEvent(&xevent);
 
@@ -507,7 +507,7 @@ void DIOSTREAMSPI::ThreadConnection(void* data)
 
               case DIOSTREAMSPI_FSMSTATE_SENDINGDATA          : break;
 
-              case DIOSTREAMSPI_FSMSTATE_DISCONNECTING        : { DIOSTREAM_XEVENT xevent(diostream,DIOSTREAM_XEVENT_TYPE_DISCONNECTED);
+              case DIOSTREAMSPI_FSMSTATE_DISCONNECTING        : { DIOSTREAM_XEVENT xevent(diostream, DIOSTREAM_XEVENT_TYPE_DISCONNECTED);
                                                                   xevent.SetDIOStream(diostream);
                                                                   diostream->PostEvent(&xevent);
 

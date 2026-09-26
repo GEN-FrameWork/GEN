@@ -127,7 +127,7 @@ XSYSTEM_PLATFORM XESP32SYSTEM::GetPlatform(XSTRING* namestring)
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         bool XESP32SYSTEM::GetMemoryInfo(XDWORD& total,XDWORD& free)
+* @fn         bool XESP32SYSTEM::GetMemoryInfo(XDWORD& total, XDWORD& free)
 * @brief      Get memory info
 * @ingroup    PLATFORM_ESP32
 * 
@@ -137,7 +137,7 @@ XSYSTEM_PLATFORM XESP32SYSTEM::GetPlatform(XSTRING* namestring)
 * @return     bool : true if the operation is successful; otherwise false.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-bool XESP32SYSTEM::GetMemoryInfo(XDWORD& total,XDWORD& free)
+bool XESP32SYSTEM::GetMemoryInfo(XDWORD& total, XDWORD& free)
 {
   total = 0;
   free  = 0;

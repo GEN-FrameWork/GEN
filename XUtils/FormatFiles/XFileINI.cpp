@@ -168,10 +168,6 @@ void XFILEINIKEY::Clean()
 }
 
 
-
-
-
-
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         XFILEINISECTION::XFILEINISECTION()
@@ -266,7 +262,7 @@ XFILEINIKEY* XFILEINISECTION::FindKey(XSTRING& key)
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         bool XFILEINISECTION::GetKey(XSTRING& key,XSTRING& value)
+* @fn         bool XFILEINISECTION::GetKey(XSTRING& key, XSTRING& value)
 * @brief      Get key
 * @ingroup    XUTILS
 * 
@@ -276,7 +272,7 @@ XFILEINIKEY* XFILEINISECTION::FindKey(XSTRING& key)
 * @return     bool : true if the operation is successful; otherwise false.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-bool XFILEINISECTION::GetKey(XSTRING& key,XSTRING& value)
+bool XFILEINISECTION::GetKey(XSTRING& key, XSTRING& value)
 {
   XFILEINIKEY* okey=FindKey(key);
 
@@ -290,7 +286,7 @@ bool XFILEINISECTION::GetKey(XSTRING& key,XSTRING& value)
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         bool XFILEINISECTION::SetKey(XSTRING& key,XSTRING& value)
+* @fn         bool XFILEINISECTION::SetKey(XSTRING& key, XSTRING& value)
 * @brief      Set key
 * @ingroup    XUTILS
 * 
@@ -300,7 +296,7 @@ bool XFILEINISECTION::GetKey(XSTRING& key,XSTRING& value)
 * @return     bool : true if the operation is successful; otherwise false.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-bool XFILEINISECTION::SetKey(XSTRING& key,XSTRING& value)
+bool XFILEINISECTION::SetKey(XSTRING& key, XSTRING& value)
 {
   XFILEINIKEY* okey  = FindKey(key);
   bool         isnew = false;
@@ -347,7 +343,7 @@ bool XFILEINISECTION::DeleteKey(XSTRING& key)
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         bool XFILEINISECTION::GetNextKey(XSTRING& key,XSTRING& value)
+* @fn         bool XFILEINISECTION::GetNextKey(XSTRING& key, XSTRING& value)
 * @brief      Get next key
 * @ingroup    XUTILS
 * 
@@ -357,7 +353,7 @@ bool XFILEINISECTION::DeleteKey(XSTRING& key)
 * @return     bool : true if the operation is successful; otherwise false.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-bool XFILEINISECTION::GetNextKey(XSTRING& key,XSTRING& value)
+bool XFILEINISECTION::GetNextKey(XSTRING& key, XSTRING& value)
 {
   if(selectkey>=keys.GetSize()) return false;
 
@@ -409,10 +405,6 @@ void XFILEINISECTION::Clean()
   keys.DeleteContents();
   keys.DeleteAll();
 }
-
-
-
-
 
 
 /**-------------------------------------------------------------------------------------------------------------------
@@ -742,7 +734,7 @@ XFILEINI::~XFILEINI()
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         bool XFILEINI::Open(XPATH& xpath,bool readonly)
+* @fn         bool XFILEINI::Open(XPATH& xpath, bool readonly)
 * @brief      Open
 * @ingroup    XUTILS
 * 
@@ -752,9 +744,9 @@ XFILEINI::~XFILEINI()
 * @return     bool : true if the operation is successful; otherwise false.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-bool XFILEINI::Open(XPATH& xpath,bool readonly)
+bool XFILEINI::Open(XPATH& xpath, bool readonly)
 {
-  if(!XFILETXT::Open(xpath,readonly)) return false;
+  if(!XFILETXT::Open(xpath, readonly)) return false;
 
   Serialization(true);
 
@@ -1006,7 +998,7 @@ bool XFILEINI::DeleteSection(XCHAR* section)
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         XFILEINIKEY* XFILEINI::GetKey(XSTRING& section,XSTRING& key)
+* @fn         XFILEINIKEY* XFILEINI::GetKey(XSTRING& section, XSTRING& key)
 * @brief      Get key
 * @ingroup    XUTILS
 * 
@@ -1016,7 +1008,7 @@ bool XFILEINI::DeleteSection(XCHAR* section)
 * @return     XFILEINIKEY* : Pointer to the requested object; NULL if it is not available.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-XFILEINIKEY* XFILEINI::GetKey(XSTRING& section,XSTRING& key)
+XFILEINIKEY* XFILEINI::GetKey(XSTRING& section, XSTRING& key)
 {
   XFILEINISECTION* _section = GetSection(section);
   if(!_section) return NULL;
@@ -1030,7 +1022,7 @@ XFILEINIKEY* XFILEINI::GetKey(XSTRING& section,XSTRING& key)
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         bool XFILEINI::DeleteKey(XSTRING& section,XSTRING& key)
+* @fn         bool XFILEINI::DeleteKey(XSTRING& section, XSTRING& key)
 * @brief      Delete key
 * @ingroup    XUTILS
 * 
@@ -1040,7 +1032,7 @@ XFILEINIKEY* XFILEINI::GetKey(XSTRING& section,XSTRING& key)
 * @return     bool : true if the operation is successful; otherwise false.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-bool XFILEINI::DeleteKey(XSTRING& section,XSTRING& key)
+bool XFILEINI::DeleteKey(XSTRING& section, XSTRING& key)
 {
   if(!SelectSection(section)) return false;
 
@@ -1053,7 +1045,7 @@ bool XFILEINI::DeleteKey(XSTRING& section,XSTRING& key)
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         bool XFILEINI::DeleteKey(XCHAR* section,XSTRING& key)
+* @fn         bool XFILEINI::DeleteKey(XCHAR* section, XSTRING& key)
 * @brief      Delete key
 * @ingroup    XUTILS
 * 
@@ -1063,17 +1055,17 @@ bool XFILEINI::DeleteKey(XSTRING& section,XSTRING& key)
 * @return     bool : true if the operation is successful; otherwise false.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-bool XFILEINI::DeleteKey(XCHAR* section,XSTRING& key)
+bool XFILEINI::DeleteKey(XCHAR* section, XSTRING& key)
 {
   XSTRING _section(section);
 
-  return DeleteKey(_section,key);
+  return DeleteKey(_section, key);
 }
 
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         bool XFILEINI::DeleteKey(XSTRING& section,XCHAR* key)
+* @fn         bool XFILEINI::DeleteKey(XSTRING& section, XCHAR* key)
 * @brief      Delete key
 * @ingroup    XUTILS
 * 
@@ -1083,19 +1075,19 @@ bool XFILEINI::DeleteKey(XCHAR* section,XSTRING& key)
 * @return     bool : true if the operation is successful; otherwise false.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-bool XFILEINI::DeleteKey(XSTRING& section,XCHAR* key)
+bool XFILEINI::DeleteKey(XSTRING& section, XCHAR* key)
 {
   XSTRING _key;
 
   _key = key;
 
-  return DeleteKey(section,_key);
+  return DeleteKey(section, _key);
 }
 
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         bool XFILEINI::DeleteKey(XCHAR* section,XCHAR* key)
+* @fn         bool XFILEINI::DeleteKey(XCHAR* section, XCHAR* key)
 * @brief      Delete key
 * @ingroup    XUTILS
 * 
@@ -1105,18 +1097,18 @@ bool XFILEINI::DeleteKey(XSTRING& section,XCHAR* key)
 * @return     bool : true if the operation is successful; otherwise false.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-bool XFILEINI::DeleteKey(XCHAR* section,XCHAR* key)
+bool XFILEINI::DeleteKey(XCHAR* section, XCHAR* key)
 {
   XSTRING _section(section);
   XSTRING _key(key);
 
-  return DeleteKey(_section,_key);
+  return DeleteKey(_section, _key);
 }
 
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         bool XFILEINI::ReadValue(XSTRING& section,XSTRING& key,XSTRING& value)
+* @fn         bool XFILEINI::ReadValue(XSTRING& section, XSTRING& key, XSTRING& value)
 * @brief      Read value
 * @ingroup    XUTILS
 * 
@@ -1127,7 +1119,7 @@ bool XFILEINI::DeleteKey(XCHAR* section,XCHAR* key)
 * @return     bool : true if the operation is successful; otherwise false.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-bool XFILEINI::ReadValue(XSTRING& section,XSTRING& key,XSTRING& value)
+bool XFILEINI::ReadValue(XSTRING& section, XSTRING& key, XSTRING& value)
 {
   value.Empty();
 
@@ -1147,7 +1139,7 @@ bool XFILEINI::ReadValue(XSTRING& section,XSTRING& key,XSTRING& value)
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         bool XFILEINI::ReadValue(XCHAR* section,XSTRING& key,XSTRING& value)
+* @fn         bool XFILEINI::ReadValue(XCHAR* section, XSTRING& key, XSTRING& value)
 * @brief      Read value
 * @ingroup    XUTILS
 * 
@@ -1158,17 +1150,17 @@ bool XFILEINI::ReadValue(XSTRING& section,XSTRING& key,XSTRING& value)
 * @return     bool : true if the operation is successful; otherwise false.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-bool XFILEINI::ReadValue(XCHAR* section,XSTRING& key,XSTRING& value)
+bool XFILEINI::ReadValue(XCHAR* section, XSTRING& key, XSTRING& value)
 {
   XSTRING _section(section);
 
-  return ReadValue(_section,key,value);
+  return ReadValue(_section, key, value);
 }
 
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         bool XFILEINI::ReadValue(XSTRING& section,XCHAR* key,XSTRING& value)
+* @fn         bool XFILEINI::ReadValue(XSTRING& section, XCHAR* key, XSTRING& value)
 * @brief      Read value
 * @ingroup    XUTILS
 * 
@@ -1179,17 +1171,17 @@ bool XFILEINI::ReadValue(XCHAR* section,XSTRING& key,XSTRING& value)
 * @return     bool : true if the operation is successful; otherwise false.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-bool XFILEINI::ReadValue(XSTRING& section,XCHAR* key,XSTRING& value)
+bool XFILEINI::ReadValue(XSTRING& section, XCHAR* key, XSTRING& value)
 {
   XSTRING _key(key);
 
-  return ReadValue(section,_key,value);
+  return ReadValue(section, _key, value);
 }
 
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         bool XFILEINI::ReadValue(XCHAR* section,XCHAR* key,XSTRING& value)
+* @fn         bool XFILEINI::ReadValue(XCHAR* section, XCHAR* key, XSTRING& value)
 * @brief      Read value
 * @ingroup    XUTILS
 * 
@@ -1200,18 +1192,18 @@ bool XFILEINI::ReadValue(XSTRING& section,XCHAR* key,XSTRING& value)
 * @return     bool : true if the operation is successful; otherwise false.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-bool XFILEINI::ReadValue(XCHAR* section,XCHAR* key,XSTRING& value)
+bool XFILEINI::ReadValue(XCHAR* section, XCHAR* key, XSTRING& value)
 {
   XSTRING _section(section);
   XSTRING _key(key);
 
-  return ReadValue(_section,_key,value);
+  return ReadValue(_section, _key, value);
 }
 
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         bool XFILEINI::ReadValue(XSTRING& key,XSTRING& value)
+* @fn         bool XFILEINI::ReadValue(XSTRING& key, XSTRING& value)
 * @brief      Read value
 * @ingroup    XUTILS
 * 
@@ -1221,7 +1213,7 @@ bool XFILEINI::ReadValue(XCHAR* section,XCHAR* key,XSTRING& value)
 * @return     bool : true if the operation is successful; otherwise false.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-bool XFILEINI::ReadValue(XSTRING& key,XSTRING& value)
+bool XFILEINI::ReadValue(XSTRING& key, XSTRING& value)
 {
   value.Empty();
 
@@ -1233,13 +1225,13 @@ bool XFILEINI::ReadValue(XSTRING& key,XSTRING& value)
   if(!ssection)            return false;
   if(!ssection->GetName()) return false;
 
-  return ReadValue((*ssection->GetName()),key,value);
+  return ReadValue((*ssection->GetName()), key, value);
 }
 
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         bool XFILEINI::ReadValue(XCHAR* key,XSTRING& value)
+* @fn         bool XFILEINI::ReadValue(XCHAR* key, XSTRING& value)
 * @brief      Read value
 * @ingroup    XUTILS
 * 
@@ -1249,17 +1241,17 @@ bool XFILEINI::ReadValue(XSTRING& key,XSTRING& value)
 * @return     bool : true if the operation is successful; otherwise false.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-bool XFILEINI::ReadValue(XCHAR* key,XSTRING& value)
+bool XFILEINI::ReadValue(XCHAR* key, XSTRING& value)
 {
   XSTRING _key(key);
 
-  return ReadValue(_key,value);
+  return ReadValue(_key, value);
 }
 
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         bool XFILEINI::WriteValue(XSTRING& section,XSTRING& key,XSTRING& value)
+* @fn         bool XFILEINI::WriteValue(XSTRING& section, XSTRING& key, XSTRING& value)
 * @brief      Write value
 * @ingroup    XUTILS
 * 
@@ -1270,7 +1262,7 @@ bool XFILEINI::ReadValue(XCHAR* key,XSTRING& value)
 * @return     bool : true if the operation is successful; otherwise false.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-bool XFILEINI::WriteValue(XSTRING& section,XSTRING& key,XSTRING& value)
+bool XFILEINI::WriteValue(XSTRING& section, XSTRING& key, XSTRING& value)
 {
   if(!SelectSection(section))
     {
@@ -1281,13 +1273,13 @@ bool XFILEINI::WriteValue(XSTRING& section,XSTRING& key,XSTRING& value)
   XFILEINISECTION* ssection = (XFILEINISECTION*)sections.Get(selectsection);
   if(!ssection) return false;
 
-  return ssection->SetKey(key,value);
+  return ssection->SetKey(key, value);
 }
 
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         bool XFILEINI::WriteValue(XCHAR* section,XSTRING& key,XSTRING& value)
+* @fn         bool XFILEINI::WriteValue(XCHAR* section, XSTRING& key, XSTRING& value)
 * @brief      Write value
 * @ingroup    XUTILS
 * 
@@ -1298,17 +1290,17 @@ bool XFILEINI::WriteValue(XSTRING& section,XSTRING& key,XSTRING& value)
 * @return     bool : true if the operation is successful; otherwise false.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-bool XFILEINI::WriteValue(XCHAR* section,XSTRING& key,XSTRING& value)
+bool XFILEINI::WriteValue(XCHAR* section, XSTRING& key, XSTRING& value)
 {
   XSTRING _section(section);
 
-  return WriteValue(_section,key,value);
+  return WriteValue(_section, key, value);
 }
 
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         bool XFILEINI::WriteValue(XSTRING& section,XCHAR* key,XSTRING& value)
+* @fn         bool XFILEINI::WriteValue(XSTRING& section, XCHAR* key, XSTRING& value)
 * @brief      Write value
 * @ingroup    XUTILS
 * 
@@ -1319,17 +1311,17 @@ bool XFILEINI::WriteValue(XCHAR* section,XSTRING& key,XSTRING& value)
 * @return     bool : true if the operation is successful; otherwise false.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-bool XFILEINI::WriteValue(XSTRING& section,XCHAR* key,XSTRING& value)
+bool XFILEINI::WriteValue(XSTRING& section, XCHAR* key, XSTRING& value)
 {
   XSTRING _key(key);
 
-  return WriteValue(section,_key,value);
+  return WriteValue(section, _key, value);
 }
 
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         bool XFILEINI::WriteValue(XCHAR* section,XCHAR* key,XSTRING& value)
+* @fn         bool XFILEINI::WriteValue(XCHAR* section, XCHAR* key, XSTRING& value)
 * @brief      Write value
 * @ingroup    XUTILS
 * 
@@ -1340,18 +1332,18 @@ bool XFILEINI::WriteValue(XSTRING& section,XCHAR* key,XSTRING& value)
 * @return     bool : true if the operation is successful; otherwise false.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-bool XFILEINI::WriteValue(XCHAR* section,XCHAR* key,XSTRING& value)
+bool XFILEINI::WriteValue(XCHAR* section, XCHAR* key, XSTRING& value)
 {
   XSTRING _section(section);
   XSTRING _key(key);
 
-  return WriteValue(_section,_key,value);
+  return WriteValue(_section, _key, value);
 }
 
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         bool XFILEINI::WriteValue(XSTRING& key,XSTRING& value)
+* @fn         bool XFILEINI::WriteValue(XSTRING& key, XSTRING& value)
 * @brief      Write value
 * @ingroup    XUTILS
 * 
@@ -1361,7 +1353,7 @@ bool XFILEINI::WriteValue(XCHAR* section,XCHAR* key,XSTRING& value)
 * @return     bool : true if the operation is successful; otherwise false.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-bool XFILEINI::WriteValue(XSTRING& key,XSTRING& value)
+bool XFILEINI::WriteValue(XSTRING& key, XSTRING& value)
 {
   if(sections.IsEmpty()) return false;
 
@@ -1371,13 +1363,13 @@ bool XFILEINI::WriteValue(XSTRING& key,XSTRING& value)
   if(!ssection)            return false;
   if(!ssection->GetName()) return false;
 
-  return WriteValue((*ssection->GetName()),key,value);
+  return WriteValue((*ssection->GetName()), key, value);
 }
 
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         bool XFILEINI::WriteValue(XCHAR* key,XSTRING& value)
+* @fn         bool XFILEINI::WriteValue(XCHAR* key, XSTRING& value)
 * @brief      Write value
 * @ingroup    XUTILS
 * 
@@ -1387,17 +1379,17 @@ bool XFILEINI::WriteValue(XSTRING& key,XSTRING& value)
 * @return     bool : true if the operation is successful; otherwise false.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-bool XFILEINI::WriteValue(XCHAR* key,XSTRING& value)
+bool XFILEINI::WriteValue(XCHAR* key, XSTRING& value)
 {
   XSTRING _key(key);
 
-  return WriteValue(_key,value);
+  return WriteValue(_key, value);
 }
 
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         bool XFILEINI::GetNextKey(XSTRING& key,XSTRING& value)
+* @fn         bool XFILEINI::GetNextKey(XSTRING& key, XSTRING& value)
 * @brief      Get next key
 * @ingroup    XUTILS
 * 
@@ -1407,7 +1399,7 @@ bool XFILEINI::WriteValue(XCHAR* key,XSTRING& value)
 * @return     bool : true if the operation is successful; otherwise false.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-bool XFILEINI::GetNextKey(XSTRING& key,XSTRING& value)
+bool XFILEINI::GetNextKey(XSTRING& key, XSTRING& value)
 {
   if(sections.IsEmpty()) return false;
 
@@ -1416,13 +1408,13 @@ bool XFILEINI::GetNextKey(XSTRING& key,XSTRING& value)
   XFILEINISECTION* ssection = (XFILEINISECTION*)sections.Get(selectsection);
   if(!ssection) return false;
 
-  return ssection->GetNextKey(key,value);
+  return ssection->GetNextKey(key, value);
 }
 
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         bool XFILEINI::ReadKeyMap(XSTRING& section,XFILEINIKEYMAP* keymap,int nkeymap)
+* @fn         bool XFILEINI::ReadKeyMap(XSTRING& section, XFILEINIKEYMAP* keymap, int nkeymap)
 * @brief      Read key map
 * @ingroup    XUTILS
 * 
@@ -1433,7 +1425,7 @@ bool XFILEINI::GetNextKey(XSTRING& key,XSTRING& value)
 * @return     bool : true if the operation is successful; otherwise false.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-bool XFILEINI::ReadKeyMap(XSTRING& section,XFILEINIKEYMAP* keymap,int nkeymap)
+bool XFILEINI::ReadKeyMap(XSTRING& section, XFILEINIKEYMAP* keymap, int nkeymap)
 {
   if(!nkeymap)                return false;
   if(!SelectSection(section)) return false;
@@ -1442,7 +1434,7 @@ bool XFILEINI::ReadKeyMap(XSTRING& section,XFILEINIKEYMAP* keymap,int nkeymap)
 
   for(int c=0;c<nkeymap;c++)
     {
-      if(ReadValue(keymap[c].key,value)) keymap[c].value = value;
+      if(ReadValue(keymap[c].key, value)) keymap[c].value = value;
     }
 
   return true;
@@ -1451,7 +1443,7 @@ bool XFILEINI::ReadKeyMap(XSTRING& section,XFILEINIKEYMAP* keymap,int nkeymap)
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         bool XFILEINI::ReadKeyMap(XCHAR* section,XFILEINIKEYMAP* keymap,int nkeymap)
+* @fn         bool XFILEINI::ReadKeyMap(XCHAR* section, XFILEINIKEYMAP* keymap, int nkeymap)
 * @brief      Read key map
 * @ingroup    XUTILS
 * 
@@ -1462,11 +1454,11 @@ bool XFILEINI::ReadKeyMap(XSTRING& section,XFILEINIKEYMAP* keymap,int nkeymap)
 * @return     bool : true if the operation is successful; otherwise false.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-bool XFILEINI::ReadKeyMap(XCHAR* section,XFILEINIKEYMAP* keymap,int nkeymap)
+bool XFILEINI::ReadKeyMap(XCHAR* section, XFILEINIKEYMAP* keymap, int nkeymap)
 {
   XSTRING _section(section);
 
-  return ReadKeyMap(_section,keymap,nkeymap);
+  return ReadKeyMap(_section, keymap, nkeymap);
 }
 
 
@@ -1549,8 +1541,8 @@ bool XFILEINI::ConvertFromLines()
                                 {
                                   value.DeleteCharactersToEnd(index_found-1);   
 
-                                  value.DeleteCharacter(__C(' '),  XSTRINGCONTEXT_FROM_FIRST);    
-                                  value.DeleteCharacter(__C(' '),  XSTRINGCONTEXT_TO_END);
+                                  value.DeleteCharacter(__C(' '), XSTRINGCONTEXT_FROM_FIRST);    
+                                  value.DeleteCharacter(__C(' '), XSTRINGCONTEXT_TO_END);
                                 }
                             }
                           
@@ -1647,8 +1639,8 @@ bool XFILEINI::ConvertToLines()
                               line.Add(__L(" "));
                             }
 
-                          remark->GetTextRemark()->DeleteCharacter(__C(' '),  XSTRINGCONTEXT_FROM_FIRST);    
-                          remark->GetTextRemark()->DeleteCharacter(__C(' '),  XSTRINGCONTEXT_TO_END);
+                          remark->GetTextRemark()->DeleteCharacter(__C(' '), XSTRINGCONTEXT_FROM_FIRST);    
+                          remark->GetTextRemark()->DeleteCharacter(__C(' '), XSTRINGCONTEXT_TO_END);
                           
                           line.AddFormat(__L("; %s"), remark->GetTextRemark()->Get());
                           AddLine(line.Get());
@@ -1675,8 +1667,8 @@ bool XFILEINI::ConvertToLines()
                               line.Add(__L(" "));
                             }
 
-                          remark->GetTextRemark()->DeleteCharacter(__C(' '),  XSTRINGCONTEXT_FROM_FIRST);    
-                          remark->GetTextRemark()->DeleteCharacter(__C(' '),  XSTRINGCONTEXT_TO_END);
+                          remark->GetTextRemark()->DeleteCharacter(__C(' '), XSTRINGCONTEXT_FROM_FIRST);    
+                          remark->GetTextRemark()->DeleteCharacter(__C(' '), XSTRINGCONTEXT_TO_END);
 
                           line.AddFormat(__L("; %s"), remark->GetTextRemark()->Get());
 
@@ -1708,8 +1700,8 @@ bool XFILEINI::ConvertToLines()
                                   line.Add(__L(" "));
                                 }
 
-                              remark->GetTextRemark()->DeleteCharacter(__C(' '),  XSTRINGCONTEXT_FROM_FIRST);    
-                              remark->GetTextRemark()->DeleteCharacter(__C(' '),  XSTRINGCONTEXT_TO_END);
+                              remark->GetTextRemark()->DeleteCharacter(__C(' '), XSTRINGCONTEXT_FROM_FIRST);    
+                              remark->GetTextRemark()->DeleteCharacter(__C(' '), XSTRINGCONTEXT_TO_END);
 
                               line.AddFormat(__L("; %s"), remark->GetTextRemark()->Get());  
                               AddLine(line.Get());                     
@@ -1736,8 +1728,8 @@ bool XFILEINI::ConvertToLines()
                                   line.Add(__L(" "));
                                 }
 
-                              remark->GetTextRemark()->DeleteCharacter(__C(' '),  XSTRINGCONTEXT_FROM_FIRST);    
-                              remark->GetTextRemark()->DeleteCharacter(__C(' '),  XSTRINGCONTEXT_TO_END);
+                              remark->GetTextRemark()->DeleteCharacter(__C(' '), XSTRINGCONTEXT_FROM_FIRST);    
+                              remark->GetTextRemark()->DeleteCharacter(__C(' '), XSTRINGCONTEXT_TO_END);
 
                               line.AddFormat(__L("; %s"), remark->GetTextRemark()->Get());
 
@@ -1875,7 +1867,7 @@ bool XFILEINI::Line_IsSection(XSTRING& line, XSTRING& section)
 
   if(line.IsEmpty()) return false;
 
-  line.Copy(__L("["),__L("]"),true,0,section);  
+  line.Copy(__L("["), __L("]"), true, 0, section);  
   if(section.IsEmpty()) return false;
  
   section.ToUpperCase();
@@ -1906,23 +1898,23 @@ bool XFILEINI::Line_IsKey(XSTRING& line, XSTRING& key, XSTRING& value)
 
   if(line.IsEmpty()) return false;
 
-  if((line.Find(__L("["),true) != XSTRING_NOTFOUND) &&
-     (line.Find(__L("]"),true) != XSTRING_NOTFOUND))  return false;
+  if((line.Find(__L("["), true) != XSTRING_NOTFOUND) &&
+     (line.Find(__L("]"), true) != XSTRING_NOTFOUND))  return false;
  
-  int indexvalue = line.Find(__L("="),true);
+  int indexvalue = line.Find(__L("="), true);
   if(indexvalue == XSTRING_NOTFOUND) return false;
 
-  line.Copy(0,indexvalue,key);
-  line.Copy(indexvalue+1,line.GetSize(),value);
+  line.Copy(0, indexvalue, key);
+  line.Copy(indexvalue+1, line.GetSize(), value);
 
   if(key.IsEmpty()) return false;      
 
   //key.ToUpperCase();
-  key.DeleteCharacter(__C(' '),XSTRINGCONTEXT_FROM_FIRST);
-  key.DeleteCharacter(__C(' '),XSTRINGCONTEXT_TO_END);
+  key.DeleteCharacter(__C(' '), XSTRINGCONTEXT_FROM_FIRST);
+  key.DeleteCharacter(__C(' '), XSTRINGCONTEXT_TO_END);
 
-  value.DeleteCharacter(__C(' '),XSTRINGCONTEXT_FROM_FIRST);
-  value.DeleteCharacter(__C(' '),XSTRINGCONTEXT_TO_END);
+  value.DeleteCharacter(__C(' '), XSTRINGCONTEXT_FROM_FIRST);
+  value.DeleteCharacter(__C(' '), XSTRINGCONTEXT_TO_END);
 
   return true;
 }

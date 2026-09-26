@@ -58,7 +58,6 @@ XESP32EEPROMMEMORYMANAGER::XESP32EEPROMMEMORYMANAGER()
 }
 
 
-
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         XESP32EEPROMMEMORYMANAGER::~XESP32EEPROMMEMORYMANAGER()
@@ -71,7 +70,6 @@ XESP32EEPROMMEMORYMANAGER::~XESP32EEPROMMEMORYMANAGER()
 {
 
 }
-
 
 
 /**-------------------------------------------------------------------------------------------------------------------
@@ -89,7 +87,6 @@ bool XESP32EEPROMMEMORYMANAGER::Ini()
 }
 
 
-
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         bool XESP32EEPROMMEMORYMANAGER::End()
@@ -103,7 +100,6 @@ bool XESP32EEPROMMEMORYMANAGER::End()
 {
   return false;
 }
-
 
 
 /**-------------------------------------------------------------------------------------------------------------------
@@ -136,7 +132,6 @@ bool XESP32EEPROMMEMORYMANAGER::Read(XDWORD offset, XBYTE* data, XDWORD size)
 }
 
 
-
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         bool XESP32EEPROMMEMORYMANAGER::Write(XDWORD offset, XBYTE* data, XDWORD size)
@@ -165,7 +160,6 @@ bool XESP32EEPROMMEMORYMANAGER::Write(XDWORD offset, XBYTE* data, XDWORD size)
 
   return true;
 }
-
 
 
 /**-------------------------------------------------------------------------------------------------------------------

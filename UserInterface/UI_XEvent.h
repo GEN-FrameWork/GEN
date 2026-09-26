@@ -52,18 +52,13 @@ enum UI_XEVENT_TYPE
   UI_XEVENT_TYPE_OUTPUT_CHANGECONTENTS                                    ,
 };
 
-
-
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
-
 
 class XTIMER;
 class XPUBLISHER;
 class INPCURSORMOTION;
 class UI_ELEMENT;
 class UI_SKIN;
-
 
 class UI_XEVENT : public XEVENT
 {

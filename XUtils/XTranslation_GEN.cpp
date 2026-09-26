@@ -107,10 +107,6 @@ void XTRANSLATION_GEN_SENTENCE::Clean()
 }
 
 
-
-
-
-
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         bool XTRANSLATION_GEN::GetIsInstanced()
@@ -256,7 +252,7 @@ bool XTRANSLATION_GEN::Sentence_Add(XDWORD ID, XDWORD codelanguage, XCHAR* sente
       return false;
     }
 
-  memset(sentenceGEN->sentence,        0, (sizesentence+1) * sizeof(XCHAR));
+  memset(sentenceGEN->sentence, 0, (sizesentence+1) * sizeof(XCHAR));
   memcpy(sentenceGEN->sentence, sentence, sizesentence     * sizeof(XCHAR));
 
   sentences.Add(sentenceGEN);
@@ -316,145 +312,145 @@ bool XTRANSLATION_GEN::Sentences_AddAll()
 
   //--- GENERIC  -----------------------------------------------------------------------------------------------------
 
-  Sentence_Add(XTRANSLATION_GEN_ID_OK                                                           , XLANGUAGE_ISO_639_3_CODE_ENG , __L("Ok")                                                              , 0);
-  Sentence_Add(XTRANSLATION_GEN_ID_ERROR                                                        , XLANGUAGE_ISO_639_3_CODE_ENG , __L("Error")                                                           , 0); 
-  Sentence_Add(XTRANSLATION_GEN_ID_YES                                                          , XLANGUAGE_ISO_639_3_CODE_ENG , __L("Yes")                                                             , 0); 
-  Sentence_Add(XTRANSLATION_GEN_ID_NO                                                           , XLANGUAGE_ISO_639_3_CODE_ENG , __L("No")                                                              , 0); 
-  Sentence_Add(XTRANSLATION_GEN_ID_TRUE                                                         , XLANGUAGE_ISO_639_3_CODE_ENG , __L("True")                                                            , 0); 
-  Sentence_Add(XTRANSLATION_GEN_ID_FALSE                                                        , XLANGUAGE_ISO_639_3_CODE_ENG , __L("False")                                                           , 0); 
+  Sentence_Add(XTRANSLATION_GEN_ID_OK, XLANGUAGE_ISO_639_3_CODE_ENG, __L("Ok"), 0);
+  Sentence_Add(XTRANSLATION_GEN_ID_ERROR, XLANGUAGE_ISO_639_3_CODE_ENG, __L("Error"), 0); 
+  Sentence_Add(XTRANSLATION_GEN_ID_YES, XLANGUAGE_ISO_639_3_CODE_ENG, __L("Yes"), 0); 
+  Sentence_Add(XTRANSLATION_GEN_ID_NO, XLANGUAGE_ISO_639_3_CODE_ENG, __L("No"), 0); 
+  Sentence_Add(XTRANSLATION_GEN_ID_TRUE, XLANGUAGE_ISO_639_3_CODE_ENG, __L("True"), 0); 
+  Sentence_Add(XTRANSLATION_GEN_ID_FALSE, XLANGUAGE_ISO_639_3_CODE_ENG, __L("False"), 0); 
 
-  Sentence_Add(XTRANSLATION_GEN_ID_OK                                                           , XLANGUAGE_ISO_639_3_CODE_SPA , __L("Correcto")                                                        , 0);
-  Sentence_Add(XTRANSLATION_GEN_ID_ERROR                                                        , XLANGUAGE_ISO_639_3_CODE_SPA , __L("Error")                                                           , 0); 
-  Sentence_Add(XTRANSLATION_GEN_ID_YES                                                          , XLANGUAGE_ISO_639_3_CODE_SPA , __L("Si")                                                              , 0); 
-  Sentence_Add(XTRANSLATION_GEN_ID_NO                                                           , XLANGUAGE_ISO_639_3_CODE_SPA , __L("No")                                                              , 0); 
-  Sentence_Add(XTRANSLATION_GEN_ID_TRUE                                                         , XLANGUAGE_ISO_639_3_CODE_SPA , __L("true")                                                            , 0); 
-  Sentence_Add(XTRANSLATION_GEN_ID_FALSE                                                        , XLANGUAGE_ISO_639_3_CODE_SPA , __L("false")                                                           , 0); 
+  Sentence_Add(XTRANSLATION_GEN_ID_OK, XLANGUAGE_ISO_639_3_CODE_SPA, __L("Correcto"), 0);
+  Sentence_Add(XTRANSLATION_GEN_ID_ERROR, XLANGUAGE_ISO_639_3_CODE_SPA, __L("Error"), 0); 
+  Sentence_Add(XTRANSLATION_GEN_ID_YES, XLANGUAGE_ISO_639_3_CODE_SPA, __L("Si"), 0); 
+  Sentence_Add(XTRANSLATION_GEN_ID_NO, XLANGUAGE_ISO_639_3_CODE_SPA, __L("No"), 0); 
+  Sentence_Add(XTRANSLATION_GEN_ID_TRUE, XLANGUAGE_ISO_639_3_CODE_SPA, __L("true"), 0); 
+  Sentence_Add(XTRANSLATION_GEN_ID_FALSE, XLANGUAGE_ISO_639_3_CODE_SPA, __L("false"), 0); 
 
 
   //--- DATETIME -----------------------------------------------------------------------------------------------------
 
   // MONTHS 
 
-  Sentence_Add(XTRANSLATION_GEN_ID_XDATETIME_MONTH_JANUARY                                      , XLANGUAGE_ISO_639_3_CODE_ENG , __L("January")                                                         , 0);
-  Sentence_Add(XTRANSLATION_GEN_ID_XDATETIME_MONTH_FEBRUARY                                     , XLANGUAGE_ISO_639_3_CODE_ENG , __L("February")                                                        , 0);
-  Sentence_Add(XTRANSLATION_GEN_ID_XDATETIME_MONTH_MARCH                                        , XLANGUAGE_ISO_639_3_CODE_ENG , __L("March")                                                           , 0);
-  Sentence_Add(XTRANSLATION_GEN_ID_XDATETIME_MONTH_APRIL                                        , XLANGUAGE_ISO_639_3_CODE_ENG , __L("April")                                                           , 0);
-  Sentence_Add(XTRANSLATION_GEN_ID_XDATETIME_MONTH_MAY                                          , XLANGUAGE_ISO_639_3_CODE_ENG , __L("May")                                                             , 0);
-  Sentence_Add(XTRANSLATION_GEN_ID_XDATETIME_MONTH_JUNE                                         , XLANGUAGE_ISO_639_3_CODE_ENG , __L("June")                                                            , 0);
-  Sentence_Add(XTRANSLATION_GEN_ID_XDATETIME_MONTH_JULY                                         , XLANGUAGE_ISO_639_3_CODE_ENG , __L("July")                                                            , 0);
-  Sentence_Add(XTRANSLATION_GEN_ID_XDATETIME_MONTH_AUGUST                                       , XLANGUAGE_ISO_639_3_CODE_ENG , __L("August")                                                          , 0);
-  Sentence_Add(XTRANSLATION_GEN_ID_XDATETIME_MONTH_SEPTEMBER                                    , XLANGUAGE_ISO_639_3_CODE_ENG , __L("September")                                                       , 0);
-  Sentence_Add(XTRANSLATION_GEN_ID_XDATETIME_MONTH_OCTOBER                                      , XLANGUAGE_ISO_639_3_CODE_ENG , __L("October")                                                         , 0);
-  Sentence_Add(XTRANSLATION_GEN_ID_XDATETIME_MONTH_NOVEMBER                                     , XLANGUAGE_ISO_639_3_CODE_ENG , __L("November")                                                        , 0);
-  Sentence_Add(XTRANSLATION_GEN_ID_XDATETIME_MONTH_DECEMBER                                     , XLANGUAGE_ISO_639_3_CODE_ENG , __L("December")                                                        , 0);
-  Sentence_Add(XTRANSLATION_GEN_ID_XDATETIME_MONTH_PRESEPARATOR                                 , XLANGUAGE_ISO_639_3_CODE_ENG , __L("of")                                                              , 0);
+  Sentence_Add(XTRANSLATION_GEN_ID_XDATETIME_MONTH_JANUARY, XLANGUAGE_ISO_639_3_CODE_ENG, __L("January"), 0);
+  Sentence_Add(XTRANSLATION_GEN_ID_XDATETIME_MONTH_FEBRUARY, XLANGUAGE_ISO_639_3_CODE_ENG, __L("February"), 0);
+  Sentence_Add(XTRANSLATION_GEN_ID_XDATETIME_MONTH_MARCH, XLANGUAGE_ISO_639_3_CODE_ENG, __L("March"), 0);
+  Sentence_Add(XTRANSLATION_GEN_ID_XDATETIME_MONTH_APRIL, XLANGUAGE_ISO_639_3_CODE_ENG, __L("April"), 0);
+  Sentence_Add(XTRANSLATION_GEN_ID_XDATETIME_MONTH_MAY, XLANGUAGE_ISO_639_3_CODE_ENG, __L("May"), 0);
+  Sentence_Add(XTRANSLATION_GEN_ID_XDATETIME_MONTH_JUNE, XLANGUAGE_ISO_639_3_CODE_ENG, __L("June"), 0);
+  Sentence_Add(XTRANSLATION_GEN_ID_XDATETIME_MONTH_JULY, XLANGUAGE_ISO_639_3_CODE_ENG, __L("July"), 0);
+  Sentence_Add(XTRANSLATION_GEN_ID_XDATETIME_MONTH_AUGUST, XLANGUAGE_ISO_639_3_CODE_ENG, __L("August"), 0);
+  Sentence_Add(XTRANSLATION_GEN_ID_XDATETIME_MONTH_SEPTEMBER, XLANGUAGE_ISO_639_3_CODE_ENG, __L("September"), 0);
+  Sentence_Add(XTRANSLATION_GEN_ID_XDATETIME_MONTH_OCTOBER, XLANGUAGE_ISO_639_3_CODE_ENG, __L("October"), 0);
+  Sentence_Add(XTRANSLATION_GEN_ID_XDATETIME_MONTH_NOVEMBER, XLANGUAGE_ISO_639_3_CODE_ENG, __L("November"), 0);
+  Sentence_Add(XTRANSLATION_GEN_ID_XDATETIME_MONTH_DECEMBER, XLANGUAGE_ISO_639_3_CODE_ENG, __L("December"), 0);
+  Sentence_Add(XTRANSLATION_GEN_ID_XDATETIME_MONTH_PRESEPARATOR, XLANGUAGE_ISO_639_3_CODE_ENG, __L("of"), 0);
 
-  Sentence_Add(XTRANSLATION_GEN_ID_XDATETIME_MONTH_JANUARY                                      , XLANGUAGE_ISO_639_3_CODE_SPA , __L("Enero")                                                           , 0);
-  Sentence_Add(XTRANSLATION_GEN_ID_XDATETIME_MONTH_FEBRUARY                                     , XLANGUAGE_ISO_639_3_CODE_SPA , __L("Febrero")                                                         , 0);
-  Sentence_Add(XTRANSLATION_GEN_ID_XDATETIME_MONTH_MARCH                                        , XLANGUAGE_ISO_639_3_CODE_SPA , __L("Marzo")                                                           , 0);
-  Sentence_Add(XTRANSLATION_GEN_ID_XDATETIME_MONTH_APRIL                                        , XLANGUAGE_ISO_639_3_CODE_SPA , __L("Abril")                                                           , 0);
-  Sentence_Add(XTRANSLATION_GEN_ID_XDATETIME_MONTH_MAY                                          , XLANGUAGE_ISO_639_3_CODE_SPA , __L("Mayo")                                                            , 0);
-  Sentence_Add(XTRANSLATION_GEN_ID_XDATETIME_MONTH_JUNE                                         , XLANGUAGE_ISO_639_3_CODE_SPA , __L("Junio")                                                           , 0);
-  Sentence_Add(XTRANSLATION_GEN_ID_XDATETIME_MONTH_JULY                                         , XLANGUAGE_ISO_639_3_CODE_SPA , __L("Julio")                                                           , 0);
-  Sentence_Add(XTRANSLATION_GEN_ID_XDATETIME_MONTH_AUGUST                                       , XLANGUAGE_ISO_639_3_CODE_SPA , __L("Agosto")                                                          , 0);
-  Sentence_Add(XTRANSLATION_GEN_ID_XDATETIME_MONTH_SEPTEMBER                                    , XLANGUAGE_ISO_639_3_CODE_SPA , __L("Septiembre")                                                      , 0);
-  Sentence_Add(XTRANSLATION_GEN_ID_XDATETIME_MONTH_OCTOBER                                      , XLANGUAGE_ISO_639_3_CODE_SPA , __L("Octubre")                                                         , 0);
-  Sentence_Add(XTRANSLATION_GEN_ID_XDATETIME_MONTH_NOVEMBER                                     , XLANGUAGE_ISO_639_3_CODE_SPA , __L("Noviembre")                                                       , 0);
-  Sentence_Add(XTRANSLATION_GEN_ID_XDATETIME_MONTH_DECEMBER                                     , XLANGUAGE_ISO_639_3_CODE_SPA , __L("Diciembre")                                                       , 0);
-  Sentence_Add(XTRANSLATION_GEN_ID_XDATETIME_MONTH_PRESEPARATOR                                 , XLANGUAGE_ISO_639_3_CODE_SPA , __L("de")                                                              , 0);
+  Sentence_Add(XTRANSLATION_GEN_ID_XDATETIME_MONTH_JANUARY, XLANGUAGE_ISO_639_3_CODE_SPA, __L("Enero"), 0);
+  Sentence_Add(XTRANSLATION_GEN_ID_XDATETIME_MONTH_FEBRUARY, XLANGUAGE_ISO_639_3_CODE_SPA, __L("Febrero"), 0);
+  Sentence_Add(XTRANSLATION_GEN_ID_XDATETIME_MONTH_MARCH, XLANGUAGE_ISO_639_3_CODE_SPA, __L("Marzo"), 0);
+  Sentence_Add(XTRANSLATION_GEN_ID_XDATETIME_MONTH_APRIL, XLANGUAGE_ISO_639_3_CODE_SPA, __L("Abril"), 0);
+  Sentence_Add(XTRANSLATION_GEN_ID_XDATETIME_MONTH_MAY, XLANGUAGE_ISO_639_3_CODE_SPA, __L("Mayo"), 0);
+  Sentence_Add(XTRANSLATION_GEN_ID_XDATETIME_MONTH_JUNE, XLANGUAGE_ISO_639_3_CODE_SPA, __L("Junio"), 0);
+  Sentence_Add(XTRANSLATION_GEN_ID_XDATETIME_MONTH_JULY, XLANGUAGE_ISO_639_3_CODE_SPA, __L("Julio"), 0);
+  Sentence_Add(XTRANSLATION_GEN_ID_XDATETIME_MONTH_AUGUST, XLANGUAGE_ISO_639_3_CODE_SPA, __L("Agosto"), 0);
+  Sentence_Add(XTRANSLATION_GEN_ID_XDATETIME_MONTH_SEPTEMBER, XLANGUAGE_ISO_639_3_CODE_SPA, __L("Septiembre"), 0);
+  Sentence_Add(XTRANSLATION_GEN_ID_XDATETIME_MONTH_OCTOBER, XLANGUAGE_ISO_639_3_CODE_SPA, __L("Octubre"), 0);
+  Sentence_Add(XTRANSLATION_GEN_ID_XDATETIME_MONTH_NOVEMBER, XLANGUAGE_ISO_639_3_CODE_SPA, __L("Noviembre"), 0);
+  Sentence_Add(XTRANSLATION_GEN_ID_XDATETIME_MONTH_DECEMBER, XLANGUAGE_ISO_639_3_CODE_SPA, __L("Diciembre"), 0);
+  Sentence_Add(XTRANSLATION_GEN_ID_XDATETIME_MONTH_PRESEPARATOR, XLANGUAGE_ISO_639_3_CODE_SPA, __L("de"), 0);
 
   // DAYOFWEEK 
 
-  Sentence_Add(XTRANSLATION_GEN_ID_XDATETIME_DAYOFWEEK_SUNDAY                                   , XLANGUAGE_ISO_639_3_CODE_ENG , __L("Sunday")                                                          , 0);
-  Sentence_Add(XTRANSLATION_GEN_ID_XDATETIME_DAYOFWEEK_MONDAY                                   , XLANGUAGE_ISO_639_3_CODE_ENG , __L("Monday")                                                          , 0);
-  Sentence_Add(XTRANSLATION_GEN_ID_XDATETIME_DAYOFWEEK_TUESDAY                                  , XLANGUAGE_ISO_639_3_CODE_ENG , __L("Tuesday")                                                         , 0);
-  Sentence_Add(XTRANSLATION_GEN_ID_XDATETIME_DAYOFWEEK_WEDNESDAY                                , XLANGUAGE_ISO_639_3_CODE_ENG , __L("Wednesday")                                                       , 0);
-  Sentence_Add(XTRANSLATION_GEN_ID_XDATETIME_DAYOFWEEK_THURSDAY                                 , XLANGUAGE_ISO_639_3_CODE_ENG , __L("Thursday")                                                        , 0);
-  Sentence_Add(XTRANSLATION_GEN_ID_XDATETIME_DAYOFWEEK_FRIDAY                                   , XLANGUAGE_ISO_639_3_CODE_ENG , __L("Friday")                                                          , 0);
-  Sentence_Add(XTRANSLATION_GEN_ID_XDATETIME_DAYOFWEEK_SATURDAY                                 , XLANGUAGE_ISO_639_3_CODE_ENG , __L("Saturday")                                                        , 0);
+  Sentence_Add(XTRANSLATION_GEN_ID_XDATETIME_DAYOFWEEK_SUNDAY, XLANGUAGE_ISO_639_3_CODE_ENG, __L("Sunday"), 0);
+  Sentence_Add(XTRANSLATION_GEN_ID_XDATETIME_DAYOFWEEK_MONDAY, XLANGUAGE_ISO_639_3_CODE_ENG, __L("Monday"), 0);
+  Sentence_Add(XTRANSLATION_GEN_ID_XDATETIME_DAYOFWEEK_TUESDAY, XLANGUAGE_ISO_639_3_CODE_ENG, __L("Tuesday"), 0);
+  Sentence_Add(XTRANSLATION_GEN_ID_XDATETIME_DAYOFWEEK_WEDNESDAY, XLANGUAGE_ISO_639_3_CODE_ENG, __L("Wednesday"), 0);
+  Sentence_Add(XTRANSLATION_GEN_ID_XDATETIME_DAYOFWEEK_THURSDAY, XLANGUAGE_ISO_639_3_CODE_ENG, __L("Thursday"), 0);
+  Sentence_Add(XTRANSLATION_GEN_ID_XDATETIME_DAYOFWEEK_FRIDAY, XLANGUAGE_ISO_639_3_CODE_ENG, __L("Friday"), 0);
+  Sentence_Add(XTRANSLATION_GEN_ID_XDATETIME_DAYOFWEEK_SATURDAY, XLANGUAGE_ISO_639_3_CODE_ENG, __L("Saturday"), 0);
 
-  Sentence_Add(XTRANSLATION_GEN_ID_XDATETIME_DAYOFWEEK_SUNDAY                                   , XLANGUAGE_ISO_639_3_CODE_SPA , __L("Domingo")                                                         , 0);
-  Sentence_Add(XTRANSLATION_GEN_ID_XDATETIME_DAYOFWEEK_MONDAY                                   , XLANGUAGE_ISO_639_3_CODE_SPA , __L("Lunes")                                                           , 0);
-  Sentence_Add(XTRANSLATION_GEN_ID_XDATETIME_DAYOFWEEK_TUESDAY                                  , XLANGUAGE_ISO_639_3_CODE_SPA , __L("Martes")                                                          , 0);
-  Sentence_Add(XTRANSLATION_GEN_ID_XDATETIME_DAYOFWEEK_WEDNESDAY                                , XLANGUAGE_ISO_639_3_CODE_SPA , __L("Miercoles")                                                       , 0);
-  Sentence_Add(XTRANSLATION_GEN_ID_XDATETIME_DAYOFWEEK_THURSDAY                                 , XLANGUAGE_ISO_639_3_CODE_SPA , __L("Jueves")                                                          , 0);
-  Sentence_Add(XTRANSLATION_GEN_ID_XDATETIME_DAYOFWEEK_FRIDAY                                   , XLANGUAGE_ISO_639_3_CODE_SPA , __L("Viernes")                                                         , 0);
-  Sentence_Add(XTRANSLATION_GEN_ID_XDATETIME_DAYOFWEEK_SATURDAY                                 , XLANGUAGE_ISO_639_3_CODE_SPA , __L("Sabado")                                                          , 0);
+  Sentence_Add(XTRANSLATION_GEN_ID_XDATETIME_DAYOFWEEK_SUNDAY, XLANGUAGE_ISO_639_3_CODE_SPA, __L("Domingo"), 0);
+  Sentence_Add(XTRANSLATION_GEN_ID_XDATETIME_DAYOFWEEK_MONDAY, XLANGUAGE_ISO_639_3_CODE_SPA, __L("Lunes"), 0);
+  Sentence_Add(XTRANSLATION_GEN_ID_XDATETIME_DAYOFWEEK_TUESDAY, XLANGUAGE_ISO_639_3_CODE_SPA, __L("Martes"), 0);
+  Sentence_Add(XTRANSLATION_GEN_ID_XDATETIME_DAYOFWEEK_WEDNESDAY, XLANGUAGE_ISO_639_3_CODE_SPA, __L("Miercoles"), 0);
+  Sentence_Add(XTRANSLATION_GEN_ID_XDATETIME_DAYOFWEEK_THURSDAY, XLANGUAGE_ISO_639_3_CODE_SPA, __L("Jueves"), 0);
+  Sentence_Add(XTRANSLATION_GEN_ID_XDATETIME_DAYOFWEEK_FRIDAY, XLANGUAGE_ISO_639_3_CODE_SPA, __L("Viernes"), 0);
+  Sentence_Add(XTRANSLATION_GEN_ID_XDATETIME_DAYOFWEEK_SATURDAY, XLANGUAGE_ISO_639_3_CODE_SPA, __L("Sabado"), 0);
 
   //--- XTIMER -------------------------------------------------------------------------------------------------------
 
-  Sentence_Add(XTRANSLATION_GEN_ID_XTIMER_XX_YEARS                                              , XLANGUAGE_ISO_639_3_CODE_ENG , __L("%d years")                                                        , 0);
-  Sentence_Add(XTRANSLATION_GEN_ID_XTIMER_ONE_YEAR                                              , XLANGUAGE_ISO_639_3_CODE_ENG , __L("one year")                                                        , 0);
-  Sentence_Add(XTRANSLATION_GEN_ID_XTIMER_XX_MONTHS                                             , XLANGUAGE_ISO_639_3_CODE_ENG , __L("%d months")                                                       , 0);
-  Sentence_Add(XTRANSLATION_GEN_ID_XTIMER_ONE_MONTH                                             , XLANGUAGE_ISO_639_3_CODE_ENG , __L("one month")                                                       , 0);
-  Sentence_Add(XTRANSLATION_GEN_ID_XTIMER_XX_DAYS                                               , XLANGUAGE_ISO_639_3_CODE_ENG , __L("%d days")                                                         , 0);
-  Sentence_Add(XTRANSLATION_GEN_ID_XTIMER_ONE_DAY                                               , XLANGUAGE_ISO_639_3_CODE_ENG , __L("one day")                                                         , 0);
-  Sentence_Add(XTRANSLATION_GEN_ID_XTIMER_XX_HOURS                                              , XLANGUAGE_ISO_639_3_CODE_ENG , __L("%d hours")                                                        , 0);
-  Sentence_Add(XTRANSLATION_GEN_ID_XTIMER_ONE_HOUR                                              , XLANGUAGE_ISO_639_3_CODE_ENG , __L("one hour")                                                        , 0);
-  Sentence_Add(XTRANSLATION_GEN_ID_XTIMER_XX_MINUTES                                            , XLANGUAGE_ISO_639_3_CODE_ENG , __L("%d minutes")                                                      , 0);
-  Sentence_Add(XTRANSLATION_GEN_ID_XTIMER_ONE_MINUTE                                            , XLANGUAGE_ISO_639_3_CODE_ENG , __L("one minute")                                                      , 0);
-  Sentence_Add(XTRANSLATION_GEN_ID_XTIMER_XX_SECONDS                                            , XLANGUAGE_ISO_639_3_CODE_ENG , __L("%d seconds")                                                      , 0);
-  Sentence_Add(XTRANSLATION_GEN_ID_XTIMER_ONE_SECOND                                            , XLANGUAGE_ISO_639_3_CODE_ENG , __L("one second")                                                      , 0);
-  Sentence_Add(XTRANSLATION_GEN_ID_XTIMER_ZERO_SECONDS                                          , XLANGUAGE_ISO_639_3_CODE_ENG , __L("zero seconds")                                                    , 0);
+  Sentence_Add(XTRANSLATION_GEN_ID_XTIMER_XX_YEARS, XLANGUAGE_ISO_639_3_CODE_ENG, __L("%d years"), 0);
+  Sentence_Add(XTRANSLATION_GEN_ID_XTIMER_ONE_YEAR, XLANGUAGE_ISO_639_3_CODE_ENG, __L("one year"), 0);
+  Sentence_Add(XTRANSLATION_GEN_ID_XTIMER_XX_MONTHS, XLANGUAGE_ISO_639_3_CODE_ENG, __L("%d months"), 0);
+  Sentence_Add(XTRANSLATION_GEN_ID_XTIMER_ONE_MONTH, XLANGUAGE_ISO_639_3_CODE_ENG, __L("one month"), 0);
+  Sentence_Add(XTRANSLATION_GEN_ID_XTIMER_XX_DAYS, XLANGUAGE_ISO_639_3_CODE_ENG, __L("%d days"), 0);
+  Sentence_Add(XTRANSLATION_GEN_ID_XTIMER_ONE_DAY, XLANGUAGE_ISO_639_3_CODE_ENG, __L("one day"), 0);
+  Sentence_Add(XTRANSLATION_GEN_ID_XTIMER_XX_HOURS, XLANGUAGE_ISO_639_3_CODE_ENG, __L("%d hours"), 0);
+  Sentence_Add(XTRANSLATION_GEN_ID_XTIMER_ONE_HOUR, XLANGUAGE_ISO_639_3_CODE_ENG, __L("one hour"), 0);
+  Sentence_Add(XTRANSLATION_GEN_ID_XTIMER_XX_MINUTES, XLANGUAGE_ISO_639_3_CODE_ENG, __L("%d minutes"), 0);
+  Sentence_Add(XTRANSLATION_GEN_ID_XTIMER_ONE_MINUTE, XLANGUAGE_ISO_639_3_CODE_ENG, __L("one minute"), 0);
+  Sentence_Add(XTRANSLATION_GEN_ID_XTIMER_XX_SECONDS, XLANGUAGE_ISO_639_3_CODE_ENG, __L("%d seconds"), 0);
+  Sentence_Add(XTRANSLATION_GEN_ID_XTIMER_ONE_SECOND, XLANGUAGE_ISO_639_3_CODE_ENG, __L("one second"), 0);
+  Sentence_Add(XTRANSLATION_GEN_ID_XTIMER_ZERO_SECONDS, XLANGUAGE_ISO_639_3_CODE_ENG, __L("zero seconds"), 0);
 
-  Sentence_Add(XTRANSLATION_GEN_ID_XTIMER_XX_YEARS                                              , XLANGUAGE_ISO_639_3_CODE_SPA , __L("%d a\xf1os")                                                      , 0);
-  Sentence_Add(XTRANSLATION_GEN_ID_XTIMER_ONE_YEAR                                              , XLANGUAGE_ISO_639_3_CODE_SPA , __L("un a\xf1o")                                                       , 0);
-  Sentence_Add(XTRANSLATION_GEN_ID_XTIMER_XX_MONTHS                                             , XLANGUAGE_ISO_639_3_CODE_SPA , __L("%d meses")                                                        , 0);
-  Sentence_Add(XTRANSLATION_GEN_ID_XTIMER_ONE_MONTH                                             , XLANGUAGE_ISO_639_3_CODE_SPA , __L("un mes")                                                          , 0);
-  Sentence_Add(XTRANSLATION_GEN_ID_XTIMER_XX_DAYS                                               , XLANGUAGE_ISO_639_3_CODE_SPA , __L("%d dias")                                                         , 0);
-  Sentence_Add(XTRANSLATION_GEN_ID_XTIMER_ONE_DAY                                               , XLANGUAGE_ISO_639_3_CODE_SPA , __L("un dia")                                                          , 0);
-  Sentence_Add(XTRANSLATION_GEN_ID_XTIMER_XX_HOURS                                              , XLANGUAGE_ISO_639_3_CODE_SPA , __L("%d horas")                                                        , 0);
-  Sentence_Add(XTRANSLATION_GEN_ID_XTIMER_ONE_HOUR                                              , XLANGUAGE_ISO_639_3_CODE_SPA , __L("una hora")                                                        , 0);
-  Sentence_Add(XTRANSLATION_GEN_ID_XTIMER_XX_MINUTES                                            , XLANGUAGE_ISO_639_3_CODE_SPA , __L("%d minutos")                                                      , 0);
-  Sentence_Add(XTRANSLATION_GEN_ID_XTIMER_ONE_MINUTE                                            , XLANGUAGE_ISO_639_3_CODE_SPA , __L("un minuto")                                                       , 0);
-  Sentence_Add(XTRANSLATION_GEN_ID_XTIMER_XX_SECONDS                                            , XLANGUAGE_ISO_639_3_CODE_SPA , __L("%d segundos")                                                     , 0);
-  Sentence_Add(XTRANSLATION_GEN_ID_XTIMER_ONE_SECOND                                            , XLANGUAGE_ISO_639_3_CODE_SPA , __L("un segundo")                                                      , 0);
-  Sentence_Add(XTRANSLATION_GEN_ID_XTIMER_ZERO_SECONDS                                          , XLANGUAGE_ISO_639_3_CODE_SPA , __L("cero segundos")                                                   , 0);
+  Sentence_Add(XTRANSLATION_GEN_ID_XTIMER_XX_YEARS, XLANGUAGE_ISO_639_3_CODE_SPA, __L("%d a\xf1os"), 0);
+  Sentence_Add(XTRANSLATION_GEN_ID_XTIMER_ONE_YEAR, XLANGUAGE_ISO_639_3_CODE_SPA, __L("un a\xf1o"), 0);
+  Sentence_Add(XTRANSLATION_GEN_ID_XTIMER_XX_MONTHS, XLANGUAGE_ISO_639_3_CODE_SPA, __L("%d meses"), 0);
+  Sentence_Add(XTRANSLATION_GEN_ID_XTIMER_ONE_MONTH, XLANGUAGE_ISO_639_3_CODE_SPA, __L("un mes"), 0);
+  Sentence_Add(XTRANSLATION_GEN_ID_XTIMER_XX_DAYS, XLANGUAGE_ISO_639_3_CODE_SPA, __L("%d dias"), 0);
+  Sentence_Add(XTRANSLATION_GEN_ID_XTIMER_ONE_DAY, XLANGUAGE_ISO_639_3_CODE_SPA, __L("un dia"), 0);
+  Sentence_Add(XTRANSLATION_GEN_ID_XTIMER_XX_HOURS, XLANGUAGE_ISO_639_3_CODE_SPA, __L("%d horas"), 0);
+  Sentence_Add(XTRANSLATION_GEN_ID_XTIMER_ONE_HOUR, XLANGUAGE_ISO_639_3_CODE_SPA, __L("una hora"), 0);
+  Sentence_Add(XTRANSLATION_GEN_ID_XTIMER_XX_MINUTES, XLANGUAGE_ISO_639_3_CODE_SPA, __L("%d minutos"), 0);
+  Sentence_Add(XTRANSLATION_GEN_ID_XTIMER_ONE_MINUTE, XLANGUAGE_ISO_639_3_CODE_SPA, __L("un minuto"), 0);
+  Sentence_Add(XTRANSLATION_GEN_ID_XTIMER_XX_SECONDS, XLANGUAGE_ISO_639_3_CODE_SPA, __L("%d segundos"), 0);
+  Sentence_Add(XTRANSLATION_GEN_ID_XTIMER_ONE_SECOND, XLANGUAGE_ISO_639_3_CODE_SPA, __L("un segundo"), 0);
+  Sentence_Add(XTRANSLATION_GEN_ID_XTIMER_ZERO_SECONDS, XLANGUAGE_ISO_639_3_CODE_SPA, __L("cero segundos"), 0);
 
 
   //--- APPLICATION LOG ----------------------------------------------------------------------------------------------
 
-  Sentence_Add(XTRANSLATION_GEN_ID_APPFLOWEXTENDED_INILOG                                       , XLANGUAGE_ISO_639_3_CODE_ENG , __L("Activating LOG system")                                           , 0);
-  Sentence_Add(XTRANSLATION_GEN_ID_APPFLOWEXTENDED_ENDLOG                                       , XLANGUAGE_ISO_639_3_CODE_ENG , __L("Disabling LOG system")                                            , 0);
-  Sentence_Add(XTRANSLATION_GEN_ID_APPFLOWEXTENDED_INIAPPSTATUS                                 , XLANGUAGE_ISO_639_3_CODE_ENG , __L("Activating App status")                                           , 0);        
-  Sentence_Add(XTRANSLATION_GEN_ID_APPFLOWEXTENDED_ENDAPPSTATUS                                 , XLANGUAGE_ISO_639_3_CODE_ENG , __L("Disabling App status")                                            , 0); 
-  Sentence_Add(XTRANSLATION_GEN_ID_APPFLOWEXTENDED_INIINTERNETSTATUS                            , XLANGUAGE_ISO_639_3_CODE_ENG , __L("Activating Internet status")                                      , 0);
-  Sentence_Add(XTRANSLATION_GEN_ID_APPFLOWEXTENDED_ENDINTERNETSTATUS                            , XLANGUAGE_ISO_639_3_CODE_ENG , __L("Disabling Internet status")                                       , 0);
-  Sentence_Add(XTRANSLATION_GEN_ID_APPFLOWEXTENDED_APPROOTPATH                                  , XLANGUAGE_ISO_639_3_CODE_ENG , __L("Application Root Path")                                           , 0);
-  Sentence_Add(XTRANSLATION_GEN_ID_APPFLOWEXTENDED_APPVERSION                                   , XLANGUAGE_ISO_639_3_CODE_ENG , __L("APP version")                                                     , 0);
-  Sentence_Add(XTRANSLATION_GEN_ID_APPFLOWEXTENDED_SOVERSION                                    , XLANGUAGE_ISO_639_3_CODE_ENG , __L("S.O. version")                                                    , 0);
-  Sentence_Add(XTRANSLATION_GEN_ID_APPFLOWEXTENDED_TOTALMEMORY                                  , XLANGUAGE_ISO_639_3_CODE_ENG , __L("Total memory %d Kb, free %d Kb (%d%%).")                          , 0);
+  Sentence_Add(XTRANSLATION_GEN_ID_APPFLOWEXTENDED_INILOG, XLANGUAGE_ISO_639_3_CODE_ENG, __L("Activating LOG system"), 0);
+  Sentence_Add(XTRANSLATION_GEN_ID_APPFLOWEXTENDED_ENDLOG, XLANGUAGE_ISO_639_3_CODE_ENG, __L("Disabling LOG system"), 0);
+  Sentence_Add(XTRANSLATION_GEN_ID_APPFLOWEXTENDED_INIAPPSTATUS, XLANGUAGE_ISO_639_3_CODE_ENG, __L("Activating App status"), 0);        
+  Sentence_Add(XTRANSLATION_GEN_ID_APPFLOWEXTENDED_ENDAPPSTATUS, XLANGUAGE_ISO_639_3_CODE_ENG, __L("Disabling App status"), 0); 
+  Sentence_Add(XTRANSLATION_GEN_ID_APPFLOWEXTENDED_INIINTERNETSTATUS, XLANGUAGE_ISO_639_3_CODE_ENG, __L("Activating Internet status"), 0);
+  Sentence_Add(XTRANSLATION_GEN_ID_APPFLOWEXTENDED_ENDINTERNETSTATUS, XLANGUAGE_ISO_639_3_CODE_ENG, __L("Disabling Internet status"), 0);
+  Sentence_Add(XTRANSLATION_GEN_ID_APPFLOWEXTENDED_APPROOTPATH, XLANGUAGE_ISO_639_3_CODE_ENG, __L("Application Root Path"), 0);
+  Sentence_Add(XTRANSLATION_GEN_ID_APPFLOWEXTENDED_APPVERSION, XLANGUAGE_ISO_639_3_CODE_ENG, __L("APP version"), 0);
+  Sentence_Add(XTRANSLATION_GEN_ID_APPFLOWEXTENDED_SOVERSION, XLANGUAGE_ISO_639_3_CODE_ENG, __L("S.O. version"), 0);
+  Sentence_Add(XTRANSLATION_GEN_ID_APPFLOWEXTENDED_TOTALMEMORY, XLANGUAGE_ISO_639_3_CODE_ENG, __L("Total memory %d Kb, free %d Kb (%d%%)."), 0);
 
-  Sentence_Add(XTRANSLATION_GEN_ID_APPFLOWEXTENDED_INILOG                                       , XLANGUAGE_ISO_639_3_CODE_SPA , __L("Activando sistema de LOG")                                        , 0);
-  Sentence_Add(XTRANSLATION_GEN_ID_APPFLOWEXTENDED_ENDLOG                                       , XLANGUAGE_ISO_639_3_CODE_SPA , __L("Desactivando sistema de LOG")                                     , 0);
-  Sentence_Add(XTRANSLATION_GEN_ID_APPFLOWEXTENDED_INIAPPSTATUS                                 , XLANGUAGE_ISO_639_3_CODE_SPA , __L("Activando estado aplicacion")                                     , 0);        
-  Sentence_Add(XTRANSLATION_GEN_ID_APPFLOWEXTENDED_ENDAPPSTATUS                                 , XLANGUAGE_ISO_639_3_CODE_SPA , __L("Desactivando estado aplicacion")                                  , 0); 
-  Sentence_Add(XTRANSLATION_GEN_ID_APPFLOWEXTENDED_INIINTERNETSTATUS                            , XLANGUAGE_ISO_639_3_CODE_SPA , __L("Activando estado Internet")                                       , 0);
-  Sentence_Add(XTRANSLATION_GEN_ID_APPFLOWEXTENDED_ENDINTERNETSTATUS                            , XLANGUAGE_ISO_639_3_CODE_SPA , __L("Desactivando estado Internet")                                    , 0);
-  Sentence_Add(XTRANSLATION_GEN_ID_APPFLOWEXTENDED_APPROOTPATH                                  , XLANGUAGE_ISO_639_3_CODE_SPA , __L("Camino raiz de application")                                      , 0);
-  Sentence_Add(XTRANSLATION_GEN_ID_APPFLOWEXTENDED_APPVERSION                                   , XLANGUAGE_ISO_639_3_CODE_SPA , __L("Version APP")                                                     , 0);
-  Sentence_Add(XTRANSLATION_GEN_ID_APPFLOWEXTENDED_SOVERSION                                    , XLANGUAGE_ISO_639_3_CODE_SPA , __L("Version S.O.")                                                    , 0);
-  Sentence_Add(XTRANSLATION_GEN_ID_APPFLOWEXTENDED_TOTALMEMORY                                  , XLANGUAGE_ISO_639_3_CODE_SPA , __L("Memoria total %d Kb, libre %d Kb (%d%%).")                        , 0);
+  Sentence_Add(XTRANSLATION_GEN_ID_APPFLOWEXTENDED_INILOG, XLANGUAGE_ISO_639_3_CODE_SPA, __L("Activando sistema de LOG"), 0);
+  Sentence_Add(XTRANSLATION_GEN_ID_APPFLOWEXTENDED_ENDLOG, XLANGUAGE_ISO_639_3_CODE_SPA, __L("Desactivando sistema de LOG"), 0);
+  Sentence_Add(XTRANSLATION_GEN_ID_APPFLOWEXTENDED_INIAPPSTATUS, XLANGUAGE_ISO_639_3_CODE_SPA, __L("Activando estado aplicacion"), 0);        
+  Sentence_Add(XTRANSLATION_GEN_ID_APPFLOWEXTENDED_ENDAPPSTATUS, XLANGUAGE_ISO_639_3_CODE_SPA, __L("Desactivando estado aplicacion"), 0); 
+  Sentence_Add(XTRANSLATION_GEN_ID_APPFLOWEXTENDED_INIINTERNETSTATUS, XLANGUAGE_ISO_639_3_CODE_SPA, __L("Activando estado Internet"), 0);
+  Sentence_Add(XTRANSLATION_GEN_ID_APPFLOWEXTENDED_ENDINTERNETSTATUS, XLANGUAGE_ISO_639_3_CODE_SPA, __L("Desactivando estado Internet"), 0);
+  Sentence_Add(XTRANSLATION_GEN_ID_APPFLOWEXTENDED_APPROOTPATH, XLANGUAGE_ISO_639_3_CODE_SPA, __L("Camino raiz de application"), 0);
+  Sentence_Add(XTRANSLATION_GEN_ID_APPFLOWEXTENDED_APPVERSION, XLANGUAGE_ISO_639_3_CODE_SPA, __L("Version APP"), 0);
+  Sentence_Add(XTRANSLATION_GEN_ID_APPFLOWEXTENDED_SOVERSION, XLANGUAGE_ISO_639_3_CODE_SPA, __L("Version S.O."), 0);
+  Sentence_Add(XTRANSLATION_GEN_ID_APPFLOWEXTENDED_TOTALMEMORY, XLANGUAGE_ISO_639_3_CODE_SPA, __L("Memoria total %d Kb, libre %d Kb (%d%%)."), 0);
   
   //--- APPLICATION CONSOLE EXIT CODE --------------------------------------------------------------------------------
 
-  Sentence_Add(XTRANSLATION_GEN_ID_APPFLOWCONSOLE_EXIT_NOTINFO                                  , XLANGUAGE_ISO_639_3_CODE_ENG , __L("No closing information")                                          , 0);
-  Sentence_Add(XTRANSLATION_GEN_ID_APPFLOWCONSOLE_EXIT_BY_SERIOUSERROR                          , XLANGUAGE_ISO_639_3_CODE_ENG , __L("Application closed due to a serious error")                       , 0);
-  Sentence_Add(XTRANSLATION_GEN_ID_APPFLOWCONSOLE_EXIT_BY_UPDATE                                , XLANGUAGE_ISO_639_3_CODE_ENG , __L("Application closed by update")                                    , 0);
-  Sentence_Add(XTRANSLATION_GEN_ID_APPFLOWCONSOLE_EXIT_BY_APPLICATION                           , XLANGUAGE_ISO_639_3_CODE_ENG , __L("Execution of the application concluded")                          , 0);
-  Sentence_Add(XTRANSLATION_GEN_ID_APPFLOWCONSOLE_EXIT_BY_USER                                  , XLANGUAGE_ISO_639_3_CODE_ENG , __L("Application closed by the user")                                  , 0);
-  Sentence_Add(XTRANSLATION_GEN_ID_APPFLOWCONSOLE_EXIT_BY_SHUTDOWN                              , XLANGUAGE_ISO_639_3_CODE_ENG , __L("Application closed by shutdown of the operating system")          , 0);
-  Sentence_Add(XTRANSLATION_GEN_ID_APPFLOWCONSOLE_EXIT_BY_INVALIDLICENSE                        , XLANGUAGE_ISO_639_3_CODE_ENG , __L("Application closed by invalid license")                           , 0);
-  Sentence_Add(XTRANSLATION_GEN_ID_APPFLOWCONSOLE_EXIT_BY_EXPIREDLICENSE                        , XLANGUAGE_ISO_639_3_CODE_ENG , __L("Closed application for expired license")                          , 0);
+  Sentence_Add(XTRANSLATION_GEN_ID_APPFLOWCONSOLE_EXIT_NOTINFO, XLANGUAGE_ISO_639_3_CODE_ENG, __L("No closing information"), 0);
+  Sentence_Add(XTRANSLATION_GEN_ID_APPFLOWCONSOLE_EXIT_BY_SERIOUSERROR, XLANGUAGE_ISO_639_3_CODE_ENG, __L("Application closed due to a serious error"), 0);
+  Sentence_Add(XTRANSLATION_GEN_ID_APPFLOWCONSOLE_EXIT_BY_UPDATE, XLANGUAGE_ISO_639_3_CODE_ENG, __L("Application closed by update"), 0);
+  Sentence_Add(XTRANSLATION_GEN_ID_APPFLOWCONSOLE_EXIT_BY_APPLICATION, XLANGUAGE_ISO_639_3_CODE_ENG, __L("Execution of the application concluded"), 0);
+  Sentence_Add(XTRANSLATION_GEN_ID_APPFLOWCONSOLE_EXIT_BY_USER, XLANGUAGE_ISO_639_3_CODE_ENG, __L("Application closed by the user"), 0);
+  Sentence_Add(XTRANSLATION_GEN_ID_APPFLOWCONSOLE_EXIT_BY_SHUTDOWN, XLANGUAGE_ISO_639_3_CODE_ENG, __L("Application closed by shutdown of the operating system"), 0);
+  Sentence_Add(XTRANSLATION_GEN_ID_APPFLOWCONSOLE_EXIT_BY_INVALIDLICENSE, XLANGUAGE_ISO_639_3_CODE_ENG, __L("Application closed by invalid license"), 0);
+  Sentence_Add(XTRANSLATION_GEN_ID_APPFLOWCONSOLE_EXIT_BY_EXPIREDLICENSE, XLANGUAGE_ISO_639_3_CODE_ENG, __L("Closed application for expired license"), 0);
 
-  Sentence_Add(XTRANSLATION_GEN_ID_APPFLOWCONSOLE_EXIT_NOTINFO                                  , XLANGUAGE_ISO_639_3_CODE_SPA , __L("No hay informacion de cierre")                                    , 0);
-  Sentence_Add(XTRANSLATION_GEN_ID_APPFLOWCONSOLE_EXIT_BY_SERIOUSERROR                          , XLANGUAGE_ISO_639_3_CODE_SPA , __L("Aplicacion cerrada debido a un error grave")                      , 0);
-  Sentence_Add(XTRANSLATION_GEN_ID_APPFLOWCONSOLE_EXIT_BY_UPDATE                                , XLANGUAGE_ISO_639_3_CODE_SPA , __L("Aplicacion cerrada por actualizacion")                            , 0);
-  Sentence_Add(XTRANSLATION_GEN_ID_APPFLOWCONSOLE_EXIT_BY_APPLICATION                           , XLANGUAGE_ISO_639_3_CODE_SPA , __L("Ejecucion de la aplicacion concluida")                            , 0);
-  Sentence_Add(XTRANSLATION_GEN_ID_APPFLOWCONSOLE_EXIT_BY_USER                                  , XLANGUAGE_ISO_639_3_CODE_SPA , __L("Aplicacion cerrada por el usuario")                               , 0);
-  Sentence_Add(XTRANSLATION_GEN_ID_APPFLOWCONSOLE_EXIT_BY_SHUTDOWN                              , XLANGUAGE_ISO_639_3_CODE_SPA , __L("Aplicacion cerrada por apagado del sistema operativo")            , 0);
-  Sentence_Add(XTRANSLATION_GEN_ID_APPFLOWCONSOLE_EXIT_BY_INVALIDLICENSE                        , XLANGUAGE_ISO_639_3_CODE_SPA , __L("Aplication cerrada por licencia invalida")                        , 0);
-  Sentence_Add(XTRANSLATION_GEN_ID_APPFLOWCONSOLE_EXIT_BY_EXPIREDLICENSE                        , XLANGUAGE_ISO_639_3_CODE_SPA , __L("Aplication cerrada por licencia vencida")                         , 0);
+  Sentence_Add(XTRANSLATION_GEN_ID_APPFLOWCONSOLE_EXIT_NOTINFO, XLANGUAGE_ISO_639_3_CODE_SPA, __L("No hay informacion de cierre"), 0);
+  Sentence_Add(XTRANSLATION_GEN_ID_APPFLOWCONSOLE_EXIT_BY_SERIOUSERROR, XLANGUAGE_ISO_639_3_CODE_SPA, __L("Aplicacion cerrada debido a un error grave"), 0);
+  Sentence_Add(XTRANSLATION_GEN_ID_APPFLOWCONSOLE_EXIT_BY_UPDATE, XLANGUAGE_ISO_639_3_CODE_SPA, __L("Aplicacion cerrada por actualizacion"), 0);
+  Sentence_Add(XTRANSLATION_GEN_ID_APPFLOWCONSOLE_EXIT_BY_APPLICATION, XLANGUAGE_ISO_639_3_CODE_SPA, __L("Ejecucion de la aplicacion concluida"), 0);
+  Sentence_Add(XTRANSLATION_GEN_ID_APPFLOWCONSOLE_EXIT_BY_USER, XLANGUAGE_ISO_639_3_CODE_SPA, __L("Aplicacion cerrada por el usuario"), 0);
+  Sentence_Add(XTRANSLATION_GEN_ID_APPFLOWCONSOLE_EXIT_BY_SHUTDOWN, XLANGUAGE_ISO_639_3_CODE_SPA, __L("Aplicacion cerrada por apagado del sistema operativo"), 0);
+  Sentence_Add(XTRANSLATION_GEN_ID_APPFLOWCONSOLE_EXIT_BY_INVALIDLICENSE, XLANGUAGE_ISO_639_3_CODE_SPA, __L("Aplication cerrada por licencia invalida"), 0);
+  Sentence_Add(XTRANSLATION_GEN_ID_APPFLOWCONSOLE_EXIT_BY_EXPIREDLICENSE, XLANGUAGE_ISO_639_3_CODE_SPA, __L("Aplication cerrada por licencia vencida"), 0);
 
   #endif
 

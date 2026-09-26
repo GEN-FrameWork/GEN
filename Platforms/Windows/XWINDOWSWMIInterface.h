@@ -35,8 +35,6 @@
 #include "XVariant.h"
 #include "XDateTime.h"
 
-
-
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
 
 enum XWINDOWSWMIINTERFACE_ERROR
@@ -51,10 +49,7 @@ enum XWINDOWSWMIINTERFACE_ERROR
   XWINDOWSWMIINTERFACE_ERROR_BLANKETPROXYSETFAILURE             ,
 };
 
-
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
-
 
 class XWINDOWSWMIINTERFACE_RESULT
 {
@@ -72,7 +67,6 @@ class XWINDOWSWMIINTERFACE_RESULT
 
     XSTRING*                        GetErrorDescription               ();
 
-
   private:
 
     void                            Clean                             ();
@@ -82,7 +76,6 @@ class XWINDOWSWMIINTERFACE_RESULT
     XWINDOWSWMIINTERFACE_ERROR      error;
     XSTRING                         errordescription;
 };
-
 
 class XWINDOWSWMIINTERFACE
 {
@@ -96,11 +89,11 @@ class XWINDOWSWMIINTERFACE
 
     XWINDOWSWMIINTERFACE_RESULT*    DoQuery                           (XCHAR* query, XCHAR* propertynameofresultobject, bool allowemptyitems = false);
 
-    bool                            DoQuery                           (XCHAR* _class, XCHAR* namedata,  XSTRING& answer);
-    bool                            DoQuery                           (XCHAR* _class, XCHAR* namedata,  XVECTOR<XSTRING*>* answers);
+    bool                            DoQuery                           (XCHAR* _class, XCHAR* namedata, XSTRING& answer);
+    bool                            DoQuery                           (XCHAR* _class, XCHAR* namedata, XVECTOR<XSTRING*>* answers);
 
-    bool                            DoQuery                           (XCHAR* _class, XCHAR* namedata,  XVARIANT& answer);
-    bool                            DoQuery                           (XCHAR* _class, XCHAR* namedata,  XVECTOR<XVARIANT*>* answers);
+    bool                            DoQuery                           (XCHAR* _class, XCHAR* namedata, XVARIANT& answer);
+    bool                            DoQuery                           (XCHAR* _class, XCHAR* namedata, XVECTOR<XVARIANT*>* answers);
 
     bool                            NetWorkInterfaceEnable            (int ID, bool enabled);
     bool                            NetWorkInterfaceSetMetric         (int ID, int metric);

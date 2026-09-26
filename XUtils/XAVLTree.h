@@ -33,12 +33,9 @@
 #include "XBase.h"
 #include "XList.h"
 
-
-
 /*---- PRECOMPILATION INCLUDES ---------------------------------------------------------------------------------------*/
 
 #include "GEN_Control.h"
-
 
 
 
@@ -46,9 +43,7 @@
 
 
 
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
-
 
 template <class T>
 struct XLESS
@@ -66,7 +61,6 @@ struct XLESS
                                           }
 
 };
-
 
 template <class K>
 class XAVLNODE
@@ -109,7 +103,6 @@ class XAVLNODE
     XAVLNODE*                             right;
     XAVLNODE*                             parent;
 
-
   private:
 
     void                                  Clean                                         ()
@@ -122,13 +115,11 @@ class XAVLNODE
                                           }
 };
 
-
 template <class K, class Comparator = XLESS<K> >
 class XAVLTREE
 {
   public:
     class XITERATOR;
-
 
                                           XAVLTREE                                      (bool multi = true)
                                           {
@@ -158,13 +149,10 @@ class XAVLTREE
 
                                             DeleteNodes(root);
 
-
-
                                             Clean();
                                           }
 
     XAVLNODE<K>*                          GetRoot                                       ()                                            { return root; }
-
 
     bool                                  Add                                           (const K& key)
                                           {
@@ -272,7 +260,6 @@ class XAVLTREE
                                                 if((!islessimp(root->key, key)) && (!islessimp(key, root->key)))
                                                   {
 
-
                                                     return root->key;
                                                   }
 
@@ -283,7 +270,6 @@ class XAVLTREE
 
                                                     if((!islessimp(n->key, key)) && (!islessimp(key, n->key)))
                                                       {
-
 
                                                         return n->key;
                                                       }
@@ -338,8 +324,6 @@ class XAVLTREE
                                             return NOTFOUND;
                                           }
 
-
-
     bool                                  Delete                                        (const K& key)
                                           {
                                             XAVLNODE<K>* target = FindNode(key);
@@ -384,9 +368,6 @@ class XAVLTREE
                                             return nelements;
                                           }
 
-
-
-
 class XITERATOR
 {
   public:
@@ -422,7 +403,6 @@ class XITERATOR
                                             else
                                               {
                                                 XAVLNODE<K>* y = current->parent;
-
 
                                                 if(y == NULL)
                                                   {
@@ -490,9 +470,6 @@ class XITERATOR
     XAVLNODE<K>*                          root;
 };
 
-
-
-
   protected:
 
     void                                  FillList                                      (XAVLNODE<K>* n, const K& key, XLIST<K>* list)
@@ -503,11 +480,7 @@ class XITERATOR
                                                 return;
                                               }
 
-
-
                                             FillList(n->left, key, list);
-
-
 
                                             if(islessimp(key, n->key))
                                               {
@@ -518,7 +491,6 @@ class XITERATOR
 
                                                 list->Add(n->key);
                                               }
-
 
                                             FillList(n->right, key, list);
                                           }
@@ -610,8 +582,7 @@ class XITERATOR
                                             return node;
                                           }
 
-    XAVLNODE<K>*                          RemoveTarget                                  (XAVLNODE<K>* node, XAVLNODE<K>* target,
-                                                                                       bool& removed)
+    XAVLNODE<K>*                          RemoveTarget                                  (XAVLNODE<K>* node, XAVLNODE<K>* target, bool& removed)
                                           {
                                             if(!node) return NULL;
                                             if(node == target)
@@ -654,7 +625,6 @@ class XITERATOR
                                             if(removed && nelements) nelements--;
                                             return removed;
                                           }
-
 
     bool                                  RotateLeft                                    (XAVLNODE<K>* n)
                                           {
@@ -734,8 +704,6 @@ class XITERATOR
                                               }
                                           }
 
-
-
     int                                   Height                                        (XAVLNODE<K>* n)
                                           {
                                             if(n == NULL)
@@ -752,7 +720,6 @@ class XITERATOR
                                             int hl = Height(n->left);
                                             int hr = Height(n->right);
 
-
                                             n->height = __MAX(hl, hr) + 1;
                                           }
 
@@ -763,12 +730,10 @@ class XITERATOR
                                                 return;
                                               }
 
-
                                             this->Copy(node->left);
                                             this->Add(node->key);
                                             this->Copy(node->right);
                                           }
-
 
     int                                   SetBalance                                    (XAVLNODE<K>* n)
                                           {

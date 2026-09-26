@@ -34,8 +34,6 @@
 #include "XSubject.h"
 #include "XSystem.h"
 
-
-
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
 
 enum APPFLOW_XEVENT_TYPE

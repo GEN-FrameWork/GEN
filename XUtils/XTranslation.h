@@ -40,7 +40,6 @@
 
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
 
-
 #define XTRANSLATION_NAMEFILEEXT         __L(".lng")
 
 #define XTRANSLATION_GENRESERVE          500
@@ -52,14 +51,9 @@
 
 #define XT_L(ID)                         GEN_XTRANSLATION.Translate_GetSentence(ID)
 
-
-
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
 
-
 class XPATH;
-
 
 class XTRANSLATION
 {

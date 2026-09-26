@@ -57,7 +57,6 @@ enum DIOLINUXICMPFSMEVENTS
 
 };
 
-
 enum DIOLINUXICMPFSMSTATES
 {
   DIOLINUXICMPFSMSTATE_NONE               = 0 ,
@@ -70,8 +69,6 @@ enum DIOLINUXICMPFSMSTATES
 
   DIOLINUXICMP_LASTSTATE
 };
-
-
 
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
 

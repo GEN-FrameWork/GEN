@@ -110,7 +110,6 @@ enum DIOI2COLEDDISPLAYSSD1306_DISPLAYSIZE
 // Charge Pump Command Table
 #define DIOI2COLEDDISPLAYSSD1306_COMMAND_CHARGE_PUMP_SET                     0x8D
 
-
 #define DIOI2COLEDDISPLAYSSD1306_DISPLAY_LINE_HEIGHT                         8
 #define DIOI2COLEDDISPLAYSSD1306_DISPLAY_LINES                               (width / DIOI2COLEDDISPLAYSSD1306_DISPLAY_LINE_HEIGHT)
 
@@ -121,11 +120,7 @@ enum DIOI2COLEDDISPLAYSSD1306_DISPLAYSIZE
 #define DIOI2COLEDDISPLAYSSD1306_BITTOGGLE(x, y)                             (x ^=  (1UL<<y))
 #define DIOI2COLEDDISPLAYSSD1306_BITCHECK(x, y)                              (x & (1UL<<y) ? 1 : 0)
 
-
-
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
-
 
 class DIOI2COLEDDISPLAYSSD1306 : public DIODISPLAYDEVICE, public DIODEVICEI2C
 {

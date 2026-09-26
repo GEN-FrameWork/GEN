@@ -35,8 +35,6 @@
 
 #include "UI_Element.h"
 
-
-
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
 
 enum UI_ELEMENT_STATISTICSCHART_TYPE
@@ -49,13 +47,10 @@ enum UI_ELEMENT_STATISTICSCHART_TYPE
   UI_ELEMENT_STATISTICSCHART_TYPE_PIE                    ,
 };
 
-
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
 
 class GRPBITMAP;
 class GRP2DCANVAS;
-
 
 class UI_ELEMENT_STATISTICSCHART : public UI_ELEMENT
 {
@@ -85,7 +80,6 @@ class UI_ELEMENT_STATISTICSCHART : public UI_ELEMENT
     GRPBITMAP*                          GetBitmap                         ();
     bool                                RebuildBitmap                     (GRP2DCANVAS* referencecanvas);
 
-    // Fase 7: denser raster for post-Present overlay (does not replace design-sized GetBitmap).
     GRPBITMAP*                          GetSharpBitmap                    ();
     bool                                EnsureSharpBitmap                 (GRP2DCANVAS* referencecanvas, double density);
     void                                InvalidateSharpBitmap             ();

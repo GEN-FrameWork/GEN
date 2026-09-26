@@ -60,7 +60,6 @@ class DIOESP32STREAMI2CPORT
                                             DIOESP32STREAMI2CPORT               ();
     virtual                                ~DIOESP32STREAMI2CPORT               ();
 
-
     XDWORD                                  GetCounterRef                       ();
     void                                    SetCounterRef                       (XDWORD counterref);
 
@@ -74,9 +73,6 @@ class DIOESP32STREAMI2CPORT
     XDWORD                                  counterref;
     I2C_HandleTypeDef*                      hi2c;
 };
-
-
-
 
 class DIOESP32STREAMI2C : public DIOSTREAMI2C
 {

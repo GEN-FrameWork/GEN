@@ -150,7 +150,7 @@ bool DIOAIOBIMAINBOARD::Ini()
 
   if(!gpio->Ini())
     {
-      GEN_XLOG.AddEntry(XLOGLEVEL_ERROR,  DIOAIOBIMAINBOARD_LOGSECTIONID, false, __L("AIOBI Main Board: ERROR! GPIO not init!"));
+      GEN_XLOG.AddEntry(XLOGLEVEL_ERROR, DIOAIOBIMAINBOARD_LOGSECTIONID, false, __L("AIOBI Main Board: ERROR! GPIO not init!"));
       return false;
     }
 
@@ -641,18 +641,18 @@ bool DIOAIOBIMAINBOARD::SetPWM(XBYTE channel, XWORD on, XWORD off, bool wait)
 * --------------------------------------------------------------------------------------------------------------------*/
 bool DIOAIOBIMAINBOARD::ResetMicroControler()
 {
-  if(!SetModeHeaderPin(DIOAIOBIMAINBOARD_HEADER_SLOT,  9, false)) return false;   // Reset Micro
+  if(!SetModeHeaderPin(DIOAIOBIMAINBOARD_HEADER_SLOT, 9, false)) return false;   // Reset Micro
   if(!SetStatusHeaderPin(DIOAIOBIMAINBOARD_HEADER_SLOT, 9, true)) return false;
 
   bool pinstatus = false;
 
-  if(SetStatusHeaderPin(DIOAIOBIMAINBOARD_HEADER_SLOT, 9,  pinstatus))
+  if(SetStatusHeaderPin(DIOAIOBIMAINBOARD_HEADER_SLOT, 9, pinstatus))
     {
       GEN_XSLEEP.MilliSeconds(10);
 
       pinstatus = !pinstatus;
 
-      return SetStatusHeaderPin(DIOAIOBIMAINBOARD_HEADER_SLOT, 9,  pinstatus);
+      return SetStatusHeaderPin(DIOAIOBIMAINBOARD_HEADER_SLOT, 9, pinstatus);
     }
 
   return false;

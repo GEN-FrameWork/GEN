@@ -90,7 +90,6 @@ enum XBER_TAGCLASS
   XBER_TAGCLASS_UNKNOWN                               
 };
 
-
 #define XBER_TAG_MASKTYPE                       0x1F  
 #define XBER_TAG_MASKISCONSTRUCTED              0x20  
 
@@ -101,8 +100,6 @@ enum XBER_TAGCLASS
 #define XBERTYPE_ISCONSTRUCTED                  XBER_TAG_MASKISCONSTRUCTED
 
 #define XBER_MAXLEVELS                          256
-
-
 
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
 
@@ -189,8 +186,8 @@ class XBER : public XSUBJECT
 
     bool                      CalculeSize                     (XBUFFER& buffer, XDWORD& sizedataber, XBYTE& sizehead);
 
-    bool                      CodeBigNumber                   (XDWORD number,XBUFFER& data);
-    bool                      CodeSize                        (XDWORD number,XBUFFER& data);
+    bool                      CodeBigNumber                   (XDWORD number, XBUFFER& data);
+    bool                      CodeSize                        (XDWORD number, XBUFFER& data);
 
     void                      Clean                           ();
 

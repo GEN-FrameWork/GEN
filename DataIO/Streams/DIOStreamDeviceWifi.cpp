@@ -157,8 +157,8 @@ bool DIOSTREAMDEVICEWIFI::DebugPrintInfo()
 
   XSTRING string;
   string.ConvertFromBoolean(hassecurity, XSTRINGBOOLEANMODE_HUMAN);
-  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, __L("Has Security     : %s ")   , string.Get());
-  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, __L("RSSI             : %d dB") , transmisionpower);
+  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, __L("Has Security : %s "), string.Get());
+  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, __L("RSSI : %d dB"), transmisionpower);
 
   return true;
 }

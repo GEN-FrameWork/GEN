@@ -206,7 +206,7 @@ bool INPCURSOR::SetIsChanged(bool ischanged)
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         bool INPCURSOR::IsPositionInRect(int x, int y, int width,int height)
+* @fn         bool INPCURSOR::IsPositionInRect(int x, int y, int width, int height)
 * @brief      Is position in rect
 * @ingroup    INPUT
 * 
@@ -218,7 +218,7 @@ bool INPCURSOR::SetIsChanged(bool ischanged)
 * @return     bool : true if the condition is met; otherwise false.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-bool INPCURSOR::IsPositionInRect(int x, int y, int width,int height)
+bool INPCURSOR::IsPositionInRect(int x, int y, int width, int height)
 {
   if((GetX() >= x) && (GetX() <= (x+width)) &&
      (GetY() >= y) && (GetY() <= (y+height))) return true;
@@ -282,7 +282,7 @@ bool INPCURSOR::AddPointToMotion(bool ispressed)
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         void INPCURSOR::Set(float x , float y, float z)
+* @fn         void INPCURSOR::Set(float x, float y, float z)
 * @brief      Set value
 * @ingroup    INPUT
 * 
@@ -358,7 +358,6 @@ void INPCURSOR::SetZ(float z)
 {
   this->z = z;
 }
-
 
 
 /**-------------------------------------------------------------------------------------------------------------------

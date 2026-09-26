@@ -38,18 +38,15 @@
 
 #include "GRPVideoFile.h"
 
-
-
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
-
 
 typedef struct
 {
-  XDWORD                                          microsecperframe;               // frame display rate (or 0)
-  XDWORD                                          maxbytespersec;                 // max. transfer rate
-  XDWORD                                          paddinggranularity;             // pad to multiples of this  
-  XDWORD                                          flags;                          // the ever-present flags
-  XDWORD                                          totalframes;                    // # frames in file
+  XDWORD                                          microsecperframe;
+  XDWORD                                          maxbytespersec;
+  XDWORD                                          paddinggranularity;
+  XDWORD                                          flags;
+  XDWORD                                          totalframes;
   XDWORD                                          initialframes;
   XDWORD                                          streams;
   XDWORD                                          suggestedbuffersize;
@@ -60,7 +57,6 @@ typedef struct
 
 } GRPVIDEOFILEAVI_MAINHEADER;
 
-
 typedef struct 
 {
   XDWORD                                          fcctype;
@@ -70,9 +66,9 @@ typedef struct
   XWORD                                           language;
   XDWORD                                          initialframes;
   XDWORD                                          scale;
-  XDWORD                                          rate;                           // dwRate / dwScale == samples/second 
+  XDWORD                                          rate;
   XDWORD                                          start;
-  XDWORD                                          length;                         // In units above... 
+  XDWORD                                          length;
   XDWORD                                          suggestedbuffersize;
   XDWORD                                          quality;
   XDWORD                                          samplesize;
@@ -110,16 +106,11 @@ typedef struct
 #define GRPVIDEOFILEAVI_TYPECHUNKFRAME        __L("00dc")  
 #define GRPVIDEOFILEAVI_INDEXENTRY_MAXSIZE    16
 
-
-
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
-
 
 class GRPPROPERTY;
 class GRPBITMAP;
 class GRPBITMAPSEQUENCE;
-
 
 class GRPVIDEOFILEAVI : public GRPVIDEOFILE
 {
@@ -134,7 +125,6 @@ class GRPVIDEOFILEAVI : public GRPVIDEOFILE
     bool                                          AddFrame                  (XBYTE* dataframe, XDWORD dataframesize);
 
     bool                                          Close                     ();        
-
 
   private:
 

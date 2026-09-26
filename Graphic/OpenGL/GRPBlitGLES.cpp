@@ -460,7 +460,7 @@ bool GRPBLITGLES::Update(GRP2DCANVAS* canvas)
     EGLint sfw = 0, sfh = 0;
     if(eglctx && eglctx->GetEGLDisplay() != EGL_NO_DISPLAY && eglctx->GetEGLSurface() != EGL_NO_SURFACE)
       {
-        eglQuerySurface(eglctx->GetEGLDisplay(), eglctx->GetEGLSurface(), EGL_WIDTH,  &sfw);
+        eglQuerySurface(eglctx->GetEGLDisplay(), eglctx->GetEGLSurface(), EGL_WIDTH, &sfw);
         eglQuerySurface(eglctx->GetEGLDisplay(), eglctx->GetEGLSurface(), EGL_HEIGHT, &sfh);
       }
 
@@ -473,7 +473,7 @@ bool GRPBLITGLES::Update(GRP2DCANVAS* canvas)
         last_cw = w; last_ch = h; last_sw = scrw; last_sh = scrh; last_fw = (int)sfw; last_fh = (int)sfh;
         
         #if defined(__ANDROID__)
-        __android_log_print(ANDROID_LOG_INFO, "GEN_BLIT",  "SIZES canvas=%dx%d screen=%dx%d surface=%dx%d texture=%dx%d", w, h, scrw, scrh, (int)sfw, (int)sfh, texw, texh);
+        __android_log_print(ANDROID_LOG_INFO, "GEN_BLIT", "SIZES canvas=%dx%d screen=%dx%d surface=%dx%d texture=%dx%d", w, h, scrw, scrh, (int)sfw, (int)sfh, texw, texh);
         #endif
 
         XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, __L("[BlitGLES] SIZES canvas=%dx%d screen=%dx%d surface=%dx%d texture=%dx%d"), w, h, scrw, scrh, (int)sfw, (int)sfh, texw, texh);
@@ -540,7 +540,7 @@ bool GRPBLITGLES::Update(GRP2DCANVAS* canvas)
           EGLSurface es0 = eglctx->GetEGLSurface();
           if(edisp != EGL_NO_DISPLAY && es0 != EGL_NO_SURFACE)
             {
-              eglQuerySurface(edisp, es0, EGL_WIDTH,  &sw0);
+              eglQuerySurface(edisp, es0, EGL_WIDTH, &sw0);
               eglQuerySurface(edisp, es0, EGL_HEIGHT, &sh0);
             }
           if(nw != (int)sw0 || nh != (int)sh0)
@@ -554,7 +554,7 @@ bool GRPBLITGLES::Update(GRP2DCANVAS* canvas)
       EGLSurface esurf = eglctx->GetEGLSurface();
       if(edisp != EGL_NO_DISPLAY && esurf != EGL_NO_SURFACE)
         {
-          if(eglQuerySurface(edisp, esurf, EGL_WIDTH,  &sw) == EGL_TRUE &&
+          if(eglQuerySurface(edisp, esurf, EGL_WIDTH, &sw) == EGL_TRUE &&
              eglQuerySurface(edisp, esurf, EGL_HEIGHT, &sh) == EGL_TRUE &&
              sw > 0 && sh > 0)
             {
@@ -596,7 +596,7 @@ bool GRPBLITGLES::Update(GRP2DCANVAS* canvas)
           glEnableVertexAttribArray((GLuint)a_pos);
           glEnableVertexAttribArray((GLuint)a_uv);
           glVertexAttribPointer((GLuint)a_pos, 2, GL_FLOAT, GL_FALSE, sizeof(float)*4, (void*)0);
-          glVertexAttribPointer((GLuint)a_uv,  2, GL_FLOAT, GL_FALSE, sizeof(float)*4, (void*)(sizeof(float)*2));
+          glVertexAttribPointer((GLuint)a_uv, 2, GL_FLOAT, GL_FALSE, sizeof(float)*4, (void*)(sizeof(float)*2));
           glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
         }
     }
@@ -745,8 +745,6 @@ bool GRPBLITGLES::SwapBuffers()
 
   return eglctx->SwapBuffers();
 }
-
-
 
 
 /**-------------------------------------------------------------------------------------------------------------------
@@ -1101,7 +1099,7 @@ bool GRPBLITGLES::CompileShaders()
   const char* fsrc = k_fshader_swizzle_src;  // .bgra swizzle (BGRA canvas)
 #endif
 
-  GLuint vs = CompileShader(GL_VERTEX_SHADER,   k_vshader_src);
+  GLuint vs = CompileShader(GL_VERTEX_SHADER, k_vshader_src);
   GLuint fs = CompileShader(GL_FRAGMENT_SHADER, fsrc);
   if(!vs || !fs)
     {
@@ -1210,8 +1208,8 @@ bool GRPBLITGLES::AllocTexture(int width, int height)
 
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S,     GL_CLAMP_TO_EDGE);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T,     GL_CLAMP_TO_EDGE);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 
   // ES 3.0 portability: GL_BGRA_EXT as an INTERNAL format is unreliable. It works on
   // ANGLE (Windows) but is invalid on strict Mesa ES 3.0 (Linux/Pi), where it silently

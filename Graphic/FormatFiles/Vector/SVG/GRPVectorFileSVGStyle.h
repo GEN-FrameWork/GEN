@@ -35,17 +35,12 @@
 #include "GRP2DColor.h"
 #include "GRP2DPath.h"
 
-
-
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
-
-
 
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
 
 class XFILEXMLELEMENT;
 class GRPVECTORFILESVGCSSSTYLESHEET;
-
 
 class GRPVECTORFILESVGSTYLE
 {

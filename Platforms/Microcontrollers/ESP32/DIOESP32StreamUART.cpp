@@ -106,7 +106,6 @@ DIOESP32STREAMUART::~DIOESP32STREAMUART()
 }
 
 
-
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         DIOSTREAMSTATUS DIOESP32STREAMUART::GetStatus()
@@ -122,7 +121,6 @@ DIOSTREAMSTATUS DIOESP32STREAMUART::GetStatus()
 
   return status;
 }
-
 
 
 /**-------------------------------------------------------------------------------------------------------------------
@@ -200,7 +198,6 @@ bool DIOESP32STREAMUART::Open()
 
   return threadconnection->Ini();
 }
-
 
 
 /**-------------------------------------------------------------------------------------------------------------------
@@ -290,7 +287,6 @@ bool DIOESP32STREAMUART::Config(XWORD mask)
 }
 
 
-
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         XDWORD DIOESP32STREAMUART::ReadDirect(XBYTE* buffer, XDWORD size)
@@ -318,7 +314,6 @@ XDWORD DIOESP32STREAMUART::ReadDirect(XBYTE* buffer, XDWORD size)
 }
 
 
-
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         XDWORD DIOESP32STREAMUART::WriteDirect(XBYTE* buffer, XDWORD size)
@@ -339,7 +334,6 @@ XDWORD DIOESP32STREAMUART::WriteDirect(XBYTE* buffer, XDWORD size)
 
   return (XDWORD)0;
 }
-
 
 
 /**-------------------------------------------------------------------------------------------------------------------
@@ -363,7 +357,7 @@ XDWORD DIOESP32STREAMUART::Write(XBYTE* buffer, XDWORD size)
 
     }
 
-  if(!outbuffer->Add(buffer,size))  return 0;
+  if(!outbuffer->Add(buffer, size))  return 0;
 
   nbyteswrite+=size;
   if(xtimernotactivity) xtimernotactivity->Reset();
@@ -372,7 +366,6 @@ XDWORD DIOESP32STREAMUART::Write(XBYTE* buffer, XDWORD size)
 
   return size;
 }
-
 
 
 /**-------------------------------------------------------------------------------------------------------------------
@@ -388,7 +381,6 @@ bool DIOESP32STREAMUART::Disconnect()
 {
   return false;
 }
-
 
 
 /**-------------------------------------------------------------------------------------------------------------------
@@ -414,7 +406,6 @@ bool DIOESP32STREAMUART::Close()
 }
 
 
-
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         bool DIOESP32STREAMUART::GetCTS()
@@ -428,7 +419,6 @@ bool DIOESP32STREAMUART::GetCTS()
 {
   return false;
 }
-
 
 
 /**-------------------------------------------------------------------------------------------------------------------
@@ -446,7 +436,6 @@ bool DIOESP32STREAMUART::GetDSR()
 }
 
 
-
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         bool DIOESP32STREAMUART::GetRing()
@@ -462,7 +451,6 @@ bool DIOESP32STREAMUART::GetRing()
 }
 
 
-
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         bool DIOESP32STREAMUART::GetRLSD()
@@ -476,7 +464,6 @@ bool DIOESP32STREAMUART::GetRLSD()
 {
   return false;
 }
-
 
 
 /**-------------------------------------------------------------------------------------------------------------------
@@ -496,7 +483,6 @@ bool DIOESP32STREAMUART::SetRTS(bool on)
 }
 
 
-
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         bool DIOESP32STREAMUART::SetDTR(bool on)
@@ -512,7 +498,6 @@ bool DIOESP32STREAMUART::SetDTR(bool on)
 {
   return false;
 }
-
 
 
 /**-------------------------------------------------------------------------------------------------------------------
@@ -532,7 +517,6 @@ bool DIOESP32STREAMUART::CleanBuffers()
 }
 
 
-
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         UART_HandleTypeDef* DIOESP32STREAMUART::GetHuart()
@@ -546,7 +530,6 @@ UART_HandleTypeDef* DIOESP32STREAMUART::GetHuart()
 {
   return &huart;
 }
-
 
 
 /**-------------------------------------------------------------------------------------------------------------------
@@ -684,7 +667,7 @@ void DIOESP32STREAMUART::ThreadConnection(void* param)
             {
               case DIOESP32UARTFSMSTATE_NONE                : break;
 
-              case DIOESP32UARTFSMSTATE_CONNECTED           : { DIOSTREAM_XEVENT xevent(diostream,DIOSTREAM_XEVENT_TYPE_CONNECTED);
+              case DIOESP32UARTFSMSTATE_CONNECTED           : { DIOSTREAM_XEVENT xevent(diostream, DIOSTREAM_XEVENT_TYPE_CONNECTED);
                                                                     xevent.SetDIOStream(diostream);
                                                                     diostream->PostEvent(&xevent);
 
@@ -694,7 +677,7 @@ void DIOESP32STREAMUART::ThreadConnection(void* param)
 
               case DIOESP32UARTFSMSTATE_WAITINGTOREAD       : break;
 
-              case DIOESP32UARTFSMSTATE_DISCONNECTING       : { DIOSTREAM_XEVENT xevent(diostream,DIOSTREAM_XEVENT_TYPE_DISCONNECTED);
+              case DIOESP32UARTFSMSTATE_DISCONNECTING       : { DIOSTREAM_XEVENT xevent(diostream, DIOSTREAM_XEVENT_TYPE_DISCONNECTED);
                                                                     xevent.SetDIOStream(diostream);
                                                                     diostream->PostEvent(&xevent);
 
@@ -706,7 +689,6 @@ void DIOESP32STREAMUART::ThreadConnection(void* param)
     }
 
 }
-
 
 
 /**-------------------------------------------------------------------------------------------------------------------

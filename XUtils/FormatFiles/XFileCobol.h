@@ -99,8 +99,6 @@ typedef XTREE<XFILECOBOL_FIELD*>                 XFILECOBOL_FD_TREE;
 typedef XTREE_NODE<XFILECOBOL_FIELD*>            XFILECOBOL_FD_TREENODE;
 typedef XTREE_NODE_ITERATOR<XFILECOBOL_FIELD*>   XFILECOBOL_FD_TREENODEITERATOR;
 
-
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
 
 class XPATH;
@@ -108,7 +106,6 @@ class XFILE;
 class XFILETXT;
 class XFILECOBOL_HANDLE;
 class XVARIANT;
-
 
 class XFILECOBOL_PIC
 {
@@ -142,7 +139,6 @@ class XFILECOBOL_PIC
     XDWORD                          ndecimals;
     bool                            hassign;
 };
-
 
 class XFILECOBOL_FIELD
 {
@@ -185,7 +181,6 @@ class XFILECOBOL_FIELD
     int                             redefineoffset;
 };
 
-
 class XFILECOBOL_RECORD
 {
   public:
@@ -226,7 +221,6 @@ class XFILECOBOL_RECORD
     XBUFFER                         data;
 };
 
-
 class XFILECOBOL_HANDLE
 {
     public:
@@ -263,7 +257,6 @@ class XFILECOBOL_HANDLE
     XFILECOBOL_FD_TREE              fdtree;
     XFILECOBOL_RECORD_TYPE          typerecord;
 };
-
 
 class XFILECOBOL
 {

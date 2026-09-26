@@ -34,8 +34,6 @@
 
 #include "GRPStatisticsChartBuilder.h"
 
-
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
 
 class GRPSTATISTICSCHARTBUILDERSVG : public GRPSTATISTICSCHARTBUILDER

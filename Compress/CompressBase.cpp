@@ -136,7 +136,7 @@ COMPRESSBASE_TYPE COMPRESSBASE::SetType(COMPRESSBASE_TYPE type)
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         bool COMPRESSBASE::Compress(XBYTE* origin,XDWORD size,XBUFFER* buffer)
+* @fn         bool COMPRESSBASE::Compress(XBYTE* origin, XDWORD size, XBUFFER* buffer)
 * @brief      Compress
 * @ingroup    COMPRESS
 * 
@@ -147,13 +147,13 @@ COMPRESSBASE_TYPE COMPRESSBASE::SetType(COMPRESSBASE_TYPE type)
 * @return     bool : true if the operation is successful; otherwise false.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-bool COMPRESSBASE::Compress(XBYTE* origin,XDWORD size,XBUFFER* buffer)
+bool COMPRESSBASE::Compress(XBYTE* origin, XDWORD size, XBUFFER* buffer)
 {
   if(!origin)   return false;
   if(!size)     return false;
   if(!buffer)   return false;
 
-  memcpy(buffer->Get(),origin,size);
+  memcpy(buffer->Get(), origin, size);
   buffer->SetSize(size);
 
   return true;
@@ -162,7 +162,7 @@ bool COMPRESSBASE::Compress(XBYTE* origin,XDWORD size,XBUFFER* buffer)
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         bool COMPRESSBASE::Decompress(XBYTE* origin,XDWORD size,XBUFFER* buffer)
+* @fn         bool COMPRESSBASE::Decompress(XBYTE* origin, XDWORD size, XBUFFER* buffer)
 * @brief      Decompress
 * @ingroup    COMPRESS
 * 
@@ -173,13 +173,13 @@ bool COMPRESSBASE::Compress(XBYTE* origin,XDWORD size,XBUFFER* buffer)
 * @return     bool : true if the operation is successful; otherwise false.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-bool COMPRESSBASE::Decompress(XBYTE* origin,XDWORD size,XBUFFER* buffer)
+bool COMPRESSBASE::Decompress(XBYTE* origin, XDWORD size, XBUFFER* buffer)
 {
   if(!origin)   return false;
   if(!size)     return false;
   if(!buffer)   return false;
 
-  memcpy(buffer->Get(),origin,size);
+  memcpy(buffer->Get(), origin, size);
   buffer->SetSize(size);
 
   return true;
@@ -188,7 +188,7 @@ bool COMPRESSBASE::Decompress(XBYTE* origin,XDWORD size,XBUFFER* buffer)
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         bool COMPRESSBASE::Compress(XBYTE* origin,XDWORD size,void* param1)
+* @fn         bool COMPRESSBASE::Compress(XBYTE* origin, XDWORD size, void* param1)
 * @brief      Compress
 * @ingroup    COMPRESS
 * 
@@ -199,14 +199,14 @@ bool COMPRESSBASE::Decompress(XBYTE* origin,XDWORD size,XBUFFER* buffer)
 * @return     bool : true if the operation is successful; otherwise false.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-bool COMPRESSBASE::Compress(XBYTE* origin,XDWORD size,void* param1)
+bool COMPRESSBASE::Compress(XBYTE* origin, XDWORD size, void* param1)
 {
   if(!origin) return false;
   if(!size)   return false;
 
   for(XDWORD c=0; c<size; c++)
     {
-      CompressResult(true,origin[c],param1);
+      CompressResult(true, origin[c], param1);
     }
 
   return false;
@@ -215,7 +215,7 @@ bool COMPRESSBASE::Compress(XBYTE* origin,XDWORD size,void* param1)
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         bool COMPRESSBASE::Decompress(XBYTE* origin,XDWORD size,void* param1)
+* @fn         bool COMPRESSBASE::Decompress(XBYTE* origin, XDWORD size, void* param1)
 * @brief      Decompress
 * @ingroup    COMPRESS
 * 
@@ -226,14 +226,14 @@ bool COMPRESSBASE::Compress(XBYTE* origin,XDWORD size,void* param1)
 * @return     bool : true if the operation is successful; otherwise false.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-bool COMPRESSBASE::Decompress(XBYTE* origin,XDWORD size,void* param1)
+bool COMPRESSBASE::Decompress(XBYTE* origin, XDWORD size, void* param1)
 {
   if(!origin) return false;
   if(!size)   return false;
 
   for(XDWORD c=0; c<size; c++)
     {
-      CompressResult(false,origin[c],param1);
+      CompressResult(false, origin[c], param1);
     }
 
   return false;
@@ -242,7 +242,7 @@ bool COMPRESSBASE::Decompress(XBYTE* origin,XDWORD size,void* param1)
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         bool COMPRESSBASE::CompressResult(bool compress,XBYTE data,void* param1)
+* @fn         bool COMPRESSBASE::CompressResult(bool compress, XBYTE data, void* param1)
 * @brief      Compress result
 * @ingroup    COMPRESS
 * 
@@ -253,7 +253,7 @@ bool COMPRESSBASE::Decompress(XBYTE* origin,XDWORD size,void* param1)
 * @return     bool : true if the operation is successful; otherwise false.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-bool COMPRESSBASE::CompressResult(bool compress,XBYTE data,void* param1)
+bool COMPRESSBASE::CompressResult(bool compress, XBYTE data, void* param1)
 {
   if(compress)
     {

@@ -35,22 +35,15 @@
 #include "DIOStreamConfig.h"
 #include "DIOStreamDeviceUSB.h"
 
-
-
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
 
-
-
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
-
 
 class DIOSTREAMUSBCONFIG : public DIOSTREAMCONFIG
 {
   public:
                                   DIOSTREAMUSBCONFIG                ();
     virtual                      ~DIOSTREAMUSBCONFIG                ();
-
 
     XSTRING*                      GetLocation                       ();
 

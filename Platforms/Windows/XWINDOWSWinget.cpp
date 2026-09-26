@@ -143,10 +143,6 @@ void XWINDOWSWINGET_ELEMENTRESULT::Clean()
 }
 
 
-
-
-
-
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         XWINDOWSWINGET_LISTRESULT::XWINDOWSWINGET_LISTRESULT()
@@ -222,10 +218,6 @@ void XWINDOWSWINGET_LISTRESULT::Clean()
 {
 
 }
-
-
-
-
 
 
 /**-------------------------------------------------------------------------------------------------------------------
@@ -682,7 +674,7 @@ bool XWINDOWSWINGET::ApplicationOperation(XWINDOWSWINGET_APPLICATIONOPERATION ap
   XSTRING           result;
 
   result.ConvertFromUTF8(buffer_output);
-  GenerateList(result,  &statuslist);
+  GenerateList(result, &statuslist);
 
   status = statuslist.GetSize()?true:false;
 
@@ -789,17 +781,16 @@ bool XWINDOWSWINGET::Exec(XCHAR* params, XBUFFER& output)
   si.hStdError    = hwrite;
   si.hStdInput    = GetStdHandle(STD_INPUT_HANDLE);
 
-  BOOL ok = CreateProcess(  NULL,
-                            (XCHAR*)cmd_str.Get(),      // buffer modificable
-                            NULL,
-                            NULL,
-                            TRUE,                       // heredar handles
-                            CREATE_NO_WINDOW,           // CLAVE: evita CMD
-                            NULL,
-                            NULL,
-                            &si,
-                            &pi
-                         );
+  BOOL ok = CreateProcess(NULL,
+                          (XCHAR*)cmd_str.Get(),  // buffer modificable
+                          NULL,
+                          NULL,
+                          TRUE,                   // heredar handles
+                          CREATE_NO_WINDOW,       // CLAVE: evita CMD
+                          NULL,
+                          NULL,
+                          &si,
+                          &pi);
 
   CloseHandle(hwrite);
 
@@ -828,8 +819,6 @@ bool XWINDOWSWINGET::Exec(XCHAR* params, XBUFFER& output)
 
   return true;
 }
-
-
 
 
 /**-------------------------------------------------------------------------------------------------------------------
@@ -1046,7 +1035,7 @@ bool XWINDOWSWINGET::GenerateColumnList(XCHAR* ask, XVECTOR<XSTRING*>* list)
 * @return     bool : true if the operation is successful; otherwise false.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-bool XWINDOWSWINGET::GenerateList(XSTRING& result,  XVECTOR<XSTRING*>* list) 
+bool XWINDOWSWINGET::GenerateList(XSTRING& result, XVECTOR<XSTRING*>* list) 
 {  
   XSTRING literal1  = __L("\r\n\x1b[32;1m--");
   XSTRING literal2  = __L("\x1B[0m\r\n");

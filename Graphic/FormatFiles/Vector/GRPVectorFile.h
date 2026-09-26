@@ -52,7 +52,6 @@ enum GRPVECTORFILERESULT
   GRPVECTORFILERESULT_LASTCOMMON
 };
 
-
 enum GRPVECTORFILETYPE
 {
   GRPVECTORFILETYPE_UNKNOWN                        = 0 ,
@@ -60,13 +59,9 @@ enum GRPVECTORFILETYPE
   GRPVECTORFILETYPE_SVG                                ,
 };
 
-
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
 
-
 class XFILETXT;
-
 
 class GRPVECTORFILE : public XSUBJECT
 {
@@ -85,7 +80,6 @@ class GRPVECTORFILE : public XSUBJECT
     void                              SetType                       (GRPVECTORFILETYPE type);
     static XCHAR*                     GetTypeText                   (GRPVECTORFILETYPE type);
 
-    
     virtual GRPVECTORFILERESULT       DetectType                    ();
 
     virtual GRPVECTORFILERESULT       Load                          ();

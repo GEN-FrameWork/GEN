@@ -55,10 +55,7 @@ enum DIONODEITEMVALUE_UNITSFORMAT_TYPE
 
 };
 
-
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
-
 
 class DIONODEITEMVALUEUNITFORMAT : public XSERIALIZABLE
 {

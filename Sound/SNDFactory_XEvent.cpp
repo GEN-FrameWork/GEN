@@ -82,6 +82,7 @@ SNDFACTORY_XEVENT::~SNDFACTORY_XEVENT()
   Clean();
 }
 
+
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         SNDITEM* SNDFACTORY_XEVENT::GetItem()

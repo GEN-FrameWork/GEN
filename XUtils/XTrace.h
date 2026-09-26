@@ -252,7 +252,6 @@ enum XTRACE_TYPE_STATUS_MSG
     #define XTRACE_PRINTDATABLOCKTAB(level, data, ...)
     #define XTRACE_PRINTDATABLOCKCODE(level, data, ...)
 
-
     #define XTRACE_PRINTMSGSTATUS(name, value)
     #define XTRACE_PRINTMSGSTATUSCOLOR(level, name, value)
     #define XTRACE_PRINTMSGSTATUSTAB(level, name, value)
@@ -262,15 +261,11 @@ enum XTRACE_TYPE_STATUS_MSG
 
 #endif
 
-
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
-
 
 class XFACTORY;
 class XMUTEX;
 class DIOSTREAM;
-
 
 class XTRACE_TARGET
 {
@@ -289,7 +284,6 @@ class XTRACE_TARGET
 
     XDWORD                          GetNSendings                      ();
     void                            AddNSendings                      ();
-
 
     #if (defined(DIO_ACTIVE) && defined(DIO_STREAMUDP_ACTIVE))
     
@@ -322,7 +316,6 @@ class XTRACE_TARGET
     #endif
 };
 
-
 class XTRACE_STATUS_MSG
 {
   public:
@@ -353,7 +346,6 @@ class XTRACE_STATUS_MSG
     XBYTE*                          Value_GetColor                     ();        
     void                            Value_SetColor                     (XBYTE* value);        
 
-          
   private:
 
     void                            Clean                              ();
@@ -372,13 +364,11 @@ class XTRACE_STATUS_MSG
     XBYTE                           value_color[3];        
 };
 
-
 class XTRACE_STATUS_MSGS
 {
   public:
                                     XTRACE_STATUS_MSGS                ();
     virtual                        ~XTRACE_STATUS_MSGS                ();
-
 
     XTRACE_STATUS_MSG*              StatusMsg_Add                     (XSTRING* line);    
     XTRACE_STATUS_MSG*              StatusMsg_Get                     (XCHAR* name);
@@ -386,14 +376,12 @@ class XTRACE_STATUS_MSGS
     XVECTOR<XTRACE_STATUS_MSG*>*    StatusMsg_GetAll                  ();
     bool                            StatusMsg_DeleteAll               ();
 
-
   private:
 
     void                            Clean                             ();
     
     XVECTOR<XTRACE_STATUS_MSG*>     statusmsgs;
 };
-
 
 class XTRACE
 {
@@ -422,7 +410,7 @@ class XTRACE
 
     bool                            ClearScreen                       (XBYTE level);
     void                            PrintHeader                       (XBYTE level, XCHAR* header);
-    bool                            Print                             (XBYTE level, XCHAR* mask,...);
+    bool                            Print                             (XBYTE level, XCHAR* mask, ...);
     bool                            PrintDataBlock                    (XBYTE level, XBYTE* data, XDWORD _size, XDWORD marginsize = 0, XDWORD sizeline = 32, bool showoffset = true, bool showtext = true);
     bool                            PrintDataBlock                    (XBYTE level, XBUFFER& data, XDWORD marginsize = 0, XDWORD sizeline = 32, bool showoffset = true, bool showtext = true);
     
@@ -448,7 +436,6 @@ class XTRACE
     bool                            SetTraceToXBuffer                 (XDWORD publicIP, XDWORD localIP, XBYTE level, XDWORD sequence, XDATETIME* xtime, XDWORD& sizepacket, XBUFFER& xbufferpacket);
     bool                            SetTraceTextToXBuffer             (XDWORD publicIP, XDWORD localIP, XBYTE level, XDWORD sequence, XDATETIME* xtime, XCHAR* string, XBUFFER& xbufferpacket);
 
-   
     #ifndef XTRACE_NOINTERNET
 
     bool                            ObtainPublicIP                    ();
@@ -471,7 +458,7 @@ class XTRACE
 
   protected:
 
-    bool                            GenerateTab                       (int ntab,XSTRING& tab);
+    bool                            GenerateTab                       (int ntab, XSTRING& tab);
 
     XTRACE_TARGET                   targets[XTRACE_MAXNTARGETS];
 

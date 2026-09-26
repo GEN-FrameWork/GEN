@@ -262,7 +262,7 @@ bool DIOWINDOWSGPIOPCPARALLEL::SetValue(DIOGPIO_ENTRY* entry, bool value)
   if(!entry) return false;
 
   PC_Get(port, dataport);
-  PC_Set(port ,value?(dataport|(0x01 << entry->GetPin())):(dataport & ~(0x01 << entry->GetPin())));
+  PC_Set(port, value?(dataport|(0x01 << entry->GetPin())):(dataport & ~(0x01 << entry->GetPin())));
 
   return true;
 }

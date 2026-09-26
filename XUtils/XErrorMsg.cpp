@@ -433,10 +433,6 @@ bool XERRORMSG::Clean()
 }
 
 
-
-
-
-
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         XERRORSMSG::XERRORSMSG()
@@ -639,7 +635,7 @@ bool XERRORSMSG::AddMsg(int code, int level, int image, int sound, XCHAR* title,
 
   if(FindMsg(code)) return false;
 
-  error = GEN_NEW XERRORMSG(code,title,msg);
+  error = GEN_NEW XERRORMSG(code, title, msg);
   if(!error) return false;
 
   error->SetLevel(level);
@@ -711,7 +707,7 @@ bool XERRORSMSG::EraseAllMsg()
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         XERRORMSG_RETURN XERRORSMSG::ShowMsg(int code,bool statusline,XBYTE returns,XCHAR* addstr,bool sound)
+* @fn         XERRORMSG_RETURN XERRORSMSG::ShowMsg(int code, bool statusline, XBYTE returns, XCHAR* addstr, bool sound)
 * @brief      Show msg
 * @ingroup    XUTILS
 * 
@@ -724,7 +720,7 @@ bool XERRORSMSG::EraseAllMsg()
 * @return     XERRORMSG_RETURN : Requested value.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-XERRORMSG_RETURN XERRORSMSG::ShowMsg(int code,bool statusline,XBYTE returns,XCHAR* addstr,bool sound)
+XERRORMSG_RETURN XERRORSMSG::ShowMsg(int code, bool statusline, XBYTE returns, XCHAR* addstr, bool sound)
 {
   return XERRORMSG_RETURN_NONE;
 }

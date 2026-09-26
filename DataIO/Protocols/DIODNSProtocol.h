@@ -32,10 +32,7 @@
 
 #include "XBase.h"
 
-
-
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
-
 
 #define DIODNSPROTOCOL_DEFAULTPORT         53
 
@@ -52,24 +49,24 @@
 // Header
 typedef struct
 {
-  XWORD                           id;             // identification number
+  XWORD                           id;
 
-  XBYTE                           rd      : 1;    // recursion desired
-  XBYTE                           tc      : 1;    // truncated message
-  XBYTE                           aa      : 1;    // authoritive answer
-  XBYTE                           opcode  : 4;    // purpose of message
-  XBYTE                           qr      : 1;    // query/response flag
+  XBYTE                           rd      : 1;
+  XBYTE                           tc      : 1;
+  XBYTE                           aa      : 1;
+  XBYTE                           opcode  : 4;
+  XBYTE                           qr      : 1;
 
-  XBYTE                           rcode   : 4;    // response code
-  XBYTE                           cd      : 1;    // checking disabled
-  XBYTE                           ad      : 1;    // authenticated data
-  XBYTE                           z       : 1;    // its z! reserved
-  XBYTE                           ra      : 1;    // recursion available
+  XBYTE                           rcode   : 4;
+  XBYTE                           cd      : 1;
+  XBYTE                           ad      : 1;
+  XBYTE                           z       : 1;
+  XBYTE                           ra      : 1;
 
-  XWORD                           q_count;        // number of question entries
-  XWORD                           ans_count;      // number of answer entries
-  XWORD                           auth_count;     // number of authority entries
-  XWORD                           add_count;      // number of resource entries
+  XWORD                           q_count;
+  XWORD                           ans_count;
+  XWORD                           auth_count;
+  XWORD                           add_count;
 
 } DIODNSPROTOCOL_HEADER;
 

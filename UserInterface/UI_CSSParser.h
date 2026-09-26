@@ -100,23 +100,11 @@ class UI_CSSPARSER
     bool                            ParseText                   (XSTRING& text, UI_STYLESHEET& out);
 
 
-    // Step 6 ("sin overrides puntuales por elemento"): parse a BARE declaration list -- the body a stylesheet
-    // rule would have between '{' and '}', with no selector of its own -- straight into a UI_STYLE bag. This is
-    // exactly what an XML "style=" attribute's value looks like, and reusing ReadDeclarationBlock() means it
-    // accepts the same grammar (comments, "prop: value; ...", trimming) as any class rule in a .css file.
     bool                            ParseInlineDeclarations     (XSTRING& text, UI_STYLE& out);
 
 
-    // Phase 2 ("parser y cascada fiables"): every diagnostic below is reported as an offset into the FLATTENED
-    // text ParseText() actually scans -- which, since ParseFile() now preserves real '\n' separators when
-    // flattening the source file (see ParseFile()), still lets a raw offset be turned back into a real (line,
-    // column-within-line) pair cheaply, without keeping a separate token-position table. Exposed as a public
-    // static utility (no instance state, mirrors UI_PROPERTYREGISTRY's helpers) so it is directly unit-testable
-    // and reusable by any future caller that wants to report "line N" instead of a meaningless flat offset.
     static void                     ResolveLineColumn           (XSTRING& text, int offset, int& outline, int& outcolumn);
 
-    // Track Q: parse hygiene counters from the last ParseText()/ParseFile() on this instance (XTRACE already
-    // prints them; getters make the failure modes unit-testable without scraping logs).
     int                             GetLastRulesKept            () const { return last_rules_kept; }
     int                             GetLastRulesDiscarded       () const { return discarded_rules; }
     int                             GetLastUnterminatedComments () const { return unterminated_comments; }
@@ -130,57 +118,32 @@ class UI_CSSPARSER
     bool                            ReadDeclarationBlock        (XSTRING& text, int& pos, UI_STYLE& decls);
     void                            SkipToNextRule              (XSTRING& text, int& pos);
 
-    // Phase 2 ("lexer con tokens/strings/escapes reales"): see the class banner above for the full rationale.
-    // ReadIdentifier() reads one identifier-like token (a selector's type/id/class/pseudo fragment) starting at
-    // `pos`, stopping at end-of-text or at an unescaped '#'/'.'/':' , and returns false if it consumed nothing.
-    // ReadStringLiteral() reads one quoted string token ('...' or "...") starting at `pos` (which MUST be
-    // positioned on the opening quote), decodes backslash escapes, and returns false if the string is
-    // unterminated (mirrors the previous behaviour: an unterminated quote is a hard failure for the caller to
-    // recover from). SkipStringLiteral() is the same scan without building the decoded text, for callers that
-    // only need to jump over a quoted span intact (SkipToNextRule(), the declaration key/value scans, the
-    // selector-list top-level scan).
     bool                            ReadIdentifier              (XSTRING& text, int& pos, XSTRING& outident);
     bool                            ReadStringLiteral           (XSTRING& text, int& pos, XSTRING& outstring);
     void                            SkipStringLiteral           (XSTRING& text, int& pos);
 
-    // Step 5 ("una sola hoja por layout"): minimal "@import "file.css";" support, so a theme (":root"
-    // variables plus shared rules) can live in one file and be pulled into several stylesheets instead of
-    // being copy-pasted into each. See UI_CSSParser.cpp for the full design note.
     bool                            ReadImportStatement         (XSTRING& text, int& pos, XSTRING& outurl);
     bool                            ResolveAndParseImport       (XSTRING& importurl, UI_STYLESHEET& out);
 
-    // Track B: @media (min-width / max-width) [and ...] { rules }
     bool                            ReadMediaCondition          (XSTRING& text, int& pos, int& out_min_w, int& out_max_w, bool& out_ok);
     bool                            ParseMediaBlock             (XSTRING& text, int& pos, UI_STYLESHEET& out, int media_min_w, int media_max_w);
     bool                            ParseOneRuleOrAtRule        (XSTRING& text, int& pos, UI_STYLESHEET& out, int* media_min_w, int* media_max_w, int& ruleindex, int& rules_kept);
 
     UI_CSSSELECTOR*                 ParseCompoundSelector       (XSTRING& text, int start, int end);
 
-    // Phase 2 ("combinadores descendiente/hijo"): see the class banner above. Splits [start, end) -- one
-    // comma-separated selector-list entry -- on top-level combinators and builds the resulting subject +
-    // ancestor-steps UI_CSSSELECTOR. This is what ReadSelectorList() now calls instead of ParseCompoundSelector()
-    // directly.
     UI_CSSSELECTOR*                 ParseCompoundSelectorSequence(XSTRING& text, int start, int end);
 
     void                            Clean                       ();
 
-    XPATH                           currentfiledir;   // directory of the file ParseText() is currently inside of (ParseFile()-driven parses only); base for resolving a relative @import URL.
-    XPATH                           currentfilepath;  // full path of the file currently being parsed (ParseFile only); included in ERROR/WARNING diagnostics so a silent transparent UI is diagnosable.
-    XVECTOR<XPATH*>                 importstack;      // files currently open along this ParseFile() call's @import chain; cycle guard, see ParseFile().
+    XPATH                           currentfiledir;
+    XPATH                           currentfilepath;
+    XVECTOR<XPATH*>                 importstack;
 
-    // Phase 2 ("cerrar el caso residual de variables"): depth of @import recursion this parser is currently
-    // inside of, maintained ONLY around the ParseFile() call in ResolveAndParseImport(). ParseText() consults
-    // it to decide whether IT is the call that should run UI_STYLESHEET::ExpandVariables() -- see ParseText()
-    // for the full rationale (the residual bug: an imported file's var() references used to be substituted
-    // before the IMPORTING file had parsed its own later ":root" block, permanently losing any override).
     int                             importdepth;
 
-    // Phase 0 hygiene: counts rules discarded during the current ParseText() (malformed / empty). Used to emit
-    // a visible ERROR summary when a non-empty source produced zero kept rules -- the classic "comment closed
-    // early by */ in prose, everything after is garbage" failure mode that used to leave the UI fully transparent.
     int                             discarded_rules;
     int                             unterminated_comments;
-    int                             last_rules_kept;      // Track Q: kept count after last ParseText
+    int                             last_rules_kept;
 };
 
 

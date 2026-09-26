@@ -32,8 +32,6 @@
 
 #include "XSystem.h"
 
-
-
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
 
 #define   _PATH_UMOUNT		  "/bin/umount"
@@ -42,13 +40,9 @@
 #define   UMOUNT_ARGS		    "umount", "-a"
 #define   SWAPOFF_ARGS      "swapoff", "-a"
 
-
 //#define   WR(s) write(fd, s, strlen(s))
 
-
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
-
 
 class XLINUXSYSTEM : public XSYSTEM
 {
@@ -70,7 +64,7 @@ class XLINUXSYSTEM : public XSYSTEM
 
     float                       GetCPUTemperature             ();
 
-    bool                        GetMemoryInfo                 (XDWORD& total,XDWORD& free);
+    bool                        GetMemoryInfo                 (XDWORD& total, XDWORD& free);
     bool                        FreeCacheMemory               ();
 
     bool                        GetVolumesInfo                (XVECTOR<XSYSTEM_VOLUMEINFO*>& volumes);

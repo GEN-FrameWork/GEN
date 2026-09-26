@@ -56,7 +56,6 @@ enum DIOGPIO_PULLMODE
    DIOGPIO_PULLMODE_DOWN      ,
 };
 
-
 #define DIOGPIO_ID_NOTDEFINED       0
 #define DIOGPIO_INVALID             0x8000000000000000
 #define DIOGPIO_PINNOTUSE           0x80000000
@@ -67,15 +66,11 @@ enum DIOGPIO_PULLMODE
 #define DIOGPIO_MODE_PWM            0x0004
 #define DIOGPIO_MODE_INTERRUPT      0x0008
 
-
 class DIOGPIO_ENTRY;
 
 typedef void (*DIOGPIO_INT_FUNCPTR)(void* param);
 
-
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
-
 
 class DIOGPIO_ENTRY
 {
@@ -132,7 +127,6 @@ class DIOGPIO_ENTRY
     void                                Clean                           ();
 };
 
-
 class DIOGPIO
 {
   public:
@@ -144,7 +138,6 @@ class DIOGPIO
     static bool                         SetInstance                     (DIOGPIO* instance);
     static bool                         DelInstance                     ();
 
-    
     XVECTOR<DIOGPIO_ENTRY*>*            GPIOEntry_GetAll                ();
     DIOGPIO_ENTRY*                      GPIOEntry_CreateByPin           (XDWORD ID, XWORD pin, DIOGPIO_PINSGROUP group = DIOGPIO_PINSGROUP_NONE);  
     DIOGPIO_ENTRY*                      GPIOEntry_CreateByGPIO          (XDWORD ID, XQWORD GPIO);  

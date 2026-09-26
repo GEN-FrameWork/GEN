@@ -32,8 +32,6 @@
 
 #include "CompressBase.h"
 
-
-
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
 
 #define   LZW_MAX_TABLE_SIZE    4096
@@ -48,8 +46,6 @@ typedef struct tagLZW_STRING
 
 } LZW_STRING, *PLZW_STRING;
 
-
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
 
 class COMPRESS_LZW : public COMPRESSBASE
@@ -58,14 +54,14 @@ class COMPRESS_LZW : public COMPRESSBASE
                            COMPRESS_LZW                       ();
     virtual               ~COMPRESS_LZW                       ();
 
-    bool                   Compress                           (XBYTE* source,XDWORD size,XBUFFER* buffer);
-    bool                   Decompress                         (XBYTE* source,XDWORD size,XBUFFER* buffer);
+    bool                   Compress                           (XBYTE* source, XDWORD size, XBUFFER* buffer);
+    bool                   Decompress                         (XBYTE* source, XDWORD size, XBUFFER* buffer);
 
     XDWORD                 LZW_Encode                         (XBYTE* inbuffer, XDWORD length, XBYTE* outbuffer);
     void                   LZW_Decode                         (XBYTE* inbuffer, XBYTE* outbuffer);
 
-    XDWORD                 LZW_GIF_Encode                     (XBYTE* dibbuffer ,XBYTE* outbuffer, XDWORD dibwidth, XDWORD dibheight, XWORD colorbit);
-    void                   LZW_GIF_Decode                     (XBYTE* inbuffer  ,XBYTE* dibbuffer, XDWORD dibwidth, XDWORD dibheight, bool binterlace);
+    XDWORD                 LZW_GIF_Encode                     (XBYTE* dibbuffer, XBYTE* outbuffer, XDWORD dibwidth, XDWORD dibheight, XWORD colorbit);
+    void                   LZW_GIF_Decode                     (XBYTE* inbuffer, XBYTE* dibbuffer, XDWORD dibwidth, XDWORD dibheight, bool binterlace);
 
   private:
 

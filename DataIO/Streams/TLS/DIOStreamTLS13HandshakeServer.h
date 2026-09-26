@@ -55,14 +55,9 @@ enum DIOSTREAMTLS13HANDSHAKESERVER_STATE
   DIOSTREAMTLS13HANDSHAKESERVER_STATE_ERROR                          ,
 };
 
-
-
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
 
-
 class DIOSTREAMTLSCONFIG;
-
 
 class DIOSTREAMTLS13HANDSHAKESERVER
 {
@@ -112,14 +107,9 @@ class DIOSTREAMTLS13HANDSHAKESERVER
     bool                                    NewSessionTicket_Create                          ();
 
     bool                                    CipherSuite_Select                               (XVECTOR<XWORD>& offered, XWORD& selected);
-    bool                                    Group_Select                                     (DIOSTREAMTLS_MSG_HANDSHAKE_CLIENTHELLO* clienthello, XWORD& selectedgroup,
-                                                                                              XBUFFER& peerpublickey, bool& helloretryrequestrequired,
-                                                                                              bool& invalidkeyshare);
+    bool                                    Group_Select                                     (DIOSTREAMTLS_MSG_HANDSHAKE_CLIENTHELLO* clienthello, XWORD& selectedgroup, XBUFFER& peerpublickey, bool& helloretryrequestrequired, bool& invalidkeyshare);
     bool                                    SignatureScheme_Select                           (XVECTOR<XWORD>& offered, CIPHERCERTIFICATEX509* leafcertificate, XWORD& selected);
-    bool                                    ServerCredentials_Select                         (XCHAR* servername, XVECTOR<XWORD>& offeredsignatures, XVECTOR<XWORD>& offeredcertificatesignatures,
-                                                                                              XVECTOR<XBUFFER*>*& certificatechain, CIPHERKEY*& privatekey,
-                                                                                              XBUFFER*& OCSPstapledresponse, CIPHERCERTIFICATEX509& leafcertificate,
-                                                                                              XWORD& signaturescheme);
+    bool                                    ServerCredentials_Select                         (XCHAR* servername, XVECTOR<XWORD>& offeredsignatures, XVECTOR<XWORD>& offeredcertificatesignatures, XVECTOR<XBUFFER*>*& certificatechain, CIPHERKEY*& privatekey, XBUFFER*& OCSPstapledresponse, CIPHERCERTIFICATEX509& leafcertificate, XWORD& signaturescheme);
     void                                    ApplicationProtocol_Select                       (DIOSTREAMTLS_MSG_EXTENSION_ALPN* offered);
 
     bool                                    SetError                                         (DIOSTREAMTLS_ALERT_DESCRIPTION alertdescription = DIOSTREAMTLS_ALERT_DESCRIPTION_INTERNAL_ERROR, bool sendalert = true);

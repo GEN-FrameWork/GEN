@@ -60,7 +60,7 @@
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         DIOLIGHTSENSORLDRANALOG::DIOLIGHTSENSORLDRANALOG( DIOGPIO* diogpio, int pindata, bool activatecache) : DIODEVICE()
+* @fn         DIOLIGHTSENSORLDRANALOG::DIOLIGHTSENSORLDRANALOG(DIOGPIO* diogpio, int pindata, bool activatecache) : DIODEVICE()
 * @brief      Constructor of class
 * @ingroup    DATAIO
 * 
@@ -205,10 +205,10 @@ bool DIOLIGHTSENSORLDRANALOG::ReadDirect(XDWORD& level)
 
   // Discharge capacitor
   diogpio->SetMode(pindata, false);
-  diogpio->Set(pindata    , false);
+  diogpio->Set(pindata, false);
   GEN_XSLEEP.MilliSeconds(100);
 
-  diogpio->SetMode(pindata,  true);
+  diogpio->SetMode(pindata, true);
   while(!diogpio->Get(pindata))
     {
       level++;

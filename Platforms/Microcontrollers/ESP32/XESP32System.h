@@ -33,7 +33,6 @@
 #include "XSystem.h"
 
 
-
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
 
 
@@ -51,7 +50,7 @@ class XESP32SYSTEM : public XSYSTEM
     
     XSYSTEM_PLATFORM        GetPlatform                 (XSTRING* namestring = NULL);
 
-    bool                    GetMemoryInfo               (XDWORD& total,XDWORD& free);
+    bool                    GetMemoryInfo               (XDWORD& total, XDWORD& free);
 
     bool                    ShutDown                    (XSYSTEM_CHANGESTATUSTYPE type);
 

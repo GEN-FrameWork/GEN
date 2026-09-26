@@ -38,11 +38,6 @@
 
 #include "XBuffer.h"
 
-#if defined(WINDOWS)
-#include <windows.h>
-#include <winnls.h>
-#endif
-
 #include "DIODNSResolver.h"
 
 
@@ -393,6 +388,7 @@ DIOURL_HOSTTYPE DIOURL::Host_GetType(XCHAR* host)
   return (host && host[0])?DIOURL_HOSTTYPE_DNS:DIOURL_HOSTTYPE_UNKNOWN;
 }
 
+
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         bool DIOURL::Host_Canonicalize(XCHAR* host, XSTRING& canonicalhost, DIOURL_HOSTTYPE& type)
@@ -437,8 +433,7 @@ bool DIOURL::Host_Canonicalize(XCHAR* host, XSTRING& canonicalhost, DIOURL_HOSTT
       else if(point == 0x3000) point = __C(' ');
 
       // UTS #46 deviation mappings (non-transitional form) and canonical
-      // sigma folding.  Keep this table local so non-Windows builds do not
-      // depend on an external IDNA library.
+      // sigma folding. Local tables keep IDNA portable (no IdnToAscii / normaliz).
       if(point == 0x03C2) point = 0x03C3;
       if(point == 0x1E9E) point = 0x00DF;
       if(point == 0x00DF) { mapped.Add(__C('s')); mapped.Add(__C('s')); continue; }
@@ -452,22 +447,6 @@ bool DIOURL::Host_Canonicalize(XCHAR* host, XSTRING& canonicalhost, DIOURL_HOSTT
 
   if(source.Character_GetLast() == __C('.')) source.DeleteLastCharacter();
   if(source.IsEmpty()) return false;
-
-#if defined(WINDOWS)
-  bool nonascii = false;
-  for(XDWORD c=0; c<source.GetSize(); c++) if((XDWORD)source[c] >= 0x80) { nonascii = true; break; }
-  if(nonascii)
-    {
-      int required = IdnToAscii(IDN_USE_STD3_ASCII_RULES, source.Get(), (int)source.GetSize(), NULL, 0);
-      if(required <= 0 || required > 253) return false;
-      XBUFFER idnabuffer;
-      if(!idnabuffer.Resize((required + 1) * sizeof(XCHAR))) return false;
-      memset(idnabuffer.Get(), 0, idnabuffer.GetSize());
-      int converted = IdnToAscii(IDN_USE_STD3_ASCII_RULES, source.Get(), (int)source.GetSize(),
-                                 (XCHAR*)idnabuffer.Get(), required);
-      if(converted != required || !source.Set((XCHAR*)idnabuffer.Get(), (XDWORD)converted)) return false;
-    }
-#endif
 
   XDWORD start = 0;
   while(start < source.GetSize())
@@ -563,7 +542,7 @@ DIOURL::DIOURL(const XCHAR* url) : XSTRING(url)
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         DIOURL::DIOURL(const XCHAR* url,XDWORD size) : XSTRING(url, size)
+* @fn         DIOURL::DIOURL(const XCHAR* url, XDWORD size) : XSTRING(url, size)
 * @brief      Constructor of class
 * @ingroup    DATAIO
 * 
@@ -571,7 +550,7 @@ DIOURL::DIOURL(const XCHAR* url) : XSTRING(url)
 * @param[in]  size : Size value.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-DIOURL::DIOURL(const XCHAR* url,XDWORD size) : XSTRING(url, size)
+DIOURL::DIOURL(const XCHAR* url, XDWORD size) : XSTRING(url, size)
 {
   Clean();
 }
@@ -643,13 +622,13 @@ bool DIOURL::GetHTTPServer(XSTRING& server, XSTRING& login, XSTRING& password)
 
   if(IsEmpty()) return false;
 
-  Copy(DIOURL_WEBURLID,__L("/"),true,0,server);
+  Copy(DIOURL_WEBURLID, __L("/"), true, 0, server);
   if(server.IsEmpty())
     {
       int index = Find(__L("/"), true);
       if(index != XSTRING_NOTFOUND)
         {
-          Copy(0,index,server);
+          Copy(0, index, server);
         }
        else server = Get();
     }
@@ -662,7 +641,7 @@ bool DIOURL::GetHTTPServer(XSTRING& server, XSTRING& login, XSTRING& password)
       XSTRING  lpstring;
 
       server.Copy(0, indexlp, lpstring);
-      server.DeleteCharacters(0,indexlp+1);
+      server.DeleteCharacters(0, indexlp+1);
 
       int indexp = lpstring.Find(__L(":"), true);
       if(indexp!=XSTRING_NOTFOUND)
@@ -702,10 +681,10 @@ bool DIOURL::GetHTTPResource(XSTRING& resource)
         index  = 0;
    else index += weburlid.GetSize();
 
-  index = Find(__L("/"), true,index);
+  index = Find(__L("/"), true, index);
   if(index != XSTRING_NOTFOUND)
     {
-      Copy(index,GetSize(),resource);
+      Copy(index, GetSize(), resource);
     }
 
   if(resource.IsEmpty()) return false;
@@ -1179,7 +1158,7 @@ bool DIOURL::DecodeUnsafeCharsToString(XSTRING& string)
               numberhex.Add(part);
             }
 
-          numberhex.UnFormat(__L("%02X"),&part[0]);
+          numberhex.UnFormat(__L("%02X"), &part[0]);
 
           part[0]&=0x00FF;
           string.Add(part);
@@ -1257,8 +1236,8 @@ bool DIOURL::Normalize()
 * --------------------------------------------------------------------------------------------------------------------*/
 bool DIOURL::HaveHTTPID()
 {
-  if(Find(DIOURL_WEBURLID,true)        != XSTRING_NOTFOUND) return true;
-  if(Find(DIOURL_WEBURLID_SECURE,true) != XSTRING_NOTFOUND) return true;
+  if(Find(DIOURL_WEBURLID, true)        != XSTRING_NOTFOUND) return true;
+  if(Find(DIOURL_WEBURLID_SECURE, true) != XSTRING_NOTFOUND) return true;
 
   return false;
 }

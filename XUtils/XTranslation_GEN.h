@@ -106,11 +106,7 @@ enum XTRANSLATION_GEN_ID
 
 };
 
-
-
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
-
 
 class XTRANSLATION_GEN_SENTENCE
 {
@@ -126,7 +122,6 @@ class XTRANSLATION_GEN_SENTENCE
     XCHAR*                                sentence;
     XDWORD                                fixed;
 };
-
 
 class XTRANSLATION_GEN
 {

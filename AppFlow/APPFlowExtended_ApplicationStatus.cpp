@@ -331,8 +331,7 @@ bool APPFLOWEXTENDED_APPLICATIONSTATUS::Update()
   
           if(ischecktotalCPUusage)
             {
-              averange.AddFormat(__L("avg. %d%% (max. %d%%)") , checkresourceshardware->GetCPUTotalCPUUsageAverange()
-                                                              , checkresourceshardware->GetCPUTotalCPUUsageMax());  
+              averange.AddFormat(__L("avg. %d%% (max. %d%%)"), checkresourceshardware->GetCPUTotalCPUUsageAverange(), checkresourceshardware->GetCPUTotalCPUUsageMax());  
             }
 
           if(ischeckappCPUusage)
@@ -344,9 +343,7 @@ bool APPFLOWEXTENDED_APPLICATIONSTATUS::Update()
 
               if(ischeckappCPUusage)
                 {         
-                  averange.AddFormat(__L("app %s avg. %d%% (max. %d%%)") , cfg->CheckResourcesHardware_GetAppCPUUsageProcessName()->Get()
-                                                                         , checkresourceshardware->GetCPUAppCPUUsageAverange()
-                                                                         , checkresourceshardware->GetCPUAppCPUUsageMax());
+                  averange.AddFormat(__L("app %s avg. %d%% (max. %d%%)"), cfg->CheckResourcesHardware_GetAppCPUUsageProcessName()->Get(), checkresourceshardware->GetCPUAppCPUUsageAverange(), checkresourceshardware->GetCPUAppCPUUsageMax());
                 }
             } 
         }         
@@ -425,12 +422,7 @@ bool APPFLOWEXTENDED_APPLICATIONSTATUS::Show(XCONSOLE* console)
       memoryunit    = __L("MB");
     }
 
-  string2.Format(__L("%.1f %s, free %.1f %s (%d%%)"),
-                 (double)memorytotal / memorydivisor,
-                 memoryunit,
-                 (double)memoryfree / memorydivisor,
-                 memoryunit,
-                 GetMemoryFreePercent());
+  string2.Format(__L("%.1f %s, free %.1f %s (%d%%)"), (double)memorytotal / memorydivisor, memoryunit, (double)memoryfree / memorydivisor, memoryunit, GetMemoryFreePercent());
 
   APPFLOW_EXTENDED.GetConsole()->Show_Line(string, string2);
 

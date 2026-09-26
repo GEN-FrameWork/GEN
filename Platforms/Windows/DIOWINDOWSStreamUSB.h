@@ -60,7 +60,6 @@ enum DIOWINDOWSUSBFSMEVENTS
   DIOWINDOWSUSB_LASTEVENT
 };
 
-
 enum DIOWINDOWSUSBFSMSTATES
 {
   DIOWINDOWSUSBFSMSTATE_NONE                = 0 ,
@@ -72,11 +71,7 @@ enum DIOWINDOWSUSBFSMSTATES
   DIOWINDOWSUSB_LASTSTATE
 };
 
-
-
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
-
 
 class DIOWINDOWSSTREAMUSB : public DIOSTREAMUSB , public XFSMACHINE
 {
@@ -95,8 +90,8 @@ class DIOWINDOWSSTREAMUSB : public DIOSTREAMUSB , public XFSMACHINE
 
     static void           ThreadConnection                              (void* data);
 
-    XDWORD                ReadBuffer                                    (XBYTE* buffer,XDWORD size);
-    XDWORD                WriteBuffer                                   (XBYTE* buffer,XDWORD size);
+    XDWORD                ReadBuffer                                    (XBYTE* buffer, XDWORD size);
+    XDWORD                WriteBuffer                                   (XBYTE* buffer, XDWORD size);
 
     void                  Clean                                         ();
 

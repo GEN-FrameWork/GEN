@@ -109,10 +109,6 @@ void XLOGENTRY::Clean()
 }
 
 
-
-
-
- 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         XLOGBASE::XLOGBASE()
@@ -179,7 +175,7 @@ bool XLOGBASE::Ini(XCHAR* pathfile, XCHAR* nameapplication, bool isdumpintrace)
 
   if(!filelog) return false;
 
-  bool status = filelog->Open(xpathfile,false);
+  bool status = filelog->Open(xpathfile, false);
   if(!status) status = filelog->Create(xpathfile);
 
   if(status) CalculateInitialStatus();
@@ -495,7 +491,7 @@ bool XLOGBASE::PassFilters(XLOGLEVEL level, XCHAR* sectionID)
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         bool XLOGBASE::AddEntry(XLOGLEVEL level, XCHAR* sectionID, bool inmemory, XCHAR* mask,...)
+* @fn         bool XLOGBASE::AddEntry(XLOGLEVEL level, XCHAR* sectionID, bool inmemory, XCHAR* mask, ...)
 * @brief      Add entry
 * @ingroup    XUTILS
 * 
@@ -508,7 +504,7 @@ bool XLOGBASE::PassFilters(XLOGLEVEL level, XCHAR* sectionID)
 * @return     bool : true if the operation is successful; otherwise false.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-bool XLOGBASE::AddEntry(XLOGLEVEL level, XCHAR* sectionID, bool inmemory, XCHAR* mask,...)
+bool XLOGBASE::AddEntry(XLOGLEVEL level, XCHAR* sectionID, bool inmemory, XCHAR* mask, ...)
 {
   //XTRACE_PRINTCOLOR(3,__L(" XLOG::AddEntry %u"),XMEMORY_GETMEMORYUSED);
 
@@ -566,7 +562,7 @@ bool XLOGBASE::AddEntry(XLOGLEVEL level, XCHAR* sectionID, bool inmemory, XCHAR*
    else
     {
       string = __L(" ");
-      string.AdjustSize(XLOG_MAXDATETIMESIZE +  XLOG_MAXLEVELSIZE + XLOG_MAXSECTIONIDSIZE, false, __L(" "));
+      string.AdjustSize(XLOG_MAXDATETIMESIZE + XLOG_MAXLEVELSIZE + XLOG_MAXSECTIONIDSIZE, false, __L(" "));
     }
   //XTRACE_PRINTCOLOR(3,__L(" XLOG::AddEntry  %u"),XMEMORY_GETMEMORYUSED);
   outstring      += string;
@@ -698,14 +694,14 @@ bool XLOGBASE::AddEntry(XLOGLEVEL level, XCHAR* sectionID, bool inmemory, XBYTE*
 
       if(showoffset)
         {
-          strdata.Format(__L("%04X"),index);
+          strdata.Format(__L("%04X"), index);
           string += strdata;
-          string += __L("   ");
+          string += __L(" ");
         }
 
       for(XDWORD c=0; c<_sizeline; c++)
         {
-          strdata.Format(__L("%02X "),data[index]);
+          strdata.Format(__L("%02X "), data[index]);
           string += strdata;
           _size++;
           index++;
@@ -715,7 +711,7 @@ bool XLOGBASE::AddEntry(XLOGLEVEL level, XCHAR* sectionID, bool inmemory, XBYTE*
         {
           for(XDWORD c=0; c<(sizeline-_sizeline); c++)
             {
-              strdata.Format(__L("   "));
+              strdata.Format(__L(" "));
               string += strdata;
             }
         }
@@ -731,7 +727,7 @@ bool XLOGBASE::AddEntry(XLOGLEVEL level, XCHAR* sectionID, bool inmemory, XBYTE*
 
               if((character<0x20) || (character>0x80) || (character==__C('%')) || (character==__C('\\'))) character = __C('.');
 
-              strdata.Format(__L("%c"),character);
+              strdata.Format(__L("%c"), character);
               string += strdata;
               index++;
             }
@@ -1274,12 +1270,7 @@ bool XLOGBASE::Backup_ControlLimits()
       backupxpathnamelog = xpathfile.Get();
 
       xdatetime->Read();
-      datestr.Format(XLOG_CREATEMASKBACKUPFILE, xdatetime->GetYear()
-                                              , xdatetime->GetMonth()
-                                              , xdatetime->GetDay()
-                                              , xdatetime->GetHours()
-                                              , xdatetime->GetMinutes()
-                                              , xdatetime->GetSeconds());
+      datestr.Format(XLOG_CREATEMASKBACKUPFILE, xdatetime->GetYear(), xdatetime->GetMonth(), xdatetime->GetDay(), xdatetime->GetHours(), xdatetime->GetMinutes(), xdatetime->GetSeconds());
 
       backupxpathnamelog.AddToNameFile(true, datestr.Get());
 
@@ -1357,9 +1348,6 @@ void XLOGBASE::Clean()
   size             = 0;
   lastentry        = NULL;
 }
-
-
-
 
 
 /**-------------------------------------------------------------------------------------------------------------------

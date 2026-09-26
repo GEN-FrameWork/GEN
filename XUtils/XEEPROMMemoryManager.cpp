@@ -230,7 +230,6 @@ bool XEEPROMMEMORYMANAGER::Read(XDWORD offset, XWORD& data)
 }
 
 
-
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         bool XEEPROMMEMORYMANAGER::Read(XDWORD offset, XDWORD& data)
@@ -318,7 +317,7 @@ bool XEEPROMMEMORYMANAGER::Write(XDWORD offset, XWORD data)
 * --------------------------------------------------------------------------------------------------------------------*/
 bool XEEPROMMEMORYMANAGER::Write(XDWORD offset, XDWORD data)
 {
-  return Write(offset,(XBYTE*)&data, sizeof(XDWORD));
+  return Write(offset, (XBYTE*)&data, sizeof(XDWORD));
 }
 
 

@@ -33,16 +33,11 @@
 #include "DIOStreamTLSMessages.h"
 #include "DIOStreamTLSMessagesExtension.h"
 
-
-
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
-
 
 #define DIOSTREAMTLS_MSG_HELLORETRYREQUEST_RANDOM_SIZE                       32
 
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
-
 
 class DIOSTREAMTLS_MSG_HANDSHAKE_SERVERHELLO : public DIOSTREAMTLS_MSG_INTERFACE
 {

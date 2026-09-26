@@ -261,10 +261,6 @@ void DIOALERT_CONDITION::Clean()
 }
 
 
-
-
-
-
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         DIOALERT::DIOALERT()
@@ -581,10 +577,6 @@ void DIOALERT::Clean()
 }
 
 
-
-
-
-
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         bool DIOALERTS::GetIsInstanced()
@@ -888,7 +880,7 @@ DIOALERT* DIOALERTS::CreateAlert(DIOALERTLEVEL level, XSTRING& title, XSTRING& m
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         bool DIOALERTS::Sender_SMTPConfig(XCHAR* URL, int port, XCHAR* login, XCHAR* password, XCHAR* senderemail, int nrecipients,...)
+* @fn         bool DIOALERTS::Sender_SMTPConfig(XCHAR* URL, int port, XCHAR* login, XCHAR* password, XCHAR* senderemail, int nrecipients, ...)
 * @brief      Sender SMTP config
 * @ingroup    DATAIO
 * 
@@ -903,7 +895,7 @@ DIOALERT* DIOALERTS::CreateAlert(DIOALERTLEVEL level, XSTRING& title, XSTRING& m
 * @return     bool : true if the operation is successful; otherwise false.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-bool DIOALERTS::Sender_SMTPConfig(XCHAR* URL, int port, XCHAR* login, XCHAR* password, XCHAR* senderemail, int nrecipients,...)
+bool DIOALERTS::Sender_SMTPConfig(XCHAR* URL, int port, XCHAR* login, XCHAR* password, XCHAR* senderemail, int nrecipients, ...)
 {
   if(!isinitialized) return false;
 
@@ -1660,10 +1652,10 @@ bool DIOALERTS::Sender_WEBSend(DIOALERT* alert)
               if(main) 
                 {
                   XFILEJSON_ADDVALUE(main, DIOALERTS_QSPARAM_APPLICATIONID , applicationIDstring.Get());                  
-                  XFILEJSON_ADDVALUE(main, DIOALERTS_QSPARAM_LEVEL         , (int)alert->GetLevel());          
-                  XFILEJSON_ADDVALUE(main, DIOALERTS_QSPARAM_TITLE         , alert->GetTitle()->Get());
-                  XFILEJSON_ADDVALUE(main, DIOALERTS_QSPARAM_ORIGIN        , alert->GetOrigin()->Get());
-                  XFILEJSON_ADDVALUE(main, DIOALERTS_QSPARAM_MESSAGE       , alert->Get_Message()->Get());
+                  XFILEJSON_ADDVALUE(main, DIOALERTS_QSPARAM_LEVEL, (int)alert->GetLevel());          
+                  XFILEJSON_ADDVALUE(main, DIOALERTS_QSPARAM_TITLE, alert->GetTitle()->Get());
+                  XFILEJSON_ADDVALUE(main, DIOALERTS_QSPARAM_ORIGIN, alert->GetOrigin()->Get());
+                  XFILEJSON_ADDVALUE(main, DIOALERTS_QSPARAM_MESSAGE, alert->Get_Message()->Get());
 
                   XFILEJSON_ADDVALUE(root, WEBcommand.Get(), main);                      
 

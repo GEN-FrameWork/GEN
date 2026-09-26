@@ -298,9 +298,9 @@ int DIOANDROIDSTREAMBLUETOOTHREMOTEENUMDEVICES::IsReadyConnect(int socket)
   FD_ZERO(&fdw);
   FD_ZERO(&fds);
 
-  FD_SET((unsigned int)socket,&fdr);
-  FD_SET((unsigned int)socket,&fdw);
-  FD_SET((unsigned int)socket,&fds);
+  FD_SET((unsigned int)socket, &fdr);
+  FD_SET((unsigned int)socket, &fdw);
+  FD_SET((unsigned int)socket, &fds);
 
   tv.tv_sec  = 0;
   tv.tv_usec = 100;
@@ -309,9 +309,9 @@ int DIOANDROIDSTREAMBLUETOOTHREMOTEENUMDEVICES::IsReadyConnect(int socket)
   if(rc==-1) return -1;
   if(rc== 2) return -1;
 
-  int status1 = FD_ISSET(socket,&fdr) ? 1 : 0;
-  int status2 = FD_ISSET(socket,&fdw) ? 1 : 0;
-  int status3 = FD_ISSET(socket,&fds) ? 1 : 0;
+  int status1 = FD_ISSET(socket, &fdr) ? 1 : 0;
+  int status2 = FD_ISSET(socket, &fdw) ? 1 : 0;
+  int status3 = FD_ISSET(socket, &fds) ? 1 : 0;
 
   if(status3) return -1;
   if(((status1) || (status2)) && (rc==1))  return  1;
@@ -402,8 +402,8 @@ bool DIOANDROIDSTREAMBLUETOOTHREMOTEENUMDEVICES::ScanDevicesName(DIOSTREAMDEVICE
   char* name = GEN_NEW char[_MAXSTR];
   if(!name)  return false;
 
-  memset(name,0,_MAXSTR);
-  memset(&bdaddr,0,sizeof(bdaddr_t));
+  memset(name, 0, _MAXSTR);
+  memset(&bdaddr, 0, sizeof(bdaddr_t));
 
   device->GetMAC()->GetXString(MACstring);
 
@@ -509,7 +509,7 @@ bool DIOANDROIDSTREAMBLUETOOTHREMOTEENUMDEVICES::ScanDeviceServices(DIOSTREAMDEV
 
   device->GetMAC()->GetXString(MACstring);
 
-  str2ba(addrlocaldevice    , &origin);
+  str2ba(addrlocaldevice, &origin);
 
   XBUFFER charstr;
   
@@ -677,7 +677,7 @@ extern "C"
 
     XDWORD ID = 0;
 
-    sscanf(UUID_str,"%x",&ID);
+    sscanf(UUID_str, "%x", &ID);
     SDP_lastservice->SetID(ID);
   }
 

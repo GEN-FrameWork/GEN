@@ -69,7 +69,7 @@
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         DIOMODBUSELECTRICMETERXEVENT::DIOMODBUSELECTRICMETERXEVENT(XSUBJECT* subject,XDWORD type) : XEVENT(subject,type)
+* @fn         DIOMODBUSELECTRICMETERXEVENT::DIOMODBUSELECTRICMETERXEVENT(XSUBJECT* subject, XDWORD type) : XEVENT(subject,type)
 * @brief      Constructor of class
 * @ingroup    DATAIO
 * 
@@ -77,7 +77,7 @@
 * @param[in]  type : Type value.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-DIOMODBUSELECTRICMETERXEVENT::DIOMODBUSELECTRICMETERXEVENT(XSUBJECT* subject,XDWORD type) : XEVENT(subject,type)
+DIOMODBUSELECTRICMETERXEVENT::DIOMODBUSELECTRICMETERXEVENT(XSUBJECT* subject, XDWORD type) : XEVENT(subject, type)
 {
   Clean();
 }
@@ -109,10 +109,6 @@ void DIOMODBUSELECTRICMETERXEVENT::Clean()
 {
 
 }
-
-
-
-
 
 
 /**-------------------------------------------------------------------------------------------------------------------
@@ -198,7 +194,7 @@ bool DIOMODBUSELECTRICMETER::Connect(XBYTE unit, bool inlittleendian, int timeou
 
   if(modbusprotocol->GetDIOStream()->GetStatus()!=DIOSTREAMSTATUS_DISCONNECTED) return false;
 
-  if(!modbusprotocol->Connect(unit,timeout)) return false;
+  if(!modbusprotocol->Connect(unit, timeout)) return false;
 
   this->unit            = unit;
   this->inlittleendian  = inlittleendian;
@@ -346,31 +342,31 @@ bool DIOMODBUSELECTRICMETER::CMD_C_TR_AA_ReadValues(DIO_C_TR_AA_RESULT* result, 
                                                       result->SetReactiveQ(4, 0);                             // Reactiva Q4
 
   // Potencias Instantaneas
-  ReadRegister(50536, 2,  100, timeout, fresult);     result->SetTotalActivePower((int)fresult);              // Potencia Activa    Total
-  ReadRegister(50538, 2,  100, timeout, fresult);     result->SetTotalReactivePower((int)fresult);            // Potencia Reactiva  Total
+  ReadRegister(50536, 2, 100, timeout, fresult);     result->SetTotalActivePower((int)fresult);              // Potencia Activa    Total
+  ReadRegister(50538, 2, 100, timeout, fresult);     result->SetTotalReactivePower((int)fresult);            // Potencia Reactiva  Total
   ReadRegister(50542, 2, 1000, timeout, fresult);     result->SetTotalPowerFactor(fresult);                   // Factor de Potencia Total
 
 
-  ReadRegister(50544, 2,  100, timeout, fresult);     result->SetActivePowerPhase(1, (int)(fresult));         // Potencia Activa    Fase I
-  ReadRegister(50550, 2,  100, timeout, fresult);     result->SetReactivePowerPhase(1, (int)(fresult));       // Potencia Reactiva  Fase I
+  ReadRegister(50544, 2, 100, timeout, fresult);     result->SetActivePowerPhase(1, (int)(fresult));         // Potencia Activa    Fase I
+  ReadRegister(50550, 2, 100, timeout, fresult);     result->SetReactivePowerPhase(1, (int)(fresult));       // Potencia Reactiva  Fase I
   ReadRegister(50562, 2, 1000, timeout, fresult);     result->SetPowerFactorPhase(1, fresult);                // Factor de Potencia Fase I
 
-  ReadRegister(50546, 2,  100, timeout, fresult);     result->SetActivePowerPhase(2, (int)(fresult));         // Potencia Activa    Fase II
-  ReadRegister(50552, 2,  100, timeout, fresult);     result->SetReactivePowerPhase(2, (int)(fresult));       // Potencia Reactiva  Fase II
+  ReadRegister(50546, 2, 100, timeout, fresult);     result->SetActivePowerPhase(2, (int)(fresult));         // Potencia Activa    Fase II
+  ReadRegister(50552, 2, 100, timeout, fresult);     result->SetReactivePowerPhase(2, (int)(fresult));       // Potencia Reactiva  Fase II
   ReadRegister(50564, 2, 1000, timeout, fresult);     result->SetPowerFactorPhase(2, fresult);                // Factor de Potencia Fase II
 
-  ReadRegister(50548, 2,  100, timeout, fresult);     result->SetActivePowerPhase(3, (int)(fresult));         // Potencia Activa    Fase III
-  ReadRegister(50554, 2,  100, timeout, fresult);     result->SetReactivePowerPhase(3, (int)(fresult));       // Potencia Reactiva  Fase III
+  ReadRegister(50548, 2, 100, timeout, fresult);     result->SetActivePowerPhase(3, (int)(fresult));         // Potencia Activa    Fase III
+  ReadRegister(50554, 2, 100, timeout, fresult);     result->SetReactivePowerPhase(3, (int)(fresult));       // Potencia Reactiva  Fase III
   ReadRegister(50566, 2, 1000, timeout, fresult);     result->SetPowerFactorPhase(3, fresult);                // Factor de Potencia Fase III
 
   // Valores Secundarios
-  ReadRegister(50520, 2,  100, timeout, fresult);     result->SetVoltagePhase(1, fresult);                    // Tension    Fase I
+  ReadRegister(50520, 2, 100, timeout, fresult);     result->SetVoltagePhase(1, fresult);                    // Tension    Fase I
   ReadRegister(50528, 2, 1000, timeout, fresult);     result->SetCurrentPhase(1, fresult);                    // Intensidad Fase I
 
-  ReadRegister(50522, 2,  100, timeout, fresult);     result->SetVoltagePhase(2, fresult);                    // Tension    Fase II
+  ReadRegister(50522, 2, 100, timeout, fresult);     result->SetVoltagePhase(2, fresult);                    // Tension    Fase II
   ReadRegister(50530, 2, 1000, timeout, fresult);     result->SetCurrentPhase(2, fresult);                    // Intensidad Fase II
 
-  ReadRegister(50524, 2,  100, timeout, fresult);     result->SetVoltagePhase(3, fresult);                    // Tension    Fase III
+  ReadRegister(50524, 2, 100, timeout, fresult);     result->SetVoltagePhase(3, fresult);                    // Tension    Fase III
   ReadRegister(50532, 2, 1000, timeout, fresult);     result->SetCurrentPhase(3, fresult);                    // Intensidad Fase III
 
   return true;

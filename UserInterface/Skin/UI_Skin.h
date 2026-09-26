@@ -43,7 +43,6 @@ enum UI_SKIN_TYPE
   UI_SKIN_TYPE_FLAT                      ,
 };
 
-
 enum UI_SKIN_DRAWMODE
 {
   UI_SKIN_DRAWMODE_UNKNOWN         =  0  ,
@@ -51,19 +50,14 @@ enum UI_SKIN_DRAWMODE
   UI_SKIN_DRAWMODE_CONTEXT               ,
 };
 
-
 #define UI_SKIN_NAME_UNKNOWN      __L("")
 #define UI_SKIN_NAME_DEFAULT      __L("default")
 #define UI_SKIN_NAME_FLAT         __L("flat")
 
-
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
-
 
 class GRPBITMAP;
 class UI_ANIMATION;
-
 
 class UI_SKIN_TEXTBOX_PART
 {
@@ -106,7 +100,6 @@ class UI_SKIN_TEXTBOX_PART
 		XSTRING														text;
     GRPBITMAP*                        image;
 };	
-
 
 class UI_SKIN 
 {
@@ -158,11 +151,6 @@ class UI_SKIN
 
     bool                              Draw                                  (UI_ELEMENT* element);
 
-    // HIDE-RESTORE FIX (2026-09): hook Draw() calls the moment an element is found invisible, instead of
-    // simply skipping it -- see the call site in UI_Skin.cpp's Draw() and the UI_SKINCANVAS override in
-    // UI_SkinCanvas.cpp for the full rationale. Default no-op here (a skin with no persistent backdrop cache
-    // of its own has nothing useful to do): every concrete skin keeps behaving exactly as before this fix
-    // unless it overrides this hook.
     virtual bool                      RestoreOnHide                         (UI_ELEMENT* element);
 	  
     virtual bool                      Draw_Scroll                           (UI_ELEMENT* element);

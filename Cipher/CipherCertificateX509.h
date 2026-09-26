@@ -66,7 +66,6 @@ enum CIPHERCERTIFICATEX509_ALGORITHM_TYPE
   CIPHERCERTIFICATEX509_ALGORITHM_TYPE_ED25519
 };
 
-
 enum CIPHERCERTIFICATEX509_RSASSAPSS_HASH_TYPE
 {
   CIPHERCERTIFICATEX509_RSASSAPSS_HASH_TYPE_UNKNOWN       = 0 ,
@@ -75,11 +74,7 @@ enum CIPHERCERTIFICATEX509_RSASSAPSS_HASH_TYPE
   CIPHERCERTIFICATEX509_RSASSAPSS_HASH_TYPE_SHA512            ,
 };
 
-
-
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
-
 
 class CIPHERCERTIFICATEX509_ID 
 {
@@ -113,7 +108,6 @@ class CIPHERCERTIFICATEX509_ID
     XSTRING                                 commonname;
 };
 
-
 class CIPHERCERTIFICATEX509 
 {
   public:
@@ -143,7 +137,6 @@ class CIPHERCERTIFICATEX509
     bool                                    IsSelfSigned                            ();
   
     CIPHERCERTIFICATEX509_ID*               GetSubjectID                            ();
-
 
     bool                                    IsPublicCipherKeyUsage                  ();
     void                                    SetPublicCipherKeyUsage                 (bool isusage);
@@ -204,9 +197,7 @@ class CIPHERCERTIFICATEX509
 
     bool                                    IsServerNameValid                       (XCHAR* servername);
     bool                                    VerifySignature                         (CIPHERKEY* issuerpublickey);
-    static bool                             VerifyDataSignature                     (CIPHERKEY* issuerpublickey,
-                                                                                     CIPHERCERTIFICATEX509_ALGORITHM_TYPE algorithm,
-                                                                                     XBUFFER& data, XBUFFER& signature);
+    static bool                             VerifyDataSignature                     (CIPHERKEY* issuerpublickey, CIPHERCERTIFICATEX509_ALGORITHM_TYPE algorithm, XBUFFER& data, XBUFFER& signature);
 
     bool                                    ConvertDateTime                         (XCHAR* datestr, XDATETIME* datetime);
 

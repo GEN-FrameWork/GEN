@@ -849,7 +849,7 @@ void GRP2DVECTORFILESVGRENDERAGG::TransformPath(GRP2DPATH& path, GRPVECTORFILESV
       GRP2DPATHSEGMENT* segment = path.Get((int)c);
       if(!segment) continue;
 
-      transform.ApplyToPoint(segment->x  , segment->y  );
+      transform.ApplyToPoint(segment->x, segment->y);
 
       if((segment->type == GRP2DPATHSEGMENTTYPE_CURVETO) || (segment->type == GRP2DPATHSEGMENTTYPE_QUADTO))
         {

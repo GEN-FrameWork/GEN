@@ -114,11 +114,11 @@ bool DIOWINDOWSPCAP::Capture_Start(DIOPCAPNETINTERFACE* netinterface, bool promi
   netinterfaceselected = netinterface;
   
   (*netinterface->GetName()).ConvertToASCII(charstr);
-  handle= pcap_open_live(charstr.GetPtrChar()    , // name of the device
-                         65536                   , // portion of the packet to capture.  65536 grants that the whole packet will be captured on all the MACs.
-                         promiscuousmode?1:0     , // promiscuous mode (nonzero means promiscuous)
-                         timeout                 , // read timeout
-                         errbuf);                  // error buffer
+  handle = pcap_open_live(charstr.GetPtrChar(),   // name of the device
+                          65536,                  // portion of the packet to capture
+                          promiscuousmode?1:0,    // promiscuous mode
+                          timeout,                // read timeout
+                          errbuf);                // error buffer
   if(handle == NULL) return false;
 
 

@@ -77,7 +77,6 @@ enum DIOATCMD_ERROR
   DIOATCMD_ERROR_WRITECMD                     ,
 };
 
-
 enum DIOATCMD_TYPEADDITIONALSIZE
 {
   DIOATCMD_TYPEADDITIONALSIZE_NONE      = 0   ,
@@ -85,13 +84,9 @@ enum DIOATCMD_TYPEADDITIONALSIZE
   DIOATCMD_TYPEADDITIONALSIZE_LINES           ,
 };
 
-
 #define DIOATCMDS_TIMEOUT             15   //Seconds
 #define DIOATCMDS_ANSWERNOTFOUND     -1
 #define DIOATCMDS_COMMANDNOTFOUND    -1
-
-
-
 
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
 
@@ -111,7 +106,7 @@ class DIOATCMD
     XSTRING*                  GetCommandString                  ();
     bool                      IsUnSolicited                     ();
 
-    bool                      Set                               (XDWORD type, XCHAR* command,bool isunsolicited = false);
+    bool                      Set                               (XDWORD type, XCHAR* command, bool isunsolicited = false);
 
   private:
 
@@ -121,7 +116,6 @@ class DIOATCMD
     XSTRING                   command;
     bool                      isunsolicited;
 };
-
 
 class DIOATCMDS  : public XFSMACHINE
 {
@@ -135,15 +129,15 @@ class DIOATCMDS  : public XFSMACHINE
     bool                      Ini                               (int timeout = DIOATCMDS_TIMEOUT, bool echomode = true, bool verbosemode = true, int minimumbaurate = 115200);
 
     DIOATCMD_ERROR            Basic                             (int timeout = DIOATCMDS_TIMEOUT);
-    DIOATCMD_ERROR            GetCharacter                      (DIOATCMD_CODECHARACTER code,XBYTE& character,int timeout = DIOATCMDS_TIMEOUT);
+    DIOATCMD_ERROR            GetCharacter                      (DIOATCMD_CODECHARACTER code, XBYTE& character, int timeout = DIOATCMDS_TIMEOUT);
     DIOATCMD_ERROR            Reset                             (int timeout = DIOATCMDS_TIMEOUT);
 
     DIOATCMD_ERROR            SetEchoMode                       (bool echomode, int timeout = DIOATCMDS_TIMEOUT);
 
-    DIOATCMD_ERROR            SetVerboseMode                    (bool verbosemode  , int timeout = DIOATCMDS_TIMEOUT);
+    DIOATCMD_ERROR            SetVerboseMode                    (bool verbosemode, int timeout = DIOATCMDS_TIMEOUT);
 
-    DIOATCMD_ERROR            GetBaudRate                       (int& baudrate, int timeout  = DIOATCMDS_TIMEOUT);
-    DIOATCMD_ERROR            SetBaudRate                       (int  baudrate, int timeout  = DIOATCMDS_TIMEOUT);
+    DIOATCMD_ERROR            GetBaudRate                       (int& baudrate, int timeout = DIOATCMDS_TIMEOUT);
+    DIOATCMD_ERROR            SetBaudRate                       (int baudrate, int timeout = DIOATCMDS_TIMEOUT);
 
     void                      End                               ();
 
@@ -156,7 +150,7 @@ class DIOATCMDS  : public XFSMACHINE
 
   protected:
 
-    bool                      AddCommand                        (XDWORD type, XCHAR* command,bool isunsolicited = false);
+    bool                      AddCommand                        (XDWORD type, XCHAR* command, bool isunsolicited = false);
     DIOATCMD*                 GetCommand                        (XDWORD type);
     XCHAR*                    GetCommandString                  (XDWORD type);
     bool                      DeleteAllCommand                  ();
@@ -193,7 +187,7 @@ class DIOATCMDS  : public XFSMACHINE
     DIOATCMD_ERROR            WaitToOneAnswerMore               (int timeout = DIOATCMDS_TIMEOUT);
 
     DIOATCMD_ERROR            MakeSimpleCommand                 (XDWORD type, XCHAR* param = NULL, int timeout = DIOATCMDS_TIMEOUT);
-    DIOATCMD_ERROR            MakeCommandWithSimpleAnswer       (XDWORD type, XSTRING& answer, XCHAR* param = NULL,int timeout = DIOATCMDS_TIMEOUT);
+    DIOATCMD_ERROR            MakeCommandWithSimpleAnswer       (XDWORD type, XSTRING& answer, XCHAR* param = NULL, int timeout = DIOATCMDS_TIMEOUT);
 
     DIOSTREAM*                diostream;
     XTIMER*                   xtimer;

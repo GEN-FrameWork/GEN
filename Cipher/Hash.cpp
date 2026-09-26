@@ -273,7 +273,7 @@ bool HASH::Do(XFILE* xfile, XQWORD size, XQWORD pos)
   if(status)
     {
       xbuffer.Resize(mod);
-      if(xfile->Read(xbuffer.Get(),mod))
+      if(xfile->Read(xbuffer.Get(), mod))
         {
           if(!Do(xbuffer))
             {

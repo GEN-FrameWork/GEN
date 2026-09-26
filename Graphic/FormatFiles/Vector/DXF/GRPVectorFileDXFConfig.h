@@ -35,8 +35,6 @@
 #include "GRPVectorFileConfig.h"
 #include "GRPVectorFileDXFTextSectionHeader.h"
 
-
-
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
 
 #define VECTORFILEDXFCONFIG_SECTION_DFX_CFG    __L("DXF Config")

@@ -55,7 +55,6 @@ enum DIOWINDOWSTCPIPFSMEVENTS
   DIOWINDOWSTCPIP_LASTEVENT
 };
 
-
 enum DIOWINDOWSTCPIPFSMSTATES
 {
   DIOWINDOWSTCPIPFSMSTATE_NONE                = 0 ,
@@ -69,11 +68,7 @@ enum DIOWINDOWSTCPIPFSMSTATES
   DIOWINDOWSTCPIP_LASTSTATE
 };
 
-
-
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
-
 
 class DIOWINDOWSSTREAMTCPIP : public DIOSTREAMTCPIP , public XFSMACHINE
 {

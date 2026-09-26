@@ -35,7 +35,6 @@
 #include "DIOURL.h"
 
 
-
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
 
 #define DIONTP_DEFAULTPORT        123
@@ -46,16 +45,11 @@
 
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
 
-
-
-
 /*---- INLINE FUNCTIONS + PROTOTYPES ---------------------------------------------------------------------------------*/
-
 
 class XTIMER;
 class DIOSTREAMUDPCONFIG;
 class DIOSTREAMUDP;
-
 
 #pragma pack(push, r1, 1)
 class DIOTIMEPACKET
@@ -75,7 +69,6 @@ class DIONTPBASICINFO
 
     XBYTE                         livnmode;
     XBYTE                         stratum;
-
 
 
 
@@ -116,7 +109,6 @@ class DIONTPFULLPACKET
 };
 #pragma pack(pop, r4)
 
-
 #pragma pack(push, r5, 1)
 class DIONTPRESPONSE
 {
@@ -133,7 +125,6 @@ class DIONTPRESPONSE
 };
 #pragma pack(pop, r5)
 
-
 class DIONTP
 {
   public:
@@ -141,13 +132,13 @@ class DIONTP
                                   DIONTP                              ();
     virtual                      ~DIONTP                              ();
 
-    bool                          GetTimeResponse                     (XCHAR*  urlntpserver, int timeout, bool hardwareuselittleendian, DIONTPRESPONSE& response);
+    bool                          GetTimeResponse                     (XCHAR* urlntpserver, int timeout, bool hardwareuselittleendian, DIONTPRESPONSE& response);
     bool                          GetTimeResponse                     (DIOURL& urlntpserver, int timeout, bool hardwareuselittleendian, DIONTPRESPONSE& response);
 
-    bool                          GetTimeSeconds                      (XCHAR*  urlntpserver, int timeout, bool hardwareuselittleendian, XQWORD& timeseconds);
+    bool                          GetTimeSeconds                      (XCHAR* urlntpserver, int timeout, bool hardwareuselittleendian, XQWORD& timeseconds);
     bool                          GetTimeSeconds                      (DIOURL& urlntpserver, int timeout, bool hardwareuselittleendian, XQWORD& timeseconds);
 
-    bool                          GetTime                             (XCHAR*  urlntpserver, int timeout, bool hardwareuselittleendian, XDATETIME& xtime);
+    bool                          GetTime                             (XCHAR* urlntpserver, int timeout, bool hardwareuselittleendian, XDATETIME& xtime);
     bool                          GetTime                             (DIOURL& urlntpserver, int timeout, bool hardwareuselittleendian, XDATETIME& xtime);
 
   private:

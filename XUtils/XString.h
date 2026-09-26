@@ -87,7 +87,6 @@ enum XSTRINGASCIICODE
 #define XSTRINGBOOLEANMODE_UPPERCASE   0x80
 #define XSTRINGBOOLEANMODE_LOWERCASE   0x40
 
-
 typedef struct 
 {
   XDWORD             character;
@@ -161,7 +160,6 @@ typedef struct
 
 #endif
 
-
 #if defined(MICROCONTROLLER)
 
   #define SPRINTF(str, ...)       sprintf(str, ## __VA_ARGS__)
@@ -169,16 +167,10 @@ typedef struct
 
 #endif
 
-
-
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
-
 
 class XBUFFER;
 class XMUTEX;
-
-
 
 class GEN_API_LIB_EXP XSTRING
 {
@@ -187,7 +179,7 @@ class GEN_API_LIB_EXP XSTRING
                           XSTRING                         (XDWORD size);
                           XSTRING                         (const char* string);
                           XSTRING                         (const XCHAR* string);
-                          XSTRING                         (const XCHAR* string,XDWORD size);
+                          XSTRING                         (const XCHAR* string, XDWORD size);
                           XSTRING                         (const XSTRING& string);
                           XSTRING                         (XWORD* string);
 
@@ -219,7 +211,6 @@ class GEN_API_LIB_EXP XSTRING
     static bool           Add                             (XCHAR* str1, const XCHAR* str2);
     bool                  Add                             (const XBYTE* buffer, XDWORD size);
     bool                  Add                             (XBUFFER& buffer);
-
 
     void                  operator =                      (const char* string);
     void                  operator =                      (const XCHAR* string);
@@ -298,7 +289,7 @@ class GEN_API_LIB_EXP XSTRING
 
     int                   Replace                         (XCHAR* findWhat, XCHAR* replaceBy);
     int                   ReplaceFirst                    (XCHAR* findWhat, XCHAR* replaceBy);
-    bool                  Insert                          (XCHAR* str,XDWORD position = 0);
+    bool                  Insert                          (XCHAR* str, XDWORD position = 0);
     bool                  Insert                          (XSTRING& str, XDWORD position = 0);
 
     bool                  ConvertFromNULL                 (bool uppercase);
@@ -360,7 +351,7 @@ class GEN_API_LIB_EXP XSTRING
 
     bool                  Swab                            ();
 
-    bool                  Split                           (XCHAR separator, XVECTOR<XSTRING*>& results,  bool addsubstringempty = false);
+    bool                  Split                           (XCHAR separator, XVECTOR<XSTRING*>& results, bool addsubstringempty = false);
 
     bool                  FormatArg                       (const XCHAR* mask, va_list* arg, bool isspecialweb = false);
     bool                  Format                          (const XCHAR* mask, ...);

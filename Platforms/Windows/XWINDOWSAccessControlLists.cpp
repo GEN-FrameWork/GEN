@@ -110,17 +110,10 @@ bool XWINDOWSACCESSCONTROLLISTS::SetFileOnlyPermissionForAdmin(XCHAR* filename)
   SID_IDENTIFIER_AUTHORITY  SIDAuthNT     = SECURITY_NT_AUTHORITY;
 
     // Create a well-known SID for the Everyone group.
-  AllocateAndInitializeSid(&SIDauthworld  , 1
-                                          , SECURITY_WORLD_RID
-                                          , 0, 0, 0, 0, 0, 0, 0
-                                          ,  &everyoneSID);
+  AllocateAndInitializeSid(&SIDauthworld, 1, SECURITY_WORLD_RID, 0, 0, 0, 0, 0, 0, 0, &everyoneSID);
 
 
-  AllocateAndInitializeSid(&SIDAuthNT     , 2
-                                          , SECURITY_BUILTIN_DOMAIN_RID
-                                          , DOMAIN_ALIAS_RID_ADMINS
-                                          , 0, 0, 0, 0, 0, 0
-                                          , &adminSID);
+  AllocateAndInitializeSid(&SIDAuthNT, 2, SECURITY_BUILTIN_DOMAIN_RID, DOMAIN_ALIAS_RID_ADMINS, 0, 0, 0, 0, 0, 0, &adminSID);
 
 
   // Initialize an EXPLICIT_ACCESS structure for an ACE.
@@ -151,9 +144,10 @@ bool XWINDOWSACCESSCONTROLLISTS::SetFileOnlyPermissionForAdmin(XCHAR* filename)
   InitializeSecurityDescriptor(SD, SECURITY_DESCRIPTOR_REVISION);
 
   // Add the ACL to the security descriptor.
-  SetSecurityDescriptorDacl(SD, TRUE      // bDaclPresent flag
-                              , ACL
-                              , FALSE);   // not a default DACL
+  SetSecurityDescriptorDacl(SD,
+                            TRUE,      // bDaclPresent flag
+                            ACL,
+                            FALSE);    // not a default DACL
 
 
   // Change the security attributes
@@ -189,10 +183,7 @@ bool XWINDOWSACCESSCONTROLLISTS::SetFileOnlyPermissionForSystemUser(XCHAR* filen
   SID_IDENTIFIER_AUTHORITY  SIDsystem     = SECURITY_NT_AUTHORITY;
 
   
-  AllocateAndInitializeSid(&SIDsystem     , 1
-                                          , SECURITY_LOCAL_SYSTEM_RID
-                                          , 0, 0, 0, 0, 0, 0, 0
-                                          , &SID);
+  AllocateAndInitializeSid(&SIDsystem, 1, SECURITY_LOCAL_SYSTEM_RID, 0, 0, 0, 0, 0, 0, 0, &SID);
     
   // Initialize an EXPLICIT_ACCESS structure for an ACE.
   ZeroMemory(&ea, EXPLICIT_ACCESS_MAXNUM_SYSTEMUSER * sizeof(EXPLICIT_ACCESS));
@@ -214,9 +205,10 @@ bool XWINDOWSACCESSCONTROLLISTS::SetFileOnlyPermissionForSystemUser(XCHAR* filen
   InitializeSecurityDescriptor(SD, SECURITY_DESCRIPTOR_REVISION);
 
   // Add the ACL to the security descriptor.
-  SetSecurityDescriptorDacl(SD, TRUE      // bDaclPresent flag
-                              , ACL
-                              , FALSE);   // not a default DACL
+  SetSecurityDescriptorDacl(SD,
+                            TRUE,      // bDaclPresent flag
+                            ACL,
+                            FALSE);    // not a default DACL
 
 
   // Change the security attributes
@@ -228,7 +220,6 @@ bool XWINDOWSACCESSCONTROLLISTS::SetFileOnlyPermissionForSystemUser(XCHAR* filen
 
   return status?true:false;
 }
-
 
 
 /**-------------------------------------------------------------------------------------------------------------------
@@ -251,11 +242,12 @@ bool XWINDOWSACCESSCONTROLLISTS::SetFileOnlyPermissionForAdminUser(XCHAR* filena
   EXPLICIT_ACCESS           ea[EXPLICIT_ACCESS_MAXNUM_SYSTEMUSER];
   SID_IDENTIFIER_AUTHORITY  SIDsystem     = SECURITY_NT_AUTHORITY;
 
-  AllocateAndInitializeSid(&SIDsystem   , 2                        // 2 sub-authorities
-                                        , SECURITY_BUILTIN_DOMAIN_RID
-                                        , DOMAIN_ALIAS_RID_ADMINS
-                                        , 0, 0, 0, 0, 0, 0
-                                        , &SID);
+  AllocateAndInitializeSid(&SIDsystem,
+                           2,                         // 2 sub-authorities
+                           SECURITY_BUILTIN_DOMAIN_RID,
+                           DOMAIN_ALIAS_RID_ADMINS,
+                           0, 0, 0, 0, 0, 0,
+                           &SID);
 
   // Initialize an EXPLICIT_ACCESS structure for an ACE.
   ZeroMemory(&ea, EXPLICIT_ACCESS_MAXNUM_SYSTEMUSER * sizeof(EXPLICIT_ACCESS));
@@ -277,9 +269,10 @@ bool XWINDOWSACCESSCONTROLLISTS::SetFileOnlyPermissionForAdminUser(XCHAR* filena
   InitializeSecurityDescriptor(SD, SECURITY_DESCRIPTOR_REVISION);
 
   // Add the ACL to the security descriptor.
-  SetSecurityDescriptorDacl(SD, TRUE      // bDaclPresent flag
-                              , ACL
-                              , FALSE);   // not a default DACL
+  SetSecurityDescriptorDacl(SD,
+                            TRUE,      // bDaclPresent flag
+                            ACL,
+                            FALSE);    // not a default DACL
 
 
   // Change the security attributes
@@ -291,7 +284,6 @@ bool XWINDOWSACCESSCONTROLLISTS::SetFileOnlyPermissionForAdminUser(XCHAR* filena
 
   return status?true:false;
 }
-
 
 
 /**-------------------------------------------------------------------------------------------------------------------
@@ -313,10 +305,7 @@ bool XWINDOWSACCESSCONTROLLISTS::SetFilePermissionForEveryone(XCHAR* filename)
   SID_IDENTIFIER_AUTHORITY SIDauthworld = SECURITY_WORLD_SID_AUTHORITY;
 
   // Create a well-known SID for the Everyone group.
-  AllocateAndInitializeSid(&SIDauthworld, 1
-                                        , SECURITY_WORLD_RID
-                                        , 0, 0, 0, 0, 0, 0, 0
-                                        , &everyoneSID);
+  AllocateAndInitializeSid(&SIDauthworld, 1, SECURITY_WORLD_RID, 0, 0, 0, 0, 0, 0, 0, &everyoneSID);
 
   // Initialize an EXPLICIT_ACCESS structure for an ACE.
   ZeroMemory(&ea, 1 * sizeof(EXPLICIT_ACCESS));
@@ -337,9 +326,10 @@ bool XWINDOWSACCESSCONTROLLISTS::SetFilePermissionForEveryone(XCHAR* filename)
   InitializeSecurityDescriptor(SD, SECURITY_DESCRIPTOR_REVISION);
 
   // Add the ACL to the security descriptor.
-  SetSecurityDescriptorDacl(SD , TRUE      // bDaclPresent flag
-                               , ACL
-                               , FALSE);   // not a default DACL
+  SetSecurityDescriptorDacl(SD,
+                            TRUE,      // bDaclPresent flag
+                            ACL,
+                            FALSE);    // not a default DACL
 
   //Change the security attributes
   BOOL status = SetFileSecurity(filename, DACL_SECURITY_INFORMATION, SD);

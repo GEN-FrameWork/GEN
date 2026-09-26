@@ -34,8 +34,6 @@
 #include "XSubject.h"
 #include "XBuffer.h"
 
-
-
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
 
 enum INPCAPTURE_XEVENT_TYPE
@@ -44,8 +42,6 @@ enum INPCAPTURE_XEVENT_TYPE
   INPCAPTURE_XEVENT_TYPE_PRESSKEY                                       ,
   INPCAPTURE_XEVENT_TYPE_UNPRESSKEY
 };
-
-
 
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
 

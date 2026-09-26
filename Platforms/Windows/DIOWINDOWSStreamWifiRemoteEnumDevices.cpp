@@ -325,12 +325,7 @@ bool DIOWINDOWSSTREAMWIFIREMOTEENUMDEVICES::SetAllConnectionInAutomaticMode(bool
               int               index   = 0;
               XSTRING           nameelement;
 
-              result = WlanGetProfile(handleclient , &(interfacelist->InterfaceInfo[0].InterfaceGuid)
-                                                   , profileinfo->strProfileName
-                                                   , NULL
-                                                   , &originalprofileXML
-                                                   , &flags
-                                                   , &grantedaccess);
+              result = WlanGetProfile(handleclient, &(interfacelist->InterfaceInfo[0].InterfaceGuid), profileinfo->strProfileName, NULL, &originalprofileXML, &flags, &grantedaccess);
 
               profileXML =  originalprofileXML;
 
@@ -348,13 +343,7 @@ bool DIOWINDOWSSTREAMWIFIREMOTEENUMDEVICES::SetAllConnectionInAutomaticMode(bool
               profileXML.Empty();
               filexml.GetAllInOneLine(profileXML);
 
-              result = WlanSetProfile(handleclient , &(interfacelist->InterfaceInfo[0].InterfaceGuid)
-                                                   , 0
-                                                   , profileXML.Get()
-                                                   , NULL
-                                                   , TRUE
-                                                   , NULL
-                                                   , &wlanreason);
+              result = WlanSetProfile(handleclient, &(interfacelist->InterfaceInfo[0].InterfaceGuid), 0, profileXML.Get(), NULL, TRUE, NULL, &wlanreason);
 
 
             }

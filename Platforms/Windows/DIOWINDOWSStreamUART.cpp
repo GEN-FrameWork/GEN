@@ -179,12 +179,12 @@ bool DIOWINDOWSSTREAMUART::Open()
       comport.Format(__L("\\\\.\\COM%d"), config->GetPort());
     }
 
-  hcom = CreateFile(comport.Get()                     ,
-                    GENERIC_READ|GENERIC_WRITE        ,
-                    0                                 ,
-                    0                                 ,
-                    OPEN_EXISTING                     ,
-                    FILE_ATTRIBUTE_NORMAL             , // FILE_FLAG_OVERLAPPED
+  hcom = CreateFile(comport.Get(),
+                    GENERIC_READ|GENERIC_WRITE,
+                    0,
+                    0,
+                    OPEN_EXISTING,
+                    FILE_ATTRIBUTE_NORMAL,  // FILE_FLAG_OVERLAPPED
                     0);
 
   if(hcom==INVALID_HANDLE_VALUE) return false;
@@ -215,7 +215,7 @@ bool DIOWINDOWSSTREAMUART::Open()
 
   Config();
 
-  memset(&ovi,0,sizeof(ovi));
+  memset(&ovi, 0, sizeof(ovi));
 
   SetEvent(DIOWINDOWSUARTFSMEVENT_CONNECTED);
 
@@ -311,7 +311,7 @@ bool DIOWINDOWSSTREAMUART::Config(XWORD mask)
   dcb.XonChar  = 1;
   dcb.XoffChar = 0;
 
-  if(!SetCommState(hcom,&dcb)) return false;
+  if(!SetCommState(hcom, &dcb)) return false;
 
   return true;
 }
@@ -319,7 +319,7 @@ bool DIOWINDOWSSTREAMUART::Config(XWORD mask)
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         XDWORD DIOWINDOWSSTREAMUART::ReadDirect(XBYTE* buffer,XDWORD size)
+* @fn         XDWORD DIOWINDOWSSTREAMUART::ReadDirect(XBYTE* buffer, XDWORD size)
 * @brief      Read direct
 * @ingroup    PLATFORM_WINDOWS
 * 
@@ -329,7 +329,7 @@ bool DIOWINDOWSSTREAMUART::Config(XWORD mask)
 * @return     XDWORD : Requested value.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-XDWORD DIOWINDOWSSTREAMUART::ReadDirect(XBYTE* buffer,XDWORD size)
+XDWORD DIOWINDOWSSTREAMUART::ReadDirect(XBYTE* buffer, XDWORD size)
 {
   if(GetStatus()==DIOSTREAMSTATUS_DISCONNECTED) return 0;
   if(size == 0)                                        return 0;
@@ -339,12 +339,12 @@ XDWORD DIOWINDOWSSTREAMUART::ReadDirect(XBYTE* buffer,XDWORD size)
 
   if(!hevent)
     {
-      hevent = CreateEvent(0,TRUE,FALSE,0);
+      hevent = CreateEvent(0, TRUE, FALSE, 0);
       if(!hevent) return 0;
 
       ovi.hEvent = hevent;
 
-      if(!ReadFile(hcom,buffer,size,&br,&ovi))
+      if(!ReadFile(hcom, buffer, size, &br, &ovi))
         {
           if(GetLastError()!=ERROR_IO_PENDING)
             {
@@ -355,9 +355,9 @@ XDWORD DIOWINDOWSSTREAMUART::ReadDirect(XBYTE* buffer,XDWORD size)
     }
    else
     {
-      switch(WaitForSingleObject(ovi.hEvent,readtimeout))
+      switch(WaitForSingleObject(ovi.hEvent, readtimeout))
         {
-          case WAIT_OBJECT_0: if(!GetOverlappedResult(hcom,&ovi,&br,FALSE))
+          case WAIT_OBJECT_0: if(!GetOverlappedResult(hcom, &ovi, &br, FALSE))
                                      status = false;
                                 else status = true;
                               break;
@@ -372,7 +372,7 @@ XDWORD DIOWINDOWSSTREAMUART::ReadDirect(XBYTE* buffer,XDWORD size)
          }
      }
 
-  memset(&ovi,0,sizeof(ovi));
+  memset(&ovi, 0, sizeof(ovi));
 
   if(hevent)
     {
@@ -408,10 +408,10 @@ XDWORD DIOWINDOWSSTREAMUART::WriteDirect(XBYTE* buffer, XDWORD size)
   OVERLAPPED oviwrite   = { 0 };
   bool       status;
 
-  oviwrite.hEvent = CreateEvent(0,TRUE,FALSE,0);
+  oviwrite.hEvent = CreateEvent(0, TRUE, FALSE, 0);
   if(!oviwrite.hEvent) return bw;
 
-  if(!WriteFile(hcom,buffer,size,&bw,&oviwrite))
+  if(!WriteFile(hcom, buffer, size, &bw, &oviwrite))
     {
       if(GetLastError()!=ERROR_IO_PENDING)
         {
@@ -419,9 +419,9 @@ XDWORD DIOWINDOWSSTREAMUART::WriteDirect(XBYTE* buffer, XDWORD size)
         }
        else
         {
-          switch(WaitForSingleObject(oviwrite.hEvent,writetimeout))
+          switch(WaitForSingleObject(oviwrite.hEvent, writetimeout))
             {
-              case WAIT_OBJECT_0 :  if(!GetOverlappedResult(hcom,&oviwrite,&bw,TRUE))
+              case WAIT_OBJECT_0 :  if(!GetOverlappedResult(hcom, &oviwrite, &bw, TRUE))
                                            status = false;
                                       else status = true;
                                     break;
@@ -501,7 +501,7 @@ bool DIOWINDOWSSTREAMUART::GetCTS()
   // if(GetStatus()==DIOSTREAMSTATUS_DISCONNECTED) return false;
 
   DWORD status = 0;
-  if(!GetCommModemStatus(hcom,&status))
+  if(!GetCommModemStatus(hcom, &status))
     {
       Close();
       return false;
@@ -525,7 +525,7 @@ bool DIOWINDOWSSTREAMUART::GetDSR()
   // if(GetStatus()==DIOSTREAMSTATUS_DISCONNECTED) return false;
 
   DWORD status = 0;
-  if(!GetCommModemStatus(hcom,&status))
+  if(!GetCommModemStatus(hcom, &status))
     {
       Close();
       return false;
@@ -549,7 +549,7 @@ bool DIOWINDOWSSTREAMUART::GetRing()
   // if(GetStatus()==DIOSTREAMSTATUS_DISCONNECTED) return false;
 
   DWORD status = 0;
-  if(!GetCommModemStatus(hcom,&status))
+  if(!GetCommModemStatus(hcom, &status))
     {
       Close();
       return false;
@@ -573,7 +573,7 @@ bool DIOWINDOWSSTREAMUART::GetRLSD()
   // if(GetStatus()==DIOSTREAMSTATUS_DISCONNECTED) return false;
 
   DWORD status = 0;
-  if(!GetCommModemStatus(hcom,&status))
+  if(!GetCommModemStatus(hcom, &status))
     {
       Close();
       return false;
@@ -598,7 +598,7 @@ bool DIOWINDOWSSTREAMUART::SetRTS(bool on)
 {
   // if(GetStatus()==DIOSTREAMSTATUS_DISCONNECTED) return false;
 
-  if(!EscapeCommFunction(hcom,on?SETRTS:CLRRTS)) return false;
+  if(!EscapeCommFunction(hcom, on?SETRTS:CLRRTS)) return false;
 
   return true;
 }
@@ -619,7 +619,7 @@ bool DIOWINDOWSSTREAMUART::SetDTR(bool on)
 {
   // if(GetStatus()==DIOSTREAMSTATUS_DISCONNECTED) return false;
 
-  if(!EscapeCommFunction(hcom,on?SETDTR:CLRDTR)) return false;
+  if(!EscapeCommFunction(hcom, on?SETDTR:CLRDTR)) return false;
 
   return true;
 }
@@ -639,11 +639,11 @@ bool DIOWINDOWSSTREAMUART::CleanBuffers()
 {
   // if(GetStatus()==DIOSTREAMSTATUS_DISCONNECTED) return false;
 
-  if(!PurgeComm(hcom,PURGE_TXCLEAR|PURGE_RXCLEAR)) return false;
+  if(!PurgeComm(hcom, PURGE_TXCLEAR|PURGE_RXCLEAR)) return false;
 
   DWORD error;
 
-  if(!ClearCommError(hcom,&error,NULL)) return false;
+  if(!ClearCommError(hcom, &error, NULL)) return false;
 
   return true;
 }
@@ -664,7 +664,7 @@ bool DIOWINDOWSSTREAMUART::SetMask(XDWORD mask)
 {
   // if(GetStatus()==DIOSTREAMSTATUS_DISCONNECTED) return false;
 
-  if(!SetCommMask(hcom,mask))
+  if(!SetCommMask(hcom, mask))
     {
       Close();
       return false;
@@ -705,7 +705,7 @@ bool DIOWINDOWSSTREAMUART::SetTimeouts()
   to.WriteTotalTimeoutConstant   = 2000;
   */
 
-  if(!SetCommTimeouts(hcom,&to))
+  if(!SetCommTimeouts(hcom, &to))
     {
       Close();
       return false;
@@ -779,7 +779,7 @@ void DIOWINDOWSSTREAMUART::ThreadConnection(void* data)
             {
               case DIOWINDOWSUARTFSMSTATE_NONE              : break;
 
-              case DIOWINDOWSUARTFSMSTATE_CONNECTED         : { DIOSTREAM_XEVENT xevent(diostream,DIOSTREAM_XEVENT_TYPE_CONNECTED);
+              case DIOWINDOWSUARTFSMSTATE_CONNECTED         : { DIOSTREAM_XEVENT xevent(diostream, DIOSTREAM_XEVENT_TYPE_CONNECTED);
                                                                 xevent.SetDIOStream(diostream);
                                                                 diostream->PostEvent(&xevent);
 
@@ -789,7 +789,7 @@ void DIOWINDOWSSTREAMUART::ThreadConnection(void* data)
 
               case DIOWINDOWSUARTFSMSTATE_WAITINGTOREAD     : break;
 
-              case DIOWINDOWSUARTFSMSTATE_DISCONNECTING     : { DIOSTREAM_XEVENT xevent(diostream,DIOSTREAM_XEVENT_TYPE_DISCONNECTED);
+              case DIOWINDOWSUARTFSMSTATE_DISCONNECTING     : { DIOSTREAM_XEVENT xevent(diostream, DIOSTREAM_XEVENT_TYPE_DISCONNECTED);
                                                                 xevent.SetDIOStream(diostream);
 
                                                                 diostream->PostEvent(&xevent);
@@ -819,7 +819,7 @@ void DIOWINDOWSSTREAMUART::Clean()
   hcom            = INVALID_HANDLE_VALUE;
   hevent          = NULL;
 
-  memset(&ovi,0,sizeof(ovi));
+  memset(&ovi, 0, sizeof(ovi));
 
   readtimeout  = 3000;
   writetimeout = 3000;

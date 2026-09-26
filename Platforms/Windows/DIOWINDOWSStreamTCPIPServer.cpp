@@ -261,7 +261,7 @@ SOCKET DIOWINDOWSSTREAMTCPIPSERVER::Accept(SOCKET handlesocket, void* addr, void
     }
 
   FD_ZERO(&fds);
-  FD_SET((unsigned int)handlesocket,&fds);
+  FD_SET((unsigned int)handlesocket, &fds);
 
   time_out.tv_sec  = 0;
   time_out.tv_usec = usec;
@@ -269,7 +269,7 @@ SOCKET DIOWINDOWSSTREAMTCPIPSERVER::Accept(SOCKET handlesocket, void* addr, void
   status = (SOCKET)select((int)(handlesocket)+1, &fds, NULL, NULL, &time_out);
   if(status>0)
     {
-      status = accept(handlesocket,(SOCKADDR*)addr, (int*)addrlen);
+      status = accept(handlesocket, (SOCKADDR*)addr, (int*)addrlen);
     }
    else 
     {
@@ -321,9 +321,9 @@ int DIOWINDOWSSTREAMTCPIPSERVER::IsReadyConnect(SOCKET handlesocket)
       return -1;
     }
 
-  int status1 = FD_ISSET(handlesocket,&fdr) ? 1 : 0;
-  int status2 = FD_ISSET(handlesocket,&fdw) ? 1 : 0;
-  int status3 = FD_ISSET(handlesocket,&fds) ? 1 : 0;
+  int status1 = FD_ISSET(handlesocket, &fdr) ? 1 : 0;
+  int status2 = FD_ISSET(handlesocket, &fdw) ? 1 : 0;
+  int status3 = FD_ISSET(handlesocket, &fds) ? 1 : 0;
 
   if(status1 || status2 )  
     {
@@ -473,8 +473,8 @@ bool DIOWINDOWSSTREAMTCPIPSERVER::GetHandleServer(DIOSTREAMTCPIP* diostream)
 
   // ------------------------------------------------------------------------------------------  
 
-  memset(&loc_addr,0,sizeof(SOCKADDR_IN));
-  memset(&rem_addr,0,sizeof(SOCKADDR_IN));
+  memset(&loc_addr, 0, sizeof(SOCKADDR_IN));
+  memset(&rem_addr, 0, sizeof(SOCKADDR_IN));
 
   if(!diostream)
     {
@@ -717,7 +717,7 @@ void DIOWINDOWSSTREAMTCPIPSERVER::ThreadConnection(void* data)
 
                                                                                 if(size)
                                                                                   {
-                                                                                    diostream->inbuffer->Add(buffer,size);
+                                                                                    diostream->inbuffer->Add(buffer, size);
 
                                                                                     diostream->AddNBytesRead(size);
                                                                                     diostreamserver->nbytesread += size;
@@ -739,7 +739,7 @@ void DIOWINDOWSSTREAMTCPIPSERVER::ThreadConnection(void* data)
                                                                                 if(esize)
                                                                                   {
                                                                                     diostream->outbuffer->SetBlocked(true);
-                                                                                    XDWORD size = send(diostream->GetHandleSocket(),(char*)diostream->outbuffer->Get(), esize,0);
+                                                                                    XDWORD size = send(diostream->GetHandleSocket(), (char*)diostream->outbuffer->Get(), esize, 0);
                                                                                     diostream->outbuffer->SetBlocked(false);
                                                                                     if(size==SOCKET_ERROR)
                                                                                       {
@@ -749,7 +749,7 @@ void DIOWINDOWSSTREAMTCPIPSERVER::ThreadConnection(void* data)
 
                                                                                     if(size)
                                                                                       {
-                                                                                        diostream->outbuffer->Extract(NULL, 0 ,size);
+                                                                                        diostream->outbuffer->Extract(NULL, 0, size);
 
                                                                                         diostream->AddNBytesWrite(size);
                                                                                         diostreamserver->nbyteswrite += size;

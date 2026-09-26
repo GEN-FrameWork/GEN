@@ -56,10 +56,7 @@
 
 #define DIOCHECKTCPIPCONNECTIONS_INFINITECUT                             -1
 
-
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
-
 
 class XFACTORY;
 class XPUBLISHER;
@@ -93,7 +90,6 @@ class DIOCHECKTCPIPCONNECTION_CUT
     int                                     nseconds;
 };
 
-
 class DIOCHECKTCPIPCONNECTION
 {
   public:
@@ -123,7 +119,6 @@ class DIOCHECKTCPIPCONNECTION
     XDWORD                                  CreateID                              ();
     void                                    Clean                                 ();
 
-
     XDWORD                                  ID;
     DIOURL*                                 url;
     bool                                    isconnected;
@@ -132,14 +127,13 @@ class DIOCHECKTCPIPCONNECTION
     XTIMER*                                 timerconnexion;
 };
 
-
 class DIOCHECKTCPIPCONNECTIONS
 {
   public:
                                             DIOCHECKTCPIPCONNECTIONS               ();
     virtual                                ~DIOCHECKTCPIPCONNECTIONS               ();
 
-    bool                                    Ini                                    (int timerconnectionscheck = DIOCHECKTCPIPCONNECTIONS_DEFAULTTIMECONNECTIONCHECKS, bool validsomeisconnected = false,  bool dispersionmode = false);
+    bool                                    Ini                                    (int timerconnectionscheck = DIOCHECKTCPIPCONNECTIONS_DEFAULTTIMECONNECTIONCHECKS, bool validsomeisconnected = false, bool dispersionmode = false);
 
     bool                                    Run                                    (bool activate = true);
 
@@ -148,16 +142,12 @@ class DIOCHECKTCPIPCONNECTIONS
     bool                                    IsCheckTimeConnections                 ();
     void                                    SetIsCheckTimeConnections              (bool ischecktimeconnections);
 
-
     void                                    Setup                                  (int timeconnectionchecks = DIOCHECKTCPIPCONNECTIONS_DEFAULTTIMECONNECTIONCHECKS, bool validsomeisconnected = false, bool dispersionmode = false);
-
-    
 
     bool                                    Connection_Add                         (XCHAR* url, XDWORD& ID);
     bool                                    Connection_Add                         (XSTRING& url, XDWORD& ID);
     bool                                    Connection_Add                         (DIOURL& url, XDWORD& ID);
 
-    
     DIOCHECKTCPIPCONNECTION*                Connection_GetByID                     (XDWORD ID);
     bool                                    Connection_IsActive                    (XDWORD ID, bool& isactive);
     bool                                    Connection_DeleteByID                  (XDWORD ID);

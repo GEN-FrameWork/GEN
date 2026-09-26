@@ -38,17 +38,12 @@
 #include "GRPVectorFile.h"
 #include "GRPVectorFileDXFTextSection.h"
 
-
-
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
 
 #define GRPVECTORFILEDXFTEXTSECTIONHEADER_MAXNDEFVAR    283
 #define GRPVECTORFILEDXFTEXTSECTIONHEADER_MAXNVAR       3
 
-
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
-
 
 typedef struct
 {
@@ -56,7 +51,6 @@ typedef struct
   XCHAR*                                                    valuename;   
 
 } GRPVECTORFILEDXFTEXTSECTIONHEADERDEFVALUE;
-
 
 typedef struct
 {
@@ -66,7 +60,6 @@ typedef struct
   XCHAR*                                                    remark;
 
 } GRPVECTORFILEDXFTEXTSECTIONHEADERDEFVARIABLE;
-
 
 class GRPVECTORFILEDXFTEXTSECTIONHEADER : public GRPVECTORFILEDXFTEXTSECTION
 {

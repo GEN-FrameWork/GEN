@@ -895,7 +895,7 @@ GRPVECTORFILERESULT GRPVECTORFILEDXFTEXTSECTIONENTITIES::ParserTextSection(XFILE
         {                       
           GRPVECTORFILEDXF::ParserTextFilePrepareLine(line);
 
-          if(!line->Compare(__L("0"),true))                                     // an entity starts at group code 0 : tested only at a code position (we step by pairs), so a *value* of "0" can never be mistaken for a delimiter
+          if(!line->Compare(__L("0"), true))                                     // an entity starts at group code 0 : tested only at a code position (we step by pairs), so a *value* of "0" can never be mistaken for a delimiter
             {
               line = fileTXT->GetLine(indexline + 1);                           // value line of the same pair : the entity type name
               if(line)

@@ -36,13 +36,9 @@
 
 #include "DIOPCap.h"
 
-
-
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
 
 #define DIOPCAP_FILTERS_PORT_TARGET      0x80000000
-
-
 
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
 
@@ -73,7 +69,6 @@ class DIOPCAP_FILTER_ENTRY
     XDWORD                            protocoltype;
     XVECTOR<XDWORD>                   ports;                       
 };
-
 
 class DIOPCAP_FILTERS
 {

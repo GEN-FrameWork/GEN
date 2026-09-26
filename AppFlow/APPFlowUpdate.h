@@ -60,8 +60,6 @@ enum APPFLOWUPDATE_EVENTOPERATION
 
 #define APPFLOW_UPDATE   APPFLOWUPDATE::GetInstance()
 
-
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
 
 class XEVENT;
@@ -104,7 +102,6 @@ class APPFLOWUPDATE_CFG
     XPATH                               xpathrootapp;
     bool                                dolog;
 };
-
 
 class APPFLOWUPDATE : public XOBSERVER, public XSUBJECT
 {

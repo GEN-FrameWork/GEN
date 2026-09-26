@@ -93,36 +93,18 @@ class UI_COMPUTEDSTYLE : public UI_STYLE
                                     UI_COMPUTEDSTYLE            ();
     virtual                        ~UI_COMPUTEDSTYLE            ();
 
-    // Alias-aware string lookup: thin wrapper over UI_PROPERTYREGISTRY::GetAliased(), so a builder does not
-    // need its own copy of the "try primarykey, fall back to secondarykey" pattern.
     bool                            GetAliased                  (XCHAR* primarykey, XCHAR* secondarykey, XSTRING& value);
 
-    // Parses the raw string at "key" into a UI_LENGTH (see UI_Length.h for NUMBER/PERCENT/KEYWORD). False if
-    // the key is absent, exactly like UI_STYLE::Get().
     bool                            GetLength                   (XCHAR* key, UI_LENGTH& value);
     bool                            GetLength                   (XCHAR* primarykey, XCHAR* secondarykey, UI_LENGTH& value);
 
-    // Parses the raw string at "key" through UI_COLOR::SetFromString() (accepts "R,G,B[,A]", "#RRGGBB[AA]" and
-    // named colours -- whatever SetFromString() already accepts elsewhere in this subsystem). False if the key
-    // is absent or the string failed to parse into a valid colour.
     bool                            GetColor                     (XCHAR* key, UI_COLOR& color);
     bool                            GetColor                     (XCHAR* primarykey, XCHAR* secondarykey, UI_COLOR& color);
 
-    // Classifies "box-sizing" into UI_BOXSIZING_CONTENTBOX / UI_BOXSIZING_BORDERBOX. "value" is always left
-    // holding a usable result (CONTENTBOX, the CSS initial value, when absent or unrecognized); the return
-    // value only tells the caller whether the key was present AND held one of the two recognized keywords.
     bool                            GetBoxSizing                 (UI_BOXSIZING& value);
 
-    // Clamps "value" (already resolved to pixels by the caller) between the lengths at "minkey"/"maxkey" (e.g.
-    // "min-width"/"max-width"), resolved through the SAME "context" the caller used for "value" itself. A bound
-    // that is absent, or resolves to a non-numeric keyword ("none", "auto"), is left unconstrained. MIN always
-    // wins over MAX on conflict, per CSS. Always succeeds -- returns "value" unchanged if neither bound applies.
     double                          ClampToMinMax                (double value, XCHAR* minkey, XCHAR* maxkey, UI_LENGTH_CONTEXT& context);
 
-    // Converts "specifiedsize" (the resolved value of width/height as the author wrote it) into the CONTENT-BOX
-    // size the rest of the box model works with: BORDER-BOX subtracts "paddingandborder" (that axis's padding
-    // + border-width, both sides, already resolved); CONTENT-BOX passes "specifiedsize" through unchanged.
-    // Never returns a negative size.
     static double                   ResolveContentSize           (double specifiedsize, UI_BOXSIZING boxsizing, double paddingandborder);
 };
 

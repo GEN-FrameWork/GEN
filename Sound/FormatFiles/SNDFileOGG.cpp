@@ -143,7 +143,7 @@ bool SNDFILEOGG::LoadFile()
   stream = stb_vorbis_open_memory(xbuffer->Get(), xbuffer->GetSize(), NULL, NULL);
   if(!stream)
     {
-      XTRACE_PRINTCOLOR(4,__L("[SND File OGG] File Load Failed: %s"), xfile->GetPathNameFile());
+      XTRACE_PRINTCOLOR(4, __L("[SND File OGG] File Load Failed: %s"), xfile->GetPathNameFile());
       return false; // need to check the specific error
     }
 

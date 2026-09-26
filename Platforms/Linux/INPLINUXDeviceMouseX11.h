@@ -34,17 +34,12 @@
 
 /*---- INCLUDES ------------------------------------------------------------------------------------------------------*/
 
-
 #include "INPCursor.h"
 #include "INPDevice.h"
 
 #include "GRPLINUXScreenX11.h"
 
-
-
-
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
-
 
 #define INPLINUXDEVICEMOUSE11_EVRELEASED    0
 #define INPLINUXDEVICEMOUSE11_EVPRESSED     1

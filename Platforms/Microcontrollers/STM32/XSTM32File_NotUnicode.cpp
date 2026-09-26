@@ -82,7 +82,6 @@ XSTM32FILE_NOTUNICODE::~XSTM32FILE_NOTUNICODE()
 }
 
 
-
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         bool XSTM32FILE_NOTUNICODE::Exist(XCHAR* path)
@@ -115,7 +114,6 @@ bool XSTM32FILE_NOTUNICODE::Exist(XCHAR* path)
    
   return status;
 }
-
 
 
 /**-------------------------------------------------------------------------------------------------------------------
@@ -163,7 +161,6 @@ bool XSTM32FILE_NOTUNICODE::Open(XCHAR* path, bool isreadonly)
 }
 
 
-
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         bool XSTM32FILE_NOTUNICODE::Create(XCHAR* path)
@@ -204,7 +201,6 @@ bool XSTM32FILE_NOTUNICODE::Create(XCHAR* path)
 }
 
 
-
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         bool XSTM32FILE_NOTUNICODE::SetSize(XQWORD size)
@@ -229,7 +225,6 @@ bool XSTM32FILE_NOTUNICODE::SetSize(XQWORD size)
   return (fresult == FR_OK)?true:false;  
 
 }
-
 
 
 /**-------------------------------------------------------------------------------------------------------------------
@@ -257,7 +252,6 @@ bool XSTM32FILE_NOTUNICODE::GetPosition(XQWORD& position)
 }
 
 
-
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         bool XSTM32FILE_NOTUNICODE::SetPosition(XQWORD position)
@@ -281,7 +275,6 @@ bool XSTM32FILE_NOTUNICODE::SetPosition(XQWORD position)
  
   return status;
 }
-
 
 
 /**-------------------------------------------------------------------------------------------------------------------
@@ -313,7 +306,6 @@ bool XSTM32FILE_NOTUNICODE::Read(XBYTE* buffer, XDWORD size, CIPHER* cipher)
 }
 
 
-
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         bool XSTM32FILE_NOTUNICODE::Read(XBYTE* buffer, XDWORD* size, CIPHER* cipher)
@@ -342,7 +334,6 @@ bool XSTM32FILE_NOTUNICODE::Read(XBYTE* buffer, XDWORD* size, CIPHER* cipher)
 
   return status;
 }
-
 
 
 /**-------------------------------------------------------------------------------------------------------------------
@@ -379,7 +370,6 @@ bool XSTM32FILE_NOTUNICODE::Write(XBYTE* buffer, XDWORD size, CIPHER* cipher)
 }
 
 
-
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         bool XSTM32FILE_NOTUNICODE::Flush()
@@ -403,7 +393,6 @@ bool XSTM32FILE_NOTUNICODE::Flush()
 }
 
 
-
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         bool XSTM32FILE_NOTUNICODE::Close()
@@ -425,7 +414,6 @@ bool XSTM32FILE_NOTUNICODE::Close()
   
   return  (fresult == FR_OK)?true:false;  
 }
-
 
 
 /**-------------------------------------------------------------------------------------------------------------------
@@ -458,7 +446,6 @@ bool XSTM32FILE_NOTUNICODE::Erase(XCHAR* path, bool overwrite)
   
   return status;
 }
-
 
 
 /**-------------------------------------------------------------------------------------------------------------------
@@ -496,8 +483,6 @@ bool XSTM32FILE_NOTUNICODE::Rename(XCHAR* pathold, XCHAR* pathnew)
 }
 
 
-
-
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         FILE* XSTM32FILE_NOTUNICODE::CreateStructHandle()
@@ -511,7 +496,6 @@ FILE* XSTM32FILE_NOTUNICODE::CreateStructHandle()
 {
   return NULL;
 }
-
 
 
 /**-------------------------------------------------------------------------------------------------------------------
@@ -529,7 +513,6 @@ bool XSTM32FILE_NOTUNICODE::DeleteStructHandle()
 }
 
 
-
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         bool XSTM32FILE_NOTUNICODE::ActualizeSize()
@@ -543,7 +526,6 @@ bool XSTM32FILE_NOTUNICODE::ActualizeSize()
 {
   return Exist(xpathnamefile.Get());
 }
-
 
 
 /**-------------------------------------------------------------------------------------------------------------------

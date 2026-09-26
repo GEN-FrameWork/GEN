@@ -361,7 +361,7 @@ void XTRACE_TARGET::Clean()
 {
   type          = XTRACE_TYPE_NONE;
 
-  memset(aim  , 0, (_MAXSTR * sizeof(XCHAR)));
+  memset(aim, 0, (_MAXSTR * sizeof(XCHAR)));
   nsendings     = 0;
 
   #if (defined(DIO_ACTIVE) && defined(DIO_STREAMUDP_ACTIVE))
@@ -372,10 +372,6 @@ void XTRACE_TARGET::Clean()
 
   #endif
 }
-
-
-
-
 
 
 /**-------------------------------------------------------------------------------------------------------------------
@@ -665,11 +661,7 @@ void XTRACE_STATUS_MSG::Clean()
     {
       value_color[c] = 0;        
     }
-}  
-
-
-
-
+}
 
 
 /**-------------------------------------------------------------------------------------------------------------------
@@ -912,10 +904,6 @@ void XTRACE_STATUS_MSGS::Clean()
 {
 
 }
-
-
-
-
 
 
 /**-------------------------------------------------------------------------------------------------------------------
@@ -1291,7 +1279,7 @@ void XTRACE::PrintHeader(XBYTE level, XCHAR* header)
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         bool XTRACE::Print(XBYTE level, XCHAR* mask,...)
+* @fn         bool XTRACE::Print(XBYTE level, XCHAR* mask, ...)
 * @brief      Print
 * @ingroup    XUTILS
 * 
@@ -1302,7 +1290,7 @@ void XTRACE::PrintHeader(XBYTE level, XCHAR* header)
 * @return     bool : true if the operation is successful; otherwise false.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-bool XTRACE::Print(XBYTE level, XCHAR* mask,...)
+bool XTRACE::Print(XBYTE level, XCHAR* mask, ...)
 {
   XSTRING string;
   XSTRING outstring;
@@ -1428,14 +1416,14 @@ bool XTRACE::PrintDataBlock(XBYTE level, XBYTE* data, XDWORD size, XDWORD margin
 
       if(showoffset)
         {
-          strdata.Format(__L("%04X"),index);
+          strdata.Format(__L("%04X"), index);
           string += strdata;
-          string += __L("   ");
+          string += __L(" ");
         }
 
       for(XDWORD c=0; c<_sizeline; c++)
         {
-          strdata.Format(__L("%02X "),data[index]);
+          strdata.Format(__L("%02X "), data[index]);
           string += strdata;
           _size++;
           index++;
@@ -1445,7 +1433,7 @@ bool XTRACE::PrintDataBlock(XBYTE level, XBYTE* data, XDWORD size, XDWORD margin
         {
           for(XDWORD c=_sizeline; c<sizeline; c++)
             {
-              string += __L("   ");
+              string += __L(" ");
             }
         }
 
@@ -1460,7 +1448,7 @@ bool XTRACE::PrintDataBlock(XBYTE level, XBYTE* data, XDWORD size, XDWORD margin
 
               if((character<0x20) || (character>0x80) || (character==__C('%')) || (character==__C('\\'))) character = __C('.');
 
-              strdata.Format(__L("%c"),character);
+              strdata.Format(__L("%c"), character);
               string += strdata;
               index++;
             }
@@ -1493,7 +1481,7 @@ bool XTRACE::PrintDataBlock(XBYTE level, XBYTE* data, XDWORD size, XDWORD margin
 * --------------------------------------------------------------------------------------------------------------------*/
 bool XTRACE::PrintDataBlock(XBYTE level, XBUFFER& data, XDWORD marginsize, XDWORD sizeline, bool showoffset, bool showtext)
 {
-  return PrintDataBlock(level,data.Get(), data.GetSize(), marginsize, sizeline, showoffset, showtext);
+  return PrintDataBlock(level, data.Get(), data.GetSize(), marginsize, sizeline, showoffset, showtext);
 }
 
 
@@ -1535,7 +1523,7 @@ bool XTRACE::PrintMsgStatus(XBYTE level, XCHAR* name, bool value)
 {
   XSTRING string;
 
-  string.Format(__L("%s,%s,%c,%s"), XTRACE_IDMSGSTATUS, name, XTRACE_IDMSGSTATUS_BOOLEAN,(value?__L("true"):__L("false")));
+  string.Format(__L("%s,%s,%c,%s"), XTRACE_IDMSGSTATUS, name, XTRACE_IDMSGSTATUS_BOOLEAN, (value?__L("true"):__L("false")));
 
   return Print(level, string.Get());
 }
@@ -2348,7 +2336,7 @@ bool XTRACE::GenerateTab(int ntab, XSTRING& tab)
 
   for(int c=0;c<ntab;c++)
     {
-      tab += __L("  ");
+      tab += __L(" ");
     }
 
   return true;

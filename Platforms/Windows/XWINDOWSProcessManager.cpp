@@ -186,7 +186,7 @@ bool XWINDOWSPROCESSMANAGER::OpenURL(XCHAR* url)
   //handleINSTANCE handle = ShellExecute(NULL, L"open", url ,NULL, NULL, SW_SHOWNORMAL); 
   //if((int)handle <= 32) return false;
 
-  ShellExecute(NULL, L"open", url ,NULL, NULL, SW_SHOWNORMAL); 
+  ShellExecute(NULL, L"open", url, NULL, NULL, SW_SHOWNORMAL); 
 
   return true;
 }
@@ -345,8 +345,6 @@ bool XWINDOWSPROCESSMANAGER::Application_Execute(XCHAR* applicationpath, XCHAR* 
   
   return status;
 }
-
-
 
 
 /**-------------------------------------------------------------------------------------------------------------------
@@ -705,7 +703,7 @@ bool XWINDOWSPROCESSMANAGER::Application_GetRunningList(XVECTOR<XPROCESS*>& appl
 * @return     bool : true if the operation is successful; otherwise false.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-bool XWINDOWSPROCESSMANAGER::Application_Terminate(XDWORD processID, XDWORD  exitcode)
+bool XWINDOWSPROCESSMANAGER::Application_Terminate(XDWORD processID, XDWORD exitcode)
 {
   DWORD   desiredaccess   = PROCESS_TERMINATE;
   bool    inherithandle   = FALSE;

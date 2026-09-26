@@ -51,12 +51,9 @@ enum GRPPROPERTYMODE
   GRPPROPERTYMODE_32_BGRA_8888          ,
 };
 
-
 #define GRPPROPERTYMODE_SCREEN_CENTER    100000
 
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
-
 
 class GRPPROPERTIES
 {

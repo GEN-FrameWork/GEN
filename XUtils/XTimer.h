@@ -36,16 +36,11 @@
 #include "XString.h"
 #include "XPath.h"
 
-
-
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
 
 #define XTIMER_INFINITE                   -1
 
-
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
-
 
 class XDATETIME;
 class XFACTORY;
@@ -77,7 +72,6 @@ class XTIMERCLOCK
 };
 
 #endif
-
 
 class XTIMER 
 {

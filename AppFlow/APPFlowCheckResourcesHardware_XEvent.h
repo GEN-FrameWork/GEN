@@ -33,8 +33,6 @@
 #include "XEvent.h"
 #include "XSubject.h"
 
-
-
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
 
 enum APPFLOWCHECKRESOURCESHARDWARE_XEVENT_TYPE
@@ -44,8 +42,6 @@ enum APPFLOWCHECKRESOURCESHARDWARE_XEVENT_TYPE
   APPFLOWCHECKRESOURCESHARDWARE_XEVENT_TYPE_TOTALCPUUSAGELIMIT                                              ,
   APPFLOWCHECKRESOURCESHARDWARE_XEVENT_TYPE_APPCPUUSAGELIMIT                                       
 };
-
-
 
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
 

@@ -378,7 +378,7 @@ bool GRPBITMAPFILEPNG::CreateFileFromBitmap(XPATH& xpath, GRPBITMAP* bitmap, int
         {
           if(!setjmp(png_jmpbuf(png)))
             {
-              png_set_write_fn(png  , (void *)this, GRPBITMAPFILEPNG::WriteFileData, NULL);
+              png_set_write_fn(png, (void *)this, GRPBITMAPFILEPNG::WriteFileData, NULL);
 
               if(!setjmp(png_jmpbuf(png)))
                 {

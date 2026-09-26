@@ -36,15 +36,12 @@
 #include "DIOURL.h"
 #include "DIOScraperWeb.h"
 
-
-
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
 
 #define DIOSCRAPERWEBTRANSLATION_NAMEFILE       __L("ws_translation.xml")
 #define DIOSCRAPERWEBTRANSLATION_NAMESERVICE    __L("TRANSLATION")
 
 #define XLANGUAGE_CODE                          XLANGUAGE_ISO_639_3_CODE
-
 
 
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
@@ -82,7 +79,7 @@ class DIOSCRAPERWEBTRANSLATION : public DIOSCRAPERWEB
 
     bool                    ChangeURL                       (XCHAR* maskurl, DIOURL& url);
 
-    bool                    Get                             (XCHAR* text  , XLANGUAGE_CODE languagetextcode, XLANGUAGE_CODE languagetranslationcode, XSTRING& translation, int timeoutforurl = DIOSCRAPERWEB_MAXTIMEOUTFORURL, XSTRING* localIP = NULL, bool usecache = true);
+    bool                    Get                             (XCHAR* text, XLANGUAGE_CODE languagetextcode, XLANGUAGE_CODE languagetranslationcode, XSTRING& translation, int timeoutforurl = DIOSCRAPERWEB_MAXTIMEOUTFORURL, XSTRING* localIP = NULL, bool usecache = true);
     bool                    Get                             (XSTRING& text, XLANGUAGE_CODE languagetextcode, XLANGUAGE_CODE languagetranslationcode, XSTRING& translation, int timeoutforurl = DIOSCRAPERWEB_MAXTIMEOUTFORURL, XSTRING* localIP = NULL, bool usecache = true);
 
   private:

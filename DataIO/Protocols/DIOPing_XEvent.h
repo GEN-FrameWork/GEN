@@ -33,8 +33,6 @@
 #include "XEvent.h"
 #include "XSubject.h"
 
-
-
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
 
 enum DIOPING_XEVENT_TYPE

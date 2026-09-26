@@ -91,15 +91,11 @@ enum DIOAIOBIMAINBOARD_I2CDIGIGPIO
 #define DIOAIOBIMAINBOARD_SLOT_PIN11              31     // GPIO  6 Raspberry Pi.
 #define DIOAIOBIMAINBOARD_SLOT_PIN21              40     // GPIO 21 Raspberry Pi.
 
-
 #define DIOAIOBIMAINBOARD_DEFAULTTIMEOUT          10
 
 #define DIOAIOBIMAINBOARD_LOGSECTIONID            __L("AIOBI MainBoard")
 
-
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
-
 
 class DIOAIOBIMAINBOARD
 {

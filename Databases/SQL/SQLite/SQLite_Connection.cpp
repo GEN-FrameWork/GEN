@@ -148,7 +148,7 @@ bool SQLITE_CONNECTION::Connect()
     {
       int timeoutseconds = databasetimeout.ConvertToInt();
 
-      returncode = sqlite3_busy_timeout(static_cast<SQLITE_DATABASE*>(database)->sqlite3database,timeoutseconds*1000);
+      returncode = sqlite3_busy_timeout(static_cast<SQLITE_DATABASE*>(database)->sqlite3database, timeoutseconds*1000);
 
        if(returncode)
         {

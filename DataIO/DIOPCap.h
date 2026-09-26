@@ -40,7 +40,6 @@
 #include "DIOIP.h"
 
 
-
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
 
 #define DIOPCAPETHERNETMACSIZE        6
@@ -74,45 +73,41 @@ typedef struct
 
 typedef struct
 {
-  XBYTE                               ver_ihl;                  // Version (4 bits) + Internet header length (4 bits)
-  XBYTE                               typeservice;              // Type of service
-  XWORD                               len;                      // Total length
-  XWORD                               identification;           // Identification
-  XWORD                               flags_fo;                 // Flags (3 bits) + Fragment offset (13 bits)
-  XBYTE                               ttl;                      // Time to live
-  XBYTE                               protocol;                 // Protocol  https://en.wikipedia.org/wiki/List_of_IP_protocol_numbers
-  XWORD                               CRC;                      // Header checksum
-  XBYTE                               sourceaddr[4];            // Source address
-  XBYTE                               targetaddr[4];            // Target address
+  XBYTE                               ver_ihl;
+  XBYTE                               typeservice;
+  XWORD                               len;
+  XWORD                               identification;
+  XWORD                               flags_fo;
+  XBYTE                               ttl;
+  XBYTE                               protocol;
+  XWORD                               CRC;
+  XBYTE                               sourceaddr[4];
+  XBYTE                               targetaddr[4];
 
 } DIOPCAPIPHEADER;
 
 
 typedef struct
 {
-  XWORD                               sourceport;               // Source port
-  XWORD                               targetport;               // Target port
-  XWORD                               datagramlen;              // Datagram length
-  XWORD                               checksum;                 // Checksum
+  XWORD                               sourceport;
+  XWORD                               targetport;
+  XWORD                               datagramlen;
+  XWORD                               checksum;
 
 } DIOPCAPUDPHEADER;
 
-
 typedef struct
 {
-  XWORD                               sourceport;               // Source port
-  XWORD                               targetport;               // Target port
-  XDWORD                              sequencenumber;           // Sequence number    
-  XDWORD                              acknowledgementnumber;    // Acknowledgement Number
-  XWORD                               hlenflags;                // Header Length + Flags                 
-  XWORD                               windowsize;               // Windows size;
-  XWORD                               checksum;                 // CheckSum
-  XWORD                               urgentpointer;            // Urgent pointer
+  XWORD                               sourceport;
+  XWORD                               targetport;
+  XDWORD                              sequencenumber;
+  XDWORD                              acknowledgementnumber;
+  XWORD                               hlenflags;
+  XWORD                               windowsize;
+  XWORD                               checksum;
+  XWORD                               urgentpointer;
 
 } DIOPCAPTCPHEADER;
-
-
-
 
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
 
@@ -154,14 +149,12 @@ class DIOPCAPNETINTERFACE
     bool                              isloopback;      
 };
 
-
 class DIOPCAPFRAME
 {
   public:
                                       DIOPCAPFRAME                  (bool hardwareuselittleendian, bool isloopback);
     virtual                          ~DIOPCAPFRAME                  ();
 
-   
     XBUFFER*                          GetData                       ();
     bool                              SetData                       (XBYTE* data, XDWORD size);
 
@@ -218,7 +211,6 @@ class DIOPCAPFRAME
 
     XDWORD                            protocoltype;
     
-
     DIOMAC                            sourceMAC;   
     DIOMAC                            targetMAC;   
 
@@ -233,7 +225,6 @@ class DIOPCAPFRAME
 
     XDWORD                            allheaderssize;
 };
-
 
 class DIOPCAP
 {

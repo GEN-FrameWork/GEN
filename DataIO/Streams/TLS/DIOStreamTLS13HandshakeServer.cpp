@@ -311,8 +311,7 @@ static DIOSTREAMTLS_ALERT_DESCRIPTION DIOSTREAMTLS13_HANDSHAKESERVER_Certificate
 * @return     bool : true if the operation is successful; otherwise false.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-static bool DIOSTREAMTLS13_HANDSHAKESERVER_ExtensionIsEqual(DIOSTREAMTLS_MSG_EXTENSION* first,
-                                                             DIOSTREAMTLS_MSG_EXTENSION* second)
+static bool DIOSTREAMTLS13_HANDSHAKESERVER_ExtensionIsEqual(DIOSTREAMTLS_MSG_EXTENSION* first, DIOSTREAMTLS_MSG_EXTENSION* second)
 {
   XBUFFER firstbuffer;
   XBUFFER secondbuffer;
@@ -496,6 +495,7 @@ bool DIOSTREAMTLS13HANDSHAKESERVER::IsSessionResumed()
   return resumptionaccepted;
 }
 
+
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         bool DIOSTREAMTLS13HANDSHAKESERVER::IsEarlyDataOffered()
@@ -506,6 +506,8 @@ bool DIOSTREAMTLS13HANDSHAKESERVER::IsSessionResumed()
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
 bool DIOSTREAMTLS13HANDSHAKESERVER::IsEarlyDataOffered() { return earlydataoffered; }
+
+
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         bool DIOSTREAMTLS13HANDSHAKESERVER::IsEarlyDataAccepted()
@@ -516,6 +518,8 @@ bool DIOSTREAMTLS13HANDSHAKESERVER::IsEarlyDataOffered() { return earlydataoffer
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
 bool DIOSTREAMTLS13HANDSHAKESERVER::IsEarlyDataAccepted() { return earlydataaccepted; }
+
+
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         XDWORD DIOSTREAMTLS13HANDSHAKESERVER::GetEarlyDataSize()
@@ -526,6 +530,8 @@ bool DIOSTREAMTLS13HANDSHAKESERVER::IsEarlyDataAccepted() { return earlydataacce
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
 XDWORD DIOSTREAMTLS13HANDSHAKESERVER::GetEarlyDataSize() { return session?session->GetEarlyDataSize():0; }
+
+
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         XDWORD DIOSTREAMTLS13HANDSHAKESERVER::EarlyData_Read(XBYTE* data, XDWORD size)
@@ -538,7 +544,7 @@ XDWORD DIOSTREAMTLS13HANDSHAKESERVER::GetEarlyDataSize() { return session?sessio
 * @return     XDWORD : Requested value.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-XDWORD DIOSTREAMTLS13HANDSHAKESERVER::EarlyData_Read(XBYTE* data, XDWORD size) { return session?session->EarlyData_Read(data,size):0; }
+XDWORD DIOSTREAMTLS13HANDSHAKESERVER::EarlyData_Read(XBYTE* data, XDWORD size) { return session?session->EarlyData_Read(data, size):0; }
 
 
 /**-------------------------------------------------------------------------------------------------------------------
@@ -584,6 +590,7 @@ DIOSTREAMTLS_ALPN_TYPE DIOSTREAMTLS13HANDSHAKESERVER::GetApplicationProtocol()
 {
   return applicationprotocol;
 }
+
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
@@ -680,9 +687,7 @@ bool DIOSTREAMTLS13HANDSHAKESERVER::CipherSuite_Select(XVECTOR<XWORD>& offered, 
 * @return     bool : true if a mutually supported group was selected; otherwise false.
 *
 * --------------------------------------------------------------------------------------------------------------------*/
-bool DIOSTREAMTLS13HANDSHAKESERVER::Group_Select(DIOSTREAMTLS_MSG_HANDSHAKE_CLIENTHELLO* clienthello, XWORD& selectedgroup,
-                                                  XBUFFER& peerpublickey, bool& helloretryrequestrequired,
-                                                  bool& invalidkeyshare)
+bool DIOSTREAMTLS13HANDSHAKESERVER::Group_Select(DIOSTREAMTLS_MSG_HANDSHAKE_CLIENTHELLO* clienthello, XWORD& selectedgroup, XBUFFER& peerpublickey, bool& helloretryrequestrequired, bool& invalidkeyshare)
 {
   DIOSTREAMTLS_MSG_EXTENSION_SUPPORTEDGROUPS* supportedgroups = NULL;
   DIOSTREAMTLS_MSG_EXTENSION_KEYSHARE*        keyshare        = NULL;
@@ -838,11 +843,7 @@ bool DIOSTREAMTLS13HANDSHAKESERVER::SignatureScheme_Select(XVECTOR<XWORD>& offer
 * @return     bool : true if the operation is successful; otherwise false.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-bool DIOSTREAMTLS13HANDSHAKESERVER::ServerCredentials_Select(XCHAR* servername, XVECTOR<XWORD>& offeredsignatures,
-                                                              XVECTOR<XWORD>& offeredcertificatesignatures,
-                                                              XVECTOR<XBUFFER*>*& certificatechain, CIPHERKEY*& privatekey,
-                                                              XBUFFER*& OCSPstapledresponse, CIPHERCERTIFICATEX509& leafcertificate,
-                                                              XWORD& signaturescheme)
+bool DIOSTREAMTLS13HANDSHAKESERVER::ServerCredentials_Select(XCHAR* servername, XVECTOR<XWORD>& offeredsignatures, XVECTOR<XWORD>& offeredcertificatesignatures, XVECTOR<XBUFFER*>*& certificatechain, CIPHERKEY*& privatekey, XBUFFER*& OCSPstapledresponse, CIPHERCERTIFICATEX509& leafcertificate, XWORD& signaturescheme)
 {
   certificatechain     = NULL;
   privatekey            = NULL;
@@ -1119,9 +1120,7 @@ bool DIOSTREAMTLS13HANDSHAKESERVER::ClientHelloRetry_Validate(DIOSTREAMTLS_MSG_H
 * @return     bool : true if the operation is successful; otherwise false.
 *
 * --------------------------------------------------------------------------------------------------------------------*/
-bool DIOSTREAMTLS13HANDSHAKESERVER::HelloRetryRequest_Create(DIOSTREAMTLS_MSG_HANDSHAKE_CLIENTHELLO* clienthello,
-                                                              XBUFFER& clienthellobuffer, XWORD ciphersuite,
-                                                              XWORD group, XBUFFER& records)
+bool DIOSTREAMTLS13HANDSHAKESERVER::HelloRetryRequest_Create(DIOSTREAMTLS_MSG_HANDSHAKE_CLIENTHELLO* clienthello, XBUFFER& clienthellobuffer, XWORD ciphersuite, XWORD group, XBUFFER& records)
 {
   DIOSTREAMTLS_MSG_FRAGMENT<DIOSTREAMTLS_MSG_HANDSHAKE_SERVERHELLO> hrrmessage;
   DIOSTREAMTLS_MSG_HANDSHAKE_SERVERHELLO*                           hrrbody;
@@ -1148,8 +1147,7 @@ bool DIOSTREAMTLS13HANDSHAKESERVER::HelloRetryRequest_Create(DIOSTREAMTLS_MSG_HA
   if(!hrrbody) return SetError();
 
   hrrbody->SetLegacyVersion(DIOSTREAMTLS_MSG_VERSION_TLS_1_2);
-  memcpy(hrrbody->GetRandom(), DIOSTREAMTLS13_HANDSHAKESERVER_HELLORETRYREQUEST_RANDOM,
-         DIOSTREAMTLS_MSG_HELLORETRYREQUEST_RANDOM_SIZE);
+  memcpy(hrrbody->GetRandom(), DIOSTREAMTLS13_HANDSHAKESERVER_HELLORETRYREQUEST_RANDOM, DIOSTREAMTLS_MSG_HELLORETRYREQUEST_RANDOM_SIZE);
 
   hrrbody->SetSessionIDLength(clienthello->GetSessionIDLength());
   if(clienthello->GetSessionIDLength())
@@ -1224,10 +1222,7 @@ bool DIOSTREAMTLS13HANDSHAKESERVER::HelloRetryRequest_Create(DIOSTREAMTLS_MSG_HA
 *
 * @return     bool : true if the operation is successful; otherwise false.
 * --------------------------------------------------------------------------------------------------------------------*/
-bool DIOSTREAMTLS13HANDSHAKESERVER::ResumptionPSK_Select(DIOSTREAMTLS_MSG_HANDSHAKE_CLIENTHELLO* clienthello,
-                                                          XBUFFER& clienthellobuffer, XCHAR* servername,
-                                                          XBUFFER* applicationprotocol,
-                                                          XWORD& ciphersuite, XBUFFER& PSK)
+bool DIOSTREAMTLS13HANDSHAKESERVER::ResumptionPSK_Select(DIOSTREAMTLS_MSG_HANDSHAKE_CLIENTHELLO* clienthello, XBUFFER& clienthellobuffer, XCHAR* servername, XBUFFER* applicationprotocol, XWORD& ciphersuite, XBUFFER& PSK)
 {
   if(!config || !config->IsSessionResumptionActive() || !clienthello ||
      (config->GetClientAuthenticationMode() != DIOSTREAMTLS_CLIENTAUTHENTICATION_MODE_NONE)) return false;
@@ -1764,8 +1759,7 @@ bool DIOSTREAMTLS13HANDSHAKESERVER::ClientHello_Process(XBUFFER& clienthello, XB
 
   if(!Group_Select(body, group, peerpublickey, helloretryrequestrequired, invalidkeyshare))
     {
-      return SetError(invalidkeyshare?DIOSTREAMTLS_ALERT_DESCRIPTION_ILLEGAL_PARAMETER:
-                                      DIOSTREAMTLS_ALERT_DESCRIPTION_HANDSHAKE_FAILURE);
+      return SetError(invalidkeyshare?DIOSTREAMTLS_ALERT_DESCRIPTION_ILLEGAL_PARAMETER: DIOSTREAMTLS_ALERT_DESCRIPTION_HANDSHAKE_FAILURE);
     }
 
   resumptionaccepted = false;
@@ -1774,9 +1768,7 @@ bool DIOSTREAMTLS13HANDSHAKESERVER::ClientHello_Process(XBUFFER& clienthello, XB
 
   if(presharedkeyfound)
     {
-      resumptionaccepted = ResumptionPSK_Select(body, clienthello, servernamefound?requestedservername.Get():NULL,
-                                                applicationprotocolnegotiated?&applicationprotocolraw:NULL,
-                                                ciphersuite, resumptionpsk);
+      resumptionaccepted = ResumptionPSK_Select(body, clienthello, servernamefound?requestedservername.Get():NULL, applicationprotocolnegotiated?&applicationprotocolraw:NULL, ciphersuite, resumptionpsk);
 
       if(state == DIOSTREAMTLS13HANDSHAKESERVER_STATE_ERROR) return false;
     }
@@ -1803,8 +1795,7 @@ bool DIOSTREAMTLS13HANDSHAKESERVER::ClientHello_Process(XBUFFER& clienthello, XB
          (localcertificatechain->GetSize() >= 2) && localcertificatechain->Get(1) &&
          issuercertificate.Decode((*localcertificatechain->Get(1))))
         {
-          CIPHERCERTIFICATEX509REVOCATION_RESULT OCSPresult = CIPHERCERTIFICATEX509REVOCATION::ValidateOCSP(
-                                                    (*localOCSPresponse), leafcertificate, issuercertificate);
+          CIPHERCERTIFICATEX509REVOCATION_RESULT OCSPresult = CIPHERCERTIFICATEX509REVOCATION::ValidateOCSP((*localOCSPresponse), leafcertificate, issuercertificate);
 
           if(OCSPresult == CIPHERCERTIFICATEX509REVOCATION_RESULT_REVOKED)
             {
@@ -1847,8 +1838,7 @@ bool DIOSTREAMTLS13HANDSHAKESERVER::ClientHello_Process(XBUFFER& clienthello, XB
   if(!session->KeyExchange_ServerGenerate(group, peerpublickey, serverpublickey, sharedsecret, invalidpeershare))
     {
       sharedsecret.FillBuffer(0);
-      return SetError(invalidpeershare?DIOSTREAMTLS_ALERT_DESCRIPTION_ILLEGAL_PARAMETER:
-                                       DIOSTREAMTLS_ALERT_DESCRIPTION_INTERNAL_ERROR);
+      return SetError(invalidpeershare?DIOSTREAMTLS_ALERT_DESCRIPTION_ILLEGAL_PARAMETER: DIOSTREAMTLS_ALERT_DESCRIPTION_INTERNAL_ERROR);
     }
 
   if(!session->CipherSuite_Select(ciphersuite))
@@ -2277,9 +2267,7 @@ bool DIOSTREAMTLS13HANDSHAKESERVER::ClientHello_Process(XBUFFER& clienthello, XB
   retryciphersuite   = 0;
   clientcertificateprovided = false;
   state = earlydataaccepted?DIOSTREAMTLS13HANDSHAKESERVER_STATE_WAIT_END_OF_EARLY_DATA:
-          ((resumptionaccepted || (config->GetClientAuthenticationMode() == DIOSTREAMTLS_CLIENTAUTHENTICATION_MODE_NONE))?
-           DIOSTREAMTLS13HANDSHAKESERVER_STATE_WAIT_FINISHED:
-           DIOSTREAMTLS13HANDSHAKESERVER_STATE_WAIT_CLIENT_CERTIFICATE);
+          ((resumptionaccepted || (config->GetClientAuthenticationMode() == DIOSTREAMTLS_CLIENTAUTHENTICATION_MODE_NONE))? DIOSTREAMTLS13HANDSHAKESERVER_STATE_WAIT_FINISHED: DIOSTREAMTLS13HANDSHAKESERVER_STATE_WAIT_CLIENT_CERTIFICATE);
 
   return true;
 }
@@ -2380,8 +2368,7 @@ bool DIOSTREAMTLS13HANDSHAKESERVER::ClientCertificate_Process(XBUFFER& message)
           return SetError(DIOSTREAMTLS_ALERT_DESCRIPTION_INTERNAL_ERROR);
         }
 
-      CIPHERCERTIFICATEX509REVOCATION_RESULT OCSPresult = CIPHERCERTIFICATEX509REVOCATION::ValidateOCSP(
-                                                    OCSPresponse, (*validatedchain->Get(0)), (*validatedchain->Get(1)));
+      CIPHERCERTIFICATEX509REVOCATION_RESULT OCSPresult = CIPHERCERTIFICATEX509REVOCATION::ValidateOCSP(OCSPresponse, (*validatedchain->Get(0)), (*validatedchain->Get(1)));
 
       if(OCSPresult == CIPHERCERTIFICATEX509REVOCATION_RESULT_REVOKED)
         {
@@ -2407,7 +2394,7 @@ bool DIOSTREAMTLS13HANDSHAKESERVER::ClientCertificate_Process(XBUFFER& message)
       if(leaf && issuer && leaf->HasOCSPURL() &&
          config->GetOCSPDirectFetcher()((*leaf->GetOCSPURL()),(*leaf),(*issuer),response,config->GetOCSPDirectContext()) &&
          response.GetSize()<=config->GetMemoryPolicy()->GetMaximumOCSPResponseSize())
-        result=CIPHERCERTIFICATEX509REVOCATION::ValidateOCSP(response,(*leaf),(*issuer));
+        result=CIPHERCERTIFICATEX509REVOCATION::ValidateOCSP(response, (*leaf), (*issuer));
       if(result==CIPHERCERTIFICATEX509REVOCATION_RESULT_REVOKED) return SetError(DIOSTREAMTLS_ALERT_DESCRIPTION_CERTIFICATE_REVOKED);
       if((result!=CIPHERCERTIFICATEX509REVOCATION_RESULT_GOOD) &&
          (config->GetRevocationPolicy()!=DIOSTREAMTLS_REVOCATIONPOLICY_SOFT_FAIL))
@@ -2424,7 +2411,7 @@ bool DIOSTREAMTLS13HANDSHAKESERVER::ClientCertificate_Process(XBUFFER& message)
             {
               XBUFFER* CRL=config->GetCertificateRevocationLists()->Get(c);
               if(!CRL || CRL->GetSize()>config->GetMemoryPolicy()->GetMaximumCRLSize()) continue;
-              CIPHERCERTIFICATEX509REVOCATION_RESULT result=CIPHERCERTIFICATEX509REVOCATION::ValidateCRL((*CRL),(*validatedchain->Get(certindex)),(*validatedchain->Get(certindex+1)));
+              CIPHERCERTIFICATEX509REVOCATION_RESULT result=CIPHERCERTIFICATEX509REVOCATION::ValidateCRL((*CRL), (*validatedchain->Get(certindex)), (*validatedchain->Get(certindex+1)));
               if(result==CIPHERCERTIFICATEX509REVOCATION_RESULT_REVOKED) return SetError(DIOSTREAMTLS_ALERT_DESCRIPTION_CERTIFICATE_REVOKED);
               if(result==CIPHERCERTIFICATEX509REVOCATION_RESULT_GOOD) valid=true;
             }

@@ -60,9 +60,7 @@
 class UI_STYLESHEET;
 class GRP2DCANVAS;
 
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
-
 
 class UI_LAYOUT
 {
@@ -75,77 +73,46 @@ class UI_LAYOUT
     UI_SKIN*                        GetSkin                       ();
     void                            SetSkin                       (UI_SKIN* ui_skin);
 
-    // Ownership guard: a UI_LAYOUT deletes its "ui_skin" in its destructor by default (unchanged, historical
-    // behaviour -- the overwhelming common case is one <layout> node per XML root, exclusively owning the
-    // UI_SKIN created for it). When UI_MANAGER::CreateLayouts() builds MORE THAN ONE UI_LAYOUT from the same
-    // XML root, every one of them is constructed with the SAME UI_SKIN* (one skin per root, not per layout),
-    // so only the first is left owning it; CreateLayouts() calls SetOwnsSkin(false) on every subsequent one to
-    // prevent a double "GEN_DELETE ui_skin" (double-free/use-after-free) when those layouts are destroyed.
     void                            SetOwnsSkin                   (bool ownskin);
 
     UI_BACKGROUND*                  GetBackground                 ();
 
-    // Phase 1 ("estilo calculado tipado", ownership step): the CSS stylesheet declared by this layout's own
-    // <stylesheet> XML node (see UI_MANAGER::CreateLayouts()). Owned by this UI_LAYOUT -- deleted in its
-    // destructor -- instead of living as a single UI_MANAGER-wide pointer that every currently-loaded layout
-    // shared and that got silently replaced (and the previous one freed) every time ANY new layout's XML was
-    // loaded, even one belonging to a different, still-visible screen. SetStyleSheet() deletes any previously
-    // owned instance before taking the new one, same replace-and-free discipline UI_MANAGER used to apply.
     UI_STYLESHEET*                  GetStyleSheet                 ();
     void                            SetStyleSheet                 (UI_STYLESHEET* sheet);
 
-    // -------------------------------------------------------------------------
-    // UIScale contract (design px → framebuffer). Opt-in per layout:
-    //   - automatic when a <stylesheet> is present, OR
-    //   - explicit via SetUIScaleEnabled(true).
-    // XML-only layouts (no sheet, no flag) never use the design canvas — e.g. UI_Options.
-    // Authors work in designWidth x designHeight; uiScale defaults to 1.0 (identical to baseline).
-    // -------------------------------------------------------------------------
     XDWORD                          GetDesignWidth                () const;
     XDWORD                          GetDesignHeight               () const;
     void                            SetDesignSize                 (XDWORD width, XDWORD height);
 
     double                          GetUIScale                    () const;
-    void                            SetUIScale                    (double scale);   // clamp to [UI_LAYOUT_UISCALE_MIN .. MAX]
-    // Autofit path: clamp [FIT_MIN .. MAX] (may be below product MIN). Does not clear autofit flag.
+    void                            SetUIScale                    (double scale);
     void                            SetUIScaleForFit              (double scale);
 
     void                            SetUIScaleEnabled             (bool enabled);
     bool                            GetUIScaleEnabled             () const;
 
-    // Fase 5: when true, scale tracks window size (fit). Manual SetUIScale / zoom keys clear it.
     void                            SetUIScaleAutofit             (bool autofit);
     bool                            GetUIScaleAutofit             () const;
 
-    // True when this layout may use the design-canvas path (stylesheet OR explicit flag).
     bool                            IsUIScaleActive               () const;
 
-    // Fase 7: density for post-Present sharp SVG/chart overlay (= GetUIScale() when UIScale active).
-    // Design paint / BoundaryLine stay in design px; Present still upsamples the design canvas.
     double                          GetAssetRasterScale           () const;
 
-    // scale = min(sw/dw, sh/dh), clamped to [FIT_MIN .. MAX]. Does not mutate layout.
     double                          ComputeFitUIScale             (XDWORD screen_w, XDWORD screen_h) const;
 
-    // Fase 6: minimum hit AABB in design px (0 = disabled). Applied only in PreSelect IsWithin.
     double                          GetMinHitSize                 () const;
     void                            SetMinHitSize                 (double size);
 
-    // Screen (framebuffer) ↔ design px. Uses GetUIScale() + letterbox offsets from ComputePresentTransform().
-    // Fase 2/3: input maps screen→design before IsWithin; paint presents design→screen with the same math.
     void                            ScreenToDesign                (double screen_x, double screen_y, double& design_x, double& design_y) const;
     void                            DesignToScreen                (double design_x, double design_y, double& screen_x, double& screen_y) const;
 
     double                          GetUIScaleOffsetX             () const;
     double                          GetUIScaleOffsetY             () const;
 
-    // Centered present: offset = (screen - design*scale) / 2 (positive = letterbox, negative = zoom crop).
     void                            ComputePresentTransform       (XDWORD screen_w, XDWORD screen_h);
 
-    // True when paint must use design offscreen + scaled blit (scale≠1 or design size ≠ screen).
     bool                            NeedsScaledPresent            (XDWORD screen_w, XDWORD screen_h) const;
 
-    // Owned design framebuffer for Fase 3 paint (NULL when identity path). Manager creates/deletes.
     GRP2DCANVAS*                    GetDesignCanvas               () const;
     void                            SetDesignCanvas               (GRP2DCANVAS* canvas);
 
@@ -160,8 +127,6 @@ class UI_LAYOUT
 
     virtual bool                    Update                        ();
 
-    
-  
   private:
 
     UI_ELEMENT*                     Elements_Get                  (UI_ELEMENT* element, XCHAR* nameelement, UI_ELEMENT_TYPE type);

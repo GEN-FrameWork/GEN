@@ -37,8 +37,6 @@
 
 #include "GRPStatisticsChartStyle.h"
 
-
-
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
 
 enum GRPSTATISTICSCHARTOUTPUTFORMAT

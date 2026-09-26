@@ -35,9 +35,7 @@
 #include "XTrace.h"
 
 
-
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
-
 
 enum DIOSTREAMDEVICE_TYPE
 {
@@ -52,11 +50,7 @@ enum DIOSTREAMDEVICE_TYPE
 
 #define DIOGUID     XUUID
 
-
-
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
-
 
 class DIOSTREAMDEVICE
 {

@@ -35,8 +35,6 @@
 #include "XThread.h"
 #include "XEvent.h"
 
-
-
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
 
 
@@ -47,7 +45,6 @@
 class  XOBSERVER;
 class  XSUBJECT;
 class  XPUBLISHER;
-
 
 class XPUBLISHERENTRY
 {
@@ -63,7 +60,6 @@ class XPUBLISHERENTRY
 
     void                                Clean                       ();
 };
-
 
 class XPUBLISHER
 {

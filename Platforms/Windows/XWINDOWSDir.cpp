@@ -175,7 +175,7 @@ bool XWINDOWSDIR::Make(XCHAR* path, bool recursive)
       xpathsequence.Empty();
     
       do{
-          if(xpath.GetPathInSequence(index,pathpart))
+          if(xpath.GetPathInSequence(index, pathpart))
             {
               xpathsequence += pathpart;
               xpathsequence += __L("\\");
@@ -244,7 +244,7 @@ bool XWINDOWSDIR::ChangeTo(XCHAR* path)
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         bool XWINDOWSDIR::Delete(XCHAR* path,bool all)
+* @fn         bool XWINDOWSDIR::Delete(XCHAR* path, bool all)
 * @brief      Delete resource
 * @ingroup    PLATFORM_WINDOWS
 * 
@@ -254,7 +254,7 @@ bool XWINDOWSDIR::ChangeTo(XCHAR* path)
 * @return     bool : true if the operation is successful; otherwise false.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-bool XWINDOWSDIR::Delete(XCHAR* path,bool all)
+bool XWINDOWSDIR::Delete(XCHAR* path, bool all)
 {
   XDIRELEMENT search;
   XPATH       xpathname;
@@ -265,14 +265,14 @@ bool XWINDOWSDIR::Delete(XCHAR* path,bool all)
       xpathname     = path;
       patternsearch = __L("*");
 
-      if(FirstSearch(xpathname.Get(),patternsearch.Get(),&search))
+      if(FirstSearch(xpathname.Get(), patternsearch.Get(), &search))
         {
           do { xpathname  = path;
                xpathname.Slash_Add();
                xpathname += search.GetNameFile()->Get();
 
                if(search.GetType() == XDIRELEMENTTYPE_DIR)
-                     Delete(xpathname.Get(),all);
+                     Delete(xpathname.Get(), all);
                 else DeleteFile(xpathname.Get());
 
              } while(NextSearch(&search));
@@ -315,7 +315,7 @@ bool XWINDOWSDIR::GetActual(XPATH& xpath)
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         bool XWINDOWSDIR::FirstSearch(XCHAR* xpath,XCHAR* patternsearch,XDIRELEMENT* searchelement)
+* @fn         bool XWINDOWSDIR::FirstSearch(XCHAR* xpath, XCHAR* patternsearch, XDIRELEMENT* searchelement)
 * @brief      First search
 * @ingroup    PLATFORM_WINDOWS
 * 
@@ -326,7 +326,7 @@ bool XWINDOWSDIR::GetActual(XPATH& xpath)
 * @return     bool : true if the operation is successful; otherwise false.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-bool XWINDOWSDIR::FirstSearch(XCHAR* xpath,XCHAR* patternsearch,XDIRELEMENT* searchelement)
+bool XWINDOWSDIR::FirstSearch(XCHAR* xpath, XCHAR* patternsearch, XDIRELEMENT* searchelement)
 {
   if(!xpath)         
     {
@@ -344,7 +344,7 @@ bool XWINDOWSDIR::FirstSearch(XCHAR* xpath,XCHAR* patternsearch,XDIRELEMENT* sea
       return false;
     }
 
-  memset(findfiledata,0,sizeof(WIN32_FIND_DATA));
+  memset(findfiledata, 0, sizeof(WIN32_FIND_DATA));
 
   searchelement->SetFindFileData(findfiledata);
 
@@ -397,7 +397,7 @@ bool XWINDOWSDIR::NextSearch(XDIRELEMENT* searchelement)
   WIN32_FIND_DATA* search = (WIN32_FIND_DATA*)searchelement->GetFindFileData();
   HANDLE           handle = (HANDLE)searchelement->GetHandle();
 
-  if(!FindNextFile(handle,search))
+  if(!FindNextFile(handle, search))
     {
       FindClose(handle);
 

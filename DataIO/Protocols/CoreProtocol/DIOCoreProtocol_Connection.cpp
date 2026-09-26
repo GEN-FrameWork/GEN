@@ -1444,7 +1444,7 @@ bool DIOCOREPROTOCOL_CONNECTION::Update()
                                                                                                                                                                                                                     
                                                                                               GetRegisterData()->Serialize();
                                                                                           
-                                                                                              sended = SendMsg(header.GetIDMessage(), DIOCOREPROTOCOL_HEADER_OPERATION_REGISTERDATA, DIOCOREPROTOCOL_REGISTRATIONDATA_RESPONSE_OPERATION_PARAM,  &classcontent);                                                                                                            
+                                                                                              sended = SendMsg(header.GetIDMessage(), DIOCOREPROTOCOL_HEADER_OPERATION_REGISTERDATA, DIOCOREPROTOCOL_REGISTRATIONDATA_RESPONSE_OPERATION_PARAM, &classcontent);                                                                                                            
                                                                                               if(sended)
                                                                                                 {
                                                                                                   Status_Set(DIOCOREPROTOCOL_CONNECTION_STATUS_REGISTERED); 

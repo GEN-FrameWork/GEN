@@ -53,7 +53,6 @@ enum DIOLINUXTCPIPFSMEVENTS
   DIOLINUXTCPIP_LASTEVENT
 };
 
-
 enum DIOLINUXTCPIPFSMSTATES
 {
   DIOLINUXTCPIPFSMSTATE_NONE                = 0 ,
@@ -67,11 +66,7 @@ enum DIOLINUXTCPIPFSMSTATES
   DIOLINUXTCPIP_LASTSTATE
 };
 
-
-
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
-
 
 class DIOLINUXSTREAMTCPIP : public DIOSTREAMTCPIP , public XFSMACHINE
 {

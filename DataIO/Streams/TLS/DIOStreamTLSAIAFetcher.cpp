@@ -112,8 +112,7 @@ DIOSTREAMTLSAIAFETCHER::~DIOSTREAMTLSAIAFETCHER()
 * @return     bool : true if the operation is successful; otherwise false.
 *
 * --------------------------------------------------------------------------------------------------------------------*/
-bool DIOSTREAMTLSAIAFETCHER::Fetch(XSTRING& url, XBUFFER& tobuffer, int timeout,
-                                    XDWORD maximumheadersize, XDWORD maximumbodysize)
+bool DIOSTREAMTLSAIAFETCHER::Fetch(XSTRING& url, XBUFFER& tobuffer, int timeout, XDWORD maximumheadersize, XDWORD maximumbodysize)
 {
   tobuffer.Delete();
 
@@ -272,8 +271,7 @@ bool DIOSTREAMTLSAIAFETCHER::Exchange(DIOSTREAMTCPIP* diostream, XSTRING& server
   if(status)
     {
       XSTRING request;
-      request.Format(__L("GET %s HTTP/1.1\r\nHost: %s\r\nConnection: close\r\nUser-Agent: Mozilla 5.0\r\nAccept: */*\r\n\r\n"),
-                     resource.Get(), server.Get());
+      request.Format(__L("GET %s HTTP/1.1\r\nHost: %s\r\nConnection: close\r\nUser-Agent: Mozilla 5.0\r\nAccept: */*\r\n\r\n"), resource.Get(), server.Get());
 
       if(!diostream->WriteStr(request)) status = false;
 

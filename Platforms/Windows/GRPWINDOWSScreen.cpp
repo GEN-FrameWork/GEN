@@ -232,13 +232,7 @@ bool GRPWINDOWSSCREEN::Update(GRP2DCANVAS* canvas)
       return true;
     }
 
-  SetDIBitsToDevice(hdc, 0, 0, width  ,
-                               height ,
-                               0,0,0  ,
-                               height ,
-                               canvas->Buffer_Get() ,
-                               &hinfo ,
-                               DIB_RGB_COLORS);
+  SetDIBitsToDevice(hdc, 0, 0, width, height, 0, 0, 0, height, canvas->Buffer_Get(), &hinfo, DIB_RGB_COLORS);
 
   Uncloak();
 
@@ -297,13 +291,7 @@ bool GRPWINDOWSSCREEN::UpdateTransparent(GRP2DCANVAS* canvas)
  
   // XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, __L("[Screen Windows] Update Transparent (Equal)  (%04d,%04d)  Bitxpixel (%d)"), width, height, GetBitsperPixel());
      
-  SetDIBitsToDevice(hdcmem, 0, 0, width  ,
-                                  height ,
-                                  0,0,0  ,
-                                  height ,
-                                  canvas->Buffer_Get() ,
-                                  &hinfo ,
-                                  DIB_RGB_COLORS);     
+  SetDIBitsToDevice(hdcmem, 0, 0, width, height, 0, 0, 0, height, canvas->Buffer_Get(), &hinfo, DIB_RGB_COLORS);     
  
   POINT         ptsrc   = { 0, 0 };
   SIZE          sizewnd = { (LONG)width, (LONG)height };
@@ -343,7 +331,7 @@ bool GRPWINDOWSSCREEN::Delete()
 
   if(Style_Is(GRPSCREENSTYLE_FULLSCREEN)) 
     {
-      ChangeDisplaySettings(NULL,0);
+      ChangeDisplaySettings(NULL, 0);
     }  
 
   if(hdc)
@@ -846,7 +834,6 @@ bool GRPWINDOWSSCREEN::ShowCursor(bool active)
 }
 
 
-
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         void* GRPWINDOWSSCREEN::GetHandle()
@@ -1339,7 +1326,7 @@ void GRPWINDOWSSCREEN::Chromes_ApplyPostCreate()
   if(cfgchromes->GetNativeCaptionActive() && !cfgchromes->GetNativeIconActive())
     {
       SendMessage(hwnd, WM_SETICON, ICON_SMALL, (LPARAM)NULL);
-      SendMessage(hwnd, WM_SETICON, ICON_BIG  , (LPARAM)NULL);
+      SendMessage(hwnd, WM_SETICON, ICON_BIG, (LPARAM)NULL);
 
       // NOTE: WM_SETICON alone only affects the taskbar/Alt+Tab icon; the caption itself still reserves
       // and paints an icon slot. WS_EX_DLGMODALFRAME is the standard Win32 technique to make the caption
@@ -1480,17 +1467,7 @@ bool GRPWINDOWSSCREEN::Create_Window(bool show)
           _exstyle |= WS_EX_TOOLWINDOW;
         }
 
-      hwnd = CreateWindowEx(_exstyle          ,
-                            classname.Get()   ,
-                            NULL              ,
-                            _style            ,
-                            posx, posy        ,
-                            width             ,
-                            height            ,
-                            NULL              ,
-                            NULL              ,
-                            hinstance         ,
-                            (void*)this);
+      hwnd = CreateWindowEx(_exstyle, classname.Get(), NULL, _style, posx, posy, width, height, NULL, NULL, hinstance, (void*)this);
 
       if(!hwnd) 
         {
@@ -1498,8 +1475,8 @@ bool GRPWINDOWSSCREEN::Create_Window(bool show)
         }
 
       SetPosition(posx, posy);  
-      SetSize(width ,height);
-      SetMaxSize(width ,height);              
+      SetSize(width, height);
+      SetMaxSize(width, height);              
     }
    else
     {          
@@ -1589,17 +1566,7 @@ bool GRPWINDOWSSCREEN::Create_Window(bool show)
           _exstyle |= WS_EX_TOOLWINDOW;
         }
 
-      hwnd = CreateWindowEx(_exstyle          ,
-                            classname.Get()   ,
-                            (usecfgchromesnative && !GetCFGChromes()->GetNativeTitleActive()) ? __L("") : GetTitle()->Get() ,
-                            _style            ,
-                            posx              , 
-                            posy              ,
-                            winw ,winh        ,
-                            NULL              ,
-                            NULL              ,
-                            hinstance         ,
-                            (void*)this);
+      hwnd = CreateWindowEx(_exstyle, classname.Get(), (usecfgchromesnative && !GetCFGChromes()->GetNativeTitleActive()) ? __L("") : GetTitle()->Get(), _style, posx, posy, winw, winh, NULL, NULL, hinstance, (void*)this);
 
       if(!hwnd)
         {
@@ -1665,12 +1632,12 @@ bool GRPWINDOWSSCREEN::Create_Window(bool show)
       point.x  += alldesktoprect->x1;
       point.y  += alldesktoprect->y1;   
     
-      SetPosition(point.x,  point.y);
-      Set_Position(point.x,  point.y);
+      SetPosition(point.x, point.y);
+      Set_Position(point.x, point.y);
 
       // NOTE: the screen size members stay at the CONTENT size (width/height), not the window size.
-      SetSize(width ,height);
-      SetMaxSize(width ,height);
+      SetSize(width, height);
+      SetMaxSize(width, height);
     }
 
   // XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, __L("[Screen Windows] Part 2 Ini: x=%04d, y=%04d (%04d,%04d)  Bitxpixel (%d)"), posx, posy, width, height, GetBitsperPixel());
@@ -1686,7 +1653,7 @@ bool GRPWINDOWSSCREEN::Create_Window(bool show)
 
 
   #ifndef OPENGL_INFO
-  memset(&hinfo,0,sizeof(BITMAPINFO));
+  memset(&hinfo, 0, sizeof(BITMAPINFO));
 
   hinfo.bmiHeader.biSize          = sizeof(BITMAPINFOHEADER);
   hinfo.bmiHeader.biWidth         = width;
@@ -1899,7 +1866,7 @@ LRESULT CALLBACK GRPWINDOWSSCREEN::BaseWndProc(HWND hwnd, UINT msg, WPARAM wpara
       case WM_MOVE                  : { GRPWINDOWSSCREEN* screen =  (GRPWINDOWSSCREEN*)GRPSCREEN::GetListScreens()->Get((void*)hwnd);
                                         if(screen)
                                           {
-                                            screen->SetPosition((int)(short) LOWORD(lparam),(int)(short) HIWORD(lparam));
+                                            screen->SetPosition((int)(short) LOWORD(lparam), (int)(short) HIWORD(lparam));
 
                                             //XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, __L("[Windows] move: x=%04d, y=%04d (%04d,%04d)"), screen->GetPositionX(), screen->GetPositionY(), screen->GetWidth(), screen->GetHeight());
                                           }

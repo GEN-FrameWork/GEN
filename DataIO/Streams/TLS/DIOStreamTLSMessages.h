@@ -228,7 +228,6 @@ enum DIOSTREAMTLSKEYSCHEDULE_ROLE
   DIOSTREAMTLSKEYSCHEDULE_ROLE_SERVER                   ,
 };
 
-
 enum DIOSTREAMTLSKEYSCHEDULE_DIRECTION
 {
   DIOSTREAMTLSKEYSCHEDULE_DIRECTION_LOCAL           = 0 ,                       // What this end writes
@@ -242,7 +241,6 @@ enum DIOSTREAMTLSKEYSCHEDULE_DIRECTION
 
 
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
-
 
 class DIOSTREAMTLS_MSG_INTERFACE
 { 
@@ -261,9 +259,7 @@ class DIOSTREAMTLS_MSG_INTERFACE
     void                                    Clean                                             ();    
 };
 
-
 #define DIOSTREAMTLS_MSG_RECORDHEADER_SIZE                                    5
-
 
 class DIOSTREAMTLS_MSG_RECORDHEADER : public DIOSTREAMTLS_MSG_INTERFACE
 {
@@ -293,7 +289,6 @@ class DIOSTREAMTLS_MSG_RECORDHEADER : public DIOSTREAMTLS_MSG_INTERFACE
     XWORD                                   protocolversion;
     XWORD                                   length;
 };
-
 
 class DIOSTREAMTLS_MSG_HANDSHAKE : public DIOSTREAMTLS_MSG_INTERFACE
 {
@@ -349,10 +344,8 @@ class DIOSTREAMTLS_MSG_ALERT : public DIOSTREAMTLS_MSG_INTERFACE
     XBYTE                                   description;
 };
 
-
 bool                                        DIOSTREAMTLS_MSG_AddLength24                    (XBUFFER& buffer, XDWORD length);
 bool                                        DIOSTREAMTLS_MSG_ExtractLength24                (XBUFFER& buffer, XDWORD& length);
-
 
 template<typename T>
 class DIOSTREAMTLS_MSG_RECORD : public DIOSTREAMTLS_MSG_INTERFACE
@@ -363,48 +356,40 @@ class DIOSTREAMTLS_MSG_RECORD : public DIOSTREAMTLS_MSG_INTERFACE
                                               Clean();
                                             }
 
-
     virtual                                ~DIOSTREAMTLS_MSG_RECORD                           ()
                                             { 
                                               Clean();
                                             }
-
 
     DIOSTREAMTLS_MSG_RECORDHEADER*          GetHeader                                         ()
                                             {
                                               return &header;
                                             }
 
-
     DIOSTREAMTLS_CONTENTTYPE                GetContenType                                     ()
                                             {
                                               return header.GetContenType();
                                             }
-
 
     void                                    SetContenType                                     (DIOSTREAMTLS_CONTENTTYPE contenttype)
                                             {
                                               header.SetContenType(contenttype);
                                             }
 
-
     XWORD                                   GetProtocolVersion                                ()
                                             {
                                               return header.GetProtocolVersion();
                                             }
-
 
     void                                    SetProtocolVersion                                (XWORD protocolversion)
                                             {
                                               header.SetProtocolVersion(protocolversion);
                                             }
 
-
     XWORD                                   GetLength                                         ()
                                             {
                                               return header.GetLength();
                                             }
-
 
     void                                    SetLength                                         (XWORD length)
                                             {
@@ -421,13 +406,11 @@ class DIOSTREAMTLS_MSG_RECORD : public DIOSTREAMTLS_MSG_INTERFACE
                                                 }
                                             } 
 
-
     T*                                      GetFragment                                       ()
                                             {
                                               return &fragment;
                                             } 
  
-
     bool                                    SetToBuffer                                       (XBUFFER& buffer, bool showdebug)
                                             {
                                               XBUFFER fragmentbuffer;
@@ -453,7 +436,6 @@ class DIOSTREAMTLS_MSG_RECORD : public DIOSTREAMTLS_MSG_INTERFACE
 
                                               return buffer.Add(fragmentbuffer);
                                             }
-
 
     bool                                    GetFromBuffer                                     (XBUFFER& buffer, bool showdebug)
                                             {
@@ -511,7 +493,6 @@ class DIOSTREAMTLS_MSG_RECORD : public DIOSTREAMTLS_MSG_INTERFACE
     T                                       fragment;
 };
 
-
 template<typename T>
 class DIOSTREAMTLS_MSG_FRAGMENT : public DIOSTREAMTLS_MSG_INTERFACE
 { 
@@ -521,31 +502,26 @@ class DIOSTREAMTLS_MSG_FRAGMENT : public DIOSTREAMTLS_MSG_INTERFACE
                                               Clean();
                                             }
 
-
     virtual                                ~DIOSTREAMTLS_MSG_FRAGMENT                         ()
                                             {
                                               Clean();
                                             }
-
 
     XBYTE                                   GetMsgType                                        ()
                                             {
                                               return msgtype;
                                             }
 
-
     void                                    SetMsgType                                        (XBYTE msgtype)
                                             {
                                               this->msgtype = msgtype;
                                             }
-
 
     XDWORD                                  GetLength                                         ()
                                             {
                                               return length;    
                                             } 
     
-
     void                                    SetLength                                         (XDWORD length)
                                             {
                                               this->length = length;    
@@ -555,7 +531,6 @@ class DIOSTREAMTLS_MSG_FRAGMENT : public DIOSTREAMTLS_MSG_INTERFACE
                                             {
                                               return &body;  
                                             }  
-
 
     bool                                    SetToBuffer                                       (XBUFFER& buffer, bool showdebug)
                                             {
@@ -585,7 +560,6 @@ class DIOSTREAMTLS_MSG_FRAGMENT : public DIOSTREAMTLS_MSG_INTERFACE
 
                                               return buffer.Add(bodybuffer);
                                             }
-
 
     bool                                    GetFromBuffer                                     (XBUFFER& buffer, bool showdebug)
                                             {

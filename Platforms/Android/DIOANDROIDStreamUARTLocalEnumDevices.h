@@ -28,7 +28,6 @@
 
 #pragma once
 
-
 #if defined(DIO_ACTIVE) && defined(DIO_STREAMUART_ACTIVE)
 
 

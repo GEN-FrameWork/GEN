@@ -62,7 +62,6 @@
 #define DIOSTREAMTLS13KEYSCHEDULE_LABEL_FINISHED                __L("finished")
 #define DIOSTREAMTLS13KEYSCHEDULE_LABEL_TRAFFICUPDATE           __L("traffic upd")
 
-
 // DIOSTREAMTLSKEYSCHEDULE_ROLE and _DIRECTION/_MAXDIRECTIONS moved to DIOStreamTLSMessages.h: they are shared
 // vocabulary with the TLS 1.2 key schedule (DIOSTREAMTLS12KEYSCHEDULE), not exclusive to this TLS 1.3 one. Every
 // secret here is still asked for by direction, never by role -- that's what lets the server-role build of this
@@ -76,11 +75,7 @@ enum DIOSTREAMTLS13KEYSCHEDULE_LEVEL
   DIOSTREAMTLS13KEYSCHEDULE_LEVEL_APPLICATION             ,
 };
 
-
-
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
-
 
 class DIOSTREAMTLS13KEYSCHEDULE
 {

@@ -32,20 +32,14 @@
 
 #include "XVector.h"
 
-
-
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
 
 #define GRP2DREBUILDAREAS_DEFAULT_EXCESSEDGE   10
 
-
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
-
 
 class GRP2DCANVAS;
 class GRPBITMAP;
-
 
 class GRP2DREBUILDAREA
 {
@@ -58,7 +52,6 @@ class GRP2DREBUILDAREA
 
     void                              SetXPos                 (double xpos);
     void                              SetYPos                 (double ypos);
-
 
     GRPBITMAP*                        GetBitmap               ();
     void                              SetBitmap               (GRPBITMAP* bitmap);
@@ -79,7 +72,6 @@ class GRP2DREBUILDAREA
 
     void                              Clean                   ();
 };
-
 
 class GRP2DREBUILDAREAS
 {

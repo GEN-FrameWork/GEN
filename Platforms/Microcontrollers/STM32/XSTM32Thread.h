@@ -37,7 +37,6 @@
 
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
 
-
 class XSTM32MUTEX : public XMUTEX
 {
   public:
@@ -60,7 +59,7 @@ class XSTM32MUTEX : public XMUTEX
 class XSTM32THREAD  : public XTHREAD
 {
   public:
-                          XSTM32THREAD              (XTHREADGROUPID groupID, XCHAR* ID,XTHREADFUNCTION function = NULL,void* data = NULL);
+                          XSTM32THREAD              (XTHREADGROUPID groupID, XCHAR* ID, XTHREADFUNCTION function = NULL, void* data = NULL);
      virtual             ~XSTM32THREAD              ();
 
      virtual bool         Ini                       (bool run = true);

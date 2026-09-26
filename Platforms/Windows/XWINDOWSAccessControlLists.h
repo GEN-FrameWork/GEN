@@ -43,7 +43,6 @@
 
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
 
-
 #define XWINDOWSACL_DELETE                           (0x00010000L)
 #define XWINDOWSACL_READ_CONTROL                     (0x00020000L)
 #define XWINDOWSACL_WRITE_DAC                        (0x00040000L)

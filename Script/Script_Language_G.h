@@ -121,7 +121,6 @@ enum SCRIPT_LNG_G_ERRORCODE
   SCRIPT_LNG_G_ERRORCODE_TYPE_MISMATCH                               // "Type mismatch"
 };
 
-
 union SCRIPT_LNG_G_VARVALUE
 {
   int          integer;
@@ -153,8 +152,8 @@ class SCRIPT_LNG_G_COMMAND
     XSTRING*                            GetCommand                  ();
     SCRIPT_LNG_G_TOKENIREPS             GetToken                    ();
 
-    bool                                Set                         (XCHAR* command,SCRIPT_LNG_G_TOKENIREPS token);
-    bool                                Set                         (XSTRING& command,SCRIPT_LNG_G_TOKENIREPS token);
+    bool                                Set                         (XCHAR* command, SCRIPT_LNG_G_TOKENIREPS token);
+    bool                                Set                         (XSTRING& command, SCRIPT_LNG_G_TOKENIREPS token);
 
   private:
 
@@ -188,7 +187,6 @@ class SCRIPT_LNG_G_FUNCTIONTYPE
     SCRIPT_LNG_G_TOKENIREPS             returntype;
     XCHAR*                              location;
 };
-
 
 class SCRIPT_LNG_G_VAR
 {
@@ -245,17 +243,15 @@ class SCRIPT_LNG_G_VAR
     bool                                isreturnvalue;
 };
 
-
 class SCRIPT_LNG_G : public SCRIPT
 {
   public:
                                         SCRIPT_LNG_G                ();
     virtual                            ~SCRIPT_LNG_G                ();
 
-
    int                                  Run                         (int* returnval = NULL);
 
-    bool                                AddCommand                  (XCHAR* command, SCRIPT_LNG_G_TOKENIREPS  token);
+    bool                                AddCommand                  (XCHAR* command, SCRIPT_LNG_G_TOKENIREPS token);
     bool                                DeleteCommands              ();
 
     int                                 GetFuncParams               (SCRIPT_LNG_G_VAR* params);
@@ -274,7 +270,7 @@ class SCRIPT_LNG_G : public SCRIPT
     bool                                IsDigit                     (XCHAR character);
     bool                                IsAlpha                     (XCHAR character);
 
-    bool                                IsDelimiter                 (XCHAR  c);
+    bool                                IsDelimiter                 (XCHAR c);
     SCRIPT_LNG_G_TOKENIREPS             LookUpToken                 (XCHAR* s);
     void                                PutBackToken                ();
 

@@ -107,11 +107,11 @@ bool SCRIPT_LIB_SYSTEM::AddLibraryFunctions(SCRIPT* script)
 
   this->script = script;
 
-  script->AddLibraryFunction(this, __L("System_GetType")              , Call_System_GetType);
-  script->AddLibraryFunction(this, __L("System_Reboot")               , Call_System_Reboot);
-  script->AddLibraryFunction(this, __L("System_PowerOff")             , Call_System_PowerOff);
-  script->AddLibraryFunction(this, __L("System_Logout")               , Call_System_Logout);
-  script->AddLibraryFunction(this, __L("System_GetEnviromentVar")     , Call_System_GetEnviromentVar);
+  script->AddLibraryFunction(this, __L("System_GetType"), Call_System_GetType);
+  script->AddLibraryFunction(this, __L("System_Reboot"), Call_System_Reboot);
+  script->AddLibraryFunction(this, __L("System_PowerOff"), Call_System_PowerOff);
+  script->AddLibraryFunction(this, __L("System_Logout"), Call_System_Logout);
+  script->AddLibraryFunction(this, __L("System_GetEnviromentVar"), Call_System_GetEnviromentVar);
 
   return true;
 }

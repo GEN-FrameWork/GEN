@@ -328,10 +328,6 @@ void DIOAPPLICATIONUPDATE_VERSIONDATA::Clean()
 }
 
 
-
-
-
-
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         DIOAPPLICATIONUPDATE_FILE::DIOAPPLICATIONUPDATE_FILE(XPATH& xpathfile, XDWORD CRC32, XQWORD size)
@@ -458,10 +454,6 @@ void DIOAPPLICATIONUPDATE_FILE::Clean()
 }
 
 
-
-
-
-
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         DIOAPPLICATIONUPDATE::DIOAPPLICATIONUPDATE(XDWORD applicationversion, XDWORD applicationsubversion, XDWORD applicationsubversionerror, XCHAR* applicationname, XPATH& xpathrootapp)
@@ -570,7 +562,7 @@ bool DIOAPPLICATIONUPDATE::GetVersionAvailable(DIOURL& url, int port, DIOAPPLICA
 
   webclient->Set_Port(port);
 
-  status = webclient->Get(urlfile, xpath ,NULL, timeout);
+  status = webclient->Get(urlfile, xpath, NULL, timeout);
   if(!status)
     {
       if(stopprocess)
@@ -617,8 +609,8 @@ bool DIOAPPLICATIONUPDATE::GetVersionAvailable(DIOURL& url, int port, DIOAPPLICA
 
                       int comma=value.FindCharacter(__C(','));
                       XSTRING name;
-                      value.Copy(0,comma,name);
-                      value.DeleteCharacters(0,comma+1);
+                      value.Copy(0, comma, name);
+                      value.DeleteCharacters(0, comma+1);
                       value.UnFormat(__L("%d,%08X"), &sizefile, &CRC32);
                       xpathfile.Set(name.Get());
 
@@ -1430,9 +1422,7 @@ bool DIOAPPLICATIONUPDATE::Restore(DIOAPPLICATIONUPDATE_VERSIONDATA& application
 
   xpathbackup =  xpathrootapp;
   xpathbackup.Slash_Add();
-  xpathbackup.AddFormat(dir_mask.Get(), applicationversiondata.GetVersion()
-                                      , applicationversiondata.GetSubVersion()
-                                      , applicationversiondata.GetSubVersionError());
+  xpathbackup.AddFormat(dir_mask.Get(), applicationversiondata.GetVersion(), applicationversiondata.GetSubVersion(), applicationversiondata.GetSubVersionError());
 
   status = Restore(xpathbackup, error);
 

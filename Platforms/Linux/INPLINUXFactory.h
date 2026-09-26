@@ -30,7 +30,6 @@
 
 /*---- INCLUDES ------------------------------------------------------------------------------------------------------*/
 
-
 #include "XString.h"
 #include "XVector.h"
 
@@ -38,7 +37,6 @@
 #include "INPLINUXDeviceID.h"
 
 #include "INPFactory.h"
-
 
 
 

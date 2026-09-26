@@ -51,16 +51,11 @@
 
 #include "DIOStreamBluetoothLERemoteEnumDevices.h"
 
-
-
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
 
 #define DIOLINUXSTREAMBLUETOOTHLEREMOTEENUMDEVICES_MAXLIST  1024
 
-
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
-
 
 class XMUTEX;
 class DIOSTREAMDEVICEBLUETOOTH;

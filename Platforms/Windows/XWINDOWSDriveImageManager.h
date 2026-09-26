@@ -36,11 +36,7 @@
 
 #include "XDriveImageManager.h"
 
-
-
-
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
-
 
 typedef struct
 {
@@ -50,11 +46,7 @@ typedef struct
 
 } XWINDOWSDRIVEIMAGE_DEVICE_NUMBER;
 
-
-
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
-
 
 class XWINDOWSDRIVEIMAGEMANAGER : public XDRIVEIMAGEMANAGER
 {
@@ -71,9 +63,7 @@ class XWINDOWSDRIVEIMAGEMANAGER : public XDRIVEIMAGEMANAGER
 
     bool                        Close                           (XDRIVEIMAGEMANAGER_DRIVE& drive);
 
-
   private:
-
 
     HANDLE                      GetHandleFromDevice             (int device, XDWORD access);
     HANDLE                      GetHandleFromVolume             (int volume, XDWORD access);

@@ -91,28 +91,22 @@ enum DIOMODBUSELECTRICMETER_REGISTERTYPE
 #define DIOMODBUSELECTRICMETER_CONNECTTIMEOUT            5       // Seconds
 #define DIOMODBUSELECTRICMETER_READTIMEOUT              15       // Seconds
 
-
-
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
-
 
 class XFACTORY;
 class XPUBLISHER;
 class DIOSTREAM;
 
-
 class DIOMODBUSELECTRICMETERXEVENT : public XEVENT
 {
   public:
-                              DIOMODBUSELECTRICMETERXEVENT        (XSUBJECT* subject,XDWORD type = DIOMODBUSELECTRICMETERXEVENT_TYPE_UNKNOW);
+                              DIOMODBUSELECTRICMETERXEVENT        (XSUBJECT* subject, XDWORD type = DIOMODBUSELECTRICMETERXEVENT_TYPE_UNKNOW);
     virtual                  ~DIOMODBUSELECTRICMETERXEVENT        ();
 
   private:
 
     void                      Clean                               ();
 };
-
 
 class DIOMODBUSELECTRICMETER  : public XSUBJECT
 {

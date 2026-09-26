@@ -34,19 +34,12 @@
 
 #include "DIOStreamEnumDevices.h"
 
-
-
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
-
-
-
 
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
 
-
 class XBUFFER;
 class XTIMER;
-
 
 class DIOSTREAMENUMSERVERS :  public DIOSTREAMENUMDEVICES
 {

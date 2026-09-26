@@ -39,10 +39,7 @@
 #include "DIOCoreProtocol_Connection.h"
 #include "DIOCoreProtocol_ConnectionsManager.h"
 
-
-
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
-
 
 enum DIOCOREPROTOCOL_CONNECTIONSMANAGER_XEVENT_TYPE
 {
@@ -56,11 +53,7 @@ enum DIOCOREPROTOCOL_CONNECTIONSMANAGER_XEVENT_TYPE
   DIOCOREPROTOCOL_CONNECTIONSMANAGER_XEVENT_TYPE_ASKUPDATECLASS
 };
 
-
-
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
-
 
 class DIOCOREPROTOCOL_CONNECTIONSMANAGER_XEVENT : public XEVENT
 {

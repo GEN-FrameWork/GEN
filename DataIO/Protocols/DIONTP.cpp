@@ -147,7 +147,7 @@ bool DIONTP::GetTimeResponse(XCHAR* urlntpserver, int timeout, bool hardwareusel
 
   basicinfo.livnmode = 27; //Encoded representation which represents NTP Client Request & NTP version 3.0
 
-  if(diostreamudp->Write((XBYTE*)&basicinfo,sizeof(DIONTPBASICINFO)))
+  if(diostreamudp->Write((XBYTE*)&basicinfo, sizeof(DIONTPBASICINFO)))
     {
       xtimer->Reset();
 
@@ -155,7 +155,7 @@ bool DIONTP::GetTimeResponse(XCHAR* urlntpserver, int timeout, bool hardwareusel
       XDWORD           br = 0;
       while(!br)
         {
-          memset((XBYTE*)&fullpacket,0 ,sizeof(DIONTPFULLPACKET));
+          memset((XBYTE*)&fullpacket, 0, sizeof(DIONTPFULLPACKET));
 
           XDWORD size  = diostreamudp->GetInXBuffer()->GetSize();
           if(size >= sizeof(DIONTPBASICINFO))
@@ -165,9 +165,9 @@ bool DIONTP::GetTimeResponse(XCHAR* urlntpserver, int timeout, bool hardwareusel
                 {              
                   response.stratum           = fullpacket.basic.stratum;
                   response.leapindicator     = (fullpacket.basic.livnmode & 0xC0) >> 6;
-                  response.originatetime     = ConvertTimePacket(fullpacket.basic.originatetimestamp  , hardwareuselittleendian);
-                  response.receivetime       = ConvertTimePacket(fullpacket.basic.receivetimestamp    , hardwareuselittleendian);
-                  response.transmittime      = ConvertTimePacket(fullpacket.basic.transmittimestamp   , hardwareuselittleendian);
+                  response.originatetime     = ConvertTimePacket(fullpacket.basic.originatetimestamp, hardwareuselittleendian);
+                  response.receivetime       = ConvertTimePacket(fullpacket.basic.receivetimestamp, hardwareuselittleendian);
+                  response.transmittime      = ConvertTimePacket(fullpacket.basic.transmittimestamp, hardwareuselittleendian);
 
                   long long roundtripdelay   = (long long)(response.destinationtime - response.originatetime) - (long long)(response.receivetime - response.transmittime);
                   long long localclockoffset = (long long)(response.receivetime - response.originatetime)     + (long long)(response.transmittime - response.destinationtime);
@@ -237,7 +237,7 @@ bool DIONTP::GetTimeSeconds(XCHAR* urlntpserver, int timeout, bool hardwareuseli
 
   timeseconds = 0;
 
-  if(GetTimeResponse(urlntpserver,timeout, hardwareuselittleendian, response))
+  if(GetTimeResponse(urlntpserver, timeout, hardwareuselittleendian, response))
     {
       timeseconds = (response.receivetime >> 32);
 

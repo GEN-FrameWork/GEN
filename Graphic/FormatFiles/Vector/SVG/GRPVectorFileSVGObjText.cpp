@@ -166,6 +166,8 @@ XSTRING* GRPVECTORFILESVGOBJTEXT::GetText()   { return &text; }
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
 double                     GRPVECTORFILESVGOBJTEXT::GetX()           { return x;          }
+
+
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         double GRPVECTORFILESVGOBJTEXT::GetY()
@@ -176,6 +178,8 @@ double                     GRPVECTORFILESVGOBJTEXT::GetX()           { return x;
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
 double                     GRPVECTORFILESVGOBJTEXT::GetY()           { return y;          }
+
+
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         bool GRPVECTORFILESVGOBJTEXT::HasX()
@@ -186,6 +190,8 @@ double                     GRPVECTORFILESVGOBJTEXT::GetY()           { return y;
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
 bool                       GRPVECTORFILESVGOBJTEXT::HasX()           { return hasx;       }
+
+
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         bool GRPVECTORFILESVGOBJTEXT::HasY()
@@ -196,6 +202,8 @@ bool                       GRPVECTORFILESVGOBJTEXT::HasX()           { return ha
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
 bool                       GRPVECTORFILESVGOBJTEXT::HasY()           { return hasy;       }
+
+
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         double GRPVECTORFILESVGOBJTEXT::GetDX()
@@ -206,6 +214,8 @@ bool                       GRPVECTORFILESVGOBJTEXT::HasY()           { return ha
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
 double                     GRPVECTORFILESVGOBJTEXT::GetDX()          { return dx;         }
+
+
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         double GRPVECTORFILESVGOBJTEXT::GetDY()
@@ -216,6 +226,8 @@ double                     GRPVECTORFILESVGOBJTEXT::GetDX()          { return dx
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
 double                     GRPVECTORFILESVGOBJTEXT::GetDY()          { return dy;         }
+
+
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         double GRPVECTORFILESVGOBJTEXT::GetFontSize()
@@ -226,6 +238,8 @@ double                     GRPVECTORFILESVGOBJTEXT::GetDY()          { return dy
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
 double                     GRPVECTORFILESVGOBJTEXT::GetFontSize()    { return fontsize;   }
+
+
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         bool GRPVECTORFILESVGOBJTEXT::HasFontSize()
@@ -236,6 +250,8 @@ double                     GRPVECTORFILESVGOBJTEXT::GetFontSize()    { return fo
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
 bool                       GRPVECTORFILESVGOBJTEXT::HasFontSize()    { return hasfontsize;}
+
+
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         GRPVECTORFILESVGTEXTANCHOR GRPVECTORFILESVGOBJTEXT::GetTextAnchor()

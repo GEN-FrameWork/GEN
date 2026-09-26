@@ -109,11 +109,11 @@ bool SCRIPT_LIB_LOG::AddLibraryFunctions(SCRIPT* script)
 
   this->script = script;
 
-  script->AddLibraryFunction(this, __L("Log_Ini")                  , Call_Log_Ini);
-  script->AddLibraryFunction(this, __L("Log_CFG_SetLimit")         , Call_Log_CFG_SetLimit);
-  script->AddLibraryFunction(this, __L("Log_CFG_SetFilters")       , Call_Log_CFG_SetFilters);
-  script->AddLibraryFunction(this, __L("Log_CFG_SetBackup")        , Call_Log_CFG_SetBackup);
-  script->AddLibraryFunction(this, __L("Log_AddEntry")             , Call_Log_AddEntry);
+  script->AddLibraryFunction(this, __L("Log_Ini"), Call_Log_Ini);
+  script->AddLibraryFunction(this, __L("Log_CFG_SetLimit"), Call_Log_CFG_SetLimit);
+  script->AddLibraryFunction(this, __L("Log_CFG_SetFilters"), Call_Log_CFG_SetFilters);
+  script->AddLibraryFunction(this, __L("Log_CFG_SetBackup"), Call_Log_CFG_SetBackup);
+  script->AddLibraryFunction(this, __L("Log_AddEntry"), Call_Log_AddEntry);
   
   return true;
 }
@@ -407,7 +407,7 @@ void Call_Log_AddEntry(SCRIPT_LIB* library, SCRIPT* script, XVECTOR<XVARIANT*>* 
                         int  nparam = 1;
                         bool end    = false;
 
-                        memset(param,0,MAXTEMPOSTR*sizeof(XCHAR));
+                        memset(param, 0, MAXTEMPOSTR*sizeof(XCHAR));
                         param[0] = '%';
 
                         c++;
@@ -455,7 +455,7 @@ void Call_Log_AddEntry(SCRIPT_LIB* library, SCRIPT* script, XVECTOR<XVARIANT*>* 
                                 case __C('s')   :
                                 case __C('S')   : { XVARIANT variantparam = (*params->Get(paramindex));
                                                     paramindex++;
-                                                    string.Format(param,(XCHAR*)variantparam);
+                                                    string.Format(param, (XCHAR*)variantparam);
                                                     end = true;
                                                   }
                                                   break;

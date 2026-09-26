@@ -33,18 +33,13 @@
 #include "XObserver.h"
 #include "XSubject.h"
 
-
-
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
-
 
 enum DIOCAMERA_TASKID
 {
   DIOCAMERA_TASKID_UNKNOWN                      = 0 ,
   DIOCAMERA_TASKID_GETIMAGE                         ,  
 };
-
-
 
 
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/

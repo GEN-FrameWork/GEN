@@ -272,7 +272,6 @@ bool SNDFILEWAV::Close()
 }
 
 
-
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         SNDFILEWAV_FORMAT* SNDFILEWAV::GetFormat()
@@ -303,7 +302,7 @@ void SNDFILEWAV::Clean()
   format_list       = NULL;
   data_list         = NULL;
 
-  memset(&format,  0, sizeof(SNDFILEWAV_FORMAT));
+  memset(&format, 0, sizeof(SNDFILEWAV_FORMAT));
 
   dataoffsetinfile  = 0;
   datasizeinfile    = 0;

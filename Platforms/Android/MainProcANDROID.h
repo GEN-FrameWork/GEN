@@ -47,12 +47,9 @@
 
 #include "MainProc.h"
 
-
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
 
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
-
 
 class XPATHS;
 class XPATH;
@@ -66,7 +63,6 @@ class INPANDROIDDEVICEKEYBOARD;
 class INPANDROIDDEVICEMOUSE;
 class INPDEVICE;
 
-
 class MAINPROCANDROID :  public ANDROIDNATIVEACTIVITY_HANDLER, public ANDROIDNATIVEINPUT_HANDLER, public MAINPROC, public XSUBJECT
 {
   public:
@@ -76,7 +72,6 @@ class MAINPROCANDROID :  public ANDROIDNATIVEACTIVITY_HANDLER, public ANDROIDNAT
     bool                            Ini                                 (XSTRING* apkpath, XSTRING* datapath, APPFLOWMAIN* appmain = NULL, APPFLOWBASE_MODE_TYPE applicationmode = APPFLOWBASE_MODE_TYPE_UNKNOWN);
     bool                            Update                              ();
     bool                            End                                 ();
-
 
     #ifdef INP_ACTIVE
     INPDEVICE*                      GetKeyboard                         ();

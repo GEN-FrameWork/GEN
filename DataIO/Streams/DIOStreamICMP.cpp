@@ -191,7 +191,7 @@ XBUFFER* DIOSTREAMICMPDATAGRAM::GetData()
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         bool DIOSTREAMICMPDATAGRAM::SetData(XBYTE* data,XDWORD size)
+* @fn         bool DIOSTREAMICMPDATAGRAM::SetData(XBYTE* data, XDWORD size)
 * @brief      Set data
 * @ingroup    DATAIO
 * 
@@ -201,11 +201,11 @@ XBUFFER* DIOSTREAMICMPDATAGRAM::GetData()
 * @return     bool : true if the operation is successful; otherwise false.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-bool DIOSTREAMICMPDATAGRAM::SetData(XBYTE* data,XDWORD size)
+bool DIOSTREAMICMPDATAGRAM::SetData(XBYTE* data, XDWORD size)
 {
   if(!this->data) return false;
   this->data->Delete();
-  this->data->Add(data,size);
+  this->data->Add(data, size);
 
   return true;
 }
@@ -345,7 +345,7 @@ XDWORD DIOSTREAMICMP::Read(XBYTE* buffer, XDWORD size)
             {
               esize = size;
 
-              memcpy(buffer,(XBYTE*)datagram->GetData()->Get(), size);
+              memcpy(buffer, (XBYTE*)datagram->GetData()->Get(), size);
 
               nbytesread+= size;
               if(xtimernotactivity) xtimernotactivity->Reset();
@@ -378,7 +378,7 @@ XDWORD DIOSTREAMICMP::Write(XBYTE* buffer, XDWORD size)
 {
   if(!AddDatagram(true, __L(""), buffer, size)) return 0;
 
-  if(!outbuffer->Add(buffer,size))  return 0;
+  if(!outbuffer->Add(buffer, size))  return 0;
 
   nbyteswrite+=size;
   if(xtimernotactivity) xtimernotactivity->Reset();
@@ -442,7 +442,7 @@ bool DIOSTREAMICMP::WriteDatagram(XSTRING& address, XBYTE* buffer, XDWORD size)
 {
   if(address.IsEmpty()) return false;
   if(!AddDatagram(true, address, buffer, size)) return false;
-  if(!outbuffer->Add(buffer,size)) return false;
+  if(!outbuffer->Add(buffer, size)) return false;
 
   return true;
 }
@@ -626,7 +626,7 @@ bool DIOSTREAMICMP::AddDatagram(bool istosend, XCHAR* address, XBYTE* data, XDWO
     {
       datagram->SetIsToSend(istosend);
       datagram->SetAddress(address);
-      datagram->SetData(data,size);
+      datagram->SetData(data, size);
 
       datagrams.Add(datagram);
     }
@@ -639,7 +639,7 @@ bool DIOSTREAMICMP::AddDatagram(bool istosend, XCHAR* address, XBYTE* data, XDWO
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         bool DIOSTREAMICMP::AddDatagram(bool istosend, XSTRING& address, XBYTE* data,XDWORD size)
+* @fn         bool DIOSTREAMICMP::AddDatagram(bool istosend, XSTRING& address, XBYTE* data, XDWORD size)
 * @brief      Add datagram
 * @ingroup    DATAIO
 * 
@@ -651,7 +651,7 @@ bool DIOSTREAMICMP::AddDatagram(bool istosend, XCHAR* address, XBYTE* data, XDWO
 * @return     bool : true if the operation is successful; otherwise false.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-bool DIOSTREAMICMP::AddDatagram(bool istosend, XSTRING& address, XBYTE* data,XDWORD size)
+bool DIOSTREAMICMP::AddDatagram(bool istosend, XSTRING& address, XBYTE* data, XDWORD size)
 {
   return AddDatagram(istosend, address.Get(), data, size);
 }

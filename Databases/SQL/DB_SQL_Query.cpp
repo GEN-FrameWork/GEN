@@ -172,7 +172,6 @@ bool DB_SQL_QUERY::Set(XCHAR* query)
 }
 
 
-
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         bool DB_SQL_QUERY::UnbindAll()
@@ -317,7 +316,7 @@ bool DB_SQL_QUERY::Bind(XDWORD id, XDATETIME& datetime)
 
   (*variant) = datetime;
 
-  return statementbindings.Add(id,variant);
+  return statementbindings.Add(id, variant);
 }
 
 

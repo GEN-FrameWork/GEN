@@ -49,21 +49,14 @@ enum DIOI2CEEPROM24XXXTYPE
   DIOI2CEEPROM24XXXTYPE_515               ,
 };
 
-
 #define DIOI2CEEPROM2408_ADDR                   0x50
 
 #define DIOI2CEEPROM2408_FIXEDADDRESSBASE       0x50
 #define DIOI2CEEPROM2416_FIXEDADDRESSBASE       0x50
 
-
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
 
-
-
-
 /*---- INLINE FUNCTIONS + PROTOTYPES ---------------------------------------------------------------------------------*/
-
 
 class DIOI2CEEPROM24XXX : public DIODEVICEI2C
 {

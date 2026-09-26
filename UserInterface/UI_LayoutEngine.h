@@ -416,34 +416,16 @@ class UI_LAYOUTENGINE
 {
   public:
 
-    // Builds and returns a new UI_LAYOUTBOX tree mirroring "root"'s UI_ELEMENT subtree (root and every
-    // descendant reachable through GetComposeElements(), recursively). NULL if "root" is NULL. The caller
-    // owns the returned tree (GEN_DELETE it -- UI_LAYOUTBOX's own destructor recursively frees every child).
     static UI_LAYOUTBOX*           BuildTree                    (UI_ELEMENT* root);
 
-    // Walks "root" and every descendant, moving the content box of each non-STATIC node per CSS position/inset
-    // rules (see the SCOPE ADDENDUM above). Ignored if "root" is NULL. Sizes are never touched, only positions.
     static void                    ApplyPositioning              (UI_LAYOUTBOX* root);
 
-    // Walks "root" (a UI_ELEMENT) and "tree" (the UI_LAYOUTBOX BuildTree() built FROM "root", typically after
-    // ApplyPositioning() has repositioned it) together, driving each element's geometry from its paired box
-    // through UI_CSSBox_Set(). Ignored if either is NULL. Does not touch padding/border/margin on the element
-    // (UI_CSSBox_Set() never has -- those remain whatever the legacy builders already set).
     static void                    WriteBackTree                 (UI_ELEMENT* root, UI_LAYOUTBOX* tree);
 
-    // The real entry point: runs "strategy" against "root". LEGACY is a no-op (existing geometry stands as-is);
-    // CSS runs BuildTree() -> ApplyPositioning() -> WriteBackTree() and discards the temporary tree. Ignored if
-    // "root" is NULL.
     static void                    RunLayout                     (UI_ELEMENT* root, UI_LAYOUTSTRATEGY strategy);
 
-    // Walks "root" and every descendant; wherever UI_LAYOUTBOX::IsFlexContainer() is true, arranges that box's
-    // DIRECT children along the main axis per its UI_JUSTIFY_CONTENT (see the SCOPE above). Ignored if "root"
-    // is NULL. Children of a non-flex-container box are left exactly where they already were.
     static void                    ApplyFlexLayout                (UI_LAYOUTBOX* root);
 
-    // Walks "root" and every descendant; wherever UI_LAYOUTBOX::IsGridContainer() is true, arranges that box's
-    // DIRECT children into a grid per its grid-template-columns/rows and gap (see the SCOPE ADDENDUM above).
-    // Ignored if "root" is NULL. Children of a non-grid-container box are left exactly where they already were.
     static void                    ApplyGridLayout                 (UI_LAYOUTBOX* root);
 
   private:
@@ -452,13 +434,7 @@ class UI_LAYOUTENGINE
     static void                    ApplyRelativeOffset           (UI_LAYOUTBOX* box);
     static void                    ApplyAbsolutePosition         (UI_LAYOUTBOX* box, UI_LAYOUTBOX* containingblock);
     static void                    WriteBackRecursive             (UI_ELEMENT* element, UI_LAYOUTBOX* box);
-    // True if this element or any descendant is a flex/grid container. Used by RunLayout to leave pure
-    // absolute XML trees (UI_Options, etc.) completely untouched -- WriteBack must not rewrite VisibleRect/
-    // BoundaryLine when CSS flow never ran.
     static bool                    SubtreeUsesCSSFlowLayout       (UI_ELEMENT* element);
-    // Single arrange-then-recurse walk used by RunLayout: flex and/or grid at THIS node, THEN children.
-    // Separate full-tree ApplyFlexLayout/ApplyGridLayout passes break nested flex-inside-grid (and vice versa)
-    // because the second pass moves parents without re-arranging already-finished descendants.
     static void                    ApplyFlowLayoutRecursive       (UI_LAYOUTBOX* box);
     static void                    ApplyFlexLayoutRecursive       (UI_LAYOUTBOX* box);
     static void                    ArrangeFlexChildren             (UI_LAYOUTBOX* container);

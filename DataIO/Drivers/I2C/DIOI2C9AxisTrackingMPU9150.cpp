@@ -801,6 +801,7 @@ void DIOI2C9AXISTRACKINGMPU9150::SetZGyroFIFOEnabled(bool enabled)
   WriteBit(deviceaddr, DIOI2CMPU9150_RA_FIFO_EN, DIOI2CMPU9150_ZG_FIFO_EN_BIT, enabled);
 }
 
+
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         bool DIOI2C9AXISTRACKINGMPU9150::GetAccelFIFOEnabled()
@@ -816,6 +817,7 @@ bool DIOI2C9AXISTRACKINGMPU9150::GetAccelFIFOEnabled()
   return buffer[0]?true:false;
 }
 
+
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         void DIOI2C9AXISTRACKINGMPU9150::SetAccelFIFOEnabled(bool enabled)
@@ -829,6 +831,7 @@ void DIOI2C9AXISTRACKINGMPU9150::SetAccelFIFOEnabled(bool enabled)
 {
   WriteBit(deviceaddr, DIOI2CMPU9150_RA_FIFO_EN, DIOI2CMPU9150_ACCEL_FIFO_EN_BIT, enabled);
 }
+
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
@@ -845,6 +848,7 @@ bool DIOI2C9AXISTRACKINGMPU9150::GetSlave2FIFOEnabled()
   return buffer[0]?true:false;
 }
 
+
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         void DIOI2C9AXISTRACKINGMPU9150::SetSlave2FIFOEnabled(bool enabled)
@@ -858,6 +862,7 @@ void DIOI2C9AXISTRACKINGMPU9150::SetSlave2FIFOEnabled(bool enabled)
 {
   WriteBit(deviceaddr, DIOI2CMPU9150_RA_FIFO_EN, DIOI2CMPU9150_SLV2_FIFO_EN_BIT, enabled);
 }
+
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
@@ -874,6 +879,7 @@ bool DIOI2C9AXISTRACKINGMPU9150::GetSlave1FIFOEnabled()
   return buffer[0]?true:false;
 }
 
+
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         void DIOI2C9AXISTRACKINGMPU9150::SetSlave1FIFOEnabled(bool enabled)
@@ -887,6 +893,7 @@ void DIOI2C9AXISTRACKINGMPU9150::SetSlave1FIFOEnabled(bool enabled)
 {
   WriteBit(deviceaddr, DIOI2CMPU9150_RA_FIFO_EN, DIOI2CMPU9150_SLV1_FIFO_EN_BIT, enabled);
 }
+
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
@@ -903,6 +910,7 @@ bool DIOI2C9AXISTRACKINGMPU9150::GetSlave0FIFOEnabled()
   return buffer[0]?true:false;
 }
 
+
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         void DIOI2C9AXISTRACKINGMPU9150::SetSlave0FIFOEnabled(bool enabled)
@@ -916,6 +924,7 @@ void DIOI2C9AXISTRACKINGMPU9150::SetSlave0FIFOEnabled(bool enabled)
 {
   WriteBit(deviceaddr, DIOI2CMPU9150_RA_FIFO_EN, DIOI2CMPU9150_SLV0_FIFO_EN_BIT, enabled);
 }
+
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
@@ -932,6 +941,7 @@ bool DIOI2C9AXISTRACKINGMPU9150::GetMultiMasterEnabled()
   return buffer[0]?true:false;
 }
 
+
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         void DIOI2C9AXISTRACKINGMPU9150::SetMultiMasterEnabled(bool enabled)
@@ -945,6 +955,7 @@ void DIOI2C9AXISTRACKINGMPU9150::SetMultiMasterEnabled(bool enabled)
 {
   WriteBit(deviceaddr, DIOI2CMPU9150_RA_I2C_MST_CTRL, DIOI2CMPU9150_MULT_MST_EN_BIT, enabled);
 }
+
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
@@ -961,6 +972,7 @@ bool DIOI2C9AXISTRACKINGMPU9150::GetWaitForExternalSensorEnabled()
   return buffer[0]?true:false;
 }
 
+
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         void DIOI2C9AXISTRACKINGMPU9150::SetWaitForExternalSensorEnabled(bool enabled)
@@ -974,6 +986,7 @@ void DIOI2C9AXISTRACKINGMPU9150::SetWaitForExternalSensorEnabled(bool enabled)
 {
   WriteBit(deviceaddr, DIOI2CMPU9150_RA_I2C_MST_CTRL, DIOI2CMPU9150_WAIT_FOR_ES_BIT, enabled);
 }
+
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
@@ -990,6 +1003,7 @@ bool DIOI2C9AXISTRACKINGMPU9150::GetSlave3FIFOEnabled()
   return buffer[0]?true:false;
 }
 
+
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         void DIOI2C9AXISTRACKINGMPU9150::SetSlave3FIFOEnabled(bool enabled)
@@ -1003,6 +1017,7 @@ void DIOI2C9AXISTRACKINGMPU9150::SetSlave3FIFOEnabled(bool enabled)
 {
   WriteBit(deviceaddr, DIOI2CMPU9150_RA_I2C_MST_CTRL, DIOI2CMPU9150_SLV_3_FIFO_EN_BIT, enabled);
 }
+
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
@@ -1019,6 +1034,7 @@ bool DIOI2C9AXISTRACKINGMPU9150::GetSlaveReadWriteTransitionEnabled()
   return buffer[0]?true:false;
 }
 
+
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         void DIOI2C9AXISTRACKINGMPU9150::SetSlaveReadWriteTransitionEnabled(bool enabled)
@@ -1032,6 +1048,7 @@ void DIOI2C9AXISTRACKINGMPU9150::SetSlaveReadWriteTransitionEnabled(bool enabled
 {
   WriteBit(deviceaddr, DIOI2CMPU9150_RA_I2C_MST_CTRL, DIOI2CMPU9150_I2C_MST_P_NSR_BIT, enabled);
 }
+
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
@@ -1048,6 +1065,7 @@ XBYTE DIOI2C9AXISTRACKINGMPU9150::GetMasterClockSpeed()
   return buffer[0];
 }
 
+
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         void DIOI2C9AXISTRACKINGMPU9150::SetMasterClockSpeed(XBYTE speed)
@@ -1061,6 +1079,7 @@ void DIOI2C9AXISTRACKINGMPU9150::SetMasterClockSpeed(XBYTE speed)
 {
   WriteBits(deviceaddr, DIOI2CMPU9150_RA_I2C_MST_CTRL, DIOI2CMPU9150_I2C_MST_CLK_BIT, DIOI2CMPU9150_I2C_MST_CLK_LENGTH, speed);
 }
+
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
@@ -1078,6 +1097,7 @@ void DIOI2C9AXISTRACKINGMPU9150::SetSlaveAddress(XBYTE num, XBYTE address)
 
    WriteByte(deviceaddr, DIOI2CMPU9150_RA_I2C_SLV0_ADDR + num*3, address);
 }
+
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
@@ -1098,6 +1118,7 @@ XBYTE DIOI2C9AXISTRACKINGMPU9150::GetSlaveRegister(XBYTE num)
   return buffer[0];
 }
 
+
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         void DIOI2C9AXISTRACKINGMPU9150::SetSlaveRegister(XBYTE num, XBYTE reg)
@@ -1114,6 +1135,7 @@ void DIOI2C9AXISTRACKINGMPU9150::SetSlaveRegister(XBYTE num, XBYTE reg)
 
   WriteByte(deviceaddr, DIOI2CMPU9150_RA_I2C_SLV0_REG + num*3, reg);
 }
+
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
@@ -1134,6 +1156,7 @@ bool DIOI2C9AXISTRACKINGMPU9150::GetSlaveEnabled(XBYTE num)
   return buffer[0]?true:false;
 }
 
+
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         void DIOI2C9AXISTRACKINGMPU9150::SetSlaveEnabled(XBYTE num, bool enabled)
@@ -1150,6 +1173,7 @@ void DIOI2C9AXISTRACKINGMPU9150::SetSlaveEnabled(XBYTE num, bool enabled)
 
   WriteBit(deviceaddr, DIOI2CMPU9150_RA_I2C_SLV0_CTRL + num*3, DIOI2CMPU9150_I2C_SLV_EN_BIT, enabled);
 }
+
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
@@ -1170,6 +1194,7 @@ bool DIOI2C9AXISTRACKINGMPU9150::GetSlaveWordByteSwap(XBYTE num)
   return buffer[0]?true:false;
 }
 
+
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         void DIOI2C9AXISTRACKINGMPU9150::SetSlaveWordByteSwap(XBYTE num, bool enabled)
@@ -1186,6 +1211,7 @@ void DIOI2C9AXISTRACKINGMPU9150::SetSlaveWordByteSwap(XBYTE num, bool enabled)
 
   WriteBit(deviceaddr, DIOI2CMPU9150_RA_I2C_SLV0_CTRL + num*3, DIOI2CMPU9150_I2C_SLV_BYTE_SW_BIT, enabled);
 }
+
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
@@ -1206,6 +1232,7 @@ bool DIOI2C9AXISTRACKINGMPU9150::GetSlaveWriteMode(XBYTE num)
   return buffer[0]?true:false;
 }
 
+
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         void DIOI2C9AXISTRACKINGMPU9150::SetSlaveWriteMode(XBYTE num, bool mode)
@@ -1222,6 +1249,7 @@ void DIOI2C9AXISTRACKINGMPU9150::SetSlaveWriteMode(XBYTE num, bool mode)
 
   WriteBit(deviceaddr, DIOI2CMPU9150_RA_I2C_SLV0_CTRL + num*3, DIOI2CMPU9150_I2C_SLV_REG_DIS_BIT, mode);
 }
+
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
@@ -1242,6 +1270,7 @@ bool DIOI2C9AXISTRACKINGMPU9150::GetSlaveWordGroupOffset(XBYTE num)
   return buffer[0]?true:false;
 }
 
+
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         void DIOI2C9AXISTRACKINGMPU9150::SetSlaveWordGroupOffset(XBYTE num, bool enabled)
@@ -1258,6 +1287,7 @@ void DIOI2C9AXISTRACKINGMPU9150::SetSlaveWordGroupOffset(XBYTE num, bool enabled
 
   WriteBit(deviceaddr, DIOI2CMPU9150_RA_I2C_SLV0_CTRL + num*3, DIOI2CMPU9150_I2C_SLV_GRP_BIT, enabled);
 }
+
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
@@ -1277,6 +1307,7 @@ XBYTE DIOI2C9AXISTRACKINGMPU9150::GetSlaveDataLength(XBYTE num)
   return buffer[0];
 }
 
+
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         void DIOI2C9AXISTRACKINGMPU9150::SetSlaveDataLength(XBYTE num, XBYTE length)
@@ -1293,6 +1324,7 @@ void DIOI2C9AXISTRACKINGMPU9150::SetSlaveDataLength(XBYTE num, XBYTE length)
   WriteBits(deviceaddr, DIOI2CMPU9150_RA_I2C_SLV0_CTRL + num*3, DIOI2CMPU9150_I2C_SLV_LEN_BIT, DIOI2CMPU9150_I2C_SLV_LEN_LENGTH, length);
 }
 
+
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         XBYTE DIOI2C9AXISTRACKINGMPU9150::GetSlave4Address()
@@ -1308,6 +1340,7 @@ XBYTE DIOI2C9AXISTRACKINGMPU9150::GetSlave4Address()
   return buffer[0];
 }
 
+
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         void DIOI2C9AXISTRACKINGMPU9150::SetSlave4Address(XBYTE address)
@@ -1321,6 +1354,7 @@ void DIOI2C9AXISTRACKINGMPU9150::SetSlave4Address(XBYTE address)
 {
   WriteByte(deviceaddr, DIOI2CMPU9150_RA_I2C_SLV4_ADDR, address);
 }
+
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
@@ -1337,6 +1371,7 @@ XBYTE DIOI2C9AXISTRACKINGMPU9150::GetSlave4Register()
   return buffer[0];
 }
 
+
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         void DIOI2C9AXISTRACKINGMPU9150::SetSlave4Register(XBYTE reg)
@@ -1351,6 +1386,7 @@ void DIOI2C9AXISTRACKINGMPU9150::SetSlave4Register(XBYTE reg)
   WriteByte(deviceaddr, DIOI2CMPU9150_RA_I2C_SLV4_REG, reg);
 }
 
+
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         void DIOI2C9AXISTRACKINGMPU9150::SetSlave4OutputByte(XBYTE data)
@@ -1364,6 +1400,7 @@ void DIOI2C9AXISTRACKINGMPU9150::SetSlave4OutputByte(XBYTE data)
 {
   WriteByte(deviceaddr, DIOI2CMPU9150_RA_I2C_SLV4_DO, data);
 }
+
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
@@ -1380,6 +1417,7 @@ bool DIOI2C9AXISTRACKINGMPU9150::GetSlave4Enabled()
   return buffer[0]?true:false;
 }
 
+
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         void DIOI2C9AXISTRACKINGMPU9150::SetSlave4Enabled(bool enabled)
@@ -1393,6 +1431,7 @@ void DIOI2C9AXISTRACKINGMPU9150::SetSlave4Enabled(bool enabled)
 {
   WriteBit(deviceaddr, DIOI2CMPU9150_RA_I2C_SLV4_CTRL, DIOI2CMPU9150_I2C_SLV4_EN_BIT, enabled);
 }
+
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
@@ -1409,6 +1448,7 @@ bool DIOI2C9AXISTRACKINGMPU9150::GetSlave4InterruptEnabled()
   return buffer[0]?true:false;
 }
 
+
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         void DIOI2C9AXISTRACKINGMPU9150::SetSlave4InterruptEnabled(bool enabled)
@@ -1422,6 +1462,7 @@ void DIOI2C9AXISTRACKINGMPU9150::SetSlave4InterruptEnabled(bool enabled)
 {
    WriteBit(deviceaddr, DIOI2CMPU9150_RA_I2C_SLV4_CTRL, DIOI2CMPU9150_I2C_SLV4_INT_EN_BIT, enabled);
 }
+
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
@@ -1438,6 +1479,7 @@ bool DIOI2C9AXISTRACKINGMPU9150::GetSlave4WriteMode()
   return buffer[0]?true:false;
 }
 
+
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         void DIOI2C9AXISTRACKINGMPU9150::SetSlave4WriteMode(bool mode)
@@ -1451,6 +1493,7 @@ void DIOI2C9AXISTRACKINGMPU9150::SetSlave4WriteMode(bool mode)
 {
   WriteBit(deviceaddr, DIOI2CMPU9150_RA_I2C_SLV4_CTRL, DIOI2CMPU9150_I2C_SLV4_REG_DIS_BIT, mode);
 }
+
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
@@ -1467,6 +1510,7 @@ XBYTE DIOI2C9AXISTRACKINGMPU9150::GetSlave4MasterDelay()
   return buffer[0];
 }
 
+
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         void DIOI2C9AXISTRACKINGMPU9150::GetSlave4MasterDelay(XBYTE delay)
@@ -1480,6 +1524,7 @@ void DIOI2C9AXISTRACKINGMPU9150::GetSlave4MasterDelay(XBYTE delay)
 {
   WriteBits(deviceaddr, DIOI2CMPU9150_RA_I2C_SLV4_CTRL, DIOI2CMPU9150_I2C_SLV4_MST_DLY_BIT, DIOI2CMPU9150_I2C_SLV4_MST_DLY_LENGTH, delay);
 }
+
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
@@ -1496,6 +1541,7 @@ XBYTE DIOI2C9AXISTRACKINGMPU9150::GetSlate4InputByte()
   return buffer[0];
 }
 
+
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         bool DIOI2C9AXISTRACKINGMPU9150::GetPassthroughStatus()
@@ -1510,6 +1556,7 @@ bool DIOI2C9AXISTRACKINGMPU9150::GetPassthroughStatus()
   ReadBit(deviceaddr, DIOI2CMPU9150_RA_I2C_MST_STATUS, DIOI2CMPU9150_MST_PASS_THROUGH_BIT, buffer);
   return buffer[0]?true:false;
 }
+
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
@@ -1526,6 +1573,7 @@ bool DIOI2C9AXISTRACKINGMPU9150::GetSlave4IsDone()
   return buffer[0]?true:false;
 }
 
+
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         bool DIOI2C9AXISTRACKINGMPU9150::GetLostArbitration()
@@ -1540,6 +1588,7 @@ bool DIOI2C9AXISTRACKINGMPU9150::GetLostArbitration()
   ReadBit(deviceaddr, DIOI2CMPU9150_RA_I2C_MST_STATUS, DIOI2CMPU9150_MST_I2C_LOST_ARB_BIT, buffer);
   return buffer[0]?true:false;
 }
+
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
@@ -1556,6 +1605,7 @@ bool DIOI2C9AXISTRACKINGMPU9150::GetSlave4Nack()
   return buffer[0]?true:false;
 }
 
+
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         bool DIOI2C9AXISTRACKINGMPU9150::GetSlave3Nack()
@@ -1570,6 +1620,7 @@ bool DIOI2C9AXISTRACKINGMPU9150::GetSlave3Nack()
   ReadBit(deviceaddr, DIOI2CMPU9150_RA_I2C_MST_STATUS, DIOI2CMPU9150_MST_I2C_SLV3_NACK_BIT, buffer);
   return buffer[0]?true:false;
 }
+
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
@@ -1586,6 +1637,7 @@ bool DIOI2C9AXISTRACKINGMPU9150::GetSlave2Nack()
   return buffer[0]?true:false;
 }
 
+
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         bool DIOI2C9AXISTRACKINGMPU9150::GetSlave1Nack()
@@ -1600,6 +1652,7 @@ bool DIOI2C9AXISTRACKINGMPU9150::GetSlave1Nack()
   ReadBit(deviceaddr, DIOI2CMPU9150_RA_I2C_MST_STATUS, DIOI2CMPU9150_MST_I2C_SLV1_NACK_BIT, buffer);
   return buffer[0]?true:false;
 }
+
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
@@ -1616,6 +1669,7 @@ bool DIOI2C9AXISTRACKINGMPU9150::GetSlave0Nack()
   return buffer[0]?true:false;
 }
 
+
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         bool DIOI2C9AXISTRACKINGMPU9150::GetInterruptMode()
@@ -1631,6 +1685,7 @@ bool DIOI2C9AXISTRACKINGMPU9150::GetInterruptMode()
   return buffer[0]?true:false;
 }
 
+
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         void DIOI2C9AXISTRACKINGMPU9150::SetInterruptMode(bool mode)
@@ -1644,6 +1699,7 @@ void DIOI2C9AXISTRACKINGMPU9150::SetInterruptMode(bool mode)
 {
   WriteBit(deviceaddr, DIOI2CMPU9150_RA_INT_PIN_CFG, DIOI2CMPU9150_INTCFG_INT_LEVEL_BIT, mode);
 }
+
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
@@ -1660,6 +1716,7 @@ bool DIOI2C9AXISTRACKINGMPU9150::GetInterruptDrive()
   return buffer[0]?true:false;
 }
 
+
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         void DIOI2C9AXISTRACKINGMPU9150::SetInterruptDrive(bool drive)
@@ -1673,6 +1730,7 @@ void DIOI2C9AXISTRACKINGMPU9150::SetInterruptDrive(bool drive)
 {
   WriteBit(deviceaddr, DIOI2CMPU9150_RA_INT_PIN_CFG, DIOI2CMPU9150_INTCFG_INT_OPEN_BIT, drive);
 }
+
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
@@ -1689,6 +1747,7 @@ bool DIOI2C9AXISTRACKINGMPU9150::GetInterruptLatch()
   return buffer[0]?true:false;
 }
 
+
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         void DIOI2C9AXISTRACKINGMPU9150::SetInterruptLatch(bool latch)
@@ -1702,6 +1761,7 @@ void DIOI2C9AXISTRACKINGMPU9150::SetInterruptLatch(bool latch)
 {
   WriteBit(deviceaddr, DIOI2CMPU9150_RA_INT_PIN_CFG, DIOI2CMPU9150_INTCFG_LATCH_INT_EN_BIT, latch);
 }
+
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
@@ -1718,6 +1778,7 @@ bool DIOI2C9AXISTRACKINGMPU9150::GetInterruptLatchClear()
   return buffer[0]?true:false;
 }
 
+
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         void DIOI2C9AXISTRACKINGMPU9150::SetInterruptLatchClear(bool clear)
@@ -1731,6 +1792,7 @@ void DIOI2C9AXISTRACKINGMPU9150::SetInterruptLatchClear(bool clear)
 {
   WriteBit(deviceaddr, DIOI2CMPU9150_RA_INT_PIN_CFG, DIOI2CMPU9150_INTCFG_INT_RD_CLEAR_BIT, clear);
 }
+
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
@@ -1747,6 +1809,7 @@ bool DIOI2C9AXISTRACKINGMPU9150::GetFSyncInterruptLevel()
   return buffer[0]?true:false;
 }
 
+
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         void DIOI2C9AXISTRACKINGMPU9150::SetFSyncInterruptLevel(bool level)
@@ -1760,6 +1823,7 @@ void DIOI2C9AXISTRACKINGMPU9150::SetFSyncInterruptLevel(bool level)
 {
   WriteBit(deviceaddr, DIOI2CMPU9150_RA_INT_PIN_CFG, DIOI2CMPU9150_INTCFG_FSYNC_INT_LEVEL_BIT, level);
 }
+
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
@@ -1776,6 +1840,7 @@ bool DIOI2C9AXISTRACKINGMPU9150::GetFSyncInterruptEnabled()
   return buffer[0]?true:false;
 }
 
+
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         void DIOI2C9AXISTRACKINGMPU9150::SetFSyncInterruptEnabled(bool enabled)
@@ -1789,6 +1854,7 @@ void DIOI2C9AXISTRACKINGMPU9150::SetFSyncInterruptEnabled(bool enabled)
 {
   WriteBit(deviceaddr, DIOI2CMPU9150_RA_INT_PIN_CFG, DIOI2CMPU9150_INTCFG_FSYNC_INT_EN_BIT, enabled);
 }
+
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
@@ -1805,6 +1871,7 @@ bool DIOI2C9AXISTRACKINGMPU9150::GetI2CBypassEnabled()
   return buffer[0]?true:false;
 }
 
+
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         void DIOI2C9AXISTRACKINGMPU9150::SetI2CBypassEnabled(bool enabled)
@@ -1818,6 +1885,7 @@ void DIOI2C9AXISTRACKINGMPU9150::SetI2CBypassEnabled(bool enabled)
 {
   WriteBit(deviceaddr, DIOI2CMPU9150_RA_INT_PIN_CFG, DIOI2CMPU9150_INTCFG_I2C_BYPASS_EN_BIT, enabled);
 }
+
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
@@ -1834,6 +1902,7 @@ bool DIOI2C9AXISTRACKINGMPU9150::GetClockOutputEnabled()
   return buffer[0]?true:false;
 }
 
+
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         void DIOI2C9AXISTRACKINGMPU9150::SetClockOutputEnabled(bool enabled)
@@ -1847,6 +1916,7 @@ void DIOI2C9AXISTRACKINGMPU9150::SetClockOutputEnabled(bool enabled)
 {
   WriteBit(deviceaddr, DIOI2CMPU9150_RA_INT_PIN_CFG, DIOI2CMPU9150_INTCFG_CLKOUT_EN_BIT, enabled);
 }
+
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
@@ -1863,6 +1933,7 @@ XBYTE DIOI2C9AXISTRACKINGMPU9150::GetIntEnabled()
   return buffer[0];
 }
 
+
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         void DIOI2C9AXISTRACKINGMPU9150::SetIntEnabled(XBYTE enabled)
@@ -1876,6 +1947,7 @@ void DIOI2C9AXISTRACKINGMPU9150::SetIntEnabled(XBYTE enabled)
 {
   WriteByte(deviceaddr, DIOI2CMPU9150_RA_INT_ENABLE, enabled);
 }
+
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
@@ -1892,6 +1964,7 @@ bool DIOI2C9AXISTRACKINGMPU9150::GetIntFreefallEnabled()
   return buffer[0]?true:false;
 }
 
+
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         void DIOI2C9AXISTRACKINGMPU9150::SetIntFreefallEnabled(bool enabled)
@@ -1905,6 +1978,7 @@ void DIOI2C9AXISTRACKINGMPU9150::SetIntFreefallEnabled(bool enabled)
 {
   WriteBit(deviceaddr, DIOI2CMPU9150_RA_INT_ENABLE, DIOI2CMPU9150_INTERRUPT_FF_BIT, enabled);
 }
+
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
@@ -1921,6 +1995,7 @@ bool DIOI2C9AXISTRACKINGMPU9150::GetIntMotionEnabled()
   return buffer[0]?true:false;
 }
 
+
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         void DIOI2C9AXISTRACKINGMPU9150::SetIntMotionEnabled(bool enabled)
@@ -1934,6 +2009,7 @@ void DIOI2C9AXISTRACKINGMPU9150::SetIntMotionEnabled(bool enabled)
 {
   WriteBit(deviceaddr, DIOI2CMPU9150_RA_INT_ENABLE, DIOI2CMPU9150_INTERRUPT_MOT_BIT, enabled);
 }
+
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
@@ -1950,6 +2026,7 @@ bool DIOI2C9AXISTRACKINGMPU9150::GetIntZeroMotionEnabled()
   return buffer[0]?true:false;
 }
 
+
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         void DIOI2C9AXISTRACKINGMPU9150::SetIntZeroMotionEnabled(bool enabled)
@@ -1963,6 +2040,7 @@ void DIOI2C9AXISTRACKINGMPU9150::SetIntZeroMotionEnabled(bool enabled)
 {
   WriteBit(deviceaddr, DIOI2CMPU9150_RA_INT_ENABLE, DIOI2CMPU9150_INTERRUPT_ZMOT_BIT, enabled);
 }
+
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
@@ -1979,6 +2057,7 @@ bool DIOI2C9AXISTRACKINGMPU9150::GetIntFIFOBufferOverflowEnabled()
   return buffer[0]?true:false;
 }
 
+
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         void DIOI2C9AXISTRACKINGMPU9150::SetIntFIFOBufferOverflowEnabled(bool enabled)
@@ -1992,6 +2071,7 @@ void DIOI2C9AXISTRACKINGMPU9150::SetIntFIFOBufferOverflowEnabled(bool enabled)
 {
   WriteBit(deviceaddr, DIOI2CMPU9150_RA_INT_ENABLE, DIOI2CMPU9150_INTERRUPT_FIFO_OFLOW_BIT, enabled);
 }
+
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
@@ -2008,6 +2088,7 @@ bool DIOI2C9AXISTRACKINGMPU9150::GetIntI2CMasterEnabled()
   return buffer[0]?true:false;
 }
 
+
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         void DIOI2C9AXISTRACKINGMPU9150::SetIntI2CMasterEnabled(bool enabled)
@@ -2021,6 +2102,7 @@ void DIOI2C9AXISTRACKINGMPU9150::SetIntI2CMasterEnabled(bool enabled)
 {
   WriteBit(deviceaddr, DIOI2CMPU9150_RA_INT_ENABLE, DIOI2CMPU9150_INTERRUPT_I2C_MST_INT_BIT, enabled);
 }
+
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
@@ -2037,6 +2119,7 @@ bool DIOI2C9AXISTRACKINGMPU9150::GetIntDataReadyEnabled()
   return buffer[0]?true:false;
 }
 
+
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         void DIOI2C9AXISTRACKINGMPU9150::SetIntDataReadyEnabled(bool enabled)
@@ -2050,6 +2133,7 @@ void DIOI2C9AXISTRACKINGMPU9150::SetIntDataReadyEnabled(bool enabled)
 {
   WriteBit(deviceaddr, DIOI2CMPU9150_RA_INT_ENABLE, DIOI2CMPU9150_INTERRUPT_DATA_RDY_BIT, enabled);
 }
+
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
@@ -2066,6 +2150,7 @@ XBYTE DIOI2C9AXISTRACKINGMPU9150::GetIntStatus()
   return buffer[0];
 }
 
+
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         bool DIOI2C9AXISTRACKINGMPU9150::GetIntFreefallStatus()
@@ -2080,6 +2165,7 @@ bool DIOI2C9AXISTRACKINGMPU9150::GetIntFreefallStatus()
   ReadBit(deviceaddr, DIOI2CMPU9150_RA_INT_STATUS, DIOI2CMPU9150_INTERRUPT_FF_BIT, buffer);
   return buffer[0]?true:false;
 }
+
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
@@ -2096,6 +2182,7 @@ bool DIOI2C9AXISTRACKINGMPU9150::GetIntMotionStatus()
   return buffer[0]?true:false;
 }
 
+
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         bool DIOI2C9AXISTRACKINGMPU9150::GetIntZeroMotionStatus()
@@ -2110,6 +2197,7 @@ bool DIOI2C9AXISTRACKINGMPU9150::GetIntZeroMotionStatus()
   ReadBit(deviceaddr, DIOI2CMPU9150_RA_INT_STATUS, DIOI2CMPU9150_INTERRUPT_ZMOT_BIT, buffer);
   return buffer[0]?true:false;
 }
+
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
@@ -2126,6 +2214,7 @@ bool DIOI2C9AXISTRACKINGMPU9150::GetIntFIFOBufferOverflowStatus()
   return buffer[0]?true:false;
 }
 
+
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         bool DIOI2C9AXISTRACKINGMPU9150::GetIntI2CMasterStatus()
@@ -2141,6 +2230,7 @@ bool DIOI2C9AXISTRACKINGMPU9150::GetIntI2CMasterStatus()
   return buffer[0]?true:false;
 }
 
+
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         bool DIOI2C9AXISTRACKINGMPU9150::GetIntDataReadyStatus()
@@ -2155,6 +2245,7 @@ bool DIOI2C9AXISTRACKINGMPU9150::GetIntDataReadyStatus()
   ReadBit(deviceaddr, DIOI2CMPU9150_RA_INT_STATUS, DIOI2CMPU9150_INTERRUPT_DATA_RDY_BIT, buffer);
   return buffer[0]?true:false;
 }
+
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
@@ -2191,6 +2282,7 @@ void DIOI2C9AXISTRACKINGMPU9150::GetMotion9(XWORDSIG* ax, XWORDSIG* ay, XWORDSIG
   *mz = (((XWORDSIG)buffer[5]) << 8) | buffer[4];
 }
 
+
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         void DIOI2C9AXISTRACKINGMPU9150::GetMag(XWORDSIG* mx, XWORDSIG* my, XWORDSIG* mz)
@@ -2217,6 +2309,7 @@ void DIOI2C9AXISTRACKINGMPU9150::GetMag(XWORDSIG* mx, XWORDSIG* my, XWORDSIG* mz
   *mz = (((XWORDSIG)buffer[5]) << 8) | buffer[4];
 }
 
+
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         void DIOI2C9AXISTRACKINGMPU9150::GetMotion6(XWORDSIG* ax, XWORDSIG* ay, XWORDSIG* az, XWORDSIG* gx, XWORDSIG* gy, XWORDSIG* gz)
@@ -2242,6 +2335,7 @@ void DIOI2C9AXISTRACKINGMPU9150::GetMotion6(XWORDSIG* ax, XWORDSIG* ay, XWORDSIG
   *gz = (((XWORDSIG)buffer[12]) << 8) | buffer[13];
 }
 
+
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         void DIOI2C9AXISTRACKINGMPU9150::GetAcceleration(XWORDSIG* x, XWORDSIG* y, XWORDSIG* z)
@@ -2261,6 +2355,7 @@ void DIOI2C9AXISTRACKINGMPU9150::GetAcceleration(XWORDSIG* x, XWORDSIG* y, XWORD
   *z = (((XWORDSIG)buffer[4]) << 8) | buffer[5];
 }
 
+
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         XWORDSIG DIOI2C9AXISTRACKINGMPU9150::GetAccelerationX()
@@ -2275,6 +2370,7 @@ XWORDSIG DIOI2C9AXISTRACKINGMPU9150::GetAccelerationX()
   ReadBytes(deviceaddr, DIOI2CMPU9150_RA_ACCEL_XOUT_H, 2, buffer);
   return (((XWORDSIG)buffer[0]) << 8) | buffer[1];
 }
+
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
@@ -2291,6 +2387,7 @@ XWORDSIG DIOI2C9AXISTRACKINGMPU9150::GetAccelerationY()
   return (((XWORDSIG)buffer[0]) << 8) | buffer[1];
 }
 
+
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         XWORDSIG DIOI2C9AXISTRACKINGMPU9150::GetAccelerationZ()
@@ -2306,6 +2403,7 @@ XWORDSIG DIOI2C9AXISTRACKINGMPU9150::GetAccelerationZ()
   return (((XWORDSIG)buffer[0]) << 8) | buffer[1];
 }
 
+
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         XWORDSIG DIOI2C9AXISTRACKINGMPU9150::GetTemperature()
@@ -2320,6 +2418,7 @@ XWORDSIG DIOI2C9AXISTRACKINGMPU9150::GetTemperature()
   ReadBytes(deviceaddr, DIOI2CMPU9150_RA_TEMP_OUT_H, 2, buffer);
   return (((XWORDSIG)buffer[0]) << 8) | buffer[1];
 }
+
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
@@ -2340,6 +2439,7 @@ void DIOI2C9AXISTRACKINGMPU9150::GetRotation(XWORDSIG* x, XWORDSIG* y, XWORDSIG*
   *z = (((XWORDSIG)buffer[4]) << 8) | buffer[5];
 }
 
+
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         XWORDSIG DIOI2C9AXISTRACKINGMPU9150::GetRotationX()
@@ -2354,6 +2454,7 @@ XWORDSIG DIOI2C9AXISTRACKINGMPU9150::GetRotationX()
   ReadBytes(deviceaddr, DIOI2CMPU9150_RA_GYRO_XOUT_H, 2, buffer);
   return (((XWORDSIG)buffer[0]) << 8) | buffer[1];
 }
+
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
@@ -2370,6 +2471,7 @@ XWORDSIG DIOI2C9AXISTRACKINGMPU9150::GetRotationY()
   return (((XWORDSIG)buffer[0]) << 8) | buffer[1];
 }
 
+
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         XWORDSIG DIOI2C9AXISTRACKINGMPU9150::GetRotationZ()
@@ -2384,6 +2486,7 @@ XWORDSIG DIOI2C9AXISTRACKINGMPU9150::GetRotationZ()
   ReadBytes(deviceaddr, DIOI2CMPU9150_RA_GYRO_ZOUT_H, 2, buffer);
   return (((XWORDSIG)buffer[0]) << 8) | buffer[1];
 }
+
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
@@ -2402,6 +2505,7 @@ XBYTE DIOI2C9AXISTRACKINGMPU9150::GetExternalSensorByte(int position)
   return buffer[0];
 }
 
+
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         XWORDSIG DIOI2C9AXISTRACKINGMPU9150::GetExternalSensorWord(int position)
@@ -2418,6 +2522,7 @@ XWORDSIG DIOI2C9AXISTRACKINGMPU9150::GetExternalSensorWord(int position)
   ReadBytes(deviceaddr, DIOI2CMPU9150_RA_EXT_SENS_DATA_00 + position, 2, buffer);
   return (XWORDSIG)(((XWORDSIG)buffer[0]) << 8) | buffer[1];
 }
+
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
@@ -2436,6 +2541,7 @@ XDWORD DIOI2C9AXISTRACKINGMPU9150::GetExternalSensorDWord(int position)
   return (((XDWORD)buffer[0]) << 24) | (((XDWORD)buffer[1]) << 16) | (((XWORDSIG)buffer[2]) << 8) | buffer[3];
 }
 
+
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         bool DIOI2C9AXISTRACKINGMPU9150::GetXNegMotionDetected()
@@ -2450,6 +2556,7 @@ bool DIOI2C9AXISTRACKINGMPU9150::GetXNegMotionDetected()
   ReadBit(deviceaddr, DIOI2CMPU9150_RA_MOT_DETECT_STATUS, DIOI2CMPU9150_MOTION_MOT_XNEG_BIT, buffer);
   return buffer[0]?true:false;
 }
+
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
@@ -2466,6 +2573,7 @@ bool DIOI2C9AXISTRACKINGMPU9150::GetXPosMotionDetected()
   return buffer[0]?true:false;
 }
 
+
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         bool DIOI2C9AXISTRACKINGMPU9150::GetYNegMotionDetected()
@@ -2480,6 +2588,7 @@ bool DIOI2C9AXISTRACKINGMPU9150::GetYNegMotionDetected()
   ReadBit(deviceaddr, DIOI2CMPU9150_RA_MOT_DETECT_STATUS, DIOI2CMPU9150_MOTION_MOT_YNEG_BIT, buffer);
   return buffer[0]?true:false;
 }
+
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
@@ -2496,6 +2605,7 @@ bool DIOI2C9AXISTRACKINGMPU9150::GetYPosMotionDetected()
   return buffer[0]?true:false;
 }
 
+
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         bool DIOI2C9AXISTRACKINGMPU9150::GetZNegMotionDetected()
@@ -2510,6 +2620,7 @@ bool DIOI2C9AXISTRACKINGMPU9150::GetZNegMotionDetected()
   ReadBit(deviceaddr, DIOI2CMPU9150_RA_MOT_DETECT_STATUS, DIOI2CMPU9150_MOTION_MOT_ZNEG_BIT, buffer);
   return buffer[0]?true:false;
 }
+
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
@@ -2526,6 +2637,7 @@ bool DIOI2C9AXISTRACKINGMPU9150::GetZPosMotionDetected()
   return buffer[0]?true:false;
 }
 
+
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         bool DIOI2C9AXISTRACKINGMPU9150::GetZeroMotionDetected()
@@ -2540,6 +2652,7 @@ bool DIOI2C9AXISTRACKINGMPU9150::GetZeroMotionDetected()
   ReadBit(deviceaddr, DIOI2CMPU9150_RA_MOT_DETECT_STATUS, DIOI2CMPU9150_MOTION_MOT_ZRMOT_BIT, buffer);
   return buffer[0]?true:false;
 }
+
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
@@ -2558,6 +2671,7 @@ void DIOI2C9AXISTRACKINGMPU9150::SetSlaveOutputByte(XBYTE num, XBYTE data)
   WriteByte(deviceaddr, DIOI2CMPU9150_RA_I2C_SLV0_DO + num, data);
 }
 
+
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         bool DIOI2C9AXISTRACKINGMPU9150::GetExternalShadowDelayEnabled()
@@ -2573,6 +2687,7 @@ bool DIOI2C9AXISTRACKINGMPU9150::GetExternalShadowDelayEnabled()
   return buffer[0]?true:false;
 }
 
+
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         void DIOI2C9AXISTRACKINGMPU9150::SetExternalShadowDelayEnabled(bool enabled)
@@ -2586,6 +2701,7 @@ void DIOI2C9AXISTRACKINGMPU9150::SetExternalShadowDelayEnabled(bool enabled)
 {
   WriteBit(deviceaddr, DIOI2CMPU9150_RA_I2C_MST_DELAY_CTRL, DIOI2CMPU9150_DELAYCTRL_DELAY_ES_SHADOW_BIT, enabled);
 }
+
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
@@ -2606,6 +2722,7 @@ bool DIOI2C9AXISTRACKINGMPU9150::GetSlaveDelayEnabled(XBYTE num)
   return buffer[0]?true:false;
 }
 
+
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         void DIOI2C9AXISTRACKINGMPU9150::SetSlaveDelayEnabled(XBYTE num, bool enabled)
@@ -2621,6 +2738,7 @@ void DIOI2C9AXISTRACKINGMPU9150::SetSlaveDelayEnabled(XBYTE num, bool enabled)
   WriteBit(deviceaddr, DIOI2CMPU9150_RA_I2C_MST_DELAY_CTRL, num, enabled);
 }
 
+
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         void DIOI2C9AXISTRACKINGMPU9150::ResetGyroscopePath()
@@ -2632,6 +2750,7 @@ void DIOI2C9AXISTRACKINGMPU9150::ResetGyroscopePath()
 {
   WriteBit(deviceaddr, DIOI2CMPU9150_RA_SIGNAL_PATH_RESET, DIOI2CMPU9150_PATHRESET_GYRO_RESET_BIT, true);
 }
+
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
@@ -2645,6 +2764,7 @@ void DIOI2C9AXISTRACKINGMPU9150::ResetAccelerometerPath()
   WriteBit(deviceaddr, DIOI2CMPU9150_RA_SIGNAL_PATH_RESET, DIOI2CMPU9150_PATHRESET_ACCEL_RESET_BIT, true);
 }
 
+
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         void DIOI2C9AXISTRACKINGMPU9150::ResetTemperaturePath()
@@ -2656,6 +2776,7 @@ void DIOI2C9AXISTRACKINGMPU9150::ResetTemperaturePath()
 {
   WriteBit(deviceaddr, DIOI2CMPU9150_RA_SIGNAL_PATH_RESET, DIOI2CMPU9150_PATHRESET_TEMP_RESET_BIT, true);
 }
+
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
@@ -2672,6 +2793,7 @@ XBYTE DIOI2C9AXISTRACKINGMPU9150::GetAccelerometerPowerOnDelay()
   return buffer[0];
 }
 
+
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         void DIOI2C9AXISTRACKINGMPU9150::SetAccelerometerPowerOnDelay(XBYTE delay)
@@ -2685,6 +2807,7 @@ void DIOI2C9AXISTRACKINGMPU9150::SetAccelerometerPowerOnDelay(XBYTE delay)
 {
   WriteBits(deviceaddr, DIOI2CMPU9150_RA_MOT_DETECT_CTRL, DIOI2CMPU9150_DETECT_ACCEL_ON_DELAY_BIT, DIOI2CMPU9150_DETECT_ACCEL_ON_DELAY_LENGTH, delay);
 }
+
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
@@ -2701,6 +2824,7 @@ XBYTE DIOI2C9AXISTRACKINGMPU9150::GetFreefallDetectionCounterDecrement()
   return buffer[0];
 }
 
+
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         void DIOI2C9AXISTRACKINGMPU9150::SetFreefallDetectionCounterDecrement(XBYTE decrement)
@@ -2714,6 +2838,7 @@ void DIOI2C9AXISTRACKINGMPU9150::SetFreefallDetectionCounterDecrement(XBYTE decr
 {
   WriteBits(deviceaddr, DIOI2CMPU9150_RA_MOT_DETECT_CTRL, DIOI2CMPU9150_DETECT_FF_COUNT_BIT, DIOI2CMPU9150_DETECT_FF_COUNT_LENGTH, decrement);
 }
+
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
@@ -2730,6 +2855,7 @@ XBYTE DIOI2C9AXISTRACKINGMPU9150::GetMotionDetectionCounterDecrement()
   return buffer[0];
 }
 
+
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         void DIOI2C9AXISTRACKINGMPU9150::SetMotionDetectionCounterDecrement(XBYTE decrement)
@@ -2743,6 +2869,7 @@ void DIOI2C9AXISTRACKINGMPU9150::SetMotionDetectionCounterDecrement(XBYTE decrem
 {
   WriteBits(deviceaddr, DIOI2CMPU9150_RA_MOT_DETECT_CTRL, DIOI2CMPU9150_DETECT_MOT_COUNT_BIT, DIOI2CMPU9150_DETECT_MOT_COUNT_LENGTH, decrement);
 }
+
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
@@ -2759,6 +2886,7 @@ bool DIOI2C9AXISTRACKINGMPU9150::GetFIFOEnabled()
   return buffer[0]?true:false;
 }
 
+
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         void DIOI2C9AXISTRACKINGMPU9150::SetFIFOEnabled(bool enabled)
@@ -2772,6 +2900,7 @@ void DIOI2C9AXISTRACKINGMPU9150::SetFIFOEnabled(bool enabled)
 {
   WriteBit(deviceaddr, DIOI2CMPU9150_RA_USER_CTRL, DIOI2CMPU9150_USERCTRL_FIFO_EN_BIT, enabled);
 }
+
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
@@ -2788,6 +2917,7 @@ bool DIOI2C9AXISTRACKINGMPU9150::GetI2CMasterModeEnabled()
   return buffer[0]?true:false;
 }
 
+
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         void DIOI2C9AXISTRACKINGMPU9150::SetI2CMasterModeEnabled(bool enabled)
@@ -2801,6 +2931,7 @@ void DIOI2C9AXISTRACKINGMPU9150::SetI2CMasterModeEnabled(bool enabled)
 {
   WriteBit(deviceaddr, DIOI2CMPU9150_RA_USER_CTRL, DIOI2CMPU9150_USERCTRL_I2C_MST_EN_BIT, enabled);
 }
+
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
@@ -2816,6 +2947,7 @@ void DIOI2C9AXISTRACKINGMPU9150::SwitchSPIEnabled(bool enabled)
   WriteBit(deviceaddr, DIOI2CMPU9150_RA_USER_CTRL, DIOI2CMPU9150_USERCTRL_I2C_IF_DIS_BIT, enabled);
 }
 
+
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         void DIOI2C9AXISTRACKINGMPU9150::ResetFIFO()
@@ -2827,6 +2959,7 @@ void DIOI2C9AXISTRACKINGMPU9150::ResetFIFO()
 {
   WriteBit(deviceaddr, DIOI2CMPU9150_RA_USER_CTRL, DIOI2CMPU9150_USERCTRL_FIFO_RESET_BIT, true);
 }
+
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
@@ -2864,6 +2997,7 @@ void DIOI2C9AXISTRACKINGMPU9150::ResetSensors()
   WriteBit(deviceaddr, DIOI2CMPU9150_RA_USER_CTRL, DIOI2CMPU9150_USERCTRL_SIG_COND_RESET_BIT, true);
 }
 
+
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         void DIOI2C9AXISTRACKINGMPU9150::Reset()
@@ -2875,6 +3009,7 @@ void DIOI2C9AXISTRACKINGMPU9150::Reset()
 {
   WriteBit(deviceaddr, DIOI2CMPU9150_RA_PWR_MGMT_1, DIOI2CMPU9150_PWR1_DEVICE_RESET_BIT, true);
 }
+
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
@@ -2891,6 +3026,7 @@ bool DIOI2C9AXISTRACKINGMPU9150::GetSleepEnabled()
   return buffer[0]?true:false;
 }
 
+
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         void DIOI2C9AXISTRACKINGMPU9150::SetSleepEnabled(bool enabled)
@@ -2904,6 +3040,7 @@ void DIOI2C9AXISTRACKINGMPU9150::SetSleepEnabled(bool enabled)
 {
   WriteBit(deviceaddr, DIOI2CMPU9150_RA_PWR_MGMT_1, DIOI2CMPU9150_PWR1_SLEEP_BIT, enabled);
 }
+
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
@@ -2920,6 +3057,7 @@ bool DIOI2C9AXISTRACKINGMPU9150::GetWakeCycleEnabled()
   return buffer[0]?true:false;
 }
 
+
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         void DIOI2C9AXISTRACKINGMPU9150::SetWakeCycleEnabled(bool enabled)
@@ -2933,6 +3071,7 @@ void DIOI2C9AXISTRACKINGMPU9150::SetWakeCycleEnabled(bool enabled)
 {
   WriteBit(deviceaddr, DIOI2CMPU9150_RA_PWR_MGMT_1, DIOI2CMPU9150_PWR1_CYCLE_BIT, enabled);
 }
+
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
@@ -2949,6 +3088,7 @@ bool DIOI2C9AXISTRACKINGMPU9150::GetTempSensorEnabled()
   return (buffer[0] == 0)?true:false; // 1 is actually disabled here
 }
 
+
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         void DIOI2C9AXISTRACKINGMPU9150::SetTempSensorEnabled(bool enabled)
@@ -2963,6 +3103,7 @@ void DIOI2C9AXISTRACKINGMPU9150::SetTempSensorEnabled(bool enabled)
   // 1 is actually disabled here
   WriteBit(deviceaddr, DIOI2CMPU9150_RA_PWR_MGMT_1, DIOI2CMPU9150_PWR1_TEMP_DIS_BIT, !enabled);
 }
+
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
@@ -2979,6 +3120,7 @@ XBYTE DIOI2C9AXISTRACKINGMPU9150::GetClockSource()
   return buffer[0];
 }
 
+
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         void DIOI2C9AXISTRACKINGMPU9150::SetClockSource(XBYTE source)
@@ -2992,6 +3134,7 @@ void DIOI2C9AXISTRACKINGMPU9150::SetClockSource(XBYTE source)
 {
   WriteBits(deviceaddr, DIOI2CMPU9150_RA_PWR_MGMT_1, DIOI2CMPU9150_PWR1_CLKSEL_BIT, DIOI2CMPU9150_PWR1_CLKSEL_LENGTH, source);
 }
+
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
@@ -3008,6 +3151,7 @@ XBYTE DIOI2C9AXISTRACKINGMPU9150::GetWakeFrequency()
   return buffer[0];
 }
 
+
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         void DIOI2C9AXISTRACKINGMPU9150::SetWakeFrequency(XBYTE frequency)
@@ -3021,6 +3165,7 @@ void DIOI2C9AXISTRACKINGMPU9150::SetWakeFrequency(XBYTE frequency)
 {
   WriteBits(deviceaddr, DIOI2CMPU9150_RA_PWR_MGMT_2, DIOI2CMPU9150_PWR2_LP_WAKE_CTRL_BIT, DIOI2CMPU9150_PWR2_LP_WAKE_CTRL_LENGTH, frequency);
 }
+
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
@@ -3037,6 +3182,7 @@ bool DIOI2C9AXISTRACKINGMPU9150::GetStandbyXAccelEnabled()
   return buffer[0]?true:false;
 }
 
+
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         void DIOI2C9AXISTRACKINGMPU9150::SetStandbyXAccelEnabled(bool enabled)
@@ -3050,6 +3196,7 @@ void DIOI2C9AXISTRACKINGMPU9150::SetStandbyXAccelEnabled(bool enabled)
 {
   WriteBit(deviceaddr, DIOI2CMPU9150_RA_PWR_MGMT_2, DIOI2CMPU9150_PWR2_STBY_XA_BIT, enabled);
 }
+
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
@@ -3066,6 +3213,7 @@ bool DIOI2C9AXISTRACKINGMPU9150::GetStandbyYAccelEnabled()
   return buffer[0]?true:false;
 }
 
+
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         void DIOI2C9AXISTRACKINGMPU9150::SetStandbyYAccelEnabled(bool enabled)
@@ -3079,6 +3227,7 @@ void DIOI2C9AXISTRACKINGMPU9150::SetStandbyYAccelEnabled(bool enabled)
 {
   WriteBit(deviceaddr, DIOI2CMPU9150_RA_PWR_MGMT_2, DIOI2CMPU9150_PWR2_STBY_YA_BIT, enabled);
 }
+
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
@@ -3095,6 +3244,7 @@ bool DIOI2C9AXISTRACKINGMPU9150::GetStandbyZAccelEnabled()
   return buffer[0]?true:false;
 }
 
+
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         void DIOI2C9AXISTRACKINGMPU9150::SetStandbyZAccelEnabled(bool enabled)
@@ -3108,6 +3258,7 @@ void DIOI2C9AXISTRACKINGMPU9150::SetStandbyZAccelEnabled(bool enabled)
 {
   WriteBit(deviceaddr, DIOI2CMPU9150_RA_PWR_MGMT_2, DIOI2CMPU9150_PWR2_STBY_ZA_BIT, enabled);
 }
+
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
@@ -3124,6 +3275,7 @@ bool DIOI2C9AXISTRACKINGMPU9150::GetStandbyXGyroEnabled()
   return buffer[0]?true:false;
 }
 
+
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         void DIOI2C9AXISTRACKINGMPU9150::SetStandbyXGyroEnabled(bool enabled)
@@ -3137,6 +3289,7 @@ void DIOI2C9AXISTRACKINGMPU9150::SetStandbyXGyroEnabled(bool enabled)
 {
   WriteBit(deviceaddr, DIOI2CMPU9150_RA_PWR_MGMT_2, DIOI2CMPU9150_PWR2_STBY_XG_BIT, enabled);
 }
+
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
@@ -3153,6 +3306,7 @@ bool DIOI2C9AXISTRACKINGMPU9150::GetStandbyYGyroEnabled()
   return buffer[0]?true:false;
 }
 
+
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         void DIOI2C9AXISTRACKINGMPU9150::SetStandbyYGyroEnabled(bool enabled)
@@ -3166,6 +3320,7 @@ void DIOI2C9AXISTRACKINGMPU9150::SetStandbyYGyroEnabled(bool enabled)
 {
   WriteBit(deviceaddr, DIOI2CMPU9150_RA_PWR_MGMT_2, DIOI2CMPU9150_PWR2_STBY_YG_BIT, enabled);
 }
+
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
@@ -3182,6 +3337,7 @@ bool DIOI2C9AXISTRACKINGMPU9150::GetStandbyZGyroEnabled()
   return buffer[0]?true:false;
 }
 
+
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         void DIOI2C9AXISTRACKINGMPU9150::SetStandbyZGyroEnabled(bool enabled)
@@ -3195,6 +3351,7 @@ void DIOI2C9AXISTRACKINGMPU9150::SetStandbyZGyroEnabled(bool enabled)
 {
   WriteBit(deviceaddr, DIOI2CMPU9150_RA_PWR_MGMT_2, DIOI2CMPU9150_PWR2_STBY_ZG_BIT, enabled);
 }
+
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
@@ -3211,6 +3368,7 @@ XWORDSIG DIOI2C9AXISTRACKINGMPU9150::GetFIFOCount()
   return (((XWORDSIG)buffer[0]) << 8) | buffer[1];
 }
 
+
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         XBYTE DIOI2C9AXISTRACKINGMPU9150::GetFIFOByte()
@@ -3225,8 +3383,6 @@ XBYTE DIOI2C9AXISTRACKINGMPU9150::GetFIFOByte()
   ReadByte(deviceaddr, DIOI2CMPU9150_RA_FIFO_R_W, buffer);
   return buffer[0];
 }
-
-
 
 
 /**-------------------------------------------------------------------------------------------------------------------

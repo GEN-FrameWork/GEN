@@ -148,35 +148,35 @@ bool DIOLINUXGPIORPI::Ini()
 
   if(model == RPI_MODEL_B_5)  
     {
-      GPIOEntry_Create(DIOGPIO_ID_NOTDEFINED,  1, DIOGPIO_INVALID);     /* 01 - Not available (3v3 Power)   */      GPIOEntry_Create(DIOGPIO_ID_NOTDEFINED,  2, DIOGPIO_INVALID);     /* 02 - Not available (5v  Power) */
-      GPIOEntry_Create(DIOGPIO_ID_NOTDEFINED,  3,             401);     /* 03 - I2C (SDA)                   */      GPIOEntry_Create(DIOGPIO_ID_NOTDEFINED,  4, DIOGPIO_INVALID);     /* 04 - Not available (5v  Power) */
-      GPIOEntry_Create(DIOGPIO_ID_NOTDEFINED,  5,             402);     /* 05 - I2C (SDL)                   */      GPIOEntry_Create(DIOGPIO_ID_NOTDEFINED,  6, DIOGPIO_INVALID);     /* 06 - Not available (Ground)    */
-      GPIOEntry_Create(DIOGPIO_ID_NOTDEFINED,  7,             403);     /* 07 - GPCLK0                      */      GPIOEntry_Create(DIOGPIO_ID_NOTDEFINED,  8,             413);     /* 08 - UART TXD                  */
-      GPIOEntry_Create(DIOGPIO_ID_NOTDEFINED,  9, DIOGPIO_INVALID);     /* 09 - Not available (Ground)      */      GPIOEntry_Create(DIOGPIO_ID_NOTDEFINED, 10,             414);     /* 10 - UART RXD                  */
-      GPIOEntry_Create(DIOGPIO_ID_NOTDEFINED, 11,             416);     /* 11 - Generic I/O                 */      GPIOEntry_Create(DIOGPIO_ID_NOTDEFINED, 12,             417);     /* 12 - PCM_CLK                   */
-      GPIOEntry_Create(DIOGPIO_ID_NOTDEFINED, 13,             426);     /* 13 - PCM_DOUT                    */      GPIOEntry_Create(DIOGPIO_ID_NOTDEFINED, 14, DIOGPIO_INVALID);     /* 14 - Not available (Ground)    */
-      GPIOEntry_Create(DIOGPIO_ID_NOTDEFINED, 15,             421);     /* 15 - Generic I/O                 */      GPIOEntry_Create(DIOGPIO_ID_NOTDEFINED, 16,             422);     /* 16 - Generic I/O               */
-      GPIOEntry_Create(DIOGPIO_ID_NOTDEFINED, 17, DIOGPIO_INVALID);     /* 17 - Not available (3v3 Power)   */      GPIOEntry_Create(DIOGPIO_ID_NOTDEFINED, 18,             423);     /* 18 - Generic I/O               */
-      GPIOEntry_Create(DIOGPIO_ID_NOTDEFINED, 19,             409);     /* 19 - SPI MOSI                    */      GPIOEntry_Create(DIOGPIO_ID_NOTDEFINED, 20, DIOGPIO_INVALID);     /* 20 - Not available (Ground)    */
-      GPIOEntry_Create(DIOGPIO_ID_NOTDEFINED, 21,             408);     /* 21 - SPI MISO                    */      GPIOEntry_Create(DIOGPIO_ID_NOTDEFINED, 22,             423);     /* 22 - Generic I/O               */
-      GPIOEntry_Create(DIOGPIO_ID_NOTDEFINED, 23,             410);     /* 23 - SPI SCLK                    */      GPIOEntry_Create(DIOGPIO_ID_NOTDEFINED, 24,             407);     /* 24 - SPI CE0                   */
-      GPIOEntry_Create(DIOGPIO_ID_NOTDEFINED, 25, DIOGPIO_INVALID);     /* 25 - Not available               */      GPIOEntry_Create(DIOGPIO_ID_NOTDEFINED, 26,             406);     /* 26 - SPI CE1                   */
+      GPIOEntry_Create(DIOGPIO_ID_NOTDEFINED, 1, DIOGPIO_INVALID);     /* 01 - Not available (3v3 Power)   */      GPIOEntry_Create(DIOGPIO_ID_NOTDEFINED, 2, DIOGPIO_INVALID);     /* 02 - Not available (5v  Power) */
+      GPIOEntry_Create(DIOGPIO_ID_NOTDEFINED, 3, 401);     /* 03 - I2C (SDA)                   */      GPIOEntry_Create(DIOGPIO_ID_NOTDEFINED, 4, DIOGPIO_INVALID);     /* 04 - Not available (5v  Power) */
+      GPIOEntry_Create(DIOGPIO_ID_NOTDEFINED, 5, 402);     /* 05 - I2C (SDL)                   */      GPIOEntry_Create(DIOGPIO_ID_NOTDEFINED, 6, DIOGPIO_INVALID);     /* 06 - Not available (Ground)    */
+      GPIOEntry_Create(DIOGPIO_ID_NOTDEFINED, 7, 403);     /* 07 - GPCLK0                      */      GPIOEntry_Create(DIOGPIO_ID_NOTDEFINED, 8, 413);     /* 08 - UART TXD                  */
+      GPIOEntry_Create(DIOGPIO_ID_NOTDEFINED, 9, DIOGPIO_INVALID);     /* 09 - Not available (Ground)      */      GPIOEntry_Create(DIOGPIO_ID_NOTDEFINED, 10, 414);     /* 10 - UART RXD                  */
+      GPIOEntry_Create(DIOGPIO_ID_NOTDEFINED, 11, 416);     /* 11 - Generic I/O                 */      GPIOEntry_Create(DIOGPIO_ID_NOTDEFINED, 12, 417);     /* 12 - PCM_CLK                   */
+      GPIOEntry_Create(DIOGPIO_ID_NOTDEFINED, 13, 426);     /* 13 - PCM_DOUT                    */      GPIOEntry_Create(DIOGPIO_ID_NOTDEFINED, 14, DIOGPIO_INVALID);     /* 14 - Not available (Ground)    */
+      GPIOEntry_Create(DIOGPIO_ID_NOTDEFINED, 15, 421);     /* 15 - Generic I/O                 */      GPIOEntry_Create(DIOGPIO_ID_NOTDEFINED, 16, 422);     /* 16 - Generic I/O               */
+      GPIOEntry_Create(DIOGPIO_ID_NOTDEFINED, 17, DIOGPIO_INVALID);     /* 17 - Not available (3v3 Power)   */      GPIOEntry_Create(DIOGPIO_ID_NOTDEFINED, 18, 423);     /* 18 - Generic I/O               */
+      GPIOEntry_Create(DIOGPIO_ID_NOTDEFINED, 19, 409);     /* 19 - SPI MOSI                    */      GPIOEntry_Create(DIOGPIO_ID_NOTDEFINED, 20, DIOGPIO_INVALID);     /* 20 - Not available (Ground)    */
+      GPIOEntry_Create(DIOGPIO_ID_NOTDEFINED, 21, 408);     /* 21 - SPI MISO                    */      GPIOEntry_Create(DIOGPIO_ID_NOTDEFINED, 22, 423);     /* 22 - Generic I/O               */
+      GPIOEntry_Create(DIOGPIO_ID_NOTDEFINED, 23, 410);     /* 23 - SPI SCLK                    */      GPIOEntry_Create(DIOGPIO_ID_NOTDEFINED, 24, 407);     /* 24 - SPI CE0                   */
+      GPIOEntry_Create(DIOGPIO_ID_NOTDEFINED, 25, DIOGPIO_INVALID);     /* 25 - Not available               */      GPIOEntry_Create(DIOGPIO_ID_NOTDEFINED, 26, 406);     /* 26 - SPI CE1                   */
     }
    else
     {      
-      GPIOEntry_Create(DIOGPIO_ID_NOTDEFINED,  1, DIOGPIO_INVALID);     /* 01 - Not available (3v3 Power)   */      GPIOEntry_Create(DIOGPIO_ID_NOTDEFINED,  2, DIOGPIO_INVALID);     /* 02 - Not available (5v  Power) */
-      GPIOEntry_Create(DIOGPIO_ID_NOTDEFINED,  3,               2);     /* 03 - I2C (SDA)                   */      GPIOEntry_Create(DIOGPIO_ID_NOTDEFINED,  4, DIOGPIO_INVALID);     /* 04 - Not available (5v  Power) */
-      GPIOEntry_Create(DIOGPIO_ID_NOTDEFINED,  5,               3);     /* 05 - I2C (SDL)                   */      GPIOEntry_Create(DIOGPIO_ID_NOTDEFINED,  6, DIOGPIO_INVALID);     /* 06 - Not available (Ground)    */
-      GPIOEntry_Create(DIOGPIO_ID_NOTDEFINED,  7,               4);     /* 07 - GPCLK0                      */      GPIOEntry_Create(DIOGPIO_ID_NOTDEFINED,  8,              14);     /* 08 - UART TXD                  */
-      GPIOEntry_Create(DIOGPIO_ID_NOTDEFINED,  9, DIOGPIO_INVALID);     /* 09 - Not available (Ground)      */      GPIOEntry_Create(DIOGPIO_ID_NOTDEFINED, 10,              15);     /* 10 - UART RXD                  */
-      GPIOEntry_Create(DIOGPIO_ID_NOTDEFINED, 11,              17);     /* 11 - Generic I/O                 */      GPIOEntry_Create(DIOGPIO_ID_NOTDEFINED, 12,              18);     /* 12 - PCM_CLK                   */
-      GPIOEntry_Create(DIOGPIO_ID_NOTDEFINED, 13,              27);     /* 13 - PCM_DOUT                    */      GPIOEntry_Create(DIOGPIO_ID_NOTDEFINED, 14, DIOGPIO_INVALID);     /* 14 - Not available (Ground)    */
-      GPIOEntry_Create(DIOGPIO_ID_NOTDEFINED, 15,              22);     /* 15 - Generic I/O                 */      GPIOEntry_Create(DIOGPIO_ID_NOTDEFINED, 16,              23);     /* 16 - Generic I/O               */
-      GPIOEntry_Create(DIOGPIO_ID_NOTDEFINED, 17, DIOGPIO_INVALID);     /* 17 - Not available (3v3 Power)   */      GPIOEntry_Create(DIOGPIO_ID_NOTDEFINED, 18,              24);     /* 18 - Generic I/O               */
-      GPIOEntry_Create(DIOGPIO_ID_NOTDEFINED, 19,              10);     /* 19 - SPI MOSI                    */      GPIOEntry_Create(DIOGPIO_ID_NOTDEFINED, 20, DIOGPIO_INVALID);     /* 20 - Not available (Ground)    */
-      GPIOEntry_Create(DIOGPIO_ID_NOTDEFINED, 21,               9);     /* 21 - SPI MISO                    */      GPIOEntry_Create(DIOGPIO_ID_NOTDEFINED, 22,              25);     /* 22 - Generic I/O               */
-      GPIOEntry_Create(DIOGPIO_ID_NOTDEFINED, 23,              11);     /* 23 - SPI SCLK                    */      GPIOEntry_Create(DIOGPIO_ID_NOTDEFINED, 24,               8);     /* 24 - SPI CE0                   */
-      GPIOEntry_Create(DIOGPIO_ID_NOTDEFINED, 25, DIOGPIO_INVALID);     /* 25 - Not available               */      GPIOEntry_Create(DIOGPIO_ID_NOTDEFINED, 26,               7);     /* 26 - SPI CE1                   */      
+      GPIOEntry_Create(DIOGPIO_ID_NOTDEFINED, 1, DIOGPIO_INVALID);     /* 01 - Not available (3v3 Power)   */      GPIOEntry_Create(DIOGPIO_ID_NOTDEFINED, 2, DIOGPIO_INVALID);     /* 02 - Not available (5v  Power) */
+      GPIOEntry_Create(DIOGPIO_ID_NOTDEFINED, 3, 2);     /* 03 - I2C (SDA)                   */      GPIOEntry_Create(DIOGPIO_ID_NOTDEFINED, 4, DIOGPIO_INVALID);     /* 04 - Not available (5v  Power) */
+      GPIOEntry_Create(DIOGPIO_ID_NOTDEFINED, 5, 3);     /* 05 - I2C (SDL)                   */      GPIOEntry_Create(DIOGPIO_ID_NOTDEFINED, 6, DIOGPIO_INVALID);     /* 06 - Not available (Ground)    */
+      GPIOEntry_Create(DIOGPIO_ID_NOTDEFINED, 7, 4);     /* 07 - GPCLK0                      */      GPIOEntry_Create(DIOGPIO_ID_NOTDEFINED, 8, 14);     /* 08 - UART TXD                  */
+      GPIOEntry_Create(DIOGPIO_ID_NOTDEFINED, 9, DIOGPIO_INVALID);     /* 09 - Not available (Ground)      */      GPIOEntry_Create(DIOGPIO_ID_NOTDEFINED, 10, 15);     /* 10 - UART RXD                  */
+      GPIOEntry_Create(DIOGPIO_ID_NOTDEFINED, 11, 17);     /* 11 - Generic I/O                 */      GPIOEntry_Create(DIOGPIO_ID_NOTDEFINED, 12, 18);     /* 12 - PCM_CLK                   */
+      GPIOEntry_Create(DIOGPIO_ID_NOTDEFINED, 13, 27);     /* 13 - PCM_DOUT                    */      GPIOEntry_Create(DIOGPIO_ID_NOTDEFINED, 14, DIOGPIO_INVALID);     /* 14 - Not available (Ground)    */
+      GPIOEntry_Create(DIOGPIO_ID_NOTDEFINED, 15, 22);     /* 15 - Generic I/O                 */      GPIOEntry_Create(DIOGPIO_ID_NOTDEFINED, 16, 23);     /* 16 - Generic I/O               */
+      GPIOEntry_Create(DIOGPIO_ID_NOTDEFINED, 17, DIOGPIO_INVALID);     /* 17 - Not available (3v3 Power)   */      GPIOEntry_Create(DIOGPIO_ID_NOTDEFINED, 18, 24);     /* 18 - Generic I/O               */
+      GPIOEntry_Create(DIOGPIO_ID_NOTDEFINED, 19, 10);     /* 19 - SPI MOSI                    */      GPIOEntry_Create(DIOGPIO_ID_NOTDEFINED, 20, DIOGPIO_INVALID);     /* 20 - Not available (Ground)    */
+      GPIOEntry_Create(DIOGPIO_ID_NOTDEFINED, 21, 9);     /* 21 - SPI MISO                    */      GPIOEntry_Create(DIOGPIO_ID_NOTDEFINED, 22, 25);     /* 22 - Generic I/O               */
+      GPIOEntry_Create(DIOGPIO_ID_NOTDEFINED, 23, 11);     /* 23 - SPI SCLK                    */      GPIOEntry_Create(DIOGPIO_ID_NOTDEFINED, 24, 8);     /* 24 - SPI CE0                   */
+      GPIOEntry_Create(DIOGPIO_ID_NOTDEFINED, 25, DIOGPIO_INVALID);     /* 25 - Not available               */      GPIOEntry_Create(DIOGPIO_ID_NOTDEFINED, 26, 7);     /* 26 - SPI CE1                   */      
     }
 
   // ------------- Extended PI2 -------------------------------------------------------
@@ -184,12 +184,12 @@ bool DIOLINUXGPIORPI::Ini()
   if(model == RPI_MODEL_B_5)  
     {
       GPIOEntry_Create(DIOGPIO_ID_NOTDEFINED, 27, DIOGPIO_INVALID);     /* 27 - I2C ID EEProm SC            */      GPIOEntry_Create(DIOGPIO_ID_NOTDEFINED, 28, DIOGPIO_INVALID);     /* 28 - I2C ID EEProm SD          */
-      GPIOEntry_Create(DIOGPIO_ID_NOTDEFINED, 29,             404);     /* 29 - Generic I/O                 */      GPIOEntry_Create(DIOGPIO_ID_NOTDEFINED, 30, DIOGPIO_INVALID);     /* 30 - Not available  (Ground)   */
-      GPIOEntry_Create(DIOGPIO_ID_NOTDEFINED, 31,             405);     /* 31 - Generic I/O                 */      GPIOEntry_Create(DIOGPIO_ID_NOTDEFINED, 32,             411);     /* 32 - Generic I/O               */
-      GPIOEntry_Create(DIOGPIO_ID_NOTDEFINED, 33,             412);     /* 33 - Generic I/O                 */      GPIOEntry_Create(DIOGPIO_ID_NOTDEFINED, 34, DIOGPIO_INVALID);     /* 34 - Not available (Ground)    */
-      GPIOEntry_Create(DIOGPIO_ID_NOTDEFINED, 35,             418);     /* 35 - Generic I/O                 */      GPIOEntry_Create(DIOGPIO_ID_NOTDEFINED, 36,             415);     /* 36 - Generic I/O               */
-      GPIOEntry_Create(DIOGPIO_ID_NOTDEFINED, 37,             425);     /* 37 - Generic I/O                 */      GPIOEntry_Create(DIOGPIO_ID_NOTDEFINED, 38,             419);     /* 38 - Generic I/O               */
-      GPIOEntry_Create(DIOGPIO_ID_NOTDEFINED, 39, DIOGPIO_INVALID);     /* 39 - Not available (Ground)      */      GPIOEntry_Create(DIOGPIO_ID_NOTDEFINED, 40,             420);     /* 40 - Generic I/O               */
+      GPIOEntry_Create(DIOGPIO_ID_NOTDEFINED, 29, 404);     /* 29 - Generic I/O                 */      GPIOEntry_Create(DIOGPIO_ID_NOTDEFINED, 30, DIOGPIO_INVALID);     /* 30 - Not available  (Ground)   */
+      GPIOEntry_Create(DIOGPIO_ID_NOTDEFINED, 31, 405);     /* 31 - Generic I/O                 */      GPIOEntry_Create(DIOGPIO_ID_NOTDEFINED, 32, 411);     /* 32 - Generic I/O               */
+      GPIOEntry_Create(DIOGPIO_ID_NOTDEFINED, 33, 412);     /* 33 - Generic I/O                 */      GPIOEntry_Create(DIOGPIO_ID_NOTDEFINED, 34, DIOGPIO_INVALID);     /* 34 - Not available (Ground)    */
+      GPIOEntry_Create(DIOGPIO_ID_NOTDEFINED, 35, 418);     /* 35 - Generic I/O                 */      GPIOEntry_Create(DIOGPIO_ID_NOTDEFINED, 36, 415);     /* 36 - Generic I/O               */
+      GPIOEntry_Create(DIOGPIO_ID_NOTDEFINED, 37, 425);     /* 37 - Generic I/O                 */      GPIOEntry_Create(DIOGPIO_ID_NOTDEFINED, 38, 419);     /* 38 - Generic I/O               */
+      GPIOEntry_Create(DIOGPIO_ID_NOTDEFINED, 39, DIOGPIO_INVALID);     /* 39 - Not available (Ground)      */      GPIOEntry_Create(DIOGPIO_ID_NOTDEFINED, 40, 420);     /* 40 - Generic I/O               */
 
     }
 
@@ -202,12 +202,12 @@ bool DIOLINUXGPIORPI::Ini()
     )
     {
       GPIOEntry_Create(DIOGPIO_ID_NOTDEFINED, 27, DIOGPIO_INVALID);     /* 27 - I2C ID EEProm SC            */      GPIOEntry_Create(DIOGPIO_ID_NOTDEFINED, 28, DIOGPIO_INVALID);     /* 28 - I2C ID EEProm SD          */
-      GPIOEntry_Create(DIOGPIO_ID_NOTDEFINED, 29,               5);     /* 29 - Generic I/O                 */      GPIOEntry_Create(DIOGPIO_ID_NOTDEFINED, 30, DIOGPIO_INVALID);     /* 30 - Not available  (Ground)   */
-      GPIOEntry_Create(DIOGPIO_ID_NOTDEFINED, 31,               6);     /* 31 - Generic I/O                 */      GPIOEntry_Create(DIOGPIO_ID_NOTDEFINED, 32,              12);     /* 32 - Generic I/O               */
-      GPIOEntry_Create(DIOGPIO_ID_NOTDEFINED, 33,              13);     /* 33 - Generic I/O                 */      GPIOEntry_Create(DIOGPIO_ID_NOTDEFINED, 34, DIOGPIO_INVALID);     /* 34 - Not available (Ground)    */
-      GPIOEntry_Create(DIOGPIO_ID_NOTDEFINED, 35,              19);     /* 35 - Generic I/O                 */      GPIOEntry_Create(DIOGPIO_ID_NOTDEFINED, 36,              16);     /* 36 - Generic I/O               */
-      GPIOEntry_Create(DIOGPIO_ID_NOTDEFINED, 37,              26);     /* 37 - Generic I/O                 */      GPIOEntry_Create(DIOGPIO_ID_NOTDEFINED, 38,              20);     /* 38 - Generic I/O               */
-      GPIOEntry_Create(DIOGPIO_ID_NOTDEFINED, 39, DIOGPIO_INVALID);     /* 39 - Not available (Ground)      */      GPIOEntry_Create(DIOGPIO_ID_NOTDEFINED, 40,              21);     /* 40 - Generic I/O               */
+      GPIOEntry_Create(DIOGPIO_ID_NOTDEFINED, 29, 5);     /* 29 - Generic I/O                 */      GPIOEntry_Create(DIOGPIO_ID_NOTDEFINED, 30, DIOGPIO_INVALID);     /* 30 - Not available  (Ground)   */
+      GPIOEntry_Create(DIOGPIO_ID_NOTDEFINED, 31, 6);     /* 31 - Generic I/O                 */      GPIOEntry_Create(DIOGPIO_ID_NOTDEFINED, 32, 12);     /* 32 - Generic I/O               */
+      GPIOEntry_Create(DIOGPIO_ID_NOTDEFINED, 33, 13);     /* 33 - Generic I/O                 */      GPIOEntry_Create(DIOGPIO_ID_NOTDEFINED, 34, DIOGPIO_INVALID);     /* 34 - Not available (Ground)    */
+      GPIOEntry_Create(DIOGPIO_ID_NOTDEFINED, 35, 19);     /* 35 - Generic I/O                 */      GPIOEntry_Create(DIOGPIO_ID_NOTDEFINED, 36, 16);     /* 36 - Generic I/O               */
+      GPIOEntry_Create(DIOGPIO_ID_NOTDEFINED, 37, 26);     /* 37 - Generic I/O                 */      GPIOEntry_Create(DIOGPIO_ID_NOTDEFINED, 38, 20);     /* 38 - Generic I/O               */
+      GPIOEntry_Create(DIOGPIO_ID_NOTDEFINED, 39, DIOGPIO_INVALID);     /* 39 - Not available (Ground)      */      GPIOEntry_Create(DIOGPIO_ID_NOTDEFINED, 40, 21);     /* 40 - Generic I/O               */
     }
     
 
@@ -219,12 +219,16 @@ bool DIOLINUXGPIORPI::Ini()
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         void DIOLINUXGPIORPI::Clean()
-* @brief      Set mode
+* @fn         bool DIOLINUXGPIORPI::SetMode(DIOGPIO_ENTRY* entry, XWORD mode)
+* @brief      Set Mode
 * @ingroup    PLATFORM_LINUX
 * 
+* @param[in]  entry : 
+* @param[in]  mode : 
+* 
+* @return     bool : true if the operation is successful; otherwise false.
+* 
 * --------------------------------------------------------------------------------------------------------------------*/
-/*
 bool DIOLINUXGPIORPI::SetMode(DIOGPIO_ENTRY* entry, XWORD mode)
 {
   if(!entry) return false;
@@ -237,17 +241,19 @@ bool DIOLINUXGPIORPI::SetMode(DIOGPIO_ENTRY* entry, XWORD mode)
 
   return RPI_GPIOMode(entry->GetGPIO(), isinput);
 }
-*/
 
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         void DIOLINUXGPIORPI::Clean()
-* @brief      Get value
+* @fn         bool DIOLINUXGPIORPI::GetValue(DIOGPIO_ENTRY* entry)
+* @brief      Get Value
 * @ingroup    PLATFORM_LINUX
 * 
+* @param[in]  entry : 
+* 
+* @return     bool : true if the operation is successful; otherwise false.
+* 
 * --------------------------------------------------------------------------------------------------------------------*/
-/*
 bool DIOLINUXGPIORPI::GetValue(DIOGPIO_ENTRY* entry)
 {  
   if(!entry) return false;
@@ -255,17 +261,20 @@ bool DIOLINUXGPIORPI::GetValue(DIOGPIO_ENTRY* entry)
   
   return RPI_GPIORead(entry->GetGPIO());
 }
-*/
 
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         void DIOLINUXGPIORPI::Clean()
-* @brief      Set value
+* @fn         bool DIOLINUXGPIORPI::SetValue(DIOGPIO_ENTRY* entry, bool value)
+* @brief      Set Value
 * @ingroup    PLATFORM_LINUX
 * 
+* @param[in]  entry : 
+* @param[in]  value : 
+* 
+* @return     bool : true if the operation is successful; otherwise false.
+* 
 * --------------------------------------------------------------------------------------------------------------------*/
-/*
 bool DIOLINUXGPIORPI::SetValue(DIOGPIO_ENTRY* entry, bool value)
 {
   if(!entry) return false;
@@ -273,32 +282,32 @@ bool DIOLINUXGPIORPI::SetValue(DIOGPIO_ENTRY* entry, bool value)
 
   return RPI_GPIOWrite(entry->GetGPIO(), value);
 }
-*/
 
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         void DIOLINUXGPIORPI::Clean()
-* @brief      Clean internal state
+* @fn         bool DIOLINUXGPIORPI::End()
+* @brief      End
 * @ingroup    PLATFORM_LINUX
 * 
+* @return     bool : true if the operation is successful; otherwise false.
+* 
 * --------------------------------------------------------------------------------------------------------------------*/
-/*
 bool DIOLINUXGPIORPI::End()
 {
   return RPI_End();
 }
-*/
 
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         void DIOLINUXGPIORPI::Clean()
-* @brief      RPI ini
+* @fn         bool DIOLINUXGPIORPI::RPI_Ini()
+* @brief      RPI Ini
 * @ingroup    PLATFORM_LINUX
 * 
+* @return     bool : true if the operation is successful; otherwise false.
+* 
 * --------------------------------------------------------------------------------------------------------------------*/
-/*
 bool DIOLINUXGPIORPI::RPI_Ini()
 { 
   uint32_t* map = NULL;
@@ -331,17 +340,17 @@ bool DIOLINUXGPIORPI::RPI_Ini()
    
   return true;
 }
-*/
 
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         void DIOLINUXGPIORPI::Clean()
-* @brief      RPI end
+* @fn         bool DIOLINUXGPIORPI::RPI_End()
+* @brief      RPI End
 * @ingroup    PLATFORM_LINUX
 * 
+* @return     bool : true if the operation is successful; otherwise false.
+* 
 * --------------------------------------------------------------------------------------------------------------------*/
-/*
 bool DIOLINUXGPIORPI::RPI_End()
 {
   if(!initialization) 
@@ -354,34 +363,39 @@ bool DIOLINUXGPIORPI::RPI_End()
 
   return true;
 }
-*/
 
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         void DIOLINUXGPIORPI::Clean()
-* @brief      RPI is GPIO valid
+* @fn         bool DIOLINUXGPIORPI::RPI_IsGPIOValid(XQWORD GPIO)
+* @brief      RPI Is GPIOValid
 * @ingroup    PLATFORM_LINUX
 * 
+* @param[in]  GPIO : 
+* 
+* @return     bool : true if the operation is successful; otherwise false.
+* 
 * --------------------------------------------------------------------------------------------------------------------*/
-/*
 bool DIOLINUXGPIORPI::RPI_IsGPIOValid(XQWORD GPIO)
 {
   if(GPIO<2 || GPIO>27) return false;
 
   return true;
 }
-*/
 
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         void DIOLINUXGPIORPI::Clean()
-* @brief      RPIGPIO mode
+* @fn         bool DIOLINUXGPIORPI::RPI_GPIOMode(XQWORD GPIO, bool isinput)
+* @brief      RPI GPIOMode
 * @ingroup    PLATFORM_LINUX
 * 
+* @param[in]  GPIO : 
+* @param[in]  isinput : 
+* 
+* @return     bool : true if the operation is successful; otherwise false.
+* 
 * --------------------------------------------------------------------------------------------------------------------*/
-/*
 bool DIOLINUXGPIORPI::RPI_GPIOMode(XQWORD GPIO, bool isinput)
 {
   if(!initialization) 
@@ -433,17 +447,19 @@ bool DIOLINUXGPIORPI::RPI_GPIOMode(XQWORD GPIO, bool isinput)
   
   return true;
 }
-*/
 
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         void DIOLINUXGPIORPI::Clean()
-* @brief      RPIGPIO read
+* @fn         bool DIOLINUXGPIORPI::RPI_GPIORead(XQWORD GPIO)
+* @brief      RPI GPIORead
 * @ingroup    PLATFORM_LINUX
 * 
+* @param[in]  GPIO : 
+* 
+* @return     bool : true if the operation is successful; otherwise false.
+* 
 * --------------------------------------------------------------------------------------------------------------------*/
-/*
 bool DIOLINUXGPIORPI::RPI_GPIORead(XQWORD GPIO)
 {
   if(!initialization) 
@@ -474,17 +490,20 @@ bool DIOLINUXGPIORPI::RPI_GPIORead(XQWORD GPIO)
 
   return false;
 }
-*/
 
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         void DIOLINUXGPIORPI::Clean()
-* @brief      RPIGPIO write
+* @fn         bool DIOLINUXGPIORPI::RPI_GPIOWrite(XQWORD GPIO, bool isactive)
+* @brief      RPI GPIOWrite
 * @ingroup    PLATFORM_LINUX
 * 
+* @param[in]  GPIO : 
+* @param[in]  isactive : 
+* 
+* @return     bool : true if the operation is successful; otherwise false.
+* 
 * --------------------------------------------------------------------------------------------------------------------*/
-/*
 bool DIOLINUXGPIORPI::RPI_GPIOWrite(XQWORD GPIO, bool isactive)
 {
   if(!initialization) 
@@ -538,7 +557,6 @@ bool DIOLINUXGPIORPI::RPI_GPIOWrite(XQWORD GPIO, bool isactive)
 
   return true;
 }
-*/
 
 
 /**-------------------------------------------------------------------------------------------------------------------

@@ -48,7 +48,6 @@ enum SNDOPENALPLAYITEM_XFSMEVENTS
   SNDOPENALPLAYITEM_LASTEVENT
 };
 
-
 enum DEVTESTSCONSOLEXFSMSTATES
 {
   SNDOPENALPLAYITEM_XFSMSTATE_NONE              = 0 ,
@@ -60,9 +59,6 @@ enum DEVTESTSCONSOLEXFSMSTATES
 
   SNDOPENALPLAYITEM_LASTSTATE
 };
-
-
-
 
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
 

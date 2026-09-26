@@ -93,15 +93,12 @@
 
 #define SWAP(a,b)             { XDWORD t = a; a = b; b = t; t = 0; }
 
-
 typedef struct  
 { 
   int     mode;
   XDWORD  sk[32];
 
 } CIPHERDES_CONTEXT;
-
-
 
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
 
@@ -144,8 +141,8 @@ class CIPHERDES : public CIPHER
 
     int                   DESCipher               (CIPHERDES_CONTEXT* ctx, XBYTE input[8], XBYTE output[8]);
 
-    bool                  DESCipher_ECB           (CIPHERDES_CONTEXT* ctx, int mode,  size_t length, XBYTE iv[8], XBYTE* input, XBYTE* output);
-    bool                  DESCipher_CBC           (CIPHERDES_CONTEXT* ctx, int mode,  size_t length, XBYTE iv[8], XBYTE* input, XBYTE* output);
+    bool                  DESCipher_ECB           (CIPHERDES_CONTEXT* ctx, int mode, size_t length, XBYTE iv[8], XBYTE* input, XBYTE* output);
+    bool                  DESCipher_CBC           (CIPHERDES_CONTEXT* ctx, int mode, size_t length, XBYTE iv[8], XBYTE* input, XBYTE* output);
 
   private:
 

@@ -34,14 +34,10 @@
 
 #include "APPFlowBase.h"
 
-
-
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
 
 #define APPFLOWCONSOLE_DEFAULT_MESSAGEMASK                   __L("%-36s ... ")
 #define APPFLOWCONSOLE_DEFAULT_MESSAGEMASKWITHOUTPOINTS      __L("%-36s ")
-
-
 
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
 

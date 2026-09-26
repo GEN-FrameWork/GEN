@@ -52,7 +52,6 @@ enum
   #define XFILE_DISPLAYNOTCLOSEFILES
 #endif
 
-
 #define XFILE_GETFILESIZE(xpathfile, size)    { size = -1;                                        \
                                                 XFILE* xfile=GEN_XFACTORY.Create_File();  \
                                                 if(xfile)                                         \
@@ -66,13 +65,9 @@ enum
                                                   }                                               \
                                               }
 
-
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
 
-
 class CIPHER;
-
 
 class XFILE 
 {
@@ -91,7 +86,7 @@ class XFILE
     virtual bool            GetPosition             (XQWORD& position)                                          = 0;
     virtual bool            SetPosition             (XQWORD position)                                           = 0;
 
-    virtual bool            Read                    (XBYTE* buffer, XDWORD  size , CIPHER* cipher = NULL)       = 0;
+    virtual bool            Read                    (XBYTE* buffer, XDWORD size, CIPHER* cipher = NULL)       = 0;
     virtual bool            Read                    (XBYTE* buffer, XDWORD* size , CIPHER* cipher = NULL)       = 0;
 
     virtual bool            Write                   (XBYTE* buffer, XDWORD size , CIPHER* cipher = NULL)        = 0;
@@ -109,13 +104,13 @@ class XFILE
 
     bool                    Exist                   (XPATH& xpath);
 
-    bool                    Open                    (XPATH& xpath,bool readonly = true);
+    bool                    Open                    (XPATH& xpath, bool readonly = true);
     bool                    Create                  (XPATH& xpath);
 
-    bool                    Erase                   (XPATH& xpath,bool overwrite = false);
-    bool                    Rename                  (XPATH& xpathold,XPATH& xpathnew);
-    bool                    Rename                  (XCHAR* xpathold,XPATH& xpathnew);
-    bool                    Rename                  (XPATH& xpathold,XCHAR* xpathnew);
+    bool                    Erase                   (XPATH& xpath, bool overwrite = false);
+    bool                    Rename                  (XPATH& xpathold, XPATH& xpathnew);
+    bool                    Rename                  (XCHAR* xpathold, XPATH& xpathnew);
+    bool                    Rename                  (XPATH& xpathold, XCHAR* xpathnew);
 
     bool                    IsOpen                  ();
     bool                    IsReadOnly              ();

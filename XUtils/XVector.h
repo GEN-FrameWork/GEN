@@ -37,9 +37,6 @@
 
 #include "XMemory_Control.h"
 
-
-
-
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
 
 #ifdef MICROCONTROLLER
@@ -48,10 +45,7 @@
   #define XVECTOR_DEFAULTADDINLIMIT   100
 #endif
 
-
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
-
 
 template<class T>
 class XVECTOR
@@ -73,7 +67,6 @@ class XVECTOR
                                       DeleteAll();
                                       Clean();
                                     }
-
 
     bool                            IsEmpty                               ()                                              { return nelements?false:true;                          }
     XDWORD                          GetSize                               ()                                              { return nelements;                                     }
@@ -110,7 +103,6 @@ class XVECTOR
                                       return true;
                                     }
 
-
     virtual bool                    Add                                   (T element)
                                     {
                                       if(!ismulti)
@@ -136,7 +128,6 @@ class XVECTOR
                                       return true;
                                     }
 
-
     int                             Find                                  (T element)
                                     {
                                       if(!array) 
@@ -155,7 +146,6 @@ class XVECTOR
                                       return NOTFOUND;
                                     }
 
-
     T                               Get                                   (XDWORD index)
                                     {
                                       if(!array) 
@@ -170,7 +160,6 @@ class XVECTOR
 
                                       return array[index];
                                     }
-
 
     T*                              GetPointer                            (XDWORD index)
                                     {
@@ -187,15 +176,12 @@ class XVECTOR
                                       return &array[index];
                                     }
 
-
     inline T                        FastGet                               (XDWORD index)
                                     {                                     
                                       return array[index];
                                     }
 
-
     T                               GetLast                               ()                                              { return Get(nelements-1);                              }
-
 
     bool                            Set                                   (XDWORD index, T element)
                                     {
@@ -208,7 +194,6 @@ class XVECTOR
 
                                       return true;
                                     }
-
 
     bool                            Insert                                (XDWORD index, T element)
                                     {
@@ -227,7 +212,6 @@ class XVECTOR
 
                                       return Set(index, element);
                                     }
-
 
     virtual bool                    Delete                                (T element)
                                     {
@@ -250,7 +234,6 @@ class XVECTOR
                                       return false;
                                     }
 
-
     bool                            DeleteLast                            ()
                                     {
                                       if(!array) 
@@ -262,7 +245,6 @@ class XVECTOR
 
                                       return true;
                                     }
-
 
     virtual bool                    DeleteIndex                           (XDWORD index)
                                     {
@@ -282,13 +264,11 @@ class XVECTOR
                                       return true;
                                     }
 
-
     void                            FastDeleteIndex                       (XDWORD index)
                                     {
                                       ResizeRemove(index);
                                       nelements--;
                                     }
-
 
     bool                            DeleteAll                             ()
                                     {
@@ -305,7 +285,6 @@ class XVECTOR
 
                                       return true;
                                     }
-
 
     bool                            ResizeContents                        (int newsize)
                                     {
@@ -333,7 +312,6 @@ class XVECTOR
                                                
                                       return true;
                                     }
-
 
     bool                            DeleteContentsInstanced()
                                     {
@@ -363,7 +341,6 @@ class XVECTOR
                                       return true;
                                     }
 
-
     bool                            DeleteContents                        ()
                                     {
                                       if(!nelements) 
@@ -386,8 +363,7 @@ class XVECTOR
                                       return true;
                                     }
 
-
-    bool                            Swap                                  (XDWORD firstindex,XDWORD secondindex)
+    bool                            Swap                                  (XDWORD firstindex, XDWORD secondindex)
                                     {
                                       if(firstindex   >=  nelements)  
                                         {
@@ -406,7 +382,6 @@ class XVECTOR
 
                                       return true;
                                     }
-
 
     bool                            Copy                                  (XVECTOR<T>* origin)
                                     {
@@ -433,7 +408,6 @@ class XVECTOR
                                       return true;
                                     }
 
-
     bool                            ResizeAdd                             ()
                                     {
 
@@ -456,27 +430,22 @@ class XVECTOR
                                           narray = newsize;
                                           array  = newarray;
 
-
-
                                           if((newsize * sizeof (T)) == 400)
                                             {                                                                                                             
                                               int a=0;
                                               a++;                                                      
                                             }
 
-
                                         }
 
                                       return true;
                                     }
-
 
   private:
                                     XVECTOR(const XVECTOR<T> & rhs)
                                     {
                                       Clean();
                                     }
-
 
     void                            Clean                                 ()
                                     {

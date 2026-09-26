@@ -36,19 +36,14 @@
 #include "GRPBitmap.h"
 #include "GRPBitmapFile.h"
 
-
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
 
 #define UI_ANIMATION_FRAME_INI          __L("#[")
 #define UI_ANIMATION_FRAME_END          __L("]")
 
-
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
 
-
 class GRP2DCANVAS;
-
 
 class UI_ANIMATION
 {

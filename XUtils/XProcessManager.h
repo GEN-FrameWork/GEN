@@ -37,18 +37,11 @@
 #include "XConsole.h"
 #include "XSerializable.h"
 
-
 #include "GRPRect.h"
-
-
 
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
 
-
-
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
-
 
 class XPROCESS 
 {
@@ -79,7 +72,6 @@ class XPROCESS
 
     bool                            Compare                           (XPROCESS& xprocess, bool onlyfixed = true);  
 
-    
   private:
 
     void                            Clean                             ();
@@ -96,7 +88,6 @@ class XPROCESS
     int                             windowtitleheight;    
     int                             windowborderwidth;
 };
-
 
 class XPROCESSMANAGER
 {
@@ -130,7 +121,7 @@ class XPROCESSMANAGER
 
     virtual bool                    Application_GetRunningList        (XVECTOR<XPROCESS*>& applist, bool onlywithvalidwindow = false);
 
-    virtual bool                    Application_Terminate             (XDWORD processID, XDWORD  exitcode = 0);
+    virtual bool                    Application_Terminate             (XDWORD processID, XDWORD exitcode = 0);
     bool                            Application_Terminate             (XPROCESS& process, XDWORD exitcode = 0);
     bool                            Application_Terminate             (XCHAR* processname, XDWORD exitcode = 0);
     bool                            Application_Terminate             (XSTRING& processname, XDWORD exitcode = 0);

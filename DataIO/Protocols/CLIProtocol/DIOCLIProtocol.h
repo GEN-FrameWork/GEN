@@ -70,9 +70,7 @@ enum DIOCLIPROTOCOL_ERROR
 
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
 
-
 class DIOSTREAM;
-
 
 class DIOCLIPROTOCOLCOMMAND
 {
@@ -92,7 +90,6 @@ class DIOCLIPROTOCOLCOMMAND
     int                                   nparams;
 };
 
-
 class DIOCLIPROTOCOLANSWER
 {
   public:
@@ -111,7 +108,6 @@ class DIOCLIPROTOCOLANSWER
     XSTRING                               command;
     XSTRING                               answer;
 };
-
 
 class DIOCLIPROTOCOL
 {

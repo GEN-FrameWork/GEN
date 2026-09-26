@@ -61,7 +61,7 @@
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         define PUT_UINT32_LE(n,b,i)
+* @fn         define PUT_UINT32_LE(n, b, i)
 * @brief      PUT UINT32 LE
 * @ingroup    CIPHER
 * 
@@ -79,7 +79,7 @@
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         define AES_FROUND(X0,X1,X2,X3,Y0,Y1,Y2,Y3)
+* @fn         define AES_FROUND(X0, X1, X2, X3, Y0, Y1, Y2, Y3)
 * @brief      AES FROUND
 * @ingroup    CIPHER
 * 
@@ -108,7 +108,7 @@
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         define AES_RROUND(X0,X1,X2,X3,Y0,Y1,Y2,Y3)
+* @fn         define AES_RROUND(X0, X1, X2, X3, Y0, Y1, Y2, Y3)
 * @brief      AES RROUND
 * @ingroup    CIPHER
 * 
@@ -195,7 +195,7 @@ CIPHERAES::~CIPHERAES()
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         bool CIPHERAES::Cipher(XBYTE* input,XDWORD size)
+* @fn         bool CIPHERAES::Cipher(XBYTE* input, XDWORD size)
 * @brief      Cipher
 * @ingroup    CIPHER
 * 
@@ -205,7 +205,7 @@ CIPHERAES::~CIPHERAES()
 * @return     bool : true if the operation is successful; otherwise false.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-bool CIPHERAES::Cipher(XBYTE* input,XDWORD size)
+bool CIPHERAES::Cipher(XBYTE* input, XDWORD size)
 {
   if(!size) return false;
 
@@ -234,25 +234,25 @@ bool CIPHERAES::Cipher(XBYTE* input,XDWORD size)
   XBYTE nonce_counter[16];
   int   offset  = 0;
 
-  memset(stream_block  ,0  , 16);
-  memset(nonce_counter ,0  , 16);
-  memcpy(nonce_counter ,iv , 16);
+  memset(stream_block, 0, 16);
+  memset(nonce_counter, 0, 16);
+  memcpy(nonce_counter, iv, 16);
 
   switch(this->GetChainingMode())
     {
       case CIPHERCHAININGMODE_UNKNOWN : status =false;
                                         break;
 
-      case CIPHERCHAININGMODE_ECB     : status = AESCipher_ECB(&ctx, CIPHERAES_ENCRYPT , result->GetSize(), inputpadding.Get(),  result->Get());
+      case CIPHERCHAININGMODE_ECB     : status = AESCipher_ECB(&ctx, CIPHERAES_ENCRYPT, result->GetSize(), inputpadding.Get(), result->Get());
                                         break;
 
-      case CIPHERCHAININGMODE_CBC     : status = AESCipher_CBC(&ctx, CIPHERAES_ENCRYPT , result->GetSize(), iv, inputpadding.Get(),  result->Get());
+      case CIPHERCHAININGMODE_CBC     : status = AESCipher_CBC(&ctx, CIPHERAES_ENCRYPT, result->GetSize(), iv, inputpadding.Get(), result->Get());
                                         break;
 
-      case CIPHERCHAININGMODE_CFB     : status = AESCipher_CFB128(&ctx, CIPHERAES_ENCRYPT , result->GetSize(), &offset, iv, inputpadding.Get(),  result->Get());
+      case CIPHERCHAININGMODE_CFB     : status = AESCipher_CFB128(&ctx, CIPHERAES_ENCRYPT, result->GetSize(), &offset, iv, inputpadding.Get(), result->Get());
                                         break;
 
-      case CIPHERCHAININGMODE_CTR     : status = AESCipher_CTR(&ctx, result->GetSize(), &offset, nonce_counter, stream_block, inputpadding.Get(),  result->Get());
+      case CIPHERCHAININGMODE_CTR     : status = AESCipher_CTR(&ctx, result->GetSize(), &offset, nonce_counter, stream_block, inputpadding.Get(), result->Get());
                                         break;
 
       case CIPHERCHAININGMODE_GCM     :                                             // AEAD modes go through CipherAEAD()/UncipherAEAD(), see CIPHERAESGCM
@@ -286,7 +286,7 @@ bool CIPHERAES::Uncipher(XBYTE* input, XDWORD size)
   CIPHERAES_CONTEXT ctx;
   XBYTE             iv[16];
 
-  memset(iv,0,16);
+  memset(iv, 0, 16);
   if(inivector && inivector->GetSize()>=8) memcpy(iv, inivector->Get(), 16);
 
   result->Delete();
@@ -303,24 +303,24 @@ bool CIPHERAES::Uncipher(XBYTE* input, XDWORD size)
   bool  status  = false;
   int   offset  = 0;
 
-  memset(stream_block  ,0 , 16);
-  memset(nonce_counter ,0 , 16);
+  memset(stream_block, 0, 16);
+  memset(nonce_counter, 0, 16);
 
   switch(this->GetChainingMode())
     {
       case CIPHERCHAININGMODE_UNKNOWN : status =false;
                                         break;
 
-      case CIPHERCHAININGMODE_ECB     : status = AESCipher_ECB(&ctx, CIPHERAES_DECRYPT , size, input,  result->Get());
+      case CIPHERCHAININGMODE_ECB     : status = AESCipher_ECB(&ctx, CIPHERAES_DECRYPT, size, input, result->Get());
                                         break;
 
-      case CIPHERCHAININGMODE_CBC     : status = AESCipher_CBC(&ctx, CIPHERAES_DECRYPT , size, iv, input,  result->Get());
+      case CIPHERCHAININGMODE_CBC     : status = AESCipher_CBC(&ctx, CIPHERAES_DECRYPT, size, iv, input, result->Get());
                                         break;
 
-      case CIPHERCHAININGMODE_CFB     : status = AESCipher_CFB128(&ctx, CIPHERAES_DECRYPT , size, &offset, iv, input,  result->Get());
+      case CIPHERCHAININGMODE_CFB     : status = AESCipher_CFB128(&ctx, CIPHERAES_DECRYPT, size, &offset, iv, input, result->Get());
                                         break;
 
-      case CIPHERCHAININGMODE_CTR     : status = AESCipher_CTR(&ctx, size, &offset, nonce_counter, stream_block, input,  result->Get());
+      case CIPHERCHAININGMODE_CTR     : status = AESCipher_CTR(&ctx, size, &offset, nonce_counter, stream_block, input, result->Get());
                                         break;
 
       case CIPHERCHAININGMODE_GCM     :                                             // AEAD modes go through CipherAEAD()/UncipherAEAD(), see CIPHERAESGCM
@@ -609,9 +609,9 @@ bool CIPHERAES::AESCipher_ECB_Block(CIPHERAES_CONTEXT* ctx, int mode, XBYTE inpu
 
   RK = ctx->rk;
 
-  GET_UINT32_LE( X0, input,  0 ); X0 ^= *RK++;
-  GET_UINT32_LE( X1, input,  4 ); X1 ^= *RK++;
-  GET_UINT32_LE( X2, input,  8 ); X2 ^= *RK++;
+  GET_UINT32_LE(X0, input, 0); X0 ^= *RK++;
+  GET_UINT32_LE(X1, input, 4); X1 ^= *RK++;
+  GET_UINT32_LE(X2, input, 8); X2 ^= *RK++;
   GET_UINT32_LE( X3, input, 12 ); X3 ^= *RK++;
 
   if(mode == CIPHERAES_DECRYPT)
@@ -683,9 +683,9 @@ bool CIPHERAES::AESCipher_ECB_Block(CIPHERAES_CONTEXT* ctx, int mode, XBYTE inpu
            ( (XDWORD) FSb[ ( Y2 >> 24 ) & 0xFF ] << 24 );
     }
 
-  PUT_UINT32_LE( X0, output,  0 );
-  PUT_UINT32_LE( X1, output,  4 );
-  PUT_UINT32_LE( X2, output,  8 );
+  PUT_UINT32_LE(X0, output, 0);
+  PUT_UINT32_LE(X1, output, 4);
+  PUT_UINT32_LE(X2, output, 8);
   PUT_UINT32_LE( X3, output, 12 );
 
   return true;

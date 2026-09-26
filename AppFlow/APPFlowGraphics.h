@@ -37,8 +37,6 @@
 #include "APPFlowBase.h"
 #include "APPFlowConsole.h"
 
-
-
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
 
 enum APPFLOWGRAPHICS_INIOPTIONS
@@ -49,15 +47,11 @@ enum APPFLOWGRAPHICS_INIOPTIONS
   APPFLOWGRAPHICS_INIOPTION_INPUT               = 1 << 3
 };
 
-
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
-
 
 class GRPSCREEN;
 class GRP2DCANVAS;
 class INPDEVICE;
-
 
 class APPFLOWGRAPHICS : public APPFLOWCONSOLE, public XOBSERVER
 {

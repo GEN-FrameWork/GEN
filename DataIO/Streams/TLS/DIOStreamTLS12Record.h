@@ -34,10 +34,7 @@
 
 #include "DIOStreamTLSMessages.h"
 
-
-
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
-
 
 #define DIOSTREAMTLS12RECORD_MAXPLAINSIZE                     16384             // 2^14, RFC 5246 section 6.2.1
 #define DIOSTREAMTLS12RECORD_MAXCIPHERSIZE                    (16384 + 2048)    // Plain text plus the AEAD expansion
@@ -46,15 +43,10 @@
 #define DIOSTREAMTLS12RECORD_TAGSIZE                          16
 #define DIOSTREAMTLS12RECORD_AADSIZE                          13                // seq(8) + type(1) + version(2) + length(2)
 
-
-
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
-
 
 class CIPHER;
 class CIPHERKEYSYMMETRICAL;
-
 
 class DIOSTREAMTLS12RECORD
 {
@@ -66,8 +58,6 @@ class DIOSTREAMTLS12RECORD
     void                                    End                                               ();
     bool                                    IsIni                                             ();
 
-    
-    
     bool                                    SetKeys                                           (DIOSTREAMTLSKEYSCHEDULE_DIRECTION direction, XBUFFER& key, XBUFFER& fixedIV);
 
     bool                                    IsProtected                                       (DIOSTREAMTLSKEYSCHEDULE_DIRECTION direction);

@@ -125,7 +125,6 @@ DIOSTREAM* DIOSTM32FACTORY::CreateStreamIO(DIOSTREAMCONFIG* config)
 }
 
 
-
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         bool DIOSTM32FACTORY::DeleteStreamIO(DIOSTREAM* diostream)
@@ -164,7 +163,6 @@ DIOLEDNEOPIXELWS2812B* DIOSTM32FACTORY::CreateLedNeopixelWS2812B()
 
   return ledneopixelws2812b;
 }
-
 
 
 /**-------------------------------------------------------------------------------------------------------------------

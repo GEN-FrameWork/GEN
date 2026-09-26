@@ -429,7 +429,7 @@ bool XMPINTEGER::SetBit(XDWORD position, XBYTE value)
       if(!Grow(off + 1)) return false;
     }
 
-  limbs[off] &= ~((XLIMB)(0x01)  << idx);
+  limbs[off] &= ~((XLIMB)(0x01) << idx);
   limbs[off] |=  ((XLIMB)(value) << idx);
 
   return true;
@@ -463,35 +463,17 @@ int XMPINTEGER::GetLSB()
 }
 
 
+
+
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         int XMPINTEGER::GetMSB()
 * @brief      Get MSB
 * @ingroup    XUTILS
 * 
-* @return     int : Requested value.
+* @return     int : 
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-/*
-int XMPINTEGER::GetMSB()
-{
-  XDWORD i;
-  XDWORD j;
-
-  for(i=nlimbs-1; i>0; i--)
-    {
-      if(limbs[i] != 0) break;
-    }
-
-  for(j = XMPINTEGER_BITSINLIMB; j>0; j--)
-    {
-      if(((limbs[i] >> ( j - 1 ) ) & 1 ) != 0 ) break;
-    }
-
-   return ((i * XMPINTEGER_BITSINLIMB) + j);
-}
-*/
-
 int XMPINTEGER::GetMSB()
 {
   int i;
@@ -518,8 +500,6 @@ int XMPINTEGER::GetMSB()
 
   return (i * XMPINTEGER_BITSINLIMB + j);
 }
-
-
 
 
 /**-------------------------------------------------------------------------------------------------------------------

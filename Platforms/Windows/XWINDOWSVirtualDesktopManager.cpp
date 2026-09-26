@@ -115,10 +115,6 @@ void XWINDOWSVIRTUALDESKTOP::Clean()
 }
 
 
-
-
-
-
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         bool XWINDOWSVIRTUALDESKTOPMANAGER::GetIsInstanced()
@@ -341,6 +337,7 @@ bool XWINDOWSVIRTUALDESKTOPMANAGER::SwitchDesktop(XSTRING& desktopname, bool inh
 {
   return SwitchDesktop(desktopname.Get(), inherit);
 }
+
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
@@ -579,15 +576,7 @@ bool XWINDOWSVIRTUALDESKTOPMANAGER::LaunchApplication(XCHAR* applicationfilepath
   sinfo.lpDesktop = desktopname;
 
   //Lanuching a application into dekstop
-  BOOL processreturn = CreateProcess(applicationfilepath , NULL
-                                                         , NULL
-                                                         , NULL
-                                                         , TRUE
-                                                         , NORMAL_PRIORITY_CLASS
-                                                         , NULL
-                                                         , directoryapp.Get()
-                                                         , &sinfo
-                                                         , &pinfo);
+  BOOL processreturn = CreateProcess(applicationfilepath, NULL, NULL, NULL, TRUE, NORMAL_PRIORITY_CLASS, NULL, directoryapp.Get(), &sinfo, &pinfo);
   if(processreturn) status = true;
 
   return status;

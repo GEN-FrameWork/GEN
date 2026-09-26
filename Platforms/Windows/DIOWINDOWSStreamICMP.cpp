@@ -111,7 +111,7 @@ DIOWINDOWSSTREAMICMP::DIOWINDOWSSTREAMICMP() : DIOSTREAMICMP(), XFSMACHINE(0)
             DIOWINDOWSICMPFSMEVENT_SENDINGDATA          , DIOWINDOWSICMPFSMSTATE_SENDINGDATA        ,
             XFSMACHINESTATE_EVENTDEFEND);
 
-  threadconnection = CREATEXTHREAD(XTHREADGROUPID_DIOSTREAMICMP, __L("DIOWINDOWSSTREAMICMP::DIOWINDOWSSTREAMICMP"),ThreadConnection,(void*)this);
+  threadconnection = CREATEXTHREAD(XTHREADGROUPID_DIOSTREAMICMP, __L("DIOWINDOWSSTREAMICMP::DIOWINDOWSSTREAMICMP"), ThreadConnection, (void*)this);
 }
 
 
@@ -238,7 +238,7 @@ bool DIOWINDOWSSTREAMICMP::Close()
 
   if(handle!=INVALID_SOCKET)
     {
-      shutdown(handle,SD_BOTH);
+      shutdown(handle, SD_BOTH);
       closesocket(handle);
       handle  = INVALID_SOCKET;
     }
@@ -279,7 +279,7 @@ int DIOWINDOWSSTREAMICMP::IsReadyConnect(SOCKET socket)
   tv.tv_sec  = 0;
   tv.tv_usec = 100;
 
-  rc = select((int)(socket)+1,&fdr, &fdw, &fds, &tv);
+  rc = select((int)(socket)+1, &fdr, &fdw, &fds, &tv);
   if(rc == SOCKET_ERROR) return -1;
 
   int status1 = FD_ISSET(socket, &fdr) ? 1 : 0;
@@ -394,7 +394,7 @@ void DIOWINDOWSSTREAMICMP::ThreadConnection(void* data)
 
                                                                     memset(&origin_addr, 0, size_addr);
 
-                                                                    XDWORD size = recvfrom(diostream->handle, (char*)buffer, DIOSTREAM_MAXBUFFER, 0,(sockaddr*)&origin_addr, &size_addr);
+                                                                    XDWORD size = recvfrom(diostream->handle, (char*)buffer, DIOSTREAM_MAXBUFFER, 0, (sockaddr*)&origin_addr, &size_addr);
 
                                                                     if(size == SOCKET_ERROR)
                                                                       {
@@ -406,12 +406,9 @@ void DIOWINDOWSSTREAMICMP::ThreadConnection(void* data)
                                                                       {
                                                                         XSTRING address;
 
-                                                                        address.Format(__L("%d.%d.%d.%d") , origin_addr.sin_addr.S_un.S_un_b.s_b1
-                                                                                                          , origin_addr.sin_addr.S_un.S_un_b.s_b2
-                                                                                                          , origin_addr.sin_addr.S_un.S_un_b.s_b3
-                                                                                                          , origin_addr.sin_addr.S_un.S_un_b.s_b4);
+                                                                        address.Format(__L("%d.%d.%d.%d"), origin_addr.sin_addr.S_un.S_un_b.s_b1, origin_addr.sin_addr.S_un.S_un_b.s_b2, origin_addr.sin_addr.S_un.S_un_b.s_b3, origin_addr.sin_addr.S_un.S_un_b.s_b4);
 
-                                                                        diostream->AddDatagram(false, address.Get(), (XBYTE*)buffer,size);
+                                                                        diostream->AddDatagram(false, address.Get(), (XBYTE*)buffer, size);
                                                                         diostream->inbuffer->Add(buffer, size);
 
                                                                       }
@@ -461,7 +458,7 @@ void DIOWINDOWSSTREAMICMP::ThreadConnection(void* data)
                                                                             
                                                                             target_addr.sin_port  = 0;
 
-                                                                            size = sendto(diostream->handle,(char*)datagram->GetData()->Get(), datagram->GetData()->GetSize(), 0, (sockaddr*)&target_addr, size_addr);
+                                                                            size = sendto(diostream->handle, (char*)datagram->GetData()->Get(), datagram->GetData()->GetSize(), 0, (sockaddr*)&target_addr, size_addr);
 
                                                                             if(size == SOCKET_ERROR)
                                                                               {
@@ -561,7 +558,7 @@ void DIOWINDOWSSTREAMICMP::ThreadConnection(void* data)
                                                                 }
                                                                 break;
 
-              case DIOWINDOWSICMPFSMSTATE_CONNECTED         : { DIOSTREAM_XEVENT xevent(diostream,DIOSTREAM_XEVENT_TYPE_CONNECTED);
+              case DIOWINDOWSICMPFSMSTATE_CONNECTED         : { DIOSTREAM_XEVENT xevent(diostream, DIOSTREAM_XEVENT_TYPE_CONNECTED);
                                                                 xevent.SetDIOStream(diostream);
 
                                                                 diostream->PostEvent(&xevent);
@@ -574,7 +571,7 @@ void DIOWINDOWSSTREAMICMP::ThreadConnection(void* data)
 
               case DIOWINDOWSICMPFSMSTATE_SENDINGDATA       : break;
 
-              case DIOWINDOWSICMPFSMSTATE_DISCONNECTING     : { DIOSTREAM_XEVENT xevent(diostream,DIOSTREAM_XEVENT_TYPE_DISCONNECTED);
+              case DIOWINDOWSICMPFSMSTATE_DISCONNECTING     : { DIOSTREAM_XEVENT xevent(diostream, DIOSTREAM_XEVENT_TYPE_DISCONNECTED);
                                                                 xevent.SetDIOStream(diostream);
 
                                                                 diostream->PostEvent(&xevent);

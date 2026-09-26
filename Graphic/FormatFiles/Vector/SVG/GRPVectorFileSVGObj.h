@@ -61,13 +61,10 @@ enum GRPVECTORFILESVGOBJTYPE
   GRPVECTORFILESVGOBJTYPE_RADIALGRADIENT,                                       // <radialGradient>  (paint server, not rendered directly)
 };
 
-
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
 
 class XFILEXMLELEMENT;
 class GRPVECTORFILESVGCSSSTYLESHEET;
-
 
 class GRPVECTORFILESVGOBJ
 {

@@ -54,7 +54,7 @@
 
 /**-------------------------------------------------------------------------------------------------------------------
 *
-* @fn         define GET_UINT32_BE(n,b,i)
+* @fn         define GET_UINT32_BE(n, b, i)
 * @brief      Get a 32 bit value from a buffer, in network order
 * @ingroup    CIPHER
 *
@@ -67,7 +67,7 @@
 
 /**-------------------------------------------------------------------------------------------------------------------
 *
-* @fn         define PUT_UINT32_BE(n,b,i)
+* @fn         define PUT_UINT32_BE(n, b, i)
 * @brief      Put a 32 bit value into a buffer, in network order
 * @ingroup    CIPHER
 *
@@ -80,7 +80,7 @@
 
 /**-------------------------------------------------------------------------------------------------------------------
 *
-* @fn         define GET_UINT64_BE(n,b,i)
+* @fn         define GET_UINT64_BE(n, b, i)
 * @brief      Get a 64 bit value from a buffer, in network order
 * @ingroup    CIPHER
 *
@@ -97,7 +97,7 @@
 
 /**-------------------------------------------------------------------------------------------------------------------
 *
-* @fn         define PUT_UINT64_BE(n,b,i)
+* @fn         define PUT_UINT64_BE(n, b, i)
 * @brief      Put a 64 bit value into a buffer, in network order
 * @ingroup    CIPHER
 *
@@ -490,7 +490,7 @@ bool CIPHERAESGCM::GCM_Start(XBUFFER& nonce, XBUFFER& additionaldata)
 
       memset(workbuffer, 0, CIPHERAESGCM_BLOCKSIZE);
 
-      PUT_UINT32_BE((XDWORD)(sizenoncebits >> 32), workbuffer,  8);
+      PUT_UINT32_BE((XDWORD)(sizenoncebits >> 32), workbuffer, 8);
       PUT_UINT32_BE((XDWORD)(sizenoncebits      ), workbuffer, 12);
 
       data = nonce.Get();
@@ -652,9 +652,9 @@ bool CIPHERAESGCM::GCM_Finish(XBYTE* tag)
     {
       memset(workbuffer, 0, CIPHERAESGCM_BLOCKSIZE);
 
-      PUT_UINT32_BE((XDWORD)(sizeadditionaldatabits >> 32), workbuffer,  0);
-      PUT_UINT32_BE((XDWORD)(sizeadditionaldatabits      ), workbuffer,  4);
-      PUT_UINT32_BE((XDWORD)(sizedatabits           >> 32), workbuffer,  8);
+      PUT_UINT32_BE((XDWORD)(sizeadditionaldatabits >> 32), workbuffer, 0);
+      PUT_UINT32_BE((XDWORD)(sizeadditionaldatabits ), workbuffer, 4);
+      PUT_UINT32_BE((XDWORD)(sizedatabits >> 32), workbuffer, 8);
       PUT_UINT32_BE((XDWORD)(sizedatabits                ), workbuffer, 12);
 
       for(c=0; c<CIPHERAESGCM_BLOCKSIZE; c++)

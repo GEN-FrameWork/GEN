@@ -210,8 +210,7 @@ bool DIOWEBCLIENT_OPERATIONERROR::IsSet()
 * @param[in]  HTTPstatus : HTTPstatus value.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-void DIOWEBCLIENT_OPERATIONERROR::Set(DIOWEBCLIENT_ERRORSTAGE stage, DIOWEBCLIENT_ERROR error,
-                                      DIOSTREAMERROR streamerror, int HTTPstatus)
+void DIOWEBCLIENT_OPERATIONERROR::Set(DIOWEBCLIENT_ERRORSTAGE stage, DIOWEBCLIENT_ERROR error, DIOSTREAMERROR streamerror, int HTTPstatus)
 {
   this->stage       = stage;
   this->error       = error;
@@ -234,8 +233,6 @@ void DIOWEBCLIENT_OPERATIONERROR::Clean()
   streamerror = DIOSTREAMERROR_NONE;
   HTTPstatus  = 0;
 }
-
-
 
 
 /**-------------------------------------------------------------------------------------------------------------------
@@ -679,10 +676,6 @@ void DIOWEBCLIENT_HEADER::Clean()
 {
 
 }
-
-
-
-
 
 
 /**-------------------------------------------------------------------------------------------------------------------
@@ -2160,7 +2153,7 @@ bool DIOWEBCLIENT::MakeOperation(DIOWEBHEADER_METHOD method, DIOURL& url, XBUFFE
       return false;
     }
 
-  bool explicitHTTP  = (url.Find(DIOURL_WEBURLID       , true) == 0);
+  bool explicitHTTP  = (url.Find(DIOURL_WEBURLID, true) == 0);
   bool explicitHTTPS = (url.Find(DIOURL_WEBURLID_SECURE, true) == 0);
 
   // http:// and https:// are mandatory when explicitly present. Only a genuinely scheme-less URL is governed by
@@ -2298,8 +2291,7 @@ bool DIOWEBCLIENT::MakeOperation(DIOWEBHEADER_METHOD method, DIOURL& url, XBUFFE
 
       #else
 
-      OperationError_Set(isTLS?DIOWEBCLIENT_ERROR_TLSCONFIGURATION:DIOWEBCLIENT_ERROR_TCPCONNECTION,
-                         isTLS?DIOSTREAMERROR_TLSCONFIGURATION:DIOSTREAMERROR_TCPCONNECTION);
+      OperationError_Set(isTLS?DIOWEBCLIENT_ERROR_TLSCONFIGURATION:DIOWEBCLIENT_ERROR_TCPCONNECTION, isTLS?DIOSTREAMERROR_TLSCONFIGURATION:DIOSTREAMERROR_TCPCONNECTION);
       #endif
 
       return false;
@@ -2694,9 +2686,9 @@ bool DIOWEBCLIENT::MakeOperation(DIOWEBHEADER_METHOD method, DIOURL& url, XBUFFE
       
       //XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, __L("%s"), www_authenticate.Get());
 
-      GetSubStringWWWWAuthenticate(www_authenticate, __L("realm")     , realm_str);
-      GetSubStringWWWWAuthenticate(www_authenticate, __L("nonce")     , nonce_str);
-      GetSubStringWWWWAuthenticate(www_authenticate, __L("opaque")    , opaque_str);
+      GetSubStringWWWWAuthenticate(www_authenticate, __L("realm"), realm_str);
+      GetSubStringWWWWAuthenticate(www_authenticate, __L("nonce"), nonce_str);
+      GetSubStringWWWWAuthenticate(www_authenticate, __L("opaque"), opaque_str);
       GetSubStringWWWWAuthenticate(www_authenticate, __L("algorithm") , algorithm_str, false);
 
       /*

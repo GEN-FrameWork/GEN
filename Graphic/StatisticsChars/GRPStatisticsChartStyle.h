@@ -33,7 +33,6 @@
 #include "XBase.h"
 
 
-
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
 
 enum GRPSTATISTICSCHARTTEXTANCHOR
@@ -52,16 +51,14 @@ enum GRPSTATISTICSCHARTLEGENDPOSITION
   GRPSTATISTICSCHARTLEGENDPOSITION_RIGHT          ,                          // legend column at the right of the plot
 };
 
-
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
 
 struct GRPSTATISTICSCHARTCOLOR
 {
-    XBYTE                           r;                                    // red   (0..255)
-    XBYTE                           g;                                    // green (0..255)
-    XBYTE                           b;                                    // blue  (0..255)
-    XBYTE                           a;                                    // alpha (0..255), 255 = opaque
+    XBYTE                           r;
+    XBYTE                           g;
+    XBYTE                           b;
+    XBYTE                           a;
 
                                     GRPSTATISTICSCHARTCOLOR               ()                                              { r = 0;   g = 0;   b = 0;   a = 255;                   }
                                     GRPSTATISTICSCHARTCOLOR               (XBYTE r, XBYTE g, XBYTE b)                     { this->r = r; this->g = g; this->b = b; a = 255;       }
@@ -70,16 +67,14 @@ struct GRPSTATISTICSCHARTCOLOR
     void                            Set                                   (XBYTE r, XBYTE g, XBYTE b, XBYTE a = 255)      { this->r = r; this->g = g; this->b = b; this->a = a;   }
 };
 
-
-
 struct GRPSTATISTICSCHARTSTYLE
 {
-    bool                            hasfill;                              // true if the shape is filled
-    GRPSTATISTICSCHARTCOLOR         fillcolor;                            // fill color
+    bool                            hasfill;
+    GRPSTATISTICSCHARTCOLOR         fillcolor;
 
-    bool                            hasstroke;                            // true if the shape is stroked
-    GRPSTATISTICSCHARTCOLOR         strokecolor;                          // stroke color
-    double                          strokewidth;                          // stroke width
+    bool                            hasstroke;
+    GRPSTATISTICSCHARTCOLOR         strokecolor;
+    double                          strokewidth;
 
                                     GRPSTATISTICSCHARTSTYLE               ()                                              { hasfill = false; hasstroke = false; strokewidth = 1.0;  }
 
@@ -91,11 +86,11 @@ struct GRPSTATISTICSCHARTSTYLE
 
 struct GRPSTATISTICSCHARTTEXTSTYLE
 {
-    GRPSTATISTICSCHARTCOLOR         color;                                // text color
-    double                          size;                                 // font size (in output units)
-    GRPSTATISTICSCHARTTEXTANCHOR    anchor;                               // horizontal anchor of the text
-    double                          rotation;                             // rotation in degrees (clockwise), 0 = horizontal
-    bool                            bold;                                 // true for bold text
+    GRPSTATISTICSCHARTCOLOR         color;
+    double                          size;
+    GRPSTATISTICSCHARTTEXTANCHOR    anchor;
+    double                          rotation;
+    bool                            bold;
 
                                     GRPSTATISTICSCHARTTEXTSTYLE           ()                                              { size = 12.0; anchor = GRPSTATISTICSCHARTTEXTANCHOR_START; rotation = 0.0; bold = false;  }
 };

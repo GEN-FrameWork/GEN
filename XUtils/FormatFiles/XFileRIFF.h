@@ -33,8 +33,6 @@
 #include "XFile.h"
 #include "XTree.h"
 
-
-
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
 
 class XFILERIFF_LIST;
@@ -46,8 +44,6 @@ typedef XTREE<XFILERIFF_LIST*>                           XFILERIFF_XTREE;
 #define XFILERIFF_TYPE_RIFF  0x46464952
 #define XFILERIFF_TYPE_LIST  0x5453494C
 #define XFILERIFF_TYPE_INFO  0x4F464E49
-
-
 
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
 
@@ -87,7 +83,6 @@ class XFILERIFF_LIST
     
     #endif
 };
-
 
 class XFILERIFF 
 {

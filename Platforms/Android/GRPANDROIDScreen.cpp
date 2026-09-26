@@ -205,9 +205,7 @@ bool GRPANDROIDSCREEN::Update(GRP2DCANVAS* canvas)
       // Android compositor treats the window as fully opaque (black background).
       // This mirrors what the Linux X11 blitter does via ChooseVisualID().
       blitgles->SetUseAlpha(Style_Is(GRPSCREENSTYLE_TRANSPARENT));
-      GENBLITLOG("Update(canvas): usealpha=%d (screen style TRANSPARENT=%d)",
-                 (int)Style_Is(GRPSCREENSTYLE_TRANSPARENT),
-                 (int)Style_Is(GRPSCREENSTYLE_TRANSPARENT));
+      GENBLITLOG("Update(canvas): usealpha=%d (screen style TRANSPARENT=%d)", (int)Style_Is(GRPSCREENSTYLE_TRANSPARENT), (int)Style_Is(GRPSCREENSTYLE_TRANSPARENT));
 
       GENBLITLOG("Update(canvas): creating blitgles...");
       if(!blitgles->Create(this))

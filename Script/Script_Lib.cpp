@@ -166,6 +166,7 @@ bool SCRIPT_LIB::GetParamConverted(XVARIANT* variant, bool& value)
   return true;
 }
 
+
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         bool SCRIPT_LIB::GetParamConverted(XVARIANT* variant, int& value)

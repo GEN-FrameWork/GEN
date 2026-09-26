@@ -716,7 +716,7 @@ bool XWINDOWSDRIVEIMAGEMANAGER::GetMediaType(HANDLE hdevice)
   DISK_GEOMETRY diskgeometry;
   DWORD         nbytesreturned;
 
-  if(DeviceIoControl(hdevice, IOCTL_DISK_GET_DRIVE_GEOMETRY,NULL, 0, &diskgeometry, sizeof(diskgeometry), &nbytesreturned, NULL))
+  if(DeviceIoControl(hdevice, IOCTL_DISK_GET_DRIVE_GEOMETRY, NULL, 0, &diskgeometry, sizeof(diskgeometry), &nbytesreturned, NULL))
     {
       if((diskgeometry.MediaType == FixedMedia) || (diskgeometry.MediaType == RemovableMedia)) return true; // Not a floppy
     }

@@ -225,7 +225,7 @@ bool POSTGRESQL_DATABASE::Savepoint(XCHAR* savepoint)
   XSTRING savepointstring;
   bool    success;
 
-  savepointstring.Format(__L("SAVEPOINT %s"),savepoint);
+  savepointstring.Format(__L("SAVEPOINT %s"), savepoint);
 
   XBUFFER oem;
   
@@ -261,7 +261,7 @@ bool POSTGRESQL_DATABASE::ReleaseSavepoint(XCHAR* savepoint)
   XSTRING savepointstring;
   bool    success;
 
-  savepointstring.Format(__L("RELEASE %s"),savepoint);
+  savepointstring.Format(__L("RELEASE %s"), savepoint);
 
   XBUFFER oem;
   
@@ -438,7 +438,7 @@ bool POSTGRESQL_DATABASE::SetDatabaseEncoding(DB_SQL_DATABASE_ENCODING encodingt
       case DB_SQL_DATABASE_ENCODING_SQL_ASCII         :
       case DB_SQL_DATABASE_ENCODING_UHC               : break;
 
-      case DB_SQL_DATABASE_ENCODING_UTF8              : { int rc = PQsetClientEncoding(conn,"UTF8");
+      case DB_SQL_DATABASE_ENCODING_UTF8              : { int rc = PQsetClientEncoding(conn, "UTF8");
                                                           if(rc==0) return true;
                                                         }
                                                         break;

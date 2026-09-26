@@ -33,8 +33,6 @@
 #include "XString.h"
 #include "XEvent.h"
 
-
-
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
 
 enum SCRIPT_XEVENT_TYPE
@@ -43,8 +41,6 @@ enum SCRIPT_XEVENT_TYPE
   SCRIPT_XEVENT_TYPE_ERROR                              ,
   SCRIPT_XEVENT_TYPE_BREAK                              ,
 };
-
-
 
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
 

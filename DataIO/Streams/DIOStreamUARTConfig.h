@@ -71,7 +71,6 @@ enum DIOSTREAMUARTFLOWCONTROL
   DIOSTREAMUARTFLOWCONTROL_SOFT         ,
 };
 
-
 #define DIOSTREAMUARTMASK_BAUDRATE            0x0001
 #define DIOSTREAMUARTMASK_DATABITS            0x0002
 #define DIOSTREAMUARTMASK_PARITY              0x0004
@@ -83,11 +82,7 @@ enum DIOSTREAMUARTFLOWCONTROL
 #define DIOSTREAMUART_FLOWCONTROL_STR_SOFT    __L("XON/XOFF")
 #define DIOSTREAMUART_FLOWCONTROL_STR_HARD    __L("RTS/CTS")
 
-
-
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
-
 
 class DIOSTREAMUARTCONFIG : public DIOSTREAMCONFIG
 {

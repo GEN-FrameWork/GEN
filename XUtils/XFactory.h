@@ -34,7 +34,6 @@
 
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
 
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
 
 class XTIMER;
@@ -45,8 +44,6 @@ class XDIR;
 #ifdef XCONSOLE_ACTIVE
 class XCONSOLE;
 #endif
-
-
 
 class XFACTORY
 {
@@ -82,7 +79,7 @@ class XFACTORY
     virtual XMUTEX*             Create_Mutex                ();
     virtual bool                Delete_Mutex                (XMUTEX* mutex);
 
-    virtual XTHREAD*            CreateThread                (XTHREADGROUPID groupID, XCHAR* ID,XTHREADFUNCTION function = NULL,void* param = NULL);
+    virtual XTHREAD*            CreateThread                (XTHREADGROUPID groupID, XCHAR* ID, XTHREADFUNCTION function = NULL, void* param = NULL);
     virtual bool                DeleteThread                (XTHREADGROUPID groupID, XTHREAD* xthread);
 
   private:

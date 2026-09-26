@@ -129,7 +129,7 @@ bool SQLITE_QUERY::Execute()
       return false;
     }
 
-  int rc = Exec((char*)buffer->Get(),size);
+  int rc = Exec((char*)buffer->Get(), size);
 
   busyflag = (rc==2)?true:false;
 
@@ -170,7 +170,6 @@ bool SQLITE_QUERY::Bind(XDWORD ID, int integer)
 {
   return DB_SQL_QUERY::Bind(ID+1, integer);
 }
-
 
 
 /**-------------------------------------------------------------------------------------------------------------------
@@ -465,7 +464,7 @@ bool SQLITE_QUERY::BindParametersToQuery()
 
           case DB_SQL_VARIANT_TYPE_FLOAT      : { float data = (*variant);
 
-                                                  int rc = sqlite3_bind_double(ppstmt, statementindex,(double)data);
+                                                  int rc = sqlite3_bind_double(ppstmt, statementindex, (double)data);
                                                   switch(rc)
                                                     {
                                                       case SQLITE_OK      : break;

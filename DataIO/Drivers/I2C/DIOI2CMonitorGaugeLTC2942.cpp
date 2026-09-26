@@ -140,7 +140,7 @@ bool DIOI2CMONITORGAUGELTC2942::SetAC(XWORD ac)
   XBYTE ctrl;
   
   // Backup control register 
-  if(!ReadRegister(DIOI2CMONITORGAUGELTC2942_REG_CONTROL,ctrl))           return false;
+  if(!ReadRegister(DIOI2CMONITORGAUGELTC2942_REG_CONTROL, ctrl))           return false;
   
   // Shutdown analog section before programming GEN_NEW AC value 
   if(!WriteRegister(DIOI2CMONITORGAUGELTC2942_REG_CONTROL, ctrl | DIOI2CMONITORGAUGELTC2942_CTL_SHUTDOWN))   return false;

@@ -217,7 +217,7 @@ XCONSOLE_SYMBOLSUSED XLINUXCONSOLE::GetSymbolsUsed()
 bool XLINUXCONSOLE::Maximize()
 {
   #ifndef APPFLOW_GRAPHICS_NOTCONSOLE_ACTIVE
-  setvbuf(stdout, NULL,_IONBF,0);
+  setvbuf(stdout, NULL, _IONBF, 0);
   #endif
 
   return true;

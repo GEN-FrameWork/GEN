@@ -49,7 +49,6 @@ enum DIOI2CBATTERYCHARGERBQ24295_GPIOENTRY
   DIOI2CBATTERYCHARGERBQ24295_GPIOENTRYID_END           ,
 };
 
-
 #define DIOI2CBATTERYCHARGERBQ24295_ADDR                                      0x6B
 
 // Register map
@@ -65,10 +64,7 @@ enum DIOI2CBATTERYCHARGERBQ24295_GPIOENTRY
 #define DIOI2CBATTERYCHARGERBQ24295_FAULT_REG_REG09                           0x09
 #define DIOI2CBATTERYCHARGERBQ24295_VENDOR_PART_REVISION_REG0A                0x0A
 
-
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
-
 
 class DIOI2CBATTERYCHARGERBQ24295: public DIODEVICEI2C
 {

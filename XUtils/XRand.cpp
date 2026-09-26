@@ -371,7 +371,7 @@ bool XRAND::Percent(int percent)
   if(percent <= 0)   return false;
   if(percent >= 100) return true;
 
-  int random = Between(1,100);
+  int random = Between(1, 100);
   if(random <= percent) return true;
 
   return false;

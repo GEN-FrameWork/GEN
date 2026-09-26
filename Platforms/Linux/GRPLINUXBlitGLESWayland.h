@@ -39,9 +39,7 @@
 
 #include "GRPBlitGLES.h"
 
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
-
 
 class GRPLINUXBLITGLESWAYLAND : public GRPBLITGLES
 {

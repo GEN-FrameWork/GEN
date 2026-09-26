@@ -500,10 +500,6 @@ void XWINDOWSREGISTRYKEY::Clean()
 }
 
 
-
-
-
-
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         XWINDOWSREGISTRYMANAGER::XWINDOWSREGISTRYMANAGER()
@@ -634,7 +630,7 @@ bool XWINDOWSREGISTRYMANAGER::OpenKey(HKEY handlekey, XCHAR* subkeystring, XWIND
   HKEY    oper_handlekey;
   LSTATUS status;
 
-  status = RegOpenKeyEx(handlekey, subkeystring, 0,  KEY_ALL_ACCESS | KEY_WOW64_64KEY, &oper_handlekey);
+  status = RegOpenKeyEx(handlekey, subkeystring, 0, KEY_ALL_ACCESS | KEY_WOW64_64KEY, &oper_handlekey);
   if(status != ERROR_SUCCESS)  return false;
 
   registrykey.SetHandle(oper_handlekey);

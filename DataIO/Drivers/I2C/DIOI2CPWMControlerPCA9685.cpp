@@ -137,13 +137,13 @@ bool DIOI2CPWMCONTROLERPCA9685::SetPWMFrequency(float frequency)
 
   XBYTE newmode = (oldmode&0x7F) | 0x10; // sleep
 
-  status = SendCommand(DIOI2CPWMCONTROLERPCA9685_MODE1      , newmode);       // go to sleep
+  status = SendCommand(DIOI2CPWMCONTROLERPCA9685_MODE1, newmode);       // go to sleep
   if(!status) return false;
 
   status = SendCommand(DIOI2CPWMCONTROLERPCA9685_PRESCALE , prescale);      // set the prescaler
   if(!status) return false;
 
-  status = SendCommand(DIOI2CPWMCONTROLERPCA9685_MODE1      , oldmode);
+  status = SendCommand(DIOI2CPWMCONTROLERPCA9685_MODE1, oldmode);
   if(!status) return false;
 
   xtimerout->SetMilliSeconds(50);

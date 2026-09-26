@@ -36,17 +36,13 @@
 #include "XString.h"
 
 
-
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
 
 #define GEN_XWINDOWSVIRTUALDESKTOPMANAGER    XWINDOWSVIRTUALDESKTOPMANAGER::GetInstance()
 
 typedef bool(*XWINDOWSVIRTUALDESKTOPMANAGER_HOOK_FUNC)(void);
 
-
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
-
 
 class XWINDOWSVIRTUALDESKTOP
 {
@@ -62,7 +58,6 @@ class XWINDOWSVIRTUALDESKTOP
 
     XSTRING                                   name;
 };
-
 
 class XWINDOWSVIRTUALDESKTOPMANAGER
 {

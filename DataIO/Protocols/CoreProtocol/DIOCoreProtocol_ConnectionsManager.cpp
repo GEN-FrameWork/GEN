@@ -1697,7 +1697,6 @@ bool DIOCOREPROTOCOL_CONNECTIONSMANAGER::ManagerHeartBet()
 
   return false;
 }
-           
 
 
 /**-------------------------------------------------------------------------------------------------------------------

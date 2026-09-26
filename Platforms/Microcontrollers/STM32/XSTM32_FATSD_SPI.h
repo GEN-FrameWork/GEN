@@ -59,8 +59,6 @@
 
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
 
-
-
 class XSTM32_FATSD_SPI
 {
   public:
@@ -87,8 +85,6 @@ class XSTM32_FATSD_SPI
     DRESULT                 Disk_IOTCL              (XBYTE drive, XBYTE ctrl, void* buffer);
 
     bool                    End                     ();  
-
-   
 
   private:
 

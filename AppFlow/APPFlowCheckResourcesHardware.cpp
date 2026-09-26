@@ -333,7 +333,7 @@ bool APPFLOWCHECKRESOURCESHARDWARE::CheckMemoryStatus()
       return false;
     }
 
-  GEN_XSYSTEM.GetMemoryInfo(mem_total,mem_free);
+  GEN_XSYSTEM.GetMemoryInfo(mem_total, mem_free);
 
   mem_freepercent = GEN_XSYSTEM.GetFreeMemoryPercent();
 

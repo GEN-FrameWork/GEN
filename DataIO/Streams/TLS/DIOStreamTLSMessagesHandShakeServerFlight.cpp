@@ -151,8 +151,7 @@ static bool DIOSTREAMTLS_MSG_SERVERFLIGHT_Extensions_SetToBuffer(XVECTOR<DIOSTRE
 * @return     bool : true if the operation is successful; otherwise false.
 *
 * --------------------------------------------------------------------------------------------------------------------*/
-static bool DIOSTREAMTLS_MSG_SERVERFLIGHT_Extensions_GetFromBuffer(XBUFFER& buffer, DIOSTREAMTLS_MSG_EXTENSION_CONTEXT context,
-                                                                   XVECTOR<DIOSTREAMTLS_MSG_EXTENSION*>& extensions)
+static bool DIOSTREAMTLS_MSG_SERVERFLIGHT_Extensions_GetFromBuffer(XBUFFER& buffer, DIOSTREAMTLS_MSG_EXTENSION_CONTEXT context, XVECTOR<DIOSTREAMTLS_MSG_EXTENSION*>& extensions)
 {
   DIOSTREAMTLS_MSG_SERVERFLIGHT_Extensions_DeleteAll(extensions);
 
@@ -1440,6 +1439,7 @@ XBUFFER* DIOSTREAMTLS_MSG_HANDSHAKE_NEWSESSIONTICKET::GetTicket()
   return &ticket;
 }
 
+
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         XDWORD DIOSTREAMTLS_MSG_HANDSHAKE_NEWSESSIONTICKET::GetMaximumEarlyDataSize()
@@ -1453,6 +1453,7 @@ XDWORD DIOSTREAMTLS_MSG_HANDSHAKE_NEWSESSIONTICKET::GetMaximumEarlyDataSize()
 {
   return maximumearlydatasize;
 }
+
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 

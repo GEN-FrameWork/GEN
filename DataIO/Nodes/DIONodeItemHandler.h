@@ -36,8 +36,6 @@
 
 #include "DIONodeItem.h"
 
-
-
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
 
 enum DIONODEITEMHANDLER_TYPE
@@ -52,10 +50,7 @@ enum DIONODEITEMHANDLER_TYPE
 
 #define DIONODEITEMHANDLER_INVALIDPARAM     -1 
 
-
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
-
 
 class DIONODEITEMHANDLER : public XSUBJECT
 {

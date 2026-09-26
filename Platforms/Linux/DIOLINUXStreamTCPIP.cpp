@@ -334,7 +334,7 @@ int DIOLINUXSTREAMTCPIP::Accept(int socket, void* addr, void* addrlen, XDWORD us
   if(socket==-1) return -1;
 
   FD_ZERO(&fds);
-  FD_SET((unsigned int)socket,&fds);
+  FD_SET((unsigned int)socket, &fds);
 
   time_out.tv_sec  = 0;
   time_out.tv_usec = usec;
@@ -406,7 +406,7 @@ int DIOLINUXSTREAMTCPIP::IsReadyConnect(int socket)
           int       optval;
           socklen_t optlen = sizeof(optval);
 
-          if(getsockopt(socket,SOL_SOCKET, SO_ERROR, &optval, &optlen) < 0 )
+          if(getsockopt(socket, SOL_SOCKET, SO_ERROR, &optval, &optlen) < 0 )
             {
               SetLastDIOError(DIOSTREAMERROR_TCPCONNECTION);
               return -1;
@@ -526,7 +526,7 @@ bool DIOLINUXSTREAMTCPIP::GetHandleServer()
           return false;
         }
 
-      fcntl(handleserver, F_SETFL, fcntl(handleserver, F_GETFL,0) | O_NONBLOCK);
+      fcntl(handleserver, F_SETFL, fcntl(handleserver, F_GETFL, 0) | O_NONBLOCK);
 
       config->SetHandleMultiServer(handleserver);
     }
@@ -767,7 +767,7 @@ void DIOLINUXSTREAMTCPIP::ThreadConnection(void* data)
 
                                                                 FD_CLR(diostream->handlesocket, &read_flags);
 
-                                                                XDWORD size = recv(diostream->handlesocket,(char*)buffer, DIOSTREAM_MAXBUFFER, 0);
+                                                                XDWORD size = recv(diostream->handlesocket, (char*)buffer, DIOSTREAM_MAXBUFFER, 0);
                                                                 if(size==-1)
                                                                   {
                                                                     diostream->SetEvent(DIOLINUXTCPIPFSMEVENT_DISCONNECTING);
@@ -776,7 +776,7 @@ void DIOLINUXSTREAMTCPIP::ThreadConnection(void* data)
 
                                                                 if(size)
                                                                   {
-                                                                    diostream->inbuffer->Add(buffer,size);
+                                                                    diostream->inbuffer->Add(buffer, size);
                                                                   }
                                                                  else
                                                                   {
@@ -795,7 +795,7 @@ void DIOLINUXSTREAMTCPIP::ThreadConnection(void* data)
                                                                 if(esize)
                                                                   {
                                                                     diostream->outbuffer->SetBlocked(true);
-                                                                    XDWORD size = send(diostream->handlesocket,(char*)diostream->outbuffer->Get(), esize,0);
+                                                                    XDWORD size = send(diostream->handlesocket, (char*)diostream->outbuffer->Get(), esize, 0);
                                                                     diostream->outbuffer->SetBlocked(false);
 
                                                                     if(size == -1)

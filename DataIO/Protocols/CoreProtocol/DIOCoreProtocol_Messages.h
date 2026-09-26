@@ -38,8 +38,6 @@
 
 #include "DIOCoreProtocol_Header.h"
 
-
-
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
 
 enum DIOCOREPROTOCOL_MESSAGE_TYPE_ACQUISITION
@@ -49,12 +47,9 @@ enum DIOCOREPROTOCOL_MESSAGE_TYPE_ACQUISITION
   DIOCOREPROTOCOL_MESSAGE_TYPE_ACQUISITION_WRITE              ,  
 };
 
-
-
 /*---- CLASS ---------------------------------------------------------c------------------------------------------------*/
 
 class XMUTEX;
-
 
 class DIOCOREPROTOCOL_MESSAGE
 {
@@ -84,7 +79,6 @@ class DIOCOREPROTOCOL_MESSAGE
     bool                                                        isconsumed;     
     XDWORD                                                      sizeallmessage;
 };
-
 
 class DIOCOREPROTOCOL_MESSAGES
 {

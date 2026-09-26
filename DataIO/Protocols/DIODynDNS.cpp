@@ -313,7 +313,7 @@ DIODYNDNS_STATUSCODE DIODYNDNS::GetError(XSTRING& result)
 
   for(int c=0; c<(sizeof(stringcodes)/sizeof(XCHAR*)); c++)
     {
-      if(result.Find(stringcodes[c],true) != XSTRING_NOTFOUND)
+      if(result.Find(stringcodes[c], true) != XSTRING_NOTFOUND)
         {
           code = (DIODYNDNS_STATUSCODE)(c);
           break;

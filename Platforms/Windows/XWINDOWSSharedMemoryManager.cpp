@@ -124,23 +124,13 @@ XBYTE* XWINDOWSSHAREDMEMORYMANAGER::Create(XCHAR* ID, XDWORD size, bool ispublic
 
       if(ConvertStringSecurityDescriptorToSecurityDescriptor(sdd, SDDL_REVISION_1, &attributes.lpSecurityDescriptor, NULL) != TRUE) return NULL;
 
-      handlefile = CreateFileMapping((HANDLE)NULL,
-                                     &attributes,
-                                     PAGE_READWRITE,
-                                     0,
-                                     this->size,
-                                     ID);
+      handlefile = CreateFileMapping((HANDLE)NULL, &attributes, PAGE_READWRITE, 0, this->size, ID);
 
       LocalFree(attributes.lpSecurityDescriptor);
     }
    else
     {
-      handlefile = CreateFileMapping((HANDLE)NULL,
-                                     NULL,
-                                     PAGE_READWRITE,
-                                     0,
-                                     this->size,
-                                     ID);
+      handlefile = CreateFileMapping((HANDLE)NULL, NULL, PAGE_READWRITE, 0, this->size, ID);
     }
 
   if(!handlefile) return NULL;
@@ -163,7 +153,6 @@ XBYTE* XWINDOWSSHAREDMEMORYMANAGER::Create(XCHAR* ID, XDWORD size, bool ispublic
 
   return pointer;
 }
-
 
 
 /**-------------------------------------------------------------------------------------------------------------------
@@ -202,7 +191,7 @@ XBYTE* XWINDOWSSHAREDMEMORYMANAGER::Open(XCHAR* ID, XDWORD& size)
   if(base)
     {
 
-       memcpy((XBYTE*)&this->size, base,sizeof(XDWORD));
+       memcpy((XBYTE*)&this->size, base, sizeof(XDWORD));
     
        //XTRACE_PRINTCOLOR(XTRACE_COLOR_PURPLE, __L("[WINDOWS Shared Mem]  Open Size [%d]"), this->size);
 

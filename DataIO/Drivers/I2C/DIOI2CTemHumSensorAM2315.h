@@ -36,8 +36,6 @@
 
 #include "DIODeviceI2C.h"
 
-
-
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
 
 #define DIOI2CTEMHUMSENSORAM2315_ADDRESS                     0x5c

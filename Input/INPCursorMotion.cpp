@@ -213,10 +213,6 @@ void INPCURSORMOTIONPOINT::Clean()
 }
 
 
-
-
-
-
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         INPCURSORMOTION::INPCURSORMOTION()
@@ -332,7 +328,7 @@ bool INPCURSORMOTION::AddPoint(float x, float y, float z)
   INPCURSORMOTIONPOINT* point = GEN_NEW INPCURSORMOTIONPOINT();
   if(!point) return false;
 
-  point->Set(x,y,z);
+  point->Set(x, y, z);
 
   points.Add(point);
 
@@ -431,7 +427,7 @@ bool INPCURSORMOTION::AddFromLine(INPCURSORMOTION_REDUCEDMODE reducedmode, int r
   y = y1;
 
 
-  int  steps    = CalculateReducedModeSteps(reducedmode,reducedfactor,npixels);
+  int  steps    = CalculateReducedModeSteps(reducedmode, reducedfactor, npixels);
   int  incstep  = steps;
   bool addpoint = false;
 
@@ -470,7 +466,7 @@ bool INPCURSORMOTION::AddFromLine(INPCURSORMOTION_REDUCEDMODE reducedmode, int r
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         bool INPCURSORMOTION::AddFromCircle(INPCURSORMOTION_REDUCEDMODE reducedmode,int reducedfactor,int xc, int yc, int radio)
+* @fn         bool INPCURSORMOTION::AddFromCircle(INPCURSORMOTION_REDUCEDMODE reducedmode, int reducedfactor, int xc, int yc, int radio)
 * @brief      Add from circle
 * @ingroup    INPUT
 * 
@@ -483,7 +479,7 @@ bool INPCURSORMOTION::AddFromLine(INPCURSORMOTION_REDUCEDMODE reducedmode, int r
 * @return     bool : true if the operation is successful; otherwise false.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-bool INPCURSORMOTION::AddFromCircle(INPCURSORMOTION_REDUCEDMODE reducedmode,int reducedfactor,int xc, int yc, int radio)
+bool INPCURSORMOTION::AddFromCircle(INPCURSORMOTION_REDUCEDMODE reducedmode, int reducedfactor, int xc, int yc, int radio)
 {
   float deg     = 0;
   int   npixels = 0;
@@ -496,7 +492,7 @@ bool INPCURSORMOTION::AddFromCircle(INPCURSORMOTION_REDUCEDMODE reducedmode,int 
 
   deg = 0;
 
-  int  steps    = CalculateReducedModeSteps(reducedmode,reducedfactor,npixels);
+  int  steps    = CalculateReducedModeSteps(reducedmode, reducedfactor, npixels);
   int  incstep  = steps;
   bool addpoint = false;
 
@@ -510,7 +506,7 @@ bool INPCURSORMOTION::AddFromCircle(INPCURSORMOTION_REDUCEDMODE reducedmode,int 
          }
 
        if(addpoint)
-              AddPoint((float)xc+x ,(float)yc+y , true);
+              AddPoint((float)xc+x, (float)yc+y, true);
          else incstep++;
 
        addpoint = false;
@@ -525,7 +521,7 @@ bool INPCURSORMOTION::AddFromCircle(INPCURSORMOTION_REDUCEDMODE reducedmode,int 
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         bool INPCURSORMOTION::AddFromElipse(INPCURSORMOTION_REDUCEDMODE reducedmode,int reducedfactor, int x, int y, int rx, int ry)
+* @fn         bool INPCURSORMOTION::AddFromElipse(INPCURSORMOTION_REDUCEDMODE reducedmode, int reducedfactor, int x, int y, int rx, int ry)
 * @brief      Add from elipse
 * @ingroup    INPUT
 * 
@@ -539,7 +535,7 @@ bool INPCURSORMOTION::AddFromCircle(INPCURSORMOTION_REDUCEDMODE reducedmode,int 
 * @return     bool : true if the operation is successful; otherwise false.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-bool INPCURSORMOTION::AddFromElipse(INPCURSORMOTION_REDUCEDMODE reducedmode,int reducedfactor, int x, int y, int rx, int ry)
+bool INPCURSORMOTION::AddFromElipse(INPCURSORMOTION_REDUCEDMODE reducedmode, int reducedfactor, int x, int y, int rx, int ry)
 {
   int ix, iy;
   int h, i, j, k;
@@ -568,15 +564,15 @@ bool INPCURSORMOTION::AddFromElipse(INPCURSORMOTION_REDUCEDMODE reducedmode,int 
           if(((h != oh) || (k != ok)) && (h < oi))
             {
 
-              AddPoint((float)x+h, (float)y+k,true);
+              AddPoint((float)x+h, (float)y+k, true);
 
-              if(h) AddPoint((float)x-h, (float)y+k,true);
+              if(h) AddPoint((float)x-h, (float)y+k, true);
 
               if(k)
                 {
-                  AddPoint((float)x+h, (float)y-k,true);
+                  AddPoint((float)x+h, (float)y-k, true);
 
-                  if(h) AddPoint((float)x-h, (float)y-k,true);
+                  if(h) AddPoint((float)x-h, (float)y-k, true);
                 }
 
             }
@@ -584,15 +580,15 @@ bool INPCURSORMOTION::AddFromElipse(INPCURSORMOTION_REDUCEDMODE reducedmode,int 
           if(((i!=oi)||(j!=oj)) && (h < i))
             {
 
-              AddPoint((float)x+i, (float)y+j,true);
+              AddPoint((float)x+i, (float)y+j, true);
 
-              if(i) AddPoint((float)x-i, (float)y+j,true);
+              if(i) AddPoint((float)x-i, (float)y+j, true);
 
               if(j)
                 {
-                  AddPoint((float)x+i, (float)y-j,true);
+                  AddPoint((float)x+i, (float)y-j, true);
 
-                  if(i) AddPoint((float)x-i, (float)y-j,true);
+                  if(i) AddPoint((float)x-i, (float)y-j, true);
                 }
 
             }
@@ -621,15 +617,15 @@ bool INPCURSORMOTION::AddFromElipse(INPCURSORMOTION_REDUCEDMODE reducedmode,int 
             if(((j != oj) || (i != oi)) && (h < i))
               {
 
-                AddPoint((float)x+j, (float)y+i,true);
+                AddPoint((float)x+j, (float)y+i, true);
 
-                if(j) AddPoint((float)x-j, (float)y+i,true);
+                if(j) AddPoint((float)x-j, (float)y+i, true);
 
                 if(i)
                   {
-                    AddPoint((float)x+j, (float)y-i,true);
+                    AddPoint((float)x+j, (float)y-i, true);
 
-                    if(j) AddPoint((float)x-j, (float)y-i,true);
+                    if(j) AddPoint((float)x-j, (float)y-i, true);
 
                   }
               }
@@ -637,15 +633,15 @@ bool INPCURSORMOTION::AddFromElipse(INPCURSORMOTION_REDUCEDMODE reducedmode,int 
            if(((k != ok) || (h != oh)) && (h < oi))
              {
 
-               AddPoint((float)x+k, (float)y+h,true);
+               AddPoint((float)x+k, (float)y+h, true);
 
-                if(k) AddPoint((float)x-k, (float)y+h,true);
+                if(k) AddPoint((float)x-k, (float)y+h, true);
 
                 if(h)
                   {
-                    AddPoint((float)x+k, (float)y-h,true);
+                    AddPoint((float)x+k, (float)y-h, true);
 
-                    if(k) AddPoint((float)x-k, (float)y-h,true);
+                    if(k) AddPoint((float)x-k, (float)y-h, true);
                   }
 
              }
@@ -906,15 +902,15 @@ INPCURSORMOTION_DIR INPCURSORMOTION::GetDirectionByDifferential(XDWORD* differen
 
   for(XDWORD c=1; c<points.GetSize(); c++)
     {
-      max_right = __MAX(((int)points.Get(c)->GetX() - x_origin),  max_right);
-      max_left  = __MAX((x_origin - (int)points.Get(c)->GetX()),  max_left);
+      max_right = __MAX(((int)points.Get(c)->GetX() - x_origin), max_right);
+      max_left  = __MAX((x_origin - (int)points.Get(c)->GetX()), max_left);
 
-      max_up    = __MAX(((int)points.Get(c)->GetY() - y_origin),  max_up);
-      max_down  = __MAX((y_origin - (int)points.Get(c)->GetY()),  max_down);     
+      max_up    = __MAX(((int)points.Get(c)->GetY() - y_origin), max_up);
+      max_down  = __MAX((y_origin - (int)points.Get(c)->GetY()), max_down);     
     }
   
   int x   = __MAX(max_right, max_left);
-  int y   = __MAX(max_up   , max_down);
+  int y   = __MAX(max_up, max_down);
 
   if(x > y)
     {
@@ -991,7 +987,7 @@ bool INPCURSORMOTION::Reset()
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         int INPCURSORMOTION::CalculateReducedModeSteps(INPCURSORMOTION_REDUCEDMODE mode,int factor,int npixels)
+* @fn         int INPCURSORMOTION::CalculateReducedModeSteps(INPCURSORMOTION_REDUCEDMODE mode, int factor, int npixels)
 * @brief      Calculate reduced mode steps
 * @ingroup    INPUT
 * 
@@ -1002,7 +998,7 @@ bool INPCURSORMOTION::Reset()
 * @return     int : Requested value.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-int INPCURSORMOTION::CalculateReducedModeSteps(INPCURSORMOTION_REDUCEDMODE mode,int factor,int npixels)
+int INPCURSORMOTION::CalculateReducedModeSteps(INPCURSORMOTION_REDUCEDMODE mode, int factor, int npixels)
 {
   int steps = 0;
 

@@ -77,7 +77,6 @@ XSTM32SYSTEM::~XSTM32SYSTEM()
 }
 
 
-
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         XSYSTEM_HARDWARETYPE XSTM32SYSTEM::GetTypeHardware(int* revision)
@@ -93,7 +92,6 @@ XSYSTEM_HARDWARETYPE XSTM32SYSTEM::GetTypeHardware(int* revision)
 {
   return XSYSTEM_HARDWARETYPE_MICRO_STM32;
 }
-
 
 
 /**-------------------------------------------------------------------------------------------------------------------
@@ -151,11 +149,9 @@ XSYSTEM_PLATFORM XSTM32SYSTEM::GetPlatform(XSTRING* namestring)
 }
 
 
-
-
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         bool XSTM32SYSTEM::GetMemoryInfo(XDWORD& total,XDWORD& free)
+* @fn         bool XSTM32SYSTEM::GetMemoryInfo(XDWORD& total, XDWORD& free)
 * @brief      Get memory info
 * @ingroup    PLATFORM_STM32
 * 
@@ -165,14 +161,13 @@ XSYSTEM_PLATFORM XSTM32SYSTEM::GetPlatform(XSTRING* namestring)
 * @return     bool : true if the operation is successful; otherwise false.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-bool XSTM32SYSTEM::GetMemoryInfo(XDWORD& total,XDWORD& free)
+bool XSTM32SYSTEM::GetMemoryInfo(XDWORD& total, XDWORD& free)
 {
   total = 0;
   free  = 0;
 
   return true;
 }
-
 
 
 /**-------------------------------------------------------------------------------------------------------------------
@@ -207,7 +202,6 @@ bool XSTM32SYSTEM::ShutDown(XSYSTEM_CHANGESTATUSTYPE type)
 
   return true;
 }
-
 
 
 /**-------------------------------------------------------------------------------------------------------------------

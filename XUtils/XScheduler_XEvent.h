@@ -33,8 +33,6 @@
 #include "XEvent.h"
 #include "XSubject.h"
 
-
-
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
 
 enum XSCHEDULER_XEVENT_TYPE
@@ -42,10 +40,7 @@ enum XSCHEDULER_XEVENT_TYPE
   XSCHEDULER_XEVENT_TYPE_UNKNOWN          = XEVENT_TYPE_SCHEDULER ,
 };
 
-
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
-
 
 class XTIMER;
 class XDATETIME;

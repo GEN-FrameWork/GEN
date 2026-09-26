@@ -30,7 +30,6 @@
 
 /*---- INCLUDES ------------------------------------------------------------------------------------------------------*/
 
-
 #include <ff.h>
 
 #include "XBase.h"
@@ -47,7 +46,6 @@ typedef struct
   FILINFO   fileinfo;
   
 } XSTM32DIR_SEARCHINFO; 
-
 
 class XSTM32DIR_NOTUNICODE : public XDIR
 {

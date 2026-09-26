@@ -92,11 +92,7 @@
 #define DIOI2CTOUCHSENSORAT42QT1060_KEY_5_REFERENCE_LSB_REG					62
 #define DIOI2CTOUCHSENSORAT42QT1060_KEY_5_REFERENCE_MSB_REG					63
 
-
-
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
-
 
 class DIOI2CTOUCHSENSORAT42QT1060: public DIODEVICEI2C
 {

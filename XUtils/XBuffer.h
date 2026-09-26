@@ -49,21 +49,16 @@ enum XBUFFER_PADDINGTYPE
   XBUFFER_PADDINGTYPE_ISOIEC7816_4             ,
 };
 
-
 #define XBUFFER_INVALIDPOSITION             -1
 #define XBUFFER_ISTHREADSAFE                true
 
 #define XBUFFER_MASTER_NBITS                -1
-
-
 
 #ifdef MICROCONTROLLER
 #define XBUFFER_ADDBLOCKMEMSIZE_DEFAULT      8
 #else
 #define XBUFFER_ADDBLOCKMEMSIZE_DEFAULT    128
 #endif
-
-
 
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
 
@@ -113,7 +108,7 @@ class GEN_API_LIB_EXP XBUFFER
     bool                     Insert                               (XBUFFER* buffer, int frompos = 0);
     bool                     Insert                               (XBUFFER& buffer, int frompos = 0);
     bool                     Insert                               (XBYTE data, int frompos = 0);
-    bool                     Insert                               (bool  data, int frompos = 0);
+    bool                     Insert                               (bool data, int frompos = 0);
     bool                     Insert                               (XWORD data, int frompos = 0);
     bool                     Insert                               (XDWORD data, int frompos = 0);
     bool                     Insert                               (XQWORD data, int frompos = 0);
@@ -125,7 +120,7 @@ class GEN_API_LIB_EXP XBUFFER
     bool                     InsertWithMask                       (XCHAR* mask, int frompos, ...);
     bool                     InsertWithMask                       (XSTRING* mask, int frompos, ...);
 
-    XDWORD                   Extract                              (XBYTE* pbuffer,XDWORD ppos, XDWORD psize);
+    XDWORD                   Extract                              (XBYTE* pbuffer, XDWORD ppos, XDWORD psize);
     bool                     Extract                              (XBYTE& data, XDWORD ppos = 0);
     bool                     Extract                              (bool& data, XDWORD ppos = 0);
     bool                     Extract                              (XWORD& data, XDWORD ppos = 0);
@@ -146,9 +141,9 @@ class GEN_API_LIB_EXP XBUFFER
     char*                    GetPtrChar                           ();
     XWORD*                   GetPtrWord                           ();
 
-    bool                     Get                                  (XBYTE* pbuffer,int psize, int frompos = XBUFFER_INVALIDPOSITION);
+    bool                     Get                                  (XBYTE* pbuffer, int psize, int frompos = XBUFFER_INVALIDPOSITION);
     bool                     Get                                  (XBYTE& data, int frompos = XBUFFER_INVALIDPOSITION);
-    bool                     Get                                  (bool& data,  int frompos = XBUFFER_INVALIDPOSITION);
+    bool                     Get                                  (bool& data, int frompos = XBUFFER_INVALIDPOSITION);
     bool                     Get                                  (XWORD& data, int frompos = XBUFFER_INVALIDPOSITION);
     bool                     Get                                  (XDWORD& data, int frompos = XBUFFER_INVALIDPOSITION);
     bool                     Get                                  (XQWORD& data, int frompos = XBUFFER_INVALIDPOSITION);
@@ -160,7 +155,7 @@ class GEN_API_LIB_EXP XBUFFER
     bool                     GetWithMask                          (XCHAR* mask, int frompos, ...);
     bool                     GetWithMask                          (XSTRING* mask, int frompos, ...);
 
-    bool                     Set                                  (XBYTE* pbuffer,int psize, int topos = XBUFFER_INVALIDPOSITION);
+    bool                     Set                                  (XBYTE* pbuffer, int psize, int topos = XBUFFER_INVALIDPOSITION);
     bool                     Set                                  (XBYTE data, int topos = XBUFFER_INVALIDPOSITION);
     bool                     Set                                  (bool data, int topos = XBUFFER_INVALIDPOSITION);
     bool                     Set                                  (XWORD data, int topos = XBUFFER_INVALIDPOSITION);
@@ -174,7 +169,7 @@ class GEN_API_LIB_EXP XBUFFER
     XDWORD                   SetWithMask                          (XCHAR* mask, int topos, ...);
     XDWORD                   SetWithMask                          (XSTRING* mask, int topos, ...);
 
-    bool                     Resize                               (XDWORD newsize,bool setblocked = true);
+    bool                     Resize                               (XDWORD newsize, bool setblocked = true);
     bool                     Delete                               (bool setblocked = true);
     bool                     SecureDelete                         (bool setblocked = true);
     bool                     DeleteByte                           (XBYTE data, bool setblocked = true); 
@@ -202,7 +197,6 @@ class GEN_API_LIB_EXP XBUFFER
     XBYTE                    Padding_GetSize                      ();
     bool                     Padding_Delete                       ();
 
-
     XBYTE                    Bit_GetNBits                         ();
     bool                     Bit_SetNBits                         (int nbits);
     bool                     Bit_AddData                          (XDWORD data, int nbits = XBUFFER_MASTER_NBITS);
@@ -227,13 +221,13 @@ class GEN_API_LIB_EXP XBUFFER
 
     void                     Clean                                ();
 
-    bool                     AddXBufferWithMask                   (XBUFFER& xbuffer, XCHAR* mask    , va_list& arg);
-    bool                     AddXBufferWithMask                   (XBUFFER& xbuffer, XSTRING* mask  , va_list& arg);
+    bool                     AddXBufferWithMask                   (XBUFFER& xbuffer, XCHAR* mask, va_list& arg);
+    bool                     AddXBufferWithMask                   (XBUFFER& xbuffer, XSTRING* mask, va_list& arg);
 
     XDWORD                   CalculeExtractSizeArgWithMask        (XBUFFER& xbuffer, int frompos, XCHAR* mask, va_list& arg);
 
-    bool                     ExtractXBufferWithMask               (XBUFFER& xbuffer, XCHAR* mask    , va_list& arg);
-    bool                     ExtractXBufferWithMask               (XBUFFER& xbuffer, XSTRING* mask  , va_list& arg);
+    bool                     ExtractXBufferWithMask               (XBUFFER& xbuffer, XCHAR* mask, va_list& arg);
+    bool                     ExtractXBufferWithMask               (XBUFFER& xbuffer, XSTRING* mask, va_list& arg);
     
     XBYTE*                   buffer;
     XDWORD                   size;

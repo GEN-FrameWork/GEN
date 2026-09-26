@@ -32,8 +32,6 @@
 
 #include "Cipher.h"
 
-
-
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
 
 #define CIPHERBLOWFISH_ENCRYPT     1
@@ -43,15 +41,12 @@
 #define CIPHERBLOWFISH_ROUNDS      16         // when increasing this value, make sure to extend the initialisation vectors 
 #define CIPHERBLOWFISH_BLOCKSIZE   8          // Blowfish uses 64 bit blocks 
 
-
 typedef struct  
 { 
-  XDWORD  P[CIPHERBLOWFISH_ROUNDS + 2];       // Blowfish round keys    
-  XDWORD  S[4][256];                          // key dependent S-boxes  
+  XDWORD  P[CIPHERBLOWFISH_ROUNDS + 2];
+  XDWORD  S[4][256];
 
 } CIPHERBLOWFISH_CONTEXT;
-
-
 
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
 

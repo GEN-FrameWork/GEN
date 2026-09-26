@@ -210,7 +210,7 @@ GRPBITMAP* GRPBITMAPFILEBASE::ForceModeOfBitmap(GRPPROPERTYMODE forcemode, GRPBI
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         bool GRPBITMAPFILEBASE::Open(XPATH& xpath,bool readonly)
+* @fn         bool GRPBITMAPFILEBASE::Open(XPATH& xpath, bool readonly)
 * @brief      Open
 * @ingroup    GRAPHIC
 * 
@@ -220,10 +220,10 @@ GRPBITMAP* GRPBITMAPFILEBASE::ForceModeOfBitmap(GRPPROPERTYMODE forcemode, GRPBI
 * @return     bool : true if the operation is successful; otherwise false.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-bool GRPBITMAPFILEBASE::Open(XPATH& xpath,bool readonly)
+bool GRPBITMAPFILEBASE::Open(XPATH& xpath, bool readonly)
 {
   if(!file)                          return false;
-  if(!file->Open(xpath,readonly))    return false;
+  if(!file->Open(xpath, readonly))    return false;
 
   return true;
 }
@@ -278,10 +278,6 @@ void GRPBITMAPFILEBASE::Clean()
 {
 
 }
-
-
-
-
 
 
 /**-------------------------------------------------------------------------------------------------------------------
@@ -411,11 +407,11 @@ GRPBITMAPFILE_TYPE GRPBITMAPFILE::GetTypeFromExtenxion(XCHAR* xpath)
 
   _xpath.GetExt(ext);
   
-  if(!ext.Compare(__L(".jpg"),  true))  type = GRPBITMAPFILE_TYPE_JPG; 
+  if(!ext.Compare(__L(".jpg"), true))  type = GRPBITMAPFILE_TYPE_JPG; 
   if(!ext.Compare(__L(".jpeg"), true))  type = GRPBITMAPFILE_TYPE_JPG;
-  if(!ext.Compare(__L(".png"),  true))  type = GRPBITMAPFILE_TYPE_PNG;
-  if(!ext.Compare(__L(".bmp"),  true))  type = GRPBITMAPFILE_TYPE_BMP;
-  if(!ext.Compare(__L(".tga"),  true))  type = GRPBITMAPFILE_TYPE_TGA;
+  if(!ext.Compare(__L(".png"), true))  type = GRPBITMAPFILE_TYPE_PNG;
+  if(!ext.Compare(__L(".bmp"), true))  type = GRPBITMAPFILE_TYPE_BMP;
+  if(!ext.Compare(__L(".tga"), true))  type = GRPBITMAPFILE_TYPE_TGA;
 
   return type;
 }

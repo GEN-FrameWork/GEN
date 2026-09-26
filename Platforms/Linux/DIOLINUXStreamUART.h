@@ -58,7 +58,6 @@ enum DIOLINUXUARTFSMEVENTS
 
 };
 
-
 enum DIOLINUXUARTFSMSTATES
 {
   DIOLINUXUARTFSMSTATE_NONE              = 0  ,
@@ -70,11 +69,7 @@ enum DIOLINUXUARTFSMSTATES
   DIOLINUXUART_LASTSTATE
 };
 
-
-
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
-
 
 class DIOLINUXSTREAMUART : public DIOSTREAMUART , public XFSMACHINE
 {

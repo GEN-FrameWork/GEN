@@ -42,7 +42,6 @@
 #include "XSubject.h"
 
 
-
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
 
 typedef int32_t       STATUS;
@@ -51,10 +50,7 @@ const STATUS          STATUS_OK   = 0;
 const STATUS          STATUS_KO   = -1;
 const STATUS          STATUS_EXIT = -2;
 
-
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
-
 
 class ANDROIDNATIVEINPUT_HANDLER
 {
@@ -95,7 +91,6 @@ class ANDROIDNATIVEACTIVITY_HANDLER
     virtual void                      OnGainFocus                             ()                                {               };
     virtual void                      OnLostFocus                             ()                                {               };
 };
-
 
 class ANDROIDNATIVEACTIVITY_EVENTLOOP
 {

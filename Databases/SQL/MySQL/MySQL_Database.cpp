@@ -147,9 +147,9 @@ bool MYSQL_DATABASE::Transaction()
   MYSQL* conn=static_cast<MYSQL_CONNECTION*>(this->connection)->connection;
   if(!conn)  return false;
 
-  mysql_autocommit(conn,false);
+  mysql_autocommit(conn, false);
 
-  int RC = mysql_query(conn,"BEGIN");
+  int RC = mysql_query(conn, "BEGIN");
 
   if(RC == DB_SQL_MYSQL_OK)
     {
@@ -180,7 +180,7 @@ bool MYSQL_DATABASE::Commit()
       if(RC == DB_SQL_MYSQL_OK)
         {
           transactionstarted = false;
-          mysql_autocommit(conn,true);
+          mysql_autocommit(conn, true);
 
           return true;
         }
@@ -223,7 +223,7 @@ bool MYSQL_DATABASE::Rollback(XCHAR* savepointname)
        else
         {
           DB_SQL_STRING text;
-          text.Format(__L("ROLLBACK TO SAVEPOINT %s"),savepointname);
+          text.Format(__L("ROLLBACK TO SAVEPOINT %s"), savepointname);
           
           XBUFFER rollbacktext;
           
@@ -264,7 +264,7 @@ bool MYSQL_DATABASE::Savepoint(XCHAR* savepoint)
 
   DB_SQL_STRING text;
 
-  text.Format(__L("SAVEPOINT %s"),savepoint);
+  text.Format(__L("SAVEPOINT %s"), savepoint);
 
   XBUFFER savetext;
   
@@ -298,7 +298,7 @@ bool MYSQL_DATABASE::ReleaseSavepoint(XCHAR* savepoint)
   if(!conn) return false;
 
   DB_SQL_STRING text;
-  text.Format(__L("RELEASE %s"),savepoint);
+  text.Format(__L("RELEASE %s"), savepoint);
 
   XBUFFER savetext;
   
@@ -484,7 +484,7 @@ bool MYSQL_DATABASE::SetDatabaseEncoding(DB_SQL_DATABASE_ENCODING encodingtouse)
       case DB_SQL_DATABASE_ENCODING_SQL_ASCII           :
       case DB_SQL_DATABASE_ENCODING_UHC                 : break;
 
-      case DB_SQL_DATABASE_ENCODING_UTF8                : { int rc = mysql_set_character_set(conn,"utf8");
+      case DB_SQL_DATABASE_ENCODING_UTF8                : { int rc = mysql_set_character_set(conn, "utf8");
                                                             if (rc == 0) return true;
                                                           }
                                                           break;

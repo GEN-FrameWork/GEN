@@ -354,9 +354,7 @@ bool XLINUXPROCESSMANAGER::Application_Execute(XCHAR* applicationpath, XCHAR* pa
       XBUFFER charstr;
    
       cmd.ConvertToASCII(charstr);                                
-      execl(charstr.GetPtrChar() , param[ 0], param[ 1], param[ 2], param[ 3], param[ 4], param[ 5], param[ 6], param[ 7], param[ 8], param[ 9]
-                                 , param[10], param[11], param[12], param[13], param[14], param[15], param[16], param[17], param[18], param[19]
-                                 , NULL);   
+      execl(charstr.GetPtrChar(), param[ 0], param[ 1], param[ 2], param[ 3], param[ 4], param[ 5], param[ 6], param[ 7], param[ 8], param[ 9], param[10], param[11], param[12], param[13], param[14], param[15], param[16], param[17], param[18], param[19], NULL);   
       _exit(127);
     } 
    else 

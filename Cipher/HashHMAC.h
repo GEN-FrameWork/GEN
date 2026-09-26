@@ -34,10 +34,7 @@
 
 #include "Hash.h"
 
-
-
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
-
 
 #define HASHHMAC_IPAD                       0x36
 #define HASHHMAC_OPAD                       0x5C
@@ -46,11 +43,7 @@
 #define HASHHMAC_BLOCKSIZE_64               64
 #define HASHHMAC_BLOCKSIZE_128              128
 
-
-
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
-
 
 class HASHHMAC : public HASH
 {

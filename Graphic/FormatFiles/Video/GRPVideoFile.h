@@ -34,8 +34,6 @@
 #include "XFile.h"
 #include "XPath.h"
 
-
-
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
 
 #define GRPVIDEOFILE_DEFAULTFRAMERATE 25
@@ -48,7 +46,6 @@
 class GRPPROPERTY;
 class GRPBITMAP;
 class GRPBITMAPSEQUENCE;
-
 
 class GRPVIDEOFILE_PROPERTYS
 {

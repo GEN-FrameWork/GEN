@@ -32,7 +32,6 @@
 
 #include "XBase.h"
 
-
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
 
 enum CIPHERECDSAX25519_TYPEKEY  
@@ -45,8 +44,6 @@ enum CIPHERECDSAX25519_TYPEKEY
 };  
 
 #define CIPHERECDSAX25519_MAXKEY  32
-
-
 
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
 
@@ -83,12 +80,7 @@ class CIPHERECDSAX25519
     static void             fexpand                   (XQWORDSIG* output, const XBYTE* input);
     static void             fcontract                 (XBYTE *output, XQWORDSIG* input);
 
-    static void             fmonty                    (XQWORDSIG* x2, XQWORDSIG* z2,
-                                                       XQWORDSIG* x3, XQWORDSIG* z3,
-                                                       XQWORDSIG* x, XQWORDSIG* z,
-                                                       XQWORDSIG* xprime, XQWORDSIG* zprime,
-                                                       const XQWORDSIG* qmqp
-                                                      ); 
+    static void             fmonty                    (XQWORDSIG* x2, XQWORDSIG* z2, XQWORDSIG* x3, XQWORDSIG* z3, XQWORDSIG* x, XQWORDSIG* z, XQWORDSIG* xprime, XQWORDSIG* zprime, const XQWORDSIG* qmqp); 
 
     static void             swap_conditional          (XQWORDSIG a[19], XQWORDSIG b[19], XQWORDSIG iswap);
     static void             cmult                     (XQWORDSIG* resultx, XQWORDSIG* resultz, const XBYTE* n, const XQWORDSIG* q);

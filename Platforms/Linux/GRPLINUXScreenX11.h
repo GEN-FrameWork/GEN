@@ -39,7 +39,6 @@
 #include <X11/Xlib.h>
 #include <X11/Xutil.h>
 #include <X11/Xatom.h>
-#include <X11/extensions/xf86vmode.h>
 #include <X11/extensions/Xrandr.h>
 
 #include "GRPScreen.h"
@@ -86,10 +85,7 @@ class GRPLINUXBLITGLESX11;
 #define GRPLINUXSCREENX11_CUSTOMRESIZE_EDGE_RIGHT   (1 << 0)
 #define GRPLINUXSCREENX11_CUSTOMRESIZE_EDGE_BOTTOM  (1 << 1)
 
-
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
-
 
 typedef struct
 {
@@ -100,7 +96,6 @@ typedef struct
    unsigned long   status;
 
 } HITNS;
-
 
 class GRP2DCANVAS;
 
@@ -159,11 +154,6 @@ class GRPLINUXSCREENX11 : public GRPSCREEN
 
     Display*                              display;
 
-
-
-
-
-
     Display*                              movedisplay;
 
     Window                                window;
@@ -174,17 +164,7 @@ class GRPLINUXSCREENX11 : public GRPSCREEN
 
     bool                                  isdesktop;
 
-
-
-
-
-
-
     bool                                  normalhintsapplied;
-
-
-
-
 
     bool                                  customresizing;
     int                                   customresizeedge;
@@ -204,43 +184,14 @@ class GRPLINUXSCREENX11 : public GRPSCREEN
     bool                                  IsWMSupported                     (Atom atom);
     #endif
 
-
     bool                                  Create_Window                     (bool show);
 
     void                                  Chromes_ApplyStyle                ();
     void                                  Chromes_ApplyPostCreate           ();
 
-
-
-
-
-
-
-
-
     bool                                  IsUsingCustomChromes              ();
 
-
-
-
-
-
-
-
-
-
     void                                  UpdateCustomChromesResize         ();
-
-
-
-
-
-
-
-
-
-
-
 
     void                                  ResolveViewportMax                (float& maxw, float& maxh);
 

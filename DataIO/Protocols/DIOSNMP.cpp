@@ -219,10 +219,6 @@ bool DIOSNMP_XBER::TrapData_AddTo(XBER& xber)
 }
 
 
-
-
-
-
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         DIOSNMP_BASE::DIOSNMP_BASE()
@@ -356,7 +352,7 @@ bool DIOSNMP_BASE::Open(XCHAR* IPtarget, int port, bool checkavailableNMS, XCHAR
               if(status)
                 {
                   XBYTE data[] = { 0xAA,0x55 };
-                  diostreamudp ->Write(data,sizeof(data));
+                  diostreamudp ->Write(data, sizeof(data));
 
                   status = diostreamudp->WaitToDisconnected(3);
                 }
@@ -418,10 +414,6 @@ void DIOSNMP_BASE::Clean()
 }
 
 
-
-
-
-
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         DIOSNMP_TRAP::DIOSNMP_TRAP()
@@ -451,7 +443,7 @@ DIOSNMP_TRAP::~DIOSNMP_TRAP()
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         bool DIOSNMP_TRAP::Send(XCHAR* community,XCHAR* enterprise,XCHAR* agentip,int generictrap,int specifictrap,XDWORD timestamp,int nvar,...)
+* @fn         bool DIOSNMP_TRAP::Send(XCHAR* community, XCHAR* enterprise, XCHAR* agentip, int generictrap, int specifictrap, XDWORD timestamp, int nvar, ...)
 * @brief      Send
 * @ingroup    DATAIO
 * 
@@ -467,7 +459,7 @@ DIOSNMP_TRAP::~DIOSNMP_TRAP()
 * @return     bool : true if the operation is successful; otherwise false.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-bool DIOSNMP_TRAP::Send(XCHAR* community,XCHAR* enterprise,XCHAR* agentip,int generictrap,int specifictrap,XDWORD timestamp,int nvar,...)
+bool DIOSNMP_TRAP::Send(XCHAR* community, XCHAR* enterprise, XCHAR* agentip, int generictrap, int specifictrap, XDWORD timestamp, int nvar, ...)
 {
   if(!diostreamudpcfg)  return false;
   if(!diostreamudp)     return false;
@@ -503,7 +495,7 @@ bool DIOSNMP_TRAP::Send(XCHAR* community,XCHAR* enterprise,XCHAR* agentip,int ge
         {
           va_list arg;
 
-          va_start(arg,nvar);
+          va_start(arg, nvar);
 
           for(int c=0;c<(nvar/2);c++)
             {
@@ -558,7 +550,7 @@ bool DIOSNMP_TRAP::Send(XCHAR* community,XCHAR* enterprise,XCHAR* agentip,int ge
 
   //DEBUG_PRINTDATABLOCK(xbuffer.Get(),xbuffer.GetSize(),2);
 
-  XDWORD bw = diostreamudp->Write(xbuffer.Get(),xbuffer.GetSize());
+  XDWORD bw = diostreamudp->Write(xbuffer.Get(), xbuffer.GetSize());
   if(bw!= xbuffer.GetSize()) return false;
 
   return true;
@@ -577,10 +569,6 @@ void DIOSNMP_TRAP::Clean()
 {
 
 }
-
-
-
-
 
 
 /**-------------------------------------------------------------------------------------------------------------------
@@ -709,7 +697,7 @@ bool DIOSNMP::Get(DIOSNMP_OPERATION operation, XCHAR* community, XCHAR* OIDstr, 
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         bool DIOSNMP::Send(XCHAR* community,XCHAR* enterprise,XCHAR* agentip,int generictrap,int specifictrap,XDWORD timestamp,int nvar,...)
+* @fn         bool DIOSNMP::Send(XCHAR* community, XCHAR* enterprise, XCHAR* agentip, int generictrap, int specifictrap, XDWORD timestamp, int nvar, ...)
 * @brief      Send
 * @ingroup    DATAIO
 * 
@@ -725,7 +713,7 @@ bool DIOSNMP::Get(DIOSNMP_OPERATION operation, XCHAR* community, XCHAR* OIDstr, 
 * @return     bool : true if the operation is successful; otherwise false.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-bool DIOSNMP::Send(XCHAR* community,XCHAR* enterprise,XCHAR* agentip,int generictrap,int specifictrap,XDWORD timestamp,int nvar,...)
+bool DIOSNMP::Send(XCHAR* community, XCHAR* enterprise, XCHAR* agentip, int generictrap, int specifictrap, XDWORD timestamp, int nvar, ...)
 {
   if(!diostreamudpcfg)  return false;
   if(!diostreamudp)     return false;
@@ -761,7 +749,7 @@ bool DIOSNMP::Send(XCHAR* community,XCHAR* enterprise,XCHAR* agentip,int generic
         {
           va_list arg;
 
-          va_start(arg,nvar);
+          va_start(arg, nvar);
 
           for(int c=0;c<(nvar/2);c++)
             {
@@ -816,7 +804,7 @@ bool DIOSNMP::Send(XCHAR* community,XCHAR* enterprise,XCHAR* agentip,int generic
 
   //DEBUG_PRINTDATABLOCK(xbuffer.Get(),xbuffer.GetSize(),2);
 
-  XDWORD bw = diostreamudp->Write(xbuffer.Get(),xbuffer.GetSize());
+  XDWORD bw = diostreamudp->Write(xbuffer.Get(), xbuffer.GetSize());
   if(bw!= xbuffer.GetSize()) return false;
 
   return true;

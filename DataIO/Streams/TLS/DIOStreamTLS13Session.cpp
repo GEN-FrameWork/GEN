@@ -532,9 +532,7 @@ bool DIOSTREAMTLS13SESSION::KeyExchange_SharedSecret(XWORD group, XBUFFER& publi
 * @return     bool : true if the operation is successful; otherwise false.
 *
 * --------------------------------------------------------------------------------------------------------------------*/
-bool DIOSTREAMTLS13SESSION::KeyExchange_ServerGenerate(XWORD group, XBUFFER& peerpublickey,
-                                                        XBUFFER& publickey, XBUFFER& sharedsecret,
-                                                        bool& invalidpeershare)
+bool DIOSTREAMTLS13SESSION::KeyExchange_ServerGenerate(XWORD group, XBUFFER& peerpublickey, XBUFFER& publickey, XBUFFER& sharedsecret, bool& invalidpeershare)
 {
   invalidpeershare = false;
   publickey.Delete();
@@ -548,8 +546,7 @@ bool DIOSTREAMTLS13SESSION::KeyExchange_ServerGenerate(XWORD group, XBUFFER& pee
 
   if(group == DIOSTREAMTLS_MSG_CURVEID_SECP384R1MLKEM1024)
     {
-      return keyexchangesecp384r1mlkem1024.ServerKeyShare_Create(peerpublickey, publickey, sharedsecret,
-                                                                  &invalidpeershare);
+      return keyexchangesecp384r1mlkem1024.ServerKeyShare_Create(peerpublickey, publickey, sharedsecret, &invalidpeershare);
     }
 
   #endif
@@ -558,8 +555,7 @@ bool DIOSTREAMTLS13SESSION::KeyExchange_ServerGenerate(XWORD group, XBUFFER& pee
 
   if(group == DIOSTREAMTLS_MSG_CURVEID_SECP256R1MLKEM768)
     {
-      return keyexchangesecp256r1mlkem768.ServerKeyShare_Create(peerpublickey, publickey, sharedsecret,
-                                                                 &invalidpeershare);
+      return keyexchangesecp256r1mlkem768.ServerKeyShare_Create(peerpublickey, publickey, sharedsecret, &invalidpeershare);
     }
 
   #endif
@@ -568,8 +564,7 @@ bool DIOSTREAMTLS13SESSION::KeyExchange_ServerGenerate(XWORD group, XBUFFER& pee
 
   if(group == DIOSTREAMTLS_MSG_CURVEID_X25519MLKEM768)
     {
-      return keyexchangex25519mlkem768.ServerKeyShare_Create(peerpublickey, publickey, sharedsecret,
-                                                              &invalidpeershare);
+      return keyexchangex25519mlkem768.ServerKeyShare_Create(peerpublickey, publickey, sharedsecret, &invalidpeershare);
     }
 
   #endif
@@ -1038,6 +1033,7 @@ bool DIOSTREAMTLS13SESSION::EarlyKeys_Activate(XBUFFER& PSK, XBUFFER& clienthell
   return true;
 }
 
+
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         bool DIOSTREAMTLS13SESSION::EarlyData_Protect(XBYTE* data, XDWORD size, XBUFFER& records)
@@ -1060,6 +1056,7 @@ bool DIOSTREAMTLS13SESSION::EarlyData_Protect(XBYTE* data, XDWORD size, XBUFFER&
   return true;
 }
 
+
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         bool DIOSTREAMTLS13SESSION::EarlyData_Protect(XBUFFER& data, XBUFFER& records)
@@ -1073,6 +1070,7 @@ bool DIOSTREAMTLS13SESSION::EarlyData_Protect(XBYTE* data, XDWORD size, XBUFFER&
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
 bool DIOSTREAMTLS13SESSION::EarlyData_Protect(XBUFFER& data, XBUFFER& records) { return EarlyData_Protect(data.Get(), data.GetSize(), records); }
+
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
@@ -1090,8 +1088,9 @@ XDWORD DIOSTREAMTLS13SESSION::EarlyData_Read(XBYTE* data, XDWORD size)
 {
   if(!data || !size) return 0;
   if(size>earlydatainput.GetSize()) size=earlydatainput.GetSize();
-  return earlydatainput.Extract(data,0,size);
+  return earlydatainput.Extract(data, 0, size);
 }
+
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
@@ -1103,6 +1102,7 @@ XDWORD DIOSTREAMTLS13SESSION::EarlyData_Read(XBYTE* data, XDWORD size)
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
 XDWORD DIOSTREAMTLS13SESSION::GetEarlyDataSize() { return earlydatainput.GetSize(); }
+
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
@@ -1124,6 +1124,7 @@ bool DIOSTREAMTLS13SESSION::EarlyData_Commit()
   return true;
 }
 
+
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         void DIOSTREAMTLS13SESSION::EarlyData_End(DIOSTREAMTLSKEYSCHEDULE_DIRECTION direction)
@@ -1141,6 +1142,7 @@ void DIOSTREAMTLS13SESSION::EarlyData_End(DIOSTREAMTLSKEYSCHEDULE_DIRECTION dire
       epoch[direction]=DIOSTREAMTLS13SESSION_EPOCH_HANDSHAKE;
     }
 }
+
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
@@ -1160,6 +1162,7 @@ void DIOSTREAMTLS13SESSION::EarlyKeys_Deactivate(DIOSTREAMTLSKEYSCHEDULE_DIRECTI
     }
 }
 
+
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         void DIOSTREAMTLS13SESSION::EarlyData_Accepted(bool accepted)
@@ -1170,6 +1173,7 @@ void DIOSTREAMTLS13SESSION::EarlyKeys_Deactivate(DIOSTREAMTLSKEYSCHEDULE_DIRECTI
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
 void DIOSTREAMTLS13SESSION::EarlyData_Accepted(bool accepted) { earlydataaccepted=accepted; }
+
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
@@ -1188,6 +1192,7 @@ bool DIOSTREAMTLS13SESSION::EarlyData_Limit(XDWORD maximumsize)
   maximumearlydatasize=maximumsize;
   return true;
 }
+
 
 /**-------------------------------------------------------------------------------------------------------------------
 * @fn         bool DIOSTREAMTLS13SESSION::HandshakeKeys_Activate(XBUFFER& sharedsecret, XBUFFER* PSK)

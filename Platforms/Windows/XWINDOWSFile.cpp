@@ -329,13 +329,13 @@ bool XWINDOWSFILE::Write(XBYTE* buffer, XDWORD size, CIPHER* cipher)
 
   if(cipher)
     {
-      if(!cipher->Cipher(buffer,size)) return false;
-      if(!WriteFile(filehandle,(void *)cipher->GetResult()->Get(), size,&bw, NULL)) return false;
+      if(!cipher->Cipher(buffer, size)) return false;
+      if(!WriteFile(filehandle, (void *)cipher->GetResult()->Get(), size, &bw, NULL)) return false;
       if(bw!=size) return false;
     }
    else
     {
-      if(!WriteFile(filehandle,(void *)buffer, size,&bw, NULL)) return false;
+      if(!WriteFile(filehandle, (void *)buffer, size, &bw, NULL)) return false;
       if(bw!=size) return false;
     }
 
@@ -403,7 +403,7 @@ bool XWINDOWSFILE::Close()
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         bool XWINDOWSFILE::Erase(XCHAR* xpath,bool overwrite)
+* @fn         bool XWINDOWSFILE::Erase(XCHAR* xpath, bool overwrite)
 * @brief      Erase
 * @ingroup    PLATFORM_WINDOWS
 * 
@@ -413,7 +413,7 @@ bool XWINDOWSFILE::Close()
 * @return     bool : true if the operation is successful; otherwise false.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-bool XWINDOWSFILE::Erase(XCHAR* xpath,bool overwrite)
+bool XWINDOWSFILE::Erase(XCHAR* xpath, bool overwrite)
 {
   bool  status = true;
   XPATH _xpath;
@@ -570,9 +570,9 @@ bool XWINDOWSFILE::ExtendedOpen(XCHAR* xpath, XWINDOWSFILEMODE mode)
 
   switch(mode)
     {
-      case XWINDOWSFILEMODE_READONLY  : filehandle = CreateFile(xpathnamefile.Get(), GENERIC_READ                , FILE_SHARE_READ                   , NULL, OPEN_EXISTING  , FILE_ATTRIBUTE_NORMAL, NULL);  break;
-      case XWINDOWSFILEMODE_READWRITE : filehandle = CreateFile(xpathnamefile.Get(), GENERIC_READ | GENERIC_WRITE, FILE_SHARE_READ | FILE_SHARE_WRITE, NULL, OPEN_EXISTING  , FILE_ATTRIBUTE_NORMAL, NULL);  break;
-      case XWINDOWSFILEMODE_CREATE    : filehandle = CreateFile(xpathnamefile.Get(), GENERIC_READ | GENERIC_WRITE, FILE_SHARE_READ | FILE_SHARE_WRITE, NULL, CREATE_ALWAYS  , FILE_ATTRIBUTE_NORMAL, NULL);  break;
+      case XWINDOWSFILEMODE_READONLY  : filehandle = CreateFile(xpathnamefile.Get(), GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);  break;
+      case XWINDOWSFILEMODE_READWRITE : filehandle = CreateFile(xpathnamefile.Get(), GENERIC_READ | GENERIC_WRITE, FILE_SHARE_READ | FILE_SHARE_WRITE, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);  break;
+      case XWINDOWSFILEMODE_CREATE    : filehandle = CreateFile(xpathnamefile.Get(), GENERIC_READ | GENERIC_WRITE, FILE_SHARE_READ | FILE_SHARE_WRITE, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);  break;
     }
 
   if(filehandle == INVALID_HANDLE_VALUE)

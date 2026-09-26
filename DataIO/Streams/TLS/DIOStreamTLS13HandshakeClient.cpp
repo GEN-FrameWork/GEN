@@ -152,13 +152,13 @@ static bool DIOSTREAMTLS13_HANDSHAKECLIENT_CertificateChainCompatible(XVECTOR<XB
               case CIPHERCERTIFICATEX509_RSASSAPSS_HASH_TYPE_SHA512 : RSAE=DIOSTREAMTLS_MSG_SIGNATURESCHEME_RSA_PSS_RSAE_SHA512; PSS=DIOSTREAMTLS_MSG_SIGNATURESCHEME_RSA_PSS_PSS_SHA512; break;
               default                                                : return false;
             }
-          if(!DIOSTREAMTLS13_HANDSHAKECLIENT_SignatureSchemeOffered(offered,RSAE) &&
-             !DIOSTREAMTLS13_HANDSHAKECLIENT_SignatureSchemeOffered(offered,PSS)) return false;
+          if(!DIOSTREAMTLS13_HANDSHAKECLIENT_SignatureSchemeOffered(offered, RSAE) &&
+             !DIOSTREAMTLS13_HANDSHAKECLIENT_SignatureSchemeOffered(offered, PSS)) return false;
         }
        else
         {
           XWORD scheme=DIOSTREAMTLS13_HANDSHAKECLIENT_CertificateSignatureScheme(certificate);
-          if(!scheme || !DIOSTREAMTLS13_HANDSHAKECLIENT_SignatureSchemeOffered(offered,scheme)) return false;
+          if(!scheme || !DIOSTREAMTLS13_HANDSHAKECLIENT_SignatureSchemeOffered(offered, scheme)) return false;
         }
     }
   return true;
@@ -639,6 +639,7 @@ DIOSTREAMTLS_ALPN_TYPE DIOSTREAMTLS13HANDSHAKECLIENT::GetApplicationProtocol()
   return applicationprotocol;
 }
 
+
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         XBUFFER* DIOSTREAMTLS13HANDSHAKECLIENT::GetApplicationProtocolRaw()
@@ -668,6 +669,7 @@ bool DIOSTREAMTLS13HANDSHAKECLIENT::IsSessionResumed()
   return resumptionaccepted;
 }
 
+
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         bool DIOSTREAMTLS13HANDSHAKECLIENT::IsEarlyDataOffered()
@@ -678,6 +680,8 @@ bool DIOSTREAMTLS13HANDSHAKECLIENT::IsSessionResumed()
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
 bool DIOSTREAMTLS13HANDSHAKECLIENT::IsEarlyDataOffered() { return earlydataoffered; }
+
+
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         bool DIOSTREAMTLS13HANDSHAKECLIENT::IsEarlyDataAccepted()
@@ -688,6 +692,8 @@ bool DIOSTREAMTLS13HANDSHAKECLIENT::IsEarlyDataOffered() { return earlydataoffer
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
 bool DIOSTREAMTLS13HANDSHAKECLIENT::IsEarlyDataAccepted() { return earlydataaccepted; }
+
+
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         XDWORD DIOSTREAMTLS13HANDSHAKECLIENT::GetMaximumEarlyDataSize()
@@ -698,6 +704,8 @@ bool DIOSTREAMTLS13HANDSHAKECLIENT::IsEarlyDataAccepted() { return earlydataacce
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
 XDWORD DIOSTREAMTLS13HANDSHAKECLIENT::GetMaximumEarlyDataSize() { return maximumearlydatasize; }
+
+
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         bool DIOSTREAMTLS13HANDSHAKECLIENT::EarlyData_Prepare(XDWORD size)
@@ -716,6 +724,7 @@ bool DIOSTREAMTLS13HANDSHAKECLIENT::EarlyData_Prepare(XDWORD size)
   return true;
 }
 
+
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         bool DIOSTREAMTLS13HANDSHAKECLIENT::EarlyData_Protect(XBYTE* data, XDWORD size, XBUFFER& records)
@@ -732,8 +741,10 @@ bool DIOSTREAMTLS13HANDSHAKECLIENT::EarlyData_Prepare(XDWORD size)
 bool DIOSTREAMTLS13HANDSHAKECLIENT::EarlyData_Protect(XBYTE* data, XDWORD size, XBUFFER& records)
 {
   if(!earlydataoffered || !maximumearlydatasize || size>maximumearlydatasize) return false;
-  return session && session->EarlyData_Protect(data,size,records);
+  return session && session->EarlyData_Protect(data, size, records);
 }
+
+
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         bool DIOSTREAMTLS13HANDSHAKECLIENT::EarlyData_Protect(XBUFFER& data, XBUFFER& records)
@@ -748,7 +759,7 @@ bool DIOSTREAMTLS13HANDSHAKECLIENT::EarlyData_Protect(XBYTE* data, XDWORD size, 
 * --------------------------------------------------------------------------------------------------------------------*/
 bool DIOSTREAMTLS13HANDSHAKECLIENT::EarlyData_Protect(XBUFFER& data, XBUFFER& records)
 {
-  return EarlyData_Protect(data.Get(),data.GetSize(),records);
+  return EarlyData_Protect(data.Get(), data.GetSize(), records);
 }
 
 
@@ -1443,8 +1454,7 @@ bool DIOSTREAMTLS13HANDSHAKECLIENT::Start(XBUFFER& clienthello)
 * @return     bool : true if the operation is successful; otherwise false.
 *
 * --------------------------------------------------------------------------------------------------------------------*/
-bool DIOSTREAMTLS13HANDSHAKECLIENT::HelloRetryRequest_Process(XBUFFER& helloretryrequest, XBUFFER& clienthello,
-                                                            XBUFFER& records)
+bool DIOSTREAMTLS13HANDSHAKECLIENT::HelloRetryRequest_Process(XBUFFER& helloretryrequest, XBUFFER& clienthello, XBUFFER& records)
 {
   DIOSTREAMTLS_MSG_FRAGMENT<DIOSTREAMTLS_MSG_HANDSHAKE_SERVERHELLO> hrr;
   DIOSTREAMTLS_MSG_FRAGMENT<DIOSTREAMTLS_MSG_HANDSHAKE_CLIENTHELLO> clienthellomessage;
@@ -1942,7 +1952,7 @@ bool DIOSTREAMTLS13HANDSHAKECLIENT::ClientFinished_Create(XBUFFER& clientfinishe
       XBUFFER endrecords;
       endofearly.SetMsgType(DIOSTREAMTLS_MSG_CONTENTTYPE_HANDSHAKE_END_OF_EARLY_DATA);
       endofearly.SetLength(0);
-      if(!endofearly.SetToBuffer(endbuffer,false) || !session->GetRecord()->Protect(DIOSTREAMTLS_MSG_CONTENTTYPE_HANDSHAKE,endbuffer,endrecords) ||
+      if(!endofearly.SetToBuffer(endbuffer, false) || !session->GetRecord()->Protect(DIOSTREAMTLS_MSG_CONTENTTYPE_HANDSHAKE, endbuffer, endrecords) ||
          !session->Transcript_Add(endbuffer) || !records.Add(endrecords)) return SetError();
       session->EarlyData_End(DIOSTREAMTLSKEYSCHEDULE_DIRECTION_LOCAL);
     }
@@ -1984,8 +1994,7 @@ bool DIOSTREAMTLS13HANDSHAKECLIENT::ClientFinished_Create(XBUFFER& clientfinishe
              (localcertificatechain->GetSize() >= 2) && localcertificatechain->Get(1) &&
              clientissuercertificate.Decode((*localcertificatechain->Get(1))))
             {
-              CIPHERCERTIFICATEX509REVOCATION_RESULT OCSPresult = CIPHERCERTIFICATEX509REVOCATION::ValidateOCSP(
-                                                        (*localOCSPresponse), clientleafcertificate, clientissuercertificate);
+              CIPHERCERTIFICATEX509REVOCATION_RESULT OCSPresult = CIPHERCERTIFICATEX509REVOCATION::ValidateOCSP((*localOCSPresponse), clientleafcertificate, clientissuercertificate);
 
               if(OCSPresult == CIPHERCERTIFICATEX509REVOCATION_RESULT_REVOKED) return SetError();
               sendOCSPresponse = (OCSPresult == CIPHERCERTIFICATEX509REVOCATION_RESULT_GOOD);
@@ -2153,10 +2162,7 @@ bool DIOSTREAMTLS13HANDSHAKECLIENT::NewSessionTicket_Process(XBUFFER& message)
   if(!session->GetKeySchedule()->ResumptionPSK_Calculate((*ticketmessage.GetBody()->GetTicketNonce()), PSK)) return false;
 
   XBUFFER* protocol = applicationprotocolnegotiated?&applicationprotocolraw:NULL;
-  bool status = config->SessionTicket_StoreRaw(expectedservername.Get(), (*ticketmessage.GetBody()->GetTicket()), PSK,
-                                             ticketmessage.GetBody()->GetTicketAgeAdd(),
-                                             ticketmessage.GetBody()->GetTicketLifetime(),
-                                             session->GetKeySchedule()->GetCipherSuite(), protocol, ticketmessage.GetBody()->GetMaximumEarlyDataSize());
+  bool status = config->SessionTicket_StoreRaw(expectedservername.Get(), (*ticketmessage.GetBody()->GetTicket()), PSK, ticketmessage.GetBody()->GetTicketAgeAdd(), ticketmessage.GetBody()->GetTicketLifetime(), session->GetKeySchedule()->GetCipherSuite(), protocol, ticketmessage.GetBody()->GetMaximumEarlyDataSize());
 
   if(!PSK.IsEmpty()) PSK.FillBuffer(0);
   PSK.SecureDelete();
@@ -2473,7 +2479,7 @@ bool DIOSTREAMTLS13HANDSHAKECLIENT::CertificateRequest_Process(XBUFFER& message)
               XDWORD size=((XDWORD)data->GetByte(offset)<<8)|data->GetByte(offset+1); offset+=2;
               if(!size || offset+size > data->GetSize()) return SetError();
               XBUFFER* authority=GEN_NEW XBUFFER();
-              if(!authority || !authority->Add(data->Get()+offset,size) || !requestedclientcertificateauthorities.Add(authority))
+              if(!authority || !authority->Add(data->Get()+offset, size) || !requestedclientcertificateauthorities.Add(authority))
                 { if(authority) GEN_DELETE authority; return SetError(); }
               offset+=size;
             }
@@ -2666,9 +2672,8 @@ bool DIOSTREAMTLS13HANDSHAKECLIENT::Certificate_Process(XBUFFER& message)
           return SetError();
         }
       XBUFFER OCSP;
-      if(!OCSP.Add(data->Get()+4,data->GetSize()-4)) return SetError();
-      CIPHERCERTIFICATEX509REVOCATION_RESULT result = CIPHERCERTIFICATEX509REVOCATION::ValidateOCSP(
-        OCSP,(*validatedchain->Get(0)),(*validatedchain->Get(1)));
+      if(!OCSP.Add(data->Get()+4, data->GetSize()-4)) return SetError();
+      CIPHERCERTIFICATEX509REVOCATION_RESULT result = CIPHERCERTIFICATEX509REVOCATION::ValidateOCSP(OCSP, (*validatedchain->Get(0)), (*validatedchain->Get(1)));
       if(result==CIPHERCERTIFICATEX509REVOCATION_RESULT_REVOKED ||
          (config && config->GetRevocationPolicy()!=DIOSTREAMTLS_REVOCATIONPOLICY_SOFT_FAIL &&
           result!=CIPHERCERTIFICATEX509REVOCATION_RESULT_GOOD))
@@ -2688,7 +2693,7 @@ bool DIOSTREAMTLS13HANDSHAKECLIENT::Certificate_Process(XBUFFER& message)
       if(chain && chain->GetSize()>=2 && chain->Get(0)->HasOCSPURL() &&
          config->GetOCSPDirectFetcher()((*chain->Get(0)->GetOCSPURL()),(*chain->Get(0)),(*chain->Get(1)),response,config->GetOCSPDirectContext()) &&
          response.GetSize() <= config->GetMemoryPolicy()->GetMaximumOCSPResponseSize())
-        result=CIPHERCERTIFICATEX509REVOCATION::ValidateOCSP(response,(*chain->Get(0)),(*chain->Get(1)));
+        result=CIPHERCERTIFICATEX509REVOCATION::ValidateOCSP(response, (*chain->Get(0)), (*chain->Get(1)));
       if(result==CIPHERCERTIFICATEX509REVOCATION_RESULT_REVOKED ||
          (config->GetRevocationPolicy()!=DIOSTREAMTLS_REVOCATIONPOLICY_SOFT_FAIL &&
           result!=CIPHERCERTIFICATEX509REVOCATION_RESULT_GOOD))
@@ -2711,7 +2716,7 @@ bool DIOSTREAMTLS13HANDSHAKECLIENT::Certificate_Process(XBUFFER& message)
             {
               XBUFFER* CRL=config->GetCertificateRevocationLists()->Get(c);
               if(!CRL || CRL->GetSize() > config->GetMemoryPolicy()->GetMaximumCRLSize()) continue;
-              CIPHERCERTIFICATEX509REVOCATION_RESULT result=CIPHERCERTIFICATEX509REVOCATION::ValidateCRL((*CRL),(*chain->Get(certindex)),(*chain->Get(certindex+1)));
+              CIPHERCERTIFICATEX509REVOCATION_RESULT result=CIPHERCERTIFICATEX509REVOCATION::ValidateCRL((*CRL), (*chain->Get(certindex)), (*chain->Get(certindex+1)));
               if(result==CIPHERCERTIFICATEX509REVOCATION_RESULT_REVOKED)
                 { certificatevalidationerror=CIPHERCERTIFICATEX509VALIDATOR_ERROR_REVOKED; SetAuthenticationError(DIOSTREAMTLS13HANDSHAKECLIENT_AUTHENTICATIONERROR_CERTIFICATE); return SetError(); }
               if(result==CIPHERCERTIFICATEX509REVOCATION_RESULT_GOOD) valid=true;
@@ -3065,6 +3070,7 @@ bool DIOSTREAMTLS13HANDSHAKECLIENT::ApplicationProtocol_IsOffered(DIOSTREAMTLS_A
 
   return false;
 }
+
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 

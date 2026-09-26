@@ -302,7 +302,7 @@ SOCKET DIOWINDOWSSTREAMTCPIP::Accept(SOCKET handlesocket, void* addr, void* addr
   if(handlesocket==INVALID_SOCKET) return INVALID_SOCKET;
 
   FD_ZERO(&fds);
-  FD_SET((unsigned int)handlesocket,&fds);
+  FD_SET((unsigned int)handlesocket, &fds);
 
   time_out.tv_sec  = 0;
   time_out.tv_usec = usec;
@@ -310,7 +310,7 @@ SOCKET DIOWINDOWSSTREAMTCPIP::Accept(SOCKET handlesocket, void* addr, void* addr
   status = (SOCKET)select((int)(handlesocket)+1, &fds, NULL, NULL, &time_out);
   if(status>0)
     {
-      status = accept(handlesocket,(SOCKADDR*)addr, (int*)addrlen);
+      status = accept(handlesocket, (SOCKADDR*)addr, (int*)addrlen);
     }
    else 
     {
@@ -364,9 +364,9 @@ int DIOWINDOWSSTREAMTCPIP::IsReadyConnect(SOCKET handlesocket)
       return -1;
     }
 
-  int status1 = FD_ISSET(handlesocket,&fdr) ? 1 : 0;
-  int status2 = FD_ISSET(handlesocket,&fdw) ? 1 : 0;
-  int status3 = FD_ISSET(handlesocket,&fds) ? 1 : 0;
+  int status1 = FD_ISSET(handlesocket, &fdr) ? 1 : 0;
+  int status2 = FD_ISSET(handlesocket, &fdw) ? 1 : 0;
+  int status3 = FD_ISSET(handlesocket, &fds) ? 1 : 0;
 
   if(config->IsServer())
     {
@@ -382,7 +382,7 @@ int DIOWINDOWSSTREAMTCPIP::IsReadyConnect(SOCKET handlesocket)
           int optval;
           int optlen = sizeof(int);
 
-          if(getsockopt(handlesocket,SOL_SOCKET, SO_ERROR, (char*)&optval, &optlen) < 0) 
+          if(getsockopt(handlesocket, SOL_SOCKET, SO_ERROR, (char*)&optval, &optlen) < 0) 
             {
               SetLastDIOError(DIOSTREAMERROR_TCPCONNECTION);
               return -1;
@@ -424,8 +424,8 @@ bool DIOWINDOWSSTREAMTCPIP::GetHandleServer()
   SOCKADDR_IN  rem_addr;
   XSTRING      IPstring;
 
-  memset(&loc_addr,0,sizeof(SOCKADDR_IN));
-  memset(&rem_addr,0,sizeof(SOCKADDR_IN));
+  memset(&loc_addr, 0, sizeof(SOCKADDR_IN));
+  memset(&rem_addr, 0, sizeof(SOCKADDR_IN));
 
   if(handleserver == INVALID_SOCKET)
     {
@@ -584,7 +584,7 @@ bool DIOWINDOWSSTREAMTCPIP::GetHandleClient()
 
       config->GetLocalIP()->GetXString(IPstring);
 
-      memset(&loc_addr,0,sizeof(SOCKADDR_IN));
+      memset(&loc_addr, 0, sizeof(SOCKADDR_IN));
 
       loc_addr.sin_family      = AF_INET;
 
@@ -612,7 +612,7 @@ bool DIOWINDOWSSTREAMTCPIP::GetHandleClient()
   DIOIP       remoteIP;
   XSTRING     IPstring;
 
-  memset(&rem_addr,0,sizeof(SOCKADDR_IN));
+  memset(&rem_addr, 0, sizeof(SOCKADDR_IN));
 
   if(!config->GetConnectionURL()->ResolveURL(remoteIP))
     {
@@ -758,7 +758,7 @@ void DIOWINDOWSSTREAMTCPIP::ThreadConnection(void* data)
 
                                                                   memset(buffer, 0, DIOSTREAM_MAXBUFFER);
 
-                                                                  XDWORD size = recv(diostream->handlesocket,(char*)buffer, DIOSTREAM_MAXBUFFER, 0);
+                                                                  XDWORD size = recv(diostream->handlesocket, (char*)buffer, DIOSTREAM_MAXBUFFER, 0);
                                                                   if(size==SOCKET_ERROR)
                                                                     {
                                                                       diostream->SetEvent(DIOWINDOWSTCPIPFSMEVENT_DISCONNECTING);
@@ -767,7 +767,7 @@ void DIOWINDOWSSTREAMTCPIP::ThreadConnection(void* data)
 
                                                                   if(size)
                                                                     {
-                                                                      diostream->inbuffer->Add(buffer,size);
+                                                                      diostream->inbuffer->Add(buffer, size);
                                                                     }
                                                                    else
                                                                     {
@@ -786,7 +786,7 @@ void DIOWINDOWSSTREAMTCPIP::ThreadConnection(void* data)
                                                                   if(esize)
                                                                     {
                                                                       diostream->outbuffer->SetBlocked(true);
-                                                                      XDWORD size = send(diostream->handlesocket,(char*)diostream->outbuffer->Get(), esize,0);
+                                                                      XDWORD size = send(diostream->handlesocket, (char*)diostream->outbuffer->Get(), esize, 0);
                                                                       diostream->outbuffer->SetBlocked(false);
                                                                       if(size==SOCKET_ERROR)
                                                                         {
@@ -796,7 +796,7 @@ void DIOWINDOWSSTREAMTCPIP::ThreadConnection(void* data)
 
                                                                       if(size)
                                                                         {
-                                                                          diostream->outbuffer->Extract(NULL, 0 ,size);
+                                                                          diostream->outbuffer->Extract(NULL, 0, size);
                                                                         }
                                                                     }
                                                                 }

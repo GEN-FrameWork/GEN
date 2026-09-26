@@ -401,19 +401,13 @@
 #define DIOI2CMPU9150_DMP_MEMORY_BANK_SIZE            256
 #define DIOI2CMPU9150_DMP_MEMORY_CHUNK_SIZE           16
 
-
 #define DIOI2CMPU9150_DEFAULTTIMEOUT                  5
 
-
-
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
-
 
 class XTIMER;
 class DIOSTREAMI2CCONFIG;
 class DIOSTREAMI2C;
-
 
 class DIOI2C9AXISTRACKINGMPU9150 : public DIODEVICEI2C
 {
@@ -423,7 +417,6 @@ class DIOI2C9AXISTRACKINGMPU9150 : public DIODEVICEI2C
     virtual                  ~DIOI2C9AXISTRACKINGMPU9150            ();
 
     bool                      End                                   ();
-
 
   private:
 

@@ -45,10 +45,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#if defined(WINDOWS)
-#include <windows.h>
-#include <wincrypt.h>
-#endif
 #if defined(LINUX) || defined(ANDROID)
 #include <dirent.h>
 #include <sys/stat.h>
@@ -367,8 +363,7 @@ static bool CIPHERTRUSTPROVIDERX509_LoadFile(CIPHERTRUSTPROVIDERX509* provider, 
 * @return     bool : true if the operation is successful; otherwise false.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-static bool CIPHERTRUSTPROVIDERX509_LoadDirectory(CIPHERTRUSTPROVIDERX509* provider, const char* directorypath,
-                                                   bool remove = false)
+static bool CIPHERTRUSTPROVIDERX509_LoadDirectory(CIPHERTRUSTPROVIDERX509* provider, const char* directorypath, bool remove = false)
 {
   if(!provider || !directorypath || !directorypath[0]) return false;
   DIR* directory = opendir(directorypath);
@@ -428,35 +423,6 @@ static bool CIPHERTRUSTPROVIDERX509_LoadDirectoryList(CIPHERTRUSTPROVIDERX509* p
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         bool CIPHERTRUSTPROVIDERX509WINDOWS::Load()
-* @brief      Load
-* @ingroup    CIPHER
-* 
-* @return     bool : true if the operation is successful; otherwise false.
-* 
-* --------------------------------------------------------------------------------------------------------------------*/
-bool CIPHERTRUSTPROVIDERX509WINDOWS::Load()
-{
-  Roots_Delete();
-#if defined(WINDOWS)
-  HCERTSTORE store = CertOpenSystemStoreW(0, L"ROOT");
-  if(!store) return false;
-  PCCERT_CONTEXT certificate = NULL;
-  bool status = true;
-  while((certificate = CertEnumCertificatesInStore(store, certificate)) != NULL)
-    {
-      XBUFFER DER;
-      if(!DER.Add(certificate->pbCertEncoded, certificate->cbCertEncoded) || !Root_Add(DER)) { status = false; break; }
-    }
-  CertCloseStore(store, 0);
-  return status && !GetRoots()->IsEmpty();
-#else
-  return false;
-#endif
-}
-
-/**-------------------------------------------------------------------------------------------------------------------
-* 
 * @fn         bool CIPHERTRUSTPROVIDERX509LINUX::Load()
 * @brief      Load
 * @ingroup    CIPHER
@@ -488,6 +454,7 @@ bool CIPHERTRUSTPROVIDERX509LINUX::Load()
 #endif
   return false;
 }
+
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
@@ -536,7 +503,6 @@ bool CIPHERTRUSTPROVIDERX509ANDROID::Load()
   return false;
 #endif
 }
-
 
 
 /**-------------------------------------------------------------------------------------------------------------------
@@ -690,18 +656,18 @@ bool CIPHERTRUSTEDROOTCERTIFICATESX509::GenerateEmbeddedHeadere(XPATH* originpat
   
                       if(!c)
                         {
-                          line.AddFormat(__L("XCHAR*  trustedrootcertificates[] =              { __L(\"%s\")  ,"), originxfiletxt->GetLine(c)->Get()); 
+                          line.AddFormat(__L("XCHAR* trustedrootcertificates[] = { __L(\"%s\") ,"), originxfiletxt->GetLine(c)->Get()); 
                         }
                        else
                         {
-                          line.AddFormat(__L("                                                   __L(\"%s\")  ,"), originxfiletxt->GetLine(c)->Get());  
+                          line.AddFormat(__L(" __L(\"%s\") ,"), originxfiletxt->GetLine(c)->Get());  
                         }
 
                       targetxfiletxt->AddLine(line);                                                                            
                     } 
 
                   line.Empty();
-                  line.AddFormat(__L("                                                  };"));  
+                  line.AddFormat(__L(" };"));  
                   targetxfiletxt->AddLine(line);                                                                            
 
                   status = targetxfiletxt->WriteAllFile();

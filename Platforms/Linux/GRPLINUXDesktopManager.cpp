@@ -508,10 +508,6 @@ void GRPLINUXDESKTOPMONITORS::Clean()
 }
 
 
-
-
-
-
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         GRPLINUXDESKTOPMANAGER::GRPLINUXDESKTOPMANAGER()

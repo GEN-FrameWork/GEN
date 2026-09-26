@@ -34,19 +34,13 @@
 
 #include "DIODevice.h"
 
-
-
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
-
-
-
 
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
 
 class XTIMER;
 class DIOSTREAMI2CCONFIG;
 class DIOSTREAMI2C;
-
 
 class DIODEVICEI2C : public DIODEVICE
 {

@@ -206,10 +206,6 @@ void XFEEDBACK::Clean()
 }
 
 
-
-
-
-
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         XFEEDBACK_CONTROL::XFEEDBACK_CONTROL()
@@ -223,10 +219,10 @@ XFEEDBACK_CONTROL::XFEEDBACK_CONTROL()
 
   isactive = true;
 
-  AddFeedbakText(XFEEDBACK_CODE_UNKNOWN                         , __L("Unknown"));
-  AddFeedbakText(XFEEDBACK_CODE_INVALIDPARAMFUNCTION            , __L("The %d parameter [%s] function [%s] call was invalid."));
-  AddFeedbakText(XFEEDBACK_CODE_INVALIDMEMORYALLOCATION         , __L("Invalid memory allocation in variable [%s] of function [%s]."));
-  AddFeedbakText(XFEEDBACK_CODE_ERRORINFUNCTION                 , __L("Error in function [%s]: %s"));
+  AddFeedbakText(XFEEDBACK_CODE_UNKNOWN, __L("Unknown"));
+  AddFeedbakText(XFEEDBACK_CODE_INVALIDPARAMFUNCTION, __L("The %d parameter [%s] function [%s] call was invalid."));
+  AddFeedbakText(XFEEDBACK_CODE_INVALIDMEMORYALLOCATION, __L("Invalid memory allocation in variable [%s] of function [%s]."));
+  AddFeedbakText(XFEEDBACK_CODE_ERRORINFUNCTION, __L("Error in function [%s]: %s"));
 }
 
 
@@ -286,7 +282,7 @@ bool XFEEDBACK_CONTROL::Activate(bool isactive)
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         bool XFEEDBACK_CONTROL::AddFeedbak(char const* namefile, XFEEDBACK_CODE code,int line, ...)
+* @fn         bool XFEEDBACK_CONTROL::AddFeedbak(char const* namefile, XFEEDBACK_CODE code, int line, ...)
 * @brief      add feedbak
 * @ingroup    XUTILS
 * 
@@ -298,7 +294,7 @@ bool XFEEDBACK_CONTROL::Activate(bool isactive)
 * @return     bool : true if the operation is successful; otherwise false.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-bool XFEEDBACK_CONTROL::AddFeedbak(char const* namefile, XFEEDBACK_CODE code,int line,  ...)
+bool XFEEDBACK_CONTROL::AddFeedbak(char const* namefile, XFEEDBACK_CODE code, int line, ...)
 {
   if(!isactive)
     {
@@ -366,10 +362,7 @@ bool XFEEDBACK_CONTROL::AddFeedbak(char const* namefile, XFEEDBACK_CODE code,int
 
   
 
-             GEN_XLOG.AddEntry(XLOGLEVEL_WARNING, XFEEDBACK_CONTROL_LOG_SECTIONID,  false , __L("%05d line %d, module %s -> %s"), feedbacks.GetSize() + 1
-                                                                                          , feedback->GetModuleLine()
-                                                                                          , feedback->GetModuleName()->Get()
-                                                                                          , feedback->GetText()->Get());       
+             GEN_XLOG.AddEntry(XLOGLEVEL_WARNING, XFEEDBACK_CONTROL_LOG_SECTIONID, false, __L("%05d line %d, module %s -> %s"), feedbacks.GetSize() + 1, feedback->GetModuleLine(), feedback->GetModuleName()->Get(), feedback->GetText()->Get());       
 
 
               
@@ -427,10 +420,7 @@ bool XFEEDBACK_CONTROL::DisplayAll()
 
           if(feedback)
             {              
-              XTRACE_PRINTCOLOR(XTRACE_COLOR_PURPLE, __L("%08d %05d %-72s %s")  , c+1
-                                                                                , feedback->GetModuleLine()
-                                                                                , feedback->GetModuleName()->Get()
-                                                                                , feedback->GetText()->Get());                                                                               
+              XTRACE_PRINTCOLOR(XTRACE_COLOR_PURPLE, __L("%08d %05d %-72s %s"), c+1, feedback->GetModuleLine(), feedback->GetModuleName()->Get(), feedback->GetText()->Get());                                                                               
             }
         }
 
@@ -442,6 +432,7 @@ bool XFEEDBACK_CONTROL::DisplayAll()
   return true;
   
 }
+
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 

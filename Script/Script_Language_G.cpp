@@ -142,7 +142,7 @@ SCRIPT_LNG_G_TOKENIREPS SCRIPT_LNG_G_COMMAND::GetToken()
 * @return     bool : true if the operation is successful; otherwise false.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-bool SCRIPT_LNG_G_COMMAND::Set(XCHAR* command, SCRIPT_LNG_G_TOKENIREPS  token)
+bool SCRIPT_LNG_G_COMMAND::Set(XCHAR* command, SCRIPT_LNG_G_TOKENIREPS token)
 {
   if(!command) return false;
 
@@ -155,7 +155,7 @@ bool SCRIPT_LNG_G_COMMAND::Set(XCHAR* command, SCRIPT_LNG_G_TOKENIREPS  token)
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         bool SCRIPT_LNG_G_COMMAND::Set(XSTRING& command,SCRIPT_LNG_G_TOKENIREPS token)
+* @fn         bool SCRIPT_LNG_G_COMMAND::Set(XSTRING& command, SCRIPT_LNG_G_TOKENIREPS token)
 * @brief      Set value
 * @ingroup    SCRIPT
 * 
@@ -165,9 +165,9 @@ bool SCRIPT_LNG_G_COMMAND::Set(XCHAR* command, SCRIPT_LNG_G_TOKENIREPS  token)
 * @return     bool : true if the operation is successful; otherwise false.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-bool SCRIPT_LNG_G_COMMAND::Set(XSTRING& command,SCRIPT_LNG_G_TOKENIREPS token)
+bool SCRIPT_LNG_G_COMMAND::Set(XSTRING& command, SCRIPT_LNG_G_TOKENIREPS token)
 {
-  return Set(command.Get(),token);
+  return Set(command.Get(), token);
 }
 
 
@@ -286,7 +286,6 @@ float SCRIPT_LNG_G_VAR::GetValueFloat()
 
   return (float)value.integer;
 }
-
 
 
 /**-------------------------------------------------------------------------------------------------------------------
@@ -994,19 +993,19 @@ SCRIPT_LNG_G::SCRIPT_LNG_G()
 
   DeleteVarsExec();
 
-  AddCommand(__L("if")      , SCRIPT_LNG_G_TOKENIREPS_IF);
-  AddCommand(__L("else")    , SCRIPT_LNG_G_TOKENIREPS_ELSE);
-  AddCommand(__L("for")     , SCRIPT_LNG_G_TOKENIREPS_FOR);
-  AddCommand(__L("do")      , SCRIPT_LNG_G_TOKENIREPS_DO);
-  AddCommand(__L("while")   , SCRIPT_LNG_G_TOKENIREPS_WHILE);
-  AddCommand(__L("char")    , SCRIPT_LNG_G_TOKENIREPS_CHAR);
-  AddCommand(__L("int")     , SCRIPT_LNG_G_TOKENIREPS_INT);
-  AddCommand(__L("float")   , SCRIPT_LNG_G_TOKENIREPS_FLOAT);
-  AddCommand(__L("string")  , SCRIPT_LNG_G_TOKENIREPS_STRING);
-  AddCommand(__L("return")  , SCRIPT_LNG_G_TOKENIREPS_RETURN);
-  AddCommand(__L("switch")  , SCRIPT_LNG_G_TOKENIREPS_SWITCH);
-  AddCommand(__L("break")   , SCRIPT_LNG_G_TOKENIREPS_BREAK);
-  AddCommand(__L("case")    , SCRIPT_LNG_G_TOKENIREPS_CASE);
+  AddCommand(__L("if"), SCRIPT_LNG_G_TOKENIREPS_IF);
+  AddCommand(__L("else"), SCRIPT_LNG_G_TOKENIREPS_ELSE);
+  AddCommand(__L("for"), SCRIPT_LNG_G_TOKENIREPS_FOR);
+  AddCommand(__L("do"), SCRIPT_LNG_G_TOKENIREPS_DO);
+  AddCommand(__L("while"), SCRIPT_LNG_G_TOKENIREPS_WHILE);
+  AddCommand(__L("char"), SCRIPT_LNG_G_TOKENIREPS_CHAR);
+  AddCommand(__L("int"), SCRIPT_LNG_G_TOKENIREPS_INT);
+  AddCommand(__L("float"), SCRIPT_LNG_G_TOKENIREPS_FLOAT);
+  AddCommand(__L("string"), SCRIPT_LNG_G_TOKENIREPS_STRING);
+  AddCommand(__L("return"), SCRIPT_LNG_G_TOKENIREPS_RETURN);
+  AddCommand(__L("switch"), SCRIPT_LNG_G_TOKENIREPS_SWITCH);
+  AddCommand(__L("break"), SCRIPT_LNG_G_TOKENIREPS_BREAK);
+  AddCommand(__L("case"), SCRIPT_LNG_G_TOKENIREPS_CASE);
   AddCommand(__L("")        , SCRIPT_LNG_G_TOKENIREPS_END);
 
   AddInternalLibraries();
@@ -1089,7 +1088,7 @@ int SCRIPT_LNG_G::Run(int* returnval)
       if(ipprg)
         {
           ipprg--;
-          XSTRING::Set(currenttoken,__L("main"));
+          XSTRING::Set(currenttoken, __L("main"));
 
           Call();
 
@@ -1113,7 +1112,7 @@ int SCRIPT_LNG_G::Run(int* returnval)
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         bool SCRIPT_LNG_G::AddCommand(XCHAR* command,SCRIPT_LNG_G_TOKENIREPS token)
+* @fn         bool SCRIPT_LNG_G::AddCommand(XCHAR* command, SCRIPT_LNG_G_TOKENIREPS token)
 * @brief      Add command
 * @ingroup    SCRIPT
 * 
@@ -1123,7 +1122,7 @@ int SCRIPT_LNG_G::Run(int* returnval)
 * @return     bool : true if the operation is successful; otherwise false.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-bool SCRIPT_LNG_G::AddCommand(XCHAR* command,SCRIPT_LNG_G_TOKENIREPS token)
+bool SCRIPT_LNG_G::AddCommand(XCHAR* command, SCRIPT_LNG_G_TOKENIREPS token)
 {
   SCRIPT_LNG_G_COMMAND* _command = GEN_NEW SCRIPT_LNG_G_COMMAND();
   if(!_command) return false;
@@ -1345,7 +1344,7 @@ bool SCRIPT_LNG_G::HaveError(int errorcode)
                                   __L("Type mismatch")
                                 };
 
-      SCRIPT_XEVENT xevent(this,(errorcode==SCRIPT_LNG_G_ERRORCODE_USERBREAK)?SCRIPT_XEVENT_TYPE_BREAK:SCRIPT_XEVENT_TYPE_ERROR);
+      SCRIPT_XEVENT xevent(this, (errorcode==SCRIPT_LNG_G_ERRORCODE_USERBREAK)?SCRIPT_XEVENT_TYPE_BREAK:SCRIPT_XEVENT_TYPE_ERROR);
 
 
       XDWORD sizecharnow = 0;
@@ -1678,7 +1677,7 @@ void SCRIPT_LNG_G::EvalExp0(SCRIPT_LNG_G_VAR& value)
                  {
                    PutBackToken();
 
-                   XSTRING::Set(currenttoken,tempttoken.Get());
+                   XSTRING::Set(currenttoken, tempttoken.Get());
                    tokentype    = temptokentype;
                  }
              }
@@ -1703,8 +1702,7 @@ void SCRIPT_LNG_G::EvalExp1(SCRIPT_LNG_G_VAR& value)
   XCHAR   operation;
   XSTRING relops;
 
-  relops.Format(__L("%c%c%c%c%c%c"), SCRIPT_LNG_G_DOUBLEOPERATOR_LT, SCRIPT_LNG_G_DOUBLEOPERATOR_LE, SCRIPT_LNG_G_DOUBLEOPERATOR_GT
-                                   , SCRIPT_LNG_G_DOUBLEOPERATOR_GE, SCRIPT_LNG_G_DOUBLEOPERATOR_EQ, SCRIPT_LNG_G_DOUBLEOPERATOR_NE);
+  relops.Format(__L("%c%c%c%c%c%c"), SCRIPT_LNG_G_DOUBLEOPERATOR_LT, SCRIPT_LNG_G_DOUBLEOPERATOR_LE, SCRIPT_LNG_G_DOUBLEOPERATOR_GT, SCRIPT_LNG_G_DOUBLEOPERATOR_GE, SCRIPT_LNG_G_DOUBLEOPERATOR_EQ, SCRIPT_LNG_G_DOUBLEOPERATOR_NE);
   EvalExp2(value);
 
   operation = currenttoken[0];
@@ -2015,7 +2013,7 @@ void SCRIPT_LNG_G::EvalExp4(SCRIPT_LNG_G_VAR& value)
                   if(temptoken == SCRIPT_LNG_G_DOUBLEOPERATOR_DEC) var->SetValueInteger(var->GetValueInteger()-1);
                 }
 
-              AssignVariable(currenttoken,(*var));
+              AssignVariable(currenttoken, (*var));
             }
         }
     }
@@ -2127,14 +2125,14 @@ void SCRIPT_LNG_G::Atom(SCRIPT_LNG_G_VAR& value)
                                                         {
                                                           XCHAR tempcurrentfunc[_MAXSTR];
 
-                                                          XSTRING::Set(tempcurrentfunc,currentfunction);
+                                                          XSTRING::Set(tempcurrentfunc, currentfunction);
 
                                                           Call();
 
                                                           value.Set(&returnvalue);
                                                           value.SetIsReturnValue(true);
 
-                                                          XSTRING::Set(currentfunction,tempcurrentfunc);
+                                                          XSTRING::Set(currentfunction, tempcurrentfunc);
 
                                                           returnvalue.SetType(SCRIPT_LNG_G_TOKENIREPS_UNDEFTOK);
                                                           returnvalue.SetValueInteger(0);
@@ -2150,7 +2148,7 @@ void SCRIPT_LNG_G::Atom(SCRIPT_LNG_G_VAR& value)
                                                             {
                                                               value.Set(var);
 
-                                                              XSTRING::Set(tempcurrenttoken,currenttoken);
+                                                              XSTRING::Set(tempcurrenttoken, currenttoken);
 
                                                               GetToken();
 
@@ -3962,7 +3960,6 @@ void SCRIPT_LNG_G::Exec_FOR()
 }
 
 
-
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         bool SCRIPT_LNG_G::Interpret()
@@ -4097,7 +4094,7 @@ void SCRIPT_LNG_G::Call()
     }
   else
     {
-      XSTRING::Set(currentfunction,currenttoken);
+      XSTRING::Set(currentfunction, currenttoken);
 
       localvarstacksize = localvarsstack.GetSize();
 

@@ -221,7 +221,7 @@ XBUFFER* DIOSTREAMUDPDATAGRAM::GetData()
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         bool DIOSTREAMUDPDATAGRAM::SetData(XBYTE* data,XDWORD size)
+* @fn         bool DIOSTREAMUDPDATAGRAM::SetData(XBYTE* data, XDWORD size)
 * @brief      Set data
 * @ingroup    DATAIO
 * 
@@ -231,12 +231,12 @@ XBUFFER* DIOSTREAMUDPDATAGRAM::GetData()
 * @return     bool : true if the operation is successful; otherwise false.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-bool DIOSTREAMUDPDATAGRAM::SetData(XBYTE* data,XDWORD size)
+bool DIOSTREAMUDPDATAGRAM::SetData(XBYTE* data, XDWORD size)
 {
   if(!this->data) return false;
 
   this->data->Delete();
-  this->data->Add(data,size);
+  this->data->Add(data, size);
 
   return true;
 }
@@ -422,7 +422,7 @@ bool DIOSTREAMUDP::WriteDatagram(XSTRING& address, XWORD port, XBYTE* buffer, XD
 {
   if(address.IsEmpty())                                 return false;
   if(!AddDatagram(true, address , port, buffer, size))  return false;
-  if(!outbuffer->Add(buffer,size))                      return false;
+  if(!outbuffer->Add(buffer, size))                      return false;
 
   return true;
 }
@@ -764,7 +764,7 @@ bool DIOSTREAMUDP::AddDatagram(bool istosend, XCHAR* address, XWORD port, XBYTE*
       datagram->SetIsToSend(istosend);
       datagram->SetAddress(address);
       datagram->SetPorts(port);
-      datagram->SetData(data,size);
+      datagram->SetData(data, size);
 
       datagrams.Add(datagram);
     }
@@ -777,7 +777,7 @@ bool DIOSTREAMUDP::AddDatagram(bool istosend, XCHAR* address, XWORD port, XBYTE*
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         bool DIOSTREAMUDP::AddDatagram(bool istosend, XSTRING& address, XWORD port, XBYTE* data,XDWORD size)
+* @fn         bool DIOSTREAMUDP::AddDatagram(bool istosend, XSTRING& address, XWORD port, XBYTE* data, XDWORD size)
 * @brief      Add datagram
 * @ingroup    DATAIO
 * 
@@ -790,7 +790,7 @@ bool DIOSTREAMUDP::AddDatagram(bool istosend, XCHAR* address, XWORD port, XBYTE*
 * @return     bool : true if the operation is successful; otherwise false.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-bool DIOSTREAMUDP::AddDatagram(bool istosend, XSTRING& address, XWORD port, XBYTE* data,XDWORD size)
+bool DIOSTREAMUDP::AddDatagram(bool istosend, XSTRING& address, XWORD port, XBYTE* data, XDWORD size)
 {
   return AddDatagram(istosend, address.Get(), port, data, size);
 }

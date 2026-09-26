@@ -111,8 +111,7 @@ DIOSTREAMTLSMEMORYPOLICY::DIOSTREAMTLSMEMORYPOLICY()
 * @return     bool : true if the operation is successful; otherwise false.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-bool DIOSTREAMTLSMEMORYPOLICY::SetConnectionBufferLimits(XDWORD recordinput, XDWORD handshakeinput,
-                                                          XDWORD transcript, XDWORD applicationinput)
+bool DIOSTREAMTLSMEMORYPOLICY::SetConnectionBufferLimits(XDWORD recordinput, XDWORD handshakeinput, XDWORD transcript, XDWORD applicationinput)
 {
   if((recordinput < DIOSTREAMTLS_MEMORY_MINIMUM_RECORD_INPUT) ||
      (recordinput > DIOSTREAMTLS_MEMORY_MAXIMUM_BUFFER) ||
@@ -192,8 +191,7 @@ bool DIOSTREAMTLSMEMORYPOLICY::SetRevocationLimits(XDWORD OCSPsize, XDWORD CRLsi
 * @return     bool : true if the operation is successful; otherwise false.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-bool DIOSTREAMTLSMEMORYPOLICY::SetTrustStoreLimits(XDWORD maximumroots, XDWORD maximumcertificatesize,
-                                                    XDWORD maximumtotalsize)
+bool DIOSTREAMTLSMEMORYPOLICY::SetTrustStoreLimits(XDWORD maximumroots, XDWORD maximumcertificatesize, XDWORD maximumtotalsize)
 {
   if(!maximumroots || (maximumroots > 8192) || !maximumcertificatesize ||
      (maximumcertificatesize > (4*1024*1024)) ||
@@ -234,6 +232,8 @@ bool DIOSTREAMTLSMEMORYPOLICY::SetMaximumSessionTickets(XDWORD maximumtickets)
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
 XDWORD DIOSTREAMTLSMEMORYPOLICY::GetMaximumRecordInputSize()      { return maximumrecordinputsize; }
+
+
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         XDWORD DIOSTREAMTLSMEMORYPOLICY::GetMaximumHandshakeInputSize()
@@ -244,6 +244,8 @@ XDWORD DIOSTREAMTLSMEMORYPOLICY::GetMaximumRecordInputSize()      { return maxim
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
 XDWORD DIOSTREAMTLSMEMORYPOLICY::GetMaximumHandshakeInputSize()   { return maximumhandshakeinputsize; }
+
+
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         XDWORD DIOSTREAMTLSMEMORYPOLICY::GetMaximumTranscriptSize()
@@ -254,6 +256,8 @@ XDWORD DIOSTREAMTLSMEMORYPOLICY::GetMaximumHandshakeInputSize()   { return maxim
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
 XDWORD DIOSTREAMTLSMEMORYPOLICY::GetMaximumTranscriptSize()       { return maximumtranscriptsize; }
+
+
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         XDWORD DIOSTREAMTLSMEMORYPOLICY::GetMaximumApplicationInputSize()
@@ -264,6 +268,8 @@ XDWORD DIOSTREAMTLSMEMORYPOLICY::GetMaximumTranscriptSize()       { return maxim
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
 XDWORD DIOSTREAMTLSMEMORYPOLICY::GetMaximumApplicationInputSize() { return maximumapplicationinputsize; }
+
+
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         XDWORD DIOSTREAMTLSMEMORYPOLICY::GetMaximumAIAHeaderSize()
@@ -274,6 +280,8 @@ XDWORD DIOSTREAMTLSMEMORYPOLICY::GetMaximumApplicationInputSize() { return maxim
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
 XDWORD DIOSTREAMTLSMEMORYPOLICY::GetMaximumAIAHeaderSize()        { return maximumAIAheadersize; }
+
+
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         XDWORD DIOSTREAMTLSMEMORYPOLICY::GetMaximumAIABodySize()
@@ -284,6 +292,8 @@ XDWORD DIOSTREAMTLSMEMORYPOLICY::GetMaximumAIAHeaderSize()        { return maxim
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
 XDWORD DIOSTREAMTLSMEMORYPOLICY::GetMaximumAIABodySize()          { return maximumAIAbodysize; }
+
+
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         XDWORD DIOSTREAMTLSMEMORYPOLICY::GetMaximumAIAFetches()
@@ -294,6 +304,8 @@ XDWORD DIOSTREAMTLSMEMORYPOLICY::GetMaximumAIABodySize()          { return maxim
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
 XDWORD DIOSTREAMTLSMEMORYPOLICY::GetMaximumAIAFetches()           { return maximumAIAfetches; }
+
+
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         XDWORD DIOSTREAMTLSMEMORYPOLICY::GetMaximumOCSPResponseSize()
@@ -304,6 +316,8 @@ XDWORD DIOSTREAMTLSMEMORYPOLICY::GetMaximumAIAFetches()           { return maxim
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
 XDWORD DIOSTREAMTLSMEMORYPOLICY::GetMaximumOCSPResponseSize()     { return maximumOCSPresponsesize; }
+
+
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         XDWORD DIOSTREAMTLSMEMORYPOLICY::GetMaximumCRLSize()
@@ -314,6 +328,8 @@ XDWORD DIOSTREAMTLSMEMORYPOLICY::GetMaximumOCSPResponseSize()     { return maxim
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
 XDWORD DIOSTREAMTLSMEMORYPOLICY::GetMaximumCRLSize()              { return maximumCRLsize; }
+
+
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         XDWORD DIOSTREAMTLSMEMORYPOLICY::GetMaximumCRLs()
@@ -324,6 +340,8 @@ XDWORD DIOSTREAMTLSMEMORYPOLICY::GetMaximumCRLSize()              { return maxim
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
 XDWORD DIOSTREAMTLSMEMORYPOLICY::GetMaximumCRLs()                 { return maximumCRLs; }
+
+
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         XDWORD DIOSTREAMTLSMEMORYPOLICY::GetMaximumSessionTickets()
@@ -334,6 +352,8 @@ XDWORD DIOSTREAMTLSMEMORYPOLICY::GetMaximumCRLs()                 { return maxim
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
 XDWORD DIOSTREAMTLSMEMORYPOLICY::GetMaximumSessionTickets()       { return maximumsessiontickets; }
+
+
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         XDWORD DIOSTREAMTLSMEMORYPOLICY::GetMaximumTrustRoots()
@@ -344,6 +364,8 @@ XDWORD DIOSTREAMTLSMEMORYPOLICY::GetMaximumSessionTickets()       { return maxim
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
 XDWORD DIOSTREAMTLSMEMORYPOLICY::GetMaximumTrustRoots()           { return maximumtrustroots; }
+
+
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         XDWORD DIOSTREAMTLSMEMORYPOLICY::GetMaximumTrustCertificateSize()
@@ -354,6 +376,8 @@ XDWORD DIOSTREAMTLSMEMORYPOLICY::GetMaximumTrustRoots()           { return maxim
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
 XDWORD DIOSTREAMTLSMEMORYPOLICY::GetMaximumTrustCertificateSize() { return maximumtrustcertificatesize; }
+
+
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         XDWORD DIOSTREAMTLSMEMORYPOLICY::GetMaximumTrustStoreSize()
@@ -934,6 +958,7 @@ bool DIOSTREAMTLSSERVERCREDENTIALS::SetOCSPStapledResponse(XBUFFER& response)
   return OCSPstapledresponse.Add(response);
 }
 
+
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         bool DIOSTREAMTLSSERVERCREDENTIALS::OCSPStapledResponse_Add(XBUFFER& response)
@@ -952,6 +977,7 @@ bool DIOSTREAMTLSSERVERCREDENTIALS::OCSPStapledResponse_Add(XBUFFER& response)
   if(!copy || !copy->Add(response) || !OCSPstapledresponses.Add(copy)) { if(copy) GEN_DELETE copy; return false; }
   return true;
 }
+
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
@@ -1080,8 +1106,8 @@ static bool DIOSTREAMTLSCONFIG_ALPNFromType(DIOSTREAMTLS_ALPN_TYPE type, XBUFFER
 {
   protocol.Delete();
   if(type == DIOSTREAMTLS_ALPN_TYPE_UNKNOWN) return true;
-  if(type == DIOSTREAMTLS_ALPN_TYPE_HTTP_1_1) { static XBYTE value[]={'h','t','t','p','/','1','.','1'}; return protocol.Add(value,sizeof(value)); }
-  if(type == DIOSTREAMTLS_ALPN_TYPE_HTTP_2)   { static XBYTE value[]={'h','2'}; return protocol.Add(value,sizeof(value)); }
+  if(type == DIOSTREAMTLS_ALPN_TYPE_HTTP_1_1) { static XBYTE value[]={'h','t','t','p','/','1','.','1'}; return protocol.Add(value, sizeof(value)); }
+  if(type == DIOSTREAMTLS_ALPN_TYPE_HTTP_2)   { static XBYTE value[]={'h','2'}; return protocol.Add(value, sizeof(value)); }
   return false;
 }
 
@@ -1123,6 +1149,8 @@ DIOSTREAMTLS13SESSIONTICKET::~DIOSTREAMTLS13SESSIONTICKET()
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
 XSTRING* DIOSTREAMTLS13SESSIONTICKET::GetServerName() { return &servername; }
+
+
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         XBUFFER* DIOSTREAMTLS13SESSIONTICKET::GetTicket()
@@ -1133,6 +1161,8 @@ XSTRING* DIOSTREAMTLS13SESSIONTICKET::GetServerName() { return &servername; }
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
 XBUFFER* DIOSTREAMTLS13SESSIONTICKET::GetTicket() { return &ticket; }
+
+
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         XBUFFER* DIOSTREAMTLS13SESSIONTICKET::GetPSK()
@@ -1143,6 +1173,8 @@ XBUFFER* DIOSTREAMTLS13SESSIONTICKET::GetTicket() { return &ticket; }
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
 XBUFFER* DIOSTREAMTLS13SESSIONTICKET::GetPSK() { return &psk; }
+
+
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         XDWORD DIOSTREAMTLS13SESSIONTICKET::GetTicketAgeAdd()
@@ -1153,6 +1185,8 @@ XBUFFER* DIOSTREAMTLS13SESSIONTICKET::GetPSK() { return &psk; }
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
 XDWORD DIOSTREAMTLS13SESSIONTICKET::GetTicketAgeAdd() { return ticketageadd; }
+
+
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         void DIOSTREAMTLS13SESSIONTICKET::SetTicketAgeAdd(XDWORD ageadd)
@@ -1163,6 +1197,8 @@ XDWORD DIOSTREAMTLS13SESSIONTICKET::GetTicketAgeAdd() { return ticketageadd; }
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
 void DIOSTREAMTLS13SESSIONTICKET::SetTicketAgeAdd(XDWORD ageadd) { ticketageadd = ageadd; }
+
+
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         XDWORD DIOSTREAMTLS13SESSIONTICKET::GetLifetime()
@@ -1173,6 +1209,8 @@ void DIOSTREAMTLS13SESSIONTICKET::SetTicketAgeAdd(XDWORD ageadd) { ticketageadd 
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
 XDWORD DIOSTREAMTLS13SESSIONTICKET::GetLifetime() { return lifetime; }
+
+
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         void DIOSTREAMTLS13SESSIONTICKET::SetLifetime(XDWORD lifetime)
@@ -1183,6 +1221,8 @@ XDWORD DIOSTREAMTLS13SESSIONTICKET::GetLifetime() { return lifetime; }
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
 void DIOSTREAMTLS13SESSIONTICKET::SetLifetime(XDWORD lifetime) { this->lifetime = lifetime; }
+
+
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         XQWORD DIOSTREAMTLS13SESSIONTICKET::GetReceivedEpoch()
@@ -1193,6 +1233,8 @@ void DIOSTREAMTLS13SESSIONTICKET::SetLifetime(XDWORD lifetime) { this->lifetime 
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
 XQWORD DIOSTREAMTLS13SESSIONTICKET::GetReceivedEpoch() { return receivedepoch; }
+
+
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         void DIOSTREAMTLS13SESSIONTICKET::SetReceivedEpoch(XQWORD epoch)
@@ -1203,6 +1245,8 @@ XQWORD DIOSTREAMTLS13SESSIONTICKET::GetReceivedEpoch() { return receivedepoch; }
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
 void DIOSTREAMTLS13SESSIONTICKET::SetReceivedEpoch(XQWORD epoch) { receivedepoch = epoch; }
+
+
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         XWORD DIOSTREAMTLS13SESSIONTICKET::GetCipherSuite()
@@ -1213,6 +1257,8 @@ void DIOSTREAMTLS13SESSIONTICKET::SetReceivedEpoch(XQWORD epoch) { receivedepoch
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
 XWORD DIOSTREAMTLS13SESSIONTICKET::GetCipherSuite() { return ciphersuite; }
+
+
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         void DIOSTREAMTLS13SESSIONTICKET::SetCipherSuite(XWORD ciphersuite)
@@ -1223,6 +1269,8 @@ XWORD DIOSTREAMTLS13SESSIONTICKET::GetCipherSuite() { return ciphersuite; }
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
 void DIOSTREAMTLS13SESSIONTICKET::SetCipherSuite(XWORD ciphersuite) { this->ciphersuite = ciphersuite; }
+
+
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         DIOSTREAMTLS_ALPN_TYPE DIOSTREAMTLS13SESSIONTICKET::GetApplicationProtocol()
@@ -1233,6 +1281,8 @@ void DIOSTREAMTLS13SESSIONTICKET::SetCipherSuite(XWORD ciphersuite) { this->ciph
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
 DIOSTREAMTLS_ALPN_TYPE DIOSTREAMTLS13SESSIONTICKET::GetApplicationProtocol() { return applicationprotocol; }
+
+
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         void DIOSTREAMTLS13SESSIONTICKET::SetApplicationProtocol(DIOSTREAMTLS_ALPN_TYPE protocol)
@@ -1243,6 +1293,8 @@ DIOSTREAMTLS_ALPN_TYPE DIOSTREAMTLS13SESSIONTICKET::GetApplicationProtocol() { r
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
 void DIOSTREAMTLS13SESSIONTICKET::SetApplicationProtocol(DIOSTREAMTLS_ALPN_TYPE protocol) { applicationprotocol = protocol; }
+
+
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         XBUFFER* DIOSTREAMTLS13SESSIONTICKET::GetApplicationProtocolRaw()
@@ -1253,6 +1305,8 @@ void DIOSTREAMTLS13SESSIONTICKET::SetApplicationProtocol(DIOSTREAMTLS_ALPN_TYPE 
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
 XBUFFER* DIOSTREAMTLS13SESSIONTICKET::GetApplicationProtocolRaw() { return &applicationprotocolraw; }
+
+
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         XDWORD DIOSTREAMTLS13SESSIONTICKET::GetMaximumEarlyDataSize()
@@ -1263,6 +1317,8 @@ XBUFFER* DIOSTREAMTLS13SESSIONTICKET::GetApplicationProtocolRaw() { return &appl
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
 XDWORD DIOSTREAMTLS13SESSIONTICKET::GetMaximumEarlyDataSize() { return maximumearlydatasize; }
+
+
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         void DIOSTREAMTLS13SESSIONTICKET::SetMaximumEarlyDataSize(XDWORD size)
@@ -1779,6 +1835,7 @@ XVECTOR<DIOSTREAMTLS_ALPN_TYPE>* DIOSTREAMTLSCONFIG::GetApplicationProtocols()
   return &applicationprotocols;
 }
 
+
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         XDWORD DIOSTREAMTLSCONFIG::GetApplicationProtocolsCount()
@@ -1801,6 +1858,7 @@ XDWORD DIOSTREAMTLSCONFIG::GetApplicationProtocolsCount()
     }
   return count;
 }
+
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
@@ -1829,6 +1887,7 @@ bool DIOSTREAMTLSCONFIG::GetApplicationProtocol(XDWORD index, XBUFFER& applicati
     }
   return false;
 }
+
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
@@ -2037,9 +2096,10 @@ bool DIOSTREAMTLSCONFIG::TrustedRoots_AddDefaults()
   if(IsFrozen()) return false;
   if(!trustedroots.IsEmpty()) return false;
 
-#if defined(WINDOWS)
-  CIPHERTRUSTPROVIDERX509WINDOWS platformprovider;
-#elif defined(ANDROID)
+  // Prefer OS trust material where it is available through portable file I/O
+  // (Linux/Android). Windows uses the embedded GEN bundle (cacert.h) instead of
+  // CryptoAPI so TLS does not depend on crypt32.
+#if defined(ANDROID)
   CIPHERTRUSTPROVIDERX509ANDROID platformprovider;
 #elif defined(LINUX)
   CIPHERTRUSTPROVIDERX509LINUX platformprovider;
@@ -2048,11 +2108,13 @@ bool DIOSTREAMTLSCONFIG::TrustedRoots_AddDefaults()
 #endif
   if(TrustedRoots_Load(platformprovider)) return true;
 
-#if defined(WINDOWS) || defined(ANDROID) || defined(LINUX)
+#if defined(ANDROID) || defined(LINUX)
   if(truststorefallbackpolicy == DIOSTREAMTLS_TRUSTSTORE_FALLBACKPOLICY_NEVER) return false;
-#endif
   CIPHERTRUSTPROVIDERX509GEN fallbackprovider;
   return TrustedRoots_Load(fallbackprovider);
+#else
+  return false;
+#endif
 }
 
 
@@ -2929,8 +2991,7 @@ bool DIOSTREAMTLSCONFIG::ServerCredentials_Select(XCHAR* servername, XVECTOR<XBU
 * @return     bool : true if the operation is successful; otherwise false.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-bool DIOSTREAMTLSCONFIG::ServerCredentials_Select(XCHAR* servername, XVECTOR<XBUFFER*>*& certificatechain, CIPHERKEY*& privatekey,
-                                                   XBUFFER*& OCSPstapledresponse)
+bool DIOSTREAMTLSCONFIG::ServerCredentials_Select(XCHAR* servername, XVECTOR<XBUFFER*>*& certificatechain, CIPHERKEY*& privatekey, XBUFFER*& OCSPstapledresponse)
 {
   certificatechain = NULL;
   privatekey        = NULL;
@@ -3016,6 +3077,7 @@ DIOSTREAMTLS_REVOCATIONPOLICY DIOSTREAMTLSCONFIG::GetRevocationPolicy()
 {
   return revocationpolicy;
 }
+
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
@@ -3103,6 +3165,7 @@ bool DIOSTREAMTLSCONFIG::SetAIAFetchTimeout(int timeout)
   return true;
 }
 
+
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         int DIOSTREAMTLSCONFIG::GetConnectionTimeout()
@@ -3116,6 +3179,7 @@ int DIOSTREAMTLSCONFIG::GetConnectionTimeout()
 {
   return connectiontimeout;
 }
+
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
@@ -3136,6 +3200,7 @@ bool DIOSTREAMTLSCONFIG::SetConnectionTimeout(int timeout)
   return true;
 }
 
+
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         int DIOSTREAMTLSCONFIG::GetHandshakeTimeout()
@@ -3149,6 +3214,7 @@ int DIOSTREAMTLSCONFIG::GetHandshakeTimeout()
 {
   return handshaketimeout;
 }
+
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
@@ -3169,6 +3235,7 @@ bool DIOSTREAMTLSCONFIG::SetHandshakeTimeout(int timeout)
   return true;
 }
 
+
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         CIPHERCERTIFICATEX509VALIDATIONPOLICY* DIOSTREAMTLSCONFIG::GetCertificateValidationPolicy()
@@ -3182,6 +3249,7 @@ CIPHERCERTIFICATEX509VALIDATIONPOLICY* DIOSTREAMTLSCONFIG::GetCertificateValidat
 {
   return &certificatevalidationpolicy;
 }
+
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
@@ -3238,6 +3306,7 @@ bool DIOSTREAMTLSCONFIG::SetMemoryPolicy(DIOSTREAMTLSMEMORYPOLICY& policy)
   return true;
 }
 
+
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         XVECTOR<XBUFFER*>* DIOSTREAMTLSCONFIG::GetCertificateRevocationLists()
@@ -3251,6 +3320,7 @@ XVECTOR<XBUFFER*>* DIOSTREAMTLSCONFIG::GetCertificateRevocationLists()
 {
   return &certificaterevocationlists;
 }
+
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
@@ -3273,6 +3343,7 @@ bool DIOSTREAMTLSCONFIG::CertificateRevocationList_Add(XBUFFER& CRL)
   return true;
 }
 
+
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         bool DIOSTREAMTLSCONFIG::CertificateRevocationLists_Delete()
@@ -3287,6 +3358,7 @@ bool DIOSTREAMTLSCONFIG::CertificateRevocationLists_Delete()
   if(IsFrozen()) return false;
   certificaterevocationlists.DeleteContents(); certificaterevocationlists.DeleteAll(); return true;
 }
+
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
@@ -3304,6 +3376,7 @@ void DIOSTREAMTLSCONFIG::OCSPDirect_Set(DIOSTREAMTLS_OCSPDIRECTFETCHER fetcher, 
   ocspdirectfetcher=fetcher; ocspdirectcontext=context;
 }
 
+
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         DIOSTREAMTLS_OCSPDIRECTFETCHER DIOSTREAMTLSCONFIG::GetOCSPDirectFetcher()
@@ -3317,6 +3390,7 @@ DIOSTREAMTLS_OCSPDIRECTFETCHER DIOSTREAMTLSCONFIG::GetOCSPDirectFetcher()
 {
   return ocspdirectfetcher;
 }
+
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
@@ -3415,7 +3489,6 @@ bool DIOSTREAMTLSCONFIG::SetMaxVersion(XWORD version)
 }
 
 
-
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         bool DIOSTREAMTLSCONFIG::IsEarlyDataActive()
@@ -3429,6 +3502,7 @@ bool DIOSTREAMTLSCONFIG::IsEarlyDataActive()
 {
   return earlydataactive;
 }
+
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
@@ -3445,6 +3519,7 @@ void DIOSTREAMTLSCONFIG::EarlyData_Activate(bool active)
   earlydataactive = active;
 }
 
+
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         XDWORD DIOSTREAMTLSCONFIG::GetMaximumEarlyDataSize()
@@ -3458,6 +3533,7 @@ XDWORD DIOSTREAMTLSCONFIG::GetMaximumEarlyDataSize()
 {
   return maximumearlydatasize;
 }
+
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
@@ -3476,6 +3552,7 @@ bool DIOSTREAMTLSCONFIG::SetMaximumEarlyDataSize(XDWORD size)
   maximumearlydatasize = size;
   return true;
 }
+
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
@@ -3497,6 +3574,7 @@ bool DIOSTREAMTLSCONFIG::EarlyDataReplayCheck_Set(DIOSTREAMTLS_EARLYDATA_REPLAYC
   return true;
 }
 
+
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         bool DIOSTREAMTLSCONFIG::EarlyDataReplayCheck(XBUFFER& ticketidentity)
@@ -3512,6 +3590,8 @@ bool DIOSTREAMTLSCONFIG::EarlyDataReplayCheck(XBUFFER& ticketidentity)
 {
   return earlydataactive && earlydatareplaycheck && earlydatareplaycheck(ticketidentity, earlydatareplaycontext);
 }
+
+
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         bool DIOSTREAMTLSCONFIG::IsEarlyDataAcceptable()
@@ -3525,6 +3605,8 @@ bool DIOSTREAMTLSCONFIG::IsEarlyDataAcceptable()
 {
   return earlydataactive && maximumearlydatasize && earlydatareplaycheck;
 }
+
+
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         bool DIOSTREAMTLSCONFIG::EarlyDataTicketAge_IsAcceptable(XQWORD issueepoch, XDWORD obfuscatedage, XDWORD ageadd)
@@ -3549,6 +3631,7 @@ bool DIOSTREAMTLSCONFIG::EarlyDataTicketAge_IsAcceptable(XQWORD issueepoch, XDWO
   XDWORD diff=(clientage>serverage)?(clientage-serverage):(serverage-clientage);
   return diff<=DIOSTREAMTLS13_EARLYDATA_AGE_TOLERANCE_MS;
 }
+
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
@@ -3634,6 +3717,7 @@ bool DIOSTREAMTLSCONFIG::SetSessionTicketLifetime(XDWORD lifetime)
   return true;
 }
 
+
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         XDWORD DIOSTREAMTLSCONFIG::GetSessionTicketKeyRotationInterval()
@@ -3649,6 +3733,7 @@ XDWORD DIOSTREAMTLSCONFIG::GetSessionTicketKeyRotationInterval()
   if(!lock.IsLocked()) return 0;
   return sessionticketkeyrotationinterval;
 }
+
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
@@ -3954,9 +4039,7 @@ bool DIOSTREAMTLSCONFIG::SessionTicketKeyRing_Import(XBUFFER& wrappingkey, XBUFF
 * @return     bool : true if the operation is successful; otherwise false.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-bool DIOSTREAMTLSCONFIG::SessionTicketKeyRingSynchronizer_Set(DIOSTREAMTLS_SESSIONTICKETKEYRING_LOAD load,
-                                                               DIOSTREAMTLS_SESSIONTICKETKEYRING_SAVE save,
-                                                               XBUFFER& wrappingkey, void* context)
+bool DIOSTREAMTLSCONFIG::SessionTicketKeyRingSynchronizer_Set(DIOSTREAMTLS_SESSIONTICKETKEYRING_LOAD load, DIOSTREAMTLS_SESSIONTICKETKEYRING_SAVE save, XBUFFER& wrappingkey, void* context)
 {
   if(IsFrozen() || (!load && !save) || wrappingkey.GetSize() != 32) return false;
   DIOSTREAMTLSCONFIG_LOCK lock(configmutex);
@@ -4079,15 +4162,13 @@ bool DIOSTREAMTLSCONFIG::SessionResumption_ServerInitialize()
 * @return     bool : true if the operation is successful; otherwise false.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-bool DIOSTREAMTLSCONFIG::SessionTicket_Store(XCHAR* servername, XBUFFER& ticket, XBUFFER& PSK, XDWORD ageadd,
-                                              XDWORD lifetime, XWORD ciphersuite,
-                                              DIOSTREAMTLS_ALPN_TYPE applicationprotocol)
+bool DIOSTREAMTLSCONFIG::SessionTicket_Store(XCHAR* servername, XBUFFER& ticket, XBUFFER& PSK, XDWORD ageadd, XDWORD lifetime, XWORD ciphersuite, DIOSTREAMTLS_ALPN_TYPE applicationprotocol)
 {
   XBUFFER protocol;
   if(!DIOSTREAMTLSCONFIG_ALPNFromType(applicationprotocol, protocol)) return false;
-  return SessionTicket_StoreRaw(servername, ticket, PSK, ageadd, lifetime, ciphersuite,
-                                protocol.IsEmpty()?NULL:&protocol, 0);
+  return SessionTicket_StoreRaw(servername, ticket, PSK, ageadd, lifetime, ciphersuite, protocol.IsEmpty()?NULL:&protocol, 0);
 }
+
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
@@ -4107,8 +4188,7 @@ bool DIOSTREAMTLSCONFIG::SessionTicket_Store(XCHAR* servername, XBUFFER& ticket,
 * @return     bool : true if the operation is successful; otherwise false.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-bool DIOSTREAMTLSCONFIG::SessionTicket_StoreRaw(XCHAR* servername, XBUFFER& ticket, XBUFFER& PSK, XDWORD ageadd,
-                                                 XDWORD lifetime, XWORD ciphersuite, XBUFFER* applicationprotocol, XDWORD maximumearlydatasize)
+bool DIOSTREAMTLSCONFIG::SessionTicket_StoreRaw(XCHAR* servername, XBUFFER& ticket, XBUFFER& PSK, XDWORD ageadd, XDWORD lifetime, XWORD ciphersuite, XBUFFER* applicationprotocol, XDWORD maximumearlydatasize)
 {
   DIOSTREAMTLSCONFIG_LOCK lock(configmutex);
   if(!lock.IsLocked()) return false;
@@ -4238,14 +4318,13 @@ bool DIOSTREAMTLSCONFIG::SessionTickets_Delete()
 * @return     bool : true if the operation is successful; otherwise false.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-bool DIOSTREAMTLSCONFIG::SessionTicket_Seal(XBUFFER& PSK, XWORD ciphersuite,
-                                             DIOSTREAMTLS_ALPN_TYPE applicationprotocol, XCHAR* servername,
-                                             XDWORD lifetime, XDWORD ageadd, XBUFFER& ticket, XDWORD maximumearlydatasize)
+bool DIOSTREAMTLSCONFIG::SessionTicket_Seal(XBUFFER& PSK, XWORD ciphersuite, DIOSTREAMTLS_ALPN_TYPE applicationprotocol, XCHAR* servername, XDWORD lifetime, XDWORD ageadd, XBUFFER& ticket, XDWORD maximumearlydatasize)
 {
   XBUFFER protocol;
   if(!DIOSTREAMTLSCONFIG_ALPNFromType(applicationprotocol, protocol)) return false;
   return SessionTicket_SealRaw(PSK, ciphersuite, protocol.IsEmpty()?NULL:&protocol, servername, lifetime, ageadd, ticket, maximumearlydatasize);
 }
+
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
@@ -4265,9 +4344,7 @@ bool DIOSTREAMTLSCONFIG::SessionTicket_Seal(XBUFFER& PSK, XWORD ciphersuite,
 * @return     bool : true if the operation is successful; otherwise false.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-bool DIOSTREAMTLSCONFIG::SessionTicket_SealRaw(XBUFFER& PSK, XWORD ciphersuite,
-                                                XBUFFER* applicationprotocol, XCHAR* servername,
-                                                XDWORD lifetime, XDWORD ageadd, XBUFFER& ticket, XDWORD maximumearlydatasize)
+bool DIOSTREAMTLSCONFIG::SessionTicket_SealRaw(XBUFFER& PSK, XWORD ciphersuite, XBUFFER* applicationprotocol, XCHAR* servername, XDWORD lifetime, XDWORD ageadd, XBUFFER& ticket, XDWORD maximumearlydatasize)
 {
   if(!sessionresumptionactive || PSK.IsEmpty() || !lifetime ||
      (lifetime > DIOSTREAMTLS13_SESSIONTICKET_MAX_LIFETIME) || maximumearlydatasize > DIOSTREAMTLS13_EARLYDATA_MAXSIZE ||
@@ -4353,9 +4430,7 @@ bool DIOSTREAMTLSCONFIG::SessionTicket_SealRaw(XBUFFER& PSK, XWORD ciphersuite,
 * @return     bool : true if the operation is successful; otherwise false.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-bool DIOSTREAMTLSCONFIG::SessionTicket_Open(XBUFFER& ticket, XBUFFER& PSK, XWORD& ciphersuite,
-                                             DIOSTREAMTLS_ALPN_TYPE& applicationprotocol, XSTRING& servername,
-                                             XQWORD& issueepoch, XDWORD& lifetime, XDWORD& ageadd)
+bool DIOSTREAMTLSCONFIG::SessionTicket_Open(XBUFFER& ticket, XBUFFER& PSK, XWORD& ciphersuite, DIOSTREAMTLS_ALPN_TYPE& applicationprotocol, XSTRING& servername, XQWORD& issueepoch, XDWORD& lifetime, XDWORD& ageadd)
 {
   XBUFFER protocol;
   XDWORD maximumearlydatasize = 0;
@@ -4365,6 +4440,7 @@ bool DIOSTREAMTLSCONFIG::SessionTicket_Open(XBUFFER& ticket, XBUFFER& PSK, XWORD
   if(protocol.GetSize() == 2 && !memcmp(protocol.Get(), "h2", 2)) applicationprotocol = DIOSTREAMTLS_ALPN_TYPE_HTTP_2;
   return true;
 }
+
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
@@ -4385,9 +4461,7 @@ bool DIOSTREAMTLSCONFIG::SessionTicket_Open(XBUFFER& ticket, XBUFFER& PSK, XWORD
 * @return     bool : true if the operation is successful; otherwise false.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-bool DIOSTREAMTLSCONFIG::SessionTicket_OpenRaw(XBUFFER& ticket, XBUFFER& PSK, XWORD& ciphersuite,
-                                                XBUFFER& applicationprotocol, XSTRING& servername,
-                                                XQWORD& issueepoch, XDWORD& lifetime, XDWORD& ageadd, XDWORD& maximumearlydatasize)
+bool DIOSTREAMTLSCONFIG::SessionTicket_OpenRaw(XBUFFER& ticket, XBUFFER& PSK, XWORD& ciphersuite, XBUFFER& applicationprotocol, XSTRING& servername, XQWORD& issueepoch, XDWORD& lifetime, XDWORD& ageadd, XDWORD& maximumearlydatasize)
 {
   // Enforce the ticket-key cryptoperiod on the resumption path too.  Previously rotation was guaranteed when a new
   // ticket was sealed, but a server receiving only resumptions could keep opening tickets with the current key after
@@ -4438,8 +4512,8 @@ bool DIOSTREAMTLSCONFIG::SessionTicket_OpenRaw(XBUFFER& ticket, XBUFFER& PSK, XW
       XBUFFER aad3;
       CIPHERAESGCM cipher3;
       static XBYTE aadbytes3[] = { 'G','E','N','-','T','L','S','1','3','-','T','I','C','K','E','T','-','3' };
-      if(!aad3.Add(aadbytes3,sizeof(aadbytes3)) || !DIOSTREAMTLSCONFIG_AddUInt64BE(aad3,keyID) || !cipher3.SetKey(&key) ||
-         !cipher3.UncipherAEAD(ciphertext.Get(),ciphertext.GetSize(),nonce,aad3,tag) || !cipher3.GetResult() ||
+      if(!aad3.Add(aadbytes3, sizeof(aadbytes3)) || !DIOSTREAMTLSCONFIG_AddUInt64BE(aad3, keyID) || !cipher3.SetKey(&key) ||
+         !cipher3.UncipherAEAD(ciphertext.Get(), ciphertext.GetSize(), nonce, aad3, tag) || !cipher3.GetResult() ||
          !plain.Add((*cipher3.GetResult()))) return false;
     }
 

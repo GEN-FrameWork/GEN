@@ -43,10 +43,7 @@
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
 
 
-
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
-
 
 class DIODNSRESOLVER_HOSTRESOLVED
 {
@@ -64,7 +61,6 @@ class DIODNSRESOLVER_HOSTRESOLVED
     XSTRING                                 host;
     XSTRING                                 IPresolved;
 };
-
 
 class DIODNSRESOLVER_DNSSERVER
 {
@@ -84,7 +80,6 @@ class DIODNSRESOLVER_DNSSERVER
     DIOIP                                   IP;
     XWORD                                   port;
 };
-
 
 class DIODNSRESOLVER
 {

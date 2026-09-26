@@ -99,7 +99,6 @@ enum DIOSPIOLEDDISPLAYSSD1306_DISPLAYSIZE
 // Charge Pump Command Table
 #define DIOSPIOLEDDISPLAYSSD1306_COMMAND_CHARGE_PUMP_SET                     0x8D
 
-
 #define DIOSPIOLEDDISPLAYSSD1306_DISPLAY_LINE_HEIGHT                         8
 #define DIOSPIOLEDDISPLAYSSD1306_DISPLAY_LINES                               (width / DIOSPIOLEDDISPLAYSSD1306_DISPLAY_LINE_HEIGHT)
 
@@ -110,12 +109,7 @@ enum DIOSPIOLEDDISPLAYSSD1306_DISPLAYSIZE
 #define DIOSPIOLEDDISPLAYSSD1306_BITTOGGLE(x, y)                             (x ^=  (1UL<<y))
 #define DIOSPIOLEDDISPLAYSSD1306_BITCHECK(x, y)                              (x & (1UL<<y) ? 1 : 0)
 
-
-
-
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
-
 
 class DIOSPIOLEDDISPLAYSSD1306 : public DIODISPLAYDEVICE, public DIODEVICESPI
 {

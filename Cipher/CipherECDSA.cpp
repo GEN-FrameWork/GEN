@@ -95,8 +95,7 @@ class CIPHERECDSA_POINT
 * @return     bool : true if the operation is successful; otherwise false.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-static bool CIPHERECDSA_ModularMultiplication(XMPINTEGER& result, XMPINTEGER& value1, XMPINTEGER& value2,
-                                               XMPINTEGER& modulus)
+static bool CIPHERECDSA_ModularMultiplication(XMPINTEGER& result, XMPINTEGER& value1, XMPINTEGER& value2, XMPINTEGER& modulus)
 {
   XMPINTEGER multiplication;
 
@@ -120,8 +119,7 @@ static bool CIPHERECDSA_ModularMultiplication(XMPINTEGER& result, XMPINTEGER& va
 * @return     bool : true if the operation is successful; otherwise false.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-static bool CIPHERECDSA_ModularMultiplication(XMPINTEGER& result, XMPINTEGER& value, int integer,
-                                               XMPINTEGER& modulus)
+static bool CIPHERECDSA_ModularMultiplication(XMPINTEGER& result, XMPINTEGER& value, int integer, XMPINTEGER& modulus)
 {
   XMPINTEGER multiplication;
 
@@ -145,8 +143,7 @@ static bool CIPHERECDSA_ModularMultiplication(XMPINTEGER& result, XMPINTEGER& va
 * @return     bool : true if the operation is successful; otherwise false.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-static bool CIPHERECDSA_ModularAddition(XMPINTEGER& result, XMPINTEGER& value1, XMPINTEGER& value2,
-                                        XMPINTEGER& modulus)
+static bool CIPHERECDSA_ModularAddition(XMPINTEGER& result, XMPINTEGER& value1, XMPINTEGER& value2, XMPINTEGER& modulus)
 {
   XMPINTEGER addition;
 
@@ -170,8 +167,7 @@ static bool CIPHERECDSA_ModularAddition(XMPINTEGER& result, XMPINTEGER& value1, 
 * @return     bool : true if the operation is successful; otherwise false.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-static bool CIPHERECDSA_ModularSubtraction(XMPINTEGER& result, XMPINTEGER& value1, XMPINTEGER& value2,
-                                           XMPINTEGER& modulus)
+static bool CIPHERECDSA_ModularSubtraction(XMPINTEGER& result, XMPINTEGER& value1, XMPINTEGER& value2, XMPINTEGER& modulus)
 {
   XMPINTEGER subtraction;
 
@@ -281,8 +277,7 @@ static bool CIPHERECDSA_PointDouble(CIPHERECDSA_POINT& point, XMPINTEGER& prime)
 * @return     bool : true if the operation is successful; otherwise false.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-static bool CIPHERECDSA_PointAddAffine(CIPHERECDSA_POINT& point, XMPINTEGER& affineX, XMPINTEGER& affineY,
-                                       XMPINTEGER& prime)
+static bool CIPHERECDSA_PointAddAffine(CIPHERECDSA_POINT& point, XMPINTEGER& affineX, XMPINTEGER& affineY, XMPINTEGER& prime)
 {
   XMPINTEGER Z2;
   XMPINTEGER Z3temporary;
@@ -378,8 +373,7 @@ static bool CIPHERECDSA_PointCopy(CIPHERECDSA_POINT& destination, CIPHERECDSA_PO
 * @return     bool : true if the operation is successful; otherwise false.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-static bool CIPHERECDSA_IntegerSelect(XMPINTEGER& result, XMPINTEGER& value0, XMPINTEGER& value1,
-                                      XBYTE select1, XDWORD fixedlimbs)
+static bool CIPHERECDSA_IntegerSelect(XMPINTEGER& result, XMPINTEGER& value0, XMPINTEGER& value1, XBYTE select1, XDWORD fixedlimbs)
 {
   if(!fixedlimbs || !value0.Grow(fixedlimbs) || !value1.Grow(fixedlimbs) || !result.Grow(fixedlimbs)) return false;
 
@@ -411,8 +405,7 @@ static bool CIPHERECDSA_IntegerSelect(XMPINTEGER& result, XMPINTEGER& value0, XM
 * @return     bool : true if the operation is successful; otherwise false.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-static bool CIPHERECDSA_PointSelect(CIPHERECDSA_POINT& result, CIPHERECDSA_POINT& point0,
-                                    CIPHERECDSA_POINT& point1, XBYTE select1, XDWORD fixedlimbs)
+static bool CIPHERECDSA_PointSelect(CIPHERECDSA_POINT& result, CIPHERECDSA_POINT& point0, CIPHERECDSA_POINT& point1, XBYTE select1, XDWORD fixedlimbs)
 {
   if(!CIPHERECDSA_IntegerSelect(result.X, point0.X, point1.X, select1, fixedlimbs) ||
      !CIPHERECDSA_IntegerSelect(result.Y, point0.Y, point1.Y, select1, fixedlimbs) ||
@@ -444,9 +437,7 @@ static bool CIPHERECDSA_PointSelect(CIPHERECDSA_POINT& result, CIPHERECDSA_POINT
 * @return     bool : true if the operation is successful; otherwise false.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-static bool CIPHERECDSA_PointMultiplyFixed(CIPHERECDSA_POINT& point, XMPINTEGER& scalar,
-                                           XMPINTEGER& affineX, XMPINTEGER& affineY,
-                                           XMPINTEGER& prime, XDWORD scalarbits, XDWORD fieldbits)
+static bool CIPHERECDSA_PointMultiplyFixed(CIPHERECDSA_POINT& point, XMPINTEGER& scalar, XMPINTEGER& affineX, XMPINTEGER& affineY, XMPINTEGER& prime, XDWORD scalarbits, XDWORD fieldbits)
 {
   XDWORD fixedlimbs = XMPINTEGER_BITSTOLIMBS(fieldbits);
 
@@ -483,9 +474,7 @@ static bool CIPHERECDSA_PointMultiplyFixed(CIPHERECDSA_POINT& point, XMPINTEGER&
 * @return     bool : true if the operation is successful; otherwise false.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-static bool CIPHERECDSA_PointMultiplySecret(CIPHERECDSA_POINT& point, XMPINTEGER& scalar,
-                                            XMPINTEGER& affineX, XMPINTEGER& affineY, XMPINTEGER& prime,
-                                            XMPINTEGER& order, XDWORD curvebits)
+static bool CIPHERECDSA_PointMultiplySecret(CIPHERECDSA_POINT& point, XMPINTEGER& scalar, XMPINTEGER& affineX, XMPINTEGER& affineY, XMPINTEGER& prime, XMPINTEGER& order, XDWORD curvebits)
 {
   const XDWORD blindbytes = 8;
   XBYTE         blindbuffer[blindbytes];
@@ -518,8 +507,7 @@ static bool CIPHERECDSA_PointMultiplySecret(CIPHERECDSA_POINT& point, XMPINTEGER
 
   if(blinded)
     {
-      bool status = CIPHERECDSA_PointMultiplyFixed(point, blindedscalar, affineX, affineY, prime,
-                                                    curvebits + (blindbytes * 8), curvebits);
+      bool status = CIPHERECDSA_PointMultiplyFixed(point, blindedscalar, affineX, affineY, prime, curvebits + (blindbytes * 8), curvebits);
       return status;
     }
 
@@ -585,8 +573,7 @@ static bool CIPHERECDSA_ModularInversePrime(XMPINTEGER& result, XMPINTEGER& valu
 * @return     bool : true if the operation is successful; otherwise false.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-static bool CIPHERECDSA_PointToAffine(CIPHERECDSA_POINT& point, XMPINTEGER& affineX, XMPINTEGER& affineY,
-                                      XMPINTEGER& prime)
+static bool CIPHERECDSA_PointToAffine(CIPHERECDSA_POINT& point, XMPINTEGER& affineX, XMPINTEGER& affineY, XMPINTEGER& prime)
 {
   XMPINTEGER inverseZ;
   XMPINTEGER inverseZ2;
@@ -621,8 +608,7 @@ static bool CIPHERECDSA_PointToAffine(CIPHERECDSA_POINT& point, XMPINTEGER& affi
 * @return     bool : true if the operation is successful; otherwise false.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-static bool CIPHERECDSA_PointCheck(XMPINTEGER& X, XMPINTEGER& Y, XMPINTEGER& prime,
-                                   XMPINTEGER& coefficientA, XMPINTEGER& coefficientB)
+static bool CIPHERECDSA_PointCheck(XMPINTEGER& X, XMPINTEGER& Y, XMPINTEGER& prime, XMPINTEGER& coefficientA, XMPINTEGER& coefficientB)
 {
   XMPINTEGER left;
   XMPINTEGER X2;
@@ -705,8 +691,7 @@ static bool CIPHERECDSA_DERLength(XBYTE* data, XDWORD size, XDWORD& index, XDWOR
 * @return     bool : true if the operation is successful; otherwise false.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-static bool CIPHERECDSA_DERInteger(XBYTE* data, XDWORD size, XDWORD& index, XMPINTEGER& integer,
-                                   XMPINTEGER& order, XDWORD maxsize)
+static bool CIPHERECDSA_DERInteger(XBYTE* data, XDWORD size, XDWORD& index, XMPINTEGER& integer, XMPINTEGER& order, XDWORD maxsize)
 {
   XDWORD length;
   XDWORD offset;
@@ -930,8 +915,7 @@ class CIPHERECDSA_RFC6979
     * @return     bool : true if the operation is successful; otherwise false.
     * 
     * --------------------------------------------------------------------------------------------------------------------*/
-    bool Initialize(HASH* hash, XMPINTEGER& privatekey, XMPINTEGER& order, XBYTE* digest, XDWORD digestsize,
-                    XDWORD coordinatesize, XDWORD curvebits)
+    bool Initialize(HASH* hash, XMPINTEGER& privatekey, XMPINTEGER& order, XBYTE* digest, XDWORD digestsize, XDWORD coordinatesize, XDWORD curvebits)
       {
         XMPINTEGER    digestinteger;
         XMPINTEGER    reduceddigest;

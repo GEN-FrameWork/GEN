@@ -34,20 +34,14 @@
 
 #include "DIOStreamUDP.h"
 
-
-
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
 
 #define DIOSTREAMUDPACKNOWLEDGE_DEFAULTTIMEOUT 5
 
-
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
-
 
 class HASHCRC32;
 class DIOSTREAMUDPCONFIG;
-
 
 class DIOSTREAMUDPACKNOWLEDGE : public DIOSTREAMUDP
 {
@@ -61,7 +55,7 @@ class DIOSTREAMUDPACKNOWLEDGE : public DIOSTREAMUDP
     DIOSTREAMSTATUS                 GetStatus                      ();
     
     int                             GetTimeout                            ();
-    void                            SetTimeout                            (int timeout  = DIOSTREAMUDPACKNOWLEDGE_DEFAULTTIMEOUT);
+    void                            SetTimeout                            (int timeout = DIOSTREAMUDPACKNOWLEDGE_DEFAULTTIMEOUT);
 
     bool                            Open                                  ();
 

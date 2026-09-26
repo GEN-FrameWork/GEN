@@ -484,11 +484,13 @@ bool UI_ELEMENT_STATISTICSCHART::RebuildBitmap(GRP2DCANVAS* referencecanvas)
 
 
 /**-------------------------------------------------------------------------------------------------------------------
-*
+* 
 * @fn         GRPBITMAP* UI_ELEMENT_STATISTICSCHART::GetSharpBitmap()
 * @brief      Fase 7: denser chart bitmap for live overlay (may be NULL).
 * @ingroup    USERINTERFACE
-*
+* 
+* @return     GRPBITMAP* : 
+* 
 * --------------------------------------------------------------------------------------------------------------------*/
 GRPBITMAP* UI_ELEMENT_STATISTICSCHART::GetSharpBitmap()
 {
@@ -511,11 +513,16 @@ void UI_ELEMENT_STATISTICSCHART::InvalidateSharpBitmap()
 
 
 /**-------------------------------------------------------------------------------------------------------------------
-*
+* 
 * @fn         bool UI_ELEMENT_STATISTICSCHART::EnsureSharpBitmap(GRP2DCANVAS* referencecanvas, double density)
 * @brief      Fase 7: build/cache chart raster at design size × density for post-Present overlay.
 * @ingroup    USERINTERFACE
-*
+* 
+* @param[in]  referencecanvas : 
+* @param[in]  density : 
+* 
+* @return     bool : true if the operation is successful; otherwise false.
+* 
 * --------------------------------------------------------------------------------------------------------------------*/
 bool UI_ELEMENT_STATISTICSCHART::EnsureSharpBitmap(GRP2DCANVAS* referencecanvas, double density)
 {
@@ -546,12 +553,18 @@ bool UI_ELEMENT_STATISTICSCHART::EnsureSharpBitmap(GRP2DCANVAS* referencecanvas,
 
 
 /**-------------------------------------------------------------------------------------------------------------------
-*
+* 
 * @fn         bool UI_ELEMENT_STATISTICSCHART::RasterizeChartBitmap(GRP2DCANVAS* referencecanvas, double density, GRPBITMAP*& out_bitmap)
 * @brief      Generate SVG chart and rasterize at BoundaryLine size × density.
 * @note       INTERNAL. Does not touch NeedsRebuild / design bitmap ownership.
 * @ingroup    USERINTERFACE
-*
+* 
+* @param[in]  referencecanvas : 
+* @param[in]  density : 
+* @param[in]  out_bitmap : 
+* 
+* @return     bool : true if the operation is successful; otherwise false.
+* 
 * --------------------------------------------------------------------------------------------------------------------*/
 bool UI_ELEMENT_STATISTICSCHART::RasterizeChartBitmap(GRP2DCANVAS* referencecanvas, double density, GRPBITMAP*& out_bitmap)
 {
@@ -618,10 +631,7 @@ bool UI_ELEMENT_STATISTICSCHART::RasterizeChartBitmap(GRP2DCANVAS* referencecanv
           UI_COLOR* bgcolorui = GetBackgroundColor();
           if(bgcolorui && (bgcolorui->GetAlpha() > 0))
             {
-              GRPSTATISTICSCHARTCOLOR bgcolor((XBYTE)bgcolorui->GetRed(),
-                                              (XBYTE)bgcolorui->GetGreen(),
-                                              (XBYTE)bgcolorui->GetBlue(),
-                                              (XBYTE)bgcolorui->GetAlpha());
+              GRPSTATISTICSCHARTCOLOR bgcolor((XBYTE)bgcolorui->GetRed(), (XBYTE)bgcolorui->GetGreen(), (XBYTE)bgcolorui->GetBlue(), (XBYTE)bgcolorui->GetAlpha());
               config->SetBackgroundColor(bgcolor);
               usedcssbg = true;
             }
@@ -794,12 +804,14 @@ bool UI_ELEMENT_STATISTICSCHART::DeleteBitmap()
 
 
 /**-------------------------------------------------------------------------------------------------------------------
-*
+* 
 * @fn         bool UI_ELEMENT_STATISTICSCHART::DeleteSharpBitmap()
 * @brief      Fase 7: free denser overlay cache.
 * @note       INTERNAL
 * @ingroup    USERINTERFACE
-*
+* 
+* @return     bool : true if the operation is successful; otherwise false.
+* 
 * --------------------------------------------------------------------------------------------------------------------*/
 bool UI_ELEMENT_STATISTICSCHART::DeleteSharpBitmap()
 {

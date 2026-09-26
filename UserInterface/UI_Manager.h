@@ -56,10 +56,7 @@
 #define UI_MANAGER_LAYOUT_TEXT_END          __L("]")
 #define UI_MANAGER_LAYOUT_TEXT_TRANSLATE    __L("TRANSLATE_")
 
-
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
-
 
 class GRPSCREEN;
 class GRPCONTEXT;
@@ -74,7 +71,6 @@ class UI_STYLE;
 class UI_STYLESHEET;
 class UI_COMPUTEDSTYLE;
 class UI_SKINCANVAS;
-
 
 class UI_MANAGER : public XOBSERVER, public XSUBJECT
 {
@@ -101,38 +97,6 @@ class UI_MANAGER : public XOBSERVER, public XSUBJECT
     bool                            Layouts_DeleteAll                         ();     
     UI_LAYOUT*                      Layouts_GetCommonLayout                   ();
            
-    // -------------------------------------------------------------------------
-    // SCREEN COMPOSITION LAYERS (dirty-rect, NOT full-frame Z)
-    // -------------------------------------------------------------------------
-    // Per GRPSCREEN / shared viewport canvas the paint order is fixed:
-    //   1) Background (Layout_PutBackground)
-    //   2) Content layouts (non-chrome)
-    //   3) Chrome layout (CFG caption / window buttons)
-    //   4) Modal layer — Draw the modal tree LAST on the live canvas (opaque AABB wipe + paint). Layout
-    //      skips the modal root while modal_layer_valid so it is not painted twice. This is option B:
-    //      the modal always wins the intersection without full-frame Z and without capturing a punched
-    //      shared-canvas snapshot.
-    //
-    // GetZLevel() only orders RESTORE inside one skin's RebuildAllAreas (erase high→low).
-    // It does NOT define paint order across layouts.
-    // -------------------------------------------------------------------------
-
-    // Layout_PutBackground* rewrite the canvas under widgets. Both entry points then call
-    // InvalidateCompositionCachesForScreen() so EVERY canvas skin on that screen (content layouts AND the
-    // custom window-chrome layout) drops persistent backdrop caches. Without the screen-wide wipe, chrome
-    // kept a stale formbackdrop after the virtual keyboard PutBackground and could bake itself into its own
-    // cache / leave ghosts over the top menu when auto-hide toggles.
-    //
-    // AUTHORING CONTRACT (compat descendente): layouts WITHOUT a <stylesheet> keep the historical XML-only
-    // path (no CSS cascade, no ReapplyStyleVisual). CSS Lite is opt-in per layout. Absolute xpos/ypos layouts
-    // (e.g. UI_Options) must remain pixel-identical when no stylesheet is present.
-    // Margin: no sheet -> 4-value LEFT,RIGHT,UP,DOWN and margin-* longhands ignored; with sheet -> CSS TRBL
-    // plus margin-top/right/bottom/left (see UI_PROPERTYREGISTRY::ResolveMarginEdges).
-    //
-    // UIScale (Opción A): authors work in design px (UI_LAYOUT::SetDesignSize / GetUIScale). Opt-in when the
-    // layout has a stylesheet OR SetUIScaleEnabled(true). scale=1.0 is the compatible baseline. Input maps
-    // screen→design via MapScreenToDesign before IsWithin (Fase 2). Paint uses design offscreen + scaled
-    // present when NeedsScaledPresent (Fase 3). XML-only layouts ignore UIScale entirely.
     bool                            Layout_PutBackground                      (XCHAR* layoutname);    
     bool                            Layout_PutBackgroundColor                 (XCHAR* layoutname);    
     bool                            Layout_PutBackgroundImage                 (XCHAR* layoutname);    
@@ -143,9 +107,7 @@ class UI_MANAGER : public XOBSERVER, public XSUBJECT
     bool                            Layout_PutBackgroundImage                 (bool scale = false);    
     bool                            Layout_PutBackgroundSeamlessPattern       ();
 
-    // Drop composition caches for every UI_SKINCANVAS whose GetScreen() is "screen" (content + chrome).
     void                            InvalidateCompositionCachesForScreen     (GRPSCREEN* screen);
-    // Mark every layout on "screen" dirty. exclude_chrome: skip the CFG chromes layout (content-only redraw).
     void                            Elements_SetToRedrawForScreen             (GRPSCREEN* screen, bool exclude_chrome = false);    
 
     bool                            Update                                    (UI_LAYOUT* layout);
@@ -167,28 +129,16 @@ class UI_MANAGER : public XOBSERVER, public XSUBJECT
     
     bool                            Element_SetModal                          (UI_ELEMENT* element_modal);
     UI_ELEMENT*                     Element_GetModal                          ();
-    // Modal composition layer (option B): after content AND chrome, blit an opaque cache built on an
-    // offscreen canvas (Draw of the modal tree only — never a snapshot of the shared screen). Layout Draw
-    // of the modal root is deferred while the cache is valid (see ModalLayer_IsLayoutDrawDeferred).
     bool                            Element_DrawModalOnTop                    ();
     void                            ModalLayer_Invalidate                     ();
     bool                            ModalLayer_IsLayoutDrawDeferred           (UI_ELEMENT* element);
     bool                            ModalLayer_IsCompositing                  ();
-    // While the modal cache is valid, RebuildAllAreas must not peel the modal subtree (its PreDraw
-    // snapshot on the shared canvas is meaningless; the offscreen layer owns those pixels).
     bool                            ModalLayer_IsRebuildProtected             (UI_ELEMENT* element);
-    // After the modal layer has been composed once (modal_layer_valid): content whose AABB intersects the
-    // modal must not Keep MustReDraw / rebuild-peel — that PutBitmapNoAlpha restores parchment/ListBoxMenu/
-    // Edit into the keyboard every frame (UI_Options punch-through). Modal tree itself is excluded.
-    // Also suppresses content under a visible custom-chrome caption (translucent caption otherwise shows
-    // ListBoxMenu/title ghosts in the title band).
     bool                            ModalLayer_SuppressesContentDraw          (UI_ELEMENT* element);
     bool                            ChromeCaption_SuppressesContentDraw       (UI_ELEMENT* element);
     bool                            Overlay_SuppressesContentDraw             (UI_ELEMENT* element);
     void                            Overlay_ClearSuppressedContentDirt        ();
 
-    // Before RebuildAllAreas: if two canvas skins share the same GRP2DCANVAS, propagate MustReDraw across
-    // overlapping rebuild areas so content/chrome/modal cannot leave ghosts in each other's bands.
     void                            PropagateRebuildOverlapDirtAcrossSharedCanvases();
 
     bool                            Elements_SetToRedraw                      ();
@@ -215,28 +165,20 @@ class UI_MANAGER : public XOBSERVER, public XSUBJECT
     bool                            ChangeTextElementValue                    (UI_LAYOUT* layout);
     bool                            ChangeTextElementValue                    (UI_LAYOUT* layout, UI_ELEMENT* element);
 
-    
     bool                            SubscribeInputEvents                      (bool active);    
     bool                            SubscribeOutputEvents                     (bool active, XOBSERVER* observer, XSUBJECT* subject); 
 
     bool                            CreaterVirtualKeyboard                    (UI_LAYOUT* layout, GRPSCREEN* screen);
     bool                            DeleteVirtualKeyboard                     ();
 
-    // Fase 3: after SetUIScale / SetDesignSize, ensure design canvas + seed background + full redraw.
     bool                            UIScale_PrepareLayout                     (UI_LAYOUT* layout);
 
-    // Fase 4: runtime zoom — SetUIScale + PrepareLayout (redraw without reloading XML).
     bool                            Layouts_SetUIScale                        (UI_LAYOUT* layout, double scale);
 
-    // Fase 5: scale = min(sw/dw, sh/dh) then PrepareLayout. No-op if UIScale inactive.
     bool                            Layouts_ApplyFitUIScale                   (UI_LAYOUT* layout);
 
-    // Track L.4: re-resolve rem/vw/vh/%/em length tokens from each element's computed style bag against the
-    // current design viewport + parent box, then RunLayout on top-level roots. Call after SetDesignSize or on
-    // window CHANGESIZE when the design viewport (or parent geometry) may have changed. XML-only layouts = no-op.
     bool                            Layouts_ReresolveStyleLengths             (UI_LAYOUT* layout);
 
-    // Track L.4 convenience: SetDesignSize + media viewport + ReresolveStyleLengths + UIScale_PrepareLayout.
     bool                            Layouts_SetDesignSize                     (UI_LAYOUT* layout, XDWORD width, XDWORD height);
 
   private:
@@ -259,22 +201,15 @@ class UI_MANAGER : public XOBSERVER, public XSUBJECT
     bool                            GetParentSizeFont                         (XFILEXMLELEMENT* node, double& sizefont);
     bool                            ResolvePercentValue                       (XSTRING& valuestr, double basis, double& out);
 
-    // Fase 8: rem/vw/vh/%/em via UI_LENGTH — only for layouts that own a stylesheet (UI_Options untouched).
     void                            BuildLengthContext                        (UI_LAYOUT* layout, double basis, double fontsize, UI_LENGTH_CONTEXT& out);
     bool                            ResolveStyleLength                        (XSTRING& valuestr, UI_LENGTH_CONTEXT& context, double& out);
 
-    // Track L.4: apply xpos/ypos/width/height/gap/flex-basis/margin/padding length tokens from an existing
-    // computed-style bag (no XML, no cascade rebuild). Used by Layouts_ReresolveStyleLengths.
     bool                            ApplyStyleLengthsFromBag                 (UI_ELEMENT* element, UI_LAYOUT* layout, UI_STYLE& style);
     void                            ReresolveElementStyleLengthsRecursive     (UI_ELEMENT* element, UI_LAYOUT* layout);
 
     bool                            GetLayoutElement_Base                     (XFILEXMLELEMENT* node, UI_LAYOUT* layout, UI_ELEMENT* element, bool adjusttoparent = false);
     bool                            GetLayoutElement_Base                     (UI_STYLE& style, XSTRING& fathertagname, UI_LAYOUT* layout, UI_ELEMENT* element, bool adjusttoparent = false);
 
-    // Same as the XFILEXMLELEMENT* overload above, but also hands back the fully-resolved bag (XML attributes
-    // < CSS rules < inline style) it built internally, typed as UI_COMPUTEDSTYLE, so a per-widget builder can
-    // read its own extra keys (e.g. "sizefont") through the SAME cascade instead of re-reading the raw XML node
-    // and silently losing any CSS/inline override -- see UI_ComputedStyle.h.
     bool                            GetLayoutElement_Base                     (XFILEXMLELEMENT* node, UI_LAYOUT* layout, UI_ELEMENT* element, UI_COMPUTEDSTYLE& outstyle, bool adjusttoparent = false);
     UI_ELEMENT*                     GetLayoutElement_Text                     (XFILEXMLELEMENT* node, UI_LAYOUT* layout, UI_ELEMENT* father, UI_ELEMENT* element_legacy = NULL);
     UI_ELEMENT*                     GetLayoutElement_TextBox                  (XFILEXMLELEMENT* node, UI_LAYOUT* layout, UI_ELEMENT* father, UI_ELEMENT* element_legacy = NULL);
@@ -318,17 +253,13 @@ class UI_MANAGER : public XOBSERVER, public XSUBJECT
     bool                            UseMotionInElement                        (UI_ELEMENT* element, INPCURSORMOTION* cursormotion);
     bool                            UseMotion                                 (INPCURSORMOTION* cursormotion);
 
-    // Map pointer screen px → design px for a layout (identity if UIScale inactive).
     void                            MapScreenToDesign                         (UI_LAYOUT* layout, int screen_x, int screen_y, int& design_x, int& design_y);
 
-    // Fase 3 internals: design offscreen paint + scaled present (letterbox).
     bool                            UIScale_EnsureDesignCanvas                (UI_LAYOUT* layout);
     bool                            UIScale_BeginFrame                        (UI_LAYOUT* layout);
     bool                            UIScale_Present                           (UI_LAYOUT* layout);
     void                            UIScale_EndFrame                          (UI_LAYOUT* layout);
-    // After scale/window change: drop composition caches, clear live canvas, dirty chrome.
     void                            UIScale_ResetLiveComposition              (UI_LAYOUT* layout);
-    // Fase 7: post-Present sharp overlay for SVG icons + StatisticsCharts (no BoundaryLine mutation).
     void                            UIScale_PresentSharpOverlay               (UI_LAYOUT* layout, GRP2DCANVAS* live);
     void                            UIScale_PresentSharpOverlay_Element       (UI_LAYOUT* layout, UI_ELEMENT* element, GRP2DCANVAS* live, double density);
     void                            UIScale_InvalidateSharpOverlays           (UI_LAYOUT* layout);
@@ -359,14 +290,13 @@ class UI_MANAGER : public XOBSERVER, public XSUBJECT
     XMUTEX*                         xmutex_modal;
     UI_ELEMENT*                     element_modal;
 
-    // Option B modal layer cache (opaque snapshot blitted after content).
     GRPBITMAP*                      modal_layer_bitmap;
     double                          modal_layer_x;
     double                          modal_layer_y;
     double                          modal_layer_w;
     double                          modal_layer_h;
     bool                            modal_layer_valid;
-    bool                            modal_layer_compositing;  // true while Composite rebuilds via Draw
+    bool                            modal_layer_compositing;
 
     XMUTEX*                         xmutex_UIevent;
     

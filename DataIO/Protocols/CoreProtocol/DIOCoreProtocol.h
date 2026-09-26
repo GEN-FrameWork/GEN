@@ -73,15 +73,10 @@ enum DIOCOREPROTOCOL_COMMAND_TYPE
   DIOCOREPROTOCOL_COMMAND_TYPE_LASTINTERNAL                   
 };
 
-
 #define DIOCOREPROTOCOL_COMMAND_TYPE_STRING_HEARTBEAT                     __L("hearbeat")
 #define DIOCOREPROTOCOL_COMMAND_TYPE_STRING_DISCONNECT                    __L("disconnect")
 
 //#define DIOCOREPROTOCOL_COMMAND_TYPE_STRING_DISCONNECTED_RESULT         __L("disconnected")
-
-
-
-
 
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
 
@@ -114,9 +109,7 @@ class DIOCOREPROTOCOL_COMMAND
     XSTRING                                               typestr;   
     DIOCOREPROTOCOL_BIDIRECTIONALITYMODE                  bidirectionalitymode;
 
-    
 };
-
 
 class DIOCOREPROTOCOL_UPDATECLASS
 {
@@ -160,7 +153,6 @@ class DIOCOREPROTOCOL_UPDATECLASS
     XTIMER*                                               timerlastupdate;      
     XDWORD                                                flags;
 };
-
 
 class DIOCOREPROTOCOL
 {

@@ -34,10 +34,7 @@
 
 #include "CipherAES.h"
 
-
-
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
-
 
 #define CIPHERAESGCM_BLOCKSIZE                16
 #define CIPHERAESGCM_TABLESIZE                16
@@ -47,11 +44,7 @@
 
 #define CIPHERAESGCM_NONCESIZE                12                                // NIST SP 800-38D recommended, and the only one TLS 1.3 uses
 
-
-
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
-
 
 class CIPHERAESGCM : public CIPHERAES
 {

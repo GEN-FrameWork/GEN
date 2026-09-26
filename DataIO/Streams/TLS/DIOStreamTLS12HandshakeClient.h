@@ -61,7 +61,6 @@ enum DIOSTREAMTLS12HANDSHAKECLIENT_STATE
   DIOSTREAMTLS12HANDSHAKECLIENT_STATE_ERROR                         ,
 };
 
-
 enum DIOSTREAMTLS12HANDSHAKECLIENT_AUTHENTICATIONERROR
 {
   DIOSTREAMTLS12HANDSHAKECLIENT_AUTHENTICATIONERROR_NONE             = 0 ,
@@ -75,11 +74,7 @@ enum DIOSTREAMTLS12HANDSHAKECLIENT_AUTHENTICATIONERROR
   DIOSTREAMTLS12HANDSHAKECLIENT_AUTHENTICATIONERROR_DOWNGRADEDETECTED    ,
 };
 
-
-
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
-
 
 class DIOSTREAMTLS12HANDSHAKECLIENT
 {
@@ -87,13 +82,6 @@ class DIOSTREAMTLS12HANDSHAKECLIENT
                                             DIOSTREAMTLS12HANDSHAKECLIENT                    ();
     virtual                                ~DIOSTREAMTLS12HANDSHAKECLIENT                    ();
 
-    
-    
-    
-    
-    
-    
-    
     bool                                    Ini                                              (bool checkdowngradesentinel = false);
     bool                                    Capabilities_Set                                 (DIOSTREAMTLSCONFIG* config);
     void                                    End                                              ();
@@ -116,18 +104,8 @@ class DIOSTREAMTLS12HANDSHAKECLIENT
     DIOSTREAMTLS12_MSG_CERTIFICATE*         GetServerCertificate                            ();
     DIOSTREAMTLS12_MSG_SERVERKEYEXCHANGE_ECDHE* GetServerKeyExchange                        ();
 
-    
-    
-    
-    
-    
     bool                                    CipherSuitesAndSchemes_WidenECDSA                ();
 
-    
-    
-    
-    
-    
     bool                                    IsAlgorithmRejected                              ();
 
     bool                                    ClientHello_Create                               (XCHAR* servername, XBUFFER& clienthello, XBUFFER& records);
@@ -136,8 +114,6 @@ class DIOSTREAMTLS12HANDSHAKECLIENT
     bool                                    RecordInput_Add                                  (XBUFFER& data);
     bool                                    Process                                          ();
 
-    
-    
     bool                                    ClientFlight_Create                              (XBUFFER& records);
 
   private:

@@ -86,8 +86,7 @@ static bool CIPHERCERTIFICATEX509VALIDATOR_IsSelfIssued(CIPHERCERTIFICATEX509* c
 * @return     XDWORD : Requested value.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-static XDWORD CIPHERCERTIFICATEX509VALIDATOR_NonSelfIssuedCABelow(XVECTOR<CIPHERCERTIFICATEX509*>& certificates,
-                                                                   XDWORD issuerindex)
+static XDWORD CIPHERCERTIFICATEX509VALIDATOR_NonSelfIssuedCABelow(XVECTOR<CIPHERCERTIFICATEX509*>& certificates, XDWORD issuerindex)
 {
   XDWORD count = 0;
   XDWORD limit = issuerindex;
@@ -117,8 +116,7 @@ static XDWORD CIPHERCERTIFICATEX509VALIDATOR_NonSelfIssuedCABelow(XVECTOR<CIPHER
 * @return     bool : true if the operation is successful; otherwise false.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-static bool CIPHERCERTIFICATEX509VALIDATOR_IssuerIdentifierMatches(CIPHERCERTIFICATEX509* certificate,
-                                                                    CIPHERCERTIFICATEX509* issuer)
+static bool CIPHERCERTIFICATEX509VALIDATOR_IssuerIdentifierMatches(CIPHERCERTIFICATEX509* certificate, CIPHERCERTIFICATEX509* issuer)
 {
   if(!certificate || !issuer) return false;
   if(certificate->HasAuthorityKeyIdentifier() && issuer->HasSubjectKeyIdentifier())
@@ -143,9 +141,7 @@ static bool CIPHERCERTIFICATEX509VALIDATOR_IssuerIdentifierMatches(CIPHERCERTIFI
 * @return     bool : true if the operation is successful; otherwise false.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-static bool CIPHERCERTIFICATEX509VALIDATOR_RootConstraintsPermit(CIPHERCERTIFICATEX509* root,
-                                                                  XVECTOR<CIPHERCERTIFICATEX509*>& certificates,
-                                                                  bool rootisinchain)
+static bool CIPHERCERTIFICATEX509VALIDATOR_RootConstraintsPermit(CIPHERCERTIFICATEX509* root, XVECTOR<CIPHERCERTIFICATEX509*>& certificates, bool rootisinchain)
 {
   if(!root || !root->HasNameConstraints()) return true;
   XDWORD limit=certificates.GetSize(); if(rootisinchain&&limit) limit--;
@@ -188,6 +184,7 @@ CIPHERCERTIFICATEX509VALIDATIONPOLICY::CIPHERCERTIFICATEX509VALIDATIONPOLICY()
   #endif
 }
 
+
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         XDWORD CIPHERCERTIFICATEX509VALIDATIONPOLICY::GetMinimumRSAKeyBits()
@@ -198,6 +195,8 @@ CIPHERCERTIFICATEX509VALIDATIONPOLICY::CIPHERCERTIFICATEX509VALIDATIONPOLICY()
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
 XDWORD CIPHERCERTIFICATEX509VALIDATIONPOLICY::GetMinimumRSAKeyBits() { return minimumRSAKeyBits; }
+
+
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         void CIPHERCERTIFICATEX509VALIDATIONPOLICY::SetMinimumRSAKeyBits(XDWORD bits)
@@ -208,6 +207,8 @@ XDWORD CIPHERCERTIFICATEX509VALIDATIONPOLICY::GetMinimumRSAKeyBits() { return mi
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
 void CIPHERCERTIFICATEX509VALIDATIONPOLICY::SetMinimumRSAKeyBits(XDWORD bits) { minimumRSAKeyBits = bits; }
+
+
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         bool CIPHERCERTIFICATEX509VALIDATIONPOLICY::GetAllowSHA1()
@@ -218,6 +219,8 @@ void CIPHERCERTIFICATEX509VALIDATIONPOLICY::SetMinimumRSAKeyBits(XDWORD bits) { 
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
 bool CIPHERCERTIFICATEX509VALIDATIONPOLICY::GetAllowSHA1() { return allowSHA1; }
+
+
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         void CIPHERCERTIFICATEX509VALIDATIONPOLICY::SetAllowSHA1(bool allow)
@@ -228,6 +231,8 @@ bool CIPHERCERTIFICATEX509VALIDATIONPOLICY::GetAllowSHA1() { return allowSHA1; }
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
 void CIPHERCERTIFICATEX509VALIDATIONPOLICY::SetAllowSHA1(bool allow) { allowSHA1 = allow; }
+
+
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         bool CIPHERCERTIFICATEX509VALIDATIONPOLICY::GetAllowExpired()
@@ -238,6 +243,8 @@ void CIPHERCERTIFICATEX509VALIDATIONPOLICY::SetAllowSHA1(bool allow) { allowSHA1
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
 bool CIPHERCERTIFICATEX509VALIDATIONPOLICY::GetAllowExpired() { return allowExpired; }
+
+
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         void CIPHERCERTIFICATEX509VALIDATIONPOLICY::SetAllowExpired(bool allow)
@@ -248,6 +255,8 @@ bool CIPHERCERTIFICATEX509VALIDATIONPOLICY::GetAllowExpired() { return allowExpi
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
 void CIPHERCERTIFICATEX509VALIDATIONPOLICY::SetAllowExpired(bool allow) { allowExpired = allow; }
+
+
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         bool CIPHERCERTIFICATEX509VALIDATIONPOLICY::GetRequireServerAuthEKU()
@@ -258,6 +267,8 @@ void CIPHERCERTIFICATEX509VALIDATIONPOLICY::SetAllowExpired(bool allow) { allowE
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
 bool CIPHERCERTIFICATEX509VALIDATIONPOLICY::GetRequireServerAuthEKU() { return requireServerAuthEKU; }
+
+
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         void CIPHERCERTIFICATEX509VALIDATIONPOLICY::SetRequireServerAuthEKU(bool require)
@@ -268,6 +279,8 @@ bool CIPHERCERTIFICATEX509VALIDATIONPOLICY::GetRequireServerAuthEKU() { return r
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
 void CIPHERCERTIFICATEX509VALIDATIONPOLICY::SetRequireServerAuthEKU(bool require) { requireServerAuthEKU = require; }
+
+
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         bool CIPHERCERTIFICATEX509VALIDATIONPOLICY::GetRequireClientAuthEKU()
@@ -278,6 +291,8 @@ void CIPHERCERTIFICATEX509VALIDATIONPOLICY::SetRequireServerAuthEKU(bool require
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
 bool CIPHERCERTIFICATEX509VALIDATIONPOLICY::GetRequireClientAuthEKU() { return requireClientAuthEKU; }
+
+
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         void CIPHERCERTIFICATEX509VALIDATIONPOLICY::SetRequireClientAuthEKU(bool require)
@@ -288,6 +303,8 @@ bool CIPHERCERTIFICATEX509VALIDATIONPOLICY::GetRequireClientAuthEKU() { return r
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
 void CIPHERCERTIFICATEX509VALIDATIONPOLICY::SetRequireClientAuthEKU(bool require) { requireClientAuthEKU = require; }
+
+
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         XDWORD CIPHERCERTIFICATEX509VALIDATIONPOLICY::GetMaximumChainDepth()
@@ -298,6 +315,8 @@ void CIPHERCERTIFICATEX509VALIDATIONPOLICY::SetRequireClientAuthEKU(bool require
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
 XDWORD CIPHERCERTIFICATEX509VALIDATIONPOLICY::GetMaximumChainDepth() { return maximumChainDepth; }
+
+
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         void CIPHERCERTIFICATEX509VALIDATIONPOLICY::SetMaximumChainDepth(XDWORD depth)
@@ -308,6 +327,7 @@ XDWORD CIPHERCERTIFICATEX509VALIDATIONPOLICY::GetMaximumChainDepth() { return ma
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
 void CIPHERCERTIFICATEX509VALIDATIONPOLICY::SetMaximumChainDepth(XDWORD depth) { maximumChainDepth = depth; }
+
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
@@ -327,6 +347,7 @@ bool CIPHERCERTIFICATEX509VALIDATIONPOLICY::IsSignatureAlgorithmAllowed(CIPHERCE
   if(((XDWORD)algorithm >= 64) || (algorithm == CIPHERCERTIFICATEX509_ALGORITHM_TYPE_UNKNOWN)) return false;
   return (allowedSignatureAlgorithms & (((XQWORD)1) << (XDWORD)algorithm))?true:false;
 }
+
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
@@ -426,11 +447,9 @@ bool CIPHERCERTIFICATEX509VALIDATOR::ValidateClient(XVECTOR<XBUFFER*>* certifica
 * @return     bool : true if the operation is successful; otherwise false.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-bool CIPHERCERTIFICATEX509VALIDATOR::ValidateAllPaths(XVECTOR<XBUFFER*>* certificatechain, XVECTOR<XBUFFER*>* trustedroots,
-                                                       XCHAR* servername, XDATETIME* datetime)
+bool CIPHERCERTIFICATEX509VALIDATOR::ValidateAllPaths(XVECTOR<XBUFFER*>* certificatechain, XVECTOR<XBUFFER*>* trustedroots, XCHAR* servername, XDATETIME* datetime)
 {
-  return ValidateAllPathsInternal(certificatechain, trustedroots, CIPHERCERTIFICATEX509VALIDATOR_PURPOSE_SERVER_AUTH,
-                                  servername, datetime);
+  return ValidateAllPathsInternal(certificatechain, trustedroots, CIPHERCERTIFICATEX509VALIDATOR_PURPOSE_SERVER_AUTH, servername, datetime);
 }
 
 
@@ -447,11 +466,9 @@ bool CIPHERCERTIFICATEX509VALIDATOR::ValidateAllPaths(XVECTOR<XBUFFER*>* certifi
 * @return     bool : true if the operation is successful; otherwise false.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-bool CIPHERCERTIFICATEX509VALIDATOR::ValidateClientAllPaths(XVECTOR<XBUFFER*>* certificatechain,
-                                                             XVECTOR<XBUFFER*>* trustedroots, XDATETIME* datetime)
+bool CIPHERCERTIFICATEX509VALIDATOR::ValidateClientAllPaths(XVECTOR<XBUFFER*>* certificatechain, XVECTOR<XBUFFER*>* trustedroots, XDATETIME* datetime)
 {
-  return ValidateAllPathsInternal(certificatechain, trustedroots, CIPHERCERTIFICATEX509VALIDATOR_PURPOSE_CLIENT_AUTH,
-                                  NULL, datetime);
+  return ValidateAllPathsInternal(certificatechain, trustedroots, CIPHERCERTIFICATEX509VALIDATOR_PURPOSE_CLIENT_AUTH, NULL, datetime);
 }
 
 
@@ -470,10 +487,7 @@ bool CIPHERCERTIFICATEX509VALIDATOR::ValidateClientAllPaths(XVECTOR<XBUFFER*>* c
 * @return     bool : true if the operation is successful; otherwise false.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-bool CIPHERCERTIFICATEX509VALIDATOR::ValidateAllPathsInternal(XVECTOR<XBUFFER*>* certificatechain,
-                                                               XVECTOR<XBUFFER*>* trustedroots,
-                                                               CIPHERCERTIFICATEX509VALIDATOR_PURPOSE purpose,
-                                                               XCHAR* servername, XDATETIME* datetime)
+bool CIPHERCERTIFICATEX509VALIDATOR::ValidateAllPathsInternal(XVECTOR<XBUFFER*>* certificatechain, XVECTOR<XBUFFER*>* trustedroots, CIPHERCERTIFICATEX509VALIDATOR_PURPOSE purpose, XCHAR* servername, XDATETIME* datetime)
 {
   End();
 
@@ -539,6 +553,7 @@ bool CIPHERCERTIFICATEX509VALIDATOR::ValidateAllPathsInternal(XVECTOR<XBUFFER*>*
   return status;
 }
 
+
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         CIPHERCERTIFICATEX509VALIDATIONPOLICY* CIPHERCERTIFICATEX509VALIDATOR::GetPolicy()
@@ -552,6 +567,7 @@ CIPHERCERTIFICATEX509VALIDATIONPOLICY* CIPHERCERTIFICATEX509VALIDATOR::GetPolicy
 {
   return &policy;
 }
+
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
@@ -790,7 +806,7 @@ bool CIPHERCERTIFICATEX509VALIDATOR::ValidateInternal(XVECTOR<XBUFFER*>* certifi
 
       if(chainend->GetCertificateData()->Compare((*root->GetCertificateData())))
         {
-          if(!CIPHERCERTIFICATEX509VALIDATOR_RootConstraintsPermit(root,certificates,true))
+          if(!CIPHERCERTIFICATEX509VALIDATOR_RootConstraintsPermit(root, certificates, true))
             {
               if(!rooterrorfound) rooterror = CIPHERCERTIFICATEX509VALIDATOR_ERROR_NAMECONSTRAINT;
               rooterrorfound = true;
@@ -805,7 +821,7 @@ bool CIPHERCERTIFICATEX509VALIDATOR::ValidateInternal(XVECTOR<XBUFFER*>* certifi
          (!root->HasKeyUsage() || root->IsKeyUsageCertificateSign()) &&
          IsSamePublicKey(chainend->GetPublicCipherKey(), root->GetPublicCipherKey()))
         {
-          if(!CIPHERCERTIFICATEX509VALIDATOR_RootConstraintsPermit(root,certificates,true))
+          if(!CIPHERCERTIFICATEX509VALIDATOR_RootConstraintsPermit(root, certificates, true))
             {
               if(!rooterrorfound) rooterror = CIPHERCERTIFICATEX509VALIDATOR_ERROR_NAMECONSTRAINT;
               rooterrorfound = true;
@@ -847,7 +863,7 @@ bool CIPHERCERTIFICATEX509VALIDATOR::ValidateInternal(XVECTOR<XBUFFER*>* certifi
 
       if(chainend->VerifySignature(root->GetPublicCipherKey()))
         {
-          if(!CIPHERCERTIFICATEX509VALIDATOR_RootConstraintsPermit(root,certificates,false))
+          if(!CIPHERCERTIFICATEX509VALIDATOR_RootConstraintsPermit(root, certificates, false))
             {
               if(!rooterrorfound) rooterror = CIPHERCERTIFICATEX509VALIDATOR_ERROR_NAMECONSTRAINT;
               rooterrorfound = true;

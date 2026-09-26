@@ -131,7 +131,7 @@ bool DIOWEBSERVER_QUERYSTRINGS::AddParam(XSTRING& ID, XSTRING& value)
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         bool DIOWEBSERVER_QUERYSTRINGS::AddParam(XCHAR* ID , XSTRING& value)
+* @fn         bool DIOWEBSERVER_QUERYSTRINGS::AddParam(XCHAR* ID, XSTRING& value)
 * @brief      Add param
 * @ingroup    DATAIO
 * 
@@ -141,7 +141,7 @@ bool DIOWEBSERVER_QUERYSTRINGS::AddParam(XSTRING& ID, XSTRING& value)
 * @return     bool : true if the operation is successful; otherwise false.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-bool DIOWEBSERVER_QUERYSTRINGS::AddParam(XCHAR* ID  , XSTRING& value)
+bool DIOWEBSERVER_QUERYSTRINGS::AddParam(XCHAR* ID, XSTRING& value)
 {
   return AddParam(ID, value.Get());
 }
@@ -401,7 +401,7 @@ bool DIOWEBSERVER_QUERYSTRINGS::GetAllParam(XSTRING& allparam)
       XSTRING* nameparam = params.GetKey(c);
       XSTRING* param     = params.GetElement(c);
 
-      if(nameparam && param) allparam.AddFormat(__L("%s=%s"),  nameparam->Get(), param->Get());
+      if(nameparam && param) allparam.AddFormat(__L("%s=%s"), nameparam->Get(), param->Get());
       if(c < params.GetSize()-1)  allparam += __L("&");
     }
 
@@ -466,7 +466,7 @@ int DIOWEBSERVER_QUERYSTRINGS::GetParamsFromURL(XCHAR* url)
 
   _url = url;
 
-  start = _url.Find(__L("?"),true);
+  start = _url.Find(__L("?"), true);
   if(start != XSTRING_NOTFOUND)
     {
       XSTRING ID;
@@ -476,19 +476,19 @@ int DIOWEBSERVER_QUERYSTRINGS::GetParamsFromURL(XCHAR* url)
 
       do{
           value.Empty();
-          end = _url.Find(__L("&"),true,start);
+          end = _url.Find(__L("&"), true, start);
           if(end == XSTRING_NOTFOUND)
                 _url.Copy(start, param);
            else _url.Copy(start, end, param);
 
-          separator = param.Find(__L("="),true);
+          separator = param.Find(__L("="), true);
           if(separator == XSTRING_NOTFOUND)
             {
               ID = param;
             }
            else
             {
-              param.Copy(0 , separator,ID);
+              param.Copy(0, separator, ID);
               param.Copy(separator+1, value);
             }
 

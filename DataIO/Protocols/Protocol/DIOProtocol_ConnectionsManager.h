@@ -42,17 +42,13 @@
 #include "DIOProtocol_ConnectionsManager_XEvent.h"
 
 
-
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
 
 #define DIOPROTOCOL_CONNECTIONS_DEFAULTIMETRYCONNECTIONS         8    // Seconds
 #define DIOPROTOCOL_CONNECTIONS_DEFAULTIMECHECKCONNECTIONS      60    // Seconds
 #define DIOPROTOCOL_CONNECTIONS_UNLIMITEDNCONNECTIONS           -1
 
-
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
-
 
 class XTIMER;
 class CIPHER;
@@ -63,7 +59,6 @@ class DIOPROTOCOL;
 class DIOPROTOCOL_CONNECTION;
 class DIOPROTOCOL_CONNECTIONSMANAGER;
 class DIOSTREAMENUMSERVERS;
-
 
 class DIOPROTOCOL_CONNECTION
 {
@@ -81,7 +76,6 @@ class DIOPROTOCOL_CONNECTION
     bool                                SetInUse                                      (bool inuse, XDWORD ID);
     bool                                IsInUse                                       ();
 
-
     bool                                IsSendEventConnected                          ();
     void                                SetIsSendEventConnected                       (bool issendeventconnected);
 
@@ -98,7 +92,6 @@ class DIOPROTOCOL_CONNECTION
     void                                Clean                                          ();
 
 };
-
 
 class DIOPROTOCOL_CONNECTIONSMANAGER : public XSUBJECT
 {
@@ -150,7 +143,6 @@ class DIOPROTOCOL_CONNECTIONSMANAGER : public XSUBJECT
     XSTRING*                            Application_GetName                             ();
 
   protected:
-
 
     DIOSTREAMENUMSERVERS*               diostreamenumservers;
     DIOSTREAMCONFIG*                    diostreamcfg;

@@ -40,19 +40,13 @@
 #include "GRPProperties.h"
 #include "GRPBitmapFile.h"
 
-
-
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
 
 #define GRPBITMAPFILEPNG_HEADERSIZE 8
 
-
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
 
-
 class GRPBITMAP;
-
 
 class GRPBITMAPFILEPNG : public GRPBITMAPFILEBASE
 {

@@ -748,15 +748,15 @@ bool MAINPROCWINDOWS::IsRunningAsService()
   DWORD                  bytesneeded;
   SC_HANDLE              schscmanager;
 
-  schscmanager = OpenSCManager( NULL,                              // local computer
-                                NULL                  ,            // servicesActive database
-                                SC_MANAGER_ALL_ACCESS  );          // full access rights
+  schscmanager = OpenSCManager(NULL,                    // local computer
+                               NULL,                    // servicesActive database
+                               SC_MANAGER_ALL_ACCESS);  // full access rights
   if(!schscmanager) return false;
 
   // Get a handle to the service.
-  SC_HANDLE schservice = OpenService( schscmanager          ,      // SCM database
-                                      APPMODE_SERVICE_NAME  ,      // name of service
-                                      SERVICE_ALL_ACCESS);         // full access
+  SC_HANDLE schservice = OpenService(schscmanager,          // SCM database
+                                     APPMODE_SERVICE_NAME,  // name of service
+                                     SERVICE_ALL_ACCESS);   // full access
 
   if(!schservice)
     {
@@ -1317,7 +1317,7 @@ int WINAPI WinMain(HINSTANCE hinstance, HINSTANCE hprevinst, LPSTR cmdline, int 
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         BOOL WINAPI DllMain(HINSTANCE hinstDLL, XDWORD fdwReason,LPVOID lpvReserved)
+* @fn         BOOL WINAPI DllMain(HINSTANCE hinstDLL, XDWORD fdwReason, LPVOID lpvReserved)
 * @brief      Dll Main
 * @ingroup    PLATFORM_WINDOWS
 * 
@@ -1328,7 +1328,7 @@ int WINAPI WinMain(HINSTANCE hinstance, HINSTANCE hprevinst, LPSTR cmdline, int 
 * @return     BOOL WINAPI : Requested value.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-BOOL WINAPI DllMain(HINSTANCE hinstDLL, XDWORD fdwReason,LPVOID lpvReserved)
+BOOL WINAPI DllMain(HINSTANCE hinstDLL, XDWORD fdwReason, LPVOID lpvReserved)
 {
   switch(fdwReason)
     {

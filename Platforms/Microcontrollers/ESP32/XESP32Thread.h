@@ -36,9 +36,6 @@
 
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
 
-
-
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
 
 class XESP32MUTEX : public XMUTEX
@@ -62,7 +59,7 @@ class XESP32MUTEX : public XMUTEX
 class XESP32THREAD  : public XTHREAD
 {
   public:
-                          XESP32THREAD              (XTHREADGROUPID groupID, XCHAR* ID,XTHREADFUNCTION function = NULL,void* data = NULL);
+                          XESP32THREAD              (XTHREADGROUPID groupID, XCHAR* ID, XTHREADFUNCTION function = NULL, void* data = NULL);
      virtual             ~XESP32THREAD              ();
 
      virtual bool         Ini                       (bool run = true);

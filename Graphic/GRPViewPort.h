@@ -34,9 +34,7 @@
 
 #include "GRPProperties.h"
 
-
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
-
 
 enum GRPVIEWPORT_PROJECTIONTYPE
 {
@@ -46,12 +44,9 @@ enum GRPVIEWPORT_PROJECTIONTYPE
   GRPVIEWPORT_PROJECTIONTYPE_PIXELS        ,
 };
 
-
 #define GRPVIEWPORT_ID_MAIN   __L("mainviewport")
 
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
-
 
 class GRP2DCANVAS;
 
@@ -73,25 +68,24 @@ class GRPVIEWPORT
 
     float                         GetPositionX                        ();
     float                         GetPositionY                        ();
-    void                          SetPosition                         (float  x, float  y);
+    void                          SetPosition                         (float x, float y);
 
     float                         GetWidth                            ();
     float                         GetHeight                           ();
 
-    void                          SetSize                             (float  width, float  height);
+    void                          SetSize                             (float width, float height);
 
     float                         GetMinWidth                         ();
     float                         GetMinHeight                        ();
-    void                          SetMinSize                          (float  minwidth, float  minheight);
+    void                          SetMinSize                          (float minwidth, float minheight);
 
     float                         GetMaxWidth                         ();
     float                         GetMaxHeight                        ();
-    void                          SetMaxSize                          (float  maxwidth, float  maxheight);
+    void                          SetMaxSize                          (float maxwidth, float maxheight);
 
     float                         GetCanvasPositionX                  ();
     float                         GetCanvasPositionY                  ();
-    bool                          SetCanvasPosition                   (float  x, float  y);
-
+    bool                          SetCanvasPosition                   (float x, float y);
 
     GRP2DCANVAS*                  GetCanvas                           ();
 

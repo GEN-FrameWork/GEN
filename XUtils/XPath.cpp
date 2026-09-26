@@ -121,7 +121,7 @@ XPATH::XPATH(const XCHAR* path): XSTRING(path)
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         XPATH::XPATH(const XCHAR* path,XDWORD size): XSTRING(path,size)
+* @fn         XPATH::XPATH(const XCHAR* path, XDWORD size): XSTRING(path,size)
 * @brief      Constructor of class
 * @ingroup    XUTILS
 * 
@@ -129,7 +129,7 @@ XPATH::XPATH(const XCHAR* path): XSTRING(path)
 * @param[in]  size : Size value.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-XPATH::XPATH(const XCHAR* path,XDWORD size): XSTRING(path,size)
+XPATH::XPATH(const XCHAR* path, XDWORD size): XSTRING(path, size)
 {
 
 }
@@ -593,7 +593,7 @@ XCHAR XPATH::operator [](int position)
 * --------------------------------------------------------------------------------------------------------------------*/
 bool XPATH::GetDrive(XSTRING& drive)
 {
-  Split(&drive,NULL,NULL,NULL);
+  Split(&drive, NULL, NULL, NULL);
 
   if(drive.IsEmpty()) return false;
 
@@ -616,7 +616,7 @@ bool XPATH::GetPath(XSTRING& path)
 {
   XPATH xpath;
 
-  Split(NULL,&xpath,NULL,NULL);
+  Split(NULL, &xpath, NULL, NULL);
 
   if(xpath.IsEmpty()) return false;
 
@@ -671,7 +671,7 @@ bool XPATH::GetPathAndNamefile(XSTRING& pathnamefile)
   XPATH      path;
   XSTRING name;
 
-  Split(NULL,&path,&name,NULL);
+  Split(NULL, &path, &name, NULL);
 
   path.Slash_Add();
 
@@ -728,7 +728,7 @@ bool XPATH::GetPathAndNamefileExt(XSTRING& pathnamefile)
 * --------------------------------------------------------------------------------------------------------------------*/
 bool XPATH::GetNamefile(XSTRING& namefile)
 {
-  Split(NULL,NULL,&namefile,NULL);
+  Split(NULL, NULL, &namefile, NULL);
 
   if(namefile.IsEmpty()) return false;
 
@@ -752,7 +752,7 @@ bool XPATH::GetNamefileExt(XSTRING& namefileext)
   XSTRING name;
   XSTRING ext;
 
-  Split(NULL,NULL,&name,&ext);
+  Split(NULL, NULL, &name, &ext);
 
   namefileext  = name;
   namefileext += ext;
@@ -776,7 +776,7 @@ bool XPATH::GetNamefileExt(XSTRING& namefileext)
 * --------------------------------------------------------------------------------------------------------------------*/
 bool XPATH::GetExt(XSTRING& ext)
 {
-  Split(NULL,NULL,NULL,&ext);
+  Split(NULL, NULL, NULL, &ext);
 
   if(ext.IsEmpty()) return false;
 
@@ -1031,7 +1031,7 @@ bool XPATH::DeleteDrive()
   XPATH xpath2;
 
   xpath2 = Get();
-  xpath2.DeleteCharacters(0,2);
+  xpath2.DeleteCharacters(0, 2);
 
   Set(xpath2.Get());
 
@@ -1196,7 +1196,7 @@ bool XPATH::AddToNameFile(bool isprefix, XCHAR* tag)
   XSTRING  newname;
   XSTRING  ext;
 
-  if(!Split(&drive,&xpath,&name,&ext)) return false;
+  if(!Split(&drive, &xpath, &name, &ext)) return false;
 
   //if(!drive.IsEmpty()) drive.Add(__L("/"));
 
@@ -1213,7 +1213,7 @@ bool XPATH::AddToNameFile(bool isprefix, XCHAR* tag)
       newname += tag;
     }
 
-  Format(__L("%s%s%s%s"),drive.Get(),xpath.Get(),newname.Get(),ext.Get());
+  Format(__L("%s%s%s%s"), drive.Get(), xpath.Get(), newname.Get(), ext.Get());
 
   return true;
 }
@@ -1221,7 +1221,7 @@ bool XPATH::AddToNameFile(bool isprefix, XCHAR* tag)
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         bool XPATH::Create(int nelements,...)
+* @fn         bool XPATH::Create(int nelements, ...)
 * @brief      Create resource
 * @ingroup    XUTILS
 * 
@@ -1231,7 +1231,7 @@ bool XPATH::AddToNameFile(bool isprefix, XCHAR* tag)
 * @return     bool : true if the operation is successful; otherwise false.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-bool XPATH::Create(int nelements,...)
+bool XPATH::Create(int nelements, ...)
 {
   va_list arg;
 
@@ -1350,7 +1350,7 @@ bool XPATH::Split(XSTRING* drive, XPATH* xpath, XSTRING* name, XSTRING* ext)
     {
       if(pathstr[c]==__C(':'))
         {
-          if(drive) Copy(0,c+1,(*drive));
+          if(drive) Copy(0, c+1, (*drive));
 
           idrive = c+1;
           break;

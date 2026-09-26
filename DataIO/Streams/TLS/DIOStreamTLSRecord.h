@@ -43,21 +43,14 @@
 #include "DIOStreamTLSMessages.h"
 #include "DIOStreamTLS13KeySchedule.h"
 
-
-
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
-
 
 #define DIOSTREAMTLSRECORD_MAXPLAINSIZE                       16384             // 2^14, the limit set by RFC 8446 section 5.1
 #define DIOSTREAMTLSRECORD_MAXCIPHERSIZE                      (16384 + 256)     // The limit for a protected record, section 5.2
 
 #define DIOSTREAMTLSRECORD_LEGACYVERSION                      DIOSTREAMTLS_MSG_VERSION_TLS_1_2
 
-
-
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
-
 
 class DIOSTREAMTLSRECORD
 {

@@ -35,8 +35,6 @@
 
 #include "GRPProperties.h"
 
-
-
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
 
 enum GRPBITMAPFILE_TYPE
@@ -48,10 +46,7 @@ enum GRPBITMAPFILE_TYPE
   GRPBITMAPFILE_TYPE_TGA              
 };
 
-
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
-
 
 class GRPBITMAP;
 class GRPBITMAPSEQUENCE;
@@ -77,12 +72,10 @@ class GRPBITMAPFILEBASE : public XFILECONTAINER
     bool                        Create                      (XPATH& xpath);
     bool                        Close                       (void);
 
-
   private:
 
     void                        Clean                       ();
 };
-
 
 class GRPBITMAPFILE
 {

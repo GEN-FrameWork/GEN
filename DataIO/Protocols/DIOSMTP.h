@@ -65,22 +65,17 @@ enum DIOSMTPXPRIORITY
   DIOSMTPXPRIORITY_LOW                    = 4
 };
 
-
 #define DIOSMTP_MAXNATTEMPTSCONNECT         3
 #define DIOSMTP_DEFAULTTIMEOUT              3
 #define DIOSMTP_DEFAULSIZELIMITATTACHMENT   (3*1024*1024)
 #define DIOSMTP_ANYSIZELIMITATTACHMENT      -1
 #define DIOSMTP_BOUNDARYTEXT                __L("__MESSAGE__ID__54yg6f6h6y456345")
 
-
-
-
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
 
 
 class XFILETXT;
 class DIOSTREAM;
-
 
 class DIOSMTPRECIPIENT
 {
@@ -127,7 +122,6 @@ class DIOSMTPATTACHMENT
     XQWORD                        sizelimit;
 };
 
-
 class DIOSMTP
 {
   public:
@@ -151,7 +145,6 @@ class DIOSMTP
     XSTRING*                      Server_GetConnectionLocalIP     ();
 
     bool                          Server_IsAvailable              ();
-
 
     DIOSSMPTCONTENTTYPE           GetContentType                  ();
     void                          SetContentType                  (DIOSSMPTCONTENTTYPE contenttype);

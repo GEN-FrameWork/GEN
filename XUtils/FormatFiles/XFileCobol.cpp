@@ -385,10 +385,6 @@ void XFILECOBOL_PIC::Clean()
 }
 
 
-
-
-
-
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         XFILECOBOL_FIELD::XFILECOBOL_FIELD()
@@ -630,10 +626,6 @@ void XFILECOBOL_FIELD::Clean()
   redefinename.Empty();
   redefineoffset  = 0;
 }
-
-
-
-
 
 
 /**-------------------------------------------------------------------------------------------------------------------
@@ -1131,7 +1123,7 @@ bool XFILECOBOL_RECORD::ConvertDataTo(XFILECOBOL_PIC* picture, XBUFFER& bufferda
 
                         case __C('9') :
                         case __C('X') :
-                        case __C('A') : datastring.AddFormat(__L("%c"),  bufferdata.Get()[indexdata]);
+                        case __C('A') : datastring.AddFormat(__L("%c"), bufferdata.Get()[indexdata]);
                                         indexdata++;
                                         break;
 
@@ -1216,10 +1208,6 @@ void XFILECOBOL_RECORD::Clean()
 {
   handle = NULL;
 }
-
-
-
-
 
 
 /**-------------------------------------------------------------------------------------------------------------------
@@ -1661,10 +1649,6 @@ void XFILECOBOL_HANDLE::Clean()
 {
   typerecord =  XFILECOBOL_RECORD_TYPE_UNKNOWN;
 }
-
-
-
-
 
 
 /**-------------------------------------------------------------------------------------------------------------------
@@ -2265,7 +2249,7 @@ bool XFILECOBOL::Eliminate_InvalidCharacters(XSTRING& line)
     {
       if(!IsValidCharacter(line.Get()[c]))
         {
-          line.DeleteCharacters(c,1);
+          line.DeleteCharacters(c, 1);
 
         } else c++;
     }
@@ -2368,7 +2352,6 @@ bool XFILECOBOL::Eliminate_Comments(XVECTOR<XSTRING*>* lines)
 }
 
 
-
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         bool XFILECOBOL::Eliminate_NumberLines(XVECTOR<XSTRING*>* lines)
@@ -2392,7 +2375,6 @@ bool XFILECOBOL::Eliminate_NumberLines(XVECTOR<XSTRING*>* lines)
 
   return true;
 }
-
 
 
 /**-------------------------------------------------------------------------------------------------------------------
@@ -2431,7 +2413,6 @@ bool XFILECOBOL::Eliminate_EmptyLines(XVECTOR<XSTRING*>* lines)
 }
 
 
-
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         bool XFILECOBOL::Eliminate_UnnecessarySpaces(XVECTOR<XSTRING*>* lines)
@@ -2467,7 +2448,6 @@ bool XFILECOBOL::Eliminate_UnnecessarySpaces(XVECTOR<XSTRING*>* lines)
 
   return true;
 }
-
 
 
 /**-------------------------------------------------------------------------------------------------------------------
@@ -2547,7 +2527,6 @@ bool XFILECOBOL::ExtractReservedToken(XSTRING& line, XCHAR* token, XSTRING& var)
 }
 
 
-
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         bool XFILECOBOL::ExtractReservedToken(XSTRING& line, XCHAR* token)
@@ -2576,7 +2555,6 @@ bool XFILECOBOL::ExtractReservedToken(XSTRING& line, XCHAR* token)
 
   return true;
 }
-
 
 
 /**-------------------------------------------------------------------------------------------------------------------
@@ -2625,9 +2603,9 @@ XFILECOBOL_LINE_TYPE XFILECOBOL::InterpreterLineForHandle(XSTRING& line, int& le
       index = line.Find(__L("SELECT "), true);
       if(!index)
         {
-          ExtractReservedToken(line, __L("SELECT")          , name);
+          ExtractReservedToken(line, __L("SELECT"), name);
           ExtractReservedToken(line, __L("ORGANIZATION IS") , param);
-          ExtractReservedToken(line, __L("ASSIGN TO")       , param2);
+          ExtractReservedToken(line, __L("ASSIGN TO"), param2);
 
           returntype = XFILECOBOL_LINE_TYPE_SELECT;
         }
@@ -2823,7 +2801,7 @@ bool XFILECOBOL::TraslateTextToHandle(XVECTOR<XSTRING*>* lines, XFILECOBOL_HANDL
                                                           {
                                                             xpathdata.AdjustSize(_MAXSTR);
 
-                                                            if(param2.Find(__L("'") , true) != XSTRING_NOTFOUND)  param2.UnFormat(__L("'%s'")  , xpathdata.Get());
+                                                            if(param2.Find(__L("'") , true) != XSTRING_NOTFOUND)  param2.UnFormat(__L("'%s'"), xpathdata.Get());
                                                             if(param2.Find(__L("\""), true) != XSTRING_NOTFOUND)  param2.UnFormat(__L("\"%s\""), xpathdata.Get());
 
                                                             xpathdata.AdjustSize();
@@ -2948,7 +2926,6 @@ bool XFILECOBOL::TraslateTextToHandle(XVECTOR<XSTRING*>* lines, XFILECOBOL_HANDL
 }
 
 
-
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         bool XFILECOBOL::ChangeNameNodeWithOccurs(int index, XSTRING* name)
@@ -2984,7 +2961,6 @@ bool XFILECOBOL::ChangeNameNodeWithOccurs(int index, XSTRING* name)
 
   return true;
 }
-
 
 
 /**-------------------------------------------------------------------------------------------------------------------
@@ -3049,8 +3025,6 @@ XFILECOBOL_FD_TREENODE* XFILECOBOL::DuplicateNodeWithSubnodes(int index, XFILECO
 
   return newfieldnode;
 }
-
-
 
 
 /**-------------------------------------------------------------------------------------------------------------------
