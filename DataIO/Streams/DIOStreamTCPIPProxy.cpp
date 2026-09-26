@@ -2,7 +2,9 @@
 * 
 * @file       DIOStreamTCPIPProxy.cpp
 * 
-* @class      DIOSTREAMTCPIPPROXYCFG / DIOSTREAMTCPIPPROXY
+* @class      DIOSTREAMTCPIPPROXYCFG
+* 
+* @class      DIOSTREAMTCPIPPROXY
 * @brief      Data Input/Output proxy configuration and tunnel negotiation classes
 * @ingroup    DATAIO
 * 

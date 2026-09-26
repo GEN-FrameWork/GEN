@@ -33,7 +33,7 @@
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         static bool CIPHERCERTIFICATEX509PATHBUILDER_IssuerIdentifierMatches(CIPHERCERTIFICATEX509* certificate, CIPHERCERTIFICATEX509* issuer)
+* @fn         bool CIPHERCERTIFICATEX509PATHBUILDER_IssuerIdentifierMatches(CIPHERCERTIFICATEX509* certificate, CIPHERCERTIFICATEX509* issuer)
 * @brief      Issuer identifier matches
 * @ingroup    CIPHER
 * 

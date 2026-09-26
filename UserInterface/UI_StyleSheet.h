@@ -63,10 +63,10 @@
 *   NULL (the default) is always safe: any selector that HAS a combinator requirement simply cannot match then,
 *   the same conservative "cannot verify, so no match" a pure-logic caller already gets for free.
 *
-*   No attribute selectors. `@media` supports a GEN subset: `(min-width: Npx)` / `(max-width: Npx)`
+*   No attribute selectors. `@@media` supports a GEN subset: `(min-width: Npx)` / `(max-width: Npx)`
 *   (optional `and` between features). Evaluation is load-time against the layout design viewport
 *   (`UI_STYLESHEET::SetMediaViewport`); no re-eval on window resize (same contract as rem/vw Track L.3).
-*   `@import` IS supported (see
+*   `@@import` IS supported (see
 *   UI_CSSPARSER::ReadImportStatement()/ResolveAndParseImport()), with cycle detection against the in-progress
 *   import stack. Pseudo-classes are syntactically accepted (parsed into UI_CSSSELECTOR::pseudos); ":root" is
 *   intercepted at parse time as the anchor for CSS custom properties (theme variables, see below) and never
@@ -88,10 +88,10 @@
 *   expanded values and never re-parses anything. Variables can reference other variables (up to a small
 *   fixed number of expansion passes; deep recursion is not supported and is not intended to be).
 *
-*   With "@import": substitution is deliberately deferred to the OUTERMOST UI_CSSPARSER::ParseText() call in
-*   an @import chain (see UI_CSSPARSER::importdepth), never to an imported file's own nested parse. This is
-*   what lets "@import "theme.css"; :root { --brand-color: ...; }" work as real CSS does -- a variable the
-*   IMPORTER declares AFTER the @import line still overrides the imported file's own var() uses, because every
+*   With "@@import": substitution is deliberately deferred to the OUTERMOST UI_CSSPARSER::ParseText() call in
+*   an @@import chain (see UI_CSSPARSER::importdepth), never to an imported file's own nested parse. This is
+*   what lets "@@import "theme.css"; :root { --brand-color: ...; }" work as real CSS does -- a variable the
+*   IMPORTER declares AFTER the @@import line still overrides the imported file's own var() uses, because every
 *   file's rules and ":root" variables are fully merged into this UI_STYLESHEET before var() is resolved even
 *   once, instead of the imported file substituting against a still-partial variable table of its own.
 *

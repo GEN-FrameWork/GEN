@@ -2078,7 +2078,7 @@ static bool DIOWEBSERVER_HeaderNameIs(XSTRING& line, XDWORD colon, const XCHAR* 
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         static bool DIOWEBSERVER_HeaderNameCharacterIsValid(XCHAR character)
+* @fn         bool DIOWEBSERVER_HeaderNameCharacterIsValid(XCHAR character)
 * @brief      Header name character is valid
 * @ingroup    DATAIO
 * 
@@ -2105,7 +2105,7 @@ static bool DIOWEBSERVER_HeaderNameCharacterIsValid(XCHAR character)
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         static bool DIOWEBSERVER_RequestFraming_Get(DIOWEBHEADER& header, XDWORD maximumbodysize, XDWORD& contentlength)
+* @fn         bool DIOWEBSERVER_RequestFraming_Get(DIOWEBHEADER& header, XDWORD maximumbodysize, XDWORD& contentlength)
 * @brief      Request framing get
 * @ingroup    DATAIO
 * 

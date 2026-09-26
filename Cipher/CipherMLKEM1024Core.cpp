@@ -62,9 +62,9 @@ namespace
 
   /**-------------------------------------------------------------------------------------------------------------------
   * 
-  * @fn         static uint64_t Load64LE(const uint8_t* p)
+  * @fn         uint64_t Load64LE(const uint8_t* p)
   * @brief      Load64 le
-  * @ingroup    GEN
+  * @ingroup    CIPHER
   * 
   * @param[in]  p : Pointer to p.
   * 
@@ -77,9 +77,9 @@ namespace
   }
   /**-------------------------------------------------------------------------------------------------------------------
   * 
-  * @fn         static void Store64LE(uint8_t* p,uint64_t v)
+  * @fn         void Store64LE(uint8_t* p,uint64_t v)
   * @brief      Store64 le
-  * @ingroup    GEN
+  * @ingroup    CIPHER
   * 
   * @param[in]  p : Pointer to p.
   * @param[in]  v : V value.
@@ -91,9 +91,9 @@ namespace
   }
   /**-------------------------------------------------------------------------------------------------------------------
   * 
-  * @fn         static uint64_t ROL64(uint64_t x,int n)
+  * @fn         uint64_t ROL64(uint64_t x,int n)
   * @brief      Rol64
-  * @ingroup    GEN
+  * @ingroup    CIPHER
   * 
   * @param[in]  x : X value.
   * @param[in]  n : N value.
@@ -105,11 +105,10 @@ namespace
 
   /**-------------------------------------------------------------------------------------------------------------------
   * 
-  * @fn         static void KeccakF(uint64_t st[25])
+  * @fn         void KeccakF(uint64_t st[25])
   * @brief      Keccak f
-  * @ingroup    GEN
+  * @ingroup    CIPHER
   * 
-  * @param[in]  Value.
   * 
   * --------------------------------------------------------------------------------------------------------------------*/
   static void KeccakF(uint64_t st[25])
@@ -138,9 +137,9 @@ namespace
 
   /**-------------------------------------------------------------------------------------------------------------------
   * 
-  * @fn         static void Sponge(const uint8_t* in,size_t inlen,uint8_t* out,size_t outlen,size_t rate,uint8_t domain)
+  * @fn         void Sponge(const uint8_t* in,size_t inlen,uint8_t* out,size_t outlen,size_t rate,uint8_t domain)
   * @brief      Sponge
-  * @ingroup    GEN
+  * @ingroup    CIPHER
   * 
   * @param[in]  in : Pointer to in.
   * @param[in]  inlen : Inlen value.
@@ -174,33 +173,31 @@ namespace
   }
   /**-------------------------------------------------------------------------------------------------------------------
   * 
-  * @fn         static void SHA3_256(const uint8_t* in,size_t len,uint8_t out[32])
+  * @fn         void SHA3_256(const uint8_t* in,size_t len,uint8_t out[32])
   * @brief      256
-  * @ingroup    GEN
+  * @ingroup    CIPHER
   * 
   * @param[in]  in : Pointer to in.
   * @param[in]  len : Len value.
-  * @param[in]  Value.
   * 
   * --------------------------------------------------------------------------------------------------------------------*/
   static void SHA3_256(const uint8_t* in, size_t len, uint8_t out[32]) { Sponge(in, len, out, 32, 136, 0x06); }
   /**-------------------------------------------------------------------------------------------------------------------
   * 
-  * @fn         static void SHA3_512(const uint8_t* in,size_t len,uint8_t out[64])
+  * @fn         void SHA3_512(const uint8_t* in,size_t len,uint8_t out[64])
   * @brief      512
-  * @ingroup    GEN
+  * @ingroup    CIPHER
   * 
   * @param[in]  in : Pointer to in.
   * @param[in]  len : Len value.
-  * @param[in]  Value.
   * 
   * --------------------------------------------------------------------------------------------------------------------*/
   static void SHA3_512(const uint8_t* in, size_t len, uint8_t out[64]) { Sponge(in, len, out, 64, 72, 0x06); }
   /**-------------------------------------------------------------------------------------------------------------------
   * 
-  * @fn         static void SHAKE128(const uint8_t* in,size_t len,uint8_t* out,size_t outlen)
+  * @fn         void SHAKE128(const uint8_t* in,size_t len,uint8_t* out,size_t outlen)
   * @brief      Shake128
-  * @ingroup    GEN
+  * @ingroup    CIPHER
   * 
   * @param[in]  in : Pointer to in.
   * @param[in]  len : Len value.
@@ -211,9 +208,9 @@ namespace
   static void SHAKE128(const uint8_t* in, size_t len, uint8_t* out, size_t outlen) { Sponge(in, len, out, outlen, 168, 0x1f); }
   /**-------------------------------------------------------------------------------------------------------------------
   * 
-  * @fn         static void SHAKE256(const uint8_t* in,size_t len,uint8_t* out,size_t outlen)
+  * @fn         void SHAKE256(const uint8_t* in,size_t len,uint8_t* out,size_t outlen)
   * @brief      Shake256
-  * @ingroup    GEN
+  * @ingroup    CIPHER
   * 
   * @param[in]  in : Pointer to in.
   * @param[in]  len : Len value.
@@ -225,9 +222,9 @@ namespace
 
   /**-------------------------------------------------------------------------------------------------------------------
   * 
-  * @fn         static uint16_t Add(uint16_t a,uint16_t b)
+  * @fn         uint16_t Add(uint16_t a,uint16_t b)
   * @brief      Add
-  * @ingroup    GEN
+  * @ingroup    CIPHER
   * 
   * @param[in]  a : A value.
   * @param[in]  b : B value.
@@ -238,9 +235,9 @@ namespace
   static uint16_t Add(uint16_t a, uint16_t b) { uint16_t x=a+b; if(x>=Q)x-=Q; return x; }
   /**-------------------------------------------------------------------------------------------------------------------
   * 
-  * @fn         static uint16_t Sub(uint16_t a,uint16_t b)
+  * @fn         uint16_t Sub(uint16_t a,uint16_t b)
   * @brief      Sub
-  * @ingroup    GEN
+  * @ingroup    CIPHER
   * 
   * @param[in]  a : A value.
   * @param[in]  b : B value.
@@ -251,9 +248,9 @@ namespace
   static uint16_t Sub(uint16_t a, uint16_t b) { return a>=b?a-b:(uint16_t)(a+Q-b); }
   /**-------------------------------------------------------------------------------------------------------------------
   * 
-  * @fn         static uint16_t Mul(uint16_t a,uint16_t b)
+  * @fn         uint16_t Mul(uint16_t a,uint16_t b)
   * @brief      Mul
-  * @ingroup    GEN
+  * @ingroup    CIPHER
   * 
   * @param[in]  a : A value.
   * @param[in]  b : B value.
@@ -265,9 +262,9 @@ namespace
 
   /**-------------------------------------------------------------------------------------------------------------------
   * 
-  * @fn         static void PolyAdd(POLY r,const POLY a,const POLY b)
+  * @fn         void PolyAdd(POLY r,const POLY a,const POLY b)
   * @brief      Poly add
-  * @ingroup    GEN
+  * @ingroup    CIPHER
   * 
   * @param[in]  r : R value.
   * @param[in]  a : A value.
@@ -277,9 +274,9 @@ namespace
   static void PolyAdd(POLY r, const POLY a, const POLY b) { for(int i=0;i<N;i++) r[i]=Add(a[i], b[i]); }
   /**-------------------------------------------------------------------------------------------------------------------
   * 
-  * @fn         static void PolySub(POLY r,const POLY a,const POLY b)
+  * @fn         void PolySub(POLY r,const POLY a,const POLY b)
   * @brief      Poly sub
-  * @ingroup    GEN
+  * @ingroup    CIPHER
   * 
   * @param[in]  r : R value.
   * @param[in]  a : A value.
@@ -290,9 +287,9 @@ namespace
 
   /**-------------------------------------------------------------------------------------------------------------------
   * 
-  * @fn         static void NTT(POLY f)
+  * @fn         void NTT(POLY f)
   * @brief      Ntt
-  * @ingroup    GEN
+  * @ingroup    CIPHER
   * 
   * @param[in]  f : F value.
   * 
@@ -307,9 +304,9 @@ namespace
   }
   /**-------------------------------------------------------------------------------------------------------------------
   * 
-  * @fn         static void InvNTT(POLY f)
+  * @fn         void InvNTT(POLY f)
   * @brief      Inv ntt
-  * @ingroup    GEN
+  * @ingroup    CIPHER
   * 
   * @param[in]  f : F value.
   * 
@@ -325,9 +322,9 @@ namespace
   }
   /**-------------------------------------------------------------------------------------------------------------------
   * 
-  * @fn         static void NTTMul(POLY h,const POLY f,const POLY g)
+  * @fn         void NTTMul(POLY h,const POLY f,const POLY g)
   * @brief      Ntt mul
-  * @ingroup    GEN
+  * @ingroup    CIPHER
   * 
   * @param[in]  h : H value.
   * @param[in]  f : F value.
@@ -345,9 +342,9 @@ namespace
 
   /**-------------------------------------------------------------------------------------------------------------------
   * 
-  * @fn         static uint16_t Compress(uint16_t x,int d)
+  * @fn         uint16_t Compress(uint16_t x,int d)
   * @brief      Compress
-  * @ingroup    GEN
+  * @ingroup    CIPHER
   * 
   * @param[in]  x : X value.
   * @param[in]  d : D value.
@@ -366,9 +363,9 @@ namespace
   }
   /**-------------------------------------------------------------------------------------------------------------------
   * 
-  * @fn         static uint16_t Decompress(uint16_t y,int d)
+  * @fn         uint16_t Decompress(uint16_t y,int d)
   * @brief      Decompress
-  * @ingroup    GEN
+  * @ingroup    CIPHER
   * 
   * @param[in]  y : Y value.
   * @param[in]  d : D value.
@@ -386,9 +383,9 @@ namespace
 
   /**-------------------------------------------------------------------------------------------------------------------
   * 
-  * @fn         static void Encode12(uint8_t* out,const POLY f)
+  * @fn         void Encode12(uint8_t* out,const POLY f)
   * @brief      Encode12
-  * @ingroup    GEN
+  * @ingroup    CIPHER
   * 
   * @param[out] out : Pointer to out.
   * @param[in]  f : F value.
@@ -400,9 +397,9 @@ namespace
   }
   /**-------------------------------------------------------------------------------------------------------------------
   * 
-  * @fn         static bool Decode12(POLY f,const uint8_t* in)
+  * @fn         bool Decode12(POLY f,const uint8_t* in)
   * @brief      Decode12
-  * @ingroup    GEN
+  * @ingroup    CIPHER
   * 
   * @param[in]  f : F value.
   * @param[in]  in : Pointer to in.
@@ -417,9 +414,9 @@ namespace
   }
   /**-------------------------------------------------------------------------------------------------------------------
   * 
-  * @fn         static void EncodeD(uint8_t* out,const POLY f,int d,bool compress)
+  * @fn         void EncodeD(uint8_t* out,const POLY f,int d,bool compress)
   * @brief      Encode d
-  * @ingroup    GEN
+  * @ingroup    CIPHER
   * 
   * @param[out] out : Pointer to out.
   * @param[in]  f : F value.
@@ -434,9 +431,9 @@ namespace
   }
   /**-------------------------------------------------------------------------------------------------------------------
   * 
-  * @fn         static void DecodeD(POLY f,const uint8_t* in,int d,bool decompress)
+  * @fn         void DecodeD(POLY f,const uint8_t* in,int d,bool decompress)
   * @brief      Decode d
-  * @ingroup    GEN
+  * @ingroup    CIPHER
   * 
   * @param[in]  f : F value.
   * @param[in]  in : Pointer to in.
@@ -451,12 +448,11 @@ namespace
 
   /**-------------------------------------------------------------------------------------------------------------------
   * 
-  * @fn         static void SampleCBD(POLY f,const uint8_t sigma[32],uint8_t nonce)
+  * @fn         void SampleCBD(POLY f,const uint8_t sigma[32],uint8_t nonce)
   * @brief      Sample cbd
-  * @ingroup    GEN
+  * @ingroup    CIPHER
   * 
   * @param[in]  f : F value.
-  * @param[in]  Value.
   * @param[in]  nonce : Nonce value.
   * 
   * --------------------------------------------------------------------------------------------------------------------*/
@@ -469,12 +465,11 @@ namespace
 
   /**-------------------------------------------------------------------------------------------------------------------
   * 
-  * @fn         static bool SampleNTT(POLY a,const uint8_t rho[32],uint8_t ii,uint8_t jj)
+  * @fn         bool SampleNTT(POLY a,const uint8_t rho[32],uint8_t ii,uint8_t jj)
   * @brief      Sample ntt
-  * @ingroup    GEN
+  * @ingroup    CIPHER
   * 
   * @param[in]  a : A value.
-  * @param[in]  Value.
   * @param[in]  ii : Ii value.
   * @param[in]  jj : Jj value.
   * 
@@ -490,13 +485,11 @@ namespace
 
   /**-------------------------------------------------------------------------------------------------------------------
   * 
-  * @fn         static bool ParseEK(POLYVEC t,POLY A[16],const uint8_t ek[1568])
+  * @fn         bool ParseEK(POLYVEC t,POLY A[16],const uint8_t ek[1568])
   * @brief      Parse ek
-  * @ingroup    GEN
+  * @ingroup    CIPHER
   * 
   * @param[in]  t : T value.
-  * @param[in]  Value.
-  * @param[in]  Value.
   * 
   * @return     bool : true if the operation is successful; otherwise false.
   * 
@@ -510,14 +503,10 @@ namespace
 
   /**-------------------------------------------------------------------------------------------------------------------
   * 
-  * @fn         static void PKEEncrypt(uint8_t c[1568],const uint8_t ek[1568],const uint8_t m[32],const uint8_t rnd[32])
+  * @fn         void PKEEncrypt(uint8_t c[1568],const uint8_t ek[1568],const uint8_t m[32],const uint8_t rnd[32])
   * @brief      Pke encrypt
-  * @ingroup    GEN
+  * @ingroup    CIPHER
   * 
-  * @param[in]  Value.
-  * @param[in]  Value.
-  * @param[in]  Value.
-  * @param[in]  Value.
   * 
   * --------------------------------------------------------------------------------------------------------------------*/
   static void PKEEncrypt(uint8_t c[1568], const uint8_t ek[1568], const uint8_t m[32], const uint8_t rnd[32])
@@ -538,13 +527,10 @@ namespace
 
   /**-------------------------------------------------------------------------------------------------------------------
   * 
-  * @fn         static bool PKEDecrypt(uint8_t m[32],const uint8_t dkpke[1536],const uint8_t c[1568])
+  * @fn         bool PKEDecrypt(uint8_t m[32],const uint8_t dkpke[1536],const uint8_t c[1568])
   * @brief      Pke decrypt
-  * @ingroup    GEN
+  * @ingroup    CIPHER
   * 
-  * @param[in]  Value.
-  * @param[in]  Value.
-  * @param[in]  Value.
   * 
   * @return     bool : true if the operation is successful; otherwise false.
   * 
@@ -562,9 +548,9 @@ namespace
 
   /**-------------------------------------------------------------------------------------------------------------------
   * 
-  * @fn         static bool ConstantEqual(const uint8_t* a,const uint8_t* b,size_t n)
+  * @fn         bool ConstantEqual(const uint8_t* a,const uint8_t* b,size_t n)
   * @brief      Constant equal
-  * @ingroup    GEN
+  * @ingroup    CIPHER
   * 
   * @param[in]  a : Pointer to a.
   * @param[in]  b : Pointer to b.
@@ -581,7 +567,7 @@ namespace
 * 
 * @fn         bool CIPHERMLKEM1024CORE::PublicKey_Check(const uint8_t publickey[1568])
 * @brief      Public key check
-* @ingroup    GEN
+* @ingroup    CIPHER
 * 
 * @param[in]  publickey : 
 * 
@@ -596,14 +582,14 @@ bool CIPHERMLKEM1024CORE::PublicKey_Check(const uint8_t publickey[1568])
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         bool CIPHERMLKEM1024CORE::KeyPair(const uint8_t d[32], const uint8_t z[32], uint8_t ek[1568], uint8_t dk[3168])
+* @fn         bool CIPHERMLKEM1024CORE::KeyPair(const uint8_t d[32], const uint8_t z[32], uint8_t publickey[1568], uint8_t privatekey[3168])
 * @brief      Key pair
-* @ingroup    GEN
+* @ingroup    CIPHER
 * 
 * @param[in]  d : 
 * @param[in]  z : 
-* @param[in]  ek : 
-* @param[in]  dk : 
+* @param[in]  publickey : 
+* @param[in]  privatekey : 
 * 
 * @return     bool : true if the operation is successful; otherwise false.
 * 
@@ -624,14 +610,14 @@ bool CIPHERMLKEM1024CORE::KeyPair(const uint8_t d[32], const uint8_t z[32], uint
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         bool CIPHERMLKEM1024CORE::Encapsulate(const uint8_t randomness[32], const uint8_t ek[1568], uint8_t c[1568], uint8_t ss[32])
+* @fn         bool CIPHERMLKEM1024CORE::Encapsulate(const uint8_t randomness[32], const uint8_t publickey[1568], uint8_t ciphertext[1568], uint8_t sharedsecret[32])
 * @brief      Encapsulate
-* @ingroup    GEN
+* @ingroup    CIPHER
 * 
 * @param[in]  randomness : 
-* @param[in]  ek : 
-* @param[in]  c : 
-* @param[in]  ss : 
+* @param[in]  publickey : 
+* @param[in]  ciphertext : 
+* @param[in]  sharedsecret : 
 * 
 * @return     bool : true if the operation is successful; otherwise false.
 * 
@@ -646,13 +632,13 @@ bool CIPHERMLKEM1024CORE::Encapsulate(const uint8_t randomness[32], const uint8_
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         bool CIPHERMLKEM1024CORE::Decapsulate(const uint8_t dk[3168], const uint8_t c[1568], uint8_t ss[32])
+* @fn         bool CIPHERMLKEM1024CORE::Decapsulate(const uint8_t privatekey[3168], const uint8_t ciphertext[1568], uint8_t sharedsecret[32])
 * @brief      Decapsulate
-* @ingroup    GEN
+* @ingroup    CIPHER
 * 
-* @param[in]  dk : 
-* @param[in]  c : 
-* @param[in]  ss : 
+* @param[in]  privatekey : 
+* @param[in]  ciphertext : 
+* @param[in]  sharedsecret : 
 * 
 * @return     bool : true if the operation is successful; otherwise false.
 * 

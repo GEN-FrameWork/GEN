@@ -65,7 +65,7 @@ jmethodID ANDROIDJNI::FindClassMethod;
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         static void JavaEnvDestructor(void*)
+* @fn         void JavaEnvDestructor(void*)
 * @brief      Thread-local key destructor: detaches the calling thread's JNIEnv when the thread ends
 * @ingroup    PLATFORM_ANDROID
 *

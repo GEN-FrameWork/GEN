@@ -150,7 +150,7 @@
 * SCOPE ADDENDUM (Phase 4, second increment, third sub-step: "acotados" minmax() tracks)
 *   UI_GRIDTRACK gained a second shape: isminmax == true turns it into a minmax(min, max) bound instead of a
 *   single unit/value size -- "min" (minunit/minvalue) is restricted to PX or PERCENT, matching real CSS (a
-*   minmax() minimum can never be a <flex>/`fr` value there either); "max" (maxunit/maxvalue) accepts PX,
+*   minmax() minimum can never be a \<flex\>/`fr` value there either); "max" (maxunit/maxvalue) accepts PX,
 *   PERCENT, or FR, covering the common "minmax(200px, 1fr)" idiom -- a track that never shrinks below its
 *   floor but still grows to absorb free space. There is no builder method for this (unlike the simple-track
 *   Add*Track() calls above) -- a caller fills in the fields directly, exactly as the tests below do; the
@@ -337,7 +337,7 @@ enum UI_GRID_TRACK_UNIT
 * @brief   One column or row track of a grid container's grid-template-columns/rows: either a simple size (unit
 *          + value) or a minmax(min, max) bound -- see the SCOPE ADDENDUM above for exactly what each field
 *          means in the minmax() case, and the deliberate restriction that "min" is never `fr` (matching real
-*          CSS: a minmax() minimum can never be a <flex> value either).
+*          CSS: a minmax() minimum can never be a \<flex\> value either).
 */
 struct UI_GRIDTRACK
 {

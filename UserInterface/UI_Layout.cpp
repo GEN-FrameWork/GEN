@@ -207,7 +207,7 @@ UI_STYLESHEET* UI_LAYOUT::GetStyleSheet()
 * @fn         void UI_LAYOUT::SetStyleSheet(UI_STYLESHEET* sheet)
 * @brief      Set style sheet
 * @note       Takes ownership of "sheet" -- deletes any previously owned instance first, then stores the new
-*             pointer (which may be NULL, e.g. this layout's XML declared no <stylesheet>).
+*             pointer (which may be NULL, e.g. this layout's XML declared no \<stylesheet\>).
 * @ingroup    USERINTERFACE
 *
 * @param[in]  sheet : Sheet pointer to use.

@@ -77,7 +77,7 @@
 template<class T>
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         static T XVARIANT_GetNumericValue(XVARIANT_TYPE type, const void* data)
+* @fn         T XVARIANT_GetNumericValue(XVARIANT_TYPE type, const void* data)
 * @brief      Get numeric value
 * @ingroup    XUTILS
 * 

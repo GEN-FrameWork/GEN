@@ -1690,11 +1690,11 @@ bool DIOSTREAMTLS13SESSION::KeyUpdate_Create(bool requestpeer, XBUFFER& records)
 
 /**-------------------------------------------------------------------------------------------------------------------
 *
-* @fn         bool DIOSTREAMTLS13SESSION::PostHandshakeOutput_Extract(XBUFFER& records)
-* @brief      Extract protected records generated while processing post-handshake messages
+* @fn         bool DIOSTREAMTLS13SESSION::PostHandshakeOutput_Add(XBUFFER& records)
+* @brief      Queue protected records generated while processing post-handshake messages
 * @ingroup    DATAIO
 *
-* @param[out] records : Pending records.
+* @param[in]  records : Pending records to append.
 *
 * @return     bool : true if the operation is successful; otherwise false.
 *
@@ -1731,7 +1731,7 @@ bool DIOSTREAMTLS13SESSION::NewSessionTicket_Extract(XBUFFER& message)
 * @brief      Post handshake output extract
 * @ingroup    DATAIO
 * 
-* @param[in]  records : Records value.
+* @param[out] records : Records value.
 * 
 * @return     bool : true if the operation is successful; otherwise false.
 * 

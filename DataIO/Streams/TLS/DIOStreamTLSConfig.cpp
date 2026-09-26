@@ -392,7 +392,7 @@ XDWORD DIOSTREAMTLSMEMORYPOLICY::GetMaximumTrustStoreSize()       { return maxim
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         static bool DIOSTREAMTLSCONFIG_IsCipherSuiteSupported(XWORD ciphersuite)
+* @fn         bool DIOSTREAMTLSCONFIG_IsCipherSuiteSupported(XWORD ciphersuite)
 * @brief      Is cipher suite supported
 * @ingroup    DATAIO
 * 
@@ -421,7 +421,7 @@ static bool DIOSTREAMTLSCONFIG_IsCipherSuiteSupported(XWORD ciphersuite)
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         static bool DIOSTREAMTLSCONFIG_IsTLS12CipherSuiteSupported(XWORD ciphersuite)
+* @fn         bool DIOSTREAMTLSCONFIG_IsTLS12CipherSuiteSupported(XWORD ciphersuite)
 * @brief      Is tls12 cipher suite supported
 * @ingroup    DATAIO
 * 
@@ -453,7 +453,7 @@ static bool DIOSTREAMTLSCONFIG_IsTLS12CipherSuiteSupported(XWORD ciphersuite)
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         static bool DIOSTREAMTLSCONFIG_IsSupportedGroupSupported(XWORD group)
+* @fn         bool DIOSTREAMTLSCONFIG_IsSupportedGroupSupported(XWORD group)
 * @brief      Is supported group supported
 * @ingroup    DATAIO
 * 
@@ -487,7 +487,7 @@ static bool DIOSTREAMTLSCONFIG_IsSupportedGroupSupported(XWORD group)
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         static bool DIOSTREAMTLSCONFIG_IsSignatureSchemeSupported(XWORD scheme, bool certificate)
+* @fn         bool DIOSTREAMTLSCONFIG_IsSignatureSchemeSupported(XWORD scheme, bool certificate)
 * @brief      Is signature scheme supported
 * @ingroup    DATAIO
 * 
@@ -523,7 +523,7 @@ static bool DIOSTREAMTLSCONFIG_IsSignatureSchemeSupported(XWORD scheme, bool cer
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         static bool DIOSTREAMTLSCONFIG_ServerNameMatch(XSTRING& pattern, XCHAR* servername)
+* @fn         bool DIOSTREAMTLSCONFIG_ServerNameMatch(XSTRING& pattern, XCHAR* servername)
 * @brief      Server name match
 * @ingroup    DATAIO
 * 
@@ -582,7 +582,7 @@ class DIOSTREAMTLSCONFIG_LOCK
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         static bool DIOSTREAMTLSCONFIG_AddUInt16BE(XBUFFER& buffer, XWORD value)
+* @fn         bool DIOSTREAMTLSCONFIG_AddUInt16BE(XBUFFER& buffer, XWORD value)
 * @brief      Add u int16 be
 * @ingroup    DATAIO
 * 
@@ -601,7 +601,7 @@ static bool DIOSTREAMTLSCONFIG_AddUInt16BE(XBUFFER& buffer, XWORD value)
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         static bool DIOSTREAMTLSCONFIG_AddUInt32BE(XBUFFER& buffer, XDWORD value)
+* @fn         bool DIOSTREAMTLSCONFIG_AddUInt32BE(XBUFFER& buffer, XDWORD value)
 * @brief      Add u int32 be
 * @ingroup    DATAIO
 * 
@@ -620,7 +620,7 @@ static bool DIOSTREAMTLSCONFIG_AddUInt32BE(XBUFFER& buffer, XDWORD value)
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         static bool DIOSTREAMTLSCONFIG_AddUInt64BE(XBUFFER& buffer, XQWORD value)
+* @fn         bool DIOSTREAMTLSCONFIG_AddUInt64BE(XBUFFER& buffer, XQWORD value)
 * @brief      Add u int64 be
 * @ingroup    DATAIO
 * 
@@ -640,7 +640,7 @@ static bool DIOSTREAMTLSCONFIG_AddUInt64BE(XBUFFER& buffer, XQWORD value)
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         static bool DIOSTREAMTLSCONFIG_GetUInt16BE(XBUFFER& buffer, XDWORD& position, XWORD& value)
+* @fn         bool DIOSTREAMTLSCONFIG_GetUInt16BE(XBUFFER& buffer, XDWORD& position, XWORD& value)
 * @brief      Get u int16 be
 * @ingroup    DATAIO
 * 
@@ -662,7 +662,7 @@ static bool DIOSTREAMTLSCONFIG_GetUInt16BE(XBUFFER& buffer, XDWORD& position, XW
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         static bool DIOSTREAMTLSCONFIG_GetUInt32BE(XBUFFER& buffer, XDWORD& position, XDWORD& value)
+* @fn         bool DIOSTREAMTLSCONFIG_GetUInt32BE(XBUFFER& buffer, XDWORD& position, XDWORD& value)
 * @brief      Get u int32 be
 * @ingroup    DATAIO
 * 
@@ -685,7 +685,7 @@ static bool DIOSTREAMTLSCONFIG_GetUInt32BE(XBUFFER& buffer, XDWORD& position, XD
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         static bool DIOSTREAMTLSCONFIG_GetUInt64BE(XBUFFER& buffer, XDWORD& position, XQWORD& value)
+* @fn         bool DIOSTREAMTLSCONFIG_GetUInt64BE(XBUFFER& buffer, XDWORD& position, XQWORD& value)
 * @brief      Get u int64 be
 * @ingroup    DATAIO
 * 
@@ -708,7 +708,7 @@ static bool DIOSTREAMTLSCONFIG_GetUInt64BE(XBUFFER& buffer, XDWORD& position, XQ
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         static void DIOSTREAMTLSCONFIG_SecureZero(void* data, XDWORD size)
+* @fn         void DIOSTREAMTLSCONFIG_SecureZero(void* data, XDWORD size)
 * @brief      Secure zero
 * @ingroup    DATAIO
 * 
@@ -1069,7 +1069,7 @@ void DIOSTREAMTLSSERVERCREDENTIALS::Clean()
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         static XQWORD DIOSTREAMTLSCONFIG_CurrentEpoch()
+* @fn         XQWORD DIOSTREAMTLSCONFIG_CurrentEpoch()
 * @brief      Current epoch
 * @ingroup    DATAIO
 * 
@@ -1092,7 +1092,7 @@ static XQWORD DIOSTREAMTLSCONFIG_CurrentEpoch()
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         static bool DIOSTREAMTLSCONFIG_ALPNFromType(DIOSTREAMTLS_ALPN_TYPE type, XBUFFER& protocol)
+* @fn         bool DIOSTREAMTLSCONFIG_ALPNFromType(DIOSTREAMTLS_ALPN_TYPE type, XBUFFER& protocol)
 * @brief      Alpn from type
 * @ingroup    DATAIO
 * 
@@ -2825,10 +2825,6 @@ bool DIOSTREAMTLSCONFIG::Credentials_Validate(XVECTOR<XBUFFER*>* certificatechai
          * @brief      Verify
          * @ingroup    DATAIO
          * 
-         * @param[in]  Value.
-         * @param[in]  Value.
-         * @param[in]  Value.
-         * @param[in]  Value.
          * 
          * --------------------------------------------------------------------------------------------------------------------*/
          DIOSTREAMTLSSIGNATURE::Verify(signaturescheme, publickey, content, signature))

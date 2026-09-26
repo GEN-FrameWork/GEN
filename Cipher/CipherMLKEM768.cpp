@@ -39,7 +39,7 @@ namespace
 {
   /**-------------------------------------------------------------------------------------------------------------------
   * 
-  * @fn         static void CIPHERMLKEM768_SecureErase(void* data, XDWORD size)
+  * @fn         void CIPHERMLKEM768_SecureErase(void* data, XDWORD size)
   * @brief      Secure erase
   * @ingroup    CIPHER
   * 

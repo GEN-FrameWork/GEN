@@ -83,7 +83,7 @@ class CIPHERECDSA_POINT
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         static bool CIPHERECDSA_ModularMultiplication(XMPINTEGER& result, XMPINTEGER& value1, XMPINTEGER& value2, XMPINTEGER& modulus)
+* @fn         bool CIPHERECDSA_ModularMultiplication(XMPINTEGER& result, XMPINTEGER& value1, XMPINTEGER& value2, XMPINTEGER& modulus)
 * @brief      Modular multiplication
 * @ingroup    CIPHER
 * 
@@ -107,7 +107,7 @@ static bool CIPHERECDSA_ModularMultiplication(XMPINTEGER& result, XMPINTEGER& va
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         static bool CIPHERECDSA_ModularMultiplication(XMPINTEGER& result, XMPINTEGER& value, int integer, XMPINTEGER& modulus)
+* @fn         bool CIPHERECDSA_ModularMultiplication(XMPINTEGER& result, XMPINTEGER& value, int integer, XMPINTEGER& modulus)
 * @brief      Modular multiplication
 * @ingroup    CIPHER
 * 
@@ -131,7 +131,7 @@ static bool CIPHERECDSA_ModularMultiplication(XMPINTEGER& result, XMPINTEGER& va
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         static bool CIPHERECDSA_ModularAddition(XMPINTEGER& result, XMPINTEGER& value1, XMPINTEGER& value2, XMPINTEGER& modulus)
+* @fn         bool CIPHERECDSA_ModularAddition(XMPINTEGER& result, XMPINTEGER& value1, XMPINTEGER& value2, XMPINTEGER& modulus)
 * @brief      Modular addition
 * @ingroup    CIPHER
 * 
@@ -155,7 +155,7 @@ static bool CIPHERECDSA_ModularAddition(XMPINTEGER& result, XMPINTEGER& value1, 
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         static bool CIPHERECDSA_ModularSubtraction(XMPINTEGER& result, XMPINTEGER& value1, XMPINTEGER& value2, XMPINTEGER& modulus)
+* @fn         bool CIPHERECDSA_ModularSubtraction(XMPINTEGER& result, XMPINTEGER& value1, XMPINTEGER& value2, XMPINTEGER& modulus)
 * @brief      Modular subtraction
 * @ingroup    CIPHER
 * 
@@ -179,7 +179,7 @@ static bool CIPHERECDSA_ModularSubtraction(XMPINTEGER& result, XMPINTEGER& value
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         static bool CIPHERECDSA_PointSet(CIPHERECDSA_POINT& point, XMPINTEGER& X, XMPINTEGER& Y)
+* @fn         bool CIPHERECDSA_PointSet(CIPHERECDSA_POINT& point, XMPINTEGER& X, XMPINTEGER& Y)
 * @brief      Point set
 * @ingroup    CIPHER
 * 
@@ -202,7 +202,7 @@ static bool CIPHERECDSA_PointSet(CIPHERECDSA_POINT& point, XMPINTEGER& X, XMPINT
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         static bool CIPHERECDSA_PointDouble(CIPHERECDSA_POINT& point, XMPINTEGER& prime)
+* @fn         bool CIPHERECDSA_PointDouble(CIPHERECDSA_POINT& point, XMPINTEGER& prime)
 * @brief      Point double
 * @ingroup    CIPHER
 * 
@@ -265,7 +265,7 @@ static bool CIPHERECDSA_PointDouble(CIPHERECDSA_POINT& point, XMPINTEGER& prime)
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         static bool CIPHERECDSA_PointAddAffine(CIPHERECDSA_POINT& point, XMPINTEGER& affineX, XMPINTEGER& affineY, XMPINTEGER& prime)
+* @fn         bool CIPHERECDSA_PointAddAffine(CIPHERECDSA_POINT& point, XMPINTEGER& affineX, XMPINTEGER& affineY, XMPINTEGER& prime)
 * @brief      Point add affine
 * @ingroup    CIPHER
 * 
@@ -337,7 +337,7 @@ static bool CIPHERECDSA_PointAddAffine(CIPHERECDSA_POINT& point, XMPINTEGER& aff
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         static bool CIPHERECDSA_PointCopy(CIPHERECDSA_POINT& destination, CIPHERECDSA_POINT& source)
+* @fn         bool CIPHERECDSA_PointCopy(CIPHERECDSA_POINT& destination, CIPHERECDSA_POINT& source)
 * @brief      Point copy
 * @ingroup    CIPHER
 * 
@@ -360,7 +360,7 @@ static bool CIPHERECDSA_PointCopy(CIPHERECDSA_POINT& destination, CIPHERECDSA_PO
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         static bool CIPHERECDSA_IntegerSelect(XMPINTEGER& result, XMPINTEGER& value0, XMPINTEGER& value1, XBYTE select1, XDWORD fixedlimbs)
+* @fn         bool CIPHERECDSA_IntegerSelect(XMPINTEGER& result, XMPINTEGER& value0, XMPINTEGER& value1, XBYTE select1, XDWORD fixedlimbs)
 * @brief      Integer select
 * @ingroup    CIPHER
 * 
@@ -392,7 +392,7 @@ static bool CIPHERECDSA_IntegerSelect(XMPINTEGER& result, XMPINTEGER& value0, XM
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         static bool CIPHERECDSA_PointSelect(CIPHERECDSA_POINT& result, CIPHERECDSA_POINT& point0, CIPHERECDSA_POINT& point1, XBYTE select1, XDWORD fixedlimbs)
+* @fn         bool CIPHERECDSA_PointSelect(CIPHERECDSA_POINT& result, CIPHERECDSA_POINT& point0, CIPHERECDSA_POINT& point1, XBYTE select1, XDWORD fixedlimbs)
 * @brief      Point select
 * @ingroup    CIPHER
 * 
@@ -422,7 +422,7 @@ static bool CIPHERECDSA_PointSelect(CIPHERECDSA_POINT& result, CIPHERECDSA_POINT
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         static bool CIPHERECDSA_PointMultiplyFixed(CIPHERECDSA_POINT& point, XMPINTEGER& scalar, XMPINTEGER& affineX, XMPINTEGER& affineY, XMPINTEGER& prime, XDWORD scalarbits, XDWORD fieldbits)
+* @fn         bool CIPHERECDSA_PointMultiplyFixed(CIPHERECDSA_POINT& point, XMPINTEGER& scalar, XMPINTEGER& affineX, XMPINTEGER& affineY, XMPINTEGER& prime, XDWORD scalarbits, XDWORD fieldbits)
 * @brief      Point multiply fixed
 * @ingroup    CIPHER
 * 
@@ -459,7 +459,7 @@ static bool CIPHERECDSA_PointMultiplyFixed(CIPHERECDSA_POINT& point, XMPINTEGER&
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         static bool CIPHERECDSA_PointMultiplySecret(CIPHERECDSA_POINT& point, XMPINTEGER& scalar, XMPINTEGER& affineX, XMPINTEGER& affineY, XMPINTEGER& prime, XMPINTEGER& order, XDWORD curvebits)
+* @fn         bool CIPHERECDSA_PointMultiplySecret(CIPHERECDSA_POINT& point, XMPINTEGER& scalar, XMPINTEGER& affineX, XMPINTEGER& affineY, XMPINTEGER& prime, XMPINTEGER& order, XDWORD curvebits)
 * @brief      Point multiply secret
 * @ingroup    CIPHER
 * 
@@ -519,7 +519,7 @@ static bool CIPHERECDSA_PointMultiplySecret(CIPHERECDSA_POINT& point, XMPINTEGER
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         static bool CIPHERECDSA_ModularInversePrime(XMPINTEGER& result, XMPINTEGER& value, XMPINTEGER& modulus)
+* @fn         bool CIPHERECDSA_ModularInversePrime(XMPINTEGER& result, XMPINTEGER& value, XMPINTEGER& modulus)
 * @brief      Modular inverse prime
 * @ingroup    CIPHER
 * 
@@ -561,7 +561,7 @@ static bool CIPHERECDSA_ModularInversePrime(XMPINTEGER& result, XMPINTEGER& valu
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         static bool CIPHERECDSA_PointToAffine(CIPHERECDSA_POINT& point, XMPINTEGER& affineX, XMPINTEGER& affineY, XMPINTEGER& prime)
+* @fn         bool CIPHERECDSA_PointToAffine(CIPHERECDSA_POINT& point, XMPINTEGER& affineX, XMPINTEGER& affineY, XMPINTEGER& prime)
 * @brief      Point to affine
 * @ingroup    CIPHER
 * 
@@ -595,7 +595,7 @@ static bool CIPHERECDSA_PointToAffine(CIPHERECDSA_POINT& point, XMPINTEGER& affi
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         static bool CIPHERECDSA_PointCheck(XMPINTEGER& X, XMPINTEGER& Y, XMPINTEGER& prime, XMPINTEGER& coefficientA, XMPINTEGER& coefficientB)
+* @fn         bool CIPHERECDSA_PointCheck(XMPINTEGER& X, XMPINTEGER& Y, XMPINTEGER& prime, XMPINTEGER& coefficientA, XMPINTEGER& coefficientB)
 * @brief      Point check
 * @ingroup    CIPHER
 * 
@@ -633,7 +633,7 @@ static bool CIPHERECDSA_PointCheck(XMPINTEGER& X, XMPINTEGER& Y, XMPINTEGER& pri
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         static bool CIPHERECDSA_DERLength(XBYTE* data, XDWORD size, XDWORD& index, XDWORD& length)
+* @fn         bool CIPHERECDSA_DERLength(XBYTE* data, XDWORD size, XDWORD& index, XDWORD& length)
 * @brief      Der length
 * @ingroup    CIPHER
 * 
@@ -677,7 +677,7 @@ static bool CIPHERECDSA_DERLength(XBYTE* data, XDWORD size, XDWORD& index, XDWOR
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         static bool CIPHERECDSA_DERInteger(XBYTE* data, XDWORD size, XDWORD& index, XMPINTEGER& integer, XMPINTEGER& order, XDWORD maxsize)
+* @fn         bool CIPHERECDSA_DERInteger(XBYTE* data, XDWORD size, XDWORD& index, XMPINTEGER& integer, XMPINTEGER& order, XDWORD maxsize)
 * @brief      Der integer
 * @ingroup    CIPHER
 * 
@@ -726,7 +726,7 @@ static bool CIPHERECDSA_DERInteger(XBYTE* data, XDWORD size, XDWORD& index, XMPI
 
 /**-------------------------------------------------------------------------------------------------------------------
 *
-* @fn         static CIPHERKEYTYPE CIPHERECDSA_ExpectedKeyType(CIPHERTYPE curvetype)
+* @fn         CIPHERKEYTYPE CIPHERECDSA_ExpectedKeyType(CIPHERTYPE curvetype)
 * @brief      Curve-selection helper: map the CIPHERTYPE the constructor was given to the matching public-key type
 *             (CIPHERKEYECDSA::GetType()) and the required TLS hash algorithm (RFC 8446 4.2.3 curve/hash pairing), so
 *             the rest of the class never has to special-case a curve outside of Parameters_Set().
@@ -753,7 +753,7 @@ static CIPHERKEYTYPE CIPHERECDSA_ExpectedKeyType(CIPHERTYPE curvetype)
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         static HASHTYPE CIPHERECDSA_RequiredHashType(CIPHERTYPE curvetype)
+* @fn         HASHTYPE CIPHERECDSA_RequiredHashType(CIPHERTYPE curvetype)
 * @brief      Required hash type
 * @ingroup    CIPHER
 * 
@@ -778,7 +778,7 @@ static HASHTYPE CIPHERECDSA_RequiredHashType(CIPHERTYPE curvetype)
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         static CIPHERKEYTYPE CIPHERECDSA_ExpectedPrivateKeyType(CIPHERTYPE curvetype)
+* @fn         CIPHERKEYTYPE CIPHERECDSA_ExpectedPrivateKeyType(CIPHERTYPE curvetype)
 * @brief      Expected private key type
 * @ingroup    CIPHER
 * 
@@ -803,7 +803,7 @@ static CIPHERKEYTYPE CIPHERECDSA_ExpectedPrivateKeyType(CIPHERTYPE curvetype)
 
 /**-------------------------------------------------------------------------------------------------------------------
 *
-* @fn         static bool CIPHERECDSA_DERIntegerEncode(XMPINTEGER& value, XDWORD maxsize, XBUFFER& output)
+* @fn         bool CIPHERECDSA_DERIntegerEncode(XMPINTEGER& value, XDWORD maxsize, XBUFFER& output)
 * @brief      Encode one XMPINTEGER as a minimal, non-negative DER INTEGER (tag 0x02): strip leading zero bytes down
 *             to a single byte, then prepend one 0x00 pad byte if the remaining high bit is set (otherwise the value
 *             would decode as negative). maxsize bounds the fixed-size export used to obtain the big-endian bytes
@@ -855,7 +855,7 @@ static bool CIPHERECDSA_DERIntegerEncode(XMPINTEGER& value, XDWORD maxsize, XBUF
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         static bool CIPHERECDSA_HMAC(HASH* hash, XBUFFER& key, XBUFFER& input, XSECUREBUFFER& output)
+* @fn         bool CIPHERECDSA_HMAC(HASH* hash, XBUFFER& key, XBUFFER& input, XSECUREBUFFER& output)
 * @brief      Hmac
 * @ingroup    CIPHER
 * 

@@ -82,11 +82,11 @@ UI_CSSPARSER::~UI_CSSPARSER()
 *
 * @fn         bool UI_CSSPARSER::ParseFile(XPATH& pathfile, UI_STYLESHEET& out)
 * @brief      Read a .css file from disk and parse it into `out`.
-* @note       Step 5 ("una sola hoja por layout"): this is also the entry point @import recurses through, so
-*             it (a) guards against cycles -- a file already open somewhere up this call's @import chain is
+* @note       Step 5 ("una sola hoja por layout"): this is also the entry point @@import recurses through, so
+*             it (a) guards against cycles -- a file already open somewhere up this call's @@import chain is
 *             skipped instead of recursed into again -- and (b) tracks `currentfiledir` (this file's own
 *             directory) around the ParseText() call, restoring the caller's value afterwards, so a NESTED
-*             @import inside an imported file resolves against ITS OWN directory rather than the top-level
+*             @@import inside an imported file resolves against ITS OWN directory rather than the top-level
 *             layout's. Both only matter to ResolveAndParseImport(); a normal, import-free stylesheet behaves
 *             exactly as before.
 * @ingroup    USERINTERFACE
@@ -95,7 +95,7 @@ UI_CSSPARSER::~UI_CSSPARSER()
 * @param[out] out : Target stylesheet; parsed rules are appended.
 *
 * @return     bool : true if the file was opened and read; false if it could not be opened, or if it is
-*             already open along the current @import chain (cycle).
+*             already open along the current @@import chain (cycle).
 *
 * --------------------------------------------------------------------------------------------------------------------*/
 bool UI_CSSPARSER::ParseFile(XPATH& pathfile, UI_STYLESHEET& out)
@@ -995,7 +995,7 @@ void UI_CSSPARSER::SkipToNextRule(XSTRING& text, int& pos)
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         bool UI_CSSPARSER::ParseOneRuleOrAtRule(XSTRING& text, int& pos, UI_STYLESHEET& out, int* media_min_w, int* media_max_w, int& ruleindex, int& rules_kept)
-* @brief      Parse one top-level construct: @import, @media, or a normal rule. Optional media_* attach Track B
+* @brief      Parse one top-level construct: @@import, @@media, or a normal rule. Optional media_* attach Track B
 * @ingroup    USERINTERFACE
 * 
 * @param[in]  text : 
@@ -1178,7 +1178,7 @@ bool UI_CSSPARSER::ParseOneRuleOrAtRule(XSTRING& text, int& pos, UI_STYLESHEET& 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         bool UI_CSSPARSER::ReadMediaCondition(XSTRING& text, int& pos, int& out_min_w, int& out_max_w, bool& out_ok)
-* @brief      Parse `@media` query features after the keyword. Supports (min-width:N[px]) / (max-width:N[px])
+* @brief      Parse `@@media` query features after the keyword. Supports (min-width:N[px]) / (max-width:N[px])
 * @ingroup    USERINTERFACE
 * 
 * @param[in]  text : 
@@ -1285,7 +1285,7 @@ bool UI_CSSPARSER::ReadMediaCondition(XSTRING& text, int& pos, int& out_min_w, i
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         bool UI_CSSPARSER::ParseMediaBlock(XSTRING& text, int& pos, UI_STYLESHEET& out, int media_min_w, int media_max_w)
-* @brief      Parse `{ ... }` body of an @media rule; each kept rule receives the media width range.
+* @brief      Parse `{ ... }` body of an @@media rule; each kept rule receives the media width range.
 * @ingroup    USERINTERFACE
 * 
 * @param[in]  text : 
@@ -1330,16 +1330,16 @@ bool UI_CSSPARSER::ParseMediaBlock(XSTRING& text, int& pos, UI_STYLESHEET& out, 
 /**-------------------------------------------------------------------------------------------------------------------
 *
 * @fn         bool UI_CSSPARSER::ReadImportStatement(XSTRING& text, int& pos, XSTRING& outurl)
-* @brief      Step 5: parse the body of an "@import" at-rule -- everything AFTER the "@import" keyword itself
+* @brief      Step 5: parse the body of an "@@import" at-rule -- everything AFTER the "@@import" keyword itself
 *             (the caller has already consumed that). Accepts a quoted string ("theme.css" / 'theme.css'),
 *             optionally wrapped in CSS's "url(...)" form (quoted or bare), terminated by ';'. Nothing else in
-*             real CSS's @import grammar (media queries and the like) is supported -- GEN's layouts don't need
+*             real CSS's @@import grammar (media queries and the like) is supported -- GEN's layouts don't need
 *             them, and a rule this small doesn't need to sniff for them either.
 * @note       INTERNAL
 * @ingroup    USERINTERFACE
 *
 * @param[in]     text : Source text.
-* @param[in,out] pos : Cursor; expected right after the "@import" keyword on entry, positioned right after the
+* @param[in,out] pos : Cursor; expected right after the "@@import" keyword on entry, positioned right after the
 *                terminating ';' (or at EOF, if none was found) on return.
 * @param[out]    outurl : The quoted/bare URL text, verbatim (not yet resolved to a filesystem path).
 *
@@ -1407,14 +1407,14 @@ bool UI_CSSPARSER::ReadImportStatement(XSTRING& text, int& pos, XSTRING& outurl)
 /**-------------------------------------------------------------------------------------------------------------------
 *
 * @fn         bool UI_CSSPARSER::ResolveAndParseImport(XSTRING& importurl, UI_STYLESHEET& out)
-* @brief      Step 5: resolve an @import URL against the directory of the file currently being parsed
+* @brief      Step 5: resolve an @@import URL against the directory of the file currently being parsed
 *             (`currentfiledir`, maintained by ParseFile()) and merge the target file's rules and ":root"
 *             variables into `out` by recursing into ParseFile() -- i.e. imported content behaves as if it had
-*             been written in place of the "@import" line, matching real CSS semantics.
+*             been written in place of the "@@import" line, matching real CSS semantics.
 * @note       A no-op (traced, never fatal to the importING file) when: `currentfiledir` is empty (ParseText()
 *             was called directly on an in-memory buffer rather than through ParseFile(), so there is no
 *             directory to resolve a RELATIVE url against), the target file is missing or empty, or the target
-*             is already open along this @import chain (cycle -- see ParseFile()).
+*             is already open along this @@import chain (cycle -- see ParseFile()).
 * @ingroup    USERINTERFACE
 *
 * @param[in]  importurl : Raw URL text from ReadImportStatement(), e.g. "theme.css".

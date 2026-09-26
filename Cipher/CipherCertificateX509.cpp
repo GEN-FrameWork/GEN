@@ -3,6 +3,8 @@
 * @file       CipherCertificateX509.cpp
 * 
 * @class      CIPHERCERTIFICATEX509
+* @internal
+* 
 * @brief      Cipher Certificate X509 class
 * @ingroup    CIPHER
 * 
@@ -93,7 +95,6 @@ class CIPHERCERTIFICATEX509_DERREADER
 
     /**-------------------------------------------------------------------------------------------------------------------
     * 
-    * @fn         bool Read (CIPHERCERTIFICATEX509_DERITEM& item)
     * @brief      Read
     * @ingroup    CIPHER
     * 
@@ -163,7 +164,6 @@ class CIPHERCERTIFICATEX509_DERREADER
 
     /**-------------------------------------------------------------------------------------------------------------------
     * 
-    * @fn         bool IsEnd ()
     * @brief      Is end
     * @ingroup    CIPHER
     * 
@@ -183,9 +183,9 @@ class CIPHERCERTIFICATEX509_DERREADER
 };
 
 
+/** @cond INTERNAL_FILE_HELPERS */
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         static bool CIPHERCERTIFICATEX509_DER_OIDCompare(CIPHERCERTIFICATEX509_DERITEM& item, const XBYTE* OID, XDWORD OIDsize)
 * @brief      Oid compare
 * @ingroup    CIPHER
 * 
@@ -202,14 +202,18 @@ static bool CIPHERCERTIFICATEX509_DER_OIDCompare(CIPHERCERTIFICATEX509_DERITEM& 
     {
       return false;
     }
+/** @endcond */
+
 
   return !memcmp(item.data, OID, OIDsize);
 }
 
 
+/** @cond INTERNAL_FILE_HELPERS */
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         static bool CIPHERCERTIFICATEX509_DER_OIDToString(CIPHERCERTIFICATEX509_DERITEM& item, XSTRING& OID)
+* @internal
+* 
 * @brief      Oid to string
 * @ingroup    CIPHER
 * 
@@ -293,11 +297,14 @@ static bool CIPHERCERTIFICATEX509_DER_OIDToString(CIPHERCERTIFICATEX509_DERITEM&
 
   return true;
 }
+/** @endcond */
 
 
+/** @cond INTERNAL_FILE_HELPERS */
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         static bool CIPHERCERTIFICATEX509_DER_Algorithm(CIPHERCERTIFICATEX509_DERITEM& item, XSTRING& OID, CIPHERCERTIFICATEX509_DERITEM* algorithmparameters = NULL)
+* @internal
+* 
 * @brief      Algorithm
 * @ingroup    CIPHER
 * 
@@ -343,11 +350,15 @@ static bool CIPHERCERTIFICATEX509_DER_Algorithm(CIPHERCERTIFICATEX509_DERITEM& i
 
   return true;
 }
+/** @endcond */
 
 
+
+/** @cond INTERNAL_FILE_HELPERS */
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         static bool CIPHERCERTIFICATEX509_DER_PositiveInteger(CIPHERCERTIFICATEX509_DERITEM& item, XDWORD& value)
+* @internal
+* 
 * @brief      Positive integer
 * @ingroup    CIPHER
 * 
@@ -380,11 +391,15 @@ static bool CIPHERCERTIFICATEX509_DER_PositiveInteger(CIPHERCERTIFICATEX509_DERI
 
   return true;
 }
+/** @endcond */
 
 
+
+/** @cond INTERNAL_FILE_HELPERS */
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         static bool CIPHERCERTIFICATEX509_DER_RSASSAPSSHash(CIPHERCERTIFICATEX509_DERITEM& item, CIPHERCERTIFICATEX509_RSASSAPSS_HASH_TYPE& hashtype)
+* @internal
+* 
 * @brief      Rsassapss hash
 * @ingroup    CIPHER
 * 
@@ -422,11 +437,15 @@ static bool CIPHERCERTIFICATEX509_DER_RSASSAPSSHash(CIPHERCERTIFICATEX509_DERITE
 
   return false;
 }
+/** @endcond */
 
 
+
+/** @cond INTERNAL_FILE_HELPERS */
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         static bool CIPHERCERTIFICATEX509_DER_RSASSAPSSParameters(CIPHERCERTIFICATEX509_DERITEM& parameters, CIPHERCERTIFICATEX509_RSASSAPSS_HASH_TYPE& hashtype, XDWORD& saltsize)
+* @internal
+* 
 * @brief      Rsassapss parameters
 * @ingroup    CIPHER
 * 
@@ -513,11 +532,14 @@ static bool CIPHERCERTIFICATEX509_DER_RSASSAPSSParameters(CIPHERCERTIFICATEX509_
 
   return false;
 }
+/** @endcond */
 
 
+/** @cond INTERNAL_FILE_HELPERS */
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         static bool CIPHERCERTIFICATEX509_DER_String(CIPHERCERTIFICATEX509_DERITEM& item, XSTRING& string)
+* @internal
+* 
 * @brief      String
 * @ingroup    CIPHER
 * 
@@ -564,11 +586,14 @@ static bool CIPHERCERTIFICATEX509_DER_String(CIPHERCERTIFICATEX509_DERITEM& item
 
   return false;
 }
+/** @endcond */
 
 
+/** @cond INTERNAL_FILE_HELPERS */
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         static bool CIPHERCERTIFICATEX509_DER_Name(CIPHERCERTIFICATEX509_DERITEM& item, CIPHERCERTIFICATEX509_ID* ID)
+* @internal
+* 
 * @brief      Name
 * @ingroup    CIPHER
 * 
@@ -654,11 +679,14 @@ static bool CIPHERCERTIFICATEX509_DER_Name(CIPHERCERTIFICATEX509_DERITEM& item, 
 
   return true;
 }
+/** @endcond */
 
 
+/** @cond INTERNAL_FILE_HELPERS */
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         static bool CIPHERCERTIFICATEX509_DER_Time(CIPHERCERTIFICATEX509_DERITEM& item, XDATETIME& datetime)
+* @internal
+* 
 * @brief      Time
 * @ingroup    CIPHER
 * 
@@ -717,11 +745,15 @@ static bool CIPHERCERTIFICATEX509_DER_Time(CIPHERCERTIFICATEX509_DERITEM& item, 
 
   return datetime.IsValidDate();
 }
+/** @endcond */
 
 
+
+/** @cond INTERNAL_FILE_HELPERS */
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         static int CIPHERCERTIFICATEX509_HexValue(XCHAR character)
+* @internal
+* 
 * @brief      Hex value
 * @ingroup    CIPHER
 * 
@@ -738,11 +770,15 @@ static int CIPHERCERTIFICATEX509_HexValue(XCHAR character)
 
   return -1;
 }
+/** @endcond */
 
 
+
+/** @cond INTERNAL_FILE_HELPERS */
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         static bool CIPHERCERTIFICATEX509_IPAddress(XCHAR* address, XBUFFER& binary)
+* @internal
+* 
 * @brief      Ip address
 * @ingroup    CIPHER
 * 
@@ -900,11 +936,14 @@ static bool CIPHERCERTIFICATEX509_IPAddress(XCHAR* address, XBUFFER& binary)
 
   return true;
 }
+/** @endcond */
 
 
+/** @cond INTERNAL_FILE_HELPERS */
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         static bool CIPHERCERTIFICATEX509_DNSName(XSTRING& pattern, XCHAR* servername)
+* @internal
+* 
 * @brief      Dns name
 * @ingroup    CIPHER
 * 
@@ -951,6 +990,8 @@ static bool CIPHERCERTIFICATEX509_DNSName(XSTRING& pattern, XCHAR* servername)
 
   return !hostnamesuffix.Compare(patternsuffix, true);
 }
+/** @endcond */
+
 
 
 
@@ -961,7 +1002,6 @@ static bool CIPHERCERTIFICATEX509_DNSName(XSTRING& pattern, XCHAR* servername)
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         CIPHERCERTIFICATEX509_ID::CIPHERCERTIFICATEX509_ID()
 * @brief      Constructor of class
 * @ingroup    CIPHER
 * 
@@ -974,7 +1014,6 @@ CIPHERCERTIFICATEX509_ID::CIPHERCERTIFICATEX509_ID()
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         CIPHERCERTIFICATEX509_ID::~CIPHERCERTIFICATEX509_ID()
 * @brief      Destructor of class
 * @note       VIRTUAL
 * @ingroup    CIPHER
@@ -988,7 +1027,6 @@ CIPHERCERTIFICATEX509_ID::~CIPHERCERTIFICATEX509_ID()
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         XSTRING* CIPHERCERTIFICATEX509_ID::GetCountryName()
 * @brief      get country name
 * @ingroup    CIPHER
 * 
@@ -1003,7 +1041,6 @@ XSTRING* CIPHERCERTIFICATEX509_ID::GetCountryName()
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         XSTRING* CIPHERCERTIFICATEX509_ID::GetOrganizationName()
 * @brief      get organization name
 * @ingroup    CIPHER
 * 
@@ -1018,7 +1055,6 @@ XSTRING* CIPHERCERTIFICATEX509_ID::GetOrganizationName()
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         XSTRING* CIPHERCERTIFICATEX509_ID::GetOrganizationalUnitName()
 * @brief      get organizational unit name
 * @ingroup    CIPHER
 * 
@@ -1033,7 +1069,6 @@ XSTRING* CIPHERCERTIFICATEX509_ID::GetOrganizationalUnitName()
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         XSTRING* CIPHERCERTIFICATEX509_ID::GetOrganizationalUnitNamePlus()
 * @brief      get organizational unit name plus
 * @ingroup    CIPHER
 * 
@@ -1048,7 +1083,6 @@ XSTRING* CIPHERCERTIFICATEX509_ID::GetOrganizationalUnitNamePlus()
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         XSTRING* CIPHERCERTIFICATEX509_ID::GetCommonName()
 * @brief      get common name
 * @ingroup    CIPHER
 * 
@@ -1063,7 +1097,6 @@ XSTRING* CIPHERCERTIFICATEX509_ID::GetCommonName()
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         int CIPHERCERTIFICATEX509_ID::Compare(CIPHERCERTIFICATEX509_ID* certificateID, bool ignorecase)
 * @brief      compare
 * @ingroup    CIPHER
 * 
@@ -1113,7 +1146,6 @@ int CIPHERCERTIFICATEX509_ID::Compare(CIPHERCERTIFICATEX509_ID* certificateID, b
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         int CIPHERCERTIFICATEX509_ID::Compare(CIPHERCERTIFICATEX509_ID& certificateID, bool ignorecase)
 * @brief      compare
 * @ingroup    CIPHER
 * 
@@ -1131,7 +1163,6 @@ int CIPHERCERTIFICATEX509_ID::Compare(CIPHERCERTIFICATEX509_ID& certificateID, b
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         bool CIPHERCERTIFICATEX509_ID::CopyTo(CIPHERCERTIFICATEX509_ID* certificateID)
 * @brief      copy to
 * @ingroup    CIPHER
 * 
@@ -1178,7 +1209,6 @@ bool CIPHERCERTIFICATEX509_ID::CopyTo(CIPHERCERTIFICATEX509_ID* certificateID)
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         bool CIPHERCERTIFICATEX509_ID::CopyTo(CIPHERCERTIFICATEX509_ID& certificateID)
 * @brief      copy to
 * @ingroup    CIPHER
 * 
@@ -1195,7 +1225,6 @@ bool CIPHERCERTIFICATEX509_ID::CopyTo(CIPHERCERTIFICATEX509_ID& certificateID)
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         bool CIPHERCERTIFICATEX509_ID::CopyFrom(CIPHERCERTIFICATEX509_ID* certificateID)
 * @brief      copy from
 * @ingroup    CIPHER
 * 
@@ -1242,7 +1271,6 @@ bool CIPHERCERTIFICATEX509_ID::CopyFrom(CIPHERCERTIFICATEX509_ID* certificateID)
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         bool CIPHERCERTIFICATEX509_ID::CopyFrom(CIPHERCERTIFICATEX509_ID& certificateID)
 * @brief      copy from
 * @ingroup    CIPHER
 * 
@@ -1259,7 +1287,6 @@ bool CIPHERCERTIFICATEX509_ID::CopyFrom(CIPHERCERTIFICATEX509_ID& certificateID)
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         void CIPHERCERTIFICATEX509_ID::Clean()
 * @brief      Clean the attributes of the class: Default initialize
 * @note       INTERNAL
 * @ingroup    CIPHER
@@ -1277,7 +1304,6 @@ void CIPHERCERTIFICATEX509_ID::Clean()
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         CIPHERCERTIFICATEX509::CIPHERCERTIFICATEX509()
 * @brief      Constructor of class
 * @ingroup    CIPHER
 * 
@@ -1290,7 +1316,6 @@ CIPHERCERTIFICATEX509::CIPHERCERTIFICATEX509()
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         CIPHERCERTIFICATEX509::~CIPHERCERTIFICATEX509()
 * @brief      Destructor of class
 * @note       VIRTUAL
 * @ingroup    CIPHER
@@ -1320,7 +1345,6 @@ CIPHERCERTIFICATEX509::~CIPHERCERTIFICATEX509()
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         XWORD CIPHERCERTIFICATEX509::GetVersion()
 * @brief      Get version
 * @ingroup    CIPHER
 * 
@@ -1335,7 +1359,6 @@ XWORD CIPHERCERTIFICATEX509::GetVersion()
     
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         void CIPHERCERTIFICATEX509::SetVersion(XWORD version)
 * @brief      Set version
 * @ingroup    CIPHER
 * 
@@ -1350,7 +1373,6 @@ void CIPHERCERTIFICATEX509::SetVersion(XWORD version)
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         XBUFFER* CIPHERCERTIFICATEX509::GetSerial()
 * @brief      Get serial
 * @ingroup    CIPHER
 * 
@@ -1365,7 +1387,6 @@ XBUFFER* CIPHERCERTIFICATEX509::GetSerial()
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         CIPHERCERTIFICATEX509_ALGORITHM_TYPE CIPHERCERTIFICATEX509::GetAlgorithmType()
 * @brief      get algorithm type
 * @ingroup    CIPHER
 * 
@@ -1380,7 +1401,6 @@ CIPHERCERTIFICATEX509_ALGORITHM_TYPE CIPHERCERTIFICATEX509::GetAlgorithmType()
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         bool CIPHERCERTIFICATEX509::SetAlgorithmType(XCHAR* OID)
 * @brief      Set algorithm type
 * @ingroup    CIPHER
 * 
@@ -1487,7 +1507,6 @@ bool CIPHERCERTIFICATEX509::SetAlgorithmType(XCHAR* OID)
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         XSTRING* CIPHERCERTIFICATEX509::GetAlgorithmTypeStr()
 * @brief      get algorithm type str
 * @ingroup    CIPHER
 * 
@@ -1502,7 +1521,6 @@ XSTRING* CIPHERCERTIFICATEX509::GetAlgorithmTypeStr()
 
 /**-------------------------------------------------------------------------------------------------------------------
 *
-* @fn         CIPHERCERTIFICATEX509_RSASSAPSS_HASH_TYPE CIPHERCERTIFICATEX509::GetRSASSAPSSHashType()
 * @brief      Get the validated RSA-PSS hash algorithm
 * @ingroup    CIPHER
 *
@@ -1517,7 +1535,6 @@ CIPHERCERTIFICATEX509_RSASSAPSS_HASH_TYPE CIPHERCERTIFICATEX509::GetRSASSAPSSHas
 
 /**-------------------------------------------------------------------------------------------------------------------
 *
-* @fn         XDWORD CIPHERCERTIFICATEX509::GetRSASSAPSSSaltSize()
 * @brief      Get the validated RSA-PSS salt size
 * @ingroup    CIPHER
 *
@@ -1532,7 +1549,6 @@ XDWORD CIPHERCERTIFICATEX509::GetRSASSAPSSSaltSize()
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         CIPHERCERTIFICATEX509_RSASSAPSS_HASH_TYPE CIPHERCERTIFICATEX509::GetPublicKeyRSASSAPSSHashType()
 * @brief      Get public key rsassapss hash type
 * @ingroup    CIPHER
 * 
@@ -1547,7 +1563,6 @@ CIPHERCERTIFICATEX509_RSASSAPSS_HASH_TYPE CIPHERCERTIFICATEX509::GetPublicKeyRSA
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         XDWORD CIPHERCERTIFICATEX509::GetPublicKeyRSASSAPSSSaltSize()
 * @brief      Get public key rsassapss salt size
 * @ingroup    CIPHER
 * 
@@ -1562,7 +1577,6 @@ XDWORD CIPHERCERTIFICATEX509::GetPublicKeyRSASSAPSSSaltSize()
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         CIPHERCERTIFICATEX509_ID* CIPHERCERTIFICATEX509::GetIssuerID()
 * @brief      get issuer Id
 * @ingroup    CIPHER
 * 
@@ -1577,7 +1591,6 @@ CIPHERCERTIFICATEX509_ID* CIPHERCERTIFICATEX509::GetIssuerID()
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         bool CIPHERCERTIFICATEX509::IsValidDates()
 * @brief      is valid dates
 * @ingroup    CIPHER
 * 
@@ -1603,7 +1616,6 @@ bool CIPHERCERTIFICATEX509::IsValidDates()
 
 /**-------------------------------------------------------------------------------------------------------------------
 *
-* @fn         bool CIPHERCERTIFICATEX509::IsValidDates(XDATETIME* datetime)
 * @brief      Check certificate validity at a supplied UTC time
 * @ingroup    CIPHER
 *
@@ -1629,7 +1641,6 @@ bool CIPHERCERTIFICATEX509::IsValidDates(XDATETIME* datetime)
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         XDATETIME* CIPHERCERTIFICATEX509::GetDateNotBefore()
 * @brief      Get date not before
 * @ingroup    CIPHER
 * 
@@ -1644,7 +1655,6 @@ XDATETIME* CIPHERCERTIFICATEX509::GetDateNotBefore()
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         XDATETIME* CIPHERCERTIFICATEX509::GetDateNotAfter()
 * @brief      Get date not after
 * @ingroup    CIPHER
 * 
@@ -1659,7 +1669,6 @@ XDATETIME* CIPHERCERTIFICATEX509::GetDateNotAfter()
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         bool CIPHERCERTIFICATEX509::IsSelfSigned()
 * @brief      is self signed
 * @ingroup    CIPHER
 * 
@@ -1679,7 +1688,6 @@ bool CIPHERCERTIFICATEX509::IsSelfSigned()
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         CIPHERCERTIFICATEX509_ID* CIPHERCERTIFICATEX509::GetSubjectID()
 * @brief      get subject Id
 * @ingroup    CIPHER
 * 
@@ -1694,7 +1702,6 @@ CIPHERCERTIFICATEX509_ID* CIPHERCERTIFICATEX509::GetSubjectID()
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         bool CIPHERCERTIFICATEX509::IsPublicCipherKeyUsage()
 * @brief      is public cipher key usage
 * @ingroup    CIPHER
 * 
@@ -1709,7 +1716,6 @@ bool CIPHERCERTIFICATEX509::IsPublicCipherKeyUsage()
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         void CIPHERCERTIFICATEX509::SetPublicCipherKeyUsage(bool isusage)
 * @brief      set public cipher key usage
 * @ingroup    CIPHER
 * 
@@ -1724,7 +1730,6 @@ void CIPHERCERTIFICATEX509::SetPublicCipherKeyUsage(bool isusage)
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         bool CIPHERCERTIFICATEX509::IsPublicCipherKeyBasicConstraints()
 * @brief      is public cipher key basic constraints
 * @ingroup    CIPHER
 * 
@@ -1739,7 +1744,6 @@ bool CIPHERCERTIFICATEX509::IsPublicCipherKeyBasicConstraints()
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         void CIPHERCERTIFICATEX509::SetPublicCipherKeyBasicConstraints(bool basicconstraints)
 * @brief      set public cipher key basic constraints
 * @ingroup    CIPHER
 * 
@@ -1754,7 +1758,6 @@ void CIPHERCERTIFICATEX509::SetPublicCipherKeyBasicConstraints(bool basicconstra
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         bool CIPHERCERTIFICATEX509::IsPublicCipherKeyValid()
 * @brief      is public cipher key valid
 * @ingroup    CIPHER
 * 
@@ -1769,7 +1772,6 @@ bool CIPHERCERTIFICATEX509::IsPublicCipherKeyValid()
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         void CIPHERCERTIFICATEX509::SetPublicCipherKeyValid(bool isvalid)
 * @brief      set public cipher key valid
 * @ingroup    CIPHER
 * 
@@ -1784,7 +1786,6 @@ void CIPHERCERTIFICATEX509::SetPublicCipherKeyValid(bool isvalid)
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         XSTRING* CIPHERCERTIFICATEX509::GetPublicCipherKeyID()
 * @brief      get public cipher key Id
 * @ingroup    CIPHER
 * 
@@ -1799,7 +1800,6 @@ XSTRING* CIPHERCERTIFICATEX509::GetPublicCipherKeyID()
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         CIPHERKEY* CIPHERCERTIFICATEX509::GetPublicCipherKey()
 * @brief      get public cipher key
 * @ingroup    CIPHER
 * 
@@ -1814,7 +1814,6 @@ CIPHERKEY* CIPHERCERTIFICATEX509::GetPublicCipherKey()
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         bool CIPHERCERTIFICATEX509::SetPublicCipherKey(CIPHERKEY* publiccipherkey)
 * @brief      Set public cipher key
 * @ingroup    CIPHER
 * 
@@ -1838,7 +1837,6 @@ bool CIPHERCERTIFICATEX509::SetPublicCipherKey(CIPHERKEY* publiccipherkey)
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         HASH* CIPHERCERTIFICATEX509::GetHash()
 * @brief      get hash
 * @ingroup    CIPHER
 * 
@@ -1853,7 +1851,6 @@ HASH* CIPHERCERTIFICATEX509::GetHash()
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         void CIPHERCERTIFICATEX509::SetHash(HASH* hash)
 * @brief      set hash
 * @ingroup    CIPHER
 * 
@@ -1868,7 +1865,6 @@ void CIPHERCERTIFICATEX509::SetHash(HASH* hash)
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         XBUFFER* CIPHERCERTIFICATEX509::GetHashData()
 * @brief      get hash data
 * @ingroup    CIPHER
 * 
@@ -1883,7 +1879,6 @@ XBUFFER* CIPHERCERTIFICATEX509::GetHashData()
 
 /**-------------------------------------------------------------------------------------------------------------------
 *
-* @fn         bool CIPHERCERTIFICATEX509::Decode(XBUFFER& certificate)
 * @brief      Decode a bounded DER X.509 certificate
 * @ingroup    CIPHER
 *
@@ -1960,9 +1955,8 @@ bool CIPHERCERTIFICATEX509::Decode(XBUFFER& certificate)
 
                                                           default : return false;
         }
-    }
 #endif
-    
+    }
    else if((algorithmtype == CIPHERCERTIFICATEX509_ALGORITHM_TYPE_ED25519)         ||
            (algorithmtype == CIPHERCERTIFICATEX509_ALGORITHM_TYPE_ECDSAWITHSHA1)   ||
            (algorithmtype == CIPHERCERTIFICATEX509_ALGORITHM_TYPE_ECDSAWITHSHA256) ||
@@ -2740,7 +2734,6 @@ bool CIPHERCERTIFICATEX509::Decode(XBUFFER& certificate)
 
 /**-------------------------------------------------------------------------------------------------------------------
 *
-* @fn         XBUFFER* CIPHERCERTIFICATEX509::GetCertificateData()
 * @brief      Get the complete DER certificate
 * @ingroup    CIPHER
 *
@@ -2755,7 +2748,6 @@ XBUFFER* CIPHERCERTIFICATEX509::GetCertificateData()
 
 /**-------------------------------------------------------------------------------------------------------------------
 *
-* @fn         XBUFFER* CIPHERCERTIFICATEX509::GetTBSData()
 * @brief      Get the exact DER TBSCertificate signed by the issuer
 * @ingroup    CIPHER
 *
@@ -2770,7 +2762,6 @@ XBUFFER* CIPHERCERTIFICATEX509::GetTBSData()
 
 /**-------------------------------------------------------------------------------------------------------------------
 *
-* @fn         XBUFFER* CIPHERCERTIFICATEX509::GetSignature()
 * @brief      Get the certificate signature
 * @ingroup    CIPHER
 *
@@ -2785,7 +2776,6 @@ XBUFFER* CIPHERCERTIFICATEX509::GetSignature()
 
 /**-------------------------------------------------------------------------------------------------------------------
 *
-* @fn         XBUFFER* CIPHERCERTIFICATEX509::GetIssuerData()
 * @brief      Get the exact DER issuer name
 * @ingroup    CIPHER
 *
@@ -2800,7 +2790,6 @@ XBUFFER* CIPHERCERTIFICATEX509::GetIssuerData()
 
 /**-------------------------------------------------------------------------------------------------------------------
 *
-* @fn         XBUFFER* CIPHERCERTIFICATEX509::GetSubjectData()
 * @brief      Get the exact DER subject name
 * @ingroup    CIPHER
 *
@@ -2815,7 +2804,6 @@ XBUFFER* CIPHERCERTIFICATEX509::GetSubjectData()
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         XBUFFER* CIPHERCERTIFICATEX509::GetSubjectPublicKeyData()
 * @brief      Get subject public key data
 * @ingroup    CIPHER
 * 
@@ -2830,7 +2818,6 @@ XBUFFER* CIPHERCERTIFICATEX509::GetSubjectPublicKeyData()
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         bool CIPHERCERTIFICATEX509::HasSubjectKeyIdentifier()
 * @brief      Has subject key identifier
 * @ingroup    CIPHER
 * 
@@ -2845,7 +2832,6 @@ bool CIPHERCERTIFICATEX509::HasSubjectKeyIdentifier()
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         XBUFFER* CIPHERCERTIFICATEX509::GetSubjectKeyIdentifier()
 * @brief      Get subject key identifier
 * @ingroup    CIPHER
 * 
@@ -2860,7 +2846,6 @@ XBUFFER* CIPHERCERTIFICATEX509::GetSubjectKeyIdentifier()
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         bool CIPHERCERTIFICATEX509::HasAuthorityKeyIdentifier()
 * @brief      Has authority key identifier
 * @ingroup    CIPHER
 * 
@@ -2875,7 +2860,6 @@ bool CIPHERCERTIFICATEX509::HasAuthorityKeyIdentifier()
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         XBUFFER* CIPHERCERTIFICATEX509::GetAuthorityKeyIdentifier()
 * @brief      Get authority key identifier
 * @ingroup    CIPHER
 * 
@@ -2890,7 +2874,6 @@ XBUFFER* CIPHERCERTIFICATEX509::GetAuthorityKeyIdentifier()
 
 /**-------------------------------------------------------------------------------------------------------------------
 *
-* @fn         bool CIPHERCERTIFICATEX509::HasBasicConstraints()
 * @brief      Check whether BasicConstraints is present
 * @ingroup    CIPHER
 *
@@ -2905,7 +2888,6 @@ bool CIPHERCERTIFICATEX509::HasBasicConstraints()
 
 /**-------------------------------------------------------------------------------------------------------------------
 *
-* @fn         bool CIPHERCERTIFICATEX509::IsCertificateAuthority()
 * @brief      Check whether BasicConstraints authorizes certificate signing
 * @ingroup    CIPHER
 *
@@ -2920,7 +2902,6 @@ bool CIPHERCERTIFICATEX509::IsCertificateAuthority()
 
 /**-------------------------------------------------------------------------------------------------------------------
 *
-* @fn         int CIPHERCERTIFICATEX509::GetBasicConstraintsPathLength()
 * @brief      Get the BasicConstraints path length
 * @ingroup    CIPHER
 *
@@ -2935,7 +2916,6 @@ int CIPHERCERTIFICATEX509::GetBasicConstraintsPathLength()
 
 /**-------------------------------------------------------------------------------------------------------------------
 *
-* @fn         bool CIPHERCERTIFICATEX509::HasKeyUsage()
 * @brief      Check whether KeyUsage is present
 * @ingroup    CIPHER
 *
@@ -2950,7 +2930,6 @@ bool CIPHERCERTIFICATEX509::HasKeyUsage()
 
 /**-------------------------------------------------------------------------------------------------------------------
 *
-* @fn         bool CIPHERCERTIFICATEX509::IsKeyUsageDigitalSignature()
 * @brief      Check the digitalSignature KeyUsage bit
 * @ingroup    CIPHER
 *
@@ -2965,7 +2944,6 @@ bool CIPHERCERTIFICATEX509::IsKeyUsageDigitalSignature()
 
 /**-------------------------------------------------------------------------------------------------------------------
 *
-* @fn         bool CIPHERCERTIFICATEX509::IsKeyUsageCertificateSign()
 * @brief      Check the keyCertSign KeyUsage bit
 * @ingroup    CIPHER
 *
@@ -2980,7 +2958,6 @@ bool CIPHERCERTIFICATEX509::IsKeyUsageCertificateSign()
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         bool CIPHERCERTIFICATEX509::IsKeyUsageCRLSign()
 * @brief      Is key usage crl sign
 * @ingroup    CIPHER
 * 
@@ -2995,7 +2972,6 @@ bool CIPHERCERTIFICATEX509::IsKeyUsageCRLSign()
 
 /**-------------------------------------------------------------------------------------------------------------------
 *
-* @fn         bool CIPHERCERTIFICATEX509::HasExtendedKeyUsage()
 * @brief      Check whether ExtendedKeyUsage is present
 * @ingroup    CIPHER
 *
@@ -3010,7 +2986,6 @@ bool CIPHERCERTIFICATEX509::HasExtendedKeyUsage()
 
 /**-------------------------------------------------------------------------------------------------------------------
 *
-* @fn         bool CIPHERCERTIFICATEX509::IsExtendedKeyUsageServerAuthentication()
 * @brief      Check the id-kp-serverAuth ExtendedKeyUsage
 * @ingroup    CIPHER
 *
@@ -3025,7 +3000,6 @@ bool CIPHERCERTIFICATEX509::IsExtendedKeyUsageServerAuthentication()
 
 /**-------------------------------------------------------------------------------------------------------------------
 *
-* @fn         bool CIPHERCERTIFICATEX509::IsExtendedKeyUsageClientAuthentication()
 * @brief      Check the id-kp-clientAuth ExtendedKeyUsage
 * @ingroup    CIPHER
 *
@@ -3040,7 +3014,6 @@ bool CIPHERCERTIFICATEX509::IsExtendedKeyUsageClientAuthentication()
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         bool CIPHERCERTIFICATEX509::IsExtendedKeyUsageOCSPSigning()
 * @brief      Is extended key usage ocsp signing
 * @ingroup    CIPHER
 * 
@@ -3055,7 +3028,6 @@ bool CIPHERCERTIFICATEX509::IsExtendedKeyUsageOCSPSigning()
 
 /**-------------------------------------------------------------------------------------------------------------------
 *
-* @fn         bool CIPHERCERTIFICATEX509::HasUnknownCriticalExtension()
 * @brief      Check whether an unsupported critical extension was found
 * @ingroup    CIPHER
 *
@@ -3068,9 +3040,9 @@ bool CIPHERCERTIFICATEX509::HasUnknownCriticalExtension()
 }
 
 
+/** @cond INTERNAL_FILE_HELPERS */
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         static bool CIPHERCERTIFICATEX509_DNSConstraintMatch(XSTRING* name, XSTRING* constraint)
 * @brief      Dns constraint match
 * @ingroup    CIPHER
 * 
@@ -3098,10 +3070,14 @@ static bool CIPHERCERTIFICATEX509_DNSConstraintMatch(XSTRING* name, XSTRING* con
   if(subdomainsonly) return namelen > constraintlen;
   return (namelen == constraintlen) || (normalizedname.Get()[namelen - constraintlen - 1] == '.');
 }
+/** @endcond */
 
+
+/** @cond INTERNAL_FILE_HELPERS */
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         static bool CIPHERCERTIFICATEX509_IPConstraintMatch(XBUFFER* address, XBUFFER* constraint)
+* @internal
+* 
 * @brief      Ip constraint match
 * @ingroup    CIPHER
 * 
@@ -3121,10 +3097,11 @@ static bool CIPHERCERTIFICATEX509_IPConstraintMatch(XBUFFER* address, XBUFFER* c
        (constraint->Get()[c] & constraint->Get()[addresssize+c])) return false;
   return true;
 }
+/** @endcond */
+
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         bool CIPHERCERTIFICATEX509::HasNameConstraints()
 * @brief      Has name constraints
 * @ingroup    CIPHER
 * 
@@ -3139,7 +3116,6 @@ bool CIPHERCERTIFICATEX509::HasNameConstraints()
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         bool CIPHERCERTIFICATEX509::AreNamesPermitted(CIPHERCERTIFICATEX509* certificate)
 * @brief      Are names permitted
 * @ingroup    CIPHER
 * 
@@ -3186,7 +3162,6 @@ bool CIPHERCERTIFICATEX509::AreNamesPermitted(CIPHERCERTIFICATEX509* certificate
 
 /**-------------------------------------------------------------------------------------------------------------------
 *
-* @fn         XVECTOR<XSTRING*>* CIPHERCERTIFICATEX509::GetSubjectAlternativeNamesDNS()
 * @brief      Get decoded dNSName subject alternative names
 * @ingroup    CIPHER
 *
@@ -3201,7 +3176,6 @@ XVECTOR<XSTRING*>* CIPHERCERTIFICATEX509::GetSubjectAlternativeNamesDNS()
 
 /**-------------------------------------------------------------------------------------------------------------------
 *
-* @fn         XVECTOR<XBUFFER*>* CIPHERCERTIFICATEX509::GetSubjectAlternativeNamesIP()
 * @brief      Get decoded iPAddress subject alternative names
 * @ingroup    CIPHER
 *
@@ -3216,7 +3190,6 @@ XVECTOR<XBUFFER*>* CIPHERCERTIFICATEX509::GetSubjectAlternativeNamesIP()
 
 /**-------------------------------------------------------------------------------------------------------------------
 *
-* @fn         bool CIPHERCERTIFICATEX509::HasCAIssuersURL()
 * @brief      Check whether an AuthorityInfoAccess id-ad-caIssuers URL is present
 * @ingroup    CIPHER
 *
@@ -3231,7 +3204,6 @@ bool CIPHERCERTIFICATEX509::HasCAIssuersURL()
 
 /**-------------------------------------------------------------------------------------------------------------------
 *
-* @fn         XSTRING* CIPHERCERTIFICATEX509::GetCAIssuersURL()
 * @brief      Get the AuthorityInfoAccess id-ad-caIssuers URL used to fetch the certificate's issuer
 * @ingroup    CIPHER
 *
@@ -3246,7 +3218,6 @@ XSTRING* CIPHERCERTIFICATEX509::GetCAIssuersURL()
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         bool CIPHERCERTIFICATEX509::HasOCSPURL()
 * @brief      Has ocspurl
 * @ingroup    CIPHER
 * 
@@ -3261,7 +3232,6 @@ bool CIPHERCERTIFICATEX509::HasOCSPURL()
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         XSTRING* CIPHERCERTIFICATEX509::GetOCSPURL()
 * @brief      Get ocspurl
 * @ingroup    CIPHER
 * 
@@ -3276,7 +3246,6 @@ XSTRING* CIPHERCERTIFICATEX509::GetOCSPURL()
 
 /**-------------------------------------------------------------------------------------------------------------------
 *
-* @fn         bool CIPHERCERTIFICATEX509::IsServerNameValid(XCHAR* servername)
 * @brief      Match a TLS server name exclusively against subjectAltName
 * @ingroup    CIPHER
 *
@@ -3327,7 +3296,6 @@ bool CIPHERCERTIFICATEX509::IsServerNameValid(XCHAR* servername)
 
 /**-------------------------------------------------------------------------------------------------------------------
 *
-* @fn         bool CIPHERCERTIFICATEX509::VerifySignature(CIPHERKEY* issuerpublickey)
 * @brief      Verify the X.509 signature with the issuer public key
 * @ingroup    CIPHER
 *
@@ -3366,7 +3334,6 @@ bool CIPHERCERTIFICATEX509::VerifySignature(CIPHERKEY* issuerpublickey)
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         bool CIPHERCERTIFICATEX509::VerifyDataSignature(CIPHERKEY* issuerpublickey, CIPHERCERTIFICATEX509_ALGORITHM_TYPE algorithm, XBUFFER& data, XBUFFER& signature)
 * @brief      Verify data signature
 * @ingroup    CIPHER
 * 
@@ -3433,7 +3400,6 @@ bool CIPHERCERTIFICATEX509::VerifyDataSignature(CIPHERKEY* issuerpublickey, CIPH
 
 /**-------------------------------------------------------------------------------------------------------------------
 *
-* @fn         bool CIPHERCERTIFICATEX509::ConvertDateTime(XCHAR* datestr, XDATETIME* datetime)
 * @brief      Convert date time
 * @ingroup    CIPHER
 *
@@ -3502,7 +3468,6 @@ bool CIPHERCERTIFICATEX509::ConvertDateTime(XCHAR* datestr, XDATETIME* datetime)
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         bool CIPHERCERTIFICATEX509::XTraceCertificatedPropertys()
 * @brief      Xtrace certificated propertys
 * @ingroup    CIPHER
 * 
@@ -3623,7 +3588,6 @@ bool CIPHERCERTIFICATEX509::XTraceCertificatedPropertys()
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         void CIPHERCERTIFICATEX509::Clean()
 * @brief      Clean the attributes of the class: Default initialize
 * @note       INTERNAL
 * @ingroup    CIPHER

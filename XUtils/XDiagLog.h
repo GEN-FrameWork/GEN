@@ -5,7 +5,7 @@
 * @brief      TEMPORARY diagnostic-only logging helper, added 2026-09 to root-cause a multi-second full-dashboard
 *             blank-freeze reported on real hardware and VMs (Windows and Linux) that could not be reproduced or
 *             explained from a sandboxed reconstruction alone. NOT part of the GEN framework proper -- delete this
-*             file and every '#include "XDiagLog.h"' / XDIAGLOG_* call site once the freeze is root-caused and
+*             file and every '#@@include "XDiagLog.h"' / XDIAGLOG_* call site once the freeze is root-caused and
 *             fixed.
 *
 *             Header-only on purpose: every call site (UI_System.cpp, UI_Layout.cpp, UI_SkinCanvas.cpp, ...) needs

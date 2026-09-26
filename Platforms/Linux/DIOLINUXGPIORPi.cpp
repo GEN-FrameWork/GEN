@@ -64,19 +64,9 @@
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         DIOLINUXGPIORPI::DIOLINUXGPIORPI(): DIOLINUXGPIO()
+* @fn         DIOLINUXGPIORPI::DIOLINUXGPIORPI()
 * @brief      Constructor of class
 * @ingroup    PLATFORM_LINUX
-* 
-* --------------------------------------------------------------------------------------------------------------------*/
-//DIOLINUXGPIORPI::DIOLINUXGPIORPI(): DIOGPIO()
-/**-------------------------------------------------------------------------------------------------------------------
-* 
-* @fn         DIOLINUXGPIORPI::DIOLINUXGPIORPI(): DIOLINUXGPIO()
-* @brief      Constructor of class
-* @ingroup    PLATFORM_LINUX
-* 
-* @param[in]  Value.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
 DIOLINUXGPIORPI::DIOLINUXGPIORPI(): DIOLINUXGPIO()
@@ -216,6 +206,9 @@ bool DIOLINUXGPIORPI::Ini()
   return DIOLINUXGPIO::Ini();
 }
 
+
+#if 0
+// Legacy memory-mapped RPI GPIO path (kept for reference). Active path uses DIOLINUXGPIO.
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
@@ -557,6 +550,7 @@ bool DIOLINUXGPIORPI::RPI_GPIOWrite(XQWORD GPIO, bool isactive)
 
   return true;
 }
+#endif
 
 
 /**-------------------------------------------------------------------------------------------------------------------

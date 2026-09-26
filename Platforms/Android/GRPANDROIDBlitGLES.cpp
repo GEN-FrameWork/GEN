@@ -56,7 +56,6 @@
 * @brief      Constructor of class
 * @ingroup    PLATFORM_ANDROID
 * 
-* @param[in]  Value.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
 GRPANDROIDBLITGLES::GRPANDROIDBLITGLES()  : GRPBLITGLES() { }

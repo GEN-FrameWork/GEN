@@ -771,6 +771,7 @@ void* operator new[](size_t size, char const* namefile, int line)
 * @param[in]  throw : Throw pointer to use.
 * 
 * @return     void operator : Requested value.
+* 
 * --------------------------------------------------------------------------------------------------------------------*/
 void operator delete(void* ptr) throw ()
 {

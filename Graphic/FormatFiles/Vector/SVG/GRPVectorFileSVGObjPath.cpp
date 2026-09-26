@@ -228,7 +228,6 @@ bool GRPVECTORFILESVGOBJPATH::ParsePathData(XCHAR* d)
           * @brief      C
           * @ingroup    GRAPHIC
           * 
-          * @param[in]  Value.
           * 
           * @return     case : Requested value.
           * 
@@ -247,7 +246,6 @@ bool GRPVECTORFILESVGOBJPATH::ParsePathData(XCHAR* d)
           * @brief      C
           * @ingroup    GRAPHIC
           * 
-          * @param[in]  Value.
           * 
           * @return     case : Requested value.
           * 
@@ -265,7 +263,6 @@ bool GRPVECTORFILESVGOBJPATH::ParsePathData(XCHAR* d)
           * @brief      C
           * @ingroup    GRAPHIC
           * 
-          * @param[in]  Value.
           * 
           * @return     case : Requested value.
           * 
@@ -283,7 +280,6 @@ bool GRPVECTORFILESVGOBJPATH::ParsePathData(XCHAR* d)
           * @brief      C
           * @ingroup    GRAPHIC
           * 
-          * @param[in]  Value.
           * 
           * @return     case : Requested value.
           * 
@@ -301,7 +297,6 @@ bool GRPVECTORFILESVGOBJPATH::ParsePathData(XCHAR* d)
           * @brief      C
           * @ingroup    GRAPHIC
           * 
-          * @param[in]  Value.
           * 
           * @return     case : Requested value.
           * 
@@ -322,7 +317,6 @@ bool GRPVECTORFILESVGOBJPATH::ParsePathData(XCHAR* d)
           * @brief      C
           * @ingroup    GRAPHIC
           * 
-          * @param[in]  Value.
           * 
           * @return     case : Requested value.
           * 
@@ -351,7 +345,6 @@ bool GRPVECTORFILESVGOBJPATH::ParsePathData(XCHAR* d)
           * @brief      C
           * @ingroup    GRAPHIC
           * 
-          * @param[in]  Value.
           * 
           * @return     case : Requested value.
           * 
@@ -371,7 +364,6 @@ bool GRPVECTORFILESVGOBJPATH::ParsePathData(XCHAR* d)
           * @brief      C
           * @ingroup    GRAPHIC
           * 
-          * @param[in]  Value.
           * 
           * @return     case : Requested value.
           * 
@@ -399,7 +391,6 @@ bool GRPVECTORFILESVGOBJPATH::ParsePathData(XCHAR* d)
           * @brief      C
           * @ingroup    GRAPHIC
           * 
-          * @param[in]  Value.
           * 
           * @return     case : Requested value.
           * 

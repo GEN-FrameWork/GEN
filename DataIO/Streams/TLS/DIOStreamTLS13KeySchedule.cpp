@@ -57,7 +57,7 @@
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         static void DIOStreamTLS_BufferErase(XBUFFER& buffer)
+* @fn         void DIOStreamTLS_BufferErase(XBUFFER& buffer)
 * @brief      Dio stream tls buffer erase
 * @ingroup    DATAIO
 * 

@@ -60,7 +60,7 @@
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         static bool XSERIALIZATIONMETHODBINARY_ReadType(XBUFFER* buffer, XDWORD& position, XSERIALIZATIONMETHODBINARY_TYPEELEMENT expected)
+* @fn         bool XSERIALIZATIONMETHODBINARY_ReadType(XBUFFER* buffer, XDWORD& position, XSERIALIZATIONMETHODBINARY_TYPEELEMENT expected)
 * @brief      Read type
 * @ingroup    XUTILS
 * 
@@ -83,7 +83,7 @@ static bool XSERIALIZATIONMETHODBINARY_ReadType(XBUFFER* buffer, XDWORD& positio
 template <class T>
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         static bool XSERIALIZATIONMETHODBINARY_ReadValue(XBUFFER* buffer, XDWORD& position, T& value)
+* @fn         bool XSERIALIZATIONMETHODBINARY_ReadValue(XBUFFER* buffer, XDWORD& position, T& value)
 * @brief      Read value
 * @ingroup    XUTILS
 * 
@@ -105,7 +105,7 @@ static bool XSERIALIZATIONMETHODBINARY_ReadValue(XBUFFER* buffer, XDWORD& positi
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         static bool XSERIALIZATIONMETHODBINARY_AddData(XBUFFER* target, XSERIALIZATIONMETHODBINARY_TYPEELEMENT type, XBUFFER& data)
+* @fn         bool XSERIALIZATIONMETHODBINARY_AddData(XBUFFER* target, XSERIALIZATIONMETHODBINARY_TYPEELEMENT type, XBUFFER& data)
 * @brief      Add data
 * @ingroup    XUTILS
 * 
@@ -126,7 +126,7 @@ static bool XSERIALIZATIONMETHODBINARY_AddData(XBUFFER* target, XSERIALIZATIONME
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         static bool XSERIALIZATIONMETHODBINARY_ReadData(XBUFFER* source, XDWORD& position, XSERIALIZATIONMETHODBINARY_TYPEELEMENT type, XBUFFER& data)
+* @fn         bool XSERIALIZATIONMETHODBINARY_ReadData(XBUFFER* source, XDWORD& position, XSERIALIZATIONMETHODBINARY_TYPEELEMENT type, XBUFFER& data)
 * @brief      Read data
 * @ingroup    XUTILS
 * 
@@ -549,7 +549,7 @@ bool XSERIALIZATIONMETHODBINARY::AddArray(XDWORD nelements, XCHAR* name, bool op
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         bool XSERIALIZATIONMETHODBINARY::Extract(bool var, XCHAR* name)
+* @fn         bool XSERIALIZATIONMETHODBINARY::Extract(bool& var, XCHAR* name)
 * @brief      Extract
 * @ingroup    XUTILS
 * 
@@ -568,7 +568,7 @@ bool XSERIALIZATIONMETHODBINARY::Extract(bool& var, XCHAR* name)
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         bool XSERIALIZATIONMETHODBINARY::Extract(char var, XCHAR* name)
+* @fn         bool XSERIALIZATIONMETHODBINARY::Extract(char& var, XCHAR* name)
 * @brief      Extract
 * @ingroup    XUTILS
 * 
@@ -590,7 +590,7 @@ bool XSERIALIZATIONMETHODBINARY::Extract(char& var, XCHAR* name)
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         bool XSERIALIZATIONMETHODBINARY::Extract(int var, XCHAR* name)
+* @fn         bool XSERIALIZATIONMETHODBINARY::Extract(int& var, XCHAR* name)
 * @brief      Extract
 * @ingroup    XUTILS
 * 
@@ -612,7 +612,7 @@ bool XSERIALIZATIONMETHODBINARY::Extract(int& var, XCHAR* name)
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         bool XSERIALIZATIONMETHODBINARY::Extract(float var, XCHAR* name)
+* @fn         bool XSERIALIZATIONMETHODBINARY::Extract(float& var, XCHAR* name)
 * @brief      Extract
 * @ingroup    XUTILS
 * 
@@ -631,7 +631,7 @@ bool XSERIALIZATIONMETHODBINARY::Extract(float& var, XCHAR* name)
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         bool XSERIALIZATIONMETHODBINARY::Extract(double var, XCHAR* name)
+* @fn         bool XSERIALIZATIONMETHODBINARY::Extract(double& var, XCHAR* name)
 * @brief      Extract
 * @ingroup    XUTILS
 * 
@@ -650,7 +650,7 @@ bool XSERIALIZATIONMETHODBINARY::Extract(double& var, XCHAR* name)
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         bool XSERIALIZATIONMETHODBINARY::Extract(long var, XCHAR* name)
+* @fn         bool XSERIALIZATIONMETHODBINARY::Extract(long& var, XCHAR* name)
 * @brief      Extract
 * @ingroup    XUTILS
 * 
@@ -672,7 +672,7 @@ bool XSERIALIZATIONMETHODBINARY::Extract(long& var, XCHAR* name)
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         bool XSERIALIZATIONMETHODBINARY::Extract(long long var, XCHAR* name)
+* @fn         bool XSERIALIZATIONMETHODBINARY::Extract(long long& var, XCHAR* name)
 * @brief      Extract
 * @ingroup    XUTILS
 * 
@@ -694,7 +694,7 @@ bool XSERIALIZATIONMETHODBINARY::Extract(long long& var, XCHAR* name)
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         bool XSERIALIZATIONMETHODBINARY::Extract(XBYTE var, XCHAR* name)
+* @fn         bool XSERIALIZATIONMETHODBINARY::Extract(XBYTE& var, XCHAR* name)
 * @brief      Extract
 * @ingroup    XUTILS
 * 
@@ -713,7 +713,7 @@ bool XSERIALIZATIONMETHODBINARY::Extract(XBYTE& var, XCHAR* name)
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         bool XSERIALIZATIONMETHODBINARY::Extract(XWORD var, XCHAR* name)
+* @fn         bool XSERIALIZATIONMETHODBINARY::Extract(XWORD& var, XCHAR* name)
 * @brief      Extract
 * @ingroup    XUTILS
 * 
@@ -732,7 +732,7 @@ bool XSERIALIZATIONMETHODBINARY::Extract(XWORD& var, XCHAR* name)
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         bool XSERIALIZATIONMETHODBINARY::Extract(XDWORD var, XCHAR* name)
+* @fn         bool XSERIALIZATIONMETHODBINARY::Extract(XDWORD& var, XCHAR* name)
 * @brief      Extract
 * @ingroup    XUTILS
 * 
@@ -751,7 +751,7 @@ bool XSERIALIZATIONMETHODBINARY::Extract(XDWORD& var, XCHAR* name)
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         bool XSERIALIZATIONMETHODBINARY::Extract(XQWORD var, XCHAR* name)
+* @fn         bool XSERIALIZATIONMETHODBINARY::Extract(XQWORD& var, XCHAR* name)
 * @brief      Extract
 * @ingroup    XUTILS
 * 
@@ -770,7 +770,7 @@ bool XSERIALIZATIONMETHODBINARY::Extract(XQWORD& var, XCHAR* name)
     
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         bool XSERIALIZATIONMETHODBINARY::Extract(XSTRING* var, XCHAR* name)
+* @fn         bool XSERIALIZATIONMETHODBINARY::Extract(XSTRING& var, XCHAR* name)
 * @brief      Extract
 * @ingroup    XUTILS
 * 
@@ -791,7 +791,7 @@ bool XSERIALIZATIONMETHODBINARY::Extract(XSTRING& var, XCHAR* name)
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         bool XSERIALIZATIONMETHODBINARY::Extract(XBUFFER* var, XCHAR* name)
+* @fn         bool XSERIALIZATIONMETHODBINARY::Extract(XBUFFER& var, XCHAR* name)
 * @brief      Extract
 * @ingroup    XUTILS
 * 
@@ -809,7 +809,7 @@ bool XSERIALIZATIONMETHODBINARY::Extract(XBUFFER& var, XCHAR* name)
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         bool XSERIALIZATIONMETHODBINARY::Extract(XVARIANT* var, XCHAR* name)
+* @fn         bool XSERIALIZATIONMETHODBINARY::Extract(XVARIANT& var, XCHAR* name)
 * @brief      Extract
 * @ingroup    XUTILS
 * 

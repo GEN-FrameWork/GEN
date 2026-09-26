@@ -48,7 +48,6 @@
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         void CIPHERCREDENTIALSLOADER::Certificates_Delete(XVECTOR<XBUFFER*>& certificatechain)
 * @brief      Certificates delete
 * @ingroup    CIPHER
 * 
@@ -63,7 +62,6 @@ void CIPHERCREDENTIALSLOADER::Certificates_Delete(XVECTOR<XBUFFER*>& certificate
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         void CIPHERCREDENTIALSLOADER::PrivateKey_Delete(CIPHERKEY*& privatekey)
 * @brief      Private key delete
 * @ingroup    CIPHER
 * 
@@ -76,9 +74,9 @@ void CIPHERCREDENTIALSLOADER::PrivateKey_Delete(CIPHERKEY*& privatekey)
   privatekey=NULL;
 }
 
+/** @cond INTERNAL_FILE_HELPERS */
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         static void CIPHERCREDENTIALSLOADER_StringWipe(XSTRING& string)
 * @brief      String wipe
 * @ingroup    CIPHER
 * 
@@ -94,10 +92,13 @@ static void CIPHERCREDENTIALSLOADER_StringWipe(XSTRING& string)
     }
   string.Empty();
 }
+/** @endcond */
 
+/** @cond INTERNAL_FILE_HELPERS */
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         static bool CIPHERCREDENTIALSLOADER_LegacyHexLine(XBUFFER& filedata, XDWORD requested, XSTRING& line)
+* @internal
+* 
 * @brief      Legacy hex line
 * @ingroup    CIPHER
 * 
@@ -150,10 +151,13 @@ static bool CIPHERCREDENTIALSLOADER_LegacyHexLine(XBUFFER& filedata, XDWORD requ
 
   return false;
 }
+/** @endcond */
 
+/** @cond INTERNAL_FILE_HELPERS */
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         static bool CIPHERCREDENTIALSLOADER_LegacyPrivateKey(XBUFFER& filedata, CIPHERKEYTYPE expectedpublickeytype, CIPHERKEY*& privatekey)
+* @internal
+* 
 * @brief      Legacy private key
 * @ingroup    CIPHER
 * 
@@ -228,10 +232,13 @@ static bool CIPHERCREDENTIALSLOADER_LegacyPrivateKey(XBUFFER& filedata, CIPHERKE
   CIPHERCREDENTIALSLOADER_StringWipe(extra);
   return status;
 }
+/** @endcond */
 
+/** @cond INTERNAL_FILE_HELPERS */
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         static int CIPHERCREDENTIALSLOADER_Find(XBYTE* data, XDWORD size, const char* marker, XDWORD from)
+* @internal
+* 
 * @brief      Find
 * @ingroup    CIPHER
 * 
@@ -250,10 +257,11 @@ static int CIPHERCREDENTIALSLOADER_Find(XBYTE* data, XDWORD size, const char* ma
   for(XDWORD c=from;c+markersize<=size;c++) if(!memcmp(data+c, marker, markersize)) return (int)c;
   return -1;
 }
+/** @endcond */
+
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         bool CIPHERCREDENTIALSLOADER::PEMBlocks_Decode(XBUFFER& filedata, const char* label, XVECTOR<XBUFFER*>& blocks)
 * @brief      Pem blocks decode
 * @ingroup    CIPHER
 * 
@@ -298,7 +306,6 @@ bool CIPHERCREDENTIALSLOADER::PEMBlocks_Decode(XBUFFER& filedata, const char* la
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         bool CIPHERCREDENTIALSLOADER::Certificates_Load(XBUFFER& filedata, XVECTOR<XBUFFER*>& certificatechain)
 * @brief      Certificates load
 * @ingroup    CIPHER
 * 
@@ -366,7 +373,6 @@ bool CIPHERCREDENTIALSLOADER::Certificates_Load(XBUFFER& filedata, XVECTOR<XBUFF
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         bool CIPHERCREDENTIALSLOADER::PrivateKeyDER_Decode(XBUFFER& DER, CIPHERKEYTYPE expectedpublickeytype, CIPHERKEY*& privatekey)
 * @brief      Private key der decode
 * @ingroup    CIPHER
 * 
@@ -449,9 +455,9 @@ bool CIPHERCREDENTIALSLOADER::PrivateKeyDER_Decode(XBUFFER& DER, CIPHERKEYTYPE e
 }
 
 
+/** @cond INTERNAL_FILE_HELPERS */
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         static bool CIPHERCREDENTIALSLOADER_PrivateKeyMatchesPublic(CIPHERKEY* privatekey, CIPHERKEY* publickey)
 * @brief      Private key matches public
 * @ingroup    CIPHER
 * 
@@ -520,10 +526,10 @@ static bool CIPHERCREDENTIALSLOADER_PrivateKeyMatchesPublic(CIPHERKEY* privateke
 
   return false;
 }
+/** @endcond */
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         bool CIPHERCREDENTIALSLOADER::PrivateKey_Load(XBUFFER& filedata, XCHAR* password, CIPHERKEYTYPE expectedpublickeytype, CIPHERKEY*& privatekey)
 * @brief      Private key load
 * @ingroup    CIPHER
 * 
@@ -579,7 +585,6 @@ bool CIPHERCREDENTIALSLOADER::PrivateKey_Load(XBUFFER& filedata, XCHAR* password
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         bool CIPHERCREDENTIALSLOADER::Credentials_Load(XBUFFER& certificatedata, XBUFFER& privatekeydata, XCHAR* password, XVECTOR<XBUFFER*>& certificatechain, CIPHERKEY*& privatekey)
 * @brief      Credentials load
 * @ingroup    CIPHER
 * 

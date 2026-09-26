@@ -114,7 +114,7 @@
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         static void UI_SkinCanvas_ProgressRadial_AppendArc(GRP2DPATH& path, double cx, double cy, double r, double startdeg, double spandeg, bool& firstpoint)
+* @fn         void UI_SkinCanvas_ProgressRadial_AppendArc(GRP2DPATH& path, double cx, double cy, double r, double startdeg, double spandeg, bool& firstpoint)
 * @brief      Append a circular arc to a path as a short-segment polyline (~2 deg per step). Uses only MoveTo/LineTo, which are fully exercised by the canvas stroke pipeline; this deliberately avoids GRP2DPATH::ArcTo (the SVG elliptical-arc command), whose AGG arc_to conversion is not used anywhere else and produces no geometry here. Angles are degrees; a positive span advances clockwise in this y-down canvas.
 * @note       INTERNAL / FILE LOCAL
 * @ingroup    USERINTERFACE
@@ -160,7 +160,7 @@ static void UI_SkinCanvas_ProgressRadial_AppendArc(GRP2DPATH& path, double cx, d
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         static void DrawScrollPill(GRP2DCANVAS* canvas, double a, double b, double c, double d, double formradius)
+* @fn         void DrawScrollPill(GRP2DCANVAS* canvas, double a, double b, double c, double d, double formradius)
 * @brief      Draw Scroll Pill
 * @ingroup    USERINTERFACE
 * 
@@ -190,7 +190,7 @@ static void DrawScrollPill(GRP2DCANVAS* canvas, double a, double b, double c, do
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         static void UI_SkinCanvas_ProgressBar_DrawRect(GRP2DCANVAS* canvas, double x1, double y1, double x2, double y2, double radius)
+* @fn         void UI_SkinCanvas_ProgressBar_DrawRect(GRP2DCANVAS* canvas, double x1, double y1, double x2, double y2, double radius)
 * @brief      Draw a filled rect, rounded when radius > 0. The radius is clamped to half the smaller side so a capsule (roundcap) stays valid even when the progress fill is narrower than the bar thickness (agg::rounded_rect does not self-normalize the radius).
 * @note       INTERNAL / FILE LOCAL
 * @ingroup    USERINTERFACE
@@ -248,7 +248,7 @@ static void UI_SkinCanvas_ProgressBar_DrawRect(GRP2DCANVAS* canvas, double x1, d
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         static void UI_SkinCanvas_AppendRoundRectPath(GRP2DPATH& path, double minx, double miny, double maxx, double maxy, double r)
+* @fn         void UI_SkinCanvas_AppendRoundRectPath(GRP2DPATH& path, double minx, double miny, double maxx, double maxy, double r)
 * @brief      Builds a (optionally rounded) rectangle outline into a path with MoveTo/LineTo so it can be gradient-filled.
 * @note       INTERNAL / FILE LOCAL. Inputs are already normalized (minx<=maxx, miny<=maxy) and r clamped by the caller.
 * @ingroup    USERINTERFACE
@@ -388,7 +388,7 @@ void UI_SKINCANVAS::AppendRoundRectPathPerCorner(GRP2DPATH& path, double minx, d
 
 /**-------------------------------------------------------------------------------------------------------------------
 *
-* @fn         static bool UI_SkinCanvas_RoundedRectInside(int px, int py, int w, int h, double rTL, double rTR, double rBR, double rBL)
+* @fn         bool UI_SkinCanvas_RoundedRectInside(int px, int py, int w, int h, double rTL, double rTR, double rBR, double rBL)
 * @brief      Point-in-rounded-rect test for the four per-corner radius variant.
 * @note       INTERNAL / FILE LOCAL. Rectangle spans [0, w) x [0, h). Corners with radius 0 draw square.
 * @ingroup    USERINTERFACE
@@ -435,7 +435,7 @@ static bool UI_SkinCanvas_RoundedRectInside(int px, int py, int w, int h, double
 
 /**-------------------------------------------------------------------------------------------------------------------
 *
-* @fn         static void UI_SkinCanvas_PunchRoundRectCornerTips
+* @fn         void UI_SkinCanvas_PunchRoundRectCornerTips
 * @brief      Restore true backdrop into the four AABB corner cutouts of a rounded rect.
 * @note       INTERNAL. After RoundRect/Path fill, AGG AA (and occasionally a sharp prior fill) can leave dark
 *             "picos" in the square tips outside the arc. Copy those pixels back from FormBackdrop (or from a
@@ -525,7 +525,7 @@ static void UI_SkinCanvas_PunchRoundRectCornerTips(GRP2DCANVAS* canvas, GRP2DREB
 
 /**-------------------------------------------------------------------------------------------------------------------
 *
-* @fn         static void UI_SkinCanvas_DrawSoftShadow(GRP2DCANVAS* canvas, double minx, double miny, double maxx, double maxy, double rTL, double rTR, double rBR, double rBL, UI_COLOR* shadow_color, int blur_radius)
+* @fn         void UI_SkinCanvas_DrawSoftShadow(GRP2DCANVAS* canvas, double minx, double miny, double maxx, double maxy, double rTL, double rTR, double rBR, double rBL, UI_COLOR* shadow_color, int blur_radius)
 * @brief      Draw a soft-edged rounded-rect drop shadow. Rasterises the silhouette into an off-screen RGBA
 *             bitmap padded to hold the blur fade, runs agg::stack_blur_rgba32 on it, then composites via
 *             the canvas's PutBitmapAlpha. Falls back cleanly on unsupported canvas modes (returns false so
@@ -1112,7 +1112,7 @@ void UI_SKINCANVAS::DrawElementBoxShadow(GRP2DCANVAS* canvas, UI_ELEMENT* elemen
 
 /**-------------------------------------------------------------------------------------------------------------------
 *
-* @fn         static void UI_SkinCanvas_ProgressBar_DrawGradientRect(GRP2DCANVAS* canvas, double x1, double y1, double x2, double y2, double radius, GRP2DGRADIENTSTOP* stops, double gx1, double gy1, double gx2, double gy2)
+* @fn         void UI_SkinCanvas_ProgressBar_DrawGradientRect(GRP2DCANVAS* canvas, double x1, double y1, double x2, double y2, double radius, GRP2DGRADIENTSTOP* stops, double gx1, double gy1, double gx2, double gy2)
 * @brief      Fills a (optionally rounded) rect with a linear gradient along (gx1,gy1)->(gx2,gy2).
 * @note       INTERNAL / FILE LOCAL. Used only when gradientcolor is set; the solid DrawRect path is left untouched.
 * @ingroup    USERINTERFACE
@@ -1905,7 +1905,7 @@ bool UI_SKINCANVAS::LoadFonts()
 
 /**-------------------------------------------------------------------------------------------------------------------
 *
-* @fn         static double UI_SKINCANVAS_ResolveMaxSize(UI_ELEMENT* element, double fathersize)
+* @fn         double UI_SKINCANVAS_ResolveMaxSize(UI_ELEMENT* element, double fathersize)
 * @brief      INTERNAL: corrects the one-pixel-short father size GetFatherSize() reports for a ROOT (fatherless)
 *             element, but ONLY at the point a width="max" / height="max" resolution consumes it -- never for
 *             GetFatherSize()'s other consumer, CalculePosition()'s xpos="right"/"center" and
@@ -3023,8 +3023,6 @@ bool UI_SKINCANVAS::CalculateBoundaryLine_ListBox(UI_ELEMENT* element, bool adju
 *                                    those being correct before calling this.
 * @param[in]  adjustsizemargin : Forwarded to every CalculePosition() call below, exactly as CalculateBoundaryLine_ProgressBar() does.
 *
-* @return     void.
-*
 * --------------------------------------------------------------------------------------------------------------------*/
 void UI_SKINCANVAS::ReapplyProgressBarAllocationLayout(UI_ELEMENT_PROGRESSBAR* element_progressbar, bool adjustsizemargin)
 {
@@ -3290,7 +3288,7 @@ bool UI_SKINCANVAS::CalculateBoundaryLine_ProgressRadial(UI_ELEMENT* element, bo
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         static void UI_SkinCanvas_ProgressImage_Layout(int allocation, double imgw, double imgh, double textw, double texth, double gap, double& bw, double& bh, double& ox, double& oy, double& tx, double& ty)
+* @fn         void UI_SkinCanvas_ProgressImage_Layout(int allocation, double imgw, double imgh, double textw, double texth, double gap, double& bw, double& bh, double& ox, double& oy, double& tx, double& ty)
 * @brief      Calculate boundary line progress image
 * @ingroup    USERINTERFACE
 * 
@@ -3310,7 +3308,7 @@ bool UI_SKINCANVAS::CalculateBoundaryLine_ProgressRadial(UI_ELEMENT* element, bo
 * --------------------------------------------------------------------------------------------------------------------*/
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         static void UI_SkinCanvas_ProgressImage_Layout(int allocation, double imgw, double imgh, double textw, double texth, double gap, double& bw, double& bh, double& ox, double& oy, double& tx, double& ty)
+* @fn         void UI_SkinCanvas_ProgressImage_Layout(int allocation, double imgw, double imgh, double textw, double texth, double gap, double& bw, double& bh, double& ox, double& oy, double& tx, double& ty)
 * @brief      Computes the ProgressImage caption layout for the current allocationtext.
 * @ingroup    USERINTERFACE
 * 
@@ -6114,7 +6112,7 @@ bool UI_SKINCANVAS::DrawBackgroundColor(UI_ELEMENT* element, GRP2DCANVAS* canvas
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         static void UI_SkinCanvas_ContentExtent(UI_ELEMENT* element, bool vx, bool vy, double margin, double& minx, double& maxx, double& miny, double& maxy)
+* @fn         void UI_SkinCanvas_ContentExtent(UI_ELEMENT* element, bool vx, bool vy, double margin, double& minx, double& maxx, double& miny, double& maxy)
 * @brief      Pre draw function
 * @ingroup    USERINTERFACE
 * 
@@ -6136,7 +6134,7 @@ bool UI_SKINCANVAS::DrawBackgroundColor(UI_ELEMENT* element, GRP2DCANVAS* canvas
 // VISIBLE axis is never scrolled, so the stored positions are the right ones to measure on that axis.
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         static void UI_SkinCanvas_ContentExtent(UI_ELEMENT* element, bool vx, bool vy, double margin, double& minx, double& maxx, double& miny, double& maxy)
+* @fn         void UI_SkinCanvas_ContentExtent(UI_ELEMENT* element, bool vx, bool vy, double margin, double& minx, double& maxx, double& miny, double& maxy)
 * @brief      Skin canvas content extent
 * @ingroup    USERINTERFACE
 * 
@@ -6689,7 +6687,7 @@ double UI_SKINCANVAS::TextBox_SizeLine(UI_ELEMENT_TEXTBOX* element_textbox, GRP2
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         static void UI_SkinCanvas_TextObstacle(double x, double ltop, double lbot, const double* ol, const double* orr, const double* ot, const double* ob, int n, double& jumpx, double& aheadleft, double& aheadright)
+* @fn         void UI_SkinCanvas_TextObstacle(double x, double ltop, double lbot, const double* ol, const double* orr, const double* ot, const double* ob, int n, double& jumpx, double& aheadleft, double& aheadright)
 * @brief      UI Skin Canvas Text Obstacle
 * @ingroup    USERINTERFACE
 * 
@@ -6713,7 +6711,7 @@ double UI_SKINCANVAS::TextBox_SizeLine(UI_ELEMENT_TEXTBOX* element_textbox, GRP2
 // so the layout is byte-for-byte the original behaviour.
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         static void UI_SkinCanvas_TextObstacle(double x, double ltop, double lbot, const double* ol, const double* orr, const double* ot, const double* ob, int n, double& jumpx, double& aheadleft, double& aheadright)
+* @fn         void UI_SkinCanvas_TextObstacle(double x, double ltop, double lbot, const double* ol, const double* orr, const double* ot, const double* ob, int n, double& jumpx, double& aheadleft, double& aheadright)
 * @brief      Skin canvas text obstacle
 * @ingroup    USERINTERFACE
 * 

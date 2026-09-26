@@ -54,7 +54,7 @@
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         static void DIOStreamTLS_BufferErase(XBUFFER& buffer)
+* @fn         void DIOStreamTLS_BufferErase(XBUFFER& buffer)
 * @brief      Dio stream tls buffer erase
 * @ingroup    DATAIO
 * 
@@ -198,6 +198,7 @@ bool DIOSTREAMTLSRECORD::IsIni()
 * @param[in]  direction : Direction value.
 *
 * @return     bool : true if the operation is successful; otherwise false.
+* 
 * --------------------------------------------------------------------------------------------------------------------*/
 bool DIOSTREAMTLSRECORD::ClearKeys(DIOSTREAMTLSKEYSCHEDULE_DIRECTION direction)
 {

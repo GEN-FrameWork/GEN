@@ -870,7 +870,7 @@ void Signal_Ini(void)
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         static void Signal_Handler(int sign)
+* @fn         void Signal_Handler(int sign)
 * @brief      signal  handler
 * @ingroup    PLATFORM_LINUX
 * 
@@ -1137,7 +1137,7 @@ bool Signal_Printf(bool iserror, XCHAR* title, XCHAR* mask, ...)
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         static inline bool Signal_ResolveFunctionName(void* addr, XSTRING& namefunc)
+* @fn         inline bool Signal_ResolveFunctionName(void* addr, XSTRING& namefunc)
 * @brief      nline bool  signal  resolve function name
 * @ingroup    PLATFORM_LINUX
 * 
@@ -1185,7 +1185,7 @@ static inline bool Signal_ResolveFunctionName(void* addr, XSTRING& namefunc)
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         static inline void Signal_PrintfStackTrace(FILE *out, unsigned int max_frames)
+* @fn         inline void Signal_PrintfStackTrace(FILE *out, unsigned int max_frames)
 * @brief      nline void Signal_PrintfStackTrace
 * @ingroup    PLATFORM_LINUX
 * 

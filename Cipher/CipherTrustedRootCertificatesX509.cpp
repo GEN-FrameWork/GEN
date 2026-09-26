@@ -313,7 +313,7 @@ bool CIPHERTRUSTPROVIDERX509GEN::Load()
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         static bool CIPHERTRUSTPROVIDERX509_LoadFile(CIPHERTRUSTPROVIDERX509* provider, const char* path, bool remove = false)
+* @fn         bool CIPHERTRUSTPROVIDERX509_LoadFile(CIPHERTRUSTPROVIDERX509* provider, const char* path, bool remove = false)
 * @brief      Load file
 * @ingroup    CIPHER
 * 
@@ -352,7 +352,7 @@ static bool CIPHERTRUSTPROVIDERX509_LoadFile(CIPHERTRUSTPROVIDERX509* provider, 
 #if defined(LINUX) || defined(ANDROID)
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         static bool CIPHERTRUSTPROVIDERX509_LoadDirectory(CIPHERTRUSTPROVIDERX509* provider, const char* directorypath, bool remove = false)
+* @fn         bool CIPHERTRUSTPROVIDERX509_LoadDirectory(CIPHERTRUSTPROVIDERX509* provider, const char* directorypath, bool remove = false)
 * @brief      Load directory
 * @ingroup    CIPHER
 * 
@@ -389,7 +389,7 @@ static bool CIPHERTRUSTPROVIDERX509_LoadDirectory(CIPHERTRUSTPROVIDERX509* provi
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         static bool CIPHERTRUSTPROVIDERX509_LoadDirectoryList(CIPHERTRUSTPROVIDERX509* provider, const char* paths)
+* @fn         bool CIPHERTRUSTPROVIDERX509_LoadDirectoryList(CIPHERTRUSTPROVIDERX509* provider, const char* paths)
 * @brief      Load directory list
 * @ingroup    CIPHER
 * 

@@ -71,7 +71,7 @@
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         static const XCHAR* EGLErrorToString(EGLint err)
+* @fn         const XCHAR* EGLErrorToString(EGLint err)
 * @brief      Translates an EGL error code to a human-readable string for logging.
 * @ingroup    GRAPHIC
 * 

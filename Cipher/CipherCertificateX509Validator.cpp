@@ -59,7 +59,7 @@
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         static bool CIPHERCERTIFICATEX509VALIDATOR_IsSelfIssued(CIPHERCERTIFICATEX509* certificate)
+* @fn         bool CIPHERCERTIFICATEX509VALIDATOR_IsSelfIssued(CIPHERCERTIFICATEX509* certificate)
 * @brief      Is self issued
 * @ingroup    CIPHER
 * 
@@ -76,7 +76,7 @@ static bool CIPHERCERTIFICATEX509VALIDATOR_IsSelfIssued(CIPHERCERTIFICATEX509* c
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         static XDWORD CIPHERCERTIFICATEX509VALIDATOR_NonSelfIssuedCABelow(XVECTOR<CIPHERCERTIFICATEX509*>& certificates, XDWORD issuerindex)
+* @fn         XDWORD CIPHERCERTIFICATEX509VALIDATOR_NonSelfIssuedCABelow(XVECTOR<CIPHERCERTIFICATEX509*>& certificates, XDWORD issuerindex)
 * @brief      Non self issued ca below
 * @ingroup    CIPHER
 * 
@@ -106,7 +106,7 @@ static XDWORD CIPHERCERTIFICATEX509VALIDATOR_NonSelfIssuedCABelow(XVECTOR<CIPHER
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         static bool CIPHERCERTIFICATEX509VALIDATOR_IssuerIdentifierMatches(CIPHERCERTIFICATEX509* certificate, CIPHERCERTIFICATEX509* issuer)
+* @fn         bool CIPHERCERTIFICATEX509VALIDATOR_IssuerIdentifierMatches(CIPHERCERTIFICATEX509* certificate, CIPHERCERTIFICATEX509* issuer)
 * @brief      Issuer identifier matches
 * @ingroup    CIPHER
 * 
@@ -130,7 +130,7 @@ static bool CIPHERCERTIFICATEX509VALIDATOR_IssuerIdentifierMatches(CIPHERCERTIFI
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         static bool CIPHERCERTIFICATEX509VALIDATOR_RootConstraintsPermit(CIPHERCERTIFICATEX509* root, XVECTOR<CIPHERCERTIFICATEX509*>& certificates, bool rootisinchain)
+* @fn         bool CIPHERCERTIFICATEX509VALIDATOR_RootConstraintsPermit(CIPHERCERTIFICATEX509* root, XVECTOR<CIPHERCERTIFICATEX509*>& certificates, bool rootisinchain)
 * @brief      Root constraints permit
 * @ingroup    CIPHER
 * 
@@ -408,6 +408,7 @@ CIPHERCERTIFICATEX509VALIDATOR::~CIPHERCERTIFICATEX509VALIDATOR()
 * @param[in]  datetime : Pointer to datetime.
 *
 * @return     bool : true if the operation is successful; otherwise false.
+* 
 * --------------------------------------------------------------------------------------------------------------------*/
 bool CIPHERCERTIFICATEX509VALIDATOR::Validate(XVECTOR<XBUFFER*>* certificatechain, XVECTOR<XBUFFER*>* trustedroots, XCHAR* servername, XDATETIME* datetime)
 {
@@ -426,6 +427,7 @@ bool CIPHERCERTIFICATEX509VALIDATOR::Validate(XVECTOR<XBUFFER*>* certificatechai
 * @param[in]  datetime : Pointer to datetime.
 *
 * @return     bool : true if the operation is successful; otherwise false.
+* 
 * --------------------------------------------------------------------------------------------------------------------*/
 bool CIPHERCERTIFICATEX509VALIDATOR::ValidateClient(XVECTOR<XBUFFER*>* certificatechain, XVECTOR<XBUFFER*>* trustedroots, XDATETIME* datetime)
 {
@@ -598,6 +600,7 @@ void CIPHERCERTIFICATEX509VALIDATOR::SetPolicy(CIPHERCERTIFICATEX509VALIDATIONPO
 * @param[in]  datetime : Pointer to datetime.
 *
 * @return     bool : true if the operation is successful; otherwise false.
+* 
 * --------------------------------------------------------------------------------------------------------------------*/
 bool CIPHERCERTIFICATEX509VALIDATOR::ValidateInternal(XVECTOR<XBUFFER*>* certificatechain, XVECTOR<XBUFFER*>* trustedroots, CIPHERCERTIFICATEX509VALIDATOR_PURPOSE purpose, XCHAR* servername, XDATETIME* datetime)
 {

@@ -130,7 +130,7 @@ Contrato dual: **layouts sin stylesheet** (`UI_Options`) no cambian. Solo el cam
 
 **Estado:** `ComputeFitUIScale` + `Layouts_ApplyFitUIScale`. UI_System: `uiscale_autofit` (ini, default sí); `CHANGESIZE` reaplica fit. Zoom `+/-` desactiva autofit. `UpdateSize` redimensiona canvas live. UI_Options sin cambios (XML-only = legacy).
 
-**5.3 Android (Track P ✅):** design canvas fijo (p.ej. 1440×900); el fit a la superficie nativa lo hace el **letterbox GLES** (`GRPANDROIDBlitGLES` + `MapWindowToCanvas`). `UIScale` permanece en **1.0** (Present identidad) para no doble-escalar. `OnConfigurationChanged` (GLES) conserva el design size y emite `CHANGESIZE` sin `UpdateSize(native)`. Ver Track P en [GEN_UI_CSS_Lite_Roadmap.md](GEN_UI_CSS_Lite_Roadmap.md).
+**5.3 Android (Track P ✅):** design canvas fijo (p.ej. 1440×900); el fit a la superficie nativa lo hace el **letterbox GLES** (`GRPANDROIDBlitGLES` + `MapWindowToCanvas`). `UIScale` permanece en **1.0** (Present identidad) para no doble-escalar. `OnConfigurationChanged` (GLES) conserva el design size y emite `CHANGESIZE` sin `UpdateSize(native)`. Ver Track P en GEN_UI_CSS_Lite_Roadmap.md.
 
 **Criterio de salida:** multi-resolución sin retocar `dashboard.xml`.
 
@@ -219,5 +219,5 @@ Cada PR: build UI_System + capturas en `captures/uiscale/` + `UnitTests_UserInte
 ## Continuación: CSS Lite (post Opción A)
 
 Backlog de autoría / layout / responsive / plataforma:  
-**[GEN_UI_CSS_Lite_Roadmap.md](GEN_UI_CSS_Lite_Roadmap.md)** (Tracks D, L, B, P, Q + puerta de producto).
+**GEN_UI_CSS_Lite_Roadmap.md** (Tracks D, L, B, P, Q + puerta de producto).
 

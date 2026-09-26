@@ -103,7 +103,7 @@ enum CIPHERREV_HASH
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         static bool CIPHERREV_OID(const CIPHERREV_DER& item, const XBYTE* OID, XDWORD size)
+* @fn         bool CIPHERREV_OID(const CIPHERREV_DER& item, const XBYTE* OID, XDWORD size)
 * @brief      Oid
 * @ingroup    CIPHER
 * 
@@ -121,7 +121,7 @@ static bool CIPHERREV_OID(const CIPHERREV_DER& item, const XBYTE* OID, XDWORD si
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         static bool CIPHERREV_AlgorithmIdentifier(const CIPHERREV_DER& algorithm, CIPHERREV_DER& OID, CIPHERREV_DER* parameters=NULL)
+* @fn         bool CIPHERREV_AlgorithmIdentifier(const CIPHERREV_DER& algorithm, CIPHERREV_DER& OID, CIPHERREV_DER* parameters=NULL)
 * @brief      Algorithm identifier
 * @ingroup    CIPHER
 * 
@@ -147,7 +147,7 @@ static bool CIPHERREV_AlgorithmIdentifier(const CIPHERREV_DER& algorithm, CIPHER
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         static CIPHERREV_HASH CIPHERREV_HashAlgorithm(const CIPHERREV_DER& algorithm)
+* @fn         CIPHERREV_HASH CIPHERREV_HashAlgorithm(const CIPHERREV_DER& algorithm)
 * @brief      Hash algorithm
 * @ingroup    CIPHER
 * 
@@ -174,7 +174,7 @@ static CIPHERREV_HASH CIPHERREV_HashAlgorithm(const CIPHERREV_DER& algorithm)
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         static bool CIPHERREV_Hash(CIPHERREV_HASH type, const XBYTE* data, XDWORD size, XBUFFER& result)
+* @fn         bool CIPHERREV_Hash(CIPHERREV_HASH type, const XBYTE* data, XDWORD size, XBUFFER& result)
 * @brief      Hash
 * @ingroup    CIPHER
 * 
@@ -202,7 +202,7 @@ static bool CIPHERREV_Hash(CIPHERREV_HASH type, const XBYTE* data, XDWORD size, 
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         static CIPHERCERTIFICATEX509_ALGORITHM_TYPE CIPHERREV_SignatureAlgorithm(const CIPHERREV_DER& algorithm)
+* @fn         CIPHERCERTIFICATEX509_ALGORITHM_TYPE CIPHERREV_SignatureAlgorithm(const CIPHERREV_DER& algorithm)
 * @brief      Signature algorithm
 * @ingroup    CIPHER
 * 
@@ -239,7 +239,7 @@ static CIPHERCERTIFICATEX509_ALGORITHM_TYPE CIPHERREV_SignatureAlgorithm(const C
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         static bool CIPHERREV_PSSParameters(const CIPHERREV_DER& algorithm, CIPHERREV_HASH& hashtype, XDWORD& saltsize)
+* @fn         bool CIPHERREV_PSSParameters(const CIPHERREV_DER& algorithm, CIPHERREV_HASH& hashtype, XDWORD& saltsize)
 * @brief      Pss parameters
 * @ingroup    CIPHER
 * 
@@ -288,7 +288,7 @@ static bool CIPHERREV_PSSParameters(const CIPHERREV_DER& algorithm, CIPHERREV_HA
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         static bool CIPHERREV_Verify(const CIPHERREV_DER& TBS, const CIPHERREV_DER& algorithm, const CIPHERREV_DER& bits, CIPHERCERTIFICATEX509& signer)
+* @fn         bool CIPHERREV_Verify(const CIPHERREV_DER& TBS, const CIPHERREV_DER& algorithm, const CIPHERREV_DER& bits, CIPHERCERTIFICATEX509& signer)
 * @brief      Verify
 * @ingroup    CIPHER
 * 
@@ -324,7 +324,7 @@ static bool CIPHERREV_Verify(const CIPHERREV_DER& TBS, const CIPHERREV_DER& algo
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         static bool CIPHERREV_Serial(const CIPHERREV_DER& serial)
+* @fn         bool CIPHERREV_Serial(const CIPHERREV_DER& serial)
 * @brief      Serial
 * @ingroup    CIPHER
 * 
@@ -341,7 +341,7 @@ static bool CIPHERREV_Serial(const CIPHERREV_DER& serial)
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         static bool CIPHERREV_SerialEqual(const CIPHERREV_DER& serial, XBUFFER* expected)
+* @fn         bool CIPHERREV_SerialEqual(const CIPHERREV_DER& serial, XBUFFER* expected)
 * @brief      Serial equal
 * @ingroup    CIPHER
 * 
@@ -363,7 +363,7 @@ static bool CIPHERREV_SerialEqual(const CIPHERREV_DER& serial, XBUFFER* expected
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         static bool CIPHERREV_Time(const CIPHERREV_DER& item, XDATETIME& datetime, bool generalizedonly=false)
+* @fn         bool CIPHERREV_Time(const CIPHERREV_DER& item, XDATETIME& datetime, bool generalizedonly=false)
 * @brief      Time
 * @ingroup    CIPHER
 * 
@@ -392,7 +392,7 @@ static bool CIPHERREV_Time(const CIPHERREV_DER& item, XDATETIME& datetime, bool 
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         static bool CIPHERREV_Now(XQWORD& now)
+* @fn         bool CIPHERREV_Now(XQWORD& now)
 * @brief      Now
 * @ingroup    CIPHER
 * 
@@ -410,7 +410,7 @@ static bool CIPHERREV_Now(XQWORD& now)
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         static bool CIPHERREV_TimeWindow(const CIPHERREV_DER& from, const CIPHERREV_DER* until, XQWORD now, bool generalizedonly)
+* @fn         bool CIPHERREV_TimeWindow(const CIPHERREV_DER& from, const CIPHERREV_DER* until, XQWORD now, bool generalizedonly)
 * @brief      Time window
 * @ingroup    CIPHER
 * 
@@ -437,7 +437,7 @@ static bool CIPHERREV_TimeWindow(const CIPHERREV_DER& from, const CIPHERREV_DER*
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         static bool CIPHERREV_Extensions(const CIPHERREV_DER& wrapper)
+* @fn         bool CIPHERREV_Extensions(const CIPHERREV_DER& wrapper)
 * @brief      Extensions
 * @ingroup    CIPHER
 * 
@@ -472,7 +472,7 @@ static bool CIPHERREV_Extensions(const CIPHERREV_DER& wrapper)
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         static bool CIPHERREV_CRLEntryExtensions(const CIPHERREV_DER& sequence)
+* @fn         bool CIPHERREV_CRLEntryExtensions(const CIPHERREV_DER& sequence)
 * @brief      Crl entry extensions
 * @ingroup    CIPHER
 * 
@@ -513,7 +513,7 @@ static bool CIPHERREV_CRLEntryExtensions(const CIPHERREV_DER& sequence)
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         static bool CIPHERREV_ResponderMatches(const CIPHERREV_DER& responder, CIPHERCERTIFICATEX509& signer)
+* @fn         bool CIPHERREV_ResponderMatches(const CIPHERREV_DER& responder, CIPHERCERTIFICATEX509& signer)
 * @brief      Responder matches
 * @ingroup    CIPHER
 * 
@@ -543,7 +543,7 @@ static bool CIPHERREV_ResponderMatches(const CIPHERREV_DER& responder, CIPHERCER
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         static bool CIPHERREV_DelegatedAuthorized(CIPHERCERTIFICATEX509& responder, CIPHERCERTIFICATEX509& issuer)
+* @fn         bool CIPHERREV_DelegatedAuthorized(CIPHERCERTIFICATEX509& responder, CIPHERCERTIFICATEX509& issuer)
 * @brief      Delegated authorized
 * @ingroup    CIPHER
 * 
@@ -565,7 +565,7 @@ static bool CIPHERREV_DelegatedAuthorized(CIPHERCERTIFICATEX509& responder, CIPH
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         static bool CIPHERREV_CertIDMatches(const CIPHERREV_DER& certID, CIPHERCERTIFICATEX509& certificate, CIPHERCERTIFICATEX509& issuer)
+* @fn         bool CIPHERREV_CertIDMatches(const CIPHERREV_DER& certID, CIPHERCERTIFICATEX509& certificate, CIPHERCERTIFICATEX509& issuer)
 * @brief      Cert id matches
 * @ingroup    CIPHER
 * 
@@ -592,7 +592,7 @@ static bool CIPHERREV_CertIDMatches(const CIPHERREV_DER& certID, CIPHERCERTIFICA
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         static bool CIPHERREV_CRLExtensions(const CIPHERREV_DER& wrapper, CIPHERCERTIFICATEX509& issuer)
+* @fn         bool CIPHERREV_CRLExtensions(const CIPHERREV_DER& wrapper, CIPHERCERTIFICATEX509& issuer)
 * @brief      Crl extensions
 * @ingroup    CIPHER
 * 

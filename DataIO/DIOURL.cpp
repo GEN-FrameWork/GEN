@@ -57,7 +57,7 @@
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         static bool DIOURL_IsIPv4Range(const XCHAR* host, XDWORD length)
+* @fn         bool DIOURL_IsIPv4Range(const XCHAR* host, XDWORD length)
 * @brief      Is i pv4 range
 * @ingroup    DATAIO
 * 
@@ -97,7 +97,7 @@ static bool DIOURL_IsIPv4Range(const XCHAR* host, XDWORD length)
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         static bool DIOURL_IsIPv4(XCHAR* host)
+* @fn         bool DIOURL_IsIPv4(XCHAR* host)
 * @brief      Is i pv4
 * @ingroup    DATAIO
 * 
@@ -117,7 +117,7 @@ static bool DIOURL_IsIPv4(XCHAR* host)
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         static bool DIOURL_IsIPv6(XCHAR* host)
+* @fn         bool DIOURL_IsIPv6(XCHAR* host)
 * @brief      Is i pv6
 * @ingroup    DATAIO
 * 
@@ -207,7 +207,7 @@ static bool DIOURL_IsIPv6(XCHAR* host)
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         static bool DIOURL_IDNACodePointAllowed(XDWORD point, bool first)
+* @fn         bool DIOURL_IDNACodePointAllowed(XDWORD point, bool first)
 * @brief      Idna code point allowed
 * @ingroup    DATAIO
 * 
@@ -234,7 +234,7 @@ static bool DIOURL_IDNACodePointAllowed(XDWORD point, bool first)
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         static XBYTE DIOURL_PunycodeDigit(XDWORD digit)
+* @fn         XBYTE DIOURL_PunycodeDigit(XDWORD digit)
 * @brief      Punycode digit
 * @ingroup    DATAIO
 * 
@@ -250,7 +250,7 @@ static XBYTE DIOURL_PunycodeDigit(XDWORD digit)
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         static XDWORD DIOURL_PunycodeAdapt(XDWORD delta, XDWORD points, bool first)
+* @fn         XDWORD DIOURL_PunycodeAdapt(XDWORD delta, XDWORD points, bool first)
 * @brief      Punycode adapt
 * @ingroup    DATAIO
 * 
@@ -272,7 +272,7 @@ static XDWORD DIOURL_PunycodeAdapt(XDWORD delta, XDWORD points, bool first)
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         static bool DIOURL_PunycodeLabel(XSTRING& label, XSTRING& output)
+* @fn         bool DIOURL_PunycodeLabel(XSTRING& label, XSTRING& output)
 * @brief      Punycode label
 * @ingroup    DATAIO
 * 

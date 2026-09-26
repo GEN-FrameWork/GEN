@@ -485,7 +485,7 @@ bool CIPHERPEMCODEC::PKCS8PrivateKey_Decode(XBUFFER& der, bool& isrsa, bool& ise
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         static bool CIPHERPEMCODEC_IntegerToDWORD(XBYTE* data, XDWORD size, XDWORD& value)
+* @fn         bool CIPHERPEMCODEC_IntegerToDWORD(XBYTE* data, XDWORD size, XDWORD& value)
 * @brief      Integer to dword
 * @ingroup    CIPHER
 * 
@@ -508,7 +508,7 @@ static bool CIPHERPEMCODEC_PKCS12KDF(XSTRING& password, XBYTE id, XBUFFER& salt,
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         static bool CIPHERPEMCODEC_PBKDF2(XBUFFER& password, XBUFFER& salt, XDWORD iterations, HASHTYPE hashtype, XDWORD keysize, XSECUREBUFFER& key)
+* @fn         bool CIPHERPEMCODEC_PBKDF2(XBUFFER& password, XBUFFER& salt, XDWORD iterations, HASHTYPE hashtype, XDWORD keysize, XSECUREBUFFER& key)
 * @brief      Pbkdf2
 * @ingroup    CIPHER
 * 
@@ -745,7 +745,7 @@ bool CIPHERPEMCODEC::PKCS7Certificates_Decode(XBUFFER& der, XVECTOR<XBUFFER*>& c
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         static bool CIPHERPEMCODEC_DERLength(XBUFFER& output, XDWORD length)
+* @fn         bool CIPHERPEMCODEC_DERLength(XBUFFER& output, XDWORD length)
 * @brief      Der length
 * @ingroup    CIPHER
 * 
@@ -763,7 +763,7 @@ static bool CIPHERPEMCODEC_DERLength(XBUFFER& output, XDWORD length)
 }
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         static bool CIPHERPEMCODEC_DERWrap(XBYTE tag, XBUFFER& content, XBUFFER& output)
+* @fn         bool CIPHERPEMCODEC_DERWrap(XBYTE tag, XBUFFER& content, XBUFFER& output)
 * @brief      Der wrap
 * @ingroup    CIPHER
 * 
@@ -780,7 +780,7 @@ static bool CIPHERPEMCODEC_DERWrap(XBYTE tag, XBUFFER& content, XBUFFER& output)
 }
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         static bool CIPHERPEMCODEC_PKCS12SafeContents(XBUFFER& safe, XSTRING& password, XVECTOR<XBUFFER*>& certificates, XSECUREBUFFER& privatekeyinfo)
+* @fn         bool CIPHERPEMCODEC_PKCS12SafeContents(XBUFFER& safe, XSTRING& password, XVECTOR<XBUFFER*>& certificates, XSECUREBUFFER& privatekeyinfo)
 * @brief      Pkcs12 safe contents
 * @ingroup    CIPHER
 * 
@@ -829,7 +829,7 @@ static bool CIPHERPEMCODEC_PKCS12SafeContents(XBUFFER& safe, XSTRING& password, 
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         static HASH* CIPHERPEMCODEC_HashCreate(HASHTYPE type)
+* @fn         HASH* CIPHERPEMCODEC_HashCreate(HASHTYPE type)
 * @brief      Hash create
 * @ingroup    CIPHER
 * 
@@ -852,7 +852,7 @@ static HASH* CIPHERPEMCODEC_HashCreate(HASHTYPE type)
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         static bool CIPHERPEMCODEC_PKCS12KDF(XSTRING& password, XBYTE id, XBUFFER& salt, XDWORD iterations, HASHTYPE type, XDWORD outputsize, XSECUREBUFFER& output)
+* @fn         bool CIPHERPEMCODEC_PKCS12KDF(XSTRING& password, XBYTE id, XBUFFER& salt, XDWORD iterations, HASHTYPE type, XDWORD outputsize, XSECUREBUFFER& output)
 * @brief      Pkcs12 kdf
 * @ingroup    CIPHER
 * 
@@ -892,7 +892,7 @@ static bool CIPHERPEMCODEC_PKCS12KDF(XSTRING& password, XBYTE id, XBUFFER& salt,
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         static bool CIPHERPEMCODEC_PKCS12MACVerify(XBYTE* authsafe, XDWORD authsafesize, XBYTE* data, XDWORD size, XSTRING& password)
+* @fn         bool CIPHERPEMCODEC_PKCS12MACVerify(XBYTE* authsafe, XDWORD authsafesize, XBYTE* data, XDWORD size, XSTRING& password)
 * @brief      Pkcs12 mac verify
 * @ingroup    CIPHER
 * 

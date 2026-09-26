@@ -108,7 +108,7 @@ UI_SKINCANVAS_FLAT::~UI_SKINCANVAS_FLAT()
 * @note       Box-model parity with UI_SKINCANVAS::Draw_Form (box-shadow, background-color/border-color/
 *             border-width, uniform and per-corner border-radius), reusing the same shared helpers
 *             (DrawElementBoxShadow / AppendRoundRectPathPerCorner) so a stylesheet renders identically
-*             whichever skin ("" or "FLAT") is selected in the layout's <skin> node. The Flat skin still draws
+*             whichever skin ("" or "FLAT") is selected in the layout's \<skin\> node. The Flat skin still draws
 *             the plain-rectangle fallback when none of these CSS properties were authored, so pre-existing
 *             Flat layouts are pixel-identical to before this change.
 * @ingroup    USERINTERFACE

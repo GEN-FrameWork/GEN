@@ -77,7 +77,7 @@
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         static bool IsRunningOnWSL()
+* @fn         bool IsRunningOnWSL()
 * @brief      Detect WSL/WSLg at runtime by reading /proc/version.
 * @ingroup    PLATFORM_LINUX
 * 

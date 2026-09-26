@@ -353,9 +353,9 @@
 *        "align-self" on an item -- into the new UI_ELEMENT setters, the exact same style.Get()+string-compare
 *        pattern the adjacent "direction"/"role" parsing already uses.
 *     5. UI_MANAGER::CreateLayouts() calls RunLayout(element, UI_LAYOUTSTRATEGY_CSS) once for every TOP-LEVEL
-*        element of a freshly-built <layout>, right after that element's own subtree (every nested <element>
+*        element of a freshly-built \<layout\>, right after that element's own subtree (every nested \<element\>
 *        child, built recursively by CreatePartialLayout() before this point) is fully resolved by the existing
-*        legacy XML pipeline. Deliberately unconditional (not gated behind an opt-in flag on the <layout> or the
+*        legacy XML pipeline. Deliberately unconditional (not gated behind an opt-in flag on the \<layout\> or the
 *        element): BuildTree() reads a box's CURRENT already-resolved geometry, and ApplyFlexLayout()/
 *        ApplyPositioning() are no-ops wherever IsFlexContainer() is false / position is STATIC -- which is
 *        EVERY element of EVERY layout authored before this wiring existed, since there is today no XML/CSS

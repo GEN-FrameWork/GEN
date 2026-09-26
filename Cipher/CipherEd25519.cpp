@@ -42,7 +42,7 @@ namespace
 {
   /**-------------------------------------------------------------------------------------------------------------------
   * 
-  * @fn         static void SecureErase(void* data,XDWORD size)
+  * @fn         void SecureErase(void* data,XDWORD size)
   * @brief      Secure erase
   * @ingroup    CIPHER
   * 
@@ -66,7 +66,7 @@ namespace
 
   /**-------------------------------------------------------------------------------------------------------------------
   * 
-  * @fn         static bool Const(XMPINTEGER& v, const XCHAR* text)
+  * @fn         bool Const(XMPINTEGER& v, const XCHAR* text)
   * @brief      Const
   * @ingroup    CIPHER
   * 
@@ -80,7 +80,7 @@ namespace
 
   /**-------------------------------------------------------------------------------------------------------------------
   * 
-  * @fn         static bool ModMul(XMPINTEGER& r,XMPINTEGER& a,XMPINTEGER& b,XMPINTEGER& p)
+  * @fn         bool ModMul(XMPINTEGER& r,XMPINTEGER& a,XMPINTEGER& b,XMPINTEGER& p)
   * @brief      Mod mul
   * @ingroup    CIPHER
   * 
@@ -96,7 +96,7 @@ namespace
   { XMPINTEGER t; return t.Multiplication(&a, &b) && r.Module(&r, &t, &p); }
   /**-------------------------------------------------------------------------------------------------------------------
   * 
-  * @fn         static bool ModAdd(XMPINTEGER& r,XMPINTEGER& a,XMPINTEGER& b,XMPINTEGER& p)
+  * @fn         bool ModAdd(XMPINTEGER& r,XMPINTEGER& a,XMPINTEGER& b,XMPINTEGER& p)
   * @brief      Mod add
   * @ingroup    CIPHER
   * 
@@ -112,7 +112,7 @@ namespace
   { XMPINTEGER t; return t.AdditionSigned(&a, &b) && r.Module(&r, &t, &p); }
   /**-------------------------------------------------------------------------------------------------------------------
   * 
-  * @fn         static bool ModSub(XMPINTEGER& r,XMPINTEGER& a,XMPINTEGER& b,XMPINTEGER& p)
+  * @fn         bool ModSub(XMPINTEGER& r,XMPINTEGER& a,XMPINTEGER& b,XMPINTEGER& p)
   * @brief      Mod sub
   * @ingroup    CIPHER
   * 
@@ -128,7 +128,7 @@ namespace
   { XMPINTEGER t; return t.SubtractionSigned(&a, &b) && r.Module(&r, &t, &p); }
   /**-------------------------------------------------------------------------------------------------------------------
   * 
-  * @fn         static bool ModDouble(XMPINTEGER& r,XMPINTEGER& a,XMPINTEGER& p)
+  * @fn         bool ModDouble(XMPINTEGER& r,XMPINTEGER& a,XMPINTEGER& p)
   * @brief      Mod double
   * @ingroup    CIPHER
   * 
@@ -144,7 +144,7 @@ namespace
 
   /**-------------------------------------------------------------------------------------------------------------------
   * 
-  * @fn         static bool ImportLE(XMPINTEGER& v,const XBYTE* data,XDWORD size)
+  * @fn         bool ImportLE(XMPINTEGER& v,const XBYTE* data,XDWORD size)
   * @brief      Import le
   * @ingroup    CIPHER
   * 
@@ -162,7 +162,7 @@ namespace
   }
   /**-------------------------------------------------------------------------------------------------------------------
   * 
-  * @fn         static bool ExportLE(XMPINTEGER& v,XBYTE* data,XDWORD size)
+  * @fn         bool ExportLE(XMPINTEGER& v,XBYTE* data,XDWORD size)
   * @brief      Export le
   * @ingroup    CIPHER
   * 
@@ -183,7 +183,7 @@ namespace
 
   /**-------------------------------------------------------------------------------------------------------------------
   * 
-  * @fn         static bool Hash512(const XBYTE* a,XDWORD as,const XBYTE* b,XDWORD bs,const XBYTE* c,XDWORD cs,XBYTE out[64])
+  * @fn         bool Hash512(const XBYTE* a,XDWORD as,const XBYTE* b,XDWORD bs,const XBYTE* c,XDWORD cs,XBYTE out[64])
   * @brief      Hash512
   * @ingroup    CIPHER
   * 
@@ -193,7 +193,6 @@ namespace
   * @param[in]  bs : Bs value.
   * @param[in]  c : Pointer to c.
   * @param[in]  cs : Cs value.
-  * @param[in]  Value.
   * 
   * @return     bool : true if the operation is successful; otherwise false.
   * 
@@ -206,7 +205,7 @@ namespace
 
   /**-------------------------------------------------------------------------------------------------------------------
   * 
-  * @fn         static bool InitConstants(XMPINTEGER& p,XMPINTEGER& l,XMPINTEGER& d,XMPINTEGER& bx,XMPINTEGER& by,XMPINTEGER& sqrtm1)
+  * @fn         bool InitConstants(XMPINTEGER& p,XMPINTEGER& l,XMPINTEGER& d,XMPINTEGER& bx,XMPINTEGER& by,XMPINTEGER& sqrtm1)
   * @brief      Init constants
   * @ingroup    CIPHER
   * 
@@ -232,7 +231,7 @@ namespace
 
   /**-------------------------------------------------------------------------------------------------------------------
   * 
-  * @fn         static bool PointIdentity(EDPOINT& p)
+  * @fn         bool PointIdentity(EDPOINT& p)
   * @brief      Point identity
   * @ingroup    CIPHER
   * 
@@ -246,7 +245,7 @@ namespace
 
   /**-------------------------------------------------------------------------------------------------------------------
   * 
-  * @fn         static bool PointAffine(EDPOINT& p,XMPINTEGER& x,XMPINTEGER& y,XMPINTEGER& prime)
+  * @fn         bool PointAffine(EDPOINT& p,XMPINTEGER& x,XMPINTEGER& y,XMPINTEGER& prime)
   * @brief      Point affine
   * @ingroup    CIPHER
   * 
@@ -265,7 +264,7 @@ namespace
 
   /**-------------------------------------------------------------------------------------------------------------------
   * 
-  * @fn         static bool PointFromAffine(EDPOINT& p,XMPINTEGER& x,XMPINTEGER& y,XMPINTEGER& prime)
+  * @fn         bool PointFromAffine(EDPOINT& p,XMPINTEGER& x,XMPINTEGER& y,XMPINTEGER& prime)
   * @brief      Point from affine
   * @ingroup    CIPHER
   * 
@@ -282,7 +281,7 @@ namespace
 
   /**-------------------------------------------------------------------------------------------------------------------
   * 
-  * @fn         static bool PointAdd(EDPOINT& r,EDPOINT& p1,EDPOINT& p2,XMPINTEGER& prime,XMPINTEGER& d)
+  * @fn         bool PointAdd(EDPOINT& r,EDPOINT& p1,EDPOINT& p2,XMPINTEGER& prime,XMPINTEGER& d)
   * @brief      Point add
   * @ingroup    CIPHER
   * 
@@ -308,7 +307,7 @@ namespace
 
   /**-------------------------------------------------------------------------------------------------------------------
   * 
-  * @fn         static bool PointDouble(EDPOINT& r,EDPOINT& p,XMPINTEGER& prime)
+  * @fn         bool PointDouble(EDPOINT& r,EDPOINT& p,XMPINTEGER& prime)
   * @brief      Point double
   * @ingroup    CIPHER
   * 
@@ -336,7 +335,7 @@ namespace
 
   /**-------------------------------------------------------------------------------------------------------------------
   * 
-  * @fn         static bool IntegerSelect(XMPINTEGER& result,XMPINTEGER& value0,XMPINTEGER& value1,XBYTE select1,XDWORD fixedlimbs)
+  * @fn         bool IntegerSelect(XMPINTEGER& result,XMPINTEGER& value0,XMPINTEGER& value1,XBYTE select1,XDWORD fixedlimbs)
   * @brief      Integer select
   * @ingroup    CIPHER
   * 
@@ -362,7 +361,7 @@ namespace
 
   /**-------------------------------------------------------------------------------------------------------------------
   * 
-  * @fn         static bool PointSelect(EDPOINT& result,EDPOINT& point0,EDPOINT& point1,XBYTE select1,XDWORD fixedlimbs)
+  * @fn         bool PointSelect(EDPOINT& result,EDPOINT& point0,EDPOINT& point1,XBYTE select1,XDWORD fixedlimbs)
   * @brief      Point select
   * @ingroup    CIPHER
   * 
@@ -383,7 +382,7 @@ namespace
 
   /**-------------------------------------------------------------------------------------------------------------------
   * 
-  * @fn         static bool PointMul(EDPOINT& r,XMPINTEGER& scalar,EDPOINT& point,XMPINTEGER& prime,XMPINTEGER& d)
+  * @fn         bool PointMul(EDPOINT& r,XMPINTEGER& scalar,EDPOINT& point,XMPINTEGER& prime,XMPINTEGER& d)
   * @brief      Point mul
   * @ingroup    CIPHER
   * 
@@ -426,12 +425,11 @@ namespace
 
   /**-------------------------------------------------------------------------------------------------------------------
   * 
-  * @fn         static bool PointEncode(EDPOINT& p,XBYTE out[32],XMPINTEGER& prime)
+  * @fn         bool PointEncode(EDPOINT& p,XBYTE out[32],XMPINTEGER& prime)
   * @brief      Point encode
   * @ingroup    CIPHER
   * 
   * @param[in]  p : P value.
-  * @param[in]  Value.
   * @param[in]  prime : Prime value.
   * 
   * @return     bool : true if the operation is successful; otherwise false.
@@ -444,11 +442,10 @@ namespace
 
   /**-------------------------------------------------------------------------------------------------------------------
   * 
-  * @fn         static bool PointDecode(const XBYTE in[32],EDPOINT& point,XMPINTEGER& prime,XMPINTEGER& d,XMPINTEGER& sqrtm1)
+  * @fn         bool PointDecode(const XBYTE in[32],EDPOINT& point,XMPINTEGER& prime,XMPINTEGER& d,XMPINTEGER& sqrtm1)
   * @brief      Point decode
   * @ingroup    CIPHER
   * 
-  * @param[in]  Value.
   * @param[in]  point : Point value.
   * @param[in]  prime : Prime value.
   * @param[in]  d : D value.
@@ -470,7 +467,7 @@ namespace
 
   /**-------------------------------------------------------------------------------------------------------------------
   * 
-  * @fn         static bool PointIsPrimeOrder(EDPOINT& point,XMPINTEGER& order,XMPINTEGER& prime,XMPINTEGER& d,bool rejectidentity)
+  * @fn         bool PointIsPrimeOrder(EDPOINT& point,XMPINTEGER& order,XMPINTEGER& prime,XMPINTEGER& d,bool rejectidentity)
   * @brief      Point is prime order
   * @ingroup    CIPHER
   * 
@@ -503,7 +500,7 @@ namespace
 
   /**-------------------------------------------------------------------------------------------------------------------
   * 
-  * @fn         static bool ScalarFromLEMod(XMPINTEGER& s,const XBYTE* data,XDWORD size,XMPINTEGER& l)
+  * @fn         bool ScalarFromLEMod(XMPINTEGER& s,const XBYTE* data,XDWORD size,XMPINTEGER& l)
   * @brief      Scalar from le mod
   * @ingroup    CIPHER
   * 
@@ -520,12 +517,10 @@ namespace
 
   /**-------------------------------------------------------------------------------------------------------------------
   * 
-  * @fn         static bool PublicFromSeed(const XBYTE seed[32],XBYTE publickey[32])
+  * @fn         bool PublicFromSeed(const XBYTE seed[32],XBYTE publickey[32])
   * @brief      Public from seed
   * @ingroup    CIPHER
   * 
-  * @param[in]  Value.
-  * @param[in]  Value.
   * 
   * @return     bool : true if the operation is successful; otherwise false.
   * 

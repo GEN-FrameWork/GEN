@@ -38,7 +38,6 @@
 * @brief      Constructor of class
 * @ingroup    CIPHER
 * 
-* @param[in]  Value.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
 CIPHERSECP384R1MLKEM1024::CIPHERSECP384R1MLKEM1024()

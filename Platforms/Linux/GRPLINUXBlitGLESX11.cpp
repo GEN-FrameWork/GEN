@@ -55,7 +55,6 @@
 * @brief      Constructor of class
 * @ingroup    PLATFORM_LINUX
 * 
-* @param[in]  Value.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
 GRPLINUXBLITGLESX11::GRPLINUXBLITGLESX11()  : GRPBLITGLES() { }

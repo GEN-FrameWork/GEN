@@ -37,7 +37,7 @@
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         static void CIPHERCHACHA20POLY1305_SecureErase(void* data, XDWORD size)
+* @fn         void CIPHERCHACHA20POLY1305_SecureErase(void* data, XDWORD size)
 * @brief      Secure erase
 * @ingroup    CIPHER
 * 
@@ -58,7 +58,6 @@ static void CIPHERCHACHA20POLY1305_SecureErase(void* data, XDWORD size)
 * @brief      Constructor of class
 * @ingroup    CIPHER
 * 
-* @param[in]  Value.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
 CIPHERCHACHA20POLY1305::CIPHERCHACHA20POLY1305() : CIPHER()
@@ -593,9 +592,6 @@ bool CIPHERCHACHA20POLY1305::UncipherAEAD(XBYTE* input, XDWORD size, XBUFFER& no
      * @brief      Compare constant time
      * @ingroup    CIPHER
      * 
-     * @param[in]  Value.
-     * @param[in]  Value.
-     * @param[in]  Value.
      * 
      * --------------------------------------------------------------------------------------------------------------------*/
      CIPHER::CompareConstantTime(expected, tag.Get(), sizeof(expected)))

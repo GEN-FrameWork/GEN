@@ -45,7 +45,7 @@
 *   time -- a harmless degenerate case rather than a rejection.
 *
 *   Routing every quoted-string scan through these primitives closes a real correctness gap the previous
-*   byte-by-byte scan had: a declaration value or @import URL containing ';', '}', or the selector-list ',' /
+*   byte-by-byte scan had: a declaration value or @@import URL containing ';', '}', or the selector-list ',' /
 *   '{' INSIDE a quoted string used to end the value/URL/selector list right there, because the old scan
 *   tested every byte against those delimiters unconditionally, with no notion of "currently inside a string".
 *   ReadDeclarationBlock(), ReadSelectorList() and SkipToNextRule() now treat a quoted span as one atomic unit

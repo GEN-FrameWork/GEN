@@ -1248,7 +1248,7 @@ bool GRP2DVECTORFILEDXFRENDERAGG::RenderText(GRPVECTORFILEDXFENTITY* entity, GRP
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         static bool MTextIsArgCode(XCHAR d)
+* @fn         bool MTextIsArgCode(XCHAR d)
 * @brief      MTEXT inline format code that carries an argument terminated by ';' (font, height, colour, width, ...).
 * @ingroup    GRAPHIC
 * 
@@ -1266,7 +1266,7 @@ static bool MTextIsArgCode(XCHAR d)
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         static bool MTextIsToggle(XCHAR d)
+* @fn         bool MTextIsToggle(XCHAR d)
 * @brief      MTEXT inline format toggle with no argument (underline / overline / strikethrough on-off).
 * @ingroup    GRAPHIC
 * 
@@ -1283,7 +1283,7 @@ static bool MTextIsToggle(XCHAR d)
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         static void MTextDecode(XCHAR* raw, XVECTOR<XSTRING*>& lines)
+* @fn         void MTextDecode(XCHAR* raw, XVECTOR<XSTRING*>& lines)
 * @brief      MTEXT decode : turn the MTEXT inline mini-language into plain text lines. Handles paragraph breaks (\P), escapes (\~ \\ \{ \}), grouping braces, formatting codes with an argument (\f \H \C \W \Q \A \T \p), on-off toggles (\L \O \K), and stacked text (\S num ^|/|# den ;) flattened to "num/den". The actual font / height / colour changes are not applied (single style per entity); the codes are stripped so the text reads cleanly. The caller owns the XSTRING* in the vector.
 * @note       INTERNAL
 * @ingroup    GRAPHIC
@@ -1853,7 +1853,7 @@ bool GRP2DVECTORFILEDXFRENDERAGG::RenderSolid(GRPVECTORFILEDXFENTITY* entity, GR
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         static bool HatchPeekType(XVECTOR<GRPVECTORFILEDXFVALUE*>* values, XDWORD i, XDWORD n, int& outtype)
+* @fn         bool HatchPeekType(XVECTOR<GRPVECTORFILEDXFVALUE*>* values, XDWORD i, XDWORD n, int& outtype)
 * @brief      Peek the group code of the value at position i without advancing.
 * @ingroup    GRAPHIC
 * 
@@ -1879,7 +1879,7 @@ static bool HatchPeekType(XVECTOR<GRPVECTORFILEDXFVALUE*>* values, XDWORD i, XDW
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         static bool HatchReadValue(XVECTOR<GRPVECTORFILEDXFVALUE*>* values, XDWORD& i, XDWORD n, int code, double& out)
+* @fn         bool HatchReadValue(XVECTOR<GRPVECTORFILEDXFVALUE*>* values, XDWORD& i, XDWORD n, int code, double& out)
 * @brief      If the value at i has the expected group code, read it and advance i.
 * @ingroup    GRAPHIC
 * 
@@ -1915,7 +1915,7 @@ static bool HatchReadValue(XVECTOR<GRPVECTORFILEDXFVALUE*>* values, XDWORD& i, X
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         static bool HatchReadPoint(XVECTOR<GRPVECTORFILEDXFVALUE*>* values, XDWORD& i, XDWORD n, int codex, int codey, double& x, double& y)
+* @fn         bool HatchReadPoint(XVECTOR<GRPVECTORFILEDXFVALUE*>* values, XDWORD& i, XDWORD n, int codex, int codey, double& x, double& y)
 * @brief      Read a (codex, codey) coordinate pair and advance i past both. Atomic : i is left untouched on failure.
 * @ingroup    GRAPHIC
 * 

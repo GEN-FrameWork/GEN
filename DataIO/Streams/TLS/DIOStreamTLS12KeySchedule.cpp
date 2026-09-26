@@ -56,7 +56,7 @@
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         static void DIOStreamTLS12_BufferErase(XBUFFER& buffer)
+* @fn         void DIOStreamTLS12_BufferErase(XBUFFER& buffer)
 * @brief      Dio stream tls12 buffer erase
 * @ingroup    DATAIO
 * 
@@ -472,6 +472,7 @@ bool DIOSTREAMTLS12KEYSCHEDULE::MasterSecret_Create(XBUFFER& premastersecret, XB
 * @param[in]  sessionhash : Sessionhash value.
 *
 * @return     bool : true if the operation is successful; otherwise false.
+* 
 * --------------------------------------------------------------------------------------------------------------------*/
 bool DIOSTREAMTLS12KEYSCHEDULE::MasterSecretExtended_Create(XBUFFER& premastersecret, XBUFFER& sessionhash)
 {

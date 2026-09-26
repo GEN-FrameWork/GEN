@@ -36,9 +36,9 @@
 
 #define VERSIONFRAMEWORK_NAME         "GEN FrameWork"
 #define VERSIONFRAMEWORK_VERSION      0
-#define VERSIONFRAMEWORK_SUBVERSION   28
+#define VERSIONFRAMEWORK_SUBVERSION   29
 #define VERSIONFRAMEWORK_SUBERROR     0
-#define VERSIONFRAMEWORK_CODENAME     "Winder A2"
+#define VERSIONFRAMEWORK_CODENAME     "Balanger M1"
 
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
 

@@ -1191,7 +1191,7 @@ bool XFILEXML::EncodeAllLines(bool istabulatedline)
 
 /**-------------------------------------------------------------------------------------------------------------------
 *
-* @fn         static bool XFILEXML_IsCommentOpen(XSTRING& string)
+* @fn         bool XFILEXML_IsCommentOpen(XSTRING& string)
 * @brief      True when the accumulated text is exactly the comment opening delimiter.
 * @note       INTERNAL / FILE LOCAL
 * @ingroup    XUTILS
@@ -1211,7 +1211,7 @@ static bool XFILEXML_IsCommentOpen(XSTRING& string)
 
 /**-------------------------------------------------------------------------------------------------------------------
 *
-* @fn         static bool XFILEXML_IsCommentClose(XSTRING& string)
+* @fn         bool XFILEXML_IsCommentClose(XSTRING& string)
 * @brief      True when the accumulated text already ends with the comment closing delimiter.
 * @note       INTERNAL / FILE LOCAL
 * @ingroup    XUTILS

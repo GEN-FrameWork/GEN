@@ -501,7 +501,7 @@ void UI_CSSRULE::Clean()
 /**-------------------------------------------------------------------------------------------------------------------
 *
 * @fn         void UI_CSSRULE::ClearMedia()
-* @brief      Clear optional @media gate (rule becomes unconditional).
+* @brief      Clear optional @@media gate (rule becomes unconditional).
 * @ingroup    USERINTERFACE
 *
 * --------------------------------------------------------------------------------------------------------------------*/
@@ -516,7 +516,7 @@ void UI_CSSRULE::ClearMedia()
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         void UI_CSSRULE::SetMediaWidthRange(int min_width_px, int max_width_px)
-* @brief      Attach Track B @media (min/max-width). Pass -1 for an unbound edge.
+* @brief      Attach Track B @@media (min/max-width). Pass -1 for an unbound edge.
 * @ingroup    USERINTERFACE
 * 
 * @param[in]  min_width_px : 
@@ -1367,7 +1367,7 @@ void UI_STYLESHEET::Clean()
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         void UI_STYLESHEET::SetMediaViewport(int width_px, int height_px)
-* @brief      Track B: set design viewport used to gate @media (min/max-width) rules.
+* @brief      Track B: set design viewport used to gate @@media (min/max-width) rules.
 * @ingroup    USERINTERFACE
 * 
 * @param[in]  width_px : 

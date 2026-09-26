@@ -66,7 +66,7 @@
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         static bool DIOSTREAMTLS13_HANDSHAKECLIENT_SignatureSchemeOffered(XVECTOR<XWORD>& offered, XWORD scheme)
+* @fn         bool DIOSTREAMTLS13_HANDSHAKECLIENT_SignatureSchemeOffered(XVECTOR<XWORD>& offered, XWORD scheme)
 * @brief      Signature scheme offered
 * @ingroup    DATAIO
 * 
@@ -85,7 +85,7 @@ static bool DIOSTREAMTLS13_HANDSHAKECLIENT_SignatureSchemeOffered(XVECTOR<XWORD>
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         static XWORD DIOSTREAMTLS13_HANDSHAKECLIENT_CertificateSignatureScheme(CIPHERCERTIFICATEX509& certificate)
+* @fn         XWORD DIOSTREAMTLS13_HANDSHAKECLIENT_CertificateSignatureScheme(CIPHERCERTIFICATEX509& certificate)
 * @brief      Certificate signature scheme
 * @ingroup    DATAIO
 * 
@@ -124,7 +124,7 @@ static XWORD DIOSTREAMTLS13_HANDSHAKECLIENT_CertificateSignatureScheme(CIPHERCER
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         static bool DIOSTREAMTLS13_HANDSHAKECLIENT_CertificateChainCompatible(XVECTOR<XBUFFER*>* chain, XVECTOR<XWORD>& offered)
+* @fn         bool DIOSTREAMTLS13_HANDSHAKECLIENT_CertificateChainCompatible(XVECTOR<XBUFFER*>* chain, XVECTOR<XWORD>& offered)
 * @brief      Certificate chain compatible
 * @ingroup    DATAIO
 * 
@@ -167,7 +167,7 @@ static bool DIOSTREAMTLS13_HANDSHAKECLIENT_CertificateChainCompatible(XVECTOR<XB
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         static bool DIOSTREAMTLS13_HANDSHAKECLIENT_CertificateAuthorityCompatible(XVECTOR<XBUFFER*>* chain, XVECTOR<XBUFFER*>& authorities)
+* @fn         bool DIOSTREAMTLS13_HANDSHAKECLIENT_CertificateAuthorityCompatible(XVECTOR<XBUFFER*>* chain, XVECTOR<XBUFFER*>& authorities)
 * @brief      Certificate authority compatible
 * @ingroup    DATAIO
 * 

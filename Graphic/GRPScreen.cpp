@@ -1548,7 +1548,7 @@ bool GRPSCREEN::GetCFGChromesCursorPosition(int& uix, int& uiy)
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         static void GRPSCREEN_SetElementVisibleRecursive(UI_ELEMENT* element, bool visible)
+* @fn         void GRPSCREEN_SetElementVisibleRecursive(UI_ELEMENT* element, bool visible)
 * @brief      INTERNAL: sets an element and every one of its compose (child) elements visible/invisible.
 *             UI_ELEMENT::SetVisible() only ever affects the element itself, so hiding just the caption's own
 *             "form" element would leave its icon/title/buttons drawn on their own.
@@ -1573,7 +1573,7 @@ static void GRPSCREEN_SetElementVisibleRecursive(UI_ELEMENT* element, bool visib
 
 /**-------------------------------------------------------------------------------------------------------------------
 *
-* @fn         static void GRPSCREEN_ShiftElementXRecursive(UI_ELEMENT* element, double dx)
+* @fn         void GRPSCREEN_ShiftElementXRecursive(UI_ELEMENT* element, double dx)
 * @brief      INTERNAL: shifts an element and every one of its compose (child) elements horizontally by dx.
 *             Child element positions are stored ABSOLUTE (the skin adds the father's position at layout time,
 *             see UI_SKINCANVAS::SetAroundFromSubElements()/CalculePosition()), so moving just the button's own
