@@ -38,6 +38,7 @@
 
 #include "XBuffer.h"
 #include "XDir.h"
+#include "XTrace.h"
 
 #include "HashCRC32.h"
 
@@ -427,11 +428,23 @@ bool SCRIPT_CACHE::Cache_AllList(XVECTOR<XSTRING*>* listscripts)
 
               linescripts->Split(__C(','), namescripts);
 
+              for(XDWORD d=0; d<namescripts.GetSize(); d++)
+                {
+                  SCRIPT::EliminateExtraChars(namescripts.Get(d));
+                }
+
+              // Same rule as LoadScriptAndRun: one CFG line merges into one cached blob.
+              if(!SCRIPT::HaveSameLanguage(&namescripts))
+                {
+                  XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, __L("Script cache list line rejected: mixed or unknown languages in \"%s\""), linescripts->Get());
+                  namescripts.DeleteContents();
+                  namescripts.DeleteAll();
+                  continue;
+                }
+
               XSTRING* namescript = namescripts.Get(0);
               if(namescript)
                 {
-                  SCRIPT::EliminateExtraChars(namescript);
-                  
                   SCRIPT* script = SCRIPT::Create(namescript->Get());
                   if(script) 
                     {
@@ -443,8 +456,11 @@ bool SCRIPT_CACHE::Cache_AllList(XVECTOR<XSTRING*>* listscripts)
     
                       for(XDWORD d=0; d<namescripts.GetSize(); d++)
                         {  
+                          XSTRING* nameentry = namescripts.Get(d);
+                          if(!nameentry) continue;
+
                           allpath += __C(',');  
-                          allpath += namescript->Get();  
+                          allpath += nameentry->Get();  
                         }
                     
                       ID = GEN_SCRIPT_CACHE.GenerateID(allpath);
@@ -470,8 +486,6 @@ bool SCRIPT_CACHE::Cache_AllList(XVECTOR<XSTRING*>* listscripts)
                               if(namescript)
                                 {                          
                                   XPATH xpath;   
-
-                                  SCRIPT::EliminateExtraChars(namescript);
                   
                                   GEN_XPATHSMANAGER.GetPathOfSection(XPATHSMANAGERSECTIONTYPE_SCRIPTS, xpath);
                                   xpath.Slash_Add();

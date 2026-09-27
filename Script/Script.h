@@ -88,6 +88,12 @@ class SCRIPT : public XSUBJECT
 
     static bool                         LoadScriptAndRun              (XVECTOR<XSTRING*>* listscripts, SCRFUNCADJUSTLIBRARYS adjustlibrarys = NULL);
 
+    /**
+     * @brief True if every name in the comma-split CFG line resolves to the same known SCRIPT_TYPE.
+     *        Used before concatenating those files into one in-memory script for Run/cache.
+     */
+    static bool                         HaveSameLanguage              (XVECTOR<XSTRING*>* namescripts);
+
     bool                                AddReturnByType               ();
 
     static bool                         IsScript                      (XPATH& xpath, XCHAR* extension);

@@ -450,11 +450,23 @@ bool SCRIPT::LoadScriptAndRun(XVECTOR<XSTRING*>* listscripts, SCRFUNCADJUSTLIBRA
 
               linescripts->Split(__C(','), namescripts);
 
+              for(XDWORD d=0; d<namescripts.GetSize(); d++)
+                {
+                  SCRIPT::EliminateExtraChars(namescripts.Get(d));
+                }
+
+              // One CFG line is concatenated into a single in-memory script: all entries must share a language.
+              if(!SCRIPT::HaveSameLanguage(&namescripts))
+                {
+                  XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, __L("Script CFG line rejected: mixed or unknown languages in \"%s\""), linescripts->Get());
+                  namescripts.DeleteContents();
+                  namescripts.DeleteAll();
+                  continue;
+                }
+
               XSTRING* namescript = namescripts.Get(0);
               if(namescript)
                 {
-                  SCRIPT::EliminateExtraChars(namescript);
-                  
                   SCRIPT* script = SCRIPT::Create(namescript->Get());
                   if(script) 
                     {
@@ -471,8 +483,11 @@ bool SCRIPT::LoadScriptAndRun(XVECTOR<XSTRING*>* listscripts, SCRFUNCADJUSTLIBRA
     
                       for(XDWORD d=0; d<namescripts.GetSize(); d++)
                         {  
+                          XSTRING* nameentry = namescripts.Get(d);
+                          if(!nameentry) continue;
+
                           allpath += __C(',');  
-                          allpath += namescript->Get();  
+                          allpath += nameentry->Get();  
                         }
                                        
                       #ifdef SCRIPT_CACHE_ACTIVE
@@ -500,8 +515,6 @@ bool SCRIPT::LoadScriptAndRun(XVECTOR<XSTRING*>* listscripts, SCRFUNCADJUSTLIBRA
                               if(namescript)
                                 {                          
                                   XPATH xpath;   
-
-                                  SCRIPT::EliminateExtraChars(namescript);
                   
                                   GEN_XPATHSMANAGER.GetPathOfSection(XPATHSMANAGERSECTIONTYPE_SCRIPTS, xpath);
                                   xpath.Slash_Add();
@@ -542,6 +555,39 @@ bool SCRIPT::LoadScriptAndRun(XVECTOR<XSTRING*>* listscripts, SCRFUNCADJUSTLIBRA
     }
   
   return status;
+}
+
+
+/**-------------------------------------------------------------------------------------------------------------------
+* 
+* @fn         bool SCRIPT::HaveSameLanguage(XVECTOR<XSTRING*>* namescripts)
+* @brief      Have same language
+* @ingroup    SCRIPT
+* 
+* @param[in]  namescripts : Comma-split script file names from one CFG line (already trimmed).
+* 
+* @return     bool : true if all names map to the same known SCRIPT_TYPE; otherwise false.
+* 
+* --------------------------------------------------------------------------------------------------------------------*/
+bool SCRIPT::HaveSameLanguage(XVECTOR<XSTRING*>* namescripts)
+{
+  if(!namescripts || !namescripts->GetSize()) return false;
+
+  XSTRING* first = namescripts->Get(0);
+  if(!first || first->IsEmpty()) return false;
+
+  SCRIPT_TYPE type0 = GetTypeByExtension(first->Get());
+  if(type0 == SCRIPT_TYPE_UNKNOWN) return false;
+
+  for(XDWORD d=1; d<namescripts->GetSize(); d++)
+    {
+      XSTRING* name = namescripts->Get(d);
+      if(!name || name->IsEmpty()) return false;
+
+      if(GetTypeByExtension(name->Get()) != type0) return false;
+    }
+
+  return true;
 }
 
 
