@@ -280,11 +280,26 @@ int SCRIPT_LNG_G_VAR::GetValueInteger()
 * --------------------------------------------------------------------------------------------------------------------*/
 float SCRIPT_LNG_G_VAR::GetValueFloat()
 {
-  if(type == SCRIPT_LNG_G_TOKENIREPS_FLOAT) return value.real;
-  if(type == SCRIPT_LNG_G_TOKENIREPS_CHAR)  return (float)value.character;
-  if(type != SCRIPT_LNG_G_TOKENIREPS_INT)   return 0.0f;
+  return (float)GetValueDouble();
+}
 
-  return (float)value.integer;
+
+/**-------------------------------------------------------------------------------------------------------------------
+*
+* @fn         double SCRIPT_LNG_G_VAR::GetValueDouble()
+* @brief      Get value as double (float vars keep full stored precision)
+* @ingroup    SCRIPT
+*
+* @return     double : Requested value.
+*
+* --------------------------------------------------------------------------------------------------------------------*/
+double SCRIPT_LNG_G_VAR::GetValueDouble()
+{
+  if(type == SCRIPT_LNG_G_TOKENIREPS_FLOAT) return value.real;
+  if(type == SCRIPT_LNG_G_TOKENIREPS_CHAR)  return (double)value.character;
+  if(type != SCRIPT_LNG_G_TOKENIREPS_INT)   return 0.0;
+
+  return (double)value.integer;
 }
 
 
@@ -414,7 +429,7 @@ bool SCRIPT_LNG_G_VAR::IsNumeric()
 * --------------------------------------------------------------------------------------------------------------------*/
 bool SCRIPT_LNG_G_VAR::IsTrue()
 {
-  if(type == SCRIPT_LNG_G_TOKENIREPS_FLOAT) return value.real != 0.0f;
+  if(type == SCRIPT_LNG_G_TOKENIREPS_FLOAT) return value.real != 0.0;
   if(type == SCRIPT_LNG_G_TOKENIREPS_STRING) return value.string && !value.string->IsEmpty();
 
   return GetValueInteger() != 0;
@@ -513,7 +528,7 @@ bool SCRIPT_LNG_G_VAR::SetValueInteger(int value)
 * @return     bool : true if the operation is successful; otherwise false.
 *
 * --------------------------------------------------------------------------------------------------------------------*/
-bool SCRIPT_LNG_G_VAR::SetValueFloat(float value)
+bool SCRIPT_LNG_G_VAR::SetValueFloat(double value)
 {
   this->value.real = value;
 
@@ -675,7 +690,7 @@ bool SCRIPT_LNG_G_VAR::ConvertToXVariant(XVARIANT& variant)
                                               break;
 
       case SCRIPT_LNG_G_TOKENIREPS_INT      : variant = GetValueInteger();        break;
-      case SCRIPT_LNG_G_TOKENIREPS_FLOAT    : variant = GetValueFloat();          break;
+      case SCRIPT_LNG_G_TOKENIREPS_FLOAT    : variant = GetValueDouble();         break;
       case SCRIPT_LNG_G_TOKENIREPS_STRING   : variant = GetValueString()->Get();  break;
 
                                 default     : variant.Set();
@@ -724,11 +739,11 @@ bool SCRIPT_LNG_G_VAR::ConvertFromXVariant(XVARIANT& variant)
                                           break;
 
       case XVARIANT_TYPE_FLOAT          : SetType(SCRIPT_LNG_G_TOKENIREPS_FLOAT);
-                                          SetValueFloat((float)variant);
+                                          SetValueFloat((double)(float)variant);
                                           break;
 
       case XVARIANT_TYPE_DOUBLE         : SetType(SCRIPT_LNG_G_TOKENIREPS_FLOAT);
-                                          SetValueFloat((float)(double)variant);
+                                          SetValueFloat((double)variant);
                                           break;
 
       case XVARIANT_TYPE_DOUBLEINTEGER  : SetType(SCRIPT_LNG_G_TOKENIREPS_INT);
@@ -1092,15 +1107,15 @@ int SCRIPT_LNG_G::Run(int* returnval)
 
   if(errorcode == SCRIPT_ERRORCODE_NONE)
     {
-      ipprg = FindFunction(__L("main"));    // Find program starting point.
+      ipprg = FindFunction(__L("main"));
       if(ipprg)
         {
           ipprg--;
           XSTRING::Set(currenttoken, __L("main"));
 
           Call();
-
-        } else errorcode = SCRIPT_LNG_G_ERRORCODE_FUNC_UNDEF;
+        }
+      // No main: allowed (same as Lua/JS top-level-only scripts). returnvalue stays default.
     }
 
   if(errorcode == SCRIPT_ERRORCODE_NONE)
@@ -1766,10 +1781,10 @@ void SCRIPT_LNG_G::EvalExp1(SCRIPT_LNG_G_VAR& value)
               return;
             }
 
-          bool  usefloat   = (value.GetType() == SCRIPT_LNG_G_TOKENIREPS_FLOAT) || (partialvalue.GetType() == SCRIPT_LNG_G_TOKENIREPS_FLOAT);
-          int   result     = 0;
-          float value1     = value.GetValueFloat();
-          float value2     = partialvalue.GetValueFloat();
+          bool   usefloat   = (value.GetType() == SCRIPT_LNG_G_TOKENIREPS_FLOAT) || (partialvalue.GetType() == SCRIPT_LNG_G_TOKENIREPS_FLOAT);
+          int    result     = 0;
+          double value1     = value.GetValueDouble();
+          double value2     = partialvalue.GetValueDouble();
 
           switch(operation)
             {
@@ -1851,7 +1866,7 @@ void SCRIPT_LNG_G::EvalExp2(SCRIPT_LNG_G_VAR& value)
         {
           case __C('-'):  if(usefloat)
                             {
-                              float result = value.GetValueFloat() - partialvalue.GetValueFloat();
+                              double result = value.GetValueDouble() - partialvalue.GetValueDouble();
                               value.SetType(SCRIPT_LNG_G_TOKENIREPS_FLOAT);
                               value.SetValueFloat(result);
                             }
@@ -1860,7 +1875,7 @@ void SCRIPT_LNG_G::EvalExp2(SCRIPT_LNG_G_VAR& value)
 
           case __C('+'):  if(usefloat)
                             {
-                              float result = value.GetValueFloat() + partialvalue.GetValueFloat();
+                              double result = value.GetValueDouble() + partialvalue.GetValueDouble();
                               value.SetType(SCRIPT_LNG_G_TOKENIREPS_FLOAT);
                               value.SetValueFloat(result);
                             }
@@ -1915,7 +1930,7 @@ void SCRIPT_LNG_G::EvalExp3(SCRIPT_LNG_G_VAR& value)
           // mul, div, or modulus
           case __C('*'): if(usefloat)
                            {
-                             float result = value.GetValueFloat() * partialvalue.GetValueFloat();
+                             double result = value.GetValueDouble() * partialvalue.GetValueDouble();
                              value.SetType(SCRIPT_LNG_G_TOKENIREPS_FLOAT);
                              value.SetValueFloat(result);
                            }
@@ -1924,14 +1939,14 @@ void SCRIPT_LNG_G::EvalExp3(SCRIPT_LNG_G_VAR& value)
 
           case __C('/'): if(usefloat)
                            {
-                             float divisor = partialvalue.GetValueFloat();
-                             if(divisor == 0.0f)
+                             double divisor = partialvalue.GetValueDouble();
+                             if(divisor == 0.0)
                                {
                                  HaveError(SCRIPT_LNG_G_ERRORCODE_DIV_BY_ZERO);
                                  return;
                                }
 
-                             float result = value.GetValueFloat() / divisor;
+                             double result = value.GetValueDouble() / divisor;
                              value.SetType(SCRIPT_LNG_G_TOKENIREPS_FLOAT);
                              value.SetValueFloat(result);
                            }
@@ -1950,14 +1965,14 @@ void SCRIPT_LNG_G::EvalExp3(SCRIPT_LNG_G_VAR& value)
 
           case __C('%'): if(usefloat)
                            {
-                             float divisor = partialvalue.GetValueFloat();
-                             if(divisor == 0.0f)
+                             double divisor = partialvalue.GetValueDouble();
+                             if(divisor == 0.0)
                                {
                                  HaveError(SCRIPT_LNG_G_ERRORCODE_DIV_BY_ZERO);
                                  return;
                                }
 
-                             float result = fmodf(value.GetValueFloat(), divisor);
+                             double result = fmod(value.GetValueDouble(), divisor);
                              value.SetType(SCRIPT_LNG_G_TOKENIREPS_FLOAT);
                              value.SetValueFloat(result);
                            }
@@ -2019,8 +2034,8 @@ void SCRIPT_LNG_G::EvalExp4(SCRIPT_LNG_G_VAR& value)
 
               if(var->GetType() == SCRIPT_LNG_G_TOKENIREPS_FLOAT)
                 {
-                  if(temptoken == SCRIPT_LNG_G_DOUBLEOPERATOR_INC) var->SetValueFloat(var->GetValueFloat()+1.0f);
-                  if(temptoken == SCRIPT_LNG_G_DOUBLEOPERATOR_DEC) var->SetValueFloat(var->GetValueFloat()-1.0f);
+                  if(temptoken == SCRIPT_LNG_G_DOUBLEOPERATOR_INC) var->SetValueFloat(var->GetValueDouble()+1.0);
+                  if(temptoken == SCRIPT_LNG_G_DOUBLEOPERATOR_DEC) var->SetValueFloat(var->GetValueDouble()-1.0);
                 }
                else
                 {
@@ -2046,7 +2061,7 @@ void SCRIPT_LNG_G::EvalExp4(SCRIPT_LNG_G_VAR& value)
       if(operation == __C('-'))
         {
           if(value.GetType() == SCRIPT_LNG_G_TOKENIREPS_FLOAT)
-                 value.SetValueFloat(-value.GetValueFloat());
+                 value.SetValueFloat(-value.GetValueDouble());
             else value.SetValueInteger(-value.GetValueInteger());
         }
     }
@@ -2181,8 +2196,8 @@ void SCRIPT_LNG_G::Atom(SCRIPT_LNG_G_VAR& value)
                                                                       if(var->GetType() == SCRIPT_LNG_G_TOKENIREPS_FLOAT)
                                                                         {
                                                                           if(currenttoken[0] == SCRIPT_LNG_G_DOUBLEOPERATOR_INC)
-                                                                                  var->SetValueFloat(var->GetValueFloat()+1.0f);
-                                                                            else  var->SetValueFloat(var->GetValueFloat()-1.0f);
+                                                                                  var->SetValueFloat(var->GetValueDouble()+1.0);
+                                                                            else  var->SetValueFloat(var->GetValueDouble()-1.0);
                                                                         }
                                                                        else
                                                                         {
@@ -2210,7 +2225,7 @@ void SCRIPT_LNG_G::Atom(SCRIPT_LNG_G_VAR& value)
                                                      (string.FindCharacter(__C('E')) != XSTRING_NOTFOUND))
                                                     {
                                                       value.SetType(SCRIPT_LNG_G_TOKENIREPS_FLOAT);
-                                                      value.SetValueFloat(string.ConvertToFloat());
+                                                      value.SetValueFloat(string.ConvertToDouble());
                                                     }
                                                    else
                                                     {
@@ -2374,7 +2389,7 @@ void SCRIPT_LNG_G::AssignVariable(XCHAR* variablename, SCRIPT_LNG_G_VAR& value)
                         {
                           if(var->GetType() == SCRIPT_LNG_G_TOKENIREPS_FLOAT)
                             {
-                              var->SetValueFloat(value.GetValueFloat());
+                              var->SetValueFloat(value.GetValueDouble());
                             }
                            else if(var->GetType() == SCRIPT_LNG_G_TOKENIREPS_STRING)
                             {
@@ -2434,7 +2449,7 @@ void SCRIPT_LNG_G::AssignVariable(XCHAR* variablename, SCRIPT_LNG_G_VAR& value)
                     {
                       if(var->GetType() == SCRIPT_LNG_G_TOKENIREPS_FLOAT)
                         {
-                          var->SetValueFloat(value.GetValueFloat());
+                          var->SetValueFloat(value.GetValueDouble());
                         }
                        else if(var->GetType() == SCRIPT_LNG_G_TOKENIREPS_STRING)
                         {
@@ -2642,6 +2657,119 @@ void SCRIPT_LNG_G::FindEndofBlock()
   if(tokenireps==SCRIPT_LNG_G_TOKENIREPS_END)
     {
       HaveError(SCRIPT_LNG_G_ERRORCODE_UNBAL_BRACES);
+    }
+}
+
+
+/**-------------------------------------------------------------------------------------------------------------------
+* 
+* @fn         void SCRIPT_LNG_G::SkipStatement()
+* @brief      Skip one statement or a { } block (for false branches / break targets)
+* @ingroup    SCRIPT
+* 
+* --------------------------------------------------------------------------------------------------------------------*/
+void SCRIPT_LNG_G::SkipStatement()
+{
+  SCRIPT_LNG_G_VAR dummy;
+  int              paren = 0;
+
+  GetToken();
+
+  if(currenttoken[0] == __C('{'))
+    {
+      PutBackToken();
+      FindEndofBlock();
+      return;
+    }
+
+  if(tokenireps == SCRIPT_LNG_G_TOKENIREPS_IF)
+    {
+      EvalExp(dummy);
+      SkipStatement();
+      GetToken();
+      if(tokenireps == SCRIPT_LNG_G_TOKENIREPS_ELSE)
+        {
+          SkipStatement();
+        }
+       else
+        {
+          PutBackToken();
+        }
+      return;
+    }
+
+  if(tokenireps == SCRIPT_LNG_G_TOKENIREPS_WHILE)
+    {
+      EvalExp(dummy);
+      SkipStatement();
+      return;
+    }
+
+  if(tokenireps == SCRIPT_LNG_G_TOKENIREPS_DO)
+    {
+      SkipStatement();
+      GetToken();
+      if(tokenireps != SCRIPT_LNG_G_TOKENIREPS_WHILE)
+        {
+          HaveError(SCRIPT_LNG_G_ERRORCODE_WHILE_EXPECTED);
+          return;
+        }
+      EvalExp(dummy);
+      return;
+    }
+
+  if(tokenireps == SCRIPT_LNG_G_TOKENIREPS_FOR)
+    {
+      GetToken();
+      if(currenttoken[0] != __C('('))
+        {
+          HaveError(SCRIPT_LNG_G_ERRORCODE_PAREN_EXPECTED);
+          return;
+        }
+
+      paren = 1;
+      while(paren && tokenireps != SCRIPT_LNG_G_TOKENIREPS_END)
+        {
+          GetToken();
+          if(currenttoken[0] == __C('(')) paren++;
+          if(currenttoken[0] == __C(')')) paren--;
+        }
+
+      SkipStatement();
+      return;
+    }
+
+  if(tokenireps == SCRIPT_LNG_G_TOKENIREPS_SWITCH)
+    {
+      EvalExp(dummy);
+      if(currenttoken[0] != __C('{'))
+        {
+          HaveError(SCRIPT_LNG_G_ERRORCODE_BRACE_EXPECTED);
+          return;
+        }
+      PutBackToken();
+      FindEndofBlock();
+      return;
+    }
+
+  // Expression / declaration / return: consume until ';' at paren depth 0.
+  for(;;)
+    {
+      if(tokenireps == SCRIPT_LNG_G_TOKENIREPS_END)
+        {
+          HaveError(SCRIPT_LNG_G_ERRORCODE_SYNTAX);
+          return;
+        }
+
+      if(currenttoken[0] == __C('(')) paren++;
+      if(currenttoken[0] == __C(')')) paren--;
+
+      if((currenttoken[0] == __C(';')) && !paren)
+        {
+          return;
+        }
+
+      GetToken();
     }
 }
 
@@ -3520,9 +3648,9 @@ void SCRIPT_LNG_G::GetParams()
                   return;
                 }
 
-              float floatvalue = var->GetValueFloat();
-              int   intvalue   = var->GetValueInteger();
-              XCHAR charvalue  = var->GetValueCharacter();
+              double floatvalue = var->GetValueDouble();
+              int    intvalue   = var->GetValueInteger();
+              XCHAR  charvalue  = var->GetValueCharacter();
 
               var->SetType(paramtype);
               var->SetHaveReservedSize(false);
@@ -3602,7 +3730,7 @@ void SCRIPT_LNG_G::FunctionReturn()
         }
 
       returnvalue.SetType(SCRIPT_LNG_G_TOKENIREPS_FLOAT);
-      returnvalue.SetValueFloat(value.GetValueFloat());
+      returnvalue.SetValueFloat(value.GetValueDouble());
     }
    else
     {
@@ -3635,17 +3763,11 @@ void SCRIPT_LNG_G::Exec_IF()
 
   if(cond.IsTrue())
     {
-      if(currenttoken[0] != __C('{'))
-        {
-          HaveError(SCRIPT_LNG_G_ERRORCODE_BRACE_EXPECTED);
-          return;
-        }
-
       Interpret();
     }
    else
     {
-      FindEndofBlock(); // find start of next line
+      SkipStatement();
       GetToken();
 
       if(tokenireps != SCRIPT_LNG_G_TOKENIREPS_ELSE)
@@ -3653,16 +3775,6 @@ void SCRIPT_LNG_G::Exec_IF()
           PutBackToken();
           return;
         }
-
-      GetToken();
-
-      if(currenttoken[0] != __C('{'))
-        {
-          HaveError(SCRIPT_LNG_G_ERRORCODE_BRACE_EXPECTED);
-          return;
-        }
-
-      PutBackToken();
 
       Interpret();
     }
@@ -3725,7 +3837,7 @@ void SCRIPT_LNG_G::Exec_SWITCH()
       bool caseequal;
 
       if((cval.GetType() == SCRIPT_LNG_G_TOKENIREPS_FLOAT) || (sval.GetType() == SCRIPT_LNG_G_TOKENIREPS_FLOAT))
-             caseequal = cval.GetValueFloat() == sval.GetValueFloat();
+             caseequal = cval.GetValueDouble() == sval.GetValueDouble();
         else caseequal = cval.GetValueInteger() == sval.GetValueInteger();
 
       if(caseequal)
@@ -3777,19 +3889,13 @@ void SCRIPT_LNG_G::Exec_WHILE()
 
   EvalExp(cond);
 
-  if(currenttoken[0] != __C('{'))
-    {
-      HaveError(SCRIPT_LNG_G_ERRORCODE_BRACE_EXPECTED);
-      return;
-    }
-
   if(cond.IsTrue())
     {
       Interpret();
     }
    else
     {
-      FindEndofBlock();
+      SkipStatement();
       return;
     }
 
@@ -3797,16 +3903,11 @@ void SCRIPT_LNG_G::Exec_WHILE()
 
   if(breakfound)
     {
-      do { GetToken();
-
-         } while((currenttoken[0] != __C('{')) && (tokenireps != SCRIPT_LNG_G_TOKENIREPS_END));
-
-      PutBackToken();
+      GetToken(); // while
+      EvalExp(cond);
+      SkipStatement();
 
       breakfound = false;
-
-      FindEndofBlock();
-
       return;
     }
 }
@@ -3831,12 +3932,6 @@ void SCRIPT_LNG_G::Exec_DO()
   GetToken();
   GetToken();
 
-  if(currenttoken[0] != __C('{'))
-    {
-      HaveError(SCRIPT_LNG_G_ERRORCODE_BRACE_EXPECTED);
-      return;
-    }
-
   PutBackToken();
 
   Interpret();
@@ -3845,13 +3940,10 @@ void SCRIPT_LNG_G::Exec_DO()
     {
       ipprg = templocation;
 
-      do{ GetToken();
-
-        } while((currenttoken[0] != __C('{')) && (tokenireps != SCRIPT_LNG_G_TOKENIREPS_END));
-
+      GetToken(); // do
+      GetToken();
       PutBackToken();
-
-      FindEndofBlock();
+      SkipStatement();
 
       do{ GetToken();
 
@@ -3932,13 +4024,6 @@ void SCRIPT_LNG_G::Exec_FOR()
         }
 
       GetToken();
-
-      if(currenttoken[0] != __C('{'))
-        {
-          HaveError(SCRIPT_LNG_G_ERRORCODE_BRACE_EXPECTED);
-          return;
-        }
-
       PutBackToken();
 
       if(cond.IsTrue())
@@ -3947,7 +4032,7 @@ void SCRIPT_LNG_G::Exec_FOR()
         }
        else
         {
-          FindEndofBlock();
+          SkipStatement();
           return;
         }
 
@@ -3955,18 +4040,13 @@ void SCRIPT_LNG_G::Exec_FOR()
 
       if(breakfound)
         {
-          do{ GetToken();
-
-            } while(currenttoken[0] != '{' && tokenireps!= SCRIPT_LNG_G_TOKENIREPS_END);
-
+          ipprg = templocation2;
+          GetToken();
           PutBackToken();
-
+          SkipStatement();
           breakfound = false;
-
-          FindEndofBlock();
           return;
         }
-
 
       EvalExp(cond);
 

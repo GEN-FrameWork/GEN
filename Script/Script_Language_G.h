@@ -124,7 +124,7 @@ enum SCRIPT_LNG_G_ERRORCODE
 union SCRIPT_LNG_G_VARVALUE
 {
   int          integer;
-  float        real;
+  double       real;
   XCHAR        character;
   XDWORD       uinteger;
   XSTRING*     string;
@@ -200,6 +200,7 @@ class SCRIPT_LNG_G_VAR
 
     int                                 GetValueInteger             ();
     float                               GetValueFloat               ();
+    double                              GetValueDouble              ();
     XCHAR                               GetValueCharacter           ();
     XDWORD                              GetValueUInteger            ();
     XSTRING*                            GetValueString              ();
@@ -216,7 +217,7 @@ class SCRIPT_LNG_G_VAR
     bool                                SetType                     (SCRIPT_LNG_G_TOKENIREPS type);
 
     bool                                SetValueInteger             (int value);
-    bool                                SetValueFloat               (float value);
+    bool                                SetValueFloat               (double value);
     bool                                SetValueCharacter           (XCHAR value);
     bool                                SetValueUInteger            (XDWORD value);
     bool                                SetValueString              (XSTRING* value);
@@ -291,6 +292,7 @@ class SCRIPT_LNG_G : public SCRIPT
     XCHAR*                              FindFunction                (XCHAR* name);
     SCRIPT_LNG_G_FUNCTIONTYPE*          GetFunction                 (XCHAR* name);
     void                                FindEndofBlock              ();
+    void                                SkipStatement               ();
 
     void                                DeclareGlobalVariable       ();
     void                                DeclareLocalVariable        ();
