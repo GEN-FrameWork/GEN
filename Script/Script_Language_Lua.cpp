@@ -72,7 +72,7 @@ SCRIPT_LNG_LUA::SCRIPT_LNG_LUA()
   type = SCRIPT_TYPE_LUA;
 
   state = luaL_newstate();
-  if(state) luaL_openlibs(state);    // Load Lua libraries
+  if(state) OpenLibraries();
 
   *static_cast<SCRIPT_LNG_LUA**>(lua_getextraspace(state)) = this;
 
@@ -296,6 +296,45 @@ bool SCRIPT_LNG_LUA::HaveError(XSTRING& currenttoken, int errorcode)
     }
 
   return (errorcode == SCRIPT_ERRORCODE_NONE)?false:true;
+}
+
+
+/**-------------------------------------------------------------------------------------------------------------------
+* 
+* @fn         void SCRIPT_LNG_LUA::OpenLibraries()
+* @brief      Open Lua standard libraries for this interpreter
+* @ingroup    SCRIPT
+* 
+* @note       Trusted builds call luaL_openlibs (full standard set). Sandbox builds
+*             (SCRIPT_LIB_SANDBOX_ACTIVE) open only safe libraries and remove loaders
+*             that can reach the filesystem or load arbitrary code.
+* 
+* --------------------------------------------------------------------------------------------------------------------*/
+void SCRIPT_LNG_LUA::OpenLibraries()
+{
+  if(!state) return;
+
+  #ifdef SCRIPT_LIB_SANDBOX_ACTIVE
+
+  luaL_requiref(state, "_G"           , luaopen_base      , 1);  lua_pop(state, 1);
+  luaL_requiref(state, LUA_COLIBNAME  , luaopen_coroutine , 1);  lua_pop(state, 1);
+  luaL_requiref(state, LUA_TABLIBNAME , luaopen_table     , 1);  lua_pop(state, 1);
+  luaL_requiref(state, LUA_STRLIBNAME , luaopen_string    , 1);  lua_pop(state, 1);
+  luaL_requiref(state, LUA_MATHLIBNAME, luaopen_math      , 1);  lua_pop(state, 1);
+  #ifdef LUA_UTF8LIBNAME
+  luaL_requiref(state, LUA_UTF8LIBNAME, luaopen_utf8      , 1);  lua_pop(state, 1);
+  #endif
+
+  // base still exposes load/loadfile/dofile; neutralize them in sandbox.
+  lua_pushnil(state); lua_setglobal(state, "load");
+  lua_pushnil(state); lua_setglobal(state, "loadfile");
+  lua_pushnil(state); lua_setglobal(state, "dofile");
+
+  #else
+
+  luaL_openlibs(state);
+
+  #endif
 }
 
 

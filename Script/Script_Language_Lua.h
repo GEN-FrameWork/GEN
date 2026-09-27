@@ -68,6 +68,7 @@ class SCRIPT_LNG_LUA : public SCRIPT
   private:
 
     bool                                HaveMainFunction        ();
+    void                                OpenLibraries           ();
     void                                Clean                   ();
 
     lua_State*                          state;

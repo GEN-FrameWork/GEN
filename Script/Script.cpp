@@ -976,7 +976,12 @@ bool SCRIPT::AddInternalLibraries()
           case  2 : lib = GEN_NEW SCRIPT_LIB_TIMER();       break;
           case  3 : lib = GEN_NEW SCRIPT_LIB_STRING();      break;
           case  4 : lib = GEN_NEW SCRIPT_LIB_PATH();        break;
-          case  5 : lib = GEN_NEW SCRIPT_LIB_DIR();         break;
+          case  5 :
+                    // Sandbox builds omit unrestricted filesystem helpers.
+                    #ifndef SCRIPT_LIB_SANDBOX_ACTIVE
+                    lib = GEN_NEW SCRIPT_LIB_DIR();
+                    #endif
+                    break;
           case  6 : lib = GEN_NEW SCRIPT_LIB_TRACE();       break;
 
           // Optionals
@@ -986,7 +991,7 @@ bool SCRIPT::AddInternalLibraries()
                     #endif
                     break;
           case  8 :
-                    #ifdef SCRIPT_LIB_PROCESS_ACTIVE
+                    #if defined(SCRIPT_LIB_PROCESS_ACTIVE) && !defined(SCRIPT_LIB_SANDBOX_ACTIVE)
                     lib = GEN_NEW SCRIPT_LIB_PROCESS();        
                     #endif
                     break;
