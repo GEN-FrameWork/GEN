@@ -127,7 +127,13 @@ int SCRIPT_LNG_LUA::Run(int* returnval)
       if(!HaveMainFunction())
         {
           // Exec to ajust the Stack in Lua with Main Function. lua_getglobal dont work well without this.
-          lua_pcall(state, 0, LUA_MULTRET, 0);
+          status = lua_pcall(state, 0, LUA_MULTRET, 0);
+          if(status != LUA_OK)
+            {
+              // Capture before the shared lua_pop below clears the stack (same as
+              // the non-function branch when HaveMainFunction is true).
+              currenttoken = lua_tostring(state, -1);
+            }
         }
        else
         {       
@@ -137,6 +143,10 @@ int SCRIPT_LNG_LUA::Run(int* returnval)
           if(status)
             {
               status = lua_pcall(state, 0, 1, 0);
+              if(status != LUA_OK)
+                {
+                  currenttoken = lua_tostring(state, -1);
+                }
             }
            else 
             {
