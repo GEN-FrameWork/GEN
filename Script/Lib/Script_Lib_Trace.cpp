@@ -322,7 +322,8 @@ void Call_TracePrintColor(SCRIPT_LIB* library, SCRIPT* script, XVECTOR<XVARIANT*
                                 case __C('s')   :
                                 case __C('S')   : { XVARIANT variantparam = (*params->Get(paramindex));
                                                     paramindex++;
-                                                    string.Format(param, (XCHAR*)variantparam);
+                                                    // Pass data as a string value — do not re-parse '%' inside it.
+                                                    string = (XCHAR*)variantparam;
                                                     end = true;
                                                   }
                                                   break;
