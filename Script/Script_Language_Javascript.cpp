@@ -132,10 +132,13 @@ int SCRIPT_LNG_JAVASCRIPT::Run(int* returnval)
   duk_int_t error =  duk_peval_string(context, charstr.GetPtrChar());
   if(error) 
     {
-      HaveError(DUK_ERR_ERROR);  
+      HaveError(DUK_ERR_ERROR);
+      // Keep prior side effect of the returnval path (it used to zero the out
+      // value when peval left a non-number Error on the stack), but do not run
+      // the TypeError check: that overwrote the real peval error/event.
+      if(returnval) (*returnval) = 0;
     }
-  
-  if(returnval) 
+   else if(returnval) 
     {
       // peval leaves the result at stack top (-1). Non-numeric results are not a hard
       // peval failure; reject them explicitly when the caller asked for an int.
