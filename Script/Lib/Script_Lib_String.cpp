@@ -356,7 +356,12 @@ void Call_SPrintf(SCRIPT_LIB* library, SCRIPT* script, XVECTOR<XVARIANT*>* param
 
                         c++;
 
-                        switch(mask[c])
+                        do{ string.Empty();
+
+                            param[nparam] = mask[c];
+                            nparam++;
+
+                            switch(mask[c])
                               {
                                 case __C('c')   :
                                 case __C('C')   :
@@ -410,7 +415,9 @@ void Call_SPrintf(SCRIPT_LIB* library, SCRIPT* script, XVECTOR<XVARIANT*>* param
                                       default   : break;
                               }
 
-                        if(mask[c]) c++;   // consume the format character
+                            c++;
+
+                          } while(!end);
                       }
                       break;
 
