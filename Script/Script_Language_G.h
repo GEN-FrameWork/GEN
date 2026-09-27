@@ -314,8 +314,6 @@ class SCRIPT_LNG_G : public SCRIPT
 
     void                                Call                        ();
 
-    static void                         ThreadFunction              (void* data);
-
     void                                Clean                       ();
 
     int                                 returnvaluescript;

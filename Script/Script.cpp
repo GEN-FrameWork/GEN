@@ -1197,9 +1197,10 @@ void SCRIPT::ThreadFunction(void* data)
   SCRIPT* script = (SCRIPT*)data;
   if(!script) return;
 
-  int returnvaluescript;
+  int returnvalue = 0;
 
-  script->SetErrorScript(script->Run(&returnvaluescript));
+  script->SetErrorScript(script->Run(&returnvalue));
+  script->returnvaluescript = returnvalue;
 
   script->GetThread()->Run(false);
 }

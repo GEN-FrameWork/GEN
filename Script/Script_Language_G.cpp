@@ -1279,7 +1279,7 @@ void SCRIPT_LNG_G::NotFuncParams()
 * --------------------------------------------------------------------------------------------------------------------*/
 int SCRIPT_LNG_G::GetReturnValueScript()
 {
-  return returnvaluescript;
+  return SCRIPT::returnvaluescript;
 }
 
 
@@ -1296,7 +1296,8 @@ int SCRIPT_LNG_G::GetReturnValueScript()
 * --------------------------------------------------------------------------------------------------------------------*/
 int SCRIPT_LNG_G::SetReturnValueScript(int returnvaluescript)
 {
-  this->returnvaluescript = returnvaluescript;
+  SCRIPT::returnvaluescript = returnvaluescript;
+  this->returnvaluescript   = returnvaluescript;
 
   return true;
 }
@@ -4143,30 +4144,6 @@ void SCRIPT_LNG_G::Call()
 
       functioncallstack.DeleteLast();
     }
-}
-
-
-/**-------------------------------------------------------------------------------------------------------------------
-* 
-* @fn         void SCRIPT_LNG_G::ThreadFunction(void* data)
-* @brief      Thread function
-* @ingroup    SCRIPT
-* 
-* @param[in]  data : Data buffer to use.
-* 
-* --------------------------------------------------------------------------------------------------------------------*/
-void SCRIPT_LNG_G::ThreadFunction(void* data)
-{
-  SCRIPT_LNG_G* script = (SCRIPT_LNG_G*)data;
-  if(!script) return;
-
-  int returnvaluescript;
-
-  script->SetErrorScript(script->Run(&returnvaluescript));
-
-  script->SetReturnValueScript(returnvaluescript);
-
-  script->GetThread()->Run(false);
 }
 
 
