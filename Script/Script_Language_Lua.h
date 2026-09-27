@@ -62,6 +62,7 @@ class SCRIPT_LNG_LUA : public SCRIPT
 
     bool                                AddLibraryFunction      (SCRIPT_LIB* library, XCHAR* name, SCRFUNCIONLIBRARY ptrfunction);
 
+    bool                                HaveError               (int errorcode);
     bool                                HaveError               (XSTRING& currenttoken, int errorcode);
 
   private:

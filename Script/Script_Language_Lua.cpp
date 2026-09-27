@@ -207,6 +207,25 @@ bool SCRIPT_LNG_LUA::AddLibraryFunction(SCRIPT_LIB* library, XCHAR* name, SCRFUN
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
+* @fn         bool SCRIPT_LNG_LUA::HaveError(int errorcode)
+* @brief      Have error
+* @ingroup    SCRIPT
+* 
+* @param[in]  errorcode : Errorcode value.
+* 
+* @return     bool : true if an error is present; otherwise false.
+* 
+* --------------------------------------------------------------------------------------------------------------------*/
+bool SCRIPT_LNG_LUA::HaveError(int errorcode)
+{
+  XSTRING currenttoken;
+
+  return HaveError(currenttoken, errorcode);
+}
+
+
+/**-------------------------------------------------------------------------------------------------------------------
+* 
 * @fn         bool SCRIPT_LNG_LUA::HaveError(XSTRING& currenttoken, int errorcode)
 * @brief      have error
 * @ingroup    SCRIPT
@@ -221,10 +240,11 @@ bool SCRIPT_LNG_LUA::HaveError(XSTRING& currenttoken, int errorcode)
 {
   if(errorcode != SCRIPT_ERRORCODE_NONE)
     {
+      // Must follow SCRIPT_ERRORCODE then SCRIPT_LNG_LUA_ERRORCODE (SYNTAX = SCRIPT_ERRORCODE_OWN).
       static XCHAR* errorstr[]= { __L("None")                                             ,
                                   __L("Internal error")                                   ,
-                                  __L("Syntax error")                                     ,
                                   __L("Insufficient parameters")                          ,
+                                  __L("Syntax error")                                     ,
                                   __L("Thread not yield")                                 ,
                                   __L("runtime error")                                    ,
                                   __L("memory allocation error")                          ,
@@ -234,6 +254,7 @@ bool SCRIPT_LNG_LUA::HaveError(XSTRING& currenttoken, int errorcode)
       XPATH     namefile;
       XSTRING   errorstring;
       int       nline        = 0;
+      XCHAR*    errormsg     = __L("Unknown error");
       
       namefile.AdjustSize(_MAXSTR);
       errorstring.AdjustSize(_MAXSTR);
@@ -241,17 +262,22 @@ bool SCRIPT_LNG_LUA::HaveError(XSTRING& currenttoken, int errorcode)
       namefile.AdjustSize();
       errorstring.AdjustSize();
 
+      if((errorcode >= 0) && (errorcode < (int)(sizeof(errorstr)/sizeof(errorstr[0]))))
+        {
+          errormsg = errorstr[errorcode];
+        }
+
       //namescript.Set(namefile);
       //namefile.SetOnlyNamefileExt();
 
       SCRIPT_XEVENT xevent(this, SCRIPT_XEVENT_TYPE_ERROR);
 
       xevent.SetError(errorcode);
-      xevent.GetErrorText()->Set(errorstr[errorcode]);
+      xevent.GetErrorText()->Set(errormsg);
       xevent.GetCurrentToken()->Set(currenttoken);
       xevent.SetNLine(nline);
 
-      XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, __L("Script [%s] ERROR %d: %s, line %d \"%s\""), namescript.Get(), errorcode, errorstr[errorcode], nline, errorstring.Get());
+      XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, __L("Script [%s] ERROR %d: %s, line %d \"%s\""), namescript.Get(), errorcode, errormsg, nline, errorstring.Get());
 
       PostEvent(&xevent);
 
