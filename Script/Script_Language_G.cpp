@@ -1025,8 +1025,7 @@ SCRIPT_LNG_G::~SCRIPT_LNG_G()
   DeleteCommands();
 
   DeleteLibraryFuncions();
-
-  librarys.DeleteAll();
+  // SCRIPT::librarys: owned/freed by ~SCRIPT::DeleteAllLibrarys() (not the shadowed G::librarys).
 
   DeleteVarsExec();
 
