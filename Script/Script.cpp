@@ -1169,6 +1169,69 @@ bool SCRIPT::EliminateExtraChars(XSTRING* namescript)
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
+* @fn         bool SCRIPT::ResolvePathInScriptsRoot(XCHAR* namescript, XPATH& resolvedpath)
+* @brief      Resolve path in scripts root
+* @ingroup    SCRIPT
+* 
+* @param[in]  namescript : Relative script name (no absolute / drive / parent segments).
+* @param[out] resolvedpath : Absolute path under the Scripts path section.
+* 
+* @return     bool : true if the operation is successful; otherwise false.
+* 
+* --------------------------------------------------------------------------------------------------------------------*/
+bool SCRIPT::ResolvePathInScriptsRoot(XCHAR* namescript, XPATH& resolvedpath)
+{
+  resolvedpath.Empty();
+
+  if(!namescript || !namescript[0]) return false;
+
+  XPATH relativepath;
+
+  relativepath = namescript;
+  SCRIPT::EliminateExtraChars(&relativepath);
+  relativepath.Slash_Normalize(false);
+
+  if(relativepath.IsEmpty()) return false;
+  if(relativepath.Get()[0] == __C('/')) return false;
+
+  int segmentstart = 0;
+
+  for(int index = 0; index <= (int)relativepath.GetSize(); index++)
+    {
+      XCHAR character = relativepath.Get()[index];
+
+      if((character < __C(' ')) && character) return false;
+      if(character == __C(':') || character == __C('*') || character == __C('?') ||
+         character == __C('"') || character == __C('<') || character == __C('>') ||
+         character == __C('|')) return false;
+
+      if((character == __C('/')) || !character)
+        {
+          int segmentsize = index - segmentstart;
+
+          if(segmentsize <= 0) return false;
+          if((segmentsize == 1) && (relativepath.Get()[segmentstart] == __C('.'))) return false;
+          if((segmentsize == 2) && (relativepath.Get()[segmentstart]     == __C('.')) &&
+                                    (relativepath.Get()[segmentstart + 1] == __C('.'))) return false;
+
+          segmentstart = index + 1;
+        }
+    }
+
+  if(!GEN_XPATHSMANAGER.GetPathOfSection(XPATHSMANAGERSECTIONTYPE_SCRIPTS, resolvedpath)) return false;
+
+  resolvedpath.Slash_Normalize(false);
+  resolvedpath.Slash_Delete();
+  resolvedpath.Slash_Add();
+  resolvedpath += relativepath.Get();
+  resolvedpath.Slash_Normalize(false);
+
+  return true;
+}
+
+
+/**-------------------------------------------------------------------------------------------------------------------
+* 
 * @fn         void SCRIPT::HandleEvent(XEVENT* xevent)
 * @brief      Handle event
 * @note       INTERNAL

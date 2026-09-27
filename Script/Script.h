@@ -129,7 +129,14 @@ class SCRIPT : public XSUBJECT
 
     virtual bool                        HaveError                     (int errorcode); 
 
-    static bool                         EliminateExtraChars     (XSTRING* namescript);  
+    static bool                         EliminateExtraChars           (XSTRING* namescript);
+
+    /**
+     * @brief Resolve a relative script name under XPATHSMANAGERSECTIONTYPE_SCRIPTS.
+     *        Rejects absolute paths, drive letters, '..', '.' segments and empty segments.
+     *        Does not alter Load/Save: callers opt in (app-owned path policy).
+     */
+    static bool                         ResolvePathInScriptsRoot      (XCHAR* namescript, XPATH& resolvedpath);
 
   protected:
 
