@@ -518,7 +518,11 @@ int LUA_LibraryCallBack(lua_State* state)
       case XVARIANT_TYPE_INTEGER       : lua_pushnumber(state, (int)(returnvalue));    nreturnvalues++;     break;
       case XVARIANT_TYPE_CHAR          : lua_pushnumber(state, (int)(returnvalue));    nreturnvalues++;     break;
       case XVARIANT_TYPE_XCHAR         :                                                                    break;
-      case XVARIANT_TYPE_FLOAT         : lua_pushnumber(state, (float)(returnvalue));  nreturnvalues++;     break;
+      case XVARIANT_TYPE_FLOAT         : lua_pushnumber(state, (double)(float)(returnvalue));      nreturnvalues++;  break;
+      case XVARIANT_TYPE_DOUBLE        : lua_pushnumber(state, (double)(returnvalue));             nreturnvalues++;  break;
+      case XVARIANT_TYPE_DOUBLEINTEGER : lua_pushnumber(state, (double)(long long)(returnvalue));  nreturnvalues++;  break;
+      case XVARIANT_TYPE_QWORD         : lua_pushnumber(state, (double)(XQWORD)(returnvalue));     nreturnvalues++;  break;
+      case XVARIANT_TYPE_DWORD         : lua_pushnumber(state, (double)(XDWORD)(returnvalue));     nreturnvalues++;  break;
 
       case XVARIANT_TYPE_STRING        : { XSTRING stringreturnvalue;
 

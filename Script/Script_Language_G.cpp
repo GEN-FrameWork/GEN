@@ -731,6 +731,15 @@ bool SCRIPT_LNG_G_VAR::ConvertFromXVariant(XVARIANT& variant)
                                           SetValueFloat((float)(double)variant);
                                           break;
 
+      case XVARIANT_TYPE_DOUBLEINTEGER  : SetType(SCRIPT_LNG_G_TOKENIREPS_INT);
+                                          SetValueInteger((int)(long long)variant);
+                                          break;
+
+      case XVARIANT_TYPE_QWORD          :
+      case XVARIANT_TYPE_DWORD          : SetType(SCRIPT_LNG_G_TOKENIREPS_INT);
+                                          SetValueInteger((int)(XQWORD)variant);
+                                          break;
+
       case XVARIANT_TYPE_STRING         : { XSTRING* string = GEN_NEW XSTRING();
                                             if(!string) break;
 
