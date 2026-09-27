@@ -1318,10 +1318,10 @@ bool SCRIPT_LNG_G::HaveError(int errorcode)
 {
   if(errorcode != SCRIPT_ERRORCODE_NONE)
     {
+      // Must follow SCRIPT_ERRORCODE then SCRIPT_LNG_G_ERRORCODE (SYNTAX = SCRIPT_ERRORCODE_OWN).
       static XCHAR* errorstr[]= { __L("None")                       ,
                                   __L("Internal error")             ,
                                   __L("Insufficient parameters")    ,
-                                  __L("Capability denied")          ,
                                   __L("Syntax error")               ,
                                   __L("No expression present")      ,
                                   __L("Not a variable")             ,
@@ -1343,6 +1343,12 @@ bool SCRIPT_LNG_G::HaveError(int errorcode)
                                   __L("Token too long")             ,
                                   __L("Type mismatch")
                                 };
+      XCHAR* errormsg = __L("Unknown error");
+
+      if((errorcode >= 0) && (errorcode < (int)(sizeof(errorstr)/sizeof(errorstr[0]))))
+        {
+          errormsg = errorstr[errorcode];
+        }
 
       SCRIPT_XEVENT xevent(this, (errorcode==SCRIPT_LNG_G_ERRORCODE_USERBREAK)?SCRIPT_XEVENT_TYPE_BREAK:SCRIPT_XEVENT_TYPE_ERROR);
 
@@ -1374,11 +1380,11 @@ bool SCRIPT_LNG_G::HaveError(int errorcode)
         }
 
       xevent.SetError(errorcode);
-      xevent.GetErrorText()->Set(errorstr[errorcode]);
+      xevent.GetErrorText()->Set(errormsg);
       xevent.GetCurrentToken()->Set(currenttoken);
       xevent.SetNLine(nline);
 
-      XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, __L("Script [%s] ERROR %d: %s, line %d \"%s\"") , namescript.Get(), errorcode, errorstr[errorcode], nline, currenttoken);
+      XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, __L("Script [%s] ERROR %d: %s, line %d \"%s\"") , namescript.Get(), errorcode, errormsg, nline, currenttoken);
 
       PostEvent(&xevent);      
       iscancelexec = true;
