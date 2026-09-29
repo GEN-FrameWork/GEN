@@ -3,7 +3,7 @@
 * @file       DIOScraperWebMACManufacturer.h
 * 
 * @class      DIOSCRAPERWEBMACMANUFACTURER
-* @brief      Data Input/Output Scraper Web MAC Manufacturer class
+* @brief      Typed MAC Manufacturer scraper filled by script (not XML)
 * @ingroup    DATAIO
 * 
 * @copyright  EndoraSoft. All rights reserved.
@@ -28,52 +28,72 @@
 
 #pragma once
 
+#ifdef DIO_SCRAPERWEB_MACMANUFACTURER_ACTIVE
+
 /*---- INCLUDES ------------------------------------------------------------------------------------------------------*/
 
+#include "XString.h"
+
 #include "DIOMAC.h"
-#include "DIOURL.h"
-#include "DIOScraperWeb.h"
-
-
+#include "DIOScraperWebCache.h"
+#include "DIOScraperScript.h"
 
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
 
-#define DIOSCRAPERWEBMACMANUFACTURER_NAMEFILE     __L("ws_publicip.xml")
-#define DIOSCRAPERWEBMACMANUFACTURER_NAMESERVICE  __L("MACMANUFACTURED")
+#define DIOSCRAPERWEBMACMANUFACTURER_SCRIPTPATH    __L("macmanufacturer.g")
+#define DIOSCRAPERWEBMACMANUFACTURER_MAXTIMEOUT    DIOSCRAPERSCRIPT_DEFAULT_TIMEOUT
 
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
 
-class DIOMACMANUFACTURED_RESULT :  public DIOSCRAPERWEBCACHE_RESULT
+class XMUTEX;
+
+class DIOMACMANUFACTURED_RESULT : public DIOSCRAPERWEBCACHE_RESULT
 {
   public:
+
                               DIOMACMANUFACTURED_RESULT         ();
     virtual                  ~DIOMACMANUFACTURED_RESULT         ();
 
+    XCHAR*                    GetManufacturer                   ();
     XSTRING*                  Get                               ();
+
+    bool                      IsEmpty                           ();
+
+    virtual bool              CopyFrom                          (DIOSCRAPERWEBCACHE_RESULT* result);
+    virtual bool              CopyTo                            (DIOSCRAPERWEBCACHE_RESULT* result);
+
+    bool                      Set                               (XSTRING& manufacturer);
+    bool                      Set                               (XCHAR* manufacturer);
 
   private:
 
     void                      Clean                             ();
 
-    XSTRING                   manufactured;
+    XSTRING                   manufacturer;
 };
 
 
-class DIOSCRAPERWEBMACMANUFACTURER : public DIOSCRAPERWEB
+class DIOSCRAPERWEBMACMANUFACTURER
 {
   public:
                               DIOSCRAPERWEBMACMANUFACTURER      ();
     virtual                  ~DIOSCRAPERWEBMACMANUFACTURER      ();
 
-    bool                      ChangeURL                         (XCHAR* maskurl, DIOURL& url);
+    bool                      Get                               (DIOMAC& MAC, DIOMACMANUFACTURED_RESULT& result, int timeoutforurl = DIOSCRAPERWEBMACMANUFACTURER_MAXTIMEOUT, XSTRING* localIP = NULL, bool usecache = true);
+    bool                      Get                               (XCHAR* MAC, DIOMACMANUFACTURED_RESULT& result, int timeoutforurl = DIOSCRAPERWEBMACMANUFACTURER_MAXTIMEOUT, XSTRING* localIP = NULL, bool usecache = true);
+    bool                      Get                               (XSTRING& MAC, DIOMACMANUFACTURED_RESULT& result, int timeoutforurl = DIOSCRAPERWEBMACMANUFACTURER_MAXTIMEOUT, XSTRING* localIP = NULL, bool usecache = true);
+    bool                      Get                               (DIOMAC& MAC, XSTRING& manufactured, int timeoutforurl = DIOSCRAPERWEBMACMANUFACTURER_MAXTIMEOUT, XSTRING* localIP = NULL, bool usecache = true);
 
-    bool                      Get                               (DIOMAC& MAC, XSTRING& manufactured, int timeoutforurl = DIOSCRAPERWEB_MAXTIMEOUTFORURL, XSTRING* localIP = NULL, bool usecache = true);
+    bool                      SetScriptPath                     (XCHAR* relativescriptpath);
+    XCHAR*                    GetScriptPath                     ();
 
   private:
 
     void                      Clean                             ();
 
-    DIOMAC                    MAC;
+    DIOSCRAPERWEBCACHE*       cache;
+    XMUTEX*                   xmutexdo;
+    XSTRING                   scriptpath;
 };
 
 
@@ -81,9 +101,4 @@ class DIOSCRAPERWEBMACMANUFACTURER : public DIOSCRAPERWEB
 
 /*---- INLINE FUNCTIONS + PROTOTYPES ---------------------------------------------------------------------------------*/
 
-
-
-
-
-
-
+#endif

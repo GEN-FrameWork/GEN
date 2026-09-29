@@ -3,7 +3,7 @@
 * @file       DIOScraperWebGeolocationIP.h
 * 
 * @class      DIOSCRAPERWEBGEOLOCATIONIP
-* @brief      Data Input/Output Scraper Web Geolocation IP class
+* @brief      Typed Geolocation IP scraper filled by script (not XML)
 * @ingroup    DATAIO
 * 
 * @copyright  EndoraSoft. All rights reserved.
@@ -28,6 +28,8 @@
 
 #pragma once
 
+#ifdef DIO_SCRAPERWEB_GEOLOCATIONIP_ACTIVE
+
 /*---- INCLUDES ------------------------------------------------------------------------------------------------------*/
 
 #include "XMap.h"
@@ -35,14 +37,17 @@
 #include "DIOIP.h"
 #include "DIOURL.h"
 
-#include "DIOScraperWeb.h"
+#include "DIOScraperWebCache.h"
+#include "DIOScraperScript.h"
 
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
 
-#define DIOSCRAPERWEBGEOLOCATIONIP_NAMEFILE       __L("ws_geolocationip.xml")
-#define DIOSCRAPERWEBGEOLOCATIONIP_NAMESERVICE    __L("GEOLOCATIONIP")
+#define DIOSCRAPERWEBGEOLOCATIONIP_SCRIPTPATH    __L("geolocationip.g")
+#define DIOSCRAPERWEBGEOLOCATIONIP_MAXTIMEOUT    DIOSCRAPERSCRIPT_DEFAULT_TIMEOUT
 
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
+
+class XMUTEX;
 
 class DIOGEOLOCATIONIP_RESULT : public DIOSCRAPERWEBCACHE_RESULT
 {
@@ -82,24 +87,26 @@ class DIOGEOLOCATIONIP_RESULT : public DIOSCRAPERWEBCACHE_RESULT
 };
 
 
-class DIOSCRAPERWEBGEOLOCATIONIP : public DIOSCRAPERWEB
+class DIOSCRAPERWEBGEOLOCATIONIP
 {
   public:
-                            DIOSCRAPERWEBGEOLOCATIONIP        (DIOWEBCLIENT* webclient = NULL);
+                            DIOSCRAPERWEBGEOLOCATIONIP        ();
     virtual                ~DIOSCRAPERWEBGEOLOCATIONIP        ();
 
+    bool                    Get                               (XCHAR* IP, DIOGEOLOCATIONIP_RESULT& geolocationIP, int timeoutforurl = DIOSCRAPERWEBGEOLOCATIONIP_MAXTIMEOUT, XSTRING* localIP = NULL, bool usecache = true);
+    bool                    Get                               (XSTRING& IP, DIOGEOLOCATIONIP_RESULT& geolocationIP, int timeoutforurl = DIOSCRAPERWEBGEOLOCATIONIP_MAXTIMEOUT, XSTRING* localIP = NULL, bool usecache = true);
+    bool                    Get                               (DIOIP& IP, DIOGEOLOCATIONIP_RESULT& geolocationIP, int timeoutforurl = DIOSCRAPERWEBGEOLOCATIONIP_MAXTIMEOUT, XSTRING* localIP = NULL, bool usecache = true);
 
-    bool                    ChangeURL                         (XCHAR* maskurl, DIOURL& url);
-
-    bool                    Get                               (XCHAR* IP, DIOGEOLOCATIONIP_RESULT& geolocationIP, int timeoutforurl = DIOSCRAPERWEB_MAXTIMEOUTFORURL, XSTRING* localIP = NULL, bool usecache = true);
-    bool                    Get                               (XSTRING& IP, DIOGEOLOCATIONIP_RESULT& geolocationIP, int timeoutforurl = DIOSCRAPERWEB_MAXTIMEOUTFORURL, XSTRING* localIP = NULL, bool usecache = true);
-    bool                    Get                               (DIOIP& IP, DIOGEOLOCATIONIP_RESULT& geolocationIP, int timeoutforurl = DIOSCRAPERWEB_MAXTIMEOUTFORURL, XSTRING* localIP = NULL, bool usecache = true);
+    bool                    SetScriptPath                     (XCHAR* relativescriptpath);
+    XCHAR*                  GetScriptPath                     ();
 
   private:
 
     void                    Clean                             ();
 
-    DIOIP                   IP;
+    DIOSCRAPERWEBCACHE*     cache;
+    XMUTEX*                 xmutexdo;
+    XSTRING                 scriptpath;
 };
 
 
@@ -107,7 +114,5 @@ class DIOSCRAPERWEBGEOLOCATIONIP : public DIOSCRAPERWEB
 
 /*---- INLINE FUNCTIONS + PROTOTYPES ---------------------------------------------------------------------------------*/
 
-
-
-
+#endif
 

@@ -3,7 +3,7 @@
 * @file       DIOScraperWebMACManufacturer.cpp
 * 
 * @class      DIOSCRAPERWEBMACMANUFACTURER
-* @brief      Data Input/Output Scraper Web MAC Manufacturer class
+* @brief      Typed MAC Manufacturer scraper filled by script (not XML)
 * @ingroup    DATAIO
 * 
 * @copyright  EndoraSoft. All rights reserved.
@@ -30,12 +30,13 @@
 
 #include "GEN_Defines.h"
 
-
+#ifdef DIO_SCRAPERWEB_MACMANUFACTURER_ACTIVE
 
 /*---- INCLUDES ------------------------------------------------------------------------------------------------------*/
 
 #include "DIOScraperWebMACManufacturer.h"
 
+#include "XFactory.h"
 #include "XThread.h"
 
 
@@ -51,6 +52,7 @@
 
 
 
+
 /*---- CLASS MEMBERS -------------------------------------------------------------------------------------------------*/
 
 
@@ -63,7 +65,7 @@
 * @ingroup    DATAIO
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-DIOMACMANUFACTURED_RESULT::DIOMACMANUFACTURED_RESULT()
+DIOMACMANUFACTURED_RESULT::DIOMACMANUFACTURED_RESULT(): DIOSCRAPERWEBCACHE_RESULT()
 {
   Clean();
 }
@@ -85,23 +87,125 @@ DIOMACMANUFACTURED_RESULT::~DIOMACMANUFACTURED_RESULT()
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         XSTRING* DIOMACMANUFACTURED_RESULT::Get()
-* @brief      Get value
+* @fn         XCHAR* DIOMACMANUFACTURED_RESULT::GetManufacturer()
+* @brief      Get manufacturer
 * @ingroup    DATAIO
 * 
-* @return     XSTRING* : Pointer to the requested string; NULL if it is not available.
+* --------------------------------------------------------------------------------------------------------------------*/
+XCHAR* DIOMACMANUFACTURED_RESULT::GetManufacturer()
+{
+  return manufacturer.Get();
+}
+
+
+/**-------------------------------------------------------------------------------------------------------------------
+* 
+* @fn         XSTRING* DIOMACMANUFACTURED_RESULT::Get()
+* @brief      Get manufacturer string (legacy)
+* @ingroup    DATAIO
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
 XSTRING* DIOMACMANUFACTURED_RESULT::Get()
 {
-  return &manufactured;
+  return &manufacturer;
+}
+
+
+/**-------------------------------------------------------------------------------------------------------------------
+* 
+* @fn         bool DIOMACMANUFACTURED_RESULT::IsEmpty()
+* @brief      Is empty
+* @ingroup    DATAIO
+* 
+* --------------------------------------------------------------------------------------------------------------------*/
+bool DIOMACMANUFACTURED_RESULT::IsEmpty()
+{
+  if(manufacturer.IsEmpty()) return true;
+
+  return false;
+}
+
+
+/**-------------------------------------------------------------------------------------------------------------------
+* 
+* @fn         bool DIOMACMANUFACTURED_RESULT::CopyFrom(DIOSCRAPERWEBCACHE_RESULT* result)
+* @brief      Copy from
+* @ingroup    DATAIO
+* 
+* --------------------------------------------------------------------------------------------------------------------*/
+bool DIOMACMANUFACTURED_RESULT::CopyFrom(DIOSCRAPERWEBCACHE_RESULT* result)
+{
+  if(!result) return false;
+
+  DIOMACMANUFACTURED_RESULT* macresult = (DIOMACMANUFACTURED_RESULT*)result;
+
+  if(macresult->IsEmpty()) return false;
+
+  manufacturer = macresult->manufacturer;
+
+  return true;
+}
+
+
+/**-------------------------------------------------------------------------------------------------------------------
+* 
+* @fn         bool DIOMACMANUFACTURED_RESULT::CopyTo(DIOSCRAPERWEBCACHE_RESULT* result)
+* @brief      Copy to
+* @ingroup    DATAIO
+* 
+* --------------------------------------------------------------------------------------------------------------------*/
+bool DIOMACMANUFACTURED_RESULT::CopyTo(DIOSCRAPERWEBCACHE_RESULT* result)
+{
+  if(!result)   return false;
+  if(IsEmpty()) return false;
+
+  DIOMACMANUFACTURED_RESULT* macresult = (DIOMACMANUFACTURED_RESULT*)result;
+
+  macresult->manufacturer = manufacturer;
+
+  return true;
+}
+
+
+/**-------------------------------------------------------------------------------------------------------------------
+* 
+* @fn         bool DIOMACMANUFACTURED_RESULT::Set(XSTRING& manufacturer)
+* @brief      Set value
+* @ingroup    DATAIO
+* 
+* --------------------------------------------------------------------------------------------------------------------*/
+bool DIOMACMANUFACTURED_RESULT::Set(XSTRING& manufacturer)
+{
+  return Set(manufacturer.Get());
+}
+
+
+/**-------------------------------------------------------------------------------------------------------------------
+* 
+* @fn         bool DIOMACMANUFACTURED_RESULT::Set(XCHAR* manufacturer)
+* @brief      Set value
+* @ingroup    DATAIO
+* 
+* --------------------------------------------------------------------------------------------------------------------*/
+bool DIOMACMANUFACTURED_RESULT::Set(XCHAR* manufacturer)
+{
+  if(manufacturer) this->manufacturer = manufacturer;
+
+  XCHAR character[3] = { 0x09, 0x0A, 0x0D };
+
+  for(int c=0;c<3;c++)
+    {
+      this->manufacturer.DeleteCharacter(character[c], XSTRINGCONTEXT_ALLSTRING);
+    }
+
+  return true;
 }
 
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         void DIOMACMANUFACTURED_RESULT::Clean()
-* @brief      Clean the attributes of the class: Default initialize
+* @brief      Clean
 * @note       INTERNAL
 * @ingroup    DATAIO
 * 
@@ -114,18 +218,20 @@ void DIOMACMANUFACTURED_RESULT::Clean()
 
 
 
-
-
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         DIOSCRAPERWEBMACMANUFACTURER::DIOSCRAPERWEBMACMANUFACTURER(): DIOSCRAPERWEB()
+* @fn         DIOSCRAPERWEBMACMANUFACTURER::DIOSCRAPERWEBMACMANUFACTURER()
 * @brief      Constructor of class
 * @ingroup    DATAIO
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-DIOSCRAPERWEBMACMANUFACTURER::DIOSCRAPERWEBMACMANUFACTURER(): DIOSCRAPERWEB()
+DIOSCRAPERWEBMACMANUFACTURER::DIOSCRAPERWEBMACMANUFACTURER()
 {
   Clean();
+
+  cache      = GEN_NEW DIOSCRAPERWEBCACHE();
+  xmutexdo   = GEN_XFACTORY.Create_Mutex();
+  scriptpath = DIOSCRAPERWEBMACMANUFACTURER_SCRIPTPATH;
 }
 
 
@@ -139,96 +245,116 @@ DIOSCRAPERWEBMACMANUFACTURER::DIOSCRAPERWEBMACMANUFACTURER(): DIOSCRAPERWEB()
 * --------------------------------------------------------------------------------------------------------------------*/
 DIOSCRAPERWEBMACMANUFACTURER::~DIOSCRAPERWEBMACMANUFACTURER()
 {
+  if(cache)
+    {
+      cache->DeleteAll();
+      GEN_DELETE cache;
+    }
+
+  if(xmutexdo)
+    {
+      GEN_XFACTORY.Delete_Mutex(xmutexdo);
+    }
+
   Clean();
 }
 
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         bool DIOSCRAPERWEBMACMANUFACTURER::ChangeURL(XCHAR* maskurl, DIOURL& url)
-* @brief      Change URL
+* @fn         bool DIOSCRAPERWEBMACMANUFACTURER::Get(DIOMAC& MAC, DIOMACMANUFACTURED_RESULT& result, ...)
+* @brief      Get manufacturer via scraper script
 * @ingroup    DATAIO
 * 
-* @param[in]  maskurl : Maskurl pointer to use.
-* @param[in]  url : URL to use.
-* 
-* @return     bool : true if the operation is successful; otherwise false.
-* 
 * --------------------------------------------------------------------------------------------------------------------*/
-bool DIOSCRAPERWEBMACMANUFACTURER::ChangeURL(XCHAR* maskurl, DIOURL& url)
+bool DIOSCRAPERWEBMACMANUFACTURER::Get(DIOMAC& MAC, DIOMACMANUFACTURED_RESULT& result, int timeoutforurl, XSTRING* localIP, bool usecache)
 {
-  XSTRING MACmanufactured;
+  XSTRING macstring;
 
-  MACmanufactured.Format(__L("%02X%02X%02X"), MAC.Get()[0], MAC.Get()[1], MAC.Get()[2]);
+  MAC.GetXString(macstring);
 
-  url.Format(maskurl, MACmanufactured.Get());
-
-  return true;
+  return Get(macstring.Get(), result, timeoutforurl, localIP, usecache);
 }
 
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         bool DIOSCRAPERWEBMACMANUFACTURER::Get(DIOMAC& MAC, XSTRING& manufactured, int timeoutforurl, XSTRING* localIP, bool usecache)
-* @brief      Get value
+* @fn         bool DIOSCRAPERWEBMACMANUFACTURER::Get(XSTRING& MAC, DIOMACMANUFACTURED_RESULT& result, ...)
+* @brief      Get manufacturer via scraper script
 * @ingroup    DATAIO
 * 
-* @param[in]  MAC : MAC value.
-* @param[in]  manufactured : Manufactured value.
-* @param[in]  timeoutforurl : Timeoutforurl value.
-* @param[in]  localIP : Local IP pointer to use.
-* @param[in]  usecache : Usecache value.
+* --------------------------------------------------------------------------------------------------------------------*/
+bool DIOSCRAPERWEBMACMANUFACTURER::Get(XSTRING& MAC, DIOMACMANUFACTURED_RESULT& result, int timeoutforurl, XSTRING* localIP, bool usecache)
+{
+  return Get(MAC.Get(), result, timeoutforurl, localIP, usecache);
+}
+
+
+/**-------------------------------------------------------------------------------------------------------------------
 * 
-* @return     bool : true if the operation is successful; otherwise false.
+* @fn         bool DIOSCRAPERWEBMACMANUFACTURER::Get(XCHAR* MAC, DIOMACMANUFACTURED_RESULT& result, ...)
+* @brief      Get manufacturer via scraper script
+* @ingroup    DATAIO
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-bool DIOSCRAPERWEBMACMANUFACTURER::Get(DIOMAC& MAC, XSTRING& manufactured, int timeoutforurl, XSTRING* localIP, bool usecache)
+bool DIOSCRAPERWEBMACMANUFACTURER::Get(XCHAR* MAC, DIOMACMANUFACTURED_RESULT& result, int timeoutforurl, XSTRING* localIP, bool usecache)
 {
-  XSTRING IPstring;
   bool    status = false;
+  XSTRING cacheask;
+
+  if((!MAC) || (!MAC[0])) return false;
 
   if(xmutexdo) xmutexdo->Lock();
 
-  this->MAC.GetXString(IPstring);
+  cacheask = MAC;
 
-  this->MAC.Set(MAC.Get());
-
-  DIOMACMANUFACTURED_RESULT* macmanufacturedresult;
-
-  if(usecache)
+  if(usecache && cache)
     {
-      macmanufacturedresult = (DIOMACMANUFACTURED_RESULT*)cache->Get(IPstring);
-      if(macmanufacturedresult)
+      DIOMACMANUFACTURED_RESULT* cached = (DIOMACMANUFACTURED_RESULT*)cache->Get(cacheask);
+      if(cached)
         {
-          manufactured = (*macmanufacturedresult->Get());
+          result.CopyFrom(cached);
 
           if(xmutexdo) xmutexdo->UnLock();
-
           return true;
         }
     }
 
-  if(Load(DIOSCRAPERWEBMACMANUFACTURER_NAMEFILE))
-    {
-      if(Do(DIOSCRAPERWEBMACMANUFACTURER_NAMESERVICE, timeoutforurl, localIP))
-        {
-          manufactured = GetValue(__L("MANUFACTURED"));
+  DIOSCRAPERSCRIPT runner;
 
-          if(!manufactured.IsEmpty())
+  runner.SetArg(__L("mac"), MAC);
+  runner.SetArgInt(__L("timeout"), timeoutforurl);
+  if(localIP && (!localIP->IsEmpty()))
+    {
+      runner.SetArg(__L("localIP"), (*localIP));
+    }
+
+  if(runner.Run(scriptpath.Get()))
+    {
+      XSTRING ok;
+      XSTRING manufacturer;
+
+      runner.GetResult(__L("ok"), ok);
+      runner.GetResult(__L("manufacturer"), manufacturer);
+
+      if((ok.Compare(__L("1")) == 0) && (!manufacturer.IsEmpty()))
+        {
+          result.Set(manufacturer);
+
+          if(!result.IsEmpty())
             {
-              if(usecache)
+              if(usecache && cache)
                 {
-                  macmanufacturedresult = GEN_NEW DIOMACMANUFACTURED_RESULT();
-                  if(macmanufacturedresult)
+                  DIOMACMANUFACTURED_RESULT* entry = GEN_NEW DIOMACMANUFACTURED_RESULT();
+                  if(entry)
                     {
-                      macmanufacturedresult->Get()->Set(manufactured);
-                      cache->Add(IPstring, macmanufacturedresult);
+                      entry->CopyFrom(&result);
+                      cache->Add(cacheask, entry);
                     }
                 }
 
               status = true;
             }
-
         }
     }
 
@@ -240,18 +366,63 @@ bool DIOSCRAPERWEBMACMANUFACTURER::Get(DIOMAC& MAC, XSTRING& manufactured, int t
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
+* @fn         bool DIOSCRAPERWEBMACMANUFACTURER::Get(DIOMAC& MAC, XSTRING& manufactured, ...)
+* @brief      Legacy out-param Get
+* @ingroup    DATAIO
+* 
+* --------------------------------------------------------------------------------------------------------------------*/
+bool DIOSCRAPERWEBMACMANUFACTURER::Get(DIOMAC& MAC, XSTRING& manufactured, int timeoutforurl, XSTRING* localIP, bool usecache)
+{
+  DIOMACMANUFACTURED_RESULT result;
+
+  if(!Get(MAC, result, timeoutforurl, localIP, usecache)) return false;
+
+  manufactured = result.GetManufacturer();
+  return true;
+}
+
+
+/**-------------------------------------------------------------------------------------------------------------------
+* 
+* @fn         bool DIOSCRAPERWEBMACMANUFACTURER::SetScriptPath(XCHAR* relativescriptpath)
+* @brief      SetScriptPath
+* @ingroup    DATAIO
+* 
+* --------------------------------------------------------------------------------------------------------------------*/
+bool DIOSCRAPERWEBMACMANUFACTURER::SetScriptPath(XCHAR* relativescriptpath)
+{
+  if((!relativescriptpath) || (!relativescriptpath[0])) return false;
+
+  scriptpath = relativescriptpath;
+  return true;
+}
+
+
+/**-------------------------------------------------------------------------------------------------------------------
+* 
+* @fn         XCHAR* DIOSCRAPERWEBMACMANUFACTURER::GetScriptPath()
+* @brief      GetScriptPath
+* @ingroup    DATAIO
+* 
+* --------------------------------------------------------------------------------------------------------------------*/
+XCHAR* DIOSCRAPERWEBMACMANUFACTURER::GetScriptPath()
+{
+  return scriptpath.Get();
+}
+
+
+/**-------------------------------------------------------------------------------------------------------------------
+* 
 * @fn         void DIOSCRAPERWEBMACMANUFACTURER::Clean()
-* @brief      Clean the attributes of the class: Default initialize
+* @brief      Clean
 * @note       INTERNAL
 * @ingroup    DATAIO
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
 void DIOSCRAPERWEBMACMANUFACTURER::Clean()
 {
-
+  cache    = NULL;
+  xmutexdo = NULL;
 }
 
-
-
-
-
+#endif

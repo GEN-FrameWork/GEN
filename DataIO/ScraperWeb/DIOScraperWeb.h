@@ -3,7 +3,11 @@
 * @file       DIOScraperWeb.h
 * 
 * @class      DIOSCRAPERWEB
-* @brief      Data Input/Output Scraper Web class
+* @brief      Data Input/Output Scraper Web class (LEGACY XML engine — prefer script facades)
+*
+* @note       LEGACY: do not add new providers here. Use DIOSCRAPERSCRIPT + typed facades
+*             (see Resources/scraperweb/Scraper_Script_Model.md). PublicIP and GeolocationIP
+*             no longer inherit this class.
 * @ingroup    DATAIO
 * 
 * @copyright  EndoraSoft. All rights reserved.

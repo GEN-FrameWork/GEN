@@ -74,7 +74,9 @@ enum SCRIPT_LNG_G_DOUBLEOPERATOR
   SCRIPT_LNG_G_DOUBLEOPERATOR_LS       ,
   SCRIPT_LNG_G_DOUBLEOPERATOR_RS       ,
   SCRIPT_LNG_G_DOUBLEOPERATOR_INC      ,
-  SCRIPT_LNG_G_DOUBLEOPERATOR_DEC
+  SCRIPT_LNG_G_DOUBLEOPERATOR_DEC      ,
+  SCRIPT_LNG_G_DOUBLEOPERATOR_AND      ,   // &&
+  SCRIPT_LNG_G_DOUBLEOPERATOR_OR           // ||
 };
 
 
@@ -277,10 +279,12 @@ class SCRIPT_LNG_G : public SCRIPT
 
     void                                EvalExp                     (SCRIPT_LNG_G_VAR& value);
     void                                EvalExp0                    (SCRIPT_LNG_G_VAR& value);
+    void                                EvalExpOr                   (SCRIPT_LNG_G_VAR& value);   // ||
+    void                                EvalExpAnd                  (SCRIPT_LNG_G_VAR& value);   // &&
     void                                EvalExp1                    (SCRIPT_LNG_G_VAR& value);
     void                                EvalExp2                    (SCRIPT_LNG_G_VAR& value);
     void                                EvalExp3                    (SCRIPT_LNG_G_VAR& value);
-    void                                EvalExp4                    (SCRIPT_LNG_G_VAR& value);
+    void                                EvalExp4                    (SCRIPT_LNG_G_VAR& value);   // unary + - !
     void                                EvalExp5                    (SCRIPT_LNG_G_VAR& value);
     void                                Atom                        (SCRIPT_LNG_G_VAR& value);
 

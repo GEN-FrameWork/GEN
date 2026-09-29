@@ -1,10 +1,10 @@
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @file       DIOScraperWebPublicIP.h
+* @file       Script_Lib_Scraper.h
 * 
-* @class      DIOSCRAPERWEBPUBLICIP
-* @brief      Typed Public IP scraper filled by script (not XML)
-* @ingroup    DATAIO
+* @class      SCRIPT_LIB_SCRAPER
+* @brief      Script Library Scraper (arg/result bridge for typed scrapers)
+* @ingroup    SCRIPT
 * 
 * @copyright  EndoraSoft. All rights reserved.
 * 
@@ -28,60 +28,40 @@
 
 #pragma once
 
-#ifdef DIO_SCRAPERWEB_PUBLICIP_ACTIVE
-
 /*---- INCLUDES ------------------------------------------------------------------------------------------------------*/
 
-#include "DIOIP.h"
-#include "DIOScraperWebCache.h"
-#include "DIOScraperScript.h"
+#include "Script_Lib.h"
 
 
 
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
 
-#define DIOSCRAPERWEBPUBLICIP_SCRIPTPATH    __L("publicip.g")
-#define DIOSCRAPERWEBPUBLICIP_CACHEASK      __L("public IP ID")
-#define DIOSCRAPERWEBPUBLICIP_MAXTIMEOUT    DIOSCRAPERSCRIPT_DEFAULT_TIMEOUT
+#define SCRIPT_LIB_NAME_SCRAPER   __L("Scraper")
+
+
 
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
 
-class XMUTEX;
+class XVARIANT;
+class SCRIPT;
+class DIOSCRAPERSCRIPT;
 
-class DIOPUBLICIP_RESULT :  public DIOSCRAPERWEBCACHE_RESULT
+class SCRIPT_LIB_SCRAPER : public SCRIPT_LIB
 {
   public:
-                              DIOPUBLICIP_RESULT                ();
-    virtual                  ~DIOPUBLICIP_RESULT                ();
+                          SCRIPT_LIB_SCRAPER      ();
+    virtual              ~SCRIPT_LIB_SCRAPER      ();
 
-    DIOIP*                    Get                               ();
+    bool                  AddLibraryFunctions     (SCRIPT* script);
+
+    void                  SetContext              (DIOSCRAPERSCRIPT* context);
+    DIOSCRAPERSCRIPT*     GetContext              ();
 
   private:
 
-    void                      Clean                             ();
+    void                  Clean                   ();
 
-    DIOIP                     IP;
-};
-
-
-class DIOSCRAPERWEBPUBLICIP
-{
-  public:
-                              DIOSCRAPERWEBPUBLICIP             ();
-    virtual                  ~DIOSCRAPERWEBPUBLICIP             ();
-
-    bool                      Get                               (DIOIP& IP, int timeoutforurl = DIOSCRAPERWEBPUBLICIP_MAXTIMEOUT, XSTRING* localIP = NULL, bool usecache = true);
-
-    bool                      SetScriptPath                     (XCHAR* relativescriptpath);
-    XCHAR*                    GetScriptPath                     ();
-
-  private:
-
-    void                      Clean                             ();
-
-    DIOSCRAPERWEBCACHE*       cache;
-    XMUTEX*                   xmutexdo;
-    XSTRING                   scriptpath;
+    DIOSCRAPERSCRIPT*     context;
 };
 
 
@@ -89,5 +69,8 @@ class DIOSCRAPERWEBPUBLICIP
 
 /*---- INLINE FUNCTIONS + PROTOTYPES ---------------------------------------------------------------------------------*/
 
-#endif
+void    Call_Scraper_GetArg       (SCRIPT_LIB* library, SCRIPT* script, XVECTOR<XVARIANT*>* params, XVARIANT* returnvalue);
+void    Call_Scraper_GetArgInt    (SCRIPT_LIB* library, SCRIPT* script, XVECTOR<XVARIANT*>* params, XVARIANT* returnvalue);
+void    Call_Scraper_SetResult    (SCRIPT_LIB* library, SCRIPT* script, XVECTOR<XVARIANT*>* params, XVARIANT* returnvalue);
+void    Call_Scraper_GetResult    (SCRIPT_LIB* library, SCRIPT* script, XVECTOR<XVARIANT*>* params, XVARIANT* returnvalue);
 

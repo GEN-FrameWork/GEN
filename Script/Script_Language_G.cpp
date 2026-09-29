@@ -724,6 +724,10 @@ bool SCRIPT_LNG_G_VAR::ConvertFromXVariant(XVARIANT& variant)
                                           SetValueInteger(variant);
                                           break;
 
+      case XVARIANT_TYPE_BOOLEAN        : SetType(SCRIPT_LNG_G_TOKENIREPS_INT);
+                                          SetValueInteger(((bool)variant) ? 1 : 0);
+                                          break;
+
       case XVARIANT_TYPE_CHAR           : { XSTRING str;
                                             XCHAR   character = 0x000;
 
@@ -1537,7 +1541,7 @@ bool SCRIPT_LNG_G::IsDelimiter(XCHAR c)
 {
   if(c==0) return true;
 
-  XSTRING delimiter(__L("\x09\r\n {}!:;,+-<>'/*%^=()"));
+  XSTRING delimiter(__L("\x09\r\n {}!:;,+-<>'/*%^=()&|"));
 
   if(delimiter.FindCharacter(c)!=XSTRING_NOTFOUND) return true;
 
@@ -1714,7 +1718,69 @@ void SCRIPT_LNG_G::EvalExp0(SCRIPT_LNG_G_VAR& value)
          }
     }
 
+  EvalExpOr(value);
+}
+
+
+/**-------------------------------------------------------------------------------------------------------------------
+*
+* @fn         void SCRIPT_LNG_G::EvalExpOr(SCRIPT_LNG_G_VAR& value)
+* @brief      Logical OR (||), lower precedence than &&
+* @ingroup    SCRIPT
+*
+* @param[in]  value : Value value.
+*
+* --------------------------------------------------------------------------------------------------------------------*/
+void SCRIPT_LNG_G::EvalExpOr(SCRIPT_LNG_G_VAR& value)
+{
+  EvalExpAnd(value);
+
+  while((tokentype == SCRIPT_LNG_G_TOKENTYPES_DELIMITER) &&
+        (currenttoken[0] == (XCHAR)SCRIPT_LNG_G_DOUBLEOPERATOR_OR))
+    {
+      GetToken();
+
+      SCRIPT_LNG_G_VAR partialvalue;
+
+      EvalExpAnd(partialvalue);
+
+      int result = (value.IsTrue() || partialvalue.IsTrue()) ? 1 : 0;
+
+      value.Clear();
+      value.SetType(SCRIPT_LNG_G_TOKENIREPS_INT);
+      value.SetValueInteger(result);
+    }
+}
+
+
+/**-------------------------------------------------------------------------------------------------------------------
+*
+* @fn         void SCRIPT_LNG_G::EvalExpAnd(SCRIPT_LNG_G_VAR& value)
+* @brief      Logical AND (&&), higher precedence than ||
+* @ingroup    SCRIPT
+*
+* @param[in]  value : Value value.
+*
+* --------------------------------------------------------------------------------------------------------------------*/
+void SCRIPT_LNG_G::EvalExpAnd(SCRIPT_LNG_G_VAR& value)
+{
   EvalExp1(value);
+
+  while((tokentype == SCRIPT_LNG_G_TOKENTYPES_DELIMITER) &&
+        (currenttoken[0] == (XCHAR)SCRIPT_LNG_G_DOUBLEOPERATOR_AND))
+    {
+      GetToken();
+
+      SCRIPT_LNG_G_VAR partialvalue;
+
+      EvalExp1(partialvalue);
+
+      int result = (value.IsTrue() && partialvalue.IsTrue()) ? 1 : 0;
+
+      value.Clear();
+      value.SetType(SCRIPT_LNG_G_TOKENIREPS_INT);
+      value.SetValueInteger(result);
+    }
 }
 
 
@@ -2008,6 +2074,20 @@ void SCRIPT_LNG_G::EvalExp4(SCRIPT_LNG_G_VAR& value)
   XCHAR temptoken;
 
   operation = __C('\0');
+
+  // Unary logical NOT: right-associative (!!x)
+  if((tokentype != SCRIPT_LNG_G_TOKENTYPES_STRING) && (currenttoken[0] == __C('!')))
+    {
+      GetToken();
+      EvalExp4(value);
+
+      int result = value.IsTrue() ? 0 : 1;
+
+      value.Clear();
+      value.SetType(SCRIPT_LNG_G_TOKENIREPS_INT);
+      value.SetValueInteger(result);
+      return;
+    }
 
   if(tokentype != SCRIPT_LNG_G_TOKENTYPES_STRING)
     {
@@ -2917,7 +2997,7 @@ SCRIPT_LNG_G_TOKENTYPES SCRIPT_LNG_G::GetToken()
   XSTRING   delimiters;  
   XSTRING   otherdelimiters;
 
-  dobleops        = __L("!<>=+-");
+  dobleops        = __L("!<>=+-&|");
   delimiters      = __L("{}");  
   otherdelimiters = __L("+-*^/%=;:(),'");
 
@@ -3057,6 +3137,44 @@ SCRIPT_LNG_G_TOKENTYPES SCRIPT_LNG_G::GetToken()
 
                         (*temptoken) = __C('\0');
                       }
+                     else
+                      {
+                        // Unary / logical NOT token
+                        ipprg++;
+                        (*temptoken) = __C('!');
+                        temptoken++;
+                        (*temptoken) = __C('\0');
+                      }
+                    break;
+
+          case '&': if(*(ipprg+1) == __C('&'))
+                      {
+                        ipprg++;
+                        ipprg++;
+
+                        (*temptoken) = SCRIPT_LNG_G_DOUBLEOPERATOR_AND;
+                        temptoken++;
+
+                        (*temptoken) = SCRIPT_LNG_G_DOUBLEOPERATOR_AND;
+                        temptoken++;
+
+                        (*temptoken) = __C('\0');
+                      }
+                    break;
+
+          case '|': if(*(ipprg+1) == __C('|'))
+                      {
+                        ipprg++;
+                        ipprg++;
+
+                        (*temptoken) = SCRIPT_LNG_G_DOUBLEOPERATOR_OR;
+                        temptoken++;
+
+                        (*temptoken) = SCRIPT_LNG_G_DOUBLEOPERATOR_OR;
+                        temptoken++;
+
+                        (*temptoken) = __C('\0');
+                      }
                     break;
 
           case '<': if(*(ipprg+1) == __C('='))
@@ -3176,7 +3294,7 @@ SCRIPT_LNG_G_TOKENTYPES SCRIPT_LNG_G::GetToken()
 
       while(((*ipprg) != __C('"')) && ((*ipprg) != __C('\r')) && ((*ipprg) != __C('\n')) && (*ipprg))
         {
-          // Check for \r escape sequence.
+          // Check for escape sequences: \n \r \\ \"
           if((*ipprg) == __C('\\'))
             {
               if(*(ipprg+1) == __C('n'))
@@ -3191,35 +3309,54 @@ SCRIPT_LNG_G_TOKENTYPES SCRIPT_LNG_G::GetToken()
                   ipprg++;
                   (*temptoken++) = __C('\n');
                 }
+               else if(*(ipprg+1) == __C('r'))
+                {
+                  if((temptoken - currenttoken) >= SCRIPT_LNG_G_MAXTOKENLEN)
+                    {
+                      (*temptoken) = __C('\0');
+                      HaveError(SCRIPT_LNG_G_ERRORCODE_TOKEN_TOO_LONG);
+                      return tokentype;
+                    }
+
+                  ipprg++;
+                  (*temptoken++) = __C('\r');
+                }
+               else if(*(ipprg+1) == __C('\\'))
+                {
+                  if((temptoken - currenttoken) >= SCRIPT_LNG_G_MAXTOKENLEN)
+                    {
+                      (*temptoken) = __C('\0');
+                      HaveError(SCRIPT_LNG_G_ERRORCODE_TOKEN_TOO_LONG);
+                      return tokentype;
+                    }
+
+                  ipprg++;
+                  (*temptoken++) = __C('\\');
+                }
+               else if(*(ipprg+1) == __C('"'))
+                {
+                  if((temptoken - currenttoken) >= SCRIPT_LNG_G_MAXTOKENLEN)
+                    {
+                      (*temptoken) = __C('\0');
+                      HaveError(SCRIPT_LNG_G_ERRORCODE_TOKEN_TOO_LONG);
+                      return tokentype;
+                    }
+
+                  ipprg++;
+                  (*temptoken++) = __C('"');
+                }
                else
                 {
-                  if(*(ipprg+1) == __C('r'))
+                  // Unknown escape: keep the next character literally.
+                  if((temptoken - currenttoken) >= SCRIPT_LNG_G_MAXTOKENLEN)
                     {
-                      if((temptoken - currenttoken) >= SCRIPT_LNG_G_MAXTOKENLEN)
-                        {
-                          (*temptoken) = __C('\0');
-                          HaveError(SCRIPT_LNG_G_ERRORCODE_TOKEN_TOO_LONG);
-                          return tokentype;
-                        }
-
-                      ipprg++;
-                      (*temptoken++) = __C('\r');
+                      (*temptoken) = __C('\0');
+                      HaveError(SCRIPT_LNG_G_ERRORCODE_TOKEN_TOO_LONG);
+                      return tokentype;
                     }
-                   else
-                    {
-                      if(*(ipprg+1) == '\\')
-                        {
-                          if((temptoken - currenttoken) >= SCRIPT_LNG_G_MAXTOKENLEN)
-                            {
-                              (*temptoken) = __C('\0');
-                              HaveError(SCRIPT_LNG_G_ERRORCODE_TOKEN_TOO_LONG);
-                              return tokentype;
-                            }
 
-                          ipprg++;
-                          (*temptoken++) = __C('\\');
-                        }
-                    }
+                  ipprg++;
+                  (*temptoken++) = (*ipprg);
                 }
             }
            else

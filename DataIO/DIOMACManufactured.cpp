@@ -45,7 +45,9 @@
 #include "XFileXDB.h"
 #include "XTrace.h"
 
+#ifdef DIO_SCRAPERWEB_MACMANUFACTURER_ACTIVE
 #include "DIOScraperWebMACManufacturer.h"
+#endif
 
 
 
@@ -104,6 +106,9 @@ DIOMACMANUFACTURED::~DIOMACMANUFACTURED()
 * --------------------------------------------------------------------------------------------------------------------*/
 bool DIOMACMANUFACTURED::Web_GetManufactured(DIOMAC& MAC, XSTRING& manufactured)
 {
+  #ifndef DIO_SCRAPERWEB_MACMANUFACTURER_ACTIVE
+  return false;
+  #else
   bool status = false;
 
   DIOSCRAPERWEBMACMANUFACTURER* macmanufactured = GEN_NEW DIOSCRAPERWEBMACMANUFACTURER;
@@ -114,6 +119,7 @@ bool DIOMACMANUFACTURED::Web_GetManufactured(DIOMAC& MAC, XSTRING& manufactured)
     }
 
   return status;
+  #endif
 }
 
 

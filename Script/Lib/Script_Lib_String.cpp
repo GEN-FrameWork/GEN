@@ -103,11 +103,21 @@ bool SCRIPT_LIB_STRING::AddLibraryFunctions(SCRIPT* script)
 
   this->script = script;
 
-  script->AddLibraryFunction(this, __L("AddString"), Call_AddString);
-  script->AddLibraryFunction(this, __L("FindString"), Call_FindString);
-  script->AddLibraryFunction(this, __L("CompareString"), Call_CompareString);
-  script->AddLibraryFunction(this, __L("ReplaceString"), Call_ReplaceString);
-  script->AddLibraryFunction(this, __L("SPrintf"), Call_SPrintf);
+  script->AddLibraryFunction(this, __L("AddString")       , Call_AddString);
+  script->AddLibraryFunction(this, __L("FindString")      , Call_FindString);
+  script->AddLibraryFunction(this, __L("CompareString")   , Call_CompareString);
+  script->AddLibraryFunction(this, __L("ReplaceString")   , Call_ReplaceString);
+  script->AddLibraryFunction(this, __L("ReplaceAllString"), Call_ReplaceAllString);
+  script->AddLibraryFunction(this, __L("SPrintf")         , Call_SPrintf);
+  script->AddLibraryFunction(this, __L("GetStringSize")   , Call_GetStringSize);
+  script->AddLibraryFunction(this, __L("IsEmptyString")   , Call_IsEmptyString);
+  script->AddLibraryFunction(this, __L("SubString")       , Call_SubString);
+  script->AddLibraryFunction(this, __L("SubStringFrom")   , Call_SubStringFrom);
+  script->AddLibraryFunction(this, __L("ExtractBetween")  , Call_ExtractBetween);
+  script->AddLibraryFunction(this, __L("TrimString")      , Call_TrimString);
+  script->AddLibraryFunction(this, __L("ToUpperString")   , Call_ToUpperString);
+  script->AddLibraryFunction(this, __L("ToLowerString")   , Call_ToLowerString);
+  script->AddLibraryFunction(this, __L("GetCharString")   , Call_GetCharString);
 
   return true;
 }
@@ -179,6 +189,8 @@ void Call_AddString(SCRIPT_LIB* library, SCRIPT* script, XVECTOR<XVARIANT*>* par
 * @param[in]  params : Params pointer to use.
 * @param[in]  returnvalue : Returnvalue pointer to use.
 * 
+* @note       FindString(haystack, needle, ignorecase [, startindex=0]) → index or -1
+* 
 * --------------------------------------------------------------------------------------------------------------------*/
 void Call_FindString(SCRIPT_LIB* library, SCRIPT* script, XVECTOR<XVARIANT*>* params, XVARIANT* returnvalue)
 {
@@ -195,25 +207,39 @@ void Call_FindString(SCRIPT_LIB* library, SCRIPT* script, XVECTOR<XVARIANT*>* pa
       return;
     }
 
-  XSTRING* string1    = (XSTRING*)params->Get(0)->GetData();
-  XSTRING* string2    = (XSTRING*)params->Get(1)->GetData();
-  bool     ignorecase = (bool)params->Get(2)->GetData(); 
+  XSTRING haystack;
+  XSTRING needle;
+  bool    ignorecase = false;
+  int     startindex = 0;
 
-  if(string1 && string2) 
+  if(!library->GetParamConverted(params->Get(0), haystack))
     {
-      (*returnvalue) = string1->Find(string2->Get(), ignorecase);
-    }
-   else 
-    { 
       (*returnvalue) = -1;
+      return;
     }
+
+  if(!library->GetParamConverted(params->Get(1), needle))
+    {
+      (*returnvalue) = -1;
+      return;
+    }
+
+  library->GetParamConverted(params->Get(2), ignorecase);
+
+  if(params->GetSize() >= 4)
+    {
+      library->GetParamConverted(params->Get(3), startindex);
+      if(startindex < 0) startindex = 0;
+    }
+
+  (*returnvalue) = haystack.Find(needle.Get(), ignorecase, startindex);
 }
 
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         void Call_CompareString(SCRIPT_LIB* library, SCRIPT* script, XVECTOR<XVARIANT*>* params, XVARIANT* returnvalue)
-* @brief      all_CompareString
+* @brief      Call_CompareString
 * @ingroup    SCRIPT
 * 
 * @param[in]  library : Library pointer to use.
@@ -255,7 +281,7 @@ void Call_CompareString(SCRIPT_LIB* library, SCRIPT* script, XVECTOR<XVARIANT*>*
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         void Call_ReplaceString(SCRIPT_LIB* library, SCRIPT* script, XVECTOR<XVARIANT*>* params, XVARIANT* returnvalue)
-* @brief      all_CompareString
+* @brief      Call_ReplaceString
 * @ingroup    SCRIPT
 * 
 * @param[in]  library : Library pointer to use.
@@ -290,6 +316,48 @@ void Call_ReplaceString(SCRIPT_LIB* library, SCRIPT* script, XVECTOR<XVARIANT*>*
           (*returnvalue) = (*string);
         }
     }   
+}
+
+
+/**-------------------------------------------------------------------------------------------------------------------
+* 
+* @fn         void Call_ReplaceAllString(SCRIPT_LIB* library, SCRIPT* script, XVECTOR<XVARIANT*>* params, XVARIANT* returnvalue)
+* @brief      Call_ReplaceAllString
+* @ingroup    SCRIPT
+* 
+* @param[in]  library : Library pointer to use.
+* @param[in]  script : Script pointer to use.
+* @param[in]  params : Params pointer to use.
+* @param[in]  returnvalue : Returnvalue pointer to use.
+* 
+* @note       ReplaceAllString(text, find, replace) → new string with all occurrences replaced (input not required to be mutable)
+* 
+* --------------------------------------------------------------------------------------------------------------------*/
+void Call_ReplaceAllString(SCRIPT_LIB* library, SCRIPT* script, XVECTOR<XVARIANT*>* params, XVARIANT* returnvalue)
+{
+  if((!library) || (!script) || (!params) || (!returnvalue))
+    {
+      return;
+    }
+
+  returnvalue->Set();
+
+  if(params->GetSize() < 3)
+    {
+      script->HaveError(SCRIPT_ERRORCODE_INSUF_PARAMS);
+      return;
+    }
+
+  XSTRING text;
+  XSTRING tofind;
+  XSTRING toreplace;
+
+  if(!library->GetParamConverted(params->Get(0), text))   return;
+  if(!library->GetParamConverted(params->Get(1), tofind)) return;
+  if(!library->GetParamConverted(params->Get(2), toreplace)) return;
+
+  text.Replace(tofind.Get(), toreplace.Get());
+  (*returnvalue) = text;
 }
 
 
@@ -435,4 +503,417 @@ void Call_SPrintf(SCRIPT_LIB* library, SCRIPT* script, XVECTOR<XVARIANT*>* param
 }
 
 
+/**-------------------------------------------------------------------------------------------------------------------
+* 
+* @fn         void Call_GetStringSize(SCRIPT_LIB* library, SCRIPT* script, XVECTOR<XVARIANT*>* params, XVARIANT* returnvalue)
+* @brief      Call_GetStringSize
+* @ingroup    SCRIPT
+* 
+* @note       GetStringSize(text) → length in characters
+* 
+* --------------------------------------------------------------------------------------------------------------------*/
+void Call_GetStringSize(SCRIPT_LIB* library, SCRIPT* script, XVECTOR<XVARIANT*>* params, XVARIANT* returnvalue)
+{
+  if((!library) || (!script) || (!params) || (!returnvalue))
+    {
+      return;
+    }
 
+  returnvalue->Set();
+
+  if(params->GetSize() < 1)
+    {
+      script->HaveError(SCRIPT_ERRORCODE_INSUF_PARAMS);
+      return;
+    }
+
+  XSTRING text;
+
+  if(!library->GetParamConverted(params->Get(0), text))
+    {
+      (*returnvalue) = 0;
+      return;
+    }
+
+  (*returnvalue) = (int)text.GetSize();
+}
+
+
+/**-------------------------------------------------------------------------------------------------------------------
+* 
+* @fn         void Call_IsEmptyString(SCRIPT_LIB* library, SCRIPT* script, XVECTOR<XVARIANT*>* params, XVARIANT* returnvalue)
+* @brief      Call_IsEmptyString
+* @ingroup    SCRIPT
+* 
+* @note       IsEmptyString(text) → bool
+* 
+* --------------------------------------------------------------------------------------------------------------------*/
+void Call_IsEmptyString(SCRIPT_LIB* library, SCRIPT* script, XVECTOR<XVARIANT*>* params, XVARIANT* returnvalue)
+{
+  if((!library) || (!script) || (!params) || (!returnvalue))
+    {
+      return;
+    }
+
+  returnvalue->Set();
+
+  if(params->GetSize() < 1)
+    {
+      script->HaveError(SCRIPT_ERRORCODE_INSUF_PARAMS);
+      return;
+    }
+
+  XSTRING text;
+
+  if(!library->GetParamConverted(params->Get(0), text))
+    {
+      (*returnvalue) = true;
+      return;
+    }
+
+  (*returnvalue) = text.IsEmpty();
+}
+
+
+/**-------------------------------------------------------------------------------------------------------------------
+* 
+* @fn         void Call_SubString(SCRIPT_LIB* library, SCRIPT* script, XVECTOR<XVARIANT*>* params, XVARIANT* returnvalue)
+* @brief      Call_SubString
+* @ingroup    SCRIPT
+* 
+* @note       SubString(text, start, end) → characters in [start, end). Clamps to string bounds; empty if invalid range.
+* 
+* --------------------------------------------------------------------------------------------------------------------*/
+void Call_SubString(SCRIPT_LIB* library, SCRIPT* script, XVECTOR<XVARIANT*>* params, XVARIANT* returnvalue)
+{
+  if((!library) || (!script) || (!params) || (!returnvalue))
+    {
+      return;
+    }
+
+  returnvalue->Set();
+
+  if(params->GetSize() < 3)
+    {
+      script->HaveError(SCRIPT_ERRORCODE_INSUF_PARAMS);
+      return;
+    }
+
+  XSTRING text;
+  int     start = 0;
+  int     end   = 0;
+  XSTRING result;
+
+  if(!library->GetParamConverted(params->Get(0), text))
+    {
+      (*returnvalue) = result;
+      return;
+    }
+
+  library->GetParamConverted(params->Get(1), start);
+  library->GetParamConverted(params->Get(2), end);
+
+  int size = (int)text.GetSize();
+
+  if(start < 0) start = 0;
+  if(end   < 0) end   = 0;
+  if(start > size) start = size;
+  if(end   > size) end   = size;
+
+  if(start < end)
+    {
+      text.Copy(start, end, result);
+    }
+
+  (*returnvalue) = result;
+}
+
+
+/**-------------------------------------------------------------------------------------------------------------------
+* 
+* @fn         void Call_SubStringFrom(SCRIPT_LIB* library, SCRIPT* script, XVECTOR<XVARIANT*>* params, XVARIANT* returnvalue)
+* @brief      Call_SubStringFrom
+* @ingroup    SCRIPT
+* 
+* @note       SubStringFrom(text, start) → characters from start to end of string
+* 
+* --------------------------------------------------------------------------------------------------------------------*/
+void Call_SubStringFrom(SCRIPT_LIB* library, SCRIPT* script, XVECTOR<XVARIANT*>* params, XVARIANT* returnvalue)
+{
+  if((!library) || (!script) || (!params) || (!returnvalue))
+    {
+      return;
+    }
+
+  returnvalue->Set();
+
+  if(params->GetSize() < 2)
+    {
+      script->HaveError(SCRIPT_ERRORCODE_INSUF_PARAMS);
+      return;
+    }
+
+  XSTRING text;
+  int     start = 0;
+  XSTRING result;
+
+  if(!library->GetParamConverted(params->Get(0), text))
+    {
+      (*returnvalue) = result;
+      return;
+    }
+
+  library->GetParamConverted(params->Get(1), start);
+
+  int size = (int)text.GetSize();
+
+  if(start < 0) start = 0;
+  if(start > size) start = size;
+
+  text.Copy(start, result);
+  (*returnvalue) = result;
+}
+
+
+/**-------------------------------------------------------------------------------------------------------------------
+* 
+* @fn         void Call_ExtractBetween(SCRIPT_LIB* library, SCRIPT* script, XVECTOR<XVARIANT*>* params, XVARIANT* returnvalue)
+* @brief      Call_ExtractBetween
+* @ingroup    SCRIPT
+* 
+* @note       ExtractBetween(text, startmark, endmark [, ignorecase=false [, from=0]]) → text between marks (exclusive).
+*             Empty string if either mark is missing. Marks themselves are not included.
+* 
+* --------------------------------------------------------------------------------------------------------------------*/
+void Call_ExtractBetween(SCRIPT_LIB* library, SCRIPT* script, XVECTOR<XVARIANT*>* params, XVARIANT* returnvalue)
+{
+  if((!library) || (!script) || (!params) || (!returnvalue))
+    {
+      return;
+    }
+
+  returnvalue->Set();
+
+  if(params->GetSize() < 3)
+    {
+      script->HaveError(SCRIPT_ERRORCODE_INSUF_PARAMS);
+      return;
+    }
+
+  XSTRING text;
+  XSTRING startmark;
+  XSTRING endmark;
+  bool    ignorecase = false;
+  int     from       = 0;
+  XSTRING result;
+
+  if(!library->GetParamConverted(params->Get(0), text))
+    {
+      (*returnvalue) = result;
+      return;
+    }
+
+  if(!library->GetParamConverted(params->Get(1), startmark))
+    {
+      (*returnvalue) = result;
+      return;
+    }
+
+  if(!library->GetParamConverted(params->Get(2), endmark))
+    {
+      (*returnvalue) = result;
+      return;
+    }
+
+  if(params->GetSize() >= 4)
+    {
+      library->GetParamConverted(params->Get(3), ignorecase);
+    }
+
+  if(params->GetSize() >= 5)
+    {
+      library->GetParamConverted(params->Get(4), from);
+      if(from < 0) from = 0;
+    }
+
+  int start = text.Find(startmark.Get(), ignorecase, from);
+  if(start == XSTRING_NOTFOUND)
+    {
+      (*returnvalue) = result;
+      return;
+    }
+
+  start += (int)startmark.GetSize();
+
+  int end = text.Find(endmark.Get(), ignorecase, start);
+  if(end == XSTRING_NOTFOUND)
+    {
+      (*returnvalue) = result;
+      return;
+    }
+
+  if(start < end)
+    {
+      text.Copy(start, end, result);
+    }
+
+  (*returnvalue) = result;
+}
+
+
+/**-------------------------------------------------------------------------------------------------------------------
+* 
+* @fn         void Call_TrimString(SCRIPT_LIB* library, SCRIPT* script, XVECTOR<XVARIANT*>* params, XVARIANT* returnvalue)
+* @brief      Call_TrimString
+* @ingroup    SCRIPT
+* 
+* @note       TrimString(text) → copy with leading/trailing whitespace (space, tab, CR, LF) removed
+* 
+* --------------------------------------------------------------------------------------------------------------------*/
+void Call_TrimString(SCRIPT_LIB* library, SCRIPT* script, XVECTOR<XVARIANT*>* params, XVARIANT* returnvalue)
+{
+  if((!library) || (!script) || (!params) || (!returnvalue))
+    {
+      return;
+    }
+
+  returnvalue->Set();
+
+  if(params->GetSize() < 1)
+    {
+      script->HaveError(SCRIPT_ERRORCODE_INSUF_PARAMS);
+      return;
+    }
+
+  XSTRING text;
+
+  if(!library->GetParamConverted(params->Get(0), text))
+    {
+      (*returnvalue) = text;
+      return;
+    }
+
+  text.DeleteNoCharacters(__L(" \t\r\n"), 0, XSTRINGCONTEXT_FROM_FIRST);
+  text.DeleteNoCharacters(__L(" \t\r\n"), 0, XSTRINGCONTEXT_TO_END);
+
+  (*returnvalue) = text;
+}
+
+
+/**-------------------------------------------------------------------------------------------------------------------
+* 
+* @fn         void Call_ToUpperString(SCRIPT_LIB* library, SCRIPT* script, XVECTOR<XVARIANT*>* params, XVARIANT* returnvalue)
+* @brief      Call_ToUpperString
+* @ingroup    SCRIPT
+* 
+* @note       ToUpperString(text) → uppercase copy
+* 
+* --------------------------------------------------------------------------------------------------------------------*/
+void Call_ToUpperString(SCRIPT_LIB* library, SCRIPT* script, XVECTOR<XVARIANT*>* params, XVARIANT* returnvalue)
+{
+  if((!library) || (!script) || (!params) || (!returnvalue))
+    {
+      return;
+    }
+
+  returnvalue->Set();
+
+  if(params->GetSize() < 1)
+    {
+      script->HaveError(SCRIPT_ERRORCODE_INSUF_PARAMS);
+      return;
+    }
+
+  XSTRING text;
+
+  if(!library->GetParamConverted(params->Get(0), text))
+    {
+      (*returnvalue) = text;
+      return;
+    }
+
+  text.ToUpperCase();
+  (*returnvalue) = text;
+}
+
+
+/**-------------------------------------------------------------------------------------------------------------------
+* 
+* @fn         void Call_ToLowerString(SCRIPT_LIB* library, SCRIPT* script, XVECTOR<XVARIANT*>* params, XVARIANT* returnvalue)
+* @brief      Call_ToLowerString
+* @ingroup    SCRIPT
+* 
+* @note       ToLowerString(text) → lowercase copy
+* 
+* --------------------------------------------------------------------------------------------------------------------*/
+void Call_ToLowerString(SCRIPT_LIB* library, SCRIPT* script, XVECTOR<XVARIANT*>* params, XVARIANT* returnvalue)
+{
+  if((!library) || (!script) || (!params) || (!returnvalue))
+    {
+      return;
+    }
+
+  returnvalue->Set();
+
+  if(params->GetSize() < 1)
+    {
+      script->HaveError(SCRIPT_ERRORCODE_INSUF_PARAMS);
+      return;
+    }
+
+  XSTRING text;
+
+  if(!library->GetParamConverted(params->Get(0), text))
+    {
+      (*returnvalue) = text;
+      return;
+    }
+
+  text.ToLowerCase();
+  (*returnvalue) = text;
+}
+
+
+/**-------------------------------------------------------------------------------------------------------------------
+* 
+* @fn         void Call_GetCharString(SCRIPT_LIB* library, SCRIPT* script, XVECTOR<XVARIANT*>* params, XVARIANT* returnvalue)
+* @brief      Call_GetCharString
+* @ingroup    SCRIPT
+* 
+* @note       GetCharString(text, index) → one-character string, or empty if out of range
+* 
+* --------------------------------------------------------------------------------------------------------------------*/
+void Call_GetCharString(SCRIPT_LIB* library, SCRIPT* script, XVECTOR<XVARIANT*>* params, XVARIANT* returnvalue)
+{
+  if((!library) || (!script) || (!params) || (!returnvalue))
+    {
+      return;
+    }
+
+  returnvalue->Set();
+
+  if(params->GetSize() < 2)
+    {
+      script->HaveError(SCRIPT_ERRORCODE_INSUF_PARAMS);
+      return;
+    }
+
+  XSTRING text;
+  int     index = 0;
+  XSTRING result;
+
+  if(!library->GetParamConverted(params->Get(0), text))
+    {
+      (*returnvalue) = result;
+      return;
+    }
+
+  library->GetParamConverted(params->Get(1), index);
+
+  if((index >= 0) && (index < (int)text.GetSize()) && text.Get())
+    {
+      result.Set(text.Get()[index]);
+    }
+
+  (*returnvalue) = result;
+}

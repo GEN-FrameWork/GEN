@@ -3,7 +3,7 @@
 * @file       DIOScraperWebPublicIP.cpp
 * 
 * @class      DIOSCRAPERWEBPUBLICIP
-* @brief      Data Input/Output Scraper Web Public IP class
+* @brief      Typed Public IP scraper filled by script
 * @ingroup    DATAIO
 * 
 * @copyright  EndoraSoft. All rights reserved.
@@ -30,15 +30,14 @@
 
 #include "GEN_Defines.h"
 
-
+#ifdef DIO_SCRAPERWEB_PUBLICIP_ACTIVE
 
 /*---- INCLUDES ------------------------------------------------------------------------------------------------------*/
 
 #include "DIOScraperWebPublicIP.h"
 
+#include "XFactory.h"
 #include "XThread.h"
-#include "XTrace.h"
-#include "DIOURL.h"
 
 
 
@@ -53,9 +52,8 @@
 
 
 
+
 /*---- CLASS MEMBERS -------------------------------------------------------------------------------------------------*/
-
-
 
 
 /**-------------------------------------------------------------------------------------------------------------------
@@ -91,8 +89,6 @@ DIOPUBLICIP_RESULT::~DIOPUBLICIP_RESULT()
 * @brief      Get value
 * @ingroup    DATAIO
 * 
-* @return     DIOIP* : Pointer to the requested object; NULL if it is not available.
-* 
 * --------------------------------------------------------------------------------------------------------------------*/
 DIOIP* DIOPUBLICIP_RESULT::Get()
 {
@@ -103,7 +99,7 @@ DIOIP* DIOPUBLICIP_RESULT::Get()
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         void DIOPUBLICIP_RESULT::Clean()
-* @brief      Clean the attributes of the class: Default initialize
+* @brief      Clean
 * @note       INTERNAL
 * @ingroup    DATAIO
 * 
@@ -116,18 +112,20 @@ void DIOPUBLICIP_RESULT::Clean()
 
 
 
-
-
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         DIOSCRAPERWEBPUBLICIP::DIOSCRAPERWEBPUBLICIP() : DIOSCRAPERWEB()
+* @fn         DIOSCRAPERWEBPUBLICIP::DIOSCRAPERWEBPUBLICIP()
 * @brief      Constructor of class
 * @ingroup    DATAIO
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-DIOSCRAPERWEBPUBLICIP::DIOSCRAPERWEBPUBLICIP() : DIOSCRAPERWEB()
+DIOSCRAPERWEBPUBLICIP::DIOSCRAPERWEBPUBLICIP()
 {
   Clean();
+
+  cache    = GEN_NEW DIOSCRAPERWEBCACHE();
+  xmutexdo = GEN_XFACTORY.Create_Mutex();
+  scriptpath = DIOSCRAPERWEBPUBLICIP_SCRIPTPATH;
 }
 
 
@@ -141,6 +139,17 @@ DIOSCRAPERWEBPUBLICIP::DIOSCRAPERWEBPUBLICIP() : DIOSCRAPERWEB()
 * --------------------------------------------------------------------------------------------------------------------*/
 DIOSCRAPERWEBPUBLICIP::~DIOSCRAPERWEBPUBLICIP()
 {
+  if(cache)
+    {
+      cache->DeleteAll();
+      GEN_DELETE cache;
+    }
+
+  if(xmutexdo)
+    {
+      GEN_XFACTORY.Delete_Mutex(xmutexdo);
+    }
+
   Clean();
 }
 
@@ -148,15 +157,8 @@ DIOSCRAPERWEBPUBLICIP::~DIOSCRAPERWEBPUBLICIP()
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         bool DIOSCRAPERWEBPUBLICIP::Get(DIOIP& IP, int timeoutforurl, XSTRING* localIP, bool usecache)
-* @brief      Get value
+* @brief      Get public IP via scraper script
 * @ingroup    DATAIO
-* 
-* @param[in]  IP : IP address to use.
-* @param[in]  timeoutforurl : Timeoutforurl value.
-* @param[in]  localIP : Local IP pointer to use.
-* @param[in]  usecache : Usecache value.
-* 
-* @return     bool : true if the operation is successful; otherwise false.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
 bool DIOSCRAPERWEBPUBLICIP::Get(DIOIP& IP, int timeoutforurl, XSTRING* localIP, bool usecache)
@@ -166,8 +168,8 @@ bool DIOSCRAPERWEBPUBLICIP::Get(DIOIP& IP, int timeoutforurl, XSTRING* localIP, 
 
   if(xmutexdo) xmutexdo->Lock();
 
-  publicIPID = __L("public IP ID");
-  
+  publicIPID = DIOSCRAPERWEBPUBLICIP_CACHEASK;
+
   if(usecache && cache)
     {
       DIOPUBLICIP_RESULT* publicIPresult = (DIOPUBLICIP_RESULT*)cache->Get(publicIPID);
@@ -176,42 +178,47 @@ bool DIOSCRAPERWEBPUBLICIP::Get(DIOIP& IP, int timeoutforurl, XSTRING* localIP, 
           XSTRING IPstring;
 
           publicIPresult->Get()->GetXString(IPstring);
-
           IP.Set(IPstring.Get());
 
           if(xmutexdo) xmutexdo->UnLock();
-
           return true;
         }
     }
 
-  if(Load(DIOSCRAPERWEBPUBLICIP_NAMEFILE))
-    {      
-      if(Do(DIOSCRAPERWEBPUBLICIP_NAMESERVICE, timeoutforurl, localIP))
+  DIOSCRAPERSCRIPT runner;
+
+  runner.SetArgInt(__L("timeout"), timeoutforurl);
+  if(localIP && (!localIP->IsEmpty()))
+    {
+      runner.SetArg(__L("localIP"), (*localIP));
+    }
+
+  if(runner.Run(scriptpath.Get()))
+    {
+      XSTRING ok;
+      XSTRING stringIP;
+
+      runner.GetResult(__L("ok"), ok);
+      runner.GetResult(__L("ip"), stringIP);
+
+      if((ok.Compare(__L("1")) == 0) && (!stringIP.IsEmpty()))
         {
-          XSTRING stringIP;
-
-          stringIP = GetValue(__L("IP"));
-
+          stringIP.DeleteCharacter(0x20);
           if(!stringIP.IsEmpty())
             {
-              stringIP.DeleteCharacter(0x20);
-              if(!stringIP.IsEmpty())
-                {       
-                  IP.Set(stringIP);
+              IP.Set(stringIP);
 
-                  if(usecache)
+              if(usecache && cache)
+                {
+                  DIOPUBLICIP_RESULT* publicIPresult = GEN_NEW DIOPUBLICIP_RESULT();
+                  if(publicIPresult)
                     {
-                      DIOPUBLICIP_RESULT* publicIPresult = GEN_NEW DIOPUBLICIP_RESULT();
-                      if(publicIPresult)
-                        {
-                          publicIPresult->Get()->Set(stringIP.Get());
-                          cache->Add(publicIPID, publicIPresult);
-                        }
+                      publicIPresult->Get()->Set(stringIP.Get());
+                      cache->Add(publicIPID, publicIPresult);
                     }
-
-                  status = true;
                 }
+
+              status = true;
             }
         }
     }
@@ -224,18 +231,45 @@ bool DIOSCRAPERWEBPUBLICIP::Get(DIOIP& IP, int timeoutforurl, XSTRING* localIP, 
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
+* @fn         bool DIOSCRAPERWEBPUBLICIP::SetScriptPath(XCHAR* relativescriptpath)
+* @brief      SetScriptPath
+* @ingroup    DATAIO
+* 
+* --------------------------------------------------------------------------------------------------------------------*/
+bool DIOSCRAPERWEBPUBLICIP::SetScriptPath(XCHAR* relativescriptpath)
+{
+  if((!relativescriptpath) || (!relativescriptpath[0])) return false;
+
+  scriptpath = relativescriptpath;
+  return true;
+}
+
+
+/**-------------------------------------------------------------------------------------------------------------------
+* 
+* @fn         XCHAR* DIOSCRAPERWEBPUBLICIP::GetScriptPath()
+* @brief      GetScriptPath
+* @ingroup    DATAIO
+* 
+* --------------------------------------------------------------------------------------------------------------------*/
+XCHAR* DIOSCRAPERWEBPUBLICIP::GetScriptPath()
+{
+  return scriptpath.Get();
+}
+
+
+/**-------------------------------------------------------------------------------------------------------------------
+* 
 * @fn         void DIOSCRAPERWEBPUBLICIP::Clean()
-* @brief      Clean the attributes of the class: Default initialize
+* @brief      Clean
 * @note       INTERNAL
 * @ingroup    DATAIO
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
 void DIOSCRAPERWEBPUBLICIP::Clean()
 {
-
+  cache    = NULL;
+  xmutexdo = NULL;
 }
 
-
-
-
-
+#endif

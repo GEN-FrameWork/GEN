@@ -74,6 +74,7 @@ enum APPFLOWBASE_MODE_TYPE
 #define APPFLOW_DEFAULT_DIRECTORY_SOUNDS          __L("sounds")
 #define APPFLOW_DEFAULT_DIRECTORY_FONTS           __L("fonts")
 #define APPFLOW_DEFAULT_DIRECTORY_SCRIPTS         __L("scripts")
+#define APPFLOW_DEFAULT_DIRECTORY_SCRAPERS        __L("scripts/scrapers")
 #define APPFLOW_DEFAULT_DIRECTORY_FIRMWARE        __L("firmware")
 #define APPFLOW_DEFAULT_DIRECTORY_CERTIFICATES    __L("certificates")
 

@@ -3,7 +3,7 @@
 * @file       DIOScraperWebTranslation.h
 * 
 * @class      DIOSCRAPERWEBTRANSLATION
-* @brief      Data Input/Output Scraper Web Translation class
+* @brief      Typed Translation scraper filled by script (not XML)
 * @ingroup    DATAIO
 * 
 * @copyright  EndoraSoft. All rights reserved.
@@ -28,69 +28,74 @@
 
 #pragma once
 
+#ifdef DIO_SCRAPERWEB_TRANSLATION_ACTIVE
+
 /*---- INCLUDES ------------------------------------------------------------------------------------------------------*/
 
-#include "XTranslation.h"
+#include "XString.h"
 
-#include "DIOIP.h"
-#include "DIOURL.h"
-#include "DIOScraperWeb.h"
+#include "DIOScraperWebCache.h"
+#include "DIOScraperScript.h"
 
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
 
-#define DIOSCRAPERWEBTRANSLATION_NAMEFILE       __L("ws_translation.xml")
-#define DIOSCRAPERWEBTRANSLATION_NAMESERVICE    __L("TRANSLATION")
-
-#define XLANGUAGE_CODE                          XLANGUAGE_ISO_639_3_CODE
-
+#define DIOSCRAPERWEBTRANSLATION_SCRIPTPATH    __L("translation.g")
+#define DIOSCRAPERWEBTRANSLATION_MAXTIMEOUT    DIOSCRAPERSCRIPT_DEFAULT_TIMEOUT
 
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
 
+class XMUTEX;
 
-class DIOTRANSLATION_RESULT :  public DIOSCRAPERWEBCACHE_RESULT
+class DIOTRANSLATION_RESULT : public DIOSCRAPERWEBCACHE_RESULT
 {
   public:
-                            DIOTRANSLATION_RESULT           ();
-    virtual                ~DIOTRANSLATION_RESULT           ();
 
-    XLANGUAGE_CODE          GetLanguageTextCode             ();
-    bool                    SetLanguageTextCode             (XLANGUAGE_CODE code);
+                            DIOTRANSLATION_RESULT             ();
+    virtual                ~DIOTRANSLATION_RESULT             ();
 
-    XLANGUAGE_CODE          GetLanguageTranslationCode      ();
-    bool                    SetLanguageTranslationCode      (XLANGUAGE_CODE code);
+    XCHAR*                  GetSourceLanguage                 ();
+    XCHAR*                  GetTargetLanguage                 ();
+    XCHAR*                  GetTranslation                    ();
 
-    XSTRING*                GetTranslation                  ();
+    bool                    IsEmpty                           ();
+
+    virtual bool            CopyFrom                          (DIOSCRAPERWEBCACHE_RESULT* result);
+    virtual bool            CopyTo                            (DIOSCRAPERWEBCACHE_RESULT* result);
+
+    bool                    Set                               (XSTRING& sourcelanguage, XSTRING& targetlanguage, XSTRING& translation);
+    bool                    Set                               (XCHAR* sourcelanguage, XCHAR* targetlanguage, XCHAR* translation);
 
   private:
 
-    void                    Clean                           ();
+    void                    Clean                             ();
 
-    XLANGUAGE_CODE          languagetextcode;
-    XLANGUAGE_CODE          languagetranslationcode;
+    XSTRING                 sourcelanguage;
+    XSTRING                 targetlanguage;
     XSTRING                 translation;
 };
 
 
-class DIOSCRAPERWEBTRANSLATION : public DIOSCRAPERWEB
+class DIOSCRAPERWEBTRANSLATION
 {
   public:
-                            DIOSCRAPERWEBTRANSLATION        ();
-    virtual                ~DIOSCRAPERWEBTRANSLATION        ();
+                            DIOSCRAPERWEBTRANSLATION          ();
+    virtual                ~DIOSCRAPERWEBTRANSLATION          ();
 
-    bool                    ChangeURL                       (XCHAR* maskurl, DIOURL& url);
+    bool                    Get                               (XCHAR* text, XCHAR* sourcelanguage, XCHAR* targetlanguage, DIOTRANSLATION_RESULT& result, int timeoutforurl = DIOSCRAPERWEBTRANSLATION_MAXTIMEOUT, XSTRING* localIP = NULL, bool usecache = true);
+    bool                    Get                               (XSTRING& text, XSTRING& sourcelanguage, XSTRING& targetlanguage, DIOTRANSLATION_RESULT& result, int timeoutforurl = DIOSCRAPERWEBTRANSLATION_MAXTIMEOUT, XSTRING* localIP = NULL, bool usecache = true);
+    bool                    Get                               (XCHAR* text, XCHAR* sourcelanguage, XCHAR* targetlanguage, XSTRING& translation, int timeoutforurl = DIOSCRAPERWEBTRANSLATION_MAXTIMEOUT, XSTRING* localIP = NULL, bool usecache = true);
+    bool                    Get                               (XSTRING& text, XSTRING& sourcelanguage, XSTRING& targetlanguage, XSTRING& translation, int timeoutforurl = DIOSCRAPERWEBTRANSLATION_MAXTIMEOUT, XSTRING* localIP = NULL, bool usecache = true);
 
-    bool                    Get                             (XCHAR* text, XLANGUAGE_CODE languagetextcode, XLANGUAGE_CODE languagetranslationcode, XSTRING& translation, int timeoutforurl = DIOSCRAPERWEB_MAXTIMEOUTFORURL, XSTRING* localIP = NULL, bool usecache = true);
-    bool                    Get                             (XSTRING& text, XLANGUAGE_CODE languagetextcode, XLANGUAGE_CODE languagetranslationcode, XSTRING& translation, int timeoutforurl = DIOSCRAPERWEB_MAXTIMEOUTFORURL, XSTRING* localIP = NULL, bool usecache = true);
+    bool                    SetScriptPath                     (XCHAR* relativescriptpath);
+    XCHAR*                  GetScriptPath                     ();
 
   private:
 
-    bool                    GoogleLanguageCode              (XLANGUAGE_CODE languagecode, XSTRING& googlecode);
+    void                    Clean                             ();
 
-    void                    Clean                           ();
-
-    XSTRING                 text;
-    XLANGUAGE_CODE          languagetextcode;
-    XLANGUAGE_CODE          languagetranslationcode;
+    DIOSCRAPERWEBCACHE*     cache;
+    XMUTEX*                 xmutexdo;
+    XSTRING                 scriptpath;
 };
 
 
@@ -98,7 +103,4 @@ class DIOSCRAPERWEBTRANSLATION : public DIOSCRAPERWEB
 
 /*---- INLINE FUNCTIONS + PROTOTYPES ---------------------------------------------------------------------------------*/
 
-
-
-
-
+#endif

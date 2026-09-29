@@ -78,6 +78,7 @@
 #include "Script_Lib_Window.h"
 #include "Script_Lib_InputSimulate.h"
 #include "Script_Lib_DevTest.h"
+#include "Script_Lib_WebClient.h"
 
 
 
@@ -1010,7 +1011,7 @@ bool SCRIPT::AddInternalLibraries()
 {  
   SCRIPT_LIB* lib;
 
-  for(int c=0; c<15; c++)
+  for(int c=0; c<16; c++)
     {
       lib = NULL;
 
@@ -1069,6 +1070,11 @@ bool SCRIPT::AddInternalLibraries()
           case 14 :
                     #ifdef SCRIPT_LIB_DEVTEST_ACTIVE
                     lib = GEN_NEW SCRIPT_LIB_DEVTEST();        
+                    #endif
+                    break;
+          case 15 :
+                    #if defined(SCRIPT_LIB_WEBCLIENT_ACTIVE) && !defined(SCRIPT_LIB_SANDBOX_ACTIVE)
+                    lib = GEN_NEW SCRIPT_LIB_WEBCLIENT();
                     #endif
                     break;
         } 
@@ -1218,7 +1224,7 @@ bool SCRIPT::ResolvePathInScriptsRoot(XCHAR* namescript, XPATH& resolvedpath)
         }
     }
 
-  if(!GEN_XPATHSMANAGER.GetPathOfSection(XPATHSMANAGERSECTIONTYPE_SCRIPTS, resolvedpath)) return false;
+  if(!GEN_XPATHSMANAGER.GetPathOfSection(XPATHSMANAGERSECTIONTYPE_SCRAPERS, resolvedpath)) return false;
 
   resolvedpath.Slash_Normalize(false);
   resolvedpath.Slash_Delete();

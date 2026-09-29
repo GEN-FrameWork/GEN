@@ -30,12 +30,13 @@
 
 #include "GEN_Defines.h"
 
-
+#ifdef DIO_SCRAPERWEB_GEOLOCATIONIP_ACTIVE
 
 /*---- INCLUDES ------------------------------------------------------------------------------------------------------*/
 
 #include "DIOScraperWebGeolocationIP.h"
 
+#include "XFactory.h"
 #include "XThread.h"
 
 
@@ -370,17 +371,18 @@ void DIOGEOLOCATIONIP_RESULT::Clean()
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         DIOSCRAPERWEBGEOLOCATIONIP::DIOSCRAPERWEBGEOLOCATIONIP(DIOWEBCLIENT* webclient): DIOSCRAPERWEB()
+* @fn         DIOSCRAPERWEBGEOLOCATIONIP::DIOSCRAPERWEBGEOLOCATIONIP()
 * @brief      Constructor of class
 * @ingroup    DATAIO
 * 
-* 
-* @param[in]  webclient : Web client (optional).
-* 
 * --------------------------------------------------------------------------------------------------------------------*/
-DIOSCRAPERWEBGEOLOCATIONIP::DIOSCRAPERWEBGEOLOCATIONIP(DIOWEBCLIENT* webclient): DIOSCRAPERWEB()
+DIOSCRAPERWEBGEOLOCATIONIP::DIOSCRAPERWEBGEOLOCATIONIP()
 {
   Clean();
+
+  cache      = GEN_NEW DIOSCRAPERWEBCACHE();
+  xmutexdo   = GEN_XFACTORY.Create_Mutex();
+  scriptpath = DIOSCRAPERWEBGEOLOCATIONIP_SCRIPTPATH;
 }
 
 
@@ -394,31 +396,18 @@ DIOSCRAPERWEBGEOLOCATIONIP::DIOSCRAPERWEBGEOLOCATIONIP(DIOWEBCLIENT* webclient):
 * --------------------------------------------------------------------------------------------------------------------*/
 DIOSCRAPERWEBGEOLOCATIONIP::~DIOSCRAPERWEBGEOLOCATIONIP()
 {
+  if(cache)
+    {
+      cache->DeleteAll();
+      GEN_DELETE cache;
+    }
+
+  if(xmutexdo)
+    {
+      GEN_XFACTORY.Delete_Mutex(xmutexdo);
+    }
+
   Clean();
-}
-
-
-/**-------------------------------------------------------------------------------------------------------------------
-* 
-* @fn         bool DIOSCRAPERWEBGEOLOCATIONIP::ChangeURL(XCHAR* maskurl, DIOURL& url)
-* @brief      Change URL
-* @ingroup    DATAIO
-* 
-* @param[in]  maskurl : Maskurl pointer to use.
-* @param[in]  url : URL to use.
-* 
-* @return     bool : true if the operation is successful; otherwise false.
-* 
-* --------------------------------------------------------------------------------------------------------------------*/
-bool DIOSCRAPERWEBGEOLOCATIONIP::ChangeURL(XCHAR* maskurl, DIOURL& url)
-{
-  XSTRING IPstring;
-
-  IP.GetXString(IPstring);
-
-  url.Format(maskurl, IPstring.Get());
-
-  return true;
 }
 
 
@@ -427,14 +416,6 @@ bool DIOSCRAPERWEBGEOLOCATIONIP::ChangeURL(XCHAR* maskurl, DIOURL& url)
 * @fn         bool DIOSCRAPERWEBGEOLOCATIONIP::Get(XCHAR* IP, DIOGEOLOCATIONIP_RESULT& geolocationIPresult, int timeoutforurl, XSTRING* localIP, bool usecache)
 * @brief      Get value
 * @ingroup    DATAIO
-* 
-* @param[in]  IP : IP address to use.
-* @param[in]  geolocationIPresult : Output geolocation i presult.
-* @param[in]  timeoutforurl : Timeoutforurl value.
-* @param[in]  localIP : Local IP pointer to use.
-* @param[in]  usecache : Usecache value.
-* 
-* @return     bool : true if the operation is successful; otherwise false.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
 bool DIOSCRAPERWEBGEOLOCATIONIP::Get(XCHAR* IP, DIOGEOLOCATIONIP_RESULT& geolocationIPresult, int timeoutforurl, XSTRING* localIP, bool usecache)
@@ -453,14 +434,6 @@ bool DIOSCRAPERWEBGEOLOCATIONIP::Get(XCHAR* IP, DIOGEOLOCATIONIP_RESULT& geoloca
 * @brief      Get value
 * @ingroup    DATAIO
 * 
-* @param[in]  IP : IP address to use.
-* @param[in]  geolocationIPresult : Output geolocation i presult.
-* @param[in]  timeoutforurl : Timeoutforurl value.
-* @param[in]  localIP : Local IP pointer to use.
-* @param[in]  usecache : Usecache value.
-* 
-* @return     bool : true if the operation is successful; otherwise false.
-* 
 * --------------------------------------------------------------------------------------------------------------------*/
 bool DIOSCRAPERWEBGEOLOCATIONIP::Get(XSTRING& IP, DIOGEOLOCATIONIP_RESULT& geolocationIPresult, int timeoutforurl, XSTRING* localIP, bool usecache)
 {
@@ -471,32 +444,21 @@ bool DIOSCRAPERWEBGEOLOCATIONIP::Get(XSTRING& IP, DIOGEOLOCATIONIP_RESULT& geolo
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         bool DIOSCRAPERWEBGEOLOCATIONIP::Get(DIOIP& IP, DIOGEOLOCATIONIP_RESULT& geolocationIPresult, int timeoutforurl, XSTRING* localIP, bool usecache)
-* @brief      Get value
+* @brief      Get value via scraper script
 * @ingroup    DATAIO
-* 
-* @param[in]  IP : IP address to use.
-* @param[in]  geolocationIPresult : Output geolocation i presult.
-* @param[in]  timeoutforurl : Timeoutforurl value.
-* @param[in]  localIP : Local IP pointer to use.
-* @param[in]  usecache : Usecache value.
-* 
-* @return     bool : true if the operation is successful; otherwise false.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
 bool DIOSCRAPERWEBGEOLOCATIONIP::Get(DIOIP& IP, DIOGEOLOCATIONIP_RESULT& geolocationIPresult, int timeoutforurl, XSTRING* localIP, bool usecache)
 {
-  bool status = false;
+  bool    status = false;
+  XSTRING IPstring;
 
   if(xmutexdo) xmutexdo->Lock();
 
-  this->IP.Set(IP.Get());
+  IP.GetXString(IPstring);
 
-  if(usecache)
+  if(usecache && cache)
     {
-      XSTRING IPstring;
-
-      IP.GetXString(IPstring);
-
       DIOGEOLOCATIONIP_RESULT* geoIPresult = (DIOGEOLOCATIONIP_RESULT*)cache->Get(IPstring);
       if(geoIPresult)
         {
@@ -507,45 +469,52 @@ bool DIOSCRAPERWEBGEOLOCATIONIP::Get(DIOIP& IP, DIOGEOLOCATIONIP_RESULT& geoloca
         }
     }
 
-  if(Load(DIOSCRAPERWEBGEOLOCATIONIP_NAMEFILE))
+  DIOSCRAPERSCRIPT runner;
+
+  runner.SetArg(__L("ip"), IPstring);
+  runner.SetArgInt(__L("timeout"), timeoutforurl);
+  if(localIP && (!localIP->IsEmpty()))
     {
-      if(Do(DIOSCRAPERWEBGEOLOCATIONIP_NAMESERVICE, timeoutforurl, localIP))
-       {
-          XSTRING           country;
-          XSTRING           state;
-          XSTRING           city;
-          XSTRING           ISP;
-          XSTRING           organization;
-          double            latitude  = 0;
-          double            longitude = 0;
-          XSTRING           string;
+      runner.SetArg(__L("localIP"), (*localIP));
+    }
 
-          country       = GetValue(__L("COUNTRY"));
-          state         = GetValue(__L("STATE"));
-          city          = GetValue(__L("CITY"));
-          ISP           = GetValue(__L("ISP"));
-          organization  = GetValue(__L("ORGANIZATION"));
+  if(runner.Run(scriptpath.Get()))
+    {
+      XSTRING ok;
+      XSTRING country;
+      XSTRING state;
+      XSTRING city;
+      XSTRING ISP;
+      XSTRING organization;
+      XSTRING latitude;
+      XSTRING longitude;
+      float   lat = 0.0f;
+      float   lon = 0.0f;
 
-          string        = GetValue(__L("LATITUDE"));
-          if(!string.IsEmpty()) string.UnFormat(__L("%f"), &latitude);
+      runner.GetResult(__L("ok"), ok);
+      runner.GetResult(__L("country"), country);
+      runner.GetResult(__L("state"), state);
+      runner.GetResult(__L("city"), city);
+      runner.GetResult(__L("isp"), ISP);
+      runner.GetResult(__L("organization"), organization);
+      runner.GetResult(__L("latitude"), latitude);
+      runner.GetResult(__L("longitude"), longitude);
 
-          string  = GetValue(__L("LONGITUDE"));
-          if(!string.IsEmpty()) string.UnFormat(__L("%f"), &longitude);
+      if(!latitude.IsEmpty())  latitude.UnFormat(__L("%f"), &lat);
+      if(!longitude.IsEmpty()) longitude.UnFormat(__L("%f"), &lon);
 
+      if(ok.Compare(__L("1")) == 0)
+        {
           geolocationIPresult.Set(country, state, city, ISP, organization);
-          geolocationIPresult.Set((float)latitude, (float)longitude);
+          geolocationIPresult.Set(lat, lon);
 
           if(!geolocationIPresult.IsEmpty())
             {
-              if(usecache)
+              if(usecache && cache)
                 {
                   DIOGEOLOCATIONIP_RESULT* geoIPresult = GEN_NEW DIOGEOLOCATIONIP_RESULT();
                   if(geoIPresult)
                     {
-                      XSTRING IPstring;
-
-                      IP.GetXString(IPstring);
-
                       geoIPresult->CopyFrom(&geolocationIPresult);
                       cache->Add(IPstring, geoIPresult);
                     }
@@ -564,16 +533,48 @@ bool DIOSCRAPERWEBGEOLOCATIONIP::Get(DIOIP& IP, DIOGEOLOCATIONIP_RESULT& geoloca
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
+* @fn         bool DIOSCRAPERWEBGEOLOCATIONIP::SetScriptPath(XCHAR* relativescriptpath)
+* @brief      SetScriptPath
+* @ingroup    DATAIO
+* 
+* --------------------------------------------------------------------------------------------------------------------*/
+bool DIOSCRAPERWEBGEOLOCATIONIP::SetScriptPath(XCHAR* relativescriptpath)
+{
+  if((!relativescriptpath) || (!relativescriptpath[0])) return false;
+
+  scriptpath = relativescriptpath;
+  return true;
+}
+
+
+/**-------------------------------------------------------------------------------------------------------------------
+* 
+* @fn         XCHAR* DIOSCRAPERWEBGEOLOCATIONIP::GetScriptPath()
+* @brief      GetScriptPath
+* @ingroup    DATAIO
+* 
+* --------------------------------------------------------------------------------------------------------------------*/
+XCHAR* DIOSCRAPERWEBGEOLOCATIONIP::GetScriptPath()
+{
+  return scriptpath.Get();
+}
+
+
+/**-------------------------------------------------------------------------------------------------------------------
+* 
 * @fn         void DIOSCRAPERWEBGEOLOCATIONIP::Clean()
-* @brief      Clean the attributes of the class: Default initialize
+* @brief      Clean
 * @note       INTERNAL
 * @ingroup    DATAIO
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
 void DIOSCRAPERWEBGEOLOCATIONIP::Clean()
 {
-
+  cache    = NULL;
+  xmutexdo = NULL;
 }
+
+#endif
 
 
 
