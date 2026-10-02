@@ -773,6 +773,11 @@ bool SCRIPT_LNG_G_VAR::ConvertFromXVariant(XVARIANT& variant)
       case XVARIANT_TYPE_TIME           :
       case XVARIANT_TYPE_DATETIME       : return false;
 
+      case XVARIANT_TYPE_MULTIPLE       : { XVARIANT* first = variant.Multiple_Get(0);
+                                            if(!first) break;
+                                            return ConvertFromXVariant(*first);
+                                          }
+
                               default   : break;
     }
  
@@ -1195,12 +1200,38 @@ bool SCRIPT_LNG_G::DeleteCommands()
 * --------------------------------------------------------------------------------------------------------------------*/
 int SCRIPT_LNG_G::GetFuncParams(SCRIPT_LNG_G_VAR* params)
 {
+  return GetFuncParams(params, NULL);
+}
+
+
+/**-------------------------------------------------------------------------------------------------------------------
+* 
+* @fn         int SCRIPT_LNG_G::GetFuncParams(SCRIPT_LNG_G_VAR* params, XSTRING* outnames)
+* @brief      Get func params (optional out-param variable names)
+* @ingroup    SCRIPT
+* 
+* @param[in]  params : Params pointer to use.
+* @param[out] outnames : Optional array of SCRIPT_LNG_G_NUMPARAMS names for simple variable lvalues.
+* 
+* @return     int : Requested value.
+* 
+* --------------------------------------------------------------------------------------------------------------------*/
+int SCRIPT_LNG_G::GetFuncParams(SCRIPT_LNG_G_VAR* params, XSTRING* outnames)
+{
   int count = 0;
 
   if(!params)
     {
       HaveError(SCRIPT_ERRORCODE_INTERNALERROR);
       return count;
+    }
+
+  if(outnames)
+    {
+      for(int c=0; c<SCRIPT_LNG_G_NUMPARAMS; c++)
+        {
+          outnames[c].Empty();
+        }
     }
 
   GetToken();
@@ -1227,37 +1258,58 @@ int SCRIPT_LNG_G::GetFuncParams(SCRIPT_LNG_G_VAR* params)
           return count;
         }
 
-      SCRIPT_LNG_G_VAR* param = GEN_NEW SCRIPT_LNG_G_VAR();
-      if(param)
+      XCHAR* saveip = ipprg;
+      bool   isout  = false;
+
+      GetToken();
+      if((tokentype == SCRIPT_LNG_G_TOKENTYPES_IDENTIFIER) && IsVariable(currenttoken))
         {
-          EvalExp((*param));
-
-          if(errorcode != SCRIPT_ERRORCODE_NONE)
-            {
-              GEN_DELETE param;
-              return count;
-            }
-
-          params[count].Set(param);
-
-          /*  
-          if(param->IsReturnValue())
-                 params[count].SetHaveReservedSize(true);
-            else params[count].SetHaveReservedSize(false);
-          */
+          XSTRING name = currenttoken;
 
           GetToken();
-
-          count++;
-
-          param->SetHaveReservedSize(false);
-
-          GEN_DELETE param;
+          if((currenttoken[0] == __C(',')) || (currenttoken[0] == __C(')')))
+            {
+              SCRIPT_LNG_G_VAR* var = FindVariable(name.Get());
+              if(var)
+                {
+                  params[count].Set(var);
+                  if(outnames) outnames[count] = name;
+                  isout = true;
+                  count++;
+                }
+            }
         }
-       else
+
+      if(!isout)
         {
-          HaveError(SCRIPT_ERRORCODE_INTERNALERROR);
-          return count;
+          ipprg = saveip;
+
+          SCRIPT_LNG_G_VAR* param = GEN_NEW SCRIPT_LNG_G_VAR();
+          if(param)
+            {
+              EvalExp((*param));
+
+              if(errorcode != SCRIPT_ERRORCODE_NONE)
+                {
+                  GEN_DELETE param;
+                  return count;
+                }
+
+              params[count].Set(param);
+
+              GetToken();
+
+              count++;
+
+              param->SetHaveReservedSize(false);
+
+              GEN_DELETE param;
+            }
+           else
+            {
+              HaveError(SCRIPT_ERRORCODE_INTERNALERROR);
+              return count;
+            }
         }
 
     } while(currenttoken[0] == __C(','));
@@ -1669,6 +1721,102 @@ void SCRIPT_LNG_G::EvalExp0(SCRIPT_LNG_G_VAR& value)
 
            GetToken();
 
+           // Multi-assign: a, b, c = f()  (uses lastreturnmultiple when RHS is MULTIPLE)
+           if(currenttoken[0] == __C(','))
+             {
+               XVECTOR<XSTRING*> lhsnames;
+               XSTRING*          firstname = GEN_NEW XSTRING();
+
+               if(!firstname)
+                 {
+                   HaveError(SCRIPT_ERRORCODE_INTERNALERROR);
+                   return;
+                 }
+
+               (*firstname) = tempttoken;
+               lhsnames.Add(firstname);
+
+               while(currenttoken[0] == __C(','))
+                 {
+                   GetToken();
+
+                   if(tokentype != SCRIPT_LNG_G_TOKENTYPES_IDENTIFIER)
+                     {
+                       lhsnames.DeleteContents();
+                       lhsnames.DeleteAll();
+                       HaveError(SCRIPT_LNG_G_ERRORCODE_NOT_VAR);
+                       return;
+                     }
+
+                   if(!IsVariable(currenttoken))
+                     {
+                       lhsnames.DeleteContents();
+                       lhsnames.DeleteAll();
+                       HaveError(SCRIPT_LNG_G_ERRORCODE_NOT_VAR);
+                       return;
+                     }
+
+                   XSTRING* name = GEN_NEW XSTRING();
+                   if(!name)
+                     {
+                       lhsnames.DeleteContents();
+                       lhsnames.DeleteAll();
+                       HaveError(SCRIPT_ERRORCODE_INTERNALERROR);
+                       return;
+                     }
+
+                   (*name) = currenttoken;
+                   lhsnames.Add(name);
+                   GetToken();
+                 }
+
+               if(currenttoken[0] != __C('='))
+                 {
+                   lhsnames.DeleteContents();
+                   lhsnames.DeleteAll();
+                   HaveError(SCRIPT_LNG_G_ERRORCODE_SYNTAX);
+                   return;
+                 }
+
+               GetToken();
+               lastreturnmultiple.Destroy();
+               EvalExp0(value);
+
+               if(lastreturnmultiple.GetType() == XVARIANT_TYPE_MULTIPLE)
+                 {
+                   XDWORD nret = lastreturnmultiple.Multiple_GetSize();
+
+                   for(XDWORD i=0; i<lhsnames.GetSize(); i++)
+                     {
+                       SCRIPT_LNG_G_VAR itemvalue;
+
+                       if(i < nret)
+                         {
+                           XVARIANT* item = lastreturnmultiple.Multiple_Get(i);
+                           if(item) itemvalue.ConvertFromXVariant(*item);
+                         }
+
+                       AssignVariable(lhsnames.Get(i)->Get(), itemvalue);
+                     }
+                 }
+                else
+                 {
+                   AssignVariable(lhsnames.Get(0)->Get(), value);
+
+                   for(XDWORD i=1; i<lhsnames.GetSize(); i++)
+                     {
+                       SCRIPT_LNG_G_VAR zerovalue;
+                       zerovalue.SetType(SCRIPT_LNG_G_TOKENIREPS_INT);
+                       zerovalue.SetValueInteger(0);
+                       AssignVariable(lhsnames.Get(i)->Get(), zerovalue);
+                     }
+                 }
+
+               lhsnames.DeleteContents();
+               lhsnames.DeleteAll();
+               return;
+             }
+
            if(currenttoken[0] == __C('='))
              {
                GetToken();
@@ -1691,6 +1839,7 @@ void SCRIPT_LNG_G::EvalExp0(SCRIPT_LNG_G_VAR& value)
                  }
                 else
                  {
+                   lastreturnmultiple.Destroy();
                    EvalExp0(value);
                    AssignVariable(tempttoken.Get(), value);
                  }
@@ -2198,8 +2347,9 @@ void SCRIPT_LNG_G::Atom(SCRIPT_LNG_G_VAR& value)
                                                           XVECTOR<XVARIANT*>  funcparams;
                                                           XVARIANT            funcreturnvalue;
                                                           SCRIPT_LNG_G_VAR    params[SCRIPT_LNG_G_NUMPARAMS];
+                                                          XSTRING             outnames[SCRIPT_LNG_G_NUMPARAMS];
                                                        
-                                                          int nparams = GetFuncParams(params);
+                                                          int nparams = GetFuncParams(params, outnames);
                                                           if(errorcode != SCRIPT_ERRORCODE_NONE)
                                                             {
                                                               return;
@@ -2217,7 +2367,38 @@ void SCRIPT_LNG_G::Atom(SCRIPT_LNG_G_VAR& value)
                                                           
                                                           (*function->GetFunctionLibrary())(function->GetLibrary(), this, &funcparams, &funcreturnvalue);
 
-                                                          value.ConvertFromXVariant(funcreturnvalue);
+                                                          for(int c=0; c<nparams; c++)
+                                                            {
+                                                              if(outnames[c].IsEmpty()) continue;
+
+                                                              XVARIANT* variant = funcparams.Get(c);
+                                                              if(!variant) continue;
+
+                                                              SCRIPT_LNG_G_VAR outvalue;
+                                                              outvalue.ConvertFromXVariant(*variant);
+                                                              AssignVariable(outnames[c].Get(), outvalue);
+                                                            }
+
+                                                          if(funcreturnvalue.GetType() == XVARIANT_TYPE_MULTIPLE)
+                                                            {
+                                                              lastreturnmultiple = funcreturnvalue;
+
+                                                              XVARIANT* first = funcreturnvalue.Multiple_Get(0);
+                                                              if(first)
+                                                                {
+                                                                  value.ConvertFromXVariant(*first);
+                                                                }
+                                                               else
+                                                                {
+                                                                  value.Clear();
+                                                                }
+                                                            }
+                                                           else
+                                                            {
+                                                              lastreturnmultiple.Destroy();
+                                                              value.ConvertFromXVariant(funcreturnvalue);
+                                                            }
+
                                                           value.SetIsReturnValue(true);
 
                                                           funcparams.DeleteContents();
@@ -4408,4 +4589,5 @@ void SCRIPT_LNG_G::Clean()
     }
 
   returnvalue.SetValueInteger(0);
+  lastreturnmultiple.Destroy();
 }

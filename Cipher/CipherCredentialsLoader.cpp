@@ -191,8 +191,8 @@ static bool CIPHERCREDENTIALSLOADER_LegacyPrivateKey(XBUFFER& filedata, CIPHERKE
               else if(key) GEN_DELETE key;
             }
         }
-    }
 #endif
+    }
   else
     {
       CIPHERKEYTYPE privatetype=CIPHERKEYTYPE_UNKNOWN;

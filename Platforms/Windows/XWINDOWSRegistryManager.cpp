@@ -306,6 +306,8 @@ bool XWINDOWSREGISTRYKEY::WriteValue(XCHAR* name, XVARIANT& data)
     {    
       case XVARIANT_TYPE_UNKNOWN          : break;
 
+      case XVARIANT_TYPE_MULTIPLE         : return false;
+
       case XVARIANT_TYPE_SHORT            :
       case XVARIANT_TYPE_WORD             :
       case XVARIANT_TYPE_INTEGER          :

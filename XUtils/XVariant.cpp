@@ -1160,6 +1160,8 @@ bool XVARIANT::GetType(XSTRING& typestr)
       case XVARIANT_TYPE_DATE             : typestr = __L("date");            break;
       case XVARIANT_TYPE_DATETIME         : typestr = __L("date/time");       break;
       case XVARIANT_TYPE_BUFFER           : typestr = __L("buffer");          break;      
+      case XVARIANT_TYPE_POINTER          : typestr = __L("pointer");         break;
+      case XVARIANT_TYPE_MULTIPLE         : typestr = __L("multiple");        break;
                         default           : return false;
     }
 
@@ -1377,7 +1379,18 @@ bool XVARIANT::GetDataVariant(XVARIANT& value)
 
       case XVARIANT_TYPE_BUFFER         : (*this) = (const XBUFFER*)&value;
                                           type    = value.type;                                          
-                                          break;        
+                                          break;
+
+      case XVARIANT_TYPE_MULTIPLE       : { if(!SetAsMultiple()) break;
+
+                                            XDWORD n = value.Multiple_GetSize();
+                                            for(XDWORD c=0; c<n; c++)
+                                              {
+                                                XVARIANT* item = value.Multiple_Get(c);
+                                                if(item) Multiple_Add(*item);
+                                              }
+                                          }
+                                          break;
 
                               default   : break;
     }
@@ -1476,7 +1489,22 @@ bool XVARIANT::ToString(XSTRING& to)
                                             break;
                                                                 
       case XVARIANT_TYPE_POINTER          : to.Format(__L("[%08X]"), *(XBYTE*)this->data);                                                                        
-                                            break;      
+                                            break;
+
+      case XVARIANT_TYPE_MULTIPLE         : { to = __L("[");
+                                              XDWORD n = Multiple_GetSize();
+                                              for(XDWORD c=0; c<n; c++)
+                                                {
+                                                  XVARIANT* item = Multiple_Get(c);
+                                                  XSTRING   part;
+
+                                                  if(c) to.Add(__L(","));
+                                                  if(item && item->ToString(part)) to.Add(part);
+                                                    else                            to.Add(__L("?"));
+                                                }
+                                              to.Add(__L("]"));
+                                            }
+                                            break;
 
                         default           : return false;
     }
@@ -1759,7 +1787,17 @@ bool XVARIANT::Destroy()
                                               }
                                               break;
 
-          case XVARIANT_TYPE_POINTER        : GEN_DELETE (XBYTE*)(data);         break;           
+          case XVARIANT_TYPE_POINTER        : GEN_DELETE (XBYTE*)(data);         break;
+
+          case XVARIANT_TYPE_MULTIPLE       : { XVECTOR<XVARIANT*>* list = (XVECTOR<XVARIANT*>*)data;
+                                                if(list)
+                                                  {
+                                                    list->DeleteContents();
+                                                    list->DeleteAll();
+                                                    GEN_DELETE list;
+                                                  }
+                                              }
+                                              break;
 
                                   default   : break;
         }
@@ -1770,6 +1808,98 @@ bool XVARIANT::Destroy()
   data    = NULL;
 
   return true;
+}
+
+
+/**-------------------------------------------------------------------------------------------------------------------
+* 
+* @fn         bool XVARIANT::SetAsMultiple()
+* @brief      Set as multiple return container
+* @ingroup    XUTILS
+* 
+* @return     bool : true if the operation is successful; otherwise false.
+* 
+* --------------------------------------------------------------------------------------------------------------------*/
+bool XVARIANT::SetAsMultiple()
+{
+  Destroy();
+
+  XVECTOR<XVARIANT*>* list = GEN_NEW XVECTOR<XVARIANT*>();
+  if(!list)
+    {
+      return false;
+    }
+
+  type = XVARIANT_TYPE_MULTIPLE;
+  size = sizeof(void*);
+  data = list;
+
+  return true;
+}
+
+
+/**-------------------------------------------------------------------------------------------------------------------
+* 
+* @fn         bool XVARIANT::Multiple_Add(const XVARIANT& value)
+* @brief      Add value to multiple return container
+* @ingroup    XUTILS
+* 
+* @param[in]  value : Value to add.
+* 
+* @return     bool : true if the operation is successful; otherwise false.
+* 
+* --------------------------------------------------------------------------------------------------------------------*/
+bool XVARIANT::Multiple_Add(const XVARIANT& value)
+{
+  if(type != XVARIANT_TYPE_MULTIPLE)  return false;
+  if(!data)                           return false;
+
+  XVARIANT* item = GEN_NEW XVARIANT(value);
+  if(!item)
+    {
+      return false;
+    }
+
+  ((XVECTOR<XVARIANT*>*)data)->Add(item);
+  return true;
+}
+
+
+/**-------------------------------------------------------------------------------------------------------------------
+* 
+* @fn         XDWORD XVARIANT::Multiple_GetSize() const
+* @brief      Get multiple return size
+* @ingroup    XUTILS
+* 
+* @return     XDWORD : Requested value.
+* 
+* --------------------------------------------------------------------------------------------------------------------*/
+XDWORD XVARIANT::Multiple_GetSize() const
+{
+  if(type != XVARIANT_TYPE_MULTIPLE)  return 0;
+  if(!data)                           return 0;
+
+  return ((XVECTOR<XVARIANT*>*)data)->GetSize();
+}
+
+
+/**-------------------------------------------------------------------------------------------------------------------
+* 
+* @fn         XVARIANT* XVARIANT::Multiple_Get(XDWORD index) const
+* @brief      Get multiple return item
+* @ingroup    XUTILS
+* 
+* @param[in]  index : Index value.
+* 
+* @return     XVARIANT* : Pointer to the requested object; NULL if it is not available.
+* 
+* --------------------------------------------------------------------------------------------------------------------*/
+XVARIANT* XVARIANT::Multiple_Get(XDWORD index) const
+{
+  if(type != XVARIANT_TYPE_MULTIPLE)  return NULL;
+  if(!data)                           return NULL;
+
+  return ((XVECTOR<XVARIANT*>*)data)->Get(index);
 }
 
 

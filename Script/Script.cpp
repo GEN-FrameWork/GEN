@@ -75,10 +75,14 @@
 #include "Script_Lib_Log.h"
 #include "Script_Lib_Console.h"
 #include "Script_Lib_CFG.h"
-#include "Script_Lib_Window.h"
+#include "Script_Lib_Screen.h"
 #include "Script_Lib_InputSimulate.h"
 #include "Script_Lib_DevTest.h"
 #include "Script_Lib_WebClient.h"
+
+#ifdef SCRIPT_LIB_TRACESERVER_ACTIVE
+#include "Script_Lib_TraceServer.h"
+#endif
 
 
 
@@ -1011,7 +1015,7 @@ bool SCRIPT::AddInternalLibraries()
 {  
   SCRIPT_LIB* lib;
 
-  for(int c=0; c<16; c++)
+  for(int c=0; c<17; c++)
     {
       lib = NULL;
 
@@ -1058,8 +1062,8 @@ bool SCRIPT::AddInternalLibraries()
                     #endif
                     break;
           case 12 :
-                    #ifdef SCRIPT_LIB_WINDOW_ACTIVE
-                    lib = GEN_NEW SCRIPT_LIB_WINDOW();        
+                    #ifdef SCRIPT_LIB_SCREEN_ACTIVE
+                    lib = GEN_NEW SCRIPT_LIB_SCREEN();        
                     #endif
                     break;
           case 13 :
@@ -1075,6 +1079,11 @@ bool SCRIPT::AddInternalLibraries()
           case 15 :
                     #if defined(SCRIPT_LIB_WEBCLIENT_ACTIVE) && !defined(SCRIPT_LIB_SANDBOX_ACTIVE)
                     lib = GEN_NEW SCRIPT_LIB_WEBCLIENT();
+                    #endif
+                    break;
+          case 16 :
+                    #if defined(SCRIPT_LIB_TRACESERVER_ACTIVE) && !defined(SCRIPT_LIB_SANDBOX_ACTIVE)
+                    lib = GEN_NEW SCRIPT_LIB_TRACESERVER();
                     #endif
                     break;
         } 

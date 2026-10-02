@@ -1,10 +1,10 @@
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @file       ID_IBAN.h
+* @file       XID_IBAN.h
 * 
-* @class      ID_IBAN
-* @brief      IDentification (ID) IBAN Number (International Bank Account Number)
-* @ingroup    IDENTIFICATION
+* @class      XID_IBAN
+* @brief      eXtended Utils IBAN Number (International Bank Account Number)
+* @ingroup    XUTILS
 * 
 * @copyright  EndoraSoft. All rights reserved.
 * 
@@ -36,11 +36,11 @@
 
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
 
-class ID_IBAN
+class XID_IBAN
 {
   public:
-                        ID_IBAN                       ();
-    virtual            ~ID_IBAN                       ();
+                        XID_IBAN                      ();
+    virtual            ~XID_IBAN                      ();
 
     XSTRING*            Get                           ();
     bool                Set                           (XCHAR* IBAN);

@@ -37,6 +37,7 @@
 #include "Script_Language_Javascript.h"
 
 #include <cmath>
+#include <string.h>
 
 #include "XString.h"
 
@@ -354,8 +355,12 @@ duk_ret_t SCRIPT_LNG_JAVASCRIPT::LibraryCallBack(duk_context* context)
 
   nargs = duk_get_top(context);
 
+  XVECTOR<bool> isoutobject;
+
   for(c = 0; c < nargs; c++)
     {
+      bool isout = false;
+
       XVARIANT* variant = GEN_NEW XVARIANT();
       if(variant)
         {
@@ -383,7 +388,29 @@ duk_ret_t SCRIPT_LNG_JAVASCRIPT::LibraryCallBack(duk_context* context)
                                               (*variant) = (char*)duk_require_string(context, c);
                                               break;
 
-              case DUK_TYPE_OBJECT         :  // ECMAScript object: includes objects, arrays, functions, threads
+              case DUK_TYPE_OBJECT         :  // Out-param box: object with .value and/or [0]
+                                              {
+                                                int initial = 0;
+
+                                                duk_get_prop_string(context, c, "value");
+                                                if(duk_is_number(context, -1))
+                                                  {
+                                                    initial = (int)duk_get_number(context, -1);
+                                                  }
+                                                 else
+                                                  {
+                                                    duk_pop(context);
+                                                    duk_get_prop_index(context, c, 0);
+                                                    if(duk_is_number(context, -1))
+                                                      {
+                                                        initial = (int)duk_get_number(context, -1);
+                                                      }
+                                                  }
+                                                duk_pop(context);
+
+                                                (*variant) = initial;
+                                                isout = true;
+                                              }
                                               break;
 
               case DUK_TYPE_BUFFER         :  // fixed or dynamic, garbage collected byte buffer
@@ -398,9 +425,37 @@ duk_ret_t SCRIPT_LNG_JAVASCRIPT::LibraryCallBack(duk_context* context)
 
            params.Add(variant);
         }
+
+      isoutobject.Add(isout);
     }
 
   libfunction->GetFunctionLibrary()(libfunction->GetLibrary(), script, &params, &returnvalue);
+
+  // Write out-params back into caller objects (.value and [0]).
+  for(c = 0; c < nargs; c++)
+    {
+      if(!isoutobject.Get(c)) continue;
+
+      XVARIANT* variant = params.Get(c);
+      if(!variant) continue;
+
+      int ivalue = 0;
+      switch(variant->GetType())
+        {
+          case XVARIANT_TYPE_BOOLEAN : ivalue = ((bool)(*variant)) ? 1 : 0; break;
+          case XVARIANT_TYPE_INTEGER :
+          case XVARIANT_TYPE_CHAR    : ivalue = (int)(*variant); break;
+          case XVARIANT_TYPE_FLOAT   : ivalue = (int)(float)(*variant); break;
+          case XVARIANT_TYPE_DOUBLE  : ivalue = (int)(double)(*variant); break;
+          case XVARIANT_TYPE_DWORD   : ivalue = (int)(XDWORD)(*variant); break;
+                           default   : break;
+        }
+
+      duk_push_int(context, ivalue);
+      duk_dup(context, -1);
+      duk_put_prop_string(context, c, "value");
+      duk_put_prop_index(context, c, 0);
+    }
 
   params.DeleteContents();
   params.DeleteAll();
@@ -441,6 +496,109 @@ duk_ret_t SCRIPT_LNG_JAVASCRIPT::LibraryCallBack(duk_context* context)
                                            stringreturnvalue.ConvertToASCII(charstr); 
                                            duk_push_string(context, charstr.GetPtrChar());
                                            
+                                           nreturnvalues++;
+                                         }
+                                         break;
+
+      case XVARIANT_TYPE_BUFFER        : { XBUFFER buffer = returnvalue;
+
+                                           if(buffer.GetSize() == (sizeof(int) * 2))
+                                             {
+                                               int x = 0;
+                                               int y = 0;
+
+                                               memcpy(&x, buffer.Get(), sizeof(int));
+                                               memcpy(&y, buffer.Get() + sizeof(int), sizeof(int));
+
+                                               duk_idx_t arridx = duk_push_array(context);
+                                               duk_push_int(context, x);
+                                               duk_put_prop_index(context, arridx, 0);
+                                               duk_push_int(context, y);
+                                               duk_put_prop_index(context, arridx, 1);
+                                               nreturnvalues++;
+                                             }
+                                         }
+                                         break;
+
+      case XVARIANT_TYPE_MULTIPLE      : { duk_idx_t objidx = duk_push_object(context);
+                                           XDWORD    n     = returnvalue.Multiple_GetSize();
+
+                                           for(XDWORD i=0; i<n; i++)
+                                             {
+                                               XVARIANT* item = returnvalue.Multiple_Get(i);
+                                               if(!item)
+                                                 {
+                                                   duk_push_null(context);
+                                                 }
+                                                else
+                                                 {
+                                                   switch(item->GetType())
+                                                     {
+                                                       case XVARIANT_TYPE_BOOLEAN : if((bool)(*item)) duk_push_true(context);
+                                                                                     else            duk_push_false(context);
+                                                                                   break;
+                                                       case XVARIANT_TYPE_INTEGER :
+                                                       case XVARIANT_TYPE_CHAR    : duk_push_int(context, (int)(*item)); break;
+                                                       case XVARIANT_TYPE_FLOAT   : duk_push_number(context, (double)(float)(*item)); break;
+                                                       case XVARIANT_TYPE_DOUBLE  : duk_push_number(context, (double)(*item)); break;
+                                                       case XVARIANT_TYPE_DWORD   : duk_push_number(context, (double)(XDWORD)(*item)); break;
+                                                       case XVARIANT_TYPE_STRING  : { XSTRING s = (const XSTRING&)(*item);
+                                                                                     XBUFFER a;
+                                                                                     s.ConvertToASCII(a);
+                                                                                     duk_push_string(context, a.GetPtrChar());
+                                                                                   }
+                                                                                   break;
+                                                       default                   : duk_push_null(context); break;
+                                                     }
+                                                 }
+
+                                               duk_put_prop_index(context, objidx, (duk_uarridx_t)i);
+                                             }
+
+                                           if(n > 0)
+                                             {
+                                               XVARIANT* first = returnvalue.Multiple_Get(0);
+                                               if(first && first->GetType() == XVARIANT_TYPE_BOOLEAN)
+                                                 {
+                                                   duk_get_prop_index(context, objidx, 0);
+                                                   duk_put_prop_string(context, objidx, "ok");
+
+                                                   if(n == 2)
+                                                     {
+                                                       duk_get_prop_index(context, objidx, 1);
+                                                       duk_put_prop_string(context, objidx, "value");
+                                                     }
+                                                    else if(n == 3)
+                                                     {
+                                                       duk_get_prop_index(context, objidx, 1);
+                                                       duk_put_prop_string(context, objidx, "x");
+                                                       duk_get_prop_index(context, objidx, 2);
+                                                       duk_put_prop_string(context, objidx, "y");
+                                                     }
+                                                 }
+                                                else if(first && first->GetType() == XVARIANT_TYPE_INTEGER)
+                                                 {
+                                                   duk_get_prop_index(context, objidx, 0);
+                                                   duk_put_prop_string(context, objidx, "status");
+
+                                                   duk_push_boolean(context, ((int)(*first) == 0) ? 1 : 0);
+                                                   duk_put_prop_string(context, objidx, "ok");
+
+                                                   if(n == 2)
+                                                     {
+                                                       duk_get_prop_index(context, objidx, 1);
+                                                       duk_put_prop_string(context, objidx, "value");
+                                                     }
+                                                    else if(n == 3)
+                                                     {
+                                                       duk_get_prop_index(context, objidx, 1);
+                                                       duk_put_prop_string(context, objidx, "x");
+                                                       duk_get_prop_index(context, objidx, 2);
+                                                       duk_put_prop_string(context, objidx, "y");
+                                                     }
+                                                 }
+                                             }
+
                                            nreturnvalues++;
                                          }
                                          break;

@@ -1,9 +1,9 @@
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @file       Script_Lib_Window.h
+* @file       Script_Lib_Screen.h
 * 
-* @class      SCRIPT_LIB_WINDOW
-* @brief      Script Lib Window class
+* @class      SCRIPT_LIB_SCREEN
+* @brief      Script Library Screen
 * @ingroup    SCRIPT
 * 
 * @copyright  EndoraSoft. All rights reserved.
@@ -31,6 +31,7 @@
 /*---- INCLUDES ------------------------------------------------------------------------------------------------------*/
 
 #include "XPath.h"
+#include "XVector.h"
 
 #include "Script_Lib.h"
 
@@ -38,16 +39,23 @@
 
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
 
-#define SCRIPT_LIB_NAME_WINDOW    __L("Window")
+#define SCRIPT_LIB_NAME_SCREEN    __L("Screen")
 
-#define SCRIPT_SET_LIB_APPFLOWGRAPHICS(script, appgraphics)     { SCRIPT_LIB_WINDOW* lib = (SCRIPT_LIB_WINDOW*)script->GetLibrary(SCRIPT_LIB_NAME_WINDOW); \
+enum SCRIPT_LIB_SCREEN_POSSTATUS
+{
+  SCRIPT_LIB_SCREEN_POSSTATUS_OK            = 0 ,
+  SCRIPT_LIB_SCREEN_POSSTATUS_NOTFOUND          ,
+  SCRIPT_LIB_SCREEN_POSSTATUS_BMPNOTFOUND
+};
+
+#define SCRIPT_SET_LIB_APPFLOWGRAPHICS(script, appgraphics)     { SCRIPT_LIB_SCREEN* lib = (SCRIPT_LIB_SCREEN*)script->GetLibrary(SCRIPT_LIB_NAME_SCREEN); \
                                                               if(lib) \
                                                                 { \
                                                                   lib->SetAppGraphics(appgraphics); \
                                                                 } \
                                                             }
 
-//#define SCRIPT_LIB_WINDOWS_DEBUG
+//#define SCRIPT_LIB_SCREEN_DEBUG
 
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
 
@@ -56,11 +64,30 @@ class SCRIPT;
 class GRPBITMAP; 
 class APPFLOWGRAPHICS;
 
-class SCRIPT_LIB_WINDOW : public SCRIPT_LIB
+struct SCRIPT_LIB_SCREEN_POS
+{
+  SCRIPT_LIB_SCREEN_POSSTATUS status;
+  int                         x;
+  int                         y;
+
+  SCRIPT_LIB_SCREEN_POS()
+  {
+    status = SCRIPT_LIB_SCREEN_POSSTATUS_NOTFOUND;
+    x      = 0;
+    y      = 0;
+  }
+
+  bool IsOk() const
+  {
+    return (status == SCRIPT_LIB_SCREEN_POSSTATUS_OK);
+  }
+};
+
+class SCRIPT_LIB_SCREEN : public SCRIPT_LIB
 {
   public:
-                          SCRIPT_LIB_WINDOW                     ();
-    virtual              ~SCRIPT_LIB_WINDOW                     ();
+                          SCRIPT_LIB_SCREEN                     ();
+    virtual              ~SCRIPT_LIB_SCREEN                     ();
 
     bool                  AddLibraryFunctions                   (SCRIPT* script);
 
@@ -70,7 +97,7 @@ class SCRIPT_LIB_WINDOW : public SCRIPT_LIB
     void                  BmpFindCFG_SetPixelMargin             (XBYTE pixelmargin);
 
 
-    #ifdef SCRIPT_LIB_WINDOWS_DEBUG
+    #ifdef SCRIPT_LIB_SCREEN_DEBUG
     static APPFLOWGRAPHICS*   GetAppGraphics                        ();
     static void           SetAppGraphics                        (APPFLOWGRAPHICS* appgraphics);
     #endif
@@ -82,7 +109,7 @@ class SCRIPT_LIB_WINDOW : public SCRIPT_LIB
     XBYTE                 bmpfindCFG_difflimitpercent;
     XBYTE                 bmpfindCFG_pixelmargin;
 
-    #ifdef SCRIPT_LIB_WINDOWS_DEBUG
+    #ifdef SCRIPT_LIB_SCREEN_DEBUG
     static APPFLOWGRAPHICS*   appgraphics;
     #endif
 
@@ -92,16 +119,19 @@ class SCRIPT_LIB_WINDOW : public SCRIPT_LIB
 
 /*---- INLINE FUNCTIONS + PROTOTYPES ---------------------------------------------------------------------------------*/
 
-void        Call_Window_GetPosX           (SCRIPT_LIB* library, SCRIPT* script, XVECTOR<XVARIANT*>* params, XVARIANT* returnvalue);
-void        Call_Window_GetPosY           (SCRIPT_LIB* library, SCRIPT* script, XVECTOR<XVARIANT*>* params, XVARIANT* returnvalue);
-void        Call_Window_SetBmpFindCFG     (SCRIPT_LIB* library, SCRIPT* script, XVECTOR<XVARIANT*>* params, XVARIANT* returnvalue);
-void        Call_Window_SetFocus          (SCRIPT_LIB* library, SCRIPT* script, XVECTOR<XVARIANT*>* params, XVARIANT* returnvalue);
-void        Call_Window_SetPosition       (SCRIPT_LIB* library, SCRIPT* script, XVECTOR<XVARIANT*>* params, XVARIANT* returnvalue);
-void        Call_Window_Resize            (SCRIPT_LIB* library, SCRIPT* script, XVECTOR<XVARIANT*>* params, XVARIANT* returnvalue);
-void        Call_Window_Minimize          (SCRIPT_LIB* library, SCRIPT* script, XVECTOR<XVARIANT*>* params, XVARIANT* returnvalue);
-void        Call_Window_Maximize          (SCRIPT_LIB* library, SCRIPT* script, XVECTOR<XVARIANT*>* params, XVARIANT* returnvalue);
+bool        Script_Lib_Screen_ResolvePos  (SCRIPT_LIB* library, SCRIPT* script, XVECTOR<XVARIANT*>* params, SCRIPT_LIB_SCREEN_POS& pos, XDWORD ntrailingouts = 0);
 
-#ifdef SCRIPT_LIB_WINDOWS_DEBUG
+void        Call_Screen_GetPosX           (SCRIPT_LIB* library, SCRIPT* script, XVECTOR<XVARIANT*>* params, XVARIANT* returnvalue);
+void        Call_Screen_GetPosY           (SCRIPT_LIB* library, SCRIPT* script, XVECTOR<XVARIANT*>* params, XVARIANT* returnvalue);
+void        Call_Screen_GetPosXY          (SCRIPT_LIB* library, SCRIPT* script, XVECTOR<XVARIANT*>* params, XVARIANT* returnvalue);
+void        Call_Screen_SetBmpFindCFG     (SCRIPT_LIB* library, SCRIPT* script, XVECTOR<XVARIANT*>* params, XVARIANT* returnvalue);
+void        Call_Screen_SetFocus          (SCRIPT_LIB* library, SCRIPT* script, XVECTOR<XVARIANT*>* params, XVARIANT* returnvalue);
+void        Call_Screen_SetPosition       (SCRIPT_LIB* library, SCRIPT* script, XVECTOR<XVARIANT*>* params, XVARIANT* returnvalue);
+void        Call_Screen_Resize            (SCRIPT_LIB* library, SCRIPT* script, XVECTOR<XVARIANT*>* params, XVARIANT* returnvalue);
+void        Call_Screen_Minimize          (SCRIPT_LIB* library, SCRIPT* script, XVECTOR<XVARIANT*>* params, XVARIANT* returnvalue);
+void        Call_Screen_Maximize          (SCRIPT_LIB* library, SCRIPT* script, XVECTOR<XVARIANT*>* params, XVARIANT* returnvalue);
+
+#ifdef SCRIPT_LIB_SCREEN_DEBUG
 
 bool        DifferencesPerCent            (XDWORD ndiff, XDWORD max, int limit);
 bool        IsSimilarPixel                (XDWORD origin, XDWORD target, XBYTE margin);

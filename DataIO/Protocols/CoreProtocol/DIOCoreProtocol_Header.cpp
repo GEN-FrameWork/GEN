@@ -766,7 +766,7 @@ bool DIOCOREPROTOCOL_HEADER::Compare(DIOCOREPROTOCOL_HEADER* header)
       return false;
     }
 
-  if(!ID_message.CopyTo((*header->GetIDMessage())))
+  if(!ID_message.Compare((*header->GetIDMessage())))
     {
       return false;
     }
@@ -786,7 +786,7 @@ bool DIOCOREPROTOCOL_HEADER::Compare(DIOCOREPROTOCOL_HEADER* header)
       return false;
     }
 
-  if(!datetime_send->Compare((*header->GetDateTimeSend())))
+  if(datetime_send->Compare((*header->GetDateTimeSend())))
     {
       return false;
     }

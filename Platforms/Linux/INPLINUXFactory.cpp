@@ -54,7 +54,9 @@
 #include "INPLINUXDeviceMouseWayland.h"
 #endif
 
+#ifdef INP_SIMULATE_ACTIVE
 #include "INPLINUXSimulate.h"
+#endif
 
 
 
@@ -394,9 +396,7 @@ bool INPLINUXFACTORY::GetDeviceHandlers(INPDEVICE_TYPE devicetype, XVECTOR<INPLI
 * --------------------------------------------------------------------------------------------------------------------*/
 INPSIMULATE* INPLINUXFACTORY::CreateSimulator()
 {
-  INPSIMULATE* inpsimulated = (INPSIMULATE*)GEN_NEW INPLINUXSIMULATE();
-
-  return inpsimulated;
+  return GEN_NEW INPLINUXSIMULATE();
 }
 
 
@@ -413,14 +413,12 @@ INPSIMULATE* INPLINUXFACTORY::CreateSimulator()
 * --------------------------------------------------------------------------------------------------------------------*/
 bool INPLINUXFACTORY::DeleteSimulator(INPSIMULATE* inputsimulated)
 {
-  INPLINUXSIMULATE* inpsimulated = (INPLINUXSIMULATE*)inputsimulated;
-
-  if(!inpsimulated)
+  if(!inputsimulated)
     {
       return false;
     }
 
-  GEN_DELETE inpsimulated;
+  GEN_DELETE inputsimulated;
 
   return true;
 }

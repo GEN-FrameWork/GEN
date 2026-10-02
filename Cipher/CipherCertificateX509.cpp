@@ -2144,10 +2144,9 @@ bool CIPHERCERTIFICATEX509::Decode(XBUFFER& certificate)
           return false;
         }
     }
-  #else
-   if(false)
+  else
   #endif
-   else if(!publickeyalgorithmOID.Compare(__L("1.2.840.10045.2.1"), false))
+  if(!publickeyalgorithmOID.Compare(__L("1.2.840.10045.2.1"), false))
     {
       // id-ecPublicKey: the actual curve comes from the ASN.1 parameters (a namedCurve OID). Only the three
       // NIST curves CIPHERECDSA can verify are accepted here; any other named curve is rejected up front

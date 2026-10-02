@@ -239,46 +239,81 @@ bool XWINDOWSPROCESSMANAGER::Application_Execute(XCHAR* applicationpath, XCHAR* 
   HANDLE              stdhandle_in_read   = NULL;
   HANDLE              stdhandle_in_write  = NULL;
   XSTRING             command;
-  bool                status = false;
+  bool                status              = false;
+  bool                capturermode        = (out != NULL) || ((in != NULL) && in->GetSize());
 
-  outbuftmp  = GEN_NEW XBYTE[OUTBUF_SIZE];
-  
-  if(outbuftmp)
-    {      
-      command.Format(__L("\"%s\""), applicationpath);
+  command.Format(__L("\"%s\""), applicationpath);
       
-      if(params)
+  if(params)
+    {
+      command.AddFormat(__L(" %s"), params);          
+    }        
+
+  ZeroMemory(&processinfo, sizeof(PROCESS_INFORMATION));
+  ZeroMemory(&startupinfo, sizeof(STARTUPINFO));
+  startupinfo.cb = sizeof(startupinfo);
+
+  if(capturermode)
+    {
+      outbuftmp = GEN_NEW XBYTE[OUTBUF_SIZE];
+      if(!outbuftmp)
         {
-          command.AddFormat(__L(" %s"), params);          
-        }        
+          return false;
+        }
 
       memset(&saattr, 0, sizeof(saattr));
       saattr.nLength              = sizeof(SECURITY_ATTRIBUTES);
       saattr.bInheritHandle       = TRUE;
       saattr.lpSecurityDescriptor = NULL;
 
-      // Create a pipe for the child process's STDOUT.
-      if(!CreatePipe(&stdhandle_out_read, &stdhandle_out_write, &saattr, 0))  return false;
-      // Ensure the read handle to the pipe for STDOUT is not inherited.
-      if(!SetHandleInformation(stdhandle_out_read, HANDLE_FLAG_INHERIT, 0))   return false;
+      if(!CreatePipe(&stdhandle_out_read, &stdhandle_out_write, &saattr, 0))
+        {
+          GEN_DELETE_ARRAY outbuftmp;
+          return false;
+        }
+      if(!SetHandleInformation(stdhandle_out_read, HANDLE_FLAG_INHERIT, 0))
+        {
+          CloseHandle(stdhandle_out_read);
+          CloseHandle(stdhandle_out_write);
+          GEN_DELETE_ARRAY outbuftmp;
+          return false;
+        }
 
-      // Create a pipe for the child process's STDIN.
-      if(!CreatePipe(&stdhandle_in_read, &stdhandle_in_write, &saattr, 0))    return false;
-      // Ensure the read handle to the pipe for STDIN is not inherited.
-      if(!SetHandleInformation(stdhandle_in_write, HANDLE_FLAG_INHERIT, 0))   return false;
+      if(!CreatePipe(&stdhandle_in_read, &stdhandle_in_write, &saattr, 0))
+        {
+          CloseHandle(stdhandle_out_read);
+          CloseHandle(stdhandle_out_write);
+          GEN_DELETE_ARRAY outbuftmp;
+          return false;
+        }
+      if(!SetHandleInformation(stdhandle_in_write, HANDLE_FLAG_INHERIT, 0))
+        {
+          CloseHandle(stdhandle_out_read);
+          CloseHandle(stdhandle_out_write);
+          CloseHandle(stdhandle_in_read);
+          CloseHandle(stdhandle_in_write);
+          GEN_DELETE_ARRAY outbuftmp;
+          return false;
+        }
 
-      ZeroMemory(&processinfo, sizeof(PROCESS_INFORMATION));
+      startupinfo.hStdError  = stdhandle_out_write;
+      startupinfo.hStdOutput = stdhandle_out_write;
+      startupinfo.hStdInput  = stdhandle_in_read;
+      startupinfo.dwFlags   |= STARTF_USESTDHANDLES;
+    }
+  else
+    {
+      // Interactive GUI launch (ExecApplication): show window, do not redirect std handles.
+      startupinfo.dwFlags    |= STARTF_USESHOWWINDOW;
+      startupinfo.wShowWindow = SW_SHOWNORMAL;
+    }
 
-      ZeroMemory(&startupinfo, sizeof(STARTUPINFO));
-      startupinfo.cb          = sizeof(startupinfo);
-      startupinfo.hStdError   = stdhandle_out_write;
-      startupinfo.hStdOutput  = stdhandle_out_write;
-      startupinfo.hStdInput   = stdhandle_in_read;    // GetStdHandle(STD_INPUT_HANDLE);
-      startupinfo.dwFlags    |= STARTF_USESTDHANDLES;
-
-      if(CreateProcessW(NULL, (LPWSTR)command.Get(), NULL, NULL, TRUE, CREATE_NO_WINDOW, NULL, NULL, &startupinfo, &processinfo))
+  if(CreateProcessW(NULL, (LPWSTR)command.Get(), NULL, NULL, capturermode?TRUE:FALSE, capturermode?CREATE_NO_WINDOW:0, NULL, NULL, &startupinfo, &processinfo))
+    {
+      if(capturermode)
         {
           CloseHandle(stdhandle_out_write);
+          stdhandle_out_write = NULL;
           
           if(in)
             {
@@ -293,6 +328,7 @@ bool XWINDOWSPROCESSMANAGER::Application_Execute(XCHAR* applicationpath, XCHAR* 
             }
 
           CloseHandle(stdhandle_in_write);
+          stdhandle_in_write = NULL;
 
           if(out)
             {             
@@ -311,32 +347,51 @@ bool XWINDOWSPROCESSMANAGER::Application_Execute(XCHAR* applicationpath, XCHAR* 
                     }
                 }             
             }
+        }
 
+      DWORD waitms     = capturermode ? INFINITE : 500;
+      DWORD waitresult = WaitForSingleObject(processinfo.hProcess, waitms);
 
-          if(WaitForSingleObject(processinfo.hProcess, (out?INFINITE:500)) == WAIT_OBJECT_0)
+      if(waitresult == WAIT_OBJECT_0)
+        {
+          // FIXED: exit code retrieval and handle cleanup must happen whenever the wait itself
+          // succeeds, not only when the caller also asked to capture stdout (out != NULL) --
+          // otherwise returncode was left at its initial 0 and the process/thread handles leaked
+          // whenever out was NULL. Mirrors XLINUXPROCESSMANAGER::Application_Execute(), which
+          // always retrieves the child's real exit status from waitpid() regardless of whether
+          // stdout is being captured.
+          if(GetExitCodeProcess(processinfo.hProcess, &exitcode))
             {
-              // FIXED: exit code retrieval and handle cleanup must happen whenever the wait itself
-              // succeeds, not only when the caller also asked to capture stdout (out != NULL) --
-              // otherwise returncode was left at its initial 0 and the process/thread handles leaked
-              // whenever out was NULL. Mirrors XLINUXPROCESSMANAGER::Application_Execute(), which
-              // always retrieves the child's real exit status from waitpid() regardless of whether
-              // stdout is being captured.
-              if(GetExitCodeProcess(processinfo.hProcess, &exitcode))
-                {
-                  if(returncode) (*returncode) = exitcode;
-                }
-
-              CloseHandle(processinfo.hProcess);
-              CloseHandle(processinfo.hThread);
-
-              // FIXED: status must reflect whether the child actually exited successfully (exit
-              // code 0), exactly like XLINUXPROCESSMANAGER::Application_Execute() does
-              // ("WIFEXITED(returnstatus) && !WEXITSTATUS(returnstatus)") -- not just whether the
-              // wait for its termination succeeded.
-              status = (exitcode == 0);
+              if(returncode) (*returncode) = exitcode;
             }
+
+          CloseHandle(processinfo.hProcess);
+          CloseHandle(processinfo.hThread);
+
+          // FIXED: status must reflect whether the child actually exited successfully (exit
+          // code 0), exactly like XLINUXPROCESSMANAGER::Application_Execute() does
+          // ("WIFEXITED(returnstatus) && !WEXITSTATUS(returnstatus)") -- not just whether the
+          // wait for its termination succeeded.
+          status = (exitcode == 0);
+        }
+      else if((waitresult == WAIT_TIMEOUT) && (!capturermode))
+        {
+          // Fire-and-forget GUI launch: process still running after short settle wait.
+          CloseHandle(processinfo.hProcess);
+          CloseHandle(processinfo.hThread);
+          status = true;
+        }
+      else
+        {
+          CloseHandle(processinfo.hProcess);
+          CloseHandle(processinfo.hThread);
         }
     }
+
+  if(stdhandle_out_read)  { CloseHandle(stdhandle_out_read);  }
+  if(stdhandle_in_read)   { CloseHandle(stdhandle_in_read);   }
+  if(stdhandle_out_write) { CloseHandle(stdhandle_out_write); }
+  if(stdhandle_in_write)  { CloseHandle(stdhandle_in_write);  }
 
   if(outbuftmp)
     {

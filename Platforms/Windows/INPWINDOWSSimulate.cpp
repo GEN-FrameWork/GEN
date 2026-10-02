@@ -97,9 +97,15 @@ INPWINDOWSSIMULATE::~INPWINDOWSSIMULATE()
 * --------------------------------------------------------------------------------------------------------------------*/
 bool INPWINDOWSSIMULATE::Key_Press(XBYTE code)
 {
-  keybd_event(code, 0, 0, 0);    
-    
-  return true;
+  INPUT input;
+
+  memset(&input, 0, sizeof(INPUT));
+  input.type       = INPUT_KEYBOARD;
+  input.ki.wVk     = code;
+  input.ki.wScan   = (WORD)MapVirtualKey((UINT)code, MAPVK_VK_TO_VSC);
+  input.ki.dwFlags = 0;
+
+  return (SendInput(1, &input, sizeof(INPUT)) == 1);
 }
 
 
@@ -116,9 +122,15 @@ bool INPWINDOWSSIMULATE::Key_Press(XBYTE code)
 * --------------------------------------------------------------------------------------------------------------------*/
 bool INPWINDOWSSIMULATE::Key_UnPress(XBYTE code)
 {
-  keybd_event(code, 0, KEYEVENTF_KEYUP, 0);
+  INPUT input;
 
-  return true;
+  memset(&input, 0, sizeof(INPUT));
+  input.type       = INPUT_KEYBOARD;
+  input.ki.wVk     = code;
+  input.ki.wScan   = (WORD)MapVirtualKey((UINT)code, MAPVK_VK_TO_VSC);
+  input.ki.dwFlags = KEYEVENTF_KEYUP;
+
+  return (SendInput(1, &input, sizeof(INPUT)) == 1);
 }
 
 
@@ -271,11 +283,24 @@ bool INPWINDOWSSIMULATE::Key_ClickByText(XCHAR* text, int pressuretimeinterval)
 {
   XSTRING _text;
   XSTRING literal;
+  bool    status = true;
+
+  if(!text)
+    {
+      return false;
+    }
 
   _text = text;
 
+  if(_text.IsEmpty())
+    {
+      return true;
+    }
+
   for(XDWORD c=0; c<_text.GetSize(); c++)
     {
+      bool handled = true;
+
       literal.Empty();
       literal.Add(_text.Get()[c]);
 
@@ -310,20 +335,20 @@ bool INPWINDOWSSIMULATE::Key_ClickByText(XCHAR* text, int pressuretimeinterval)
                               
                               if(!IsCapsLockActive())
                                 {
-                                  Key_ClickByLiteral(__L("CAPS LOCK"), pressuretimeinterval);
+                                  if(!Key_ClickByLiteral(__L("CAPS LOCK"), pressuretimeinterval)) status = false;
                                   changecapslock = true;      
                                 }
 
-                              Key_ClickByLiteral(literal.Get(), pressuretimeinterval);
+                              if(!Key_ClickByLiteral(literal.Get(), pressuretimeinterval)) status = false;
 
                               if(changecapslock)
                                 {
-                                  Key_ClickByLiteral(__L("CAPS LOCK"), pressuretimeinterval);                                  
+                                  if(!Key_ClickByLiteral(__L("CAPS LOCK"), pressuretimeinterval)) status = false;
                                 }    
                             }
                             break;
 
-          case __C(' ')   : Key_ClickByLiteral(__L("SPACEBAR"), pressuretimeinterval);                            
+          case __C(' ')   : if(!Key_ClickByLiteral(__L("SPACEBAR"), pressuretimeinterval)) status = false;
                             break;
 
           case __C('a')   : 
@@ -356,15 +381,15 @@ bool INPWINDOWSSIMULATE::Key_ClickByText(XCHAR* text, int pressuretimeinterval)
                               
                               if(IsCapsLockActive())
                                 {
-                                  Key_ClickByLiteral(__L("CAPS LOCK"), pressuretimeinterval);
+                                  if(!Key_ClickByLiteral(__L("CAPS LOCK"), pressuretimeinterval)) status = false;
                                   changecapslock = true;      
                                 }
 
-                              Key_ClickByLiteral(literal.Get(), pressuretimeinterval);
+                              if(!Key_ClickByLiteral(literal.Get(), pressuretimeinterval)) status = false;
 
                               if(changecapslock)
                                 {
-                                  Key_ClickByLiteral(__L("CAPS LOCK"), pressuretimeinterval);                                  
+                                  if(!Key_ClickByLiteral(__L("CAPS LOCK"), pressuretimeinterval)) status = false;
                                 }    
                             }
                             break;
@@ -415,12 +440,20 @@ bool INPWINDOWSSIMULATE::Key_ClickByText(XCHAR* text, int pressuretimeinterval)
           case 0xF1       : // __C('?')   : 
           case 0xD1       : //__C('_')    :    
           case 0xB7       : //__C('')    :
-                            Key_ClickByLiteral(literal.Get(), pressuretimeinterval);                            
-                            break;                           
+                            if(!Key_ClickByLiteral(literal.Get(), pressuretimeinterval)) status = false;
+                            break;
+
+          default         : handled = false;
+                            break;
+        }
+
+      if(!handled)
+        {
+          status = false;
         }
     }
 
-  return false;
+  return status;
 }
 
 
@@ -458,9 +491,12 @@ bool INPWINDOWSSIMULATE::Mouse_SetPos(int x, int y)
 * --------------------------------------------------------------------------------------------------------------------*/
 bool INPWINDOWSSIMULATE::Mouse_Click(int x, int y)
 {
+  // Prefer mouse_event over SendInput for UI hit-testing apps (e.g. GEN UI_System /
+  // ANGLE): SendInput can report success while the target never sees a usable click.
   SetCursorPos(x, y);
-  
+  Sleep(5);
   mouse_event(MOUSEEVENTF_LEFTDOWN, 0, 0, 0, 0);
+  Sleep(15);
   mouse_event(MOUSEEVENTF_LEFTUP, 0, 0, 0, 0);
 
   return true;

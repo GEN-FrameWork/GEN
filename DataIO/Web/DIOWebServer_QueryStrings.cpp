@@ -350,10 +350,25 @@ bool DIOWEBSERVER_QUERYSTRINGS::DelParam(XSTRING& ID)
 * --------------------------------------------------------------------------------------------------------------------*/
 bool DIOWEBSERVER_QUERYSTRINGS::DelParam(XCHAR* ID)
 {
-  XSTRING* _ID = DIOWEBSERVER_QUERYSTRINGS::GetParam(ID);
-  if(!_ID) return false;
+  if(!ID) return false;
+  if(params.IsEmpty()) return false;
 
-  return params.Delete(_ID);
+  for(int c=0; c<(int)params.GetSize(); c++)
+    {
+      XSTRING* _ID = params.GetKey(c);
+      if(_ID && !_ID->Compare(ID, true))
+        {
+          XSTRING* _value = params.GetElement(c);
+          if(!params.Delete(_ID, _value)) return false;
+
+          GEN_DELETE _ID;
+          GEN_DELETE _value;
+
+          return true;
+        }
+    }
+
+  return false;
 }
 
 

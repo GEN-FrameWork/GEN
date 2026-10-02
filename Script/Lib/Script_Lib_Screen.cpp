@@ -1,9 +1,9 @@
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @file       Script_Lib_Window.cpp
+* @file       Script_Lib_Screen.cpp
 * 
-* @class      SCRIPT_LIB_WINDOW
-* @brief      Script Lib Window class
+* @class      SCRIPT_LIB_SCREEN
+* @brief      Script Library Screen
 * @ingroup    SCRIPT
 * 
 * @copyright  EndoraSoft. All rights reserved.
@@ -34,15 +34,16 @@
 
 /*---- INCLUDES ------------------------------------------------------------------------------------------------------*/
 
-#include "Script_Lib_Window.h"
+#include "Script_Lib_Screen.h"
 
 #include "XVariant.h"
+#include "XBuffer.h"
 #include "XProcessManager.h"
 
 #include "APPFlowBase.h"
 #include "APPFlowMain.h"
 
-#ifdef SCRIPT_LIB_WINDOWS_DEBUG
+#ifdef SCRIPT_LIB_SCREEN_DEBUG
 #include "APPFlowGraphics.h"
 #endif
 
@@ -70,11 +71,8 @@
 
 /*---- GENERAL VARIABLE ----------------------------------------------------------------------------------------------*/
 
-int            windowsposx = 0;
-int            windowsposy = 0;
-
-#ifdef SCRIPT_LIB_WINDOWS_DEBUG
-APPFLOWGRAPHICS*   SCRIPT_LIB_WINDOW::appgraphics = NULL;
+#ifdef SCRIPT_LIB_SCREEN_DEBUG
+APPFLOWGRAPHICS*   SCRIPT_LIB_SCREEN::appgraphics = NULL;
 #endif
 			
 
@@ -84,13 +82,13 @@ APPFLOWGRAPHICS*   SCRIPT_LIB_WINDOW::appgraphics = NULL;
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         SCRIPT_LIB_WINDOW::SCRIPT_LIB_WINDOW()
+* @fn         SCRIPT_LIB_SCREEN::SCRIPT_LIB_SCREEN()
 * @brief      Constructor
 * @ingroup    SCRIPT
 * 
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-SCRIPT_LIB_WINDOW::SCRIPT_LIB_WINDOW() : SCRIPT_LIB(SCRIPT_LIB_NAME_WINDOW)
+SCRIPT_LIB_SCREEN::SCRIPT_LIB_SCREEN() : SCRIPT_LIB(SCRIPT_LIB_NAME_SCREEN)
 {
   Clean();
   
@@ -101,13 +99,13 @@ SCRIPT_LIB_WINDOW::SCRIPT_LIB_WINDOW() : SCRIPT_LIB(SCRIPT_LIB_NAME_WINDOW)
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         SCRIPT_LIB_WINDOW::~SCRIPT_LIB_WINDOW()
+* @fn         SCRIPT_LIB_SCREEN::~SCRIPT_LIB_SCREEN()
 * @brief      Destructor
 * @note       VIRTUAL
 * @ingroup    SCRIPT
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-SCRIPT_LIB_WINDOW::~SCRIPT_LIB_WINDOW()
+SCRIPT_LIB_SCREEN::~SCRIPT_LIB_SCREEN()
 {
   Clean();
 }
@@ -115,7 +113,7 @@ SCRIPT_LIB_WINDOW::~SCRIPT_LIB_WINDOW()
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         bool SCRIPT_LIB_WINDOW::AddLibraryFunctions(SCRIPT* script)
+* @fn         bool SCRIPT_LIB_SCREEN::AddLibraryFunctions(SCRIPT* script)
 * @brief      Add library functions
 * @ingroup    SCRIPT
 * 
@@ -124,20 +122,21 @@ SCRIPT_LIB_WINDOW::~SCRIPT_LIB_WINDOW()
 * @return     bool : true if the operation is successful; otherwise false.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-bool SCRIPT_LIB_WINDOW::AddLibraryFunctions(SCRIPT* script)
+bool SCRIPT_LIB_SCREEN::AddLibraryFunctions(SCRIPT* script)
 {
   if(!script) return false;
 
   this->script = script;
 
-  script->AddLibraryFunction(this, __L("Window_GetPosX"), Call_Window_GetPosX);
-  script->AddLibraryFunction(this, __L("Window_GetPosY"), Call_Window_GetPosY);
-  script->AddLibraryFunction(this, __L("Window_SetBmpFindCFG"), Call_Window_SetBmpFindCFG);
-  script->AddLibraryFunction(this, __L("Window_SetFocus"), Call_Window_SetFocus);
-  script->AddLibraryFunction(this, __L("Window_SetPosition"), Call_Window_SetPosition);
-  script->AddLibraryFunction(this, __L("Window_Resize"), Call_Window_Resize);
-  script->AddLibraryFunction(this, __L("Window_Minimize"), Call_Window_Minimize);
-  script->AddLibraryFunction(this, __L("Window_Maximize"), Call_Window_Maximize);
+  script->AddLibraryFunction(this, __L("Screen_GetPosX"), Call_Screen_GetPosX);
+  script->AddLibraryFunction(this, __L("Screen_GetPosY"), Call_Screen_GetPosY);
+  script->AddLibraryFunction(this, __L("Screen_GetPosXY"), Call_Screen_GetPosXY);
+  script->AddLibraryFunction(this, __L("Screen_SetBmpFindCFG"), Call_Screen_SetBmpFindCFG);
+  script->AddLibraryFunction(this, __L("Screen_SetFocus"), Call_Screen_SetFocus);
+  script->AddLibraryFunction(this, __L("Screen_SetPosition"), Call_Screen_SetPosition);
+  script->AddLibraryFunction(this, __L("Screen_Resize"), Call_Screen_Resize);
+  script->AddLibraryFunction(this, __L("Screen_Minimize"), Call_Screen_Minimize);
+  script->AddLibraryFunction(this, __L("Screen_Maximize"), Call_Screen_Maximize);
       
   return true;
 }
@@ -145,14 +144,14 @@ bool SCRIPT_LIB_WINDOW::AddLibraryFunctions(SCRIPT* script)
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         XBYTE SCRIPT_LIB_WINDOW::BmpFindCFG_GetDiffLimitPercent()
+* @fn         XBYTE SCRIPT_LIB_SCREEN::BmpFindCFG_GetDiffLimitPercent()
 * @brief      Bmp find CFG get diff limit percent
 * @ingroup    SCRIPT
 * 
 * @return     XBYTE : Requested value.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-XBYTE SCRIPT_LIB_WINDOW::BmpFindCFG_GetDiffLimitPercent()
+XBYTE SCRIPT_LIB_SCREEN::BmpFindCFG_GetDiffLimitPercent()
 {
   return bmpfindCFG_difflimitpercent;
 }
@@ -160,14 +159,14 @@ XBYTE SCRIPT_LIB_WINDOW::BmpFindCFG_GetDiffLimitPercent()
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         void SCRIPT_LIB_WINDOW::BmpFindCFG_SetDiffLimitPercent(XBYTE difflimitpercent)
+* @fn         void SCRIPT_LIB_SCREEN::BmpFindCFG_SetDiffLimitPercent(XBYTE difflimitpercent)
 * @brief      Bmp find CFG set diff limit percent
 * @ingroup    SCRIPT
 * 
 * @param[in]  difflimitpercent : Difflimitpercent value.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-void SCRIPT_LIB_WINDOW::BmpFindCFG_SetDiffLimitPercent(XBYTE difflimitpercent)
+void SCRIPT_LIB_SCREEN::BmpFindCFG_SetDiffLimitPercent(XBYTE difflimitpercent)
 {
   bmpfindCFG_difflimitpercent = difflimitpercent;
 }
@@ -175,14 +174,14 @@ void SCRIPT_LIB_WINDOW::BmpFindCFG_SetDiffLimitPercent(XBYTE difflimitpercent)
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         XBYTE SCRIPT_LIB_WINDOW::BmpFindCFG_GetPixelMargin()
+* @fn         XBYTE SCRIPT_LIB_SCREEN::BmpFindCFG_GetPixelMargin()
 * @brief      Bmp find CFG get pixel margin
 * @ingroup    SCRIPT
 * 
 * @return     XBYTE : Requested value.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-XBYTE SCRIPT_LIB_WINDOW::BmpFindCFG_GetPixelMargin()
+XBYTE SCRIPT_LIB_SCREEN::BmpFindCFG_GetPixelMargin()
 {
   return bmpfindCFG_pixelmargin;
 }
@@ -190,31 +189,31 @@ XBYTE SCRIPT_LIB_WINDOW::BmpFindCFG_GetPixelMargin()
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         void SCRIPT_LIB_WINDOW::BmpFindCFG_SetPixelMargin(XBYTE pixelmargin)
+* @fn         void SCRIPT_LIB_SCREEN::BmpFindCFG_SetPixelMargin(XBYTE pixelmargin)
 * @brief      Bmp find CFG set pixel margin
 * @ingroup    SCRIPT
 * 
 * @param[in]  pixelmargin : Pixelmargin value.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-void SCRIPT_LIB_WINDOW::BmpFindCFG_SetPixelMargin(XBYTE pixelmargin)
+void SCRIPT_LIB_SCREEN::BmpFindCFG_SetPixelMargin(XBYTE pixelmargin)
 {
   bmpfindCFG_pixelmargin = pixelmargin;
 }
 
 
-#ifdef SCRIPT_LIB_WINDOWS_DEBUG
+#ifdef SCRIPT_LIB_SCREEN_DEBUG
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         APPFLOWGRAPHICS* SCRIPT_LIB_WINDOW::GetAppGraphics()
+* @fn         APPFLOWGRAPHICS* SCRIPT_LIB_SCREEN::GetAppGraphics()
 * @brief      Get app graphics
 * @ingroup    SCRIPT
 * 
 * @return     APPFLOWGRAPHICS* : Pointer to the requested object; NULL if it is not available.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-APPFLOWGRAPHICS* SCRIPT_LIB_WINDOW::GetAppGraphics()
+APPFLOWGRAPHICS* SCRIPT_LIB_SCREEN::GetAppGraphics()
 {
   return appgraphics;
 }
@@ -222,14 +221,14 @@ APPFLOWGRAPHICS* SCRIPT_LIB_WINDOW::GetAppGraphics()
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         void SCRIPT_LIB_WINDOW::SetAppGraphics(APPFLOWGRAPHICS* _appgraphics)
+* @fn         void SCRIPT_LIB_SCREEN::SetAppGraphics(APPFLOWGRAPHICS* _appgraphics)
 * @brief      Set app graphics
 * @ingroup    SCRIPT
 * 
 * @param[in]  _appgraphics : Appgraphics pointer to use.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-void SCRIPT_LIB_WINDOW::SetAppGraphics(APPFLOWGRAPHICS* _appgraphics)
+void SCRIPT_LIB_SCREEN::SetAppGraphics(APPFLOWGRAPHICS* _appgraphics)
 {
   appgraphics = _appgraphics;
 }
@@ -238,21 +237,18 @@ void SCRIPT_LIB_WINDOW::SetAppGraphics(APPFLOWGRAPHICS* _appgraphics)
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         void SCRIPT_LIB_WINDOW::Clean()
+* @fn         void SCRIPT_LIB_SCREEN::Clean()
 * @brief      Clean the attributes of the class: Default initialize
 * @note       INTERNAL
 * @ingroup    SCRIPT
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-void SCRIPT_LIB_WINDOW::Clean()
+void SCRIPT_LIB_SCREEN::Clean()
 { 
-  windowsposx                 = 0;
-  windowsposy                 = 0;
-
   bmpfindCFG_difflimitpercent = 2;
   bmpfindCFG_pixelmargin      = 10;
 
-  #ifdef SCRIPT_LIB_WINDOWS_DEBUG
+  #ifdef SCRIPT_LIB_SCREEN_DEBUG
   appgraphics = NULL;
   #endif
 }
@@ -263,36 +259,37 @@ void SCRIPT_LIB_WINDOW::Clean()
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         void Call_Window_GetPosX(SCRIPT_LIB* library, SCRIPT* script, XVECTOR<XVARIANT*>* params, XVARIANT* returnvalue)
-* @brief      all_Window_GetPosX
+* @fn         bool Script_Lib_Screen_ResolvePos(SCRIPT_LIB* library, SCRIPT* script, XVECTOR<XVARIANT*>* params, SCRIPT_LIB_SCREEN_POS& pos)
+* @brief      Resolve window / bitmap position without shared mutable state
 * @ingroup    SCRIPT
 * 
 * @param[in]  library : Library pointer to use.
 * @param[in]  script : Script pointer to use.
 * @param[in]  params : Params pointer to use.
-* @param[in]  returnvalue : Returnvalue pointer to use.
+* @param[out] pos : Resolved position (x,y).
+* 
+* @return     bool : true if params were accepted; otherwise false.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-void Call_Window_GetPosX(SCRIPT_LIB* library, SCRIPT* script, XVECTOR<XVARIANT*>* params, XVARIANT* returnvalue)
+bool Script_Lib_Screen_ResolvePos(SCRIPT_LIB* library, SCRIPT* script, XVECTOR<XVARIANT*>* params, SCRIPT_LIB_SCREEN_POS& pos, XDWORD ntrailingouts)
 {
-  if(!library)      return;
-  if(!script)       return;
-  if(!params)       return;
-  if(!returnvalue)  return;
+  pos.status = SCRIPT_LIB_SCREEN_POSSTATUS_NOTFOUND;
+  pos.x      = 0;
+  pos.y      = 0;
 
-  SCRIPT_LIB_WINDOW* windows_library = (SCRIPT_LIB_WINDOW*)library;
+  if(!library)  return false;
+  if(!script)   return false;
+  if(!params)   return false;
 
-  returnvalue->Set();
+  SCRIPT_LIB_SCREEN* screen_library = (SCRIPT_LIB_SCREEN*)library;
 
-  if(params->GetSize()<2)
+  if(params->GetSize() < (2 + ntrailingouts))
     {
       script->HaveError(SCRIPT_ERRORCODE_INSUF_PARAMS);
-      return;
+      return false;
     }
 
-  windowsposx = 0xFFFFFF;
-  windowsposy = 0xFFFFFF;
- 
+  XDWORD              nresolve      = params->GetSize() - ntrailingouts;
   XVECTOR<XPROCESS*>  applist;
   XSTRING             appname       = (*params->Get(0));
   XSTRING             windowstitle  = (*params->Get(1));
@@ -303,12 +300,13 @@ void Call_Window_GetPosX(SCRIPT_LIB* library, SCRIPT* script, XVECTOR<XVARIANT*>
         {                              
           if(applist.Get(c)->GetName()->Find(appname, true)!= XSTRING_NOTFOUND) 
             {  
-              if(applist.Get(c)->GetWindowTitle()->Find(windowstitle, false) != XSTRING_NOTFOUND)
+              if(applist.Get(c)->GetWindowTitle()->Find(windowstitle, true) != XSTRING_NOTFOUND)
                 {
-                  windowsposx = applist.Get(c)->GetWindowRect()->x1; 
-                  windowsposy = applist.Get(c)->GetWindowRect()->y1; 
+                  pos.status = SCRIPT_LIB_SCREEN_POSSTATUS_OK;
+                  pos.x      = applist.Get(c)->GetWindowRect()->x1; 
+                  pos.y      = applist.Get(c)->GetWindowRect()->y1; 
                   
-                  if(params->GetSize() >= 3)
+                  if(nresolve >= 3)
                     {                     
                       void* handle_windows = applist.Get(c)->GetWindowHandle();                  
                       if(handle_windows)
@@ -325,7 +323,7 @@ void Call_Window_GetPosX(SCRIPT_LIB* library, SCRIPT* script, XVECTOR<XVARIANT*>
                                 {                                     
                                   // ----------------------------------------------------------------------------------
 
-                                  #ifdef SCRIPT_LIB_WINDOWS_DEBUG
+                                  #ifdef SCRIPT_LIB_SCREEN_DEBUG
                                   PutBitmap(0, 0, bitmapscreen);
                                   #endif                             
 
@@ -333,7 +331,7 @@ void Call_Window_GetPosX(SCRIPT_LIB* library, SCRIPT* script, XVECTOR<XVARIANT*>
 
                                   bool found = false;
 
-                                  for(XDWORD d=2; d<params->GetSize(); d++)
+                                  for(XDWORD d=2; d<nresolve; d++)
                                     { 
                                       XSTRING bitmaprefname  = (*params->Get(d));
                                       if(!bitmaprefname.IsEmpty())
@@ -347,7 +345,7 @@ void Call_Window_GetPosX(SCRIPT_LIB* library, SCRIPT* script, XVECTOR<XVARIANT*>
                                           GRPBITMAPFILE* bitmapfileref = GEN_NEW GRPBITMAPFILE(xpathbitmapref);
                                           if(bitmapfileref)
                                             {                   
-                                              #ifdef SCRIPT_LIB_WINDOWS_DEBUG                              
+                                              #ifdef SCRIPT_LIB_SCREEN_DEBUG                              
                                               XPATH  xpathbitmaptest;
 
                                               GEN_XPATHSMANAGER.GetPathOfSection(XPATHSMANAGERSECTIONTYPE_GRAPHICS, xpathbitmaptest);
@@ -355,19 +353,6 @@ void Call_Window_GetPosX(SCRIPT_LIB* library, SCRIPT* script, XVECTOR<XVARIANT*>
                                               xpathbitmaptest.Add(__L("back.png"));
 
                                               bitmapfileref->Save(xpathbitmaptest, bitmapscreen);
-
-                                              /*
-                                              GEN_XPATHSMANAGER.GetPathOfSection(XPATHSMANAGERSECTIONTYPE_GRAPHICS, xpathbitmaptest);
-                                              xpathbitmaptest.Slash_Add();
-                                              xpathbitmaptest.Add(__L("image001.png"));
-
-                                              GRPBITMAP* bitmaprefcap = GetBitmap(10, 418, 74, 11);
-                                              if(bitmaprefcap)
-                                                {
-                                                  bitmapfileref->Save(xpathbitmaptest, bitmaprefcap);
-                                                  GEN_DELETE bitmaprefcap;
-                                                }
-                                              */  
                                               #endif
                             
                                               GRPBITMAP* bitmapref = bitmapfileref->Load();         
@@ -376,14 +361,14 @@ void Call_Window_GetPosX(SCRIPT_LIB* library, SCRIPT* script, XVECTOR<XVARIANT*>
                                                   int x = 0;
                                                   int y = 0;   
 
-                                                  #ifdef SCRIPT_LIB_WINDOWS_DEBUG
-                                                  if(FindSubBitmap(bitmapscreen, bitmapref, x, y, windows_library->BmpFindCFG_GetDiffLimitPercent(), windows_library->BmpFindCFG_GetPixelMargin()))    
+                                                  #ifdef SCRIPT_LIB_SCREEN_DEBUG
+                                                  if(FindSubBitmap(bitmapscreen, bitmapref, x, y, screen_library->BmpFindCFG_GetDiffLimitPercent(), screen_library->BmpFindCFG_GetPixelMargin()))    
                                                   #else                                                
-                                                  if(bitmapscreen->FindSubBitmap(bitmapref, x, y, windows_library->BmpFindCFG_GetDiffLimitPercent(), windows_library->BmpFindCFG_GetPixelMargin()))
+                                                  if(bitmapscreen->FindSubBitmap(bitmapref, x, y, screen_library->BmpFindCFG_GetDiffLimitPercent(), screen_library->BmpFindCFG_GetPixelMargin()))
                                                   #endif    
                                                     {
-                                                      windowsposx += (x + (bitmapref->GetWidth() /2) + applist.Get(c)->GetWindowBorderWidth()); 
-                                                      windowsposy += (y + (bitmapref->GetHeight()/2) + applist.Get(c)->GetWindowTitleHeight()); 
+                                                      pos.x += (x + (bitmapref->GetWidth() /2) + applist.Get(c)->GetWindowBorderWidth()); 
+                                                      pos.y += (y + (bitmapref->GetHeight()/2) + applist.Get(c)->GetWindowTitleHeight()); 
                                                       found = true;
                                                     }      
                                                 }                                                 
@@ -405,8 +390,9 @@ void Call_Window_GetPosX(SCRIPT_LIB* library, SCRIPT* script, XVECTOR<XVARIANT*>
 
                                   if(!found)
                                     {
-                                      windowsposx = 0xFFFFFE;
-                                      windowsposy = 0xFFFFFE;
+                                      pos.status = SCRIPT_LIB_SCREEN_POSSTATUS_BMPNOTFOUND;
+                                      pos.x      = 0;
+                                      pos.y      = 0;
                                     }
 
                                   GEN_DELETE bitmapscreen;
@@ -425,24 +411,24 @@ void Call_Window_GetPosX(SCRIPT_LIB* library, SCRIPT* script, XVECTOR<XVARIANT*>
     
   applist.DeleteContents();
   applist.DeleteAll();
-   
-  (*returnvalue) = windowsposx;
+
+  return true;
 }
 
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         void Call_Window_GetPosY(SCRIPT_LIB* library, SCRIPT* script, XVECTOR<XVARIANT*>* params, XVARIANT* returnvalue)
-* @brief      Call_Window_GetPosY
+* @fn         void Call_Screen_GetPosX(SCRIPT_LIB* library, SCRIPT* script, XVECTOR<XVARIANT*>* params, XVARIANT* returnvalue)
+* @brief      Call_Screen_GetPosX
 * @ingroup    SCRIPT
 * 
 * @param[in]  library : Library pointer to use.
 * @param[in]  script : Script pointer to use.
-* @param[in]  params : Params pointer to use.
-* @param[in]  returnvalue : Returnvalue pointer to use.
+* @param[in]  params : Params pointer to use (app, title [, bmp...], out_x).
+* @param[in]  returnvalue : Returnvalue pointer to use (status int).
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-void Call_Window_GetPosY(SCRIPT_LIB* library, SCRIPT* script, XVECTOR<XVARIANT*>* params, XVARIANT* returnvalue)
+void Call_Screen_GetPosX(SCRIPT_LIB* library, SCRIPT* script, XVECTOR<XVARIANT*>* params, XVARIANT* returnvalue)
 {
   if(!library)      return;
   if(!script)       return;
@@ -450,21 +436,100 @@ void Call_Window_GetPosY(SCRIPT_LIB* library, SCRIPT* script, XVECTOR<XVARIANT*>
   if(!returnvalue)  return;
 
   returnvalue->Set();
+  (*returnvalue) = (int)SCRIPT_LIB_SCREEN_POSSTATUS_NOTFOUND;
 
-  if(params->GetSize()<2)
+  SCRIPT_LIB_SCREEN_POS pos;
+
+  if(!Script_Lib_Screen_ResolvePos(library, script, params, pos, 1))
     {
-      script->HaveError(SCRIPT_ERRORCODE_INSUF_PARAMS);
       return;
     }
 
-  (*returnvalue) = windowsposy;
+  XVARIANT* outx = params->Get(params->GetSize() - 1);
+  if(outx) (*outx) = pos.IsOk() ? pos.x : 0;
+
+  (*returnvalue) = (int)pos.status;
 }
 
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         void Call_Window_SetBmpFindCFG(SCRIPT_LIB* library, SCRIPT* script, XVECTOR<XVARIANT*>* params, XVARIANT* returnvalue)
-* @brief      all_Window_SetBmpFindCFG
+* @fn         void Call_Screen_GetPosY(SCRIPT_LIB* library, SCRIPT* script, XVECTOR<XVARIANT*>* params, XVARIANT* returnvalue)
+* @brief      Call_Screen_GetPosY
+* @ingroup    SCRIPT
+* 
+* @param[in]  library : Library pointer to use.
+* @param[in]  script : Script pointer to use.
+* @param[in]  params : Params pointer to use (app, title [, bmp...], out_y).
+* @param[in]  returnvalue : Returnvalue pointer to use (status int).
+* 
+* --------------------------------------------------------------------------------------------------------------------*/
+void Call_Screen_GetPosY(SCRIPT_LIB* library, SCRIPT* script, XVECTOR<XVARIANT*>* params, XVARIANT* returnvalue)
+{
+  if(!library)      return;
+  if(!script)       return;
+  if(!params)       return;
+  if(!returnvalue)  return;
+
+  returnvalue->Set();
+  (*returnvalue) = (int)SCRIPT_LIB_SCREEN_POSSTATUS_NOTFOUND;
+
+  SCRIPT_LIB_SCREEN_POS pos;
+
+  if(!Script_Lib_Screen_ResolvePos(library, script, params, pos, 1))
+    {
+      return;
+    }
+
+  XVARIANT* outy = params->Get(params->GetSize() - 1);
+  if(outy) (*outy) = pos.IsOk() ? pos.y : 0;
+
+  (*returnvalue) = (int)pos.status;
+}
+
+
+/**-------------------------------------------------------------------------------------------------------------------
+* 
+* @fn         void Call_Screen_GetPosXY(SCRIPT_LIB* library, SCRIPT* script, XVECTOR<XVARIANT*>* params, XVARIANT* returnvalue)
+* @brief      Call_Screen_GetPosXY
+* @ingroup    SCRIPT
+* 
+* @param[in]  library : Library pointer to use.
+* @param[in]  script : Script pointer to use.
+* @param[in]  params : Params pointer to use (app, title [, bmp...], out_x, out_y).
+* @param[in]  returnvalue : Returnvalue pointer to use (status int).
+* 
+* --------------------------------------------------------------------------------------------------------------------*/
+void Call_Screen_GetPosXY(SCRIPT_LIB* library, SCRIPT* script, XVECTOR<XVARIANT*>* params, XVARIANT* returnvalue)
+{
+  if(!library)      return;
+  if(!script)       return;
+  if(!params)       return;
+  if(!returnvalue)  return;
+
+  returnvalue->Set();
+  (*returnvalue) = (int)SCRIPT_LIB_SCREEN_POSSTATUS_NOTFOUND;
+
+  SCRIPT_LIB_SCREEN_POS pos;
+
+  if(!Script_Lib_Screen_ResolvePos(library, script, params, pos, 2))
+    {
+      return;
+    }
+
+  XVARIANT* outx = params->Get(params->GetSize() - 2);
+  XVARIANT* outy = params->Get(params->GetSize() - 1);
+  if(outx) (*outx) = pos.IsOk() ? pos.x : 0;
+  if(outy) (*outy) = pos.IsOk() ? pos.y : 0;
+
+  (*returnvalue) = (int)pos.status;
+}
+
+
+/**-------------------------------------------------------------------------------------------------------------------
+* 
+* @fn         void Call_Screen_SetBmpFindCFG(SCRIPT_LIB* library, SCRIPT* script, XVECTOR<XVARIANT*>* params, XVARIANT* returnvalue)
+* @brief      all_Screen_SetBmpFindCFG
 * @ingroup    SCRIPT
 * 
 * @param[in]  library : Library pointer to use.
@@ -473,14 +538,14 @@ void Call_Window_GetPosY(SCRIPT_LIB* library, SCRIPT* script, XVECTOR<XVARIANT*>
 * @param[in]  returnvalue : Returnvalue pointer to use.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-void Call_Window_SetBmpFindCFG(SCRIPT_LIB* library, SCRIPT* script, XVECTOR<XVARIANT*>* params, XVARIANT* returnvalue)
+void Call_Screen_SetBmpFindCFG(SCRIPT_LIB* library, SCRIPT* script, XVECTOR<XVARIANT*>* params, XVARIANT* returnvalue)
 {
   if(!library)      return;
   if(!script)       return;
   if(!params)       return;
   if(!returnvalue)  return;
 
-  SCRIPT_LIB_WINDOW* windows_library = (SCRIPT_LIB_WINDOW*)library;
+  SCRIPT_LIB_SCREEN* screen_library = (SCRIPT_LIB_SCREEN*)library;
   bool               status = false; 
 
   returnvalue->Set();
@@ -499,8 +564,8 @@ void Call_Window_SetBmpFindCFG(SCRIPT_LIB* library, SCRIPT* script, XVECTOR<XVAR
   library->GetParamConverted(params->Get(0), bmpfindCFG_difflimitpercent);
   library->GetParamConverted(params->Get(1), bmpfindCFG_pixelmargin);
 
-  windows_library->BmpFindCFG_SetDiffLimitPercent((XBYTE)bmpfindCFG_difflimitpercent);
-  windows_library->BmpFindCFG_SetPixelMargin((XBYTE)bmpfindCFG_pixelmargin);
+  screen_library->BmpFindCFG_SetDiffLimitPercent((XBYTE)bmpfindCFG_difflimitpercent);
+  screen_library->BmpFindCFG_SetPixelMargin((XBYTE)bmpfindCFG_pixelmargin);
 
   status = true;
 
@@ -509,8 +574,8 @@ void Call_Window_SetBmpFindCFG(SCRIPT_LIB* library, SCRIPT* script, XVECTOR<XVAR
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         void Call_Window_SetFocus(SCRIPT_LIB* library, SCRIPT* script, XVECTOR<XVARIANT*>* params, XVARIANT* returnvalue)
-* @brief      all_Window_SetFocus
+* @fn         void Call_Screen_SetFocus(SCRIPT_LIB* library, SCRIPT* script, XVECTOR<XVARIANT*>* params, XVARIANT* returnvalue)
+* @brief      all_Screen_SetFocus
 * @ingroup    SCRIPT
 * 
 * @param[in]  library : Library pointer to use.
@@ -519,7 +584,7 @@ void Call_Window_SetBmpFindCFG(SCRIPT_LIB* library, SCRIPT* script, XVECTOR<XVAR
 * @param[in]  returnvalue : Returnvalue pointer to use.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-void Call_Window_SetFocus(SCRIPT_LIB* library, SCRIPT* script, XVECTOR<XVARIANT*>* params, XVARIANT* returnvalue)
+void Call_Screen_SetFocus(SCRIPT_LIB* library, SCRIPT* script, XVECTOR<XVARIANT*>* params, XVARIANT* returnvalue)
 {
   if(!library)      return;
   if(!script)       return;
@@ -545,7 +610,7 @@ void Call_Window_SetFocus(SCRIPT_LIB* library, SCRIPT* script, XVECTOR<XVARIANT*
         {                              
           if(applist.Get(c)->GetName()->Find(appname, true)!= XSTRING_NOTFOUND) 
             {  
-              if(applist.Get(c)->GetWindowTitle()->Find(windowstitle, false) != XSTRING_NOTFOUND)
+              if(applist.Get(c)->GetWindowTitle()->Find(windowstitle, true) != XSTRING_NOTFOUND)
                 {
                   void* handle_windows = applist.Get(c)->GetWindowHandle();
                   
@@ -555,11 +620,9 @@ void Call_Window_SetFocus(SCRIPT_LIB* library, SCRIPT* script, XVECTOR<XVARIANT*
                       if(screen)
                         {                          
                           screen->SetHandle(handle_windows);
-                          screen->Set_Focus();
+                          status = screen->Set_Focus();
                         
                           GEN_GRPFACTORY.DeleteScreen(screen);  
-
-                          status = true;   
                         }
                     } 
                     
@@ -578,8 +641,8 @@ void Call_Window_SetFocus(SCRIPT_LIB* library, SCRIPT* script, XVECTOR<XVARIANT*
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         void Call_Window_SetPosition(SCRIPT_LIB* library, SCRIPT* script, XVECTOR<XVARIANT*>* params, XVARIANT* returnvalue)
-* @brief      all_Window_SetPosition
+* @fn         void Call_Screen_SetPosition(SCRIPT_LIB* library, SCRIPT* script, XVECTOR<XVARIANT*>* params, XVARIANT* returnvalue)
+* @brief      all_Screen_SetPosition
 * @ingroup    SCRIPT
 * 
 * @param[in]  library : Library pointer to use.
@@ -588,7 +651,7 @@ void Call_Window_SetFocus(SCRIPT_LIB* library, SCRIPT* script, XVECTOR<XVARIANT*
 * @param[in]  returnvalue : Returnvalue pointer to use.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-void Call_Window_SetPosition(SCRIPT_LIB* library, SCRIPT* script, XVECTOR<XVARIANT*>* params, XVARIANT* returnvalue)
+void Call_Screen_SetPosition(SCRIPT_LIB* library, SCRIPT* script, XVECTOR<XVARIANT*>* params, XVARIANT* returnvalue)
 {
   if(!library)      return;
   if(!script)       return;
@@ -619,7 +682,7 @@ void Call_Window_SetPosition(SCRIPT_LIB* library, SCRIPT* script, XVECTOR<XVARIA
         {                              
           if(applist.Get(c)->GetName()->Find(appname, true)!= XSTRING_NOTFOUND) 
             {  
-              if(applist.Get(c)->GetWindowTitle()->Find(windowstitle, false) != XSTRING_NOTFOUND)
+              if(applist.Get(c)->GetWindowTitle()->Find(windowstitle, true) != XSTRING_NOTFOUND)
                 {
                   void* handle_windows = applist.Get(c)->GetWindowHandle();
                   
@@ -652,8 +715,8 @@ void Call_Window_SetPosition(SCRIPT_LIB* library, SCRIPT* script, XVECTOR<XVARIA
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         void Call_Window_Resize(SCRIPT_LIB* library, SCRIPT* script, XVECTOR<XVARIANT*>* params, XVARIANT* returnvalue)
-* @brief      all_Window_Resize
+* @fn         void Call_Screen_Resize(SCRIPT_LIB* library, SCRIPT* script, XVECTOR<XVARIANT*>* params, XVARIANT* returnvalue)
+* @brief      all_Screen_Resize
 * @ingroup    SCRIPT
 * 
 * @param[in]  library : Library pointer to use.
@@ -662,7 +725,7 @@ void Call_Window_SetPosition(SCRIPT_LIB* library, SCRIPT* script, XVECTOR<XVARIA
 * @param[in]  returnvalue : Returnvalue pointer to use.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-void Call_Window_Resize(SCRIPT_LIB* library, SCRIPT* script, XVECTOR<XVARIANT*>* params, XVARIANT* returnvalue)
+void Call_Screen_Resize(SCRIPT_LIB* library, SCRIPT* script, XVECTOR<XVARIANT*>* params, XVARIANT* returnvalue)
 {
   if(!library)      return;
   if(!script)       return;
@@ -693,7 +756,7 @@ void Call_Window_Resize(SCRIPT_LIB* library, SCRIPT* script, XVECTOR<XVARIANT*>*
         {                              
           if(applist.Get(c)->GetName()->Find(appname, true)!= XSTRING_NOTFOUND) 
             {  
-              if(applist.Get(c)->GetWindowTitle()->Find(windowstitle, false) != XSTRING_NOTFOUND)
+              if(applist.Get(c)->GetWindowTitle()->Find(windowstitle, true) != XSTRING_NOTFOUND)
                 {
                   void* handle_windows = applist.Get(c)->GetWindowHandle();
                   
@@ -726,8 +789,8 @@ void Call_Window_Resize(SCRIPT_LIB* library, SCRIPT* script, XVECTOR<XVARIANT*>*
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         void Call_Window_Minimize(SCRIPT_LIB* library, SCRIPT* script, XVECTOR<XVARIANT*>* params, XVARIANT* returnvalue)
-* @brief      all_Window_Minimize
+* @fn         void Call_Screen_Minimize(SCRIPT_LIB* library, SCRIPT* script, XVECTOR<XVARIANT*>* params, XVARIANT* returnvalue)
+* @brief      all_Screen_Minimize
 * @ingroup    SCRIPT
 * 
 * @param[in]  library : Library pointer to use.
@@ -736,7 +799,7 @@ void Call_Window_Resize(SCRIPT_LIB* library, SCRIPT* script, XVECTOR<XVARIANT*>*
 * @param[in]  returnvalue : Returnvalue pointer to use.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-void Call_Window_Minimize(SCRIPT_LIB* library, SCRIPT* script, XVECTOR<XVARIANT*>* params, XVARIANT* returnvalue)
+void Call_Screen_Minimize(SCRIPT_LIB* library, SCRIPT* script, XVECTOR<XVARIANT*>* params, XVARIANT* returnvalue)
 {
   if(!library)      return;
   if(!script)       return;
@@ -765,7 +828,7 @@ void Call_Window_Minimize(SCRIPT_LIB* library, SCRIPT* script, XVECTOR<XVARIANT*
         {                              
           if(applist.Get(c)->GetName()->Find(appname, true)!= XSTRING_NOTFOUND) 
             {  
-              if(applist.Get(c)->GetWindowTitle()->Find(windowstitle, false) != XSTRING_NOTFOUND)
+              if(applist.Get(c)->GetWindowTitle()->Find(windowstitle, true) != XSTRING_NOTFOUND)
                 {
                   void* handle_windows = applist.Get(c)->GetWindowHandle();
                   
@@ -796,8 +859,8 @@ void Call_Window_Minimize(SCRIPT_LIB* library, SCRIPT* script, XVECTOR<XVARIANT*
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         void Call_Window_Maximize(SCRIPT_LIB* library, SCRIPT* script, XVECTOR<XVARIANT*>* params, XVARIANT* returnvalue)
-* @brief      Call_Window_Maximize
+* @fn         void Call_Screen_Maximize(SCRIPT_LIB* library, SCRIPT* script, XVECTOR<XVARIANT*>* params, XVARIANT* returnvalue)
+* @brief      Call_Screen_Maximize
 * @ingroup    SCRIPT
 * 
 * @param[in]  library : Library pointer to use.
@@ -806,7 +869,7 @@ void Call_Window_Minimize(SCRIPT_LIB* library, SCRIPT* script, XVECTOR<XVARIANT*
 * @param[in]  returnvalue : Returnvalue pointer to use.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-void Call_Window_Maximize(SCRIPT_LIB* library, SCRIPT* script, XVECTOR<XVARIANT*>* params, XVARIANT* returnvalue)
+void Call_Screen_Maximize(SCRIPT_LIB* library, SCRIPT* script, XVECTOR<XVARIANT*>* params, XVARIANT* returnvalue)
 {
   if(!library)      return;
   if(!script)       return;
@@ -835,7 +898,7 @@ void Call_Window_Maximize(SCRIPT_LIB* library, SCRIPT* script, XVECTOR<XVARIANT*
         {                              
           if(applist.Get(c)->GetName()->Find(appname, true)!= XSTRING_NOTFOUND) 
             {  
-              if(applist.Get(c)->GetWindowTitle()->Find(windowstitle, false) != XSTRING_NOTFOUND)
+              if(applist.Get(c)->GetWindowTitle()->Find(windowstitle, true) != XSTRING_NOTFOUND)
                 {
                   void* handle_windows = applist.Get(c)->GetWindowHandle();
                   
@@ -864,7 +927,7 @@ void Call_Window_Maximize(SCRIPT_LIB* library, SCRIPT* script, XVECTOR<XVARIANT*
 }
 
 
-#ifdef SCRIPT_LIB_WINDOWS_DEBUG
+#ifdef SCRIPT_LIB_SCREEN_DEBUG
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
@@ -1066,7 +1129,7 @@ bool FindSubBitmap(GRPBITMAP* bitmapscreen, GRPBITMAP* bitmapref, int& x, int& y
     {
       GRPVIEWPORT* viewport = NULL;
       GRP2DCANVAS*   canvas   = NULL;
-      GRPSCREEN*   screen   = SCRIPT_LIB_WINDOW::GetAppGraphics()->GetMainScreen();
+      GRPSCREEN*   screen   = SCRIPT_LIB_SCREEN::GetAppGraphics()->GetMainScreen();
 
       if(screen) viewport = screen->GetViewport(0);
       if(viewport) canvas = viewport->GetCanvas();
@@ -1106,14 +1169,14 @@ bool FindSubBitmap(GRPBITMAP* bitmapscreen, GRPBITMAP* bitmapref, int& x, int& y
 * --------------------------------------------------------------------------------------------------------------------*/
 bool PutBitmap(int x, int y, GRPBITMAP* bitmap)
 {
-  if(!SCRIPT_LIB_WINDOW::GetAppGraphics())
+  if(!SCRIPT_LIB_SCREEN::GetAppGraphics())
     {
       return false;
     }
                                         
   GRPVIEWPORT* viewport = NULL;
   GRP2DCANVAS*   canvas   = NULL;
-  GRPSCREEN*   screen   = SCRIPT_LIB_WINDOW::GetAppGraphics()->GetMainScreen();
+  GRPSCREEN*   screen   = SCRIPT_LIB_SCREEN::GetAppGraphics()->GetMainScreen();
 
   if(screen) viewport = screen->GetViewport(0);
   if(viewport) canvas = viewport->GetCanvas();
@@ -1144,14 +1207,14 @@ bool PutBitmap(int x, int y, GRPBITMAP* bitmap)
 * --------------------------------------------------------------------------------------------------------------------*/
 GRPBITMAP* GetBitmap(int x, int y, int sizex, int sizey)
 {
-  if(!SCRIPT_LIB_WINDOW::GetAppGraphics())
+  if(!SCRIPT_LIB_SCREEN::GetAppGraphics())
     {
       return NULL;
     }
                                         
   GRPVIEWPORT* viewport = NULL;
   GRP2DCANVAS*   canvas   = NULL;
-  GRPSCREEN*   screen   = SCRIPT_LIB_WINDOW::GetAppGraphics()->GetMainScreen();
+  GRPSCREEN*   screen   = SCRIPT_LIB_SCREEN::GetAppGraphics()->GetMainScreen();
   GRPBITMAP*   bitmap   = NULL;
 
   if(screen) viewport = screen->GetViewport(0);

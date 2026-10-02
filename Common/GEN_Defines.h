@@ -68,11 +68,6 @@
 * 
 * @}
 *
-* @defgroup IDENTIFICATION Identification
-* @{
-* 
-* @}
-*
 * @defgroup INPUT Input 
 * @{
 * 

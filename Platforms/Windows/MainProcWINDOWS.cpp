@@ -595,7 +595,7 @@ bool MAINPROCWINDOWS::Factorys_End()
       }
     #endif
 
-    #ifdef DIO_STREAMUDP_ACTIVE
+    #ifdef DIO_DNSRESOLVER_ACTIVE
     DIODNSRESOLVER::DelInstance();
     #endif
 

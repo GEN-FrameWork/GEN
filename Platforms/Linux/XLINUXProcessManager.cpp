@@ -584,7 +584,7 @@ bool XLINUXPROCESSMANAGER::Application_GetRunningList(XVECTOR<XPROCESS*>& applis
 
   closedir(dir);
   
-  return false;
+  return true;
 } 
 
 

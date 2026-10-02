@@ -30,7 +30,7 @@
 
 /*---- INCLUDES ------------------------------------------------------------------------------------------------------*/
 
-
+#include "INPSimulate.h"
 
 
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
@@ -40,26 +40,38 @@
 
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
 
-class INPLINUXSIMULATE
+class INPLINUXSIMULATE : public INPSIMULATE
 {
   public:
-                    INPLINUXSIMULATE     ();
-    virtual        ~INPLINUXSIMULATE     ();
+                    INPLINUXSIMULATE            ();
+    virtual        ~INPLINUXSIMULATE            ();
+
+    bool            Key_Press                   (XBYTE code);
+    bool            Key_UnPress                 (XBYTE code);
+    bool            Key_Click                   (XBYTE code, int pressuretime = 100);
+    bool            Mouse_SetPos                (int x, int y);
+    bool            Mouse_Click                 (int x, int y);
 
   protected:
 
   private:
 
-    void            Clean                 ();
+    bool            UInput_Ini                  ();
+    bool            UInput_End                  ();
+    bool            UInput_Emit                 (XWORD type, XWORD code, int value);
+    bool            UInput_Syn                  ();
+    bool            Key_Event                   (XBYTE code, bool pressed);
+    XWORD           GetLinuxKeyByVirtualKey     (XBYTE code);
+
+    #ifdef LINUX_X11_ACTIVE
+    bool            Mouse_WarpX11               (int x, int y);
+    #endif
+
+    int             uinputfd;
+
+    void            Clean                       ();
 };
 
 
 
 /*---- INLINE FUNCTIONS + PROTOTYPES ---------------------------------------------------------------------------------*/
-
-
-
-
-
-
-

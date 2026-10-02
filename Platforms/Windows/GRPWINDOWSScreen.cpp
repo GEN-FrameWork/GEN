@@ -880,16 +880,79 @@ bool GRPWINDOWSSCREEN::Set_Focus()
       return false;
     }
 
-  if(!SetForegroundWindow(hwnd))
+  HWND  hwndtarget      = GetAncestor(hwnd, GA_ROOT);
+  HWND  hwndforeground  = GetForegroundWindow();
+  DWORD tidcurrent      = GetCurrentThreadId();
+  DWORD tidtarget       = 0;
+  DWORD tidforeground   = 0;
+  bool  attachedtarget  = false;
+  bool  attachedfore    = false;
+
+  if(!hwndtarget)
+    {
+      hwndtarget = hwnd;
+    }
+
+  tidtarget = GetWindowThreadProcessId(hwndtarget, NULL);
+
+  if(hwndforeground)
+    {
+      tidforeground = GetWindowThreadProcessId(hwndforeground, NULL);
+    }
+
+  {
+    DWORD pidtarget = 0;
+    GetWindowThreadProcessId(hwndtarget, &pidtarget);
+    if(pidtarget)
+      {
+        AllowSetForegroundWindow(pidtarget);
+      }
+  }
+
+  // Attach before SetForegroundWindow: Windows blocks focus steals unless input queues are joined.
+  if(tidforeground && (tidforeground != tidcurrent))
+    {
+      attachedfore = AttachThreadInput(tidcurrent, tidforeground, TRUE)?true:false;
+    }
+
+  if(tidtarget && (tidtarget != tidcurrent) && (tidtarget != tidforeground))
+    {
+      attachedtarget = AttachThreadInput(tidcurrent, tidtarget, TRUE)?true:false;
+    }
+
+  ShowWindow(hwndtarget, SW_RESTORE);
+  BringWindowToTop(hwndtarget);
+  SetForegroundWindow(hwndtarget);
+  SetActiveWindow(hwndtarget);
+  SetFocus(hwnd);
+
+  if(attachedtarget)
+    {
+      AttachThreadInput(tidcurrent, tidtarget, FALSE);
+    }
+
+  if(attachedfore)
+    {
+      AttachThreadInput(tidcurrent, tidforeground, FALSE);
+    }
+
+  HWND hwndnow = GetForegroundWindow();
+  if(!hwndnow)
     {
       return false;
     }
 
-  AttachThreadInput(GetCurrentThreadId(), GetWindowThreadProcessId(GetAncestor(hwnd, GA_ROOT), NULL), TRUE);
+  if((hwndnow == hwndtarget) || (hwndnow == hwnd))
+    {
+      return true;
+    }
 
-  SetFocus(hwnd);
-    
-  return true;
+  if(GetAncestor(hwndnow, GA_ROOT) == hwndtarget)
+    {
+      return true;
+    }
+
+  return false;
 }
 
 

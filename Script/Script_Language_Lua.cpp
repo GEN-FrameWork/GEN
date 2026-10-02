@@ -37,6 +37,7 @@
 #include "Script_Language_Lua.h"
 
 #include <cmath>
+#include <string.h>
 
 #include "Script_XEvent.h"
 #include "Script_Lib.h"
@@ -452,11 +453,14 @@ int LUA_LibraryCallBack(lua_State* state)
 
   XVECTOR<XVARIANT*> params;
   XVARIANT           returnvalue;
+  XVECTOR<bool>      isouttable;
 
   int nargs = lua_gettop(state);
 
   for(int c=1; c <= nargs; ++c)
     {
+      bool isout = false;
+
       XVARIANT* variant = GEN_NEW XVARIANT();
       if(variant)
         {
@@ -466,29 +470,34 @@ int LUA_LibraryCallBack(lua_State* state)
               case LUA_TNIL           : /*(*variant) = NULL;*/                                break;
               case LUA_TBOOLEAN       : (*variant) = (lua_toboolean(state, c)?true:false);    break;
               case LUA_TLIGHTUSERDATA :                                                       break;
-              case LUA_TNUMBER        : /*
-                                        {
-                                          float  number   = (float)lua_tonumber(state, c);
-                                          double intpart  = 0.0f;
-                                          double fracpart = 0.0f;
-
-                                          fracpart = modf(number, &intpart);
-
-                                          if(!fracpart)
-                                                  (*variant) = (int)(number);
-                                            else  (*variant) = (float)(number);
-                                        }
-                                        */
-
-                                        (*variant) = (double)lua_tonumber(state, c);
+              case LUA_TNUMBER        : (*variant) = (double)lua_tonumber(state, c);
                                         break;
 
 
               case LUA_TSTRING        : (*variant) = (char*)(lua_tostring(state, c));         break;
-              case LUA_TTABLE         :                                                       break;
-              case LUA_TFUNCTION      : // XVARIANT dont suppor pointers yet
-                                        //(*variant) = (void*)(lua_tocfunction(state,c));
+              case LUA_TTABLE         : { int initial = 0;
+
+                                          lua_getfield(state, c, "value");
+                                          if(lua_isnumber(state, -1))
+                                            {
+                                              initial = (int)lua_tonumber(state, -1);
+                                            }
+                                           else
+                                            {
+                                              lua_pop(state, 1);
+                                              lua_rawgeti(state, c, 1);
+                                              if(lua_isnumber(state, -1))
+                                                {
+                                                  initial = (int)lua_tonumber(state, -1);
+                                                }
+                                            }
+                                          lua_pop(state, 1);
+
+                                          (*variant) = initial;
+                                          isout = true;
+                                        }
                                         break;
+              case LUA_TFUNCTION      :                                                       break;
               case LUA_TUSERDATA      :                                                       break;
               case LUA_TTHREAD        :                                                       break;
               case LUA_NUMTAGS        :                                                       break;
@@ -497,9 +506,36 @@ int LUA_LibraryCallBack(lua_State* state)
           params.Add(variant);
 
         }
+
+      isouttable.Add(isout);
     }
 
   libfunction->GetFunctionLibrary()(libfunction->GetLibrary(), script, &params, &returnvalue);
+
+  for(int c=1; c <= nargs; ++c)
+    {
+      if(!isouttable.Get(c - 1)) continue;
+
+      XVARIANT* variant = params.Get(c - 1);
+      if(!variant) continue;
+
+      int ivalue = 0;
+      switch(variant->GetType())
+        {
+          case XVARIANT_TYPE_BOOLEAN : ivalue = ((bool)(*variant)) ? 1 : 0; break;
+          case XVARIANT_TYPE_INTEGER :
+          case XVARIANT_TYPE_CHAR    : ivalue = (int)(*variant); break;
+          case XVARIANT_TYPE_FLOAT   : ivalue = (int)(float)(*variant); break;
+          case XVARIANT_TYPE_DOUBLE  : ivalue = (int)(double)(*variant); break;
+          case XVARIANT_TYPE_DWORD   : ivalue = (int)(XDWORD)(*variant); break;
+                           default   : break;
+        }
+
+      lua_pushnumber(state, ivalue);
+      lua_pushvalue(state, -1);
+      lua_setfield(state, c, "value");
+      lua_rawseti(state, c, 1);
+    }
 
   params.DeleteContents();
   params.DeleteAll();
@@ -534,6 +570,58 @@ int LUA_LibraryCallBack(lua_State* state)
                                            lua_pushstring(state, charstr.GetPtrChar());
                                            
                                            nreturnvalues++;
+                                         }
+                                         break;
+
+      case XVARIANT_TYPE_BUFFER        : { XBUFFER buffer = returnvalue;
+
+                                           if(buffer.GetSize() == (sizeof(int) * 2))
+                                             {
+                                               int x = 0;
+                                               int y = 0;
+
+                                               memcpy(&x, buffer.Get(), sizeof(int));
+                                               memcpy(&y, buffer.Get() + sizeof(int), sizeof(int));
+
+                                               lua_pushnumber(state, x);
+                                               lua_pushnumber(state, y);
+                                               nreturnvalues += 2;
+                                             }
+                                         }
+                                         break;
+
+      case XVARIANT_TYPE_MULTIPLE      : { XDWORD n = returnvalue.Multiple_GetSize();
+
+                                           for(XDWORD i=0; i<n; i++)
+                                             {
+                                               XVARIANT* item = returnvalue.Multiple_Get(i);
+                                               if(!item)
+                                                 {
+                                                   lua_pushnil(state);
+                                                   nreturnvalues++;
+                                                   continue;
+                                                 }
+
+                                               switch(item->GetType())
+                                                 {
+                                                   case XVARIANT_TYPE_NULL    : lua_pushnil(state); break;
+                                                   case XVARIANT_TYPE_BOOLEAN : lua_pushboolean(state, (int)(*item)); break;
+                                                   case XVARIANT_TYPE_INTEGER :
+                                                   case XVARIANT_TYPE_CHAR    : lua_pushnumber(state, (int)(*item)); break;
+                                                   case XVARIANT_TYPE_FLOAT   : lua_pushnumber(state, (double)(float)(*item)); break;
+                                                   case XVARIANT_TYPE_DOUBLE  : lua_pushnumber(state, (double)(*item)); break;
+                                                   case XVARIANT_TYPE_DWORD   : lua_pushnumber(state, (double)(XDWORD)(*item)); break;
+                                                   case XVARIANT_TYPE_STRING  : { XSTRING s = (const XSTRING&)(*item);
+                                                                                 XBUFFER a;
+                                                                                 s.ConvertToASCII(a);
+                                                                                 lua_pushstring(state, a.GetPtrChar());
+                                                                               }
+                                                                               break;
+                                                   default                   : lua_pushnil(state); break;
+                                                 }
+
+                                               nreturnvalues++;
+                                             }
                                          }
                                          break;
 

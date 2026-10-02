@@ -1,10 +1,10 @@
 /**-------------------------------------------------------------------------------------------------------------------
 *
-* @file       ID_IBAN.cpp
+* @file       XID_IBAN.cpp
 *
-* @class      ID_IBAN
-* @brief      IDentification (ID) IBAN Number (International Bank Account Number)
-* @ingroup    IDENTIFICATION
+* @class      XID_IBAN
+* @brief      eXtended Utils IBAN Number (International Bank Account Number)
+* @ingroup    XUTILS
 *
 * @copyright  EndoraSoft. All rights reserved.
 *
@@ -35,7 +35,7 @@
 
 /*---- INCLUDES ------------------------------------------------------------------------------------------------------*/
 
-#include "ID_IBAN.h"
+#include "XID_IBAN.h"
 
 #include "XBuffer.h"
 
@@ -57,12 +57,12 @@
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         ID_IBAN::ID_IBAN()
+* @fn         XID_IBAN::XID_IBAN()
 * @brief      Constructor of class
-* @ingroup    IDENTIFICATION
+* @ingroup    XUTILS
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-ID_IBAN::ID_IBAN()
+XID_IBAN::XID_IBAN()
 {
   Clean();
 }
@@ -70,13 +70,13 @@ ID_IBAN::ID_IBAN()
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         ID_IBAN::~ID_IBAN()
+* @fn         XID_IBAN::~XID_IBAN()
 * @brief      Destructor of class
 * @note       VIRTUAL
-* @ingroup    IDENTIFICATION
+* @ingroup    XUTILS
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-ID_IBAN::~ID_IBAN()
+XID_IBAN::~XID_IBAN()
 {
   Clean();
 }
@@ -84,14 +84,14 @@ ID_IBAN::~ID_IBAN()
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         XSTRING* ID_IBAN::Get()
+* @fn         XSTRING* XID_IBAN::Get()
 * @brief      Get value
-* @ingroup    IDENTIFICATION
+* @ingroup    XUTILS
 * 
 * @return     XSTRING* : Pointer to the requested string; NULL if it is not available.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-XSTRING* ID_IBAN::Get()
+XSTRING* XID_IBAN::Get()
 {
   return &IBANstr;
 }
@@ -99,16 +99,16 @@ XSTRING* ID_IBAN::Get()
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         bool ID_IBAN::Set(XCHAR* IBAN)
+* @fn         bool XID_IBAN::Set(XCHAR* IBAN)
 * @brief      Set value
-* @ingroup    IDENTIFICATION
+* @ingroup    XUTILS
 * 
 * @param[in]  IBAN : IBAN pointer to use.
 * 
 * @return     bool : true if the operation is successful; otherwise false.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-bool ID_IBAN::Set(XCHAR* IBAN)
+bool XID_IBAN::Set(XCHAR* IBAN)
 {
   bool status = false;
 
@@ -181,14 +181,14 @@ bool ID_IBAN::Set(XCHAR* IBAN)
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         XSTRING* ID_IBAN::GetCountry()
+* @fn         XSTRING* XID_IBAN::GetCountry()
 * @brief      Get country
-* @ingroup    IDENTIFICATION
+* @ingroup    XUTILS
 * 
 * @return     XSTRING* : Pointer to the requested string; NULL if it is not available.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-XSTRING* ID_IBAN::GetCountry()
+XSTRING* XID_IBAN::GetCountry()
 {
   return &country;
 }
@@ -196,9 +196,9 @@ XSTRING* ID_IBAN::GetCountry()
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         bool ID_IBAN::IsValidSizeCountry(XCHAR* countrystr, int size)
+* @fn         bool XID_IBAN::IsValidSizeCountry(XCHAR* countrystr, int size)
 * @brief      Is valid size country
-* @ingroup    IDENTIFICATION
+* @ingroup    XUTILS
 * 
 * @param[in]  countrystr : Countrystr pointer to use.
 * @param[in]  size : Size value.
@@ -206,7 +206,7 @@ XSTRING* ID_IBAN::GetCountry()
 * @return     bool : true if the condition is met; otherwise false.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-bool ID_IBAN::IsValidSizeCountry(XCHAR* countrystr, int size)
+bool XID_IBAN::IsValidSizeCountry(XCHAR* countrystr, int size)
 {
   typedef struct
   {
@@ -304,16 +304,16 @@ bool ID_IBAN::IsValidSizeCountry(XCHAR* countrystr, int size)
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         int ID_IBAN::Mod97(XSTRING& IBANstr)
+* @fn         int XID_IBAN::Mod97(XSTRING& IBANstr)
 * @brief      Mod97
-* @ingroup    IDENTIFICATION
+* @ingroup    XUTILS
 * 
 * @param[in]  IBANstr : IBA Nstr value.
 * 
 * @return     int : Requested value.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-int ID_IBAN::Mod97(XSTRING& IBANstr)
+int XID_IBAN::Mod97(XSTRING& IBANstr)
 {
   XBUFFER     xbuffer;
   const char* iban = NULL;
@@ -363,16 +363,16 @@ int ID_IBAN::Mod97(XSTRING& IBANstr)
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         int ID_IBAN::Spain_CalculeControlDigit(XSTRING& IBANstr)
+* @fn         int XID_IBAN::Spain_CalculeControlDigit(XSTRING& IBANstr)
 * @brief      Spain calcule control digit
-* @ingroup    IDENTIFICATION
+* @ingroup    XUTILS
 * 
 * @param[in]  IBANstr : IBA Nstr value.
 * 
 * @return     int : Requested value.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-int ID_IBAN::Spain_CalculeControlDigit(XSTRING& IBANstr)
+int XID_IBAN::Spain_CalculeControlDigit(XSTRING& IBANstr)
 {
   int firstdigit = 0;
   int seconddigit = 0;
@@ -445,16 +445,16 @@ int ID_IBAN::Spain_CalculeControlDigit(XSTRING& IBANstr)
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         bool ID_IBAN::Spain_ValidateControlDigit(XSTRING& IBANstr)
+* @fn         bool XID_IBAN::Spain_ValidateControlDigit(XSTRING& IBANstr)
 * @brief      Spain validate control digit
-* @ingroup    IDENTIFICATION
+* @ingroup    XUTILS
 * 
 * @param[in]  IBANstr : IBA Nstr value.
 * 
 * @return     bool : true if the operation is successful; otherwise false.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-bool ID_IBAN::Spain_ValidateControlDigit(XSTRING& IBANstr)
+bool XID_IBAN::Spain_ValidateControlDigit(XSTRING& IBANstr)
 {
   if (IBANstr.GetSize() != 24)
   {
@@ -482,13 +482,13 @@ bool ID_IBAN::Spain_ValidateControlDigit(XSTRING& IBANstr)
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         void ID_IBAN::Clean()
+* @fn         void XID_IBAN::Clean()
 * @brief      Clean the attributes of the class: Default initialize
 * @note       INTERNAL
-* @ingroup    IDENTIFICATION
+* @ingroup    XUTILS
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-void ID_IBAN::Clean()
+void XID_IBAN::Clean()
 {
   IBANstr.Empty();
   country.Empty();

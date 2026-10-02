@@ -34,6 +34,7 @@
 #include "XString.h"
 #include "XDateTime.h"
 #include "XTrace.h"
+#include "XVector.h"
 
 
 
@@ -60,6 +61,7 @@ enum XVARIANT_TYPE
   XVARIANT_TYPE_DATETIME                        ,  
   XVARIANT_TYPE_BUFFER                          ,  
   XVARIANT_TYPE_POINTER                         ,
+  XVARIANT_TYPE_MULTIPLE                        ,
 
   XVARIANT_TYPE_UNKNOWN                               
 };
@@ -155,6 +157,11 @@ class XVARIANT
     bool                            IsNull                  ();  
 
     virtual bool                    Destroy                 ();
+
+    bool                            SetAsMultiple           ();
+    bool                            Multiple_Add            (const XVARIANT& value);
+    XDWORD                          Multiple_GetSize        () const;
+    XVARIANT*                       Multiple_Get            (XDWORD index) const;
 
     #ifdef XTRACE_ACTIVE
     void                            PrintDebug              ();    

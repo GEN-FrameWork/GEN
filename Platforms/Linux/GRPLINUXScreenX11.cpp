@@ -529,7 +529,7 @@ bool GRPLINUXSCREENX11::Resize(int width, int height)
 {
   // Clamp to the GRPVIEWPORT_ID_MAIN viewport's max size here too (not just via
   // ApplyWMNormalHints()/Update()'s reactive snap-back), so an API/script-driven Resize() call
-  // (e.g. Script_Lib_Window.cpp) requesting a size beyond the max settles at the cap immediately
+  // (e.g. Script_Lib_Screen.cpp) requesting a size beyond the max settles at the cap immediately
   // instead of visibly growing for one frame and then being snapped back by Update() -- mirrors
   // Win32's WM_GETMINMAXINFO, which Windows sends (and enforces) for programmatic resizes too, not
   // just interactive drag. Not applied while fullscreen (unrelated sizing).

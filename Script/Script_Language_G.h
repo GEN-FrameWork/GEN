@@ -47,7 +47,7 @@
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
 
 #define SCRIPT_LNG_G_VERSION                    1
-#define SCRIPT_LNG_G_SUBVERSION                 1
+#define SCRIPT_LNG_G_SUBVERSION                 2
 #define SCRIPT_LNG_G_SUBVERSIONERR              0
 
 enum SCRIPT_LNG_G_TOKENTYPES
@@ -258,6 +258,7 @@ class SCRIPT_LNG_G : public SCRIPT
     bool                                DeleteCommands              ();
 
     int                                 GetFuncParams               (SCRIPT_LNG_G_VAR* params);
+    int                                 GetFuncParams               (SCRIPT_LNG_G_VAR* params, XSTRING* outnames);
     void                                NotFuncParams               ();
 
     int                                 GetReturnValueScript        ();
@@ -347,6 +348,7 @@ class SCRIPT_LNG_G : public SCRIPT
     XCHAR                               currenttoken[SCRIPT_LNG_G_MAXTOKENLEN+1];
     XCHAR                               currentfunction[_MAXSTR];
     SCRIPT_LNG_G_VAR                    returnvalue;
+    XVARIANT                            lastreturnmultiple;
 };
 
 

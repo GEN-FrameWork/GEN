@@ -41,6 +41,7 @@
 #include <cmath>
 
 #include "XFactory.h"
+#include "XPath.h"
 #include "XSystem.h"
 
 #include "Script.h"
@@ -108,6 +109,17 @@ bool SCRIPT_LIB_SYSTEM::AddLibraryFunctions(SCRIPT* script)
   this->script = script;
 
   script->AddLibraryFunction(this, __L("System_GetType"), Call_System_GetType);
+  script->AddLibraryFunction(this, __L("System_GetOperativeSystemID"), Call_System_GetOperativeSystemID);
+  script->AddLibraryFunction(this, __L("System_GetHardwareType"), Call_System_GetHardwareType);
+  script->AddLibraryFunction(this, __L("System_IsWindows"), Call_System_IsWindows);
+  script->AddLibraryFunction(this, __L("System_IsLinux"), Call_System_IsLinux);
+  script->AddLibraryFunction(this, __L("System_IsAndroid"), Call_System_IsAndroid);
+  script->AddLibraryFunction(this, __L("System_GetLanguageSO"), Call_System_GetLanguageSO);
+  script->AddLibraryFunction(this, __L("System_GetUser"), Call_System_GetUser);
+  script->AddLibraryFunction(this, __L("System_GetDomain"), Call_System_GetDomain);
+  script->AddLibraryFunction(this, __L("System_GetFreeMemoryPercent"), Call_System_GetFreeMemoryPercent);
+  script->AddLibraryFunction(this, __L("System_GetPathExecApplication"), Call_System_GetPathExecApplication);
+
   script->AddLibraryFunction(this, __L("System_Reboot"), Call_System_Reboot);
   script->AddLibraryFunction(this, __L("System_PowerOff"), Call_System_PowerOff);
   script->AddLibraryFunction(this, __L("System_Logout"), Call_System_Logout);
@@ -166,7 +178,312 @@ void Call_System_GetType(SCRIPT_LIB* library, SCRIPT* script, XVECTOR<XVARIANT*>
       case XSYSTEM_PLATFORM_LINUX_EMBEDDED  : (*returnvalue) = "LinuxEmbedded";       break;
       case XSYSTEM_PLATFORM_ANDROID         : (*returnvalue) = "Android";             break;
       case XSYSTEM_PLATFORM_STM32           : (*returnvalue) = "STM32";               break;
+      case XSYSTEM_PLATFORM_ESP32           : (*returnvalue) = "ESP32";               break;
+      case XSYSTEM_PLATFORM_SAMD5XE5X       : (*returnvalue) = "SAMD5xE5x";           break;
     };
+}
+
+
+/**-------------------------------------------------------------------------------------------------------------------
+* 
+* @fn         void Call_System_GetOperativeSystemID(SCRIPT_LIB* library, SCRIPT* script, XVECTOR<XVARIANT*>* params, XVARIANT* returnvalue)
+* @brief      Call_System_GetOperativeSystemID
+* @ingroup    SCRIPT
+* 
+* @param[in]  library : Library pointer to use.
+* @param[in]  script : Script pointer to use.
+* @param[in]  params : Params pointer to use.
+* @param[in]  returnvalue : Returnvalue pointer to use.
+* 
+* --------------------------------------------------------------------------------------------------------------------*/
+void Call_System_GetOperativeSystemID(SCRIPT_LIB* library, SCRIPT* script, XVECTOR<XVARIANT*>* params, XVARIANT* returnvalue)
+{
+  if(!library)      return;
+  if(!script)       return;
+  if(!params)       return;
+  if(!returnvalue)  return;
+
+  returnvalue->Set();
+
+  XSTRING osid;
+
+  if(GEN_XSYSTEM.GetOperativeSystemID(osid))
+    {
+      (*returnvalue) = osid.Get();
+    }
+}
+
+
+/**-------------------------------------------------------------------------------------------------------------------
+* 
+* @fn         void Call_System_GetHardwareType(SCRIPT_LIB* library, SCRIPT* script, XVECTOR<XVARIANT*>* params, XVARIANT* returnvalue)
+* @brief      Call_System_GetHardwareType
+* @ingroup    SCRIPT
+* 
+* @param[in]  library : Library pointer to use.
+* @param[in]  script : Script pointer to use.
+* @param[in]  params : Params pointer to use.
+* @param[in]  returnvalue : Returnvalue pointer to use.
+* 
+* --------------------------------------------------------------------------------------------------------------------*/
+void Call_System_GetHardwareType(SCRIPT_LIB* library, SCRIPT* script, XVECTOR<XVARIANT*>* params, XVARIANT* returnvalue)
+{
+  if(!library)      return;
+  if(!script)       return;
+  if(!params)       return;
+  if(!returnvalue)  return;
+
+  returnvalue->Set();
+
+  switch(GEN_XSYSTEM.GetTypeHardware())
+    {
+      case XSYSTEM_HARDWARETYPE_UNKNOWN         :
+                      default                   : (*returnvalue) = "Unknown";         break;
+      case XSYSTEM_HARDWARETYPE_PC              : (*returnvalue) = "PC";              break;
+      case XSYSTEM_HARDWARETYPE_LEX3V700A       : (*returnvalue) = "LEX3V700A";       break;
+      case XSYSTEM_HARDWARETYPE_ARMGENERIC      : (*returnvalue) = "ARMGeneric";      break;
+      case XSYSTEM_HARDWARETYPE_ARTILA500       : (*returnvalue) = "Artila500";       break;
+      case XSYSTEM_HARDWARETYPE_GUMSTIXCONNEX   : (*returnvalue) = "GumstixConnex";   break;
+      case XSYSTEM_HARDWARETYPE_RASPBERRYPI     : (*returnvalue) = "RaspberryPi";     break;
+      case XSYSTEM_HARDWARETYPE_BEAGLEBONE      : (*returnvalue) = "BeagleBone";      break;
+      case XSYSTEM_HARDWARETYPE_NXP_IMX6        : (*returnvalue) = "NXP_iMX6";        break;
+      case XSYSTEM_HARDWARETYPE_NXP_IMX8        : (*returnvalue) = "NXP_iMX8";        break;
+      case XSYSTEM_HARDWARETYPE_MICRO_STM32     : (*returnvalue) = "STM32";           break;
+      case XSYSTEM_HARDWARETYPE_MICRO_ESP32     : (*returnvalue) = "ESP32";           break;
+      case XSYSTEM_HARDWARETYPE_MICRO_SAMD5XE5X : (*returnvalue) = "SAMD5xE5x";       break;
+    };
+}
+
+
+/**-------------------------------------------------------------------------------------------------------------------
+* 
+* @fn         void Call_System_IsWindows(SCRIPT_LIB* library, SCRIPT* script, XVECTOR<XVARIANT*>* params, XVARIANT* returnvalue)
+* @brief      Call_System_IsWindows
+* @ingroup    SCRIPT
+* 
+* @param[in]  library : Library pointer to use.
+* @param[in]  script : Script pointer to use.
+* @param[in]  params : Params pointer to use.
+* @param[in]  returnvalue : Returnvalue pointer to use.
+* 
+* --------------------------------------------------------------------------------------------------------------------*/
+void Call_System_IsWindows(SCRIPT_LIB* library, SCRIPT* script, XVECTOR<XVARIANT*>* params, XVARIANT* returnvalue)
+{
+  if(!library)      return;
+  if(!script)       return;
+  if(!params)       return;
+  if(!returnvalue)  return;
+
+  returnvalue->Set();
+
+  (*returnvalue) = (bool)(GEN_XSYSTEM.GetPlatform() == XSYSTEM_PLATFORM_WINDOWS);
+}
+
+
+/**-------------------------------------------------------------------------------------------------------------------
+* 
+* @fn         void Call_System_IsLinux(SCRIPT_LIB* library, SCRIPT* script, XVECTOR<XVARIANT*>* params, XVARIANT* returnvalue)
+* @brief      Call_System_IsLinux
+* @ingroup    SCRIPT
+* 
+* @param[in]  library : Library pointer to use.
+* @param[in]  script : Script pointer to use.
+* @param[in]  params : Params pointer to use.
+* @param[in]  returnvalue : Returnvalue pointer to use.
+* 
+* --------------------------------------------------------------------------------------------------------------------*/
+void Call_System_IsLinux(SCRIPT_LIB* library, SCRIPT* script, XVECTOR<XVARIANT*>* params, XVARIANT* returnvalue)
+{
+  if(!library)      return;
+  if(!script)       return;
+  if(!params)       return;
+  if(!returnvalue)  return;
+
+  returnvalue->Set();
+
+  XSYSTEM_PLATFORM platform = GEN_XSYSTEM.GetPlatform();
+
+  (*returnvalue) = (bool)((platform == XSYSTEM_PLATFORM_LINUX) || (platform == XSYSTEM_PLATFORM_LINUX_EMBEDDED));
+}
+
+
+/**-------------------------------------------------------------------------------------------------------------------
+* 
+* @fn         void Call_System_IsAndroid(SCRIPT_LIB* library, SCRIPT* script, XVECTOR<XVARIANT*>* params, XVARIANT* returnvalue)
+* @brief      Call_System_IsAndroid
+* @ingroup    SCRIPT
+* 
+* @param[in]  library : Library pointer to use.
+* @param[in]  script : Script pointer to use.
+* @param[in]  params : Params pointer to use.
+* @param[in]  returnvalue : Returnvalue pointer to use.
+* 
+* --------------------------------------------------------------------------------------------------------------------*/
+void Call_System_IsAndroid(SCRIPT_LIB* library, SCRIPT* script, XVECTOR<XVARIANT*>* params, XVARIANT* returnvalue)
+{
+  if(!library)      return;
+  if(!script)       return;
+  if(!params)       return;
+  if(!returnvalue)  return;
+
+  returnvalue->Set();
+
+  (*returnvalue) = (bool)(GEN_XSYSTEM.GetPlatform() == XSYSTEM_PLATFORM_ANDROID);
+}
+
+
+/**-------------------------------------------------------------------------------------------------------------------
+* 
+* @fn         void Call_System_GetLanguageSO(SCRIPT_LIB* library, SCRIPT* script, XVECTOR<XVARIANT*>* params, XVARIANT* returnvalue)
+* @brief      Call_System_GetLanguageSO
+* @ingroup    SCRIPT
+* 
+* @param[in]  library : Library pointer to use.
+* @param[in]  script : Script pointer to use.
+* @param[in]  params : Params pointer to use.
+* @param[in]  returnvalue : Returnvalue pointer to use.
+* 
+* --------------------------------------------------------------------------------------------------------------------*/
+void Call_System_GetLanguageSO(SCRIPT_LIB* library, SCRIPT* script, XVECTOR<XVARIANT*>* params, XVARIANT* returnvalue)
+{
+  if(!library)      return;
+  if(!script)       return;
+  if(!params)       return;
+  if(!returnvalue)  return;
+
+  returnvalue->Set();
+
+  (*returnvalue) = (int)GEN_XSYSTEM.GetLanguageSO();
+}
+
+
+/**-------------------------------------------------------------------------------------------------------------------
+* 
+* @fn         void Call_System_GetUser(SCRIPT_LIB* library, SCRIPT* script, XVECTOR<XVARIANT*>* params, XVARIANT* returnvalue)
+* @brief      Call_System_GetUser
+* @ingroup    SCRIPT
+* 
+* @param[in]  library : Library pointer to use.
+* @param[in]  script : Script pointer to use.
+* @param[in]  params : Params pointer to use.
+* @param[in]  returnvalue : Returnvalue pointer to use.
+* 
+* --------------------------------------------------------------------------------------------------------------------*/
+void Call_System_GetUser(SCRIPT_LIB* library, SCRIPT* script, XVECTOR<XVARIANT*>* params, XVARIANT* returnvalue)
+{
+  if(!library)      return;
+  if(!script)       return;
+  if(!params)       return;
+  if(!returnvalue)  return;
+
+  returnvalue->Set();
+
+  XSTRING user;
+  XSTRING domain;
+
+  if(GEN_XSYSTEM.GetUserAndDomain(user, domain))
+    {
+      (*returnvalue) = user.Get();
+    }
+}
+
+
+/**-------------------------------------------------------------------------------------------------------------------
+* 
+* @fn         void Call_System_GetDomain(SCRIPT_LIB* library, SCRIPT* script, XVECTOR<XVARIANT*>* params, XVARIANT* returnvalue)
+* @brief      Call_System_GetDomain
+* @ingroup    SCRIPT
+* 
+* @param[in]  library : Library pointer to use.
+* @param[in]  script : Script pointer to use.
+* @param[in]  params : Params pointer to use.
+* @param[in]  returnvalue : Returnvalue pointer to use.
+* 
+* --------------------------------------------------------------------------------------------------------------------*/
+void Call_System_GetDomain(SCRIPT_LIB* library, SCRIPT* script, XVECTOR<XVARIANT*>* params, XVARIANT* returnvalue)
+{
+  if(!library)      return;
+  if(!script)       return;
+  if(!params)       return;
+  if(!returnvalue)  return;
+
+  returnvalue->Set();
+
+  XSTRING user;
+  XSTRING domain;
+
+  if(GEN_XSYSTEM.GetUserAndDomain(user, domain))
+    {
+      (*returnvalue) = domain.Get();
+    }
+}
+
+
+/**-------------------------------------------------------------------------------------------------------------------
+* 
+* @fn         void Call_System_GetFreeMemoryPercent(SCRIPT_LIB* library, SCRIPT* script, XVECTOR<XVARIANT*>* params, XVARIANT* returnvalue)
+* @brief      Call_System_GetFreeMemoryPercent
+* @ingroup    SCRIPT
+* 
+* @param[in]  library : Library pointer to use.
+* @param[in]  script : Script pointer to use.
+* @param[in]  params : Params pointer to use.
+* @param[in]  returnvalue : Returnvalue pointer to use.
+* 
+* --------------------------------------------------------------------------------------------------------------------*/
+void Call_System_GetFreeMemoryPercent(SCRIPT_LIB* library, SCRIPT* script, XVECTOR<XVARIANT*>* params, XVARIANT* returnvalue)
+{
+  if(!library)      return;
+  if(!script)       return;
+  if(!params)       return;
+  if(!returnvalue)  return;
+
+  returnvalue->Set();
+
+  (*returnvalue) = GEN_XSYSTEM.GetFreeMemoryPercent();
+}
+
+
+/**-------------------------------------------------------------------------------------------------------------------
+* 
+* @fn         void Call_System_GetPathExecApplication(SCRIPT_LIB* library, SCRIPT* script, XVECTOR<XVARIANT*>* params, XVARIANT* returnvalue)
+* @brief      Call_System_GetPathExecApplication
+* @ingroup    SCRIPT
+* 
+* @param[in]  library : Library pointer to use.
+* @param[in]  script : Script pointer to use.
+* @param[in]  params : Params pointer to use.
+* @param[in]  returnvalue : Returnvalue pointer to use.
+* 
+* --------------------------------------------------------------------------------------------------------------------*/
+void Call_System_GetPathExecApplication(SCRIPT_LIB* library, SCRIPT* script, XVECTOR<XVARIANT*>* params, XVARIANT* returnvalue)
+{
+  if(!library)      return;
+  if(!script)       return;
+  if(!params)       return;
+  if(!returnvalue)  return;
+
+  returnvalue->Set();
+
+  if(params->GetSize() < 1)
+    {
+      script->HaveError(SCRIPT_ERRORCODE_INSUF_PARAMS);
+      return;
+    }
+
+  XVARIANT* variant = params->Get(0);
+  if(!variant)
+    {
+      return;
+    }
+
+  XSTRING appname = (*variant);
+  XPATH   apppath;
+
+  if(GEN_XSYSTEM.GetPathExecApplication(appname.Get(), apppath))
+    {
+      (*returnvalue) = apppath.Get();
+    }
 }
 
 
@@ -281,6 +598,3 @@ void Call_System_GetEnviromentVar(SCRIPT_LIB* library, SCRIPT* script, XVECTOR<X
       (*returnvalue) = variable;
     }   
 }
-
-
-

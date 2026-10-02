@@ -260,21 +260,13 @@ void Call_ExecApplication(SCRIPT_LIB* library, SCRIPT* script, XVECTOR<XVARIANT*
   
   if(app_path)
     {    
-      XBUFFER in;
-      XBUFFER out;  
-      int     returncode = 0;
+      int returncode = 0;
 
-      status = GEN_XPROCESSMANAGER.Application_Execute(app_path->Get(), app_params?app_params->Get():__L(""), &in, &out, &returncode);    
-      if(status)
-        {            
-          (*returnvalue) = returncode?false:true; 
-          return;    
-        }                 
-       else
-        {
-          (*returnvalue) = false;  
-          return;    
-        }
+      // Do not capture stdin/stdout: that path waits for process exit (and used CREATE_NO_WINDOW).
+      // ExecApplication is meant to launch interactive GUI apps and return while they stay open.
+      status = GEN_XPROCESSMANAGER.Application_Execute(app_path->Get(), app_params?app_params->Get():__L(""), (XBUFFER*)NULL, (XBUFFER*)NULL, &returncode);    
+      (*returnvalue) = status;  
+      return;    
     }
 
   (*returnvalue) = false;
