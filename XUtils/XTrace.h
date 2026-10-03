@@ -45,6 +45,7 @@
 #include "XDateTime.h"
 #include "XString.h"
 #include "XBuffer.h"
+#include "XMap.h"
 
 
 
@@ -105,7 +106,9 @@ enum XTRACE_TYPE_STATUS_MSG
 #define XTRACE_MAXAPPLICATIONIDSIZE         36
 
 #define XTRACE_IDPACKET                     0xAADEB055
+
 #define XTRACE_IDMSGCLEARSCREEN             __L("#[CLEAR_SCREEN]# :")    
+
 #define XTRACE_IDMSGSTATUS                  __L("#[CHANGE_STATUS]# :")    
 #define XTRACE_IDMSGSTATUSCLEAR             __L("#[CLEAR_STATUS]# :")    
 #define XTRACE_IDMSGSTATUS_BOOLEAN          __C('B')    
@@ -113,7 +116,11 @@ enum XTRACE_TYPE_STATUS_MSG
 #define XTRACE_IDMSGSTATUS_STRING           __C('S')    
 #define XTRACE_IDMSGSTATUS_DWORD            __C('D')    
 #define XTRACE_IDMSGSTATUS_FLOAT            __C('F')    
-#define XTRACE_IDMSGSTATUS_COLOR            __C('C')    
+#define XTRACE_IDMSGSTATUS_COLOR            __C('C')   
+
+#define XTRACE_IDMSGTESTS                   __L("#[TESTS_RESULT]# :")    
+
+ 
 
 
 #define XTRACE_MAXCACHEREMOTEUDPIP          100
@@ -163,6 +170,12 @@ enum XTRACE_TYPE_STATUS_MSG
   #define XTRACE_PRINTHEADER(level, header)                                                               XTRACE::instance->PrintHeader(level, header)
 
   #define XTRACE_PRINTMSGSTATUS(name, value)                                                              XTRACE::instance->PrintMsgStatus(0, name, value)
+
+  #define XTRACE_PRINTMSGTESTS(ID, error)                                                                 XTRACE::instance->PrintMsgTests(ID, error)
+  #define XTRACE_TESTS_LOAD(path)                                                                         XTRACE::instance->Tests_Load(path)
+  #define XTRACE_TESTS_EXISTS(ID)                                                                         XTRACE::instance->Tests_Exists(ID)
+  #define XTRACE_TESTS_GETDESCRIPTION(ID, description)                                                    XTRACE::instance->Tests_GetDescription(ID, description)
+  #define XTRACE_TESTS_DELETEALL                                                                          XTRACE::instance->Tests_DeleteAll()
   
   #define XTRACE_CLEARSCREEN                                                                              XTRACE::instance->ClearScreen(0)
   #define XTRACE_CLEARALLSCREENS                                                                          XTRACE::instance->ClearScreen(1)
@@ -237,6 +250,15 @@ enum XTRACE_TYPE_STATUS_MSG
     #define XTRACE_PRINTDATABLOCKCODE
 
     #define XTRACE_PRINTMSGSTATUS
+    #define XTRACE_PRINTMSGSTATUSCOLOR(level, name, value)
+    #define XTRACE_PRINTMSGSTATUSTAB(level, name, value)
+    #define XTRACE_PRINTMSGSTATUSCODE(level, name, value)
+
+    #define XTRACE_PRINTMSGTESTS(ID, error)
+    #define XTRACE_TESTS_LOAD(path)                      (false)
+    #define XTRACE_TESTS_EXISTS(ID)                      (false)
+    #define XTRACE_TESTS_GETDESCRIPTION(ID, description) (false)
+    #define XTRACE_TESTS_DELETEALL
     
   #else
 
@@ -256,6 +278,12 @@ enum XTRACE_TYPE_STATUS_MSG
     #define XTRACE_PRINTMSGSTATUSCOLOR(level, name, value)
     #define XTRACE_PRINTMSGSTATUSTAB(level, name, value)
     #define XTRACE_PRINTMSGSTATUSCODE(level, name, value)
+
+    #define XTRACE_PRINTMSGTESTS(ID, error)
+    #define XTRACE_TESTS_LOAD(path)                      (false)
+    #define XTRACE_TESTS_EXISTS(ID)                      (false)
+    #define XTRACE_TESTS_GETDESCRIPTION(ID, description) (false)
+    #define XTRACE_TESTS_DELETEALL
 
   #endif
 
@@ -422,6 +450,15 @@ class XTRACE
     bool                            PrintMsgStatus                    (XBYTE level, XCHAR* name, float value);
     bool                            PrintMsgStatus                    (XBYTE level, XCHAR* name, XBYTE value[3]);
 
+    bool                            PrintMsgTests                     (XDWORD ID, int error);
+
+    bool                            Tests_Load                        (XCHAR* path);
+    bool                            Tests_Load                        (XSTRING& path);
+    bool                            Tests_Exists                      (XDWORD ID);
+    bool                            Tests_GetDescription              (XDWORD ID, XSTRING& description);
+    XDWORD                          Tests_GetSize                     ();
+    bool                            Tests_DeleteAll                   ();
+
     virtual void                    PrintSpecial                      (XTRACE_TARGET* target, XBYTE level, XCHAR* string);
     virtual void                    PrintFile                         (XTRACE_TARGET* target, XBYTE level, XCHAR* string);
     virtual void                    PrintNet                          (XTRACE_TARGET* target, XBYTE level, XCHAR* string);
@@ -479,6 +516,8 @@ class XTRACE
     
     bool                            openheader;
     XDWORD                          sequence;
+
+    XMAP<XDWORD, XSTRING*>          testsdescriptions;
 
   private:
 

@@ -72,7 +72,8 @@ SCRIPT_LIB_CONSOLE::SCRIPT_LIB_CONSOLE() : SCRIPT_LIB(SCRIPT_LIB_NAME_CONSOLE)
 {
   Clean();
 
-  console=GEN_XFACTORY.CreateConsole();
+  console      = GEN_XFACTORY.CreateConsole();
+  consoleowned = (console != NULL);
 }
 
 
@@ -86,7 +87,7 @@ SCRIPT_LIB_CONSOLE::SCRIPT_LIB_CONSOLE() : SCRIPT_LIB(SCRIPT_LIB_NAME_CONSOLE)
 * --------------------------------------------------------------------------------------------------------------------*/
 SCRIPT_LIB_CONSOLE::~SCRIPT_LIB_CONSOLE()
 {
-  if(console) GEN_XFACTORY.DeleteConsole(console);
+  if(console && consoleowned) GEN_XFACTORY.DeleteConsole(console);
 
   Clean();
 }
@@ -130,12 +131,40 @@ XCONSOLE* SCRIPT_LIB_CONSOLE::GetConsole()
 {
   if(!console) 
     {
-      console=GEN_XFACTORY.CreateConsole();
+      console      = GEN_XFACTORY.CreateConsole();
+      consoleowned = (console != NULL);
     }
     
   if(!console) return NULL;
 
   return console;
+}
+
+
+/**-------------------------------------------------------------------------------------------------------------------
+* 
+* @fn         bool SCRIPT_LIB_CONSOLE::SetConsole(XCONSOLE* console)
+* @brief      Use an external console (e.g. APPFLOWCONSOLE) instead of an owned one
+* @ingroup    SCRIPT
+* 
+* @param[in]  console : Console pointer to use (not owned by this library).
+* 
+* @return     bool : true if the operation is successful; otherwise false.
+* 
+* --------------------------------------------------------------------------------------------------------------------*/
+bool SCRIPT_LIB_CONSOLE::SetConsole(XCONSOLE* console)
+{
+  if(!console) return false;
+
+  if(this->console && consoleowned)
+    {
+      GEN_XFACTORY.DeleteConsole(this->console);
+    }
+
+  this->console = console;
+  consoleowned  = false;
+
+  return true;
 }
 
 
@@ -149,7 +178,8 @@ XCONSOLE* SCRIPT_LIB_CONSOLE::GetConsole()
 * --------------------------------------------------------------------------------------------------------------------*/
 void SCRIPT_LIB_CONSOLE::Clean()
 {
-  console = NULL;
+  console      = NULL;
+  consoleowned = false;
 }
 
 

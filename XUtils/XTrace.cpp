@@ -38,6 +38,11 @@
 #include "XTrace.h"
 
 #include "XFactory.h"
+#include "XPath.h"
+
+#if defined(XFILE_ACTIVE) && defined(XFILE_JSON_ACTIVE)
+#include "XFileJSON.h"
+#endif
 
 #include "DIOFactory.h"
 #include "DIOURL.h"
@@ -929,6 +934,8 @@ XTRACE::XTRACE()
 * --------------------------------------------------------------------------------------------------------------------*/
 XTRACE::~XTRACE()
 {
+  Tests_DeleteAll();
+
   Clean();
 }
 
@@ -1641,6 +1648,211 @@ bool XTRACE::PrintMsgStatus(XBYTE level, XCHAR* name, XBYTE value[3])
   string.Format(__L("%s,%s,%c,%02X,%02X,%02X"), XTRACE_IDMSGSTATUS, name, XTRACE_IDMSGSTATUS_COLOR, value[0], value[1], value[2]);
 
   return Print(level, string.Get());
+}
+
+
+/**-------------------------------------------------------------------------------------------------------------------
+* 
+* @fn         bool XTRACE::PrintMsgTests(XDWORD ID, int error)
+* @brief      print msg tests
+* @ingroup    XUTILS
+* 
+* @param[in]  ID : 
+* @param[in]  error : 
+* 
+* @return     bool : true if is succesful. 
+* 
+* --------------------------------------------------------------------------------------------------------------------*/
+bool XTRACE::PrintMsgTests(XDWORD ID, int error) 
+{
+  XSTRING string;
+
+  string.Format(__L("%s,%d,%d"), XTRACE_IDMSGTESTS, ID, error);
+
+  return Print(0, string.Get());
+}
+
+
+/**-------------------------------------------------------------------------------------------------------------------
+* 
+* @fn         bool XTRACE::Tests_Load(XCHAR* path)
+* @brief      Load tests catalog (JSON: id + description) into memory
+* @ingroup    XUTILS
+* 
+* @param[in]  path : Path to the JSON catalog file.
+* 
+* @return     bool : true if the operation is successful; otherwise false.
+* 
+* --------------------------------------------------------------------------------------------------------------------*/
+bool XTRACE::Tests_Load(XCHAR* path)
+{
+  if(!path) return false;
+
+  XSTRING pathstr = path;
+
+  return Tests_Load(pathstr);
+}
+
+
+/**-------------------------------------------------------------------------------------------------------------------
+* 
+* @fn         bool XTRACE::Tests_Load(XSTRING& path)
+* @brief      Load tests catalog (JSON: id + description) into memory
+* @ingroup    XUTILS
+* 
+* @param[in]  path : Path to the JSON catalog file.
+* 
+* @return     bool : true if the operation is successful; otherwise false.
+* 
+* --------------------------------------------------------------------------------------------------------------------*/
+bool XTRACE::Tests_Load(XSTRING& path)
+{
+  if(path.IsEmpty()) return false;
+
+  #if defined(XFILE_ACTIVE) && defined(XFILE_JSON_ACTIVE)
+
+  XPATH     xpath;
+  XFILEJSON xfilejson;
+
+  xpath = path;
+
+  if(!xfilejson.Open(xpath))       return false;
+  if(!xfilejson.ReadAllFile())     { xfilejson.Close(); return false; }
+  if(!xfilejson.DecodeAllLines())  { xfilejson.Close(); return false; }
+
+  Tests_DeleteAll();
+
+  XFILEJSONARRAY* tests = (XFILEJSONARRAY*)xfilejson.GetObj(__L("tests"));
+  if(!tests)
+    {
+      xfilejson.Close();
+      return false;
+    }
+
+  for(XDWORD c=0; c<tests->GetValues()->GetSize(); c++)
+    {
+      XFILEJSONVALUE* entry = tests->GetValues()->Get(c);
+      if(!entry) continue;
+      if(entry->GetType() != XFILEJSONVALUETYPE_OBJECT) continue;
+
+      XFILEJSONOBJECT* object = entry->GetValueObject();
+      if(!object) continue;
+
+      XFILEJSONVALUE* idvalue   = xfilejson.GetValue(__L("id")         , object);
+      XFILEJSONVALUE* descvalue = xfilejson.GetValue(__L("description"), object);
+      if(!idvalue || !descvalue) continue;
+
+      XDWORD id = 0;
+
+      switch(idvalue->GetType())
+        {
+          case XFILEJSONVALUETYPE_STRING : id = idvalue->GetValueString().ConvertToDWord(); break;
+          default                        : id = (XDWORD)idvalue->GetValueInteger();         break;
+        }
+
+      XSTRING description = descvalue->GetValueString();
+
+      if(!id) continue;
+      if(Tests_Exists(id)) continue;
+
+      XSTRING* descriptioncopy = GEN_NEW XSTRING();
+      if(!descriptioncopy) continue;
+
+      (*descriptioncopy) = description;
+      if(!testsdescriptions.Add(id, descriptioncopy))
+        {
+          GEN_DELETE descriptioncopy;
+        }
+    }
+
+  xfilejson.Close();
+
+  return (testsdescriptions.GetSize() > 0);
+
+  #else
+
+  return false;
+
+  #endif
+}
+
+
+/**-------------------------------------------------------------------------------------------------------------------
+* 
+* @fn         bool XTRACE::Tests_Exists(XDWORD ID)
+* @brief      Check whether a test ID exists in the loaded catalog
+* @ingroup    XUTILS
+* 
+* @param[in]  ID : Test identifier.
+* 
+* @return     bool : true if the ID is present; otherwise false.
+* 
+* --------------------------------------------------------------------------------------------------------------------*/
+bool XTRACE::Tests_Exists(XDWORD ID)
+{
+  if(!ID) return false;
+
+  return (testsdescriptions.Find(ID) != NOTFOUND);
+}
+
+
+/**-------------------------------------------------------------------------------------------------------------------
+* 
+* @fn         bool XTRACE::Tests_GetDescription(XDWORD ID, XSTRING& description)
+* @brief      Get description for a test ID from the loaded catalog
+* @ingroup    XUTILS
+* 
+* @param[in]  ID : Test identifier.
+* @param[out] description : Description text when found.
+* 
+* @return     bool : true if the ID exists; otherwise false.
+* 
+* --------------------------------------------------------------------------------------------------------------------*/
+bool XTRACE::Tests_GetDescription(XDWORD ID, XSTRING& description)
+{
+  description.Empty();
+
+  if(!Tests_Exists(ID)) return false;
+
+  XSTRING* stored = testsdescriptions.Get(ID);
+  if(!stored) return false;
+
+  description = (*stored);
+
+  return true;
+}
+
+
+/**-------------------------------------------------------------------------------------------------------------------
+* 
+* @fn         XDWORD XTRACE::Tests_GetSize()
+* @brief      Get number of loaded test catalog entries
+* @ingroup    XUTILS
+* 
+* @return     XDWORD : Number of entries.
+* 
+* --------------------------------------------------------------------------------------------------------------------*/
+XDWORD XTRACE::Tests_GetSize()
+{
+  return testsdescriptions.GetSize();
+}
+
+
+/**-------------------------------------------------------------------------------------------------------------------
+* 
+* @fn         bool XTRACE::Tests_DeleteAll()
+* @brief      Clear loaded tests catalog from memory
+* @ingroup    XUTILS
+* 
+* @return     bool : true if the operation is successful; otherwise false.
+* 
+* --------------------------------------------------------------------------------------------------------------------*/
+bool XTRACE::Tests_DeleteAll()
+{
+  testsdescriptions.DeleteElementContents();
+  testsdescriptions.DeleteAll();
+
+  return true;
 }
 
 

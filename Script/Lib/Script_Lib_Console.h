@@ -36,6 +36,13 @@
 
 #define SCRIPT_LIB_NAME_CONSOLE  __L("Console")
 
+#define SCRIPT_SET_LIB_CONSOLE(script, appconsole)  { SCRIPT_LIB_CONSOLE* lib = (SCRIPT_LIB_CONSOLE*)script->GetLibrary(SCRIPT_LIB_NAME_CONSOLE); \
+                                                      if(lib)                                                                                     \
+                                                        {                                                                                         \
+                                                          lib->SetConsole(appconsole);                                                            \
+                                                        }                                                                                         \
+                                                    }
+
 
 
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
@@ -53,12 +60,14 @@ class SCRIPT_LIB_CONSOLE : public SCRIPT_LIB
     bool                  AddLibraryFunctions     (SCRIPT* script);
 
     XCONSOLE*             GetConsole              ();
+    bool                  SetConsole              (XCONSOLE* console);
 
   private:
 
     void                  Clean                   ();
 
     XCONSOLE*             console;
+    bool                  consoleowned;
 };
 
 
