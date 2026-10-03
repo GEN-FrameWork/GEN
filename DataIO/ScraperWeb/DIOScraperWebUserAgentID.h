@@ -3,7 +3,7 @@
 * @file       DIOScraperWebUserAgentID.h
 * 
 * @class      DIOSCRAPERWEBUSERAGENTID
-* @brief      Data Input/Output Scraper Web User Agent ID class
+* @brief      Typed User-Agent scraper filled by script (not XML)
 * @ingroup    DATAIO
 * 
 * @copyright  EndoraSoft. All rights reserved.
@@ -28,52 +28,92 @@
 
 #pragma once
 
+#ifdef DIO_SCRAPERWEB_USERAGENTID_ACTIVE
+
 /*---- INCLUDES ------------------------------------------------------------------------------------------------------*/
 
-#include "DIOURL.h"
-#include "DIOScraperWeb.h"
+#include "XString.h"
+
+#include "DIOScraperWebCache.h"
+#include "DIOScraperScript.h"
 
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
 
-#define DIOSCRAPERWEBUSERAGENTID_NAMEFILE       __L("ws_useragentid.xml")
-#define DIOSCRAPERWEBUSERAGENTID_NAMESERVICE    __L("USERAGENTID")
+#define DIOSCRAPERWEBUSERAGENTID_SCRIPTPATH    __L("useragentid.g")
+#define DIOSCRAPERWEBUSERAGENTID_MAXTIMEOUT    DIOSCRAPERSCRIPT_DEFAULT_TIMEOUT
 
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
 
-class DIOUSERAGENTID_RESULT :  public DIOSCRAPERWEBCACHE_RESULT
+class XMUTEX;
+
+class DIOUSERAGENTID_RESULT : public DIOSCRAPERWEBCACHE_RESULT
 {
   public:
-                              DIOUSERAGENTID_RESULT           ();
-    virtual                  ~DIOUSERAGENTID_RESULT           ();
 
-    XSTRING*                  GetBrowser                      ();
-    XSTRING*                  GetSO                           ();
+                              DIOUSERAGENTID_RESULT             ();
+    virtual                  ~DIOUSERAGENTID_RESULT             ();
+
+    XCHAR*                    GetBrowser                        ();
+    XCHAR*                    GetBrowserVersion                 ();
+    XCHAR*                    GetBrowserType                    ();
+    XCHAR*                    GetSO                             ();
+    XCHAR*                    GetOSType                         ();
+    XCHAR*                    GetOSVersion                      ();
+    XCHAR*                    GetLanguage                       ();
+    XCHAR*                    GetLanguageTag                    ();
+
+    bool                      IsEmpty                           ();
+
+    virtual bool              CopyFrom                          (DIOSCRAPERWEBCACHE_RESULT* result);
+    virtual bool              CopyTo                            (DIOSCRAPERWEBCACHE_RESULT* result);
+
+    bool                      Set                               (XCHAR* browser,
+                                                                 XCHAR* browserversion = NULL,
+                                                                 XCHAR* browsertype    = NULL,
+                                                                 XCHAR* so             = NULL,
+                                                                 XCHAR* ostype         = NULL,
+                                                                 XCHAR* osversion      = NULL,
+                                                                 XCHAR* language       = NULL,
+                                                                 XCHAR* languagetag    = NULL);
 
   private:
 
-    void                      Clean                           ();
+    void                      Clean                             ();
+    void                      Sanitize                          (XSTRING& value);
 
     XSTRING                   browser;
+    XSTRING                   browserversion;
+    XSTRING                   browsertype;
     XSTRING                   systemoperative;
+    XSTRING                   ostype;
+    XSTRING                   osversion;
+    XSTRING                   language;
+    XSTRING                   languagetag;
 };
 
 
-class DIOSCRAPERWEBUSERAGENTID : public DIOSCRAPERWEB
+class DIOSCRAPERWEBUSERAGENTID
 {
   public:
-                              DIOSCRAPERWEBUSERAGENTID        ();
-    virtual                  ~DIOSCRAPERWEBUSERAGENTID        ();
+                              DIOSCRAPERWEBUSERAGENTID          ();
+    virtual                  ~DIOSCRAPERWEBUSERAGENTID          ();
 
-    bool                      ChangeURL                       (XCHAR* maskurl, DIOURL& url);
+    bool                      Get                               (XCHAR* useragent, DIOUSERAGENTID_RESULT& result, int timeoutforurl = DIOSCRAPERWEBUSERAGENTID_MAXTIMEOUT, XSTRING* localIP = NULL, bool usecache = true);
+    bool                      Get                               (XSTRING& useragent, DIOUSERAGENTID_RESULT& result, int timeoutforurl = DIOSCRAPERWEBUSERAGENTID_MAXTIMEOUT, XSTRING* localIP = NULL, bool usecache = true);
 
-    bool                      Get                             (XCHAR* useragent, XSTRING& browser, XSTRING& systemoperative, int timeoutforurl = DIOSCRAPERWEB_MAXTIMEOUTFORURL, XSTRING* localIP = NULL, bool usecache = true);
-    bool                      Get                             (XSTRING& useragent, XSTRING& browser, XSTRING& systemoperative, int timeoutforurl = DIOSCRAPERWEB_MAXTIMEOUTFORURL, XSTRING* localIP = NULL, bool usecache = true);
+    bool                      Get                               (XCHAR* useragent, XSTRING& browser, XSTRING& systemoperative, int timeoutforurl = DIOSCRAPERWEBUSERAGENTID_MAXTIMEOUT, XSTRING* localIP = NULL, bool usecache = true);
+    bool                      Get                               (XSTRING& useragent, XSTRING& browser, XSTRING& systemoperative, int timeoutforurl = DIOSCRAPERWEBUSERAGENTID_MAXTIMEOUT, XSTRING* localIP = NULL, bool usecache = true);
+
+    bool                      SetScriptPath                     (XCHAR* relativescriptpath);
+    XCHAR*                    GetScriptPath                     ();
 
   private:
 
-    void                      Clean                           ();
+    void                      Clean                             ();
 
-    XSTRING                   useragent;
+    DIOSCRAPERWEBCACHE*       cache;
+    XMUTEX*                   xmutexdo;
+    XSTRING                   scriptpath;
 };
 
 
@@ -81,8 +121,4 @@ class DIOSCRAPERWEBUSERAGENTID : public DIOSCRAPERWEB
 
 /*---- INLINE FUNCTIONS + PROTOTYPES ---------------------------------------------------------------------------------*/
 
-
-
-
-
-
+#endif

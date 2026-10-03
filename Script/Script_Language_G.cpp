@@ -1273,6 +1273,8 @@ int SCRIPT_LNG_G::GetFuncParams(SCRIPT_LNG_G_VAR* params, XSTRING* outnames)
               if(var)
                 {
                   params[count].Set(var);
+                  // Alias only: the live script variable keeps ownership of the string.
+                  params[count].SetHaveReservedSize(false);
                   if(outnames) outnames[count] = name;
                   isout = true;
                   count++;
@@ -2425,6 +2427,8 @@ void SCRIPT_LNG_G::Atom(SCRIPT_LNG_G_VAR& value)
 
                                                           XSTRING::Set(currentfunction, tempcurrentfunc);
 
+                                                          // Ownership transferred to value; do not free twice.
+                                                          returnvalue.SetHaveReservedSize(false);
                                                           returnvalue.SetType(SCRIPT_LNG_G_TOKENIREPS_UNDEFTOK);
                                                           returnvalue.SetValueInteger(0);
 
@@ -2438,6 +2442,8 @@ void SCRIPT_LNG_G::Atom(SCRIPT_LNG_G_VAR& value)
                                                           if(var)
                                                             {
                                                               value.Set(var);
+                                                              // Alias only: do not claim ownership of the variable's string.
+                                                              value.SetHaveReservedSize(false);
 
                                                               XSTRING::Set(tempcurrenttoken, currenttoken);
 
@@ -4020,8 +4026,6 @@ void SCRIPT_LNG_G::FunctionReturn()
 
   EvalExp(value);
 
-  value.SetHaveReservedSize(false);
-
   if(!function)
     {
       return;
@@ -4035,9 +4039,18 @@ void SCRIPT_LNG_G::FunctionReturn()
           return;
         }
 
-      returnvalue.SetType(SCRIPT_LNG_G_TOKENIREPS_STRING);
-      returnvalue.SetValueString(value.GetValueString());
-      returnvalue.SetHaveReservedSize(true);
+      // Deep-copy: value may alias a local that Call() destroys after return.
+      XSTRING* src  = value.GetValueString();
+      XSTRING* copy = GEN_NEW XSTRING();
+      if(copy)
+        {
+          if(src) (*copy) = src->Get();
+
+          returnvalue.Clear();
+          returnvalue.SetType(SCRIPT_LNG_G_TOKENIREPS_STRING);
+          returnvalue.SetValueString(copy);
+          returnvalue.SetHaveReservedSize(true);
+        }
     }
    else if(function->GetReturnType() == SCRIPT_LNG_G_TOKENIREPS_FLOAT)
     {
