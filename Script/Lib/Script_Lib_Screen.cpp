@@ -40,6 +40,10 @@
 #include "XBuffer.h"
 #include "XProcessManager.h"
 
+#ifdef WINDOWS
+#include <Windows.h>
+#endif
+
 #include "APPFlowBase.h"
 #include "APPFlowMain.h"
 
@@ -315,8 +319,21 @@ bool Script_Lib_Screen_ResolvePos(SCRIPT_LIB* library, SCRIPT* script, XVECTOR<X
                           if(screen)
                             {                          
                               screen->SetHandle(handle_windows);
-                              screen->SetWidth(applist.Get(c)->GetWindowRect()->x2 - applist.Get(c)->GetWindowRect()->x1);
-                              screen->SetHeight(applist.Get(c)->GetWindowRect()->y2 - applist.Get(c)->GetWindowRect()->y1);
+                              // CaptureContent uses GetDC (client area). Prefer client size when available.
+                              int captw = applist.Get(c)->GetWindowRect()->x2 - applist.Get(c)->GetWindowRect()->x1;
+                              int capth = applist.Get(c)->GetWindowRect()->y2 - applist.Get(c)->GetWindowRect()->y1;
+                              #ifdef WINDOWS
+                              RECT crect;
+                              if(GetClientRect((HWND)handle_windows, &crect))
+                                {
+                                  int cw = crect.right  - crect.left;
+                                  int ch = crect.bottom - crect.top;
+                                  if(cw > 0) captw = cw;
+                                  if(ch > 0) capth = ch;
+                                }
+                              #endif
+                              screen->SetWidth(captw);
+                              screen->SetHeight(capth);
                               
                               GRPBITMAP* bitmapscreen = screen->CaptureContent();
                               if(bitmapscreen)

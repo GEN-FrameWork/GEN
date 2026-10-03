@@ -262,42 +262,45 @@ bool SCRIPT_LNG_JAVASCRIPT::HaveMainFunction()
   int     start = 0;
   int     end   = 0;
   XSTRING line;
+  XSTRING searchmask;
 
   script = GetScript()->Get();
   if(script.IsEmpty()) return false;
 
   mainfunctionname = SCRIPT_LNG_JAVASCRIPT_MAINFUNCTIONNAME;
-
-  int index = GetScript()->Find(mainfunctionname, false);
-  if(index == XSTRING_NOTFOUND) return false;
-
-  for(start=index; start>0; start--)
-    {
-      if((script.Get()[start] == __C('\r')) || (script.Get()[start] == __C('\n')))
-        {
-          break;
-        }
-    }
-
-  for(end=index; end<(int)script.GetSize() ; end++)
-    {
-      if(script.Get()[end] == __C(')'))
-        {
-          break;
-        }
-    }
-
-  script.Copy(start, end+1, line);
-
-  line.DeleteCharacter(__C('\n'));
-  line.DeleteCharacter(__C('\r'));
-  line.DeleteCharacter(__C(' '));
-
-  XSTRING searchmask;
-
   searchmask.Format(__L("function%s()"), mainfunctionname.Get());
 
-  if(!line.Compare(searchmask)) return true;
+  // Walk every "main" hit: comments/strings can contain the word before the real entry point.
+  int index = 0;
+  while((index = GetScript()->Find(mainfunctionname, false, index)) != XSTRING_NOTFOUND)
+    {
+      for(start=index; start>0; start--)
+        {
+          if((script.Get()[start] == __C('\r')) || (script.Get()[start] == __C('\n')))
+            {
+              break;
+            }
+        }
+
+      for(end=index; end<(int)script.GetSize() ; end++)
+        {
+          if(script.Get()[end] == __C(')'))
+            {
+              break;
+            }
+        }
+
+      script.Copy(start, end+1, line);
+
+      line.DeleteCharacter(__C('\n'));
+      line.DeleteCharacter(__C('\r'));
+      line.DeleteCharacter(__C(' '));
+      line.DeleteCharacter(__C('\t'));
+
+      if(!line.Compare(searchmask)) return true;
+
+      index++;
+    }
 
   return false;
 }

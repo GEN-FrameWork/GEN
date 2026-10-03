@@ -1131,60 +1131,166 @@ bool GRPWINDOWSSCREEN::Maximize(bool active)
 * --------------------------------------------------------------------------------------------------------------------*/
 GRPBITMAP* GRPWINDOWSSCREEN::CaptureContent(GRPRECTINT* rect, void* handle_window)
 {
-  XBUFFER xbuffer;
-  HDC     hdcsource = GetDC(handle_window?(HWND)handle_window:hwnd);
-  HDC     hdcmemory = CreateCompatibleDC(hdcsource);
-  int     x         = 0;
-  int     y         = 0;
-  int     cx        = GetWidth();
-  int     cy        = GetHeight();  
-  bool    status    = false;
+  HWND hwndsrc = handle_window ? (HWND)handle_window : hwnd;
+  int  x       = 0;
+  int  y       = 0;
+  int  cx      = GetWidth();
+  int  cy      = GetHeight();
+  bool status  = false;
 
-  if(!hdcsource)
+  if(!hwndsrc || !IsWindow(hwndsrc))
     {
-      return NULL;  
-    }
-
-  if(!hdcmemory)
-    {
-      DeleteDC(hdcsource);
-      return NULL;        
+      return NULL;
     }
 
   if(rect)
     {
-      x         = rect->x1;
-      y         = rect->y1;
-      cx        = (rect->x2 - rect->x1);
-      cy        = (rect->y2 - rect->y1);
-    }  
+      x  = rect->x1;
+      y  = rect->y1;
+      cx = (rect->x2 - rect->x1);
+      cy = (rect->y2 - rect->y1);
+    }
 
-  HBITMAP hbitmap     = CreateCompatibleBitmap(hdcsource, cx, cy);
-  HBITMAP hbitmapold  = (HBITMAP)SelectObject(hdcmemory, hbitmap);
-  BITMAP  bitmap;
+  RECT clientrect;
+  if(!GetClientRect(hwndsrc, &clientrect))
+    {
+      return NULL;
+    }
 
-  BitBlt(hdcmemory, 0, 0, cx, cy, hdcsource, x, y, SRCCOPY);
-  hbitmap = (HBITMAP)SelectObject(hdcmemory, hbitmapold);
+  int clientw = clientrect.right  - clientrect.left;
+  int clienth = clientrect.bottom - clientrect.top;
 
-  DeleteDC(hdcsource);
+  if((clientw <= 0) || (clienth <= 0))
+    {
+      return NULL;
+    }
+
+  if(!rect)
+    {
+      x  = 0;
+      y  = 0;
+      cx = clientw;
+      cy = clienth;
+    }
+
+  if(x < 0) { cx += x; x = 0; }
+  if(y < 0) { cy += y; y = 0; }
+  if((x >= clientw) || (y >= clienth)) return NULL;
+  if((x + cx) > clientw) cx = clientw - x;
+  if((y + cy) > clienth) cy = clienth - y;
+  if((cx <= 0) || (cy <= 0)) return NULL;
+
+  HDC hdcScreen = GetDC(NULL);
+  if(!hdcScreen) return NULL;
+
+  HDC hdcmemory = CreateCompatibleDC(hdcScreen);
+  if(!hdcmemory)
+    {
+      ReleaseDC(NULL, hdcScreen);
+      return NULL;
+    }
+
+  HBITMAP hbitmap    = CreateCompatibleBitmap(hdcScreen, cx, cy);
+  HBITMAP hbitmapold = (HBITMAP)SelectObject(hdcmemory, hbitmap);
+
+  // 1) Desktop blit: works with Chrome/Edge GPU compositing when the window is visible.
+  POINT ptscreen;
+  ptscreen.x = x;
+  ptscreen.y = y;
+  ClientToScreen(hwndsrc, &ptscreen);
+
+  BOOL bltok = BitBlt(hdcmemory, 0, 0, cx, cy, hdcScreen, ptscreen.x, ptscreen.y, SRCCOPY | CAPTUREBLT);
+
+  // Detect "all black" captures typical of accelerated browsers (Chrome/Edge GPU).
+  bool mostlyblack = true;
+  if(bltok)
+    {
+      int stepx = (cx > 8) ? (cx / 8) : 1;
+      int stepy = (cy > 8) ? (cy / 8) : 1;
+      int dark  = 0;
+      int count = 0;
+
+      for(int sy = 0; sy < cy; sy += stepy)
+        {
+          for(int sx = 0; sx < cx; sx += stepx)
+            {
+              COLORREF pixel = GetPixel(hdcmemory, sx, sy);
+              if(pixel != CLR_INVALID)
+                {
+                  BYTE r = GetRValue(pixel);
+                  BYTE g = GetGValue(pixel);
+                  BYTE b = GetBValue(pixel);
+                  if((r < 8) && (g < 8) && (b < 8)) dark++;
+                  count++;
+                }
+            }
+        }
+
+      if(count && (((dark * 100) / count) < 90)) mostlyblack = false;
+    }
+
+  // 2) PrintWindow fallback (PW_RENDERFULLCONTENT) for GPU windows / when desktop blit is black.
+  if(!bltok || mostlyblack)
+    {
+      #ifndef PW_RENDERFULLCONTENT
+      #define PW_RENDERFULLCONTENT 0x00000002
+      #endif
+
+      HDC     hdcfull    = CreateCompatibleDC(hdcScreen);
+      HBITMAP hbmfull    = CreateCompatibleBitmap(hdcScreen, clientw, clienth);
+      HBITMAP hbmfullold = (HBITMAP)SelectObject(hdcfull, hbmfull);
+
+      if(PrintWindow(hwndsrc, hdcfull, PW_RENDERFULLCONTENT))
+        {
+          BitBlt(hdcmemory, 0, 0, cx, cy, hdcfull, x, y, SRCCOPY);
+          bltok = TRUE;
+        }
+       else if(PrintWindow(hwndsrc, hdcfull, 0))
+        {
+          BitBlt(hdcmemory, 0, 0, cx, cy, hdcfull, x, y, SRCCOPY);
+          bltok = TRUE;
+        }
+
+      SelectObject(hdcfull, hbmfullold);
+      DeleteObject(hbmfull);
+      DeleteDC(hdcfull);
+    }
+
+  // 3) Last resort: classic window DC BitBlt (non-accelerated apps).
+  if(!bltok)
+    {
+      HDC hdcwin = GetDC(hwndsrc);
+      if(hdcwin)
+        {
+          bltok = BitBlt(hdcmemory, 0, 0, cx, cy, hdcwin, x, y, SRCCOPY);
+          ReleaseDC(hwndsrc, hdcwin);
+        }
+    }
+
+  SelectObject(hdcmemory, hbitmapold);
+  ReleaseDC(NULL, hdcScreen);
   DeleteDC(hdcmemory);
 
+  if(!bltok)
+    {
+      DeleteObject(hbitmap);
+      return NULL;
+    }
+
+  BITMAP bitmap;
   GetObject(hbitmap, sizeof(bitmap), (LPSTR)&bitmap);
 
-  HDC dcbitmap = CreateCompatibleDC(NULL);
-  SelectObject(dcbitmap, hbitmap);
+  HDC     dcbitmap = CreateCompatibleDC(NULL);
+  HBITMAP olddib   = (HBITMAP)SelectObject(dcbitmap, hbitmap);
 
   BITMAPINFO bmpinfo;
-
-  bmpinfo.bmiHeader.biSize         = sizeof(BITMAPINFOHEADER);
-  bmpinfo.bmiHeader.biWidth        = bitmap.bmWidth;
-  bmpinfo.bmiHeader.biHeight       = bitmap.bmHeight;
-  bmpinfo.bmiHeader.biPlanes       = bitmap.bmPlanes;
-  bmpinfo.bmiHeader.biBitCount     = bitmap.bmBitsPixel;
-  bmpinfo.bmiHeader.biCompression  = BI_RGB;
-  bmpinfo.bmiHeader.biSizeImage    = 0;
-  bmpinfo.bmiHeader.biClrImportant = 0;
-  bmpinfo.bmiHeader.biClrUsed      = 0;
+  memset(&bmpinfo, 0, sizeof(bmpinfo));
+  bmpinfo.bmiHeader.biSize        = sizeof(BITMAPINFOHEADER);
+  bmpinfo.bmiHeader.biWidth       = bitmap.bmWidth;
+  bmpinfo.bmiHeader.biHeight      = bitmap.bmHeight;
+  bmpinfo.bmiHeader.biPlanes      = bitmap.bmPlanes;
+  bmpinfo.bmiHeader.biBitCount    = bitmap.bmBitsPixel;
+  bmpinfo.bmiHeader.biCompression = BI_RGB;
 
   GRPBITMAP* grpbitmap = GRPFACTORY::GetInstance().CreateBitmap(bitmap.bmWidth, bitmap.bmHeight, GRPPROPERTYMODE_32_BGRA_8888);
   if(grpbitmap)
@@ -1198,6 +1304,10 @@ GRPBITMAP* GRPWINDOWSSCREEN::CaptureContent(GRPRECTINT* rect, void* handle_windo
           buffer++;
         }
     }
+
+  SelectObject(dcbitmap, olddib);
+  DeleteDC(dcbitmap);
+  DeleteObject(hbitmap);
 
   if(!status)
     {

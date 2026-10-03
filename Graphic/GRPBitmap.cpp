@@ -368,7 +368,7 @@ bool GRPBITMAP::FindSubBitmap(GRPBITMAP* bitmapref, int& x, int& y, XBYTE diffli
   x = 0; 
   y = 0;
 
-  if(!bitmapref)
+  if(!bitmapref || !buffer)
     {
       return false;
     }
@@ -381,87 +381,96 @@ bool GRPBITMAP::FindSubBitmap(GRPBITMAP* bitmapref, int& x, int& y, XBYTE diffli
 
   if(!_bitmap->GetBuffer())
     {
+      GEN_DELETE _bitmap;
       return false;
     }
-  
-  XDWORD*   bufferscreen        = (XDWORD*)buffer;
-  XDWORD*   bufferbitmap        = (XDWORD*)_bitmap->GetBuffer();
-  XDWORD    sizepixel           = sizeof(XDWORD);
-  XDWORD    bufferscreensize    = (GetBufferSize() / sizepixel);
-  XDWORD    bufferbmplinesize   = _bitmap->GetWidth();
-  XDWORD    ndiff               = 0;
-  bool      found               = false;
-  
-  for(XDWORD scrpos = 0; scrpos < bufferscreensize; scrpos++)
+
+  XDWORD screenw = GetWidth();
+  XDWORD screenh = GetHeight();
+  XDWORD bmpw    = _bitmap->GetWidth();
+  XDWORD bmph    = _bitmap->GetHeight();
+
+  if(!screenw || !screenh || !bmpw || !bmph || (bmpw > screenw) || (bmph > screenh))
     {
-      ndiff = 0;
-      for(XDWORD bmppos = 0; bmppos < bufferbmplinesize; bmppos++)  
-        {    
-          if(bufferscreen[scrpos + bmppos] != bufferbitmap[bmppos])
+      GEN_DELETE _bitmap;
+      return false;
+    }
+
+  XDWORD* bufferscreen     = (XDWORD*)buffer;
+  XDWORD* bufferbitmap     = (XDWORD*)_bitmap->GetBuffer();
+  XDWORD  bufferscreensize = GetBufferSize() / sizeof(XDWORD);
+  XDWORD  expectedsize     = screenw * screenh;
+
+  if(bufferscreensize < expectedsize)
+    {
+      GEN_DELETE _bitmap;
+      return false;
+    }
+
+  bool found = false;
+
+  // DIB buffers are bottom-up. Only test origins where the full template fits
+  // (avoids read AVs when the needle is near the right/bottom edge).
+  for(XDWORD line = 0; line <= (screenh - bmph); line++)
+    {
+      for(XDWORD xoff = 0; xoff <= (screenw - bmpw); xoff++)
+        {
+          XDWORD bmpidx = 0;
+          bool   rowok  = true;
+
+          for(XDWORD brow = 0; brow < bmph; brow++)
             {
-              if(!IsSimilarPixel(bufferscreen[scrpos + bmppos], bufferbitmap[bmppos], pixelmargin))
+              XDWORD scrpos = ((line + brow) * screenw) + xoff;
+              XDWORD ndiff  = 0;
+
+              if((scrpos + bmpw) > bufferscreensize)
                 {
-                  ndiff++;
+                  rowok = false;
+                  break;
                 }
-            }
-        }
-               
-      found = DifferencesPerCent(ndiff, bufferbmplinesize, difflimitpercent);
-      if(found)
-        {          
-          found = false;
 
-          XDWORD srcpixelsline  = GetWidth();
-          XDWORD scrpos_tmp     = scrpos;
-          XDWORD bmppos_tmp     = bufferbmplinesize;
-         
-          x =  (scrpos % GetWidth());
-          y =  GetHeight() - (scrpos / srcpixelsline) - _bitmap->GetHeight();           
+              for(XDWORD bx = 0; bx < bmpw; bx++)
+                {
+                  XDWORD spixel = bufferscreen[scrpos + bx];
+                  XDWORD bpixel = bufferbitmap[bmpidx++];
 
-          scrpos_tmp += srcpixelsline;              
-    
-          for(XDWORD line = 1; line < _bitmap->GetHeight(); line++)
-            {                                                   
-              ndiff = 0;
-              for(XDWORD bmppos = 0; bmppos < bufferbmplinesize; bmppos++)  
-                {    
-                  if(bufferscreen[scrpos_tmp + bmppos] != bufferbitmap[bmppos_tmp])
+                  if(spixel != bpixel)
                     {
-                      if(!IsSimilarPixel(bufferscreen[scrpos_tmp + bmppos], bufferbitmap[bmppos_tmp], pixelmargin))
+                      if(!IsSimilarPixel(spixel, bpixel, pixelmargin))
                         {
                           ndiff++;
                         }
-                    }  
-                  
-                  bmppos_tmp++;
+                    }
                 }
-              
-              found = DifferencesPerCent(ndiff, bufferbmplinesize, difflimitpercent);              
 
-              if(!found)
+              if(!DifferencesPerCent(ndiff, bmpw, difflimitpercent))
                 {
-                  break;              
+                  rowok = false;
+                  break;
                 }
-      
-              scrpos_tmp += srcpixelsline;
             }
 
-          if(found)                  
+          if(rowok)
             {
+              x     = (int)xoff;
+              y     = (int)(screenh - line - bmph);
+              found = true;
               break;
-            }              
-        }  
-    } 
-  
+            }
+        }
+
+      if(found) break;
+    }
+
   if(!found)
     {
       x = 0;
       y = 0;
     }
-   
+
   GEN_DELETE _bitmap;
-  
-  return found;  
+
+  return found;
 }
 
 
