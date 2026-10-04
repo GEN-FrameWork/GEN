@@ -692,7 +692,8 @@ bool XFILECSV::Serialization(bool read, bool haveheader)
     }
    else
     {
-      if(!records.IsEmpty())
+      // Write header and/or records. Header-only files (no data rows yet) must still be persisted.
+      if(haveheader || (!records.IsEmpty()))
         {
           XSTRING line;
 

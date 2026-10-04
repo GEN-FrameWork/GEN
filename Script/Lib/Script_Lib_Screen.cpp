@@ -54,6 +54,8 @@
 #include "INPFactory.h"
 #include "INPSimulate.h"
 
+#include "XSleep.h"
+
 #include "GRPFactory.h"
 #include "GRPScreen.h"
 #include "GRPBitmap.h"
@@ -135,6 +137,7 @@ bool SCRIPT_LIB_SCREEN::AddLibraryFunctions(SCRIPT* script)
   script->AddLibraryFunction(this, __L("Screen_GetPosX"), Call_Screen_GetPosX);
   script->AddLibraryFunction(this, __L("Screen_GetPosY"), Call_Screen_GetPosY);
   script->AddLibraryFunction(this, __L("Screen_GetPosXY"), Call_Screen_GetPosXY);
+  script->AddLibraryFunction(this, __L("Screen_WaitBitmap"), Call_Screen_WaitBitmap);
   script->AddLibraryFunction(this, __L("Screen_SetBmpFindCFG"), Call_Screen_SetBmpFindCFG);
   script->AddLibraryFunction(this, __L("Screen_SetFocus"), Call_Screen_SetFocus);
   script->AddLibraryFunction(this, __L("Screen_SetPosition"), Call_Screen_SetPosition);
@@ -540,6 +543,92 @@ void Call_Screen_GetPosXY(SCRIPT_LIB* library, SCRIPT* script, XVECTOR<XVARIANT*
   if(outy) (*outy) = pos.IsOk() ? pos.y : 0;
 
   (*returnvalue) = (int)pos.status;
+}
+
+
+/**-------------------------------------------------------------------------------------------------------------------
+*
+* @fn         void Call_Screen_WaitBitmap(SCRIPT_LIB* library, SCRIPT* script, XVECTOR<XVARIANT*>* params, XVARIANT* returnvalue)
+* @brief      Wait until a reference bitmap appears in the target window
+* @ingroup    SCRIPT
+*
+* @param[in]  library : Library pointer to use.
+* @param[in]  script : Script pointer to use.
+* @param[in]  params : appname, windowtitle, bitmap, timeoutms, intervalms.
+* @param[in]  returnvalue : true if found before timeout; otherwise false.
+*
+* --------------------------------------------------------------------------------------------------------------------*/
+void Call_Screen_WaitBitmap(SCRIPT_LIB* library, SCRIPT* script, XVECTOR<XVARIANT*>* params, XVARIANT* returnvalue)
+{
+  if(!library)      return;
+  if(!script)       return;
+  if(!params)       return;
+  if(!returnvalue)  return;
+
+  returnvalue->Set();
+  (*returnvalue) = false;
+
+  if(params->GetSize() < 5)
+    {
+      script->HaveError(SCRIPT_ERRORCODE_INSUF_PARAMS);
+      return;
+    }
+
+  int timeoutms  = 0;
+  int intervalms = 0;
+
+  library->GetParamConverted(params->Get(3), timeoutms);
+  library->GetParamConverted(params->Get(4), intervalms);
+
+  if(timeoutms < 0)  timeoutms  = 0;
+  if(intervalms < 1) intervalms = 100;
+
+  // Build a ResolvePos param list: app, title, bitmap (no trailing out coords).
+  XVECTOR<XVARIANT*> resolveparams;
+  resolveparams.Add(params->Get(0));
+  resolveparams.Add(params->Get(1));
+  resolveparams.Add(params->Get(2));
+
+  int waited = 0;
+
+  while(true)
+    {
+      SCRIPT_LIB_SCREEN_POS pos;
+
+      if(Script_Lib_Screen_ResolvePos(library, script, &resolveparams, pos, 0))
+        {
+          if(pos.status == SCRIPT_LIB_SCREEN_POSSTATUS_OK)
+            {
+              (*returnvalue) = true;
+              resolveparams.DeleteAll();
+              return;
+            }
+        }
+
+      if(waited >= timeoutms)
+        {
+          break;
+        }
+
+      int sleepms = intervalms;
+      if((waited + sleepms) > timeoutms)
+        {
+          sleepms = timeoutms - waited;
+        }
+
+      if(sleepms > 0)
+        {
+          GEN_XSLEEP.MilliSeconds(sleepms);
+          waited += sleepms;
+        }
+       else
+        {
+          break;
+        }
+    }
+
+  resolveparams.DeleteAll();
+  (*returnvalue) = false;
 }
 
 

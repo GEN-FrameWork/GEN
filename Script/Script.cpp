@@ -84,6 +84,10 @@
 #include "Script_Lib_TraceServer.h"
 #endif
 
+#ifdef SCRIPT_LIB_FILECSV_ACTIVE
+#include "Script_Lib_FileCSV.h"
+#endif
+
 
 
 /*---- PRECOMPILATION INCLUDES ---------------------------------------------------------------------------------------*/
@@ -1015,7 +1019,7 @@ bool SCRIPT::AddInternalLibraries()
 {  
   SCRIPT_LIB* lib;
 
-  for(int c=0; c<17; c++)
+  for(int c=0; c<18; c++)
     {
       lib = NULL;
 
@@ -1084,6 +1088,11 @@ bool SCRIPT::AddInternalLibraries()
           case 16 :
                     #if defined(SCRIPT_LIB_TRACESERVER_ACTIVE) && !defined(SCRIPT_LIB_SANDBOX_ACTIVE)
                     lib = GEN_NEW SCRIPT_LIB_TRACESERVER();
+                    #endif
+                    break;
+          case 17 :
+                    #if defined(SCRIPT_LIB_FILECSV_ACTIVE) && !defined(SCRIPT_LIB_SANDBOX_ACTIVE)
+                    lib = GEN_NEW SCRIPT_LIB_FILECSV();
                     #endif
                     break;
         } 
