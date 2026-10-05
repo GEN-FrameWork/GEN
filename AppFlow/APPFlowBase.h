@@ -77,6 +77,7 @@ enum APPFLOWBASE_MODE_TYPE
 #define APPFLOW_DEFAULT_DIRECTORY_SCRAPERS        __L("scripts/scrapers")
 #define APPFLOW_DEFAULT_DIRECTORY_FIRMWARE        __L("firmware")
 #define APPFLOW_DEFAULT_DIRECTORY_CERTIFICATES    __L("certificates")
+#define APPFLOW_DEFAULT_DIRECTORY_TESTS           __L("Tests")
 
 #define APPLICATIONCREATEINSTANCE(CLASSNAME, VARIABLE)    CLASSNAME* VARIABLE = NULL;                     \
                                                           APPFLOWBASE* APPFLOWBASE::Create()              \
