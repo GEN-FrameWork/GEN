@@ -1026,11 +1026,11 @@ bool GRPSCREEN::LoadCFGChromesLayout()
 
       pathfile = namelayoutfile->Get();
 
-      XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, __L("[Chromes] loading custom layout: file [%s] layout [%s]"), namelayoutfile->Get(), namelayout->Get());
+      XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, _L("[Chromes] loading custom layout: file [%s] layout [%s]"), namelayoutfile->Get(), namelayout->Get());
 
       if(!GEN_USERINTERFACE.Load(pathfile, this, 0))
         {
-          XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, __L("[Chromes] ERROR: custom layout file [%s] could NOT be loaded -> NO custom chrome will be drawn (see [UI Load] trace above for the exact reason)"), namelayoutfile->Get());
+          XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, _L("[Chromes] ERROR: custom layout file [%s] could NOT be loaded -> NO custom chrome will be drawn (see [UI Load] trace above for the exact reason)"), namelayoutfile->Get());
           return false;
         }
 
@@ -1039,11 +1039,11 @@ bool GRPSCREEN::LoadCFGChromesLayout()
 
   if(!cfgchromeslayout)
     {
-      XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, __L("[Chromes] ERROR: layout named [%s] not found inside [%s] -> NO custom chrome will be drawn (check the <layout name=...> attribute in the XML)"), namelayout->Get(), namelayoutfile->Get());
+      XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, _L("[Chromes] ERROR: layout named [%s] not found inside [%s] -> NO custom chrome will be drawn (check the <layout name=...> attribute in the XML)"), namelayout->Get(), namelayoutfile->Get());
       return false;
     }
 
-  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, __L("[Chromes] custom layout [%s] loaded OK"), namelayout->Get());
+  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, _L("[Chromes] custom layout [%s] loaded OK"), namelayout->Get());
 
   // The layout's own role="title" element (if any) keeps whatever static text it was authored with in the
   // .xml; once custom chromes are active, this screen's own title (GetTitle(), the same string a native
@@ -1087,7 +1087,7 @@ bool GRPSCREEN::LoadCFGChromesLayout()
 
   cfgchromesbuttonsshift = 0;
 
-  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, __L("[Chromes] caption width resolved to [%d] (buttons reference width)"), cfgchromesbuttonsrefwidth);
+  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, _L("[Chromes] caption width resolved to [%d] (buttons reference width)"), cfgchromesbuttonsrefwidth);
 
   return true;
 }
@@ -1172,7 +1172,7 @@ bool GRPSCREEN::UpdateCFGChromesDrag()
         {
           EndCFGChromesDrag();
 
-          GRPSCREEN_CHROMESDRAGTRACE(__L("[Chromes drag] END: window (%d,%d)"), GetPositionX(), GetPositionY());
+          GRPSCREEN_CHROMESDRAGTRACE(_L("[Chromes drag] END: window (%d,%d)"), GetPositionX(), GetPositionY());
         }
 
       cfgchromesdragging   = false;
@@ -1214,13 +1214,13 @@ bool GRPSCREEN::UpdateCFGChromesDrag()
       // test above. They must not start a window move.
       if(IsOverCFGChromesButton(uix, uiy))
         {
-          GRPSCREEN_CHROMESDRAGTRACE(__L("[Chromes drag] press at UI (%d,%d) landed on a window button: no drag"), uix, uiy);
+          GRPSCREEN_CHROMESDRAGTRACE(_L("[Chromes drag] press at UI (%d,%d) landed on a window button: no drag"), uix, uiy);
           return false;
         }
 
       if(!GetCursorDesktopPosition(desktopcursorx, desktopcursory))
         {
-          GRPSCREEN_CHROMESDRAGTRACE(__L("[Chromes drag] ERROR: GetCursorDesktopPosition() not available on this backend -> the caption drag CANNOT run"));
+          GRPSCREEN_CHROMESDRAGTRACE(_L("[Chromes drag] ERROR: GetCursorDesktopPosition() not available on this backend -> the caption drag CANNOT run"));
           return false;
         }
 
@@ -1252,7 +1252,7 @@ bool GRPSCREEN::UpdateCFGChromesDrag()
           cfgchromesdragging   = false;
           cfgchromesdragmoving = false;
 
-          GRPSCREEN_CHROMESDRAGTRACE(__L("[Chromes drag] START: handed over to the window manager (SystemMove)"));
+          GRPSCREEN_CHROMESDRAGTRACE(_L("[Chromes drag] START: handed over to the window manager (SystemMove)"));
 
           return true;
         }
@@ -1260,7 +1260,7 @@ bool GRPSCREEN::UpdateCFGChromesDrag()
 
       BeginCFGChromesDrag();
 
-      GRPSCREEN_CHROMESDRAGTRACE(__L("[Chromes drag] START: in-process. window (%d,%d) cursor desktop (%d,%d) UI (%d,%d)"), anchorx, anchory, desktopcursorx, desktopcursory, uix, uiy);
+      GRPSCREEN_CHROMESDRAGTRACE(_L("[Chromes drag] START: in-process. window (%d,%d) cursor desktop (%d,%d) UI (%d,%d)"), anchorx, anchory, desktopcursorx, desktopcursory, uix, uiy);
 
       return true;
     }
@@ -1307,7 +1307,7 @@ bool GRPSCREEN::UpdateCFGChromesDrag()
 
   (void)moved;   // only read by the trace below, which compiles away unless diagnostics are enabled
 
-  GRPSCREEN_CHROMESDRAGTRACEMOVE(__L("[Chromes drag] MOVE to (%d,%d) delta (%d,%d) Set_Position=%s real (%d,%d)"), newpositionx, newpositiony, deltax, deltay, moved?__L("ok"):__L("FAILED"), GetPositionX(), GetPositionY());
+  GRPSCREEN_CHROMESDRAGTRACEMOVE(_L("[Chromes drag] MOVE to (%d,%d) delta (%d,%d) Set_Position=%s real (%d,%d)"), newpositionx, newpositiony, deltax, deltay, moved?_L("ok"):_L("FAILED"), GetPositionX(), GetPositionY());
 
   return true;
 }

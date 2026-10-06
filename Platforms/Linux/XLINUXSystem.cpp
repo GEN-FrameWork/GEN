@@ -148,7 +148,7 @@ XLINUXSYSTEM::~XLINUXSYSTEM()
 * --------------------------------------------------------------------------------------------------------------------*/
 XSYSTEM_HARDWARETYPE XLINUXSYSTEM::GetTypeHardware(int* revision)
 {
-  #define CPUINFOREVISION __L("Revision")
+  #define CPUINFOREVISION _L("Revision")
 
   if(revision)
     {
@@ -159,7 +159,7 @@ XSYSTEM_HARDWARETYPE XLINUXSYSTEM::GetTypeHardware(int* revision)
         {
           XPATH xpath;
 
-          xpath = __L("/proc/cpuinfo");
+          xpath = _L("/proc/cpuinfo");
 
           if(xfileTXT->Open(xpath))
             {
@@ -172,14 +172,14 @@ XSYSTEM_HARDWARETYPE XLINUXSYSTEM::GetTypeHardware(int* revision)
                         {
                           if(line->Find(CPUINFOREVISION, false) != XSTRING_NOTFOUND)
                             {
-                              int position = line->Find(__L(":"), false);
+                              int position = line->Find(_L(":"), false);
                               if(position != XSTRING_NOTFOUND)
                                 {
                                   XSTRING number;
 
                                   number = &line->Get()[position+1];
 
-                                  number.UnFormat(__L(" %04x"), revision);
+                                  number.UnFormat(_L(" %04x"), revision);
                                 }
                             }
                         }
@@ -249,41 +249,41 @@ XSYSTEM_PLATFORM XLINUXSYSTEM::GetPlatform(XSTRING* namestring)
 {
  
   #ifdef HW_INTEL
-  if(namestring)  namestring->Set(__L("Linux"));
+  if(namestring)  namestring->Set(_L("Linux"));
   return XSYSTEM_PLATFORM_LINUX;
   #endif
 
   #ifdef HW_LEX3V700A
-  if(namestring)  namestring->Set(__L("Linux"));
+  if(namestring)  namestring->Set(_L("Linux"));
   return XSYSTEM_PLATFORM_LINUX;
   #endif
 
   #ifdef HW_GUMSTIXCONNEX
-  if(namestring)  namestring->Set(__L("Linux Embedded"));
+  if(namestring)  namestring->Set(_L("Linux Embedded"));
   return XSYSTEM_PLATFORM_LINUX_EMBEDDED;
   #endif
 
   #ifdef HW_ARTILA500
-  if(namestring)  namestring->Set(__L("Linux Embedded"));
+  if(namestring)  namestring->Set(_L("Linux Embedded"));
   return XSYSTEM_PLATFORM_LINUX_EMBEDDED;
   #endif
 
   #ifdef HW_RASPBERRYPI
-  if(namestring)  namestring->Set(__L("Linux Embedded"));
+  if(namestring)  namestring->Set(_L("Linux Embedded"));
   return XSYSTEM_PLATFORM_LINUX_EMBEDDED;
   #endif
 
   #ifdef HW_BEAGLEBONE
-  if(namestring)  namestring->Set(__L("Linux Embedded"));
+  if(namestring)  namestring->Set(_L("Linux Embedded"));
   return XSYSTEM_PLATFORM_LINUX_EMBEDDED;
   #endif
 
   #if defined(HW_ARM) || defined(HW_ARM64)
-  if(namestring)  namestring->Set(__L("Linux Embedded"));
+  if(namestring)  namestring->Set(_L("Linux Embedded"));
   return XSYSTEM_PLATFORM_LINUX_EMBEDDED;  
   #endif
 
-  if(namestring)  namestring->Set(__L("Unknown"));  
+  if(namestring)  namestring->Set(_L("Unknown"));  
   return XSYSTEM_PLATFORM_UNKNOWN;
 }
 
@@ -308,11 +308,11 @@ bool XLINUXSYSTEM::GetOperativeSystemID(XSTRING& ID)
   int ret = uname(&details);    
   if(ret != 0) return false;
 
-  ID += details.sysname;      ID += __L(" ");
-  // ID += details.nodename;     ID += __L(" ");
-  ID += details.release;      ID += __L(" ");
-  ID += details.version;      ID += __L(" ");
-  ID += details.machine;      ID += __L(" ");
+  ID += details.sysname;      ID += _L(" ");
+  // ID += details.nodename;     ID += _L(" ");
+  ID += details.release;      ID += _L(" ");
+  ID += details.version;      ID += _L(" ");
+  ID += details.machine;      ID += _L(" ");
   
   return true;
 }
@@ -334,7 +334,7 @@ XDWORD XLINUXSYSTEM::GetLanguageSO()
 
   languageenglish.Set(setlocale(LC_MESSAGES, ""));
 
-  int undercodeindex = languageenglish.Find(__L("_"), false);
+  int undercodeindex = languageenglish.Find(_L("_"), false);
   if(undercodeindex == XSTRING_NOTFOUND) return XLANGUAGE_ISO_639_3_CODE_INVALID;
 
   int todelete = languageenglish.GetSize();
@@ -384,7 +384,7 @@ XSTRING* XLINUXSYSTEM::GetCPUSerialNumber()
   XDWORD first = eax;
   XDWORD last  = edx;
 
-  CPUserialnumber.Format(__L("%08X%08X"), last, first);
+  CPUserialnumber.Format(_L("%08X%08X"), last, first);
   #endif
 
   return &CPUserialnumber;
@@ -719,7 +719,7 @@ bool XLINUXSYSTEM::GetVolumesInfo(XVECTOR<XSYSTEM_VOLUMEINFO*>& volumes)
 bool XLINUXSYSTEM::FreeCacheMemory()
 {
   #ifdef XPROCESSMANAGER_ACTIVE
-  return GEN_XPROCESSMANAGER.MakeSystemCommand(__L("sync && sysctl -w vm.drop_caches=3 > /dev/null"));  
+  return GEN_XPROCESSMANAGER.MakeSystemCommand(_L("sync && sysctl -w vm.drop_caches=3 > /dev/null"));  
   #else 
   return false;
   #endif
@@ -819,7 +819,7 @@ int XLINUXSYSTEM::GetCPUUsageForProcessName(XCHAR* processname)
   XSTRING result;
   XBUFFER charcmd;
   
-  command.Format(__L("ps -C %s -o %%cpu"), processname);
+  command.Format(_L("ps -C %s -o %%cpu"), processname);
 
   command.ConvertToASCII(charcmd);  
 
@@ -843,7 +843,7 @@ int XLINUXSYSTEM::GetCPUUsageForProcessName(XCHAR* processname)
 
   // Extract the CPU usage percentage from the result
   double cpupercentage = 0.0f;
-  result.UnFormat(__L("%%CPU\n %lf\n"), &cpupercentage);
+  result.UnFormat(_L("%%CPU\n %lf\n"), &cpupercentage);
 
   return static_cast<int>(cpupercentage);
 }
@@ -866,7 +866,7 @@ int XLINUXSYSTEM::GetCPUUsageForProcessID(XDWORD processID)
   XSTRING result;
   XBUFFER charcmd;
   
-  command.Format(__L("ps -C -p %d -o %%cpu"), processID);
+  command.Format(_L("ps -C -p %d -o %%cpu"), processID);
 
   command.ConvertToASCII(charcmd);  
 
@@ -890,7 +890,7 @@ int XLINUXSYSTEM::GetCPUUsageForProcessID(XDWORD processID)
 
   // Extract the CPU usage percentage from the result
   double cpupercentage = 0.0f;
-  result.UnFormat(__L("%%CPU\n %lf\n"), &cpupercentage);
+  result.UnFormat(_L("%%CPU\n %lf\n"), &cpupercentage);
 
   return static_cast<int>(cpupercentage);
 }
@@ -1328,20 +1328,20 @@ bool XLINUXSYSTEM::Sound_SetLevel(bool read, long* level)
 
   if((snd_mixer_open(&handle, 0)) < 0) 
     {
-      XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, __L("[Alsa volume] snd_mixer_open: error"));
+      XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, _L("[Alsa volume] snd_mixer_open: error"));
       return false;        
     }
 
   if((snd_mixer_attach(handle, card)) < 0) 
     {
-      XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, __L("[Alsa volume] snd_mixer_attach: error"));
+      XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, _L("[Alsa volume] snd_mixer_attach: error"));
       snd_mixer_close(handle);
       return false;
     }
 
   if((snd_mixer_selem_register(handle, NULL, NULL)) < 0) 
     {
-      XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, __L("[Alsa volume] snd_mixer_selem_register: error"));
+      XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, _L("[Alsa volume] snd_mixer_selem_register: error"));
       snd_mixer_close(handle);
       return false;
     }
@@ -1349,7 +1349,7 @@ bool XLINUXSYSTEM::Sound_SetLevel(bool read, long* level)
   int ret = snd_mixer_load(handle);
   if(ret < 0) 
     {
-      XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, __L("[Alsa volume] snd_mixer_load: error"));
+      XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, _L("[Alsa volume] snd_mixer_load: error"));
       snd_mixer_close(handle);
       return false;
     }
@@ -1369,7 +1369,7 @@ bool XLINUXSYSTEM::Sound_SetLevel(bool read, long* level)
       elem = snd_mixer_find_selem(handle, sid);
       if(!elem) 
         {
-          XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, __L("[Alsa volume] snd_mixer_find_selem: error"));
+          XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, _L("[Alsa volume] snd_mixer_find_selem: error"));
 
           snd_mixer_close(handle);
           return false;   
@@ -1380,18 +1380,18 @@ bool XLINUXSYSTEM::Sound_SetLevel(bool read, long* level)
 
   snd_mixer_selem_get_playback_volume_range(elem, &minv, &maxv);
   
-  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, __L("[Alsa volume] Volume range <%i,%i>"), minv, maxv);
+  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, _L("[Alsa volume] Volume range <%i,%i>"), minv, maxv);
 
   if(read) 
     {
       if(snd_mixer_selem_get_playback_volume(elem, (snd_mixer_selem_channel_id_t)0, level) < 0) 
         {
-          XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, __L("[Alsa volume] snd_mixer_selem_get_playback_volume: error"));  
+          XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, _L("[Alsa volume] snd_mixer_selem_get_playback_volume: error"));  
           snd_mixer_close(handle);
           return false;
         }
 
-      XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, __L("[Alsa volume] Get volume %i with status %i"), *level, ret);
+      XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, _L("[Alsa volume] Get volume %i with status %i"), *level, ret);
 
       // make the value bound to 100 
       *level  -= minv;
@@ -1404,7 +1404,7 @@ bool XLINUXSYSTEM::Sound_SetLevel(bool read, long* level)
     {
       if(*level < 0 || *level > 100) // out of bounds
         {
-          XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, __L("[Alsa volume] out of bounds: error"));
+          XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, _L("[Alsa volume] out of bounds: error"));
           return false;
         }
 
@@ -1416,7 +1416,7 @@ bool XLINUXSYSTEM::Sound_SetLevel(bool read, long* level)
       
       if(snd_mixer_selem_set_playback_volume_range(elem, minv, maxv) < 0)
         {
-          XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, __L("[Alsa volume] snd_mixer_selem_set_playback_volume_range: error"));
+          XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, _L("[Alsa volume] snd_mixer_selem_set_playback_volume_range: error"));
 
           snd_mixer_close(handle);
           return false;
@@ -1424,7 +1424,7 @@ bool XLINUXSYSTEM::Sound_SetLevel(bool read, long* level)
          
       if(snd_mixer_selem_set_playback_volume_all(elem, *level) < 0) 
         {
-          XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, __L("[Alsa volume] snd_mixer_selem_set_playback_volume_all: error"));
+          XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, _L("[Alsa volume] snd_mixer_selem_set_playback_volume_all: error"));
 
           snd_mixer_close(handle);
           return false;
@@ -1433,7 +1433,7 @@ bool XLINUXSYSTEM::Sound_SetLevel(bool read, long* level)
       /*
       if(snd_mixer_selem_set_playback_volume(elem, (snd_mixer_selem_channel_id_t)0, *level) < 0) 
         {
-          XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, __L("[Alsa volume] snd_mixer_selem_set_playback_volume: error"));
+          XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, _L("[Alsa volume] snd_mixer_selem_set_playback_volume: error"));
 
           snd_mixer_close(handle);
           return false;
@@ -1441,14 +1441,14 @@ bool XLINUXSYSTEM::Sound_SetLevel(bool read, long* level)
 
       if(snd_mixer_selem_set_playback_volume(elem, (snd_mixer_selem_channel_id_t)1, *level) < 0) 
         {
-          XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, __L("[Alsa volume] snd_mixer_selem_set_playback_volume: error"));
+          XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, _L("[Alsa volume] snd_mixer_selem_set_playback_volume: error"));
 
           snd_mixer_close(handle);
           return false;
         }
        */
 
-      XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, __L("[Alsa volume] Set volume %i with status %i"), *level, ret);        
+      XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, _L("[Alsa volume] Set volume %i with status %i"), *level, ret);        
     }
 
   snd_mixer_close(handle);

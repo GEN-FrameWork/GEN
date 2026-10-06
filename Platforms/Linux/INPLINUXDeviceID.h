@@ -36,7 +36,7 @@
 
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
 
-#define INPLINUXDEVICEID_HANDLEFILE   __L("/proc/bus/input/devices")
+#define INPLINUXDEVICEID_HANDLEFILE   _L("/proc/bus/input/devices")
 #define INPLINUXDEVICEID_INVALID      -1
 
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/

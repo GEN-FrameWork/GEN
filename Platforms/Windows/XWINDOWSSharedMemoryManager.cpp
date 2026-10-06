@@ -143,7 +143,7 @@ XBYTE* XWINDOWSSHAREDMEMORYMANAGER::Create(XCHAR* ID, XDWORD size, bool ispublic
     {
       memcpy((XBYTE*)base, (XBYTE*)&this->size, sizeof(XDWORD));
       
-      //XTRACE_PRINTCOLOR(XTRACE_COLOR_PURPLE, __L("[WINDOWS Shared Mem]  Create Size [%d]"), this->size);
+      //XTRACE_PRINTCOLOR(XTRACE_COLOR_PURPLE, _L("[WINDOWS Shared Mem]  Create Size [%d]"), this->size);
 
       pointer  = base;
       pointer += sizeof(XDWORD);
@@ -193,7 +193,7 @@ XBYTE* XWINDOWSSHAREDMEMORYMANAGER::Open(XCHAR* ID, XDWORD& size)
 
        memcpy((XBYTE*)&this->size, base, sizeof(XDWORD));
     
-       //XTRACE_PRINTCOLOR(XTRACE_COLOR_PURPLE, __L("[WINDOWS Shared Mem]  Open Size [%d]"), this->size);
+       //XTRACE_PRINTCOLOR(XTRACE_COLOR_PURPLE, _L("[WINDOWS Shared Mem]  Open Size [%d]"), this->size);
 
        UnmapViewOfFile(base);
 
@@ -203,7 +203,7 @@ XBYTE* XWINDOWSSHAREDMEMORYMANAGER::Open(XCHAR* ID, XDWORD& size)
            this->size -= sizeof(XDWORD);
            size = this->size;
 
-           //XTRACE_PRINTCOLOR(XTRACE_COLOR_PURPLE, __L("[WINDOWS Shared Mem]  Open Size [%d]"), this->size);
+           //XTRACE_PRINTCOLOR(XTRACE_COLOR_PURPLE, _L("[WINDOWS Shared Mem]  Open Size [%d]"), this->size);
            
            pointer  = base;
            pointer += sizeof(XDWORD);

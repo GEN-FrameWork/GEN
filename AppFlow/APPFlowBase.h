@@ -66,18 +66,18 @@ enum APPFLOWBASE_MODE_TYPE
 };
 
 
-#define APPFLOW_DEFAULT_DIRECTORY_ROOT            __L("assets")
-#define APPFLOW_DEFAULT_DIRECTORY_WEB             __L("web")
-#define APPFLOW_DEFAULT_DIRECTORY_DATABASES       __L("databases")
-#define APPFLOW_DEFAULT_DIRECTORY_GRAPHICS        __L("graphics")
-#define APPFLOW_DEFAULT_DIRECTORY_UI_LAYOUTS      __L("ui_layouts")
-#define APPFLOW_DEFAULT_DIRECTORY_SOUNDS          __L("sounds")
-#define APPFLOW_DEFAULT_DIRECTORY_FONTS           __L("fonts")
-#define APPFLOW_DEFAULT_DIRECTORY_SCRIPTS         __L("scripts")
-#define APPFLOW_DEFAULT_DIRECTORY_SCRAPERS        __L("scripts/scrapers")
-#define APPFLOW_DEFAULT_DIRECTORY_FIRMWARE        __L("firmware")
-#define APPFLOW_DEFAULT_DIRECTORY_CERTIFICATES    __L("certificates")
-#define APPFLOW_DEFAULT_DIRECTORY_TESTS           __L("Tests")
+#define APPFLOW_DEFAULT_DIRECTORY_ROOT            _L("assets")
+#define APPFLOW_DEFAULT_DIRECTORY_WEB             _L("web")
+#define APPFLOW_DEFAULT_DIRECTORY_DATABASES       _L("databases")
+#define APPFLOW_DEFAULT_DIRECTORY_GRAPHICS        _L("graphics")
+#define APPFLOW_DEFAULT_DIRECTORY_UI_LAYOUTS      _L("ui_layouts")
+#define APPFLOW_DEFAULT_DIRECTORY_SOUNDS          _L("sounds")
+#define APPFLOW_DEFAULT_DIRECTORY_FONTS           _L("fonts")
+#define APPFLOW_DEFAULT_DIRECTORY_SCRIPTS         _L("scripts")
+#define APPFLOW_DEFAULT_DIRECTORY_SCRAPERS        _L("scripts/scrapers")
+#define APPFLOW_DEFAULT_DIRECTORY_FIRMWARE        _L("firmware")
+#define APPFLOW_DEFAULT_DIRECTORY_CERTIFICATES    _L("certificates")
+#define APPFLOW_DEFAULT_DIRECTORY_TESTS           _L("Tests")
 
 #define APPLICATIONCREATEINSTANCE(CLASSNAME, VARIABLE)    CLASSNAME* VARIABLE = NULL;                     \
                                                           APPFLOWBASE* APPFLOWBASE::Create()              \

@@ -764,14 +764,14 @@ bool APPFLOWINTERNETSERVICES::CheckInternetStatus()
 
               if(cfg->InternetServices_GetCheckInternetStatusCadence())
                 {
-                  // XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, __L("[APP Internet Services] Get Internet Services cadence %d]"), cfg->InternetServices_GetCheckInternetStatusCadence());
+                  // XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, _L("[APP Internet Services] Get Internet Services cadence %d]"), cfg->InternetServices_GetCheckInternetStatusCadence());
 
                   ChangeCadenceCheck(APPFLOWINTERNETSERVICES_TASKID_CHECKCONNECTIONINTERNET, cfg->InternetServices_GetCheckInternetStatusCadence());     
                 }
 
               if(cfg->InternetServices_GetCheckIPsChangeCadence())
                 {
-                  // XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, __L("[APP Internet Services] Get IPs ajust to 30 seconds]"));
+                  // XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, _L("[APP Internet Services] Get IPs ajust to 30 seconds]"));
 
                   ChangeCadenceCheck(APPFLOWINTERNETSERVICES_TASKID_GETIPS, 30, false);                        
                 }
@@ -787,7 +787,7 @@ bool APPFLOWINTERNETSERVICES::CheckInternetStatus()
 
           if(cfg->InternetServices_GetCheckInternetStatusCadence())
             {
-              // XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, __L("[APP Internet Services] Get Internet Services cadence 10]"));    
+              // XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, _L("[APP Internet Services] Get Internet Services cadence 10]"));    
 
               ChangeCadenceCheck(APPFLOWINTERNETSERVICES_TASKID_CHECKCONNECTIONINTERNET, 5, false);                       
             }
@@ -829,7 +829,7 @@ bool APPFLOWINTERNETSERVICES::UpdateIPs(XSTRING& actualpublicIP)
 
   APPFLOWINTERNETSERVICES_XEVENT    xevent(this, APPFLOWINTERNETSERVICES_XEVENT_TYPE_CHANGEIP);  
 
-  // APPFLOW_LOG_ENTRY(XLOGLEVEL_INFO, APPFLOW_CFG_LOG_SECTIONID_CONNEXIONS, false, __L("[Update IPs] Ini Get Local IP... "));       
+  // APPFLOW_LOG_ENTRY(XLOGLEVEL_INFO, APPFLOW_CFG_LOG_SECTIONID_CONNEXIONS, false, _L("[Update IPs] Ini Get Local IP... "));       
                                                                 
   if(enumdevices)
     {
@@ -864,7 +864,7 @@ bool APPFLOWINTERNETSERVICES::UpdateIPs(XSTRING& actualpublicIP)
       GEN_DIOFACTORY.DeleteStreamEnumDevices(enumdevices);
     }
 
-  // APPFLOW_LOG_ENTRY(status?XLOGLEVEL_INFO:XLOGLEVEL_ERROR, APPFLOW_CFG_LOG_SECTIONID_CONNEXIONS, false, __L("[Update IPs] End Get Local IP : [%s] "), actualautomaticlocalIP.Get());       
+  // APPFLOW_LOG_ENTRY(status?XLOGLEVEL_INFO:XLOGLEVEL_ERROR, APPFLOW_CFG_LOG_SECTIONID_CONNEXIONS, false, _L("[Update IPs] End Get Local IP : [%s] "), actualautomaticlocalIP.Get());       
 
   if(status)
     {
@@ -884,7 +884,7 @@ bool APPFLOWINTERNETSERVICES::UpdateIPs(XSTRING& actualpublicIP)
           sendchangeevent   = true;
         }                                                                         
       
-      // APPFLOW_LOG_ENTRY(XLOGLEVEL_INFO, APPFLOW_CFG_LOG_SECTIONID_CONNEXIONS, false, __L("[Update IPs] Ini Get Public IP... "));                                                                    
+      // APPFLOW_LOG_ENTRY(XLOGLEVEL_INFO, APPFLOW_CFG_LOG_SECTIONID_CONNEXIONS, false, _L("[Update IPs] Ini Get Public IP... "));                                                                    
 
 
       if(endservices)
@@ -913,11 +913,11 @@ bool APPFLOWINTERNETSERVICES::UpdateIPs(XSTRING& actualpublicIP)
       /*
       if(actualpublicIP.IsEmpty())
         {
-          APPFLOW_LOG_ENTRY(XLOGLEVEL_ERROR, APPFLOW_CFG_LOG_SECTIONID_CONNEXIONS, false, __L("[Update IPs] End Get Public IP: Error not IP!"));                                                                                                                      
+          APPFLOW_LOG_ENTRY(XLOGLEVEL_ERROR, APPFLOW_CFG_LOG_SECTIONID_CONNEXIONS, false, _L("[Update IPs] End Get Public IP: Error not IP!"));                                                                                                                      
         }
        else
         {   
-          APPFLOW_LOG_ENTRY((status?XLOGLEVEL_INFO:XLOGLEVEL_ERROR), APPFLOW_CFG_LOG_SECTIONID_CONNEXIONS, false, __L("[Update IPs] End Get Public IP: [%s] (%s)"), actualpublicIP.Get(), sendchangeevent?__L("has changed"):__L("has not changed"));                                                                                                                    
+          APPFLOW_LOG_ENTRY((status?XLOGLEVEL_INFO:XLOGLEVEL_ERROR), APPFLOW_CFG_LOG_SECTIONID_CONNEXIONS, false, _L("[Update IPs] End Get Public IP: [%s] (%s)"), actualpublicIP.Get(), sendchangeevent?_L("has changed"):_L("has not changed"));                                                                                                                    
         }
       */
     }
@@ -956,11 +956,11 @@ bool APPFLOWINTERNETSERVICES::UpdateDynDNSURLs(XSTRING& actualpublicIP)
       return false;
     }
                 
-  // APPFLOW_LOG_ENTRY(XLOGLEVEL_INFO, APPFLOW_CFG_LOG_SECTIONID_CONNEXIONS, false, __L("[Update IPs] Ini Update Dyndns URLs: [%s] "), actualpublicIP.Get());  
+  // APPFLOW_LOG_ENTRY(XLOGLEVEL_INFO, APPFLOW_CFG_LOG_SECTIONID_CONNEXIONS, false, _L("[Update IPs] Ini Update Dyndns URLs: [%s] "), actualpublicIP.Get());  
 
   bool status = dyndnsmanager->AssingAll(&endservices);
 
-  // APPFLOW_LOG_ENTRY((status?XLOGLEVEL_INFO:XLOGLEVEL_ERROR), APPFLOW_CFG_LOG_SECTIONID_CONNEXIONS, false, __L("[Update IPs] End Update Dyndns URLs: [%s]"), actualpublicIP.Get());    
+  // APPFLOW_LOG_ENTRY((status?XLOGLEVEL_INFO:XLOGLEVEL_ERROR), APPFLOW_CFG_LOG_SECTIONID_CONNEXIONS, false, _L("[Update IPs] End Update Dyndns URLs: [%s]"), actualpublicIP.Get());    
 
   return status;
 }
@@ -1073,7 +1073,7 @@ void APPFLOWINTERNETSERVICES::HandleEvent_Scheduler(XSCHEDULER_XEVENT* event)
                                                                     break;
 
       
-      case APPFLOWINTERNETSERVICES_TASKID_GETIPS                  : // XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, __L("[APP Internet Services] Check Get IPs..."));    
+      case APPFLOWINTERNETSERVICES_TASKID_GETIPS                  : // XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, _L("[APP Internet Services] Check Get IPs..."));    
                                                                       
                                                                     if(CheckInternetConnection()) 
                                                                       { 
@@ -1082,7 +1082,7 @@ void APPFLOWINTERNETSERVICES::HandleEvent_Scheduler(XSCHEDULER_XEVENT* event)
                                                                             
                                                                         if(UpdateIPs(actualpublicIP))
                                                                           {  
-                                                                            // XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, __L("[APP Internet Services] Update public IP"));    
+                                                                            // XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, _L("[APP Internet Services] Update public IP"));    
       
                                                                             #ifdef XTRACE_ACTIVE                                                                   
                                                                             XTRACE_RESOLVEALLRESOURCES; 
@@ -1096,7 +1096,7 @@ void APPFLOWINTERNETSERVICES::HandleEvent_Scheduler(XSCHEDULER_XEVENT* event)
                                                                         if(!actualpublicIP.IsEmpty())
                                                                           {
                                                                             #ifdef APPFLOW_CFG_DYNDNSMANAGER_ACTIVE                                                                  
-                                                                            // XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, __L("[APP Internet Services] Get IPs ajust to %d seconds]"), cfg->InternetServices_GetCheckIPsChangeCadence());
+                                                                            // XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, _L("[APP Internet Services] Get IPs ajust to %d seconds]"), cfg->InternetServices_GetCheckIPsChangeCadence());
                                                                             ChangeCadenceCheck(APPFLOWINTERNETSERVICES_TASKID_GETIPS, cfg->InternetServices_GetCheckIPsChangeCadence());   
                                                                             #endif                                                                                                                                           
                                                                           }                                                                        

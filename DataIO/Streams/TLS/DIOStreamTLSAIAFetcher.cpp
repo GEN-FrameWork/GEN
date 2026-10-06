@@ -271,7 +271,7 @@ bool DIOSTREAMTLSAIAFETCHER::Exchange(DIOSTREAMTCPIP* diostream, XSTRING& server
   if(status)
     {
       XSTRING request;
-      request.Format(__L("GET %s HTTP/1.1\r\nHost: %s\r\nConnection: close\r\nUser-Agent: Mozilla 5.0\r\nAccept: */*\r\n\r\n"), resource.Get(), server.Get());
+      request.Format(_L("GET %s HTTP/1.1\r\nHost: %s\r\nConnection: close\r\nUser-Agent: Mozilla 5.0\r\nAccept: */*\r\n\r\n"), resource.Get(), server.Get());
 
       if(!diostream->WriteStr(request)) status = false;
 
@@ -395,21 +395,21 @@ bool DIOSTREAMTLSAIAFETCHER::ResponseBody_Extract(XBUFFER& raw, XBUFFER& tobuffe
   // Only a plain 200 OK is accepted -- redirects are not followed here: an AIA fetch is a best-effort convenience,
   // not a general purpose HTTP client, and following a redirect would reopen the same "which server do we now
   // trust" question this fetch exists to sidestep.
-  if((headertext.Find(__L("HTTP/1.0 200"), true) != 0) && (headertext.Find(__L("HTTP/1.1 200"), true) != 0)) return false;
+  if((headertext.Find(_L("HTTP/1.0 200"), true) != 0) && (headertext.Find(_L("HTTP/1.1 200"), true) != 0)) return false;
 
-  bool   ischunked        = (headertext.Find(__L("Transfer-Encoding:"), true) != XSTRING_NOTFOUND) &&
-                             (headertext.Find(__L("chunked"), true) != XSTRING_NOTFOUND);
+  bool   ischunked        = (headertext.Find(_L("Transfer-Encoding:"), true) != XSTRING_NOTFOUND) &&
+                             (headertext.Find(_L("chunked"), true) != XSTRING_NOTFOUND);
   bool   hascontentlength = false;
   XQWORD contentlength    = 0;
 
-  int lengthindex = headertext.Find(__L("Content-Length:"), true);
+  int lengthindex = headertext.Find(_L("Content-Length:"), true);
   if(lengthindex != XSTRING_NOTFOUND)
     {
-      XDWORD position = lengthindex + XSTRING(__L("Content-Length:")).GetSize();
+      XDWORD position = lengthindex + XSTRING(_L("Content-Length:")).GetSize();
       bool   hasdigit  = false;
 
       while((position < headertext.GetSize()) &&
-            ((headertext.Get()[position]==__C(' ')) || (headertext.Get()[position]==__C('\t'))))
+            ((headertext.Get()[position]==_C(' ')) || (headertext.Get()[position]==_C('\t'))))
         {
           position++;
         }
@@ -418,9 +418,9 @@ bool DIOSTREAMTLSAIAFETCHER::ResponseBody_Extract(XBUFFER& raw, XBUFFER& tobuffe
         {
           XCHAR character = headertext.Get()[position];
 
-          if((character < __C('0')) || (character > __C('9'))) break;
+          if((character < _C('0')) || (character > _C('9'))) break;
 
-          XQWORD digit   = character - __C('0');
+          XQWORD digit   = character - _C('0');
           XQWORD maximum = (XQWORD)-1;
 
           if(contentlength > ((maximum - digit) / 10)) return false;
@@ -523,9 +523,9 @@ DIOSTREAMTLSAIAFETCHER_CHUNKRESULT DIOSTREAMTLSAIAFETCHER::ChunkSize_Get(XBUFFER
     {
       XBYTE character = input.GetByte(c);
 
-      if(character == __C(';')) break;
+      if(character == _C(';')) break;
 
-      if((character == __C(' ')) || (character == __C('\t')))
+      if((character == _C(' ')) || (character == _C('\t')))
         {
           if(hasdigit) afterdigits = true;
           continue;
@@ -535,9 +535,9 @@ DIOSTREAMTLSAIAFETCHER_CHUNKRESULT DIOSTREAMTLSAIAFETCHER::ChunkSize_Get(XBUFFER
 
       XBYTE digit;
 
-      if((character >= __C('0')) && (character <= __C('9')))      digit = character - __C('0');
-       else if((character >= __C('a')) && (character <= __C('f'))) digit = character - __C('a') + 10;
-       else if((character >= __C('A')) && (character <= __C('F'))) digit = character - __C('A') + 10;
+      if((character >= _C('0')) && (character <= _C('9')))      digit = character - _C('0');
+       else if((character >= _C('a')) && (character <= _C('f'))) digit = character - _C('a') + 10;
+       else if((character >= _C('A')) && (character <= _C('F'))) digit = character - _C('A') + 10;
        else return DIOSTREAMTLSAIAFETCHER_CHUNKRESULT_ERROR;
 
       if(chunksize > ((maximum - digit) >> 4)) return DIOSTREAMTLSAIAFETCHER_CHUNKRESULT_ERROR;

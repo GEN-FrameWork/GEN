@@ -119,10 +119,10 @@ bool DIOCLIPROTOCOLBUS::Ini(DIOSTREAM* diostream, XCHAR* ID, int timeout)
   enum_mutex=GEN_XFACTORY.Create_Mutex();
   if(!enum_mutex) return false;
 
-  threadsendenumrequest	= CREATEXTHREAD(XTHREADGROUPID_DIOPROTOCOL_CLI_BUS, __L("DIOCLIPROTOCOLBUS::Ini2"), ThreadSendEnumRequest, (void*)this);
+  threadsendenumrequest	= CREATEXTHREAD(XTHREADGROUPID_DIOPROTOCOL_CLI_BUS, _L("DIOCLIPROTOCOLBUS::Ini2"), ThreadSendEnumRequest, (void*)this);
   if(!threadsendenumrequest) return false;
 
-	threadreceivedcommand	= CREATEXTHREAD(XTHREADGROUPID_DIOPROTOCOL_CLI_BUS, __L("DIOCLIPROTOCOLBUS::Ini"), ThreadReceivedCommand, (void*)this);
+	threadreceivedcommand	= CREATEXTHREAD(XTHREADGROUPID_DIOPROTOCOL_CLI_BUS, _L("DIOCLIPROTOCOLBUS::Ini"), ThreadReceivedCommand, (void*)this);
   if(!threadreceivedcommand) return false;
 
   enum_timer = GEN_XFACTORY.CreateTimer();
@@ -346,7 +346,7 @@ bool DIOCLIPROTOCOLBUS::ReceivedCommand(XSTRING& originID, XSTRING& command, XVE
 
 			if(!command.Compare(DIOCLIPROTOCOLBUS_COMMAND_VERSION, true))	  		 
 				{
-					answer.Format(__L("%d.%d.%d"), version, subversion, subversionerror); 
+					answer.Format(_L("%d.%d.%d"), version, subversion, subversionerror); 
 					status = true;            
 				}
 

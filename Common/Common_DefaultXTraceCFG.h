@@ -35,20 +35,20 @@
 
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
 
-#define  GEN_XTRACE_NET_DEFAULT_01            __L("xtracegen.dyndns.org:10001")
-#define  GEN_XTRACE_NET_DEFAULT_02            __L("xtracegen.dyndns.org:10002")
-#define  GEN_XTRACE_NET_DEFAULT_03            __L("xtracegen.dyndns.org:10003")
-#define  GEN_XTRACE_NET_DEFAULT_04            __L("xtracegen.dyndns.org:10004")
-#define  GEN_XTRACE_NET_DEFAULT_05            __L("xtracegen.dyndns.org:10005")
+#define  GEN_XTRACE_NET_DEFAULT_01            _L("xtracegen.dyndns.org:10001")
+#define  GEN_XTRACE_NET_DEFAULT_02            _L("xtracegen.dyndns.org:10002")
+#define  GEN_XTRACE_NET_DEFAULT_03            _L("xtracegen.dyndns.org:10003")
+#define  GEN_XTRACE_NET_DEFAULT_04            _L("xtracegen.dyndns.org:10004")
+#define  GEN_XTRACE_NET_DEFAULT_05            _L("xtracegen.dyndns.org:10005")
 
 #ifdef XTRACE_ACTIVE
 
-  #define  GEN_XTRACE_NET_CFG_DEFAULT_01      if(tracetargets.Get(0)) tracetargets.Get(0)->Format(__L("%d,%s"), XTRACE_TYPE_NET, GEN_XTRACE_NET_DEFAULT_01);
-  #define  GEN_XTRACE_NET_CFG_DEFAULT_02      if(tracetargets.Get(1)) tracetargets.Get(1)->Format(__L("%d,%s"), XTRACE_TYPE_NET, GEN_XTRACE_NET_DEFAULT_02);
-  #define  GEN_XTRACE_NET_CFG_DEFAULT_03      if(tracetargets.Get(2)) tracetargets.Get(2)->Format(__L("%d,%s"), XTRACE_TYPE_NET, GEN_XTRACE_NET_DEFAULT_03);
-  #define  GEN_XTRACE_NET_CFG_DEFAULT_04      if(tracetargets.Get(3)) tracetargets.Get(3)->Format(__L("%d,%s"), XTRACE_TYPE_NET, GEN_XTRACE_NET_DEFAULT_04);
-//#define  GEN_XTRACE_NET_CFG_DEFAULT_05      if(tracetargets.Get(4)) tracetargets.Get(4)->Format(__L("%d,%s"), XTRACE_TYPE_NET, GEN_XTRACE_NET_DEFAULT_05);
-  #define  GEN_XTRACE_NET_CFG_DEFAULT_LOCAL   if(tracetargets.Get(4)) tracetargets.Get(4)->Format(__L("%d,*:10001"), XTRACE_TYPE_NET);
+  #define  GEN_XTRACE_NET_CFG_DEFAULT_01      if(tracetargets.Get(0)) tracetargets.Get(0)->Format(_L("%d,%s"), XTRACE_TYPE_NET, GEN_XTRACE_NET_DEFAULT_01);
+  #define  GEN_XTRACE_NET_CFG_DEFAULT_02      if(tracetargets.Get(1)) tracetargets.Get(1)->Format(_L("%d,%s"), XTRACE_TYPE_NET, GEN_XTRACE_NET_DEFAULT_02);
+  #define  GEN_XTRACE_NET_CFG_DEFAULT_03      if(tracetargets.Get(2)) tracetargets.Get(2)->Format(_L("%d,%s"), XTRACE_TYPE_NET, GEN_XTRACE_NET_DEFAULT_03);
+  #define  GEN_XTRACE_NET_CFG_DEFAULT_04      if(tracetargets.Get(3)) tracetargets.Get(3)->Format(_L("%d,%s"), XTRACE_TYPE_NET, GEN_XTRACE_NET_DEFAULT_04);
+//#define  GEN_XTRACE_NET_CFG_DEFAULT_05      if(tracetargets.Get(4)) tracetargets.Get(4)->Format(_L("%d,%s"), XTRACE_TYPE_NET, GEN_XTRACE_NET_DEFAULT_05);
+  #define  GEN_XTRACE_NET_CFG_DEFAULT_LOCAL   if(tracetargets.Get(4)) tracetargets.Get(4)->Format(_L("%d,*:10001"), XTRACE_TYPE_NET);
 
 #else
 

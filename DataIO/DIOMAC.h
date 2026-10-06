@@ -51,7 +51,7 @@ class DIOMAC
 
     XBYTE*                        Get                           ();
     XDWORD                        GetManufactured               ();
-    bool                          GetXString                    (XSTRING& MACstring, XCHAR separator = __C(':'));
+    bool                          GetXString                    (XSTRING& MACstring, XCHAR separator = _C(':'));
     XQWORD                        GetLongNumber                 ();
 
     bool                          Set                           (XBYTE* MAC);

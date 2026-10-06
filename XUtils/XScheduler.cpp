@@ -632,7 +632,7 @@ bool XSCHEDULER::Ini()
   xdatetimeactual=GEN_XFACTORY.CreateDateTime();
   if(!xdatetimeactual) return false;
 
-  xthreadscheduler = CREATEXTHREAD(XTHREADGROUPID_SCHEDULER, __L("XSCHEDULER::Ini"), ThreadScheduler, (void*)this);
+  xthreadscheduler = CREATEXTHREAD(XTHREADGROUPID_SCHEDULER, _L("XSCHEDULER::Ini"), ThreadScheduler, (void*)this);
   if(!xthreadscheduler) return false;
 
   if(!xthreadscheduler->Ini()) return false;

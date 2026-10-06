@@ -162,7 +162,7 @@ bool DIOLINUXSTREAMUSBLOCALENUMDEVICES::Search()
 
           if(!resource.IsEmpty())
             {
-              if(resource.Find(__L("/dev/bus/"), true) == XSTRING_NOTFOUND)
+              if(resource.Find(_L("/dev/bus/"), true) == XSTRING_NOTFOUND)
                 {
                   int       port;
                   int       empty[2];
@@ -171,12 +171,12 @@ bool DIOLINUXSTREAMUSBLOCALENUMDEVICES::Search()
                   string[0].AdjustSize(_MAXSTR);
                   string[1].AdjustSize(_MAXSTR);
 
-                  devicepath.UnFormat(__L("%s-%d.%d:%d%s"), string[0].Get(), &empty[0], &port, &empty[1], string[1].Get());
+                  devicepath.UnFormat(_L("%s-%d.%d:%d%s"), string[0].Get(), &empty[0], &port, &empty[1], string[1].Get());
 
                   string[0].AdjustSize();
                   string[1].AdjustSize();
 
-                  //XTRACE_PRINTCOLOR(2, __L("%s - [port %d] class[%s]"), devicepath.Get(), port, classstr.Get());
+                  //XTRACE_PRINTCOLOR(2, _L("%s - [port %d] class[%s]"), devicepath.Get(), port, classstr.Get());
 
                   DIOSTREAMDEVICEUSB* device = GEN_NEW DIOSTREAMDEVICEUSB();
                   if( device)
@@ -186,20 +186,20 @@ bool DIOLINUXSTREAMUSBLOCALENUMDEVICES::Search()
                       device->SetIndex(index);
                       device->SetType(DIOSTREAMDEVICE_TYPE_USB);
 
-                      device->GetLocation()->Format(__L("%s#%04d.%s#%04d"), DIOSTREAMUSBLOCALENUMDEVICES_PORTKEY, port, DIOSTREAMUSBLOCALENUMDEVICES_PORTHUB, hubstr.ConvertToInt());
+                      device->GetLocation()->Format(_L("%s#%04d.%s#%04d"), DIOSTREAMUSBLOCALENUMDEVICES_PORTKEY, port, DIOSTREAMUSBLOCALENUMDEVICES_PORTHUB, hubstr.ConvertToInt());
                       device->GetDescription()->Set(udev_device_get_sysattr_value(udevdevice, "product"));
                       device->GetResource()->Set(resource);
 
-                      vid.UnFormat(__L("%08X"), &vendorID);
-                      pid.UnFormat(__L("%08X"), &productID);
+                      vid.UnFormat(_L("%08X"), &vendorID);
+                      pid.UnFormat(_L("%08X"), &productID);
 
-                      // XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, __L("vid: %s, pid: %s"), vid.Get(), pid.Get());
+                      // XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, _L("vid: %s, pid: %s"), vid.Get(), pid.Get());
 
                       device->SetVendorID(vendorID);
                       device->SetProductID(productID);
                         
                       XBYTE classbyte;
-                      classstr.UnFormat(__L("%02X"), &classbyte);
+                      classstr.UnFormat(_L("%02X"), &classbyte);
 
                       device->SetClass((DIOSTREAMDEVICEUSBCLASS)classbyte);
                       device->GetSerialString()->Set(udev_device_get_sysattr_value(udevdevice, "serial"));
@@ -264,27 +264,27 @@ bool DIOLINUXSTREAMUSBLOCALENUMDEVICES::GetDescriptor(struct udev_device* udevde
    XWORD    dataword = 0;
    XBYTE    databyte = 0;
 
- //string = udev_device_get_sysattr_value(udevdevice, "bcdusb");              string.UnFormat(__L("%04X"), &dataword);   descriptor->SetBCDUSB(dataword);
-   string = udev_device_get_sysattr_value(udevdevice, "bDeviceClass");        string.UnFormat(__L("%02X"), &databyte);   descriptor->SetDeviceClass(databyte);
-   string = udev_device_get_sysattr_value(udevdevice, "bDeviceSubClass");     string.UnFormat(__L("%02X"), &databyte);   descriptor->SetDeviceSubClass(databyte);
-   string = udev_device_get_sysattr_value(udevdevice, "bDeviceProtocol");     string.UnFormat(__L("%02X"), &databyte);   descriptor->SetDeviceProtocol(databyte);
-   string = udev_device_get_sysattr_value(udevdevice, "bMaxPacketSize0");     string.UnFormat(__L("%d"), &databyte);   descriptor->SetMaxPacketSize(databyte);
-   string = udev_device_get_sysattr_value(udevdevice, "idVendor");            string.UnFormat(__L("%04X"), &dataword);   descriptor->SetIDVendor(dataword);
-   string = udev_device_get_sysattr_value(udevdevice, "idProduct");           string.UnFormat(__L("%04X"), &dataword);   descriptor->SetIDProduct(dataword);
-   string = udev_device_get_sysattr_value(udevdevice, "bcdDevice");           string.UnFormat(__L("%04X"), &dataword);   descriptor->SetBCDDevice(dataword);
-   string = udev_device_get_sysattr_value(udevdevice, "manufacturer");        //string.UnFormat(__L("%d")  , &databyte);   descriptor->SetManufacturer(databyte);
+ //string = udev_device_get_sysattr_value(udevdevice, "bcdusb");              string.UnFormat(_L("%04X"), &dataword);   descriptor->SetBCDUSB(dataword);
+   string = udev_device_get_sysattr_value(udevdevice, "bDeviceClass");        string.UnFormat(_L("%02X"), &databyte);   descriptor->SetDeviceClass(databyte);
+   string = udev_device_get_sysattr_value(udevdevice, "bDeviceSubClass");     string.UnFormat(_L("%02X"), &databyte);   descriptor->SetDeviceSubClass(databyte);
+   string = udev_device_get_sysattr_value(udevdevice, "bDeviceProtocol");     string.UnFormat(_L("%02X"), &databyte);   descriptor->SetDeviceProtocol(databyte);
+   string = udev_device_get_sysattr_value(udevdevice, "bMaxPacketSize0");     string.UnFormat(_L("%d"), &databyte);   descriptor->SetMaxPacketSize(databyte);
+   string = udev_device_get_sysattr_value(udevdevice, "idVendor");            string.UnFormat(_L("%04X"), &dataword);   descriptor->SetIDVendor(dataword);
+   string = udev_device_get_sysattr_value(udevdevice, "idProduct");           string.UnFormat(_L("%04X"), &dataword);   descriptor->SetIDProduct(dataword);
+   string = udev_device_get_sysattr_value(udevdevice, "bcdDevice");           string.UnFormat(_L("%04X"), &dataword);   descriptor->SetBCDDevice(dataword);
+   string = udev_device_get_sysattr_value(udevdevice, "manufacturer");        //string.UnFormat(_L("%d")  , &databyte);   descriptor->SetManufacturer(databyte);
 
-   //XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, __L("USB manufactured  [%s]"), string.Get());
+   //XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, _L("USB manufactured  [%s]"), string.Get());
 
-   string = udev_device_get_sysattr_value(udevdevice, "product");             //string.UnFormat(__L("%d")  , &databyte);   descriptor->SetProduct(databyte);
+   string = udev_device_get_sysattr_value(udevdevice, "product");             //string.UnFormat(_L("%d")  , &databyte);   descriptor->SetProduct(databyte);
 
-   //XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, __L("USB product  [%s]"), string.Get());
+   //XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, _L("USB product  [%s]"), string.Get());
 
-   string = udev_device_get_sysattr_value(udevdevice, "serial");              //string.UnFormat(__L("%d")  , &databyte);   descriptor->SetSerialNumber(databyte);
+   string = udev_device_get_sysattr_value(udevdevice, "serial");              //string.UnFormat(_L("%d")  , &databyte);   descriptor->SetSerialNumber(databyte);
 
-   //XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, __L("USB serial [%s]"), string.Get());
+   //XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, _L("USB serial [%s]"), string.Get());
 
-   string = udev_device_get_sysattr_value(udevdevice, "bNumConfigurations");  string.UnFormat(__L("%02X"), &databyte);   descriptor->SetNumConfigurations(databyte);
+   string = udev_device_get_sysattr_value(udevdevice, "bNumConfigurations");  string.UnFormat(_L("%02X"), &databyte);   descriptor->SetNumConfigurations(databyte);
 
    return true;
 }

@@ -146,7 +146,7 @@ bool GRPSTATISTICSCHARTSTACKEDCOLUMNS::DrawPlot(GRPSTATISTICSCHARTBUILDER& build
       if(config.GetShowAxisLabels())
         {
           XSTRING label;
-          label.Format(__L("%g"), value);
+          label.Format(_L("%g"), value);
 
           builder.DrawText(x - (axisfontsize * 0.5), yy + (axisfontsize * 0.35), label.Get(), valuestyle);
         }
@@ -196,7 +196,7 @@ bool GRPSTATISTICSCHARTSTACKEDCOLUMNS::DrawPlot(GRPSTATISTICSCHARTBUILDER& build
           if(config.GetShowValues() && (segh > fontsize))                       // only when the segment is tall enough
             {
               XSTRING vlabel;
-              vlabel.Format(__L("%g"), value);
+              vlabel.Format(_L("%g"), value);
 
               GRPSTATISTICSCHARTTEXTSTYLE vstyle;
               vstyle.color  = config.GetTextColor();

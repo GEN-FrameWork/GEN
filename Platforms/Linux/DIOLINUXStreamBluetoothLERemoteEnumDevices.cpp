@@ -132,12 +132,12 @@ bool DIOLINUXSTREAMBLUETOOTHLEREMOTEENUMDEVICES::Search()
           MACstr.ConvertToASCII(charstr);          
           hcideviceID = hci_devid(charstr.GetPtrChar());
           
-          //XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, __L("[Blueooth LE enum Remote]  Select local bluetooth: %s"), MACstr.Get());
+          //XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, _L("[Blueooth LE enum Remote]  Select local bluetooth: %s"), MACstr.Get());
         }
        else 
         {
           hcideviceID =  hci_get_route(NULL);
-          //XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, __L("[Blueooth LE enum Remote]  Default local bluetooth."));
+          //XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, _L("[Blueooth LE enum Remote]  Default local bluetooth."));
         }
     }
    else
@@ -147,12 +147,12 @@ bool DIOLINUXSTREAMBLUETOOTHLEREMOTEENUMDEVICES::Search()
   
   if(hcideviceID < 0) hcideviceID = 0;        // use device 0, if device id is invalid
 
-  //XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, __L("[LE Remote Search] start device [%d]..."), hcideviceID);
+  //XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, _L("[LE Remote Search] start device [%d]..."), hcideviceID);
     
   hcisocket = hci_open_dev(hcideviceID);
   if(hcisocket == -1) 
     {    
-      XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, __L("[Blueooth LE enum Remote]  error to hci_copen_dev. "));
+      XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, _L("[Blueooth LE enum Remote]  error to hci_copen_dev. "));
       return false;
     }
 
@@ -188,7 +188,7 @@ bool DIOLINUXSTREAMBLUETOOTHLEREMOTEENUMDEVICES::Search()
   xmutexdevicesevent=GEN_XFACTORY.Create_Mutex();
   if(!xmutexdevicesevent) return false;
   
-  threadenumdevices = CREATEXTHREAD(XTHREADGROUPID_DIOSTREAMBLUETOOTH, __L("DIOLINUXSTREAMBLUETOOTHLEREMOTEENUMDEVICES::DIOLINUXSTREAMBLUETOOTHLEREMOTEENUMDEVICES"), ThreadEnumDevices, (void*)this);
+  threadenumdevices = CREATEXTHREAD(XTHREADGROUPID_DIOSTREAMBLUETOOTH, _L("DIOLINUXSTREAMBLUETOOTHLEREMOTEENUMDEVICES::DIOLINUXSTREAMBLUETOOTHLEREMOTEENUMDEVICES"), ThreadEnumDevices, (void*)this);
   if(!threadenumdevices)  return false;
 
   threadenumdevices->SetPriority(XTHREADPRIORITY_REALTIME);
@@ -197,7 +197,7 @@ bool DIOLINUXSTREAMBLUETOOTHLEREMOTEENUMDEVICES::Search()
 
   if(GetSearchMode() & DIOSTREAMBLUETOOTHLEREMOTEENUMDEVICES_SEARCHMODE_EVENT)
     {
-      threadenumdevicesevent = CREATEXTHREAD(XTHREADGROUPID_DIOSTREAMBLUETOOTH, __L("DIOLINUXSTREAMBLUETOOTHLEREMOTEENUMDEVICES::DIOLINUXSTREAMBLUETOOTHLEREMOTEENUMDEVICES_EVENT"), ThreadEnumDevicesEvent, (void*)this);
+      threadenumdevicesevent = CREATEXTHREAD(XTHREADGROUPID_DIOSTREAMBLUETOOTH, _L("DIOLINUXSTREAMBLUETOOTHLEREMOTEENUMDEVICES::DIOLINUXSTREAMBLUETOOTHLEREMOTEENUMDEVICES_EVENT"), ThreadEnumDevicesEvent, (void*)this);
       if(!threadenumdevicesevent)  return false;
 
       //threadenumdevicesevent->SetPriority(XTHREADPRIORITY_HIGH);
@@ -256,7 +256,7 @@ bool DIOLINUXSTREAMBLUETOOTHLEREMOTEENUMDEVICES::StopSearch(bool waitend)
 
   hcisocket = -1;
 
-  // XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, __L("[LE Remote Search] stop...."));
+  // XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, _L("[LE Remote Search] stop...."));
   
   return true;
 }
@@ -336,7 +336,7 @@ void DIOLINUXSTREAMBLUETOOTHLEREMOTEENUMDEVICES::ThreadEnumDevices(void* param)
               device->GetAdvertisingData()->Delete();
               device->GetAdvertisingData()->Add(LEadvertisinginfo->data, + LEadvertisinginfo->length);
 
-              //XTRACE_PRINTCOLOR((isnewdevice?XTRACE_COLOR_PURPLE:XTRACE_COLOR_BLUE), __L("MAC %s RSSI: %d"), LEMACdevicestring.Get(), rssi);
+              //XTRACE_PRINTCOLOR((isnewdevice?XTRACE_COLOR_PURPLE:XTRACE_COLOR_BLUE), _L("MAC %s RSSI: %d"), LEMACdevicestring.Get(), rssi);
               //XTRACE_PRINTDATABLOCKCOLOR((isnewdevice?XTRACE_COLOR_PURPLE:XTRACE_COLOR_BLUE), (*device->GetAdvertisingData()));
 
               device->GetLastScanTimer()->Reset();
@@ -352,7 +352,7 @@ void DIOLINUXSTREAMBLUETOOTHLEREMOTEENUMDEVICES::ThreadEnumDevices(void* param)
           if(device_event)
             {
                 
-              // XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, __L("MAC %s RSSI: %d  [%d]"), LEMACdevicestring.Get(), rssi, LEremotedevices->devicesevent.GetSize());
+              // XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, _L("MAC %s RSSI: %d  [%d]"), LEMACdevicestring.Get(), rssi, LEremotedevices->devicesevent.GetSize());
               
               device_event->GetMAC()->Set(LEMACdevicestring);
               device_event->SetRSSI(rssi);              

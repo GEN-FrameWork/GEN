@@ -65,7 +65,7 @@ UI_ELEMENT_TEXTBOX::UI_ELEMENT_TEXTBOX()
 
   SetType(UI_ELEMENT_TYPE_TEXTBOX);
 
-  GetTypeString()->Set(__L("textbox"));
+  GetTypeString()->Set(_L("textbox"));
 }
 
 

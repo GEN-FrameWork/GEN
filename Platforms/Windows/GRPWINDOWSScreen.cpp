@@ -289,7 +289,7 @@ bool GRPWINDOWSSCREEN::UpdateTransparent(GRP2DCANVAS* canvas)
 
   SetBkMode(hdcmem, TRANSPARENT);
  
-  // XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, __L("[Screen Windows] Update Transparent (Equal)  (%04d,%04d)  Bitxpixel (%d)"), width, height, GetBitsperPixel());
+  // XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, _L("[Screen Windows] Update Transparent (Equal)  (%04d,%04d)  Bitxpixel (%d)"), width, height, GetBitsperPixel());
      
   SetDIBitsToDevice(hdcmem, 0, 0, width, height, 0, 0, 0, height, canvas->Buffer_Get(), &hinfo, DIB_RGB_COLORS);     
  
@@ -1550,7 +1550,7 @@ bool GRPWINDOWSSCREEN::Create_Window(bool show)
   //-----------------------------------------------------------------------------------------------------
 
   classname               = GRPWINDOWSSCREEN_NAMECLASS;
-  title                   = __L(" ");
+  title                   = _L(" ");
 
   wndclass.cbSize         = sizeof(wndclass);
   wndclass.style          = CS_HREDRAW | CS_VREDRAW | CS_OWNDC;
@@ -1739,7 +1739,7 @@ bool GRPWINDOWSSCREEN::Create_Window(bool show)
           _exstyle |= WS_EX_TOOLWINDOW;
         }
 
-      hwnd = CreateWindowEx(_exstyle, classname.Get(), (usecfgchromesnative && !GetCFGChromes()->GetNativeTitleActive()) ? __L("") : GetTitle()->Get(), _style, posx, posy, winw, winh, NULL, NULL, hinstance, (void*)this);
+      hwnd = CreateWindowEx(_exstyle, classname.Get(), (usecfgchromesnative && !GetCFGChromes()->GetNativeTitleActive()) ? _L("") : GetTitle()->Get(), _style, posx, posy, winw, winh, NULL, NULL, hinstance, (void*)this);
 
       if(!hwnd)
         {
@@ -1779,7 +1779,7 @@ bool GRPWINDOWSSCREEN::Create_Window(bool show)
           Chromes_ApplyPostCreate();
         }
 
-      // XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, __L("[Screen Windows] Part 1 Ini: x=%04d, y=%04d (%04d,%04d)  Bitxpixel (%d)"), posx, posy, width, height, GetBitsperPixel());
+      // XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, _L("[Screen Windows] Part 1 Ini: x=%04d, y=%04d (%04d,%04d)  Bitxpixel (%d)"), posx, posy, width, height, GetBitsperPixel());
 
       // NOTE: uses ClientSizeToWindowSize(), NOT a plain AdjustWindowRect(), so a borderless-but-resizable
       // window (WS_THICKFRAME without WS_CAPTION -- custom Chromes) ends up with a client area that is
@@ -1813,7 +1813,7 @@ bool GRPWINDOWSSCREEN::Create_Window(bool show)
       SetMaxSize(width, height);
     }
 
-  // XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, __L("[Screen Windows] Part 2 Ini: x=%04d, y=%04d (%04d,%04d)  Bitxpixel (%d)"), posx, posy, width, height, GetBitsperPixel());
+  // XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, _L("[Screen Windows] Part 2 Ini: x=%04d, y=%04d (%04d,%04d)  Bitxpixel (%d)"), posx, posy, width, height, GetBitsperPixel());
 
   // NOTE: Show(show)/SetFocus(hwnd) used to happen HERE, before hdc/blitgles even existed -- see the
   // GRP_OPENGL_ACTIVE block below, right before the final "return true;", for why they were moved past it.
@@ -1845,13 +1845,13 @@ bool GRPWINDOWSSCREEN::Create_Window(bool show)
           blitgles = GEN_NEW GRPWINDOWSBLITGLES();
           if(!blitgles)
             {
-              XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, __L("[Screen Windows] Could not allocate GRPWINDOWSBLITGLES"));
+              XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, _L("[Screen Windows] Could not allocate GRPWINDOWSBLITGLES"));
               return false;
             }
 
           if(!blitgles->Create(this))
             {
-              XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, __L("[Screen Windows] BlitGLES create failed"));
+              XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, _L("[Screen Windows] BlitGLES create failed"));
               GEN_DELETE blitgles;
               blitgles = NULL;
               return false;
@@ -2041,7 +2041,7 @@ LRESULT CALLBACK GRPWINDOWSSCREEN::BaseWndProc(HWND hwnd, UINT msg, WPARAM wpara
                                           {
                                             screen->SetPosition((int)(short) LOWORD(lparam), (int)(short) HIWORD(lparam));
 
-                                            //XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, __L("[Windows] move: x=%04d, y=%04d (%04d,%04d)"), screen->GetPositionX(), screen->GetPositionY(), screen->GetWidth(), screen->GetHeight());
+                                            //XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, _L("[Windows] move: x=%04d, y=%04d (%04d,%04d)"), screen->GetPositionX(), screen->GetPositionY(), screen->GetWidth(), screen->GetHeight());
                                           }
                                       }
                                       break;

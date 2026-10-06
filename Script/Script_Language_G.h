@@ -136,7 +136,7 @@ union SCRIPT_LNG_G_VARVALUE
 #define SCRIPT_LNG_G_MAXTOKENLEN                128     // max token  length
 #define SCRIPT_LNG_G_NUMPARAMS                  41      // max params lenght
 
-#define SCRIPT_LNG_G_EXTENSION                  __L(".g")
+#define SCRIPT_LNG_G_EXTENSION                  _L(".g")
 
 
 

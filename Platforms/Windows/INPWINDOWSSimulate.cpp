@@ -179,8 +179,8 @@ bool INPWINDOWSSIMULATE::Key_PressByLiteral(XCHAR* literal)
       switch(altkey)
         {
           case ALTERNATIVE_KEY_NONE   : break;
-          case ALTERNATIVE_KEY_ALTGR  : Key_PressByLiteral(__L("Right ALT"));  break;
-          case ALTERNATIVE_KEY_SHIFT  : Key_PressByLiteral(__L("SHIFT"));      break;
+          case ALTERNATIVE_KEY_ALTGR  : Key_PressByLiteral(_L("Right ALT"));  break;
+          case ALTERNATIVE_KEY_SHIFT  : Key_PressByLiteral(_L("SHIFT"));      break;
         }
       
       bool status = Key_Press(code);  
@@ -214,8 +214,8 @@ bool INPWINDOWSSIMULATE::Key_UnPressByLiteral(XCHAR* literal)
       switch(altkey)
         {
           case ALTERNATIVE_KEY_NONE   : break;
-          case ALTERNATIVE_KEY_ALTGR  : Key_UnPressByLiteral(__L("Right ALT"));  break;
-          case ALTERNATIVE_KEY_SHIFT  : Key_UnPressByLiteral(__L("SHIFT"));      break;
+          case ALTERNATIVE_KEY_ALTGR  : Key_UnPressByLiteral(_L("Right ALT"));  break;
+          case ALTERNATIVE_KEY_SHIFT  : Key_UnPressByLiteral(_L("SHIFT"));      break;
         }
       
       return status;   
@@ -247,8 +247,8 @@ bool INPWINDOWSSIMULATE::Key_ClickByLiteral(XCHAR* literal, int pressuretime)
       switch(altkey)
         {
           case ALTERNATIVE_KEY_NONE   : break;
-          case ALTERNATIVE_KEY_ALTGR  : Key_PressByLiteral(__L("Right ALT"));  break;
-          case ALTERNATIVE_KEY_SHIFT  : Key_PressByLiteral(__L("SHIFT"));      break;
+          case ALTERNATIVE_KEY_ALTGR  : Key_PressByLiteral(_L("Right ALT"));  break;
+          case ALTERNATIVE_KEY_SHIFT  : Key_PressByLiteral(_L("SHIFT"));      break;
         }
 
       bool status = Key_Click(code, pressuretime);  
@@ -256,8 +256,8 @@ bool INPWINDOWSSIMULATE::Key_ClickByLiteral(XCHAR* literal, int pressuretime)
       switch(altkey)
         {
           case ALTERNATIVE_KEY_NONE   : break;
-          case ALTERNATIVE_KEY_ALTGR  : Key_UnPressByLiteral(__L("Right ALT"));  break;
-          case ALTERNATIVE_KEY_SHIFT  : Key_UnPressByLiteral(__L("SHIFT"));      break;
+          case ALTERNATIVE_KEY_ALTGR  : Key_UnPressByLiteral(_L("Right ALT"));  break;
+          case ALTERNATIVE_KEY_SHIFT  : Key_UnPressByLiteral(_L("SHIFT"));      break;
         }
 
       return status;
@@ -306,36 +306,36 @@ bool INPWINDOWSSIMULATE::Key_ClickByText(XCHAR* text, int pressuretimeinterval)
 
       switch(_text.Get()[c])
         {
-          case __C('A')   : 
-          case __C('B')   : 
-          case __C('C')   : 
-          case __C('D')   : 
-          case __C('E')   : 
-          case __C('F')   : 
-          case __C('G')   : 
-          case __C('H')   : 
-          case __C('I')   : 
-          case __C('J')   : 
-          case __C('K')   : 
-          case __C('L')   : 
-          case __C('M')   : 
-          case __C('N')   : 
-          case __C('O')   : 
-          case __C('P')   : 
-          case __C('Q')   : 
-          case __C('R')   : 
-          case __C('S')   : 
-          case __C('T')   : 
-          case __C('U')   : 
-          case __C('V')   : 
-          case __C('W')   : 
-          case __C('X')   : 
-          case __C('Y')   : 
-          case __C('Z')   : { bool changecapslock = false;      
+          case _C('A')   : 
+          case _C('B')   : 
+          case _C('C')   : 
+          case _C('D')   : 
+          case _C('E')   : 
+          case _C('F')   : 
+          case _C('G')   : 
+          case _C('H')   : 
+          case _C('I')   : 
+          case _C('J')   : 
+          case _C('K')   : 
+          case _C('L')   : 
+          case _C('M')   : 
+          case _C('N')   : 
+          case _C('O')   : 
+          case _C('P')   : 
+          case _C('Q')   : 
+          case _C('R')   : 
+          case _C('S')   : 
+          case _C('T')   : 
+          case _C('U')   : 
+          case _C('V')   : 
+          case _C('W')   : 
+          case _C('X')   : 
+          case _C('Y')   : 
+          case _C('Z')   : { bool changecapslock = false;      
                               
                               if(!IsCapsLockActive())
                                 {
-                                  if(!Key_ClickByLiteral(__L("CAPS LOCK"), pressuretimeinterval)) status = false;
+                                  if(!Key_ClickByLiteral(_L("CAPS LOCK"), pressuretimeinterval)) status = false;
                                   changecapslock = true;      
                                 }
 
@@ -343,45 +343,45 @@ bool INPWINDOWSSIMULATE::Key_ClickByText(XCHAR* text, int pressuretimeinterval)
 
                               if(changecapslock)
                                 {
-                                  if(!Key_ClickByLiteral(__L("CAPS LOCK"), pressuretimeinterval)) status = false;
+                                  if(!Key_ClickByLiteral(_L("CAPS LOCK"), pressuretimeinterval)) status = false;
                                 }    
                             }
                             break;
 
-          case __C(' ')   : if(!Key_ClickByLiteral(__L("SPACEBAR"), pressuretimeinterval)) status = false;
+          case _C(' ')   : if(!Key_ClickByLiteral(_L("SPACEBAR"), pressuretimeinterval)) status = false;
                             break;
 
-          case __C('a')   : 
-          case __C('b')   : 
-          case __C('c')   : 
-          case __C('d')   : 
-          case __C('e')   : 
-          case __C('f')   : 
-          case __C('g')   : 
-          case __C('h')   : 
-          case __C('i')   : 
-          case __C('j')   : 
-          case __C('k')   : 
-          case __C('l')   : 
-          case __C('m')   : 
-          case __C('n')   : 
-          case __C('o')   : 
-          case __C('p')   : 
-          case __C('q')   : 
-          case __C('r')   : 
-          case __C('s')   : 
-          case __C('t')   : 
-          case __C('u')   : 
-          case __C('v')   : 
-          case __C('w')   : 
-          case __C('x')   : 
-          case __C('y')   : 
+          case _C('a')   : 
+          case _C('b')   : 
+          case _C('c')   : 
+          case _C('d')   : 
+          case _C('e')   : 
+          case _C('f')   : 
+          case _C('g')   : 
+          case _C('h')   : 
+          case _C('i')   : 
+          case _C('j')   : 
+          case _C('k')   : 
+          case _C('l')   : 
+          case _C('m')   : 
+          case _C('n')   : 
+          case _C('o')   : 
+          case _C('p')   : 
+          case _C('q')   : 
+          case _C('r')   : 
+          case _C('s')   : 
+          case _C('t')   : 
+          case _C('u')   : 
+          case _C('v')   : 
+          case _C('w')   : 
+          case _C('x')   : 
+          case _C('y')   : 
 
-          case __C('z')   : { bool changecapslock = false;      
+          case _C('z')   : { bool changecapslock = false;      
                               
                               if(IsCapsLockActive())
                                 {
-                                  if(!Key_ClickByLiteral(__L("CAPS LOCK"), pressuretimeinterval)) status = false;
+                                  if(!Key_ClickByLiteral(_L("CAPS LOCK"), pressuretimeinterval)) status = false;
                                   changecapslock = true;      
                                 }
 
@@ -389,57 +389,57 @@ bool INPWINDOWSSIMULATE::Key_ClickByText(XCHAR* text, int pressuretimeinterval)
 
                               if(changecapslock)
                                 {
-                                  if(!Key_ClickByLiteral(__L("CAPS LOCK"), pressuretimeinterval)) status = false;
+                                  if(!Key_ClickByLiteral(_L("CAPS LOCK"), pressuretimeinterval)) status = false;
                                 }    
                             }
                             break;
                                                                                           
-          case __C('1')   : 
-          case __C('2')   : 
-          case __C('3')   : 
-          case __C('4')   : 
-          case __C('5')   : 
-          case __C('6')   : 
-          case __C('7')   : 
-          case __C('8')   : 
-          case __C('9')   : 
-          case __C('0')   : 
+          case _C('1')   : 
+          case _C('2')   : 
+          case _C('3')   : 
+          case _C('4')   : 
+          case _C('5')   : 
+          case _C('6')   : 
+          case _C('7')   : 
+          case _C('8')   : 
+          case _C('9')   : 
+          case _C('0')   : 
 
-          case __C('!')   : 
-          case __C('@')   : 
-          case __C('#')   : 
-          case __C('$')   : 
-          case __C('%')   : 
-          case __C('^')   : 
-          case __C('&')   : 
-          case __C('*')   : 
-          case __C('(')   : 
-          case __C(')')   : 
-          case __C('_')   : 
-          case __C('+')   : 
-          case __C('-')   : 
-          case __C('=')   : 
-          case __C('[')   : 
-          case __C(']')   : 
-          case __C('{')   : 
-          case __C('}')   : 
-          case __C('|')   : 
-          case __C(';')   : 
-          case __C(':')   : 
-          case __C('\'')  : 
-          case __C(',')   : 
-          case __C('.')   : 
-          case __C('<')   :    
-          case __C('?')   : 
-          case __C('/')   : 
-          case __C('\\')  : 
-          case __C('"')   :       
+          case _C('!')   : 
+          case _C('@')   : 
+          case _C('#')   : 
+          case _C('$')   : 
+          case _C('%')   : 
+          case _C('^')   : 
+          case _C('&')   : 
+          case _C('*')   : 
+          case _C('(')   : 
+          case _C(')')   : 
+          case _C('_')   : 
+          case _C('+')   : 
+          case _C('-')   : 
+          case _C('=')   : 
+          case _C('[')   : 
+          case _C(']')   : 
+          case _C('{')   : 
+          case _C('}')   : 
+          case _C('|')   : 
+          case _C(';')   : 
+          case _C(':')   : 
+          case _C('\'')  : 
+          case _C(',')   : 
+          case _C('.')   : 
+          case _C('<')   :    
+          case _C('?')   : 
+          case _C('/')   : 
+          case _C('\\')  : 
+          case _C('"')   :       
 
-          case 0xBF       : // __C('')   : 
-          case 0xA1       : // __C('')   : 
-          case 0xF1       : // __C('?')   : 
-          case 0xD1       : //__C('_')    :    
-          case 0xB7       : //__C('')    :
+          case 0xBF       : // _C('')   : 
+          case 0xA1       : // _C('')   : 
+          case 0xF1       : // _C('?')   : 
+          case 0xD1       : //_C('_')    :    
+          case 0xB7       : //_C('')    :
                             if(!Key_ClickByLiteral(literal.Get(), pressuretimeinterval)) status = false;
                             break;
 

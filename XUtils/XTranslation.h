@@ -40,7 +40,7 @@
 
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
 
-#define XTRANSLATION_NAMEFILEEXT         __L(".lng")
+#define XTRANSLATION_NAMEFILEEXT         _L(".lng")
 
 #define XTRANSLATION_GENRESERVE          500
 #ifndef MICROCONTROLLER

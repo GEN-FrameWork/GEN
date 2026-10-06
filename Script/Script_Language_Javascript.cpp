@@ -123,7 +123,7 @@ int SCRIPT_LNG_JAVASCRIPT::Run(int* returnval)
   if(HaveMainFunction())
     {
       XSTRING mainfunctionname = SCRIPT_LNG_JAVASCRIPT_MAINFUNCTIONNAME;
-      _script.AddFormat(__L("\n%s()\n"), mainfunctionname.Get());
+      _script.AddFormat(_L("\n%s()\n"), mainfunctionname.Get());
     }
 
   XBUFFER charstr;
@@ -216,12 +216,12 @@ bool SCRIPT_LNG_JAVASCRIPT::HaveError(int _errorcode)
 
   currenttoken = duk_safe_to_string(context, -1);
 
-  if(currenttoken.Find(__L("EvalError")      , false) != XSTRING_NOTFOUND) errorcode = SCRIPT_LNG_JAVASCRIPT_ERRORCODE_EVAL_ERROR;
-  if(currenttoken.Find(__L("RangeError")     , false) != XSTRING_NOTFOUND) errorcode = SCRIPT_LNG_JAVASCRIPT_ERRORCODE_RANGE_ERROR;
-  if(currenttoken.Find(__L("ReferenceError") , false) != XSTRING_NOTFOUND) errorcode = SCRIPT_LNG_JAVASCRIPT_ERRORCODE_REFERENCE_ERROR;
-  if(currenttoken.Find(__L("SyntaxError")    , false) != XSTRING_NOTFOUND) errorcode = SCRIPT_LNG_JAVASCRIPT_ERRORCODE_SYNTAX_ERROR;
-  if(currenttoken.Find(__L("TypeError")      , false) != XSTRING_NOTFOUND) errorcode = SCRIPT_LNG_JAVASCRIPT_ERRORCODE_TYPE_ERROR;
-  if(currenttoken.Find(__L("URIError")       , false) != XSTRING_NOTFOUND) errorcode = SCRIPT_LNG_JAVASCRIPT_ERRORCODE_URI_ERROR;
+  if(currenttoken.Find(_L("EvalError")      , false) != XSTRING_NOTFOUND) errorcode = SCRIPT_LNG_JAVASCRIPT_ERRORCODE_EVAL_ERROR;
+  if(currenttoken.Find(_L("RangeError")     , false) != XSTRING_NOTFOUND) errorcode = SCRIPT_LNG_JAVASCRIPT_ERRORCODE_RANGE_ERROR;
+  if(currenttoken.Find(_L("ReferenceError") , false) != XSTRING_NOTFOUND) errorcode = SCRIPT_LNG_JAVASCRIPT_ERRORCODE_REFERENCE_ERROR;
+  if(currenttoken.Find(_L("SyntaxError")    , false) != XSTRING_NOTFOUND) errorcode = SCRIPT_LNG_JAVASCRIPT_ERRORCODE_SYNTAX_ERROR;
+  if(currenttoken.Find(_L("TypeError")      , false) != XSTRING_NOTFOUND) errorcode = SCRIPT_LNG_JAVASCRIPT_ERRORCODE_TYPE_ERROR;
+  if(currenttoken.Find(_L("URIError")       , false) != XSTRING_NOTFOUND) errorcode = SCRIPT_LNG_JAVASCRIPT_ERRORCODE_URI_ERROR;
 
   namefile.Set(namescript);
   namefile.SetOnlyNamefileExt();
@@ -233,7 +233,7 @@ bool SCRIPT_LNG_JAVASCRIPT::HaveError(int _errorcode)
   xevent.GetCurrentToken()->Set(currenttoken);
   xevent.SetNLine(nline);
 
-  XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, __L("Script [%s] ERROR %d:\"%s\"") , namefile.Get(), errorcode, currenttoken.Get());
+  XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, _L("Script [%s] ERROR %d:\"%s\"") , namefile.Get(), errorcode, currenttoken.Get());
 
   PostEvent(&xevent);
 
@@ -268,7 +268,7 @@ bool SCRIPT_LNG_JAVASCRIPT::HaveMainFunction()
   if(script.IsEmpty()) return false;
 
   mainfunctionname = SCRIPT_LNG_JAVASCRIPT_MAINFUNCTIONNAME;
-  searchmask.Format(__L("function%s()"), mainfunctionname.Get());
+  searchmask.Format(_L("function%s()"), mainfunctionname.Get());
 
   // Walk every "main" hit: comments/strings can contain the word before the real entry point.
   int index = 0;
@@ -276,7 +276,7 @@ bool SCRIPT_LNG_JAVASCRIPT::HaveMainFunction()
     {
       for(start=index; start>0; start--)
         {
-          if((script.Get()[start] == __C('\r')) || (script.Get()[start] == __C('\n')))
+          if((script.Get()[start] == _C('\r')) || (script.Get()[start] == _C('\n')))
             {
               break;
             }
@@ -284,7 +284,7 @@ bool SCRIPT_LNG_JAVASCRIPT::HaveMainFunction()
 
       for(end=index; end<(int)script.GetSize() ; end++)
         {
-          if(script.Get()[end] == __C(')'))
+          if(script.Get()[end] == _C(')'))
             {
               break;
             }
@@ -292,10 +292,10 @@ bool SCRIPT_LNG_JAVASCRIPT::HaveMainFunction()
 
       script.Copy(start, end+1, line);
 
-      line.DeleteCharacter(__C('\n'));
-      line.DeleteCharacter(__C('\r'));
-      line.DeleteCharacter(__C(' '));
-      line.DeleteCharacter(__C('\t'));
+      line.DeleteCharacter(_C('\n'));
+      line.DeleteCharacter(_C('\r'));
+      line.DeleteCharacter(_C(' '));
+      line.DeleteCharacter(_C('\t'));
 
       if(!line.Compare(searchmask)) return true;
 

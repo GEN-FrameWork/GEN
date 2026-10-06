@@ -84,7 +84,7 @@ DIOLIGHTSENSORLDRANALOG::DIOLIGHTSENSORLDRANALOG( DIOGPIO* diogpio, int pindata,
       xmutexread=GEN_XFACTORY.Create_Mutex();
       if(xmutexread)
         {
-          threadcache  = CREATEXTHREAD(XTHREADGROUPID_DIOSTREAM, __L("DIOLIGHTSENSORLDRANALOG::DIOLIGHTSENSORLDRANALOG"), ThreadRunFunction, (void*)this);
+          threadcache  = CREATEXTHREAD(XTHREADGROUPID_DIOSTREAM, _L("DIOLIGHTSENSORLDRANALOG::DIOLIGHTSENSORLDRANALOG"), ThreadRunFunction, (void*)this);
           if(!threadcache) return;
 
           //threadcache->SetPriority(THREADPRIORITY_REALTIME);

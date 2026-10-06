@@ -203,7 +203,7 @@ bool GRPVECTORFILESVGCSSSTYLESHEET::CollectStyleElements(XFILEXMLELEMENT* elemen
 {
   if(!element) return false;
 
-  if(!element->GetName().Compare(__L("style"), true))
+  if(!element->GetName().Compare(_L("style"), true))
     {
       // NOTE: the CSS text of <style>...</style> is NOT held in this element's own GetValue(); the XML reader
       // parses it as a separate child node (typically of type XFILEXMLELEMENTTYPE_CDATA). Gather this element's
@@ -256,18 +256,18 @@ bool GRPVECTORFILESVGCSSSTYLESHEET::ParseStyleSheetText(XSTRING& text)
 
   // Defensive: some XML readers leave the CDATA delimiters in the element text content instead of stripping
   // them; if present, remove them here so they never get mistaken for part of the first/last selector.
-  sheet.Replace(__L("<![CDATA["), __L(""));
-  sheet.Replace(__L("]]>"), __L(""));
+  sheet.Replace(_L("<![CDATA["), _L(""));
+  sheet.Replace(_L("]]>"), _L(""));
 
   XVECTOR<XSTRING*> rules;
-  sheet.Split(__C('}'), rules, false);
+  sheet.Split(_C('}'), rules, false);
 
   for(XDWORD c=0; c<rules.GetSize(); c++)
     {
       XSTRING* rule = rules.Get(c);
       if(rule && !rule->IsEmpty())
         {
-          int brace = rule->Find(__L("{"), false, 0);
+          int brace = rule->Find(_L("{"), false, 0);
           if(brace > 0)
             {
               XSTRING selectors;
@@ -277,7 +277,7 @@ bool GRPVECTORFILESVGCSSSTYLESHEET::ParseStyleSheetText(XSTRING& text)
               rule->Copy(brace+1, (int)rule->GetSize(), declarations);
 
               XVECTOR<XSTRING*> selectorlist;
-              selectors.Split(__C(','), selectorlist, false);
+              selectors.Split(_C(','), selectorlist, false);
 
               for(XDWORD s=0; s<selectorlist.GetSize(); s++)
                 {
@@ -286,17 +286,17 @@ bool GRPVECTORFILESVGCSSSTYLESHEET::ParseStyleSheetText(XSTRING& text)
                     {
                       XSTRING classname(*selector);
 
-                      classname.DeleteCharacter(__C(' '));
-                      classname.DeleteCharacter(__C('\r'));
-                      classname.DeleteCharacter(__C('\n'));
-                      classname.DeleteCharacter(__C('\t'));
+                      classname.DeleteCharacter(_C(' '));
+                      classname.DeleteCharacter(_C('\r'));
+                      classname.DeleteCharacter(_C('\n'));
+                      classname.DeleteCharacter(_C('\t'));
 
-                      if((!classname.IsEmpty()) && (classname[0] == __C('.')))
+                      if((!classname.IsEmpty()) && (classname[0] == _C('.')))
                         {
                           classname.DeleteCharacters(0, 1);                        // strip the leading '.'
                           if(!classname.IsEmpty()) Add(classname.Get(), declarations.Get());
                         }
-                       else if((classname.GetSize() == 1) && (classname[0] == __C('*')))
+                       else if((classname.GetSize() == 1) && (classname[0] == _C('*')))
                         {
                           // Universal selector ("* {fill:#RRGGBB}"): some icon generators emit this instead of
                           // CorelDRAW's per-part ".fil0{...}" convention when they are flattening a whole icon
@@ -307,7 +307,7 @@ bool GRPVECTORFILESVGCSSSTYLESHEET::ParseStyleSheetText(XSTRING& text)
                           // GRPVECTORFILESVGSTYLE::ApplyData applies it FIRST, before presentation attributes,
                           // class rules or inline style -- exactly the lowest-specificity position the universal
                           // selector has in a real CSS cascade, so anything more specific still overrides it.
-                          Add(__L("*"), declarations.Get());
+                          Add(_L("*"), declarations.Get());
                         }
                     }
                 }

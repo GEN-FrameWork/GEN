@@ -329,9 +329,9 @@ void INPLINUXDEVICEMOUSEX11::Clean()
 * --------------------------------------------------------------------------------------------------------------------*/
 bool INPLINUXDEVICEMOUSEX11::CreateAllButtons()
 {
-  INPBUTTON::CreateButton(&buttons, Button3, INPBUTTON_ID_MOUSE_RIGHT, __C('\x0'));
-  INPBUTTON::CreateButton(&buttons, Button1, INPBUTTON_ID_MOUSE_LEFT, __C('\x0'));
-  INPBUTTON::CreateButton(&buttons, Button2, INPBUTTON_ID_MOUSE_MIDDLE, __C('\x0'));
+  INPBUTTON::CreateButton(&buttons, Button3, INPBUTTON_ID_MOUSE_RIGHT, _C('\x0'));
+  INPBUTTON::CreateButton(&buttons, Button1, INPBUTTON_ID_MOUSE_LEFT, _C('\x0'));
+  INPBUTTON::CreateButton(&buttons, Button2, INPBUTTON_ID_MOUSE_MIDDLE, _C('\x0'));
 
   return true;
 }

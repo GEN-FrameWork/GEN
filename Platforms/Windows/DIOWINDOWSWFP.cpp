@@ -117,8 +117,8 @@ bool DIOWINDOWSWFP::Ini(bool dynamicsession)
 
   memset(&session, 0, sizeof(FWPM_SESSION0));
 
-  session.displayData.name        = __L("GEN DIOWINDOWSWFP session");
-  session.displayData.description = __L("GEN Windows Filtering Platform dynamic session");
+  session.displayData.name        = _L("GEN DIOWINDOWSWFP session");
+  session.displayData.description = _L("GEN Windows Filtering Platform dynamic session");
 
   if(dynamicsession)
     {
@@ -325,7 +325,7 @@ bool DIOWINDOWSWFP::AddBlockRemoteIPv4(DIOIP& remoteIP, XWORD remoteport, XBYTE 
 
   UINT64 filterID = 0;
 
-  return AddFilter(FWPM_LAYER_ALE_AUTH_CONNECT_V4, conditions, nconditions, filterID, filtername?filtername:__L("GEN WFP block remote IPv4"));
+  return AddFilter(FWPM_LAYER_ALE_AUTH_CONNECT_V4, conditions, nconditions, filterID, filtername?filtername:_L("GEN WFP block remote IPv4"));
 }
 
 
@@ -430,10 +430,10 @@ bool DIOWINDOWSWFP::AddBlockDNSExternal(XSTRING& applicationpathexception)
 {
   bool status = true;
 
-  status &= AddBlockRemotePort(FWPM_LAYER_ALE_AUTH_CONNECT_V4, DIOWINDOWSWFP_DNS_PORT, IPPROTO_TCP, applicationpathexception.IsEmpty()?NULL:applicationpathexception.Get(), __L("GEN WFP block external DNS TCP IPv4"));
-  status &= AddBlockRemotePort(FWPM_LAYER_ALE_AUTH_CONNECT_V6, DIOWINDOWSWFP_DNS_PORT, IPPROTO_TCP, applicationpathexception.IsEmpty()?NULL:applicationpathexception.Get(), __L("GEN WFP block external DNS TCP IPv6"));
-  status &= AddBlockRemotePort(FWPM_LAYER_ALE_AUTH_CONNECT_V4, DIOWINDOWSWFP_DNS_PORT, IPPROTO_UDP, applicationpathexception.IsEmpty()?NULL:applicationpathexception.Get(), __L("GEN WFP block external DNS UDP IPv4"));
-  status &= AddBlockRemotePort(FWPM_LAYER_ALE_AUTH_CONNECT_V6, DIOWINDOWSWFP_DNS_PORT, IPPROTO_UDP, applicationpathexception.IsEmpty()?NULL:applicationpathexception.Get(), __L("GEN WFP block external DNS UDP IPv6"));
+  status &= AddBlockRemotePort(FWPM_LAYER_ALE_AUTH_CONNECT_V4, DIOWINDOWSWFP_DNS_PORT, IPPROTO_TCP, applicationpathexception.IsEmpty()?NULL:applicationpathexception.Get(), _L("GEN WFP block external DNS TCP IPv4"));
+  status &= AddBlockRemotePort(FWPM_LAYER_ALE_AUTH_CONNECT_V6, DIOWINDOWSWFP_DNS_PORT, IPPROTO_TCP, applicationpathexception.IsEmpty()?NULL:applicationpathexception.Get(), _L("GEN WFP block external DNS TCP IPv6"));
+  status &= AddBlockRemotePort(FWPM_LAYER_ALE_AUTH_CONNECT_V4, DIOWINDOWSWFP_DNS_PORT, IPPROTO_UDP, applicationpathexception.IsEmpty()?NULL:applicationpathexception.Get(), _L("GEN WFP block external DNS UDP IPv4"));
+  status &= AddBlockRemotePort(FWPM_LAYER_ALE_AUTH_CONNECT_V6, DIOWINDOWSWFP_DNS_PORT, IPPROTO_UDP, applicationpathexception.IsEmpty()?NULL:applicationpathexception.Get(), _L("GEN WFP block external DNS UDP IPv6"));
 
   return status;
 }
@@ -485,8 +485,8 @@ bool DIOWINDOWSWFP::Provider_Add()
   memset(&provider, 0, sizeof(FWPM_PROVIDER0));
 
   provider.providerKey             = DIOWINDOWSWFP_PROVIDER_GUID;
-  provider.displayData.name        = __L("GEN WFP Provider");
-  provider.displayData.description = __L("GEN Windows Filtering Platform provider");
+  provider.displayData.name        = _L("GEN WFP Provider");
+  provider.displayData.description = _L("GEN Windows Filtering Platform provider");
 
   lasterror = FwpmProviderAdd0(enginehandle, &provider, NULL);
   if((lasterror != ERROR_SUCCESS) && (lasterror != FWP_E_ALREADY_EXISTS))
@@ -514,8 +514,8 @@ bool DIOWINDOWSWFP::SubLayer_Add()
   memset(&sublayer, 0, sizeof(FWPM_SUBLAYER0));
 
   sublayer.subLayerKey             = DIOWINDOWSWFP_SUBLAYER_GUID;
-  sublayer.displayData.name        = __L("GEN WFP SubLayer");
-  sublayer.displayData.description = __L("GEN Windows Filtering Platform sublayer");
+  sublayer.displayData.name        = _L("GEN WFP SubLayer");
+  sublayer.displayData.description = _L("GEN Windows Filtering Platform sublayer");
   sublayer.providerKey             = (GUID*)&DIOWINDOWSWFP_PROVIDER_GUID;
   sublayer.weight                  = 0x100;
 
@@ -592,7 +592,7 @@ bool DIOWINDOWSWFP::AddBlockRemotePort(const GUID& layerkey, XWORD remoteport, X
     }
 
   UINT64 filterID = 0;
-  bool   status   = AddFilter(layerkey, conditions, nconditions, filterID, filtername?filtername:__L("GEN WFP block remote port"));
+  bool   status   = AddFilter(layerkey, conditions, nconditions, filterID, filtername?filtername:_L("GEN WFP block remote port"));
 
   FreeAppID(&appID);
 
@@ -636,8 +636,8 @@ bool DIOWINDOWSWFP::AddFilter(const GUID& layerkey, void* filterconditions, XDWO
 
   memset(&filter, 0, sizeof(FWPM_FILTER0));
 
-  filter.displayData.name        = filtername?filtername:__L("GEN WFP block filter");
-  filter.displayData.description = __L("GEN Windows Filtering Platform filter");
+  filter.displayData.name        = filtername?filtername:_L("GEN WFP block filter");
+  filter.displayData.description = _L("GEN Windows Filtering Platform filter");
   filter.providerKey             = (GUID*)&DIOWINDOWSWFP_PROVIDER_GUID;
   filter.layerKey                = layerkey;
   filter.subLayerKey             = DIOWINDOWSWFP_SUBLAYER_GUID;

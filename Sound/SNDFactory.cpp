@@ -607,7 +607,7 @@ SNDITEM* SNDFACTORY::CreateItem(XDWORD frecuency, XDWORD duration)
 
   item->SetType(SNDITEM_TYPE_NOTE);
 
-  item->GetID()->Format(__L("frec: %d (Hz) - time: %d (msec)"), frecuency, duration);
+  item->GetID()->Format(_L("frec: %d (Hz) - time: %d (msec)"), frecuency, duration);
 
   SNDNOTE* note = GEN_NEW SNDNOTE();
   if(!note)

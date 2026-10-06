@@ -144,7 +144,7 @@ bool DIOMACMANUFACTURED::File_GetManufactured(XPATH& xpath, DIOMAC& MAC, XSTRING
 
       GEN_XPATHSMANAGER.GetPathOfSection(XPATHSMANAGERSECTIONTYPE_ROOT, xpathresource);
 
-      xpath.Format(__L("%s%s"), xpathresource.Get(), DIOMACMANUFACTURED_FILE_NAME);
+      xpath.Format(_L("%s%s"), xpathresource.Get(), DIOMACMANUFACTURED_FILE_NAME);
     }
 
   HASHMD5   hashmd5;
@@ -198,7 +198,7 @@ bool DIOMACMANUFACTURED::File_GetManufacturedMACs(XPATH& xpath, XSTRING& manufac
 
       GEN_XPATHSMANAGER.GetPathOfSection(XPATHSMANAGERSECTIONTYPE_ROOT, xpathresource);
 
-      xpath.Format(__L("%s%s"), xpathresource.Get(), DIOMACMANUFACTURED_FILE_NAME);
+      xpath.Format(_L("%s%s"), xpathresource.Get(), DIOMACMANUFACTURED_FILE_NAME);
     }
 
   HASHMD5   hashmd5;
@@ -314,13 +314,13 @@ bool DIOMACMANUFACTURED::File_Convert(XBUFFER& xbuffer, XPATH& xpath)
         {
           if(!line->IsEmpty())
             {
-              int start = line->Find(__L("(base 16)"), true);
+              int start = line->Find(_L("(base 16)"), true);
               if(start!=XSTRING_NOTFOUND)
                 {
                   XDWORD  ID = 0;
                 
                   start+=11;
-                  line->UnFormat(__L("%X (base 16)\t\t"), &ID);
+                  line->UnFormat(_L("%X (base 16)\t\t"), &ID);
 
                   if(idmap.Find(ID)==-1)
                     {

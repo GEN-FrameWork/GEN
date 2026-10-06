@@ -36,8 +36,8 @@
 
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
 
-#define DIOURL_WEBURLID        __L("http://")
-#define DIOURL_WEBURLID_SECURE __L("https://")
+#define DIOURL_WEBURLID        _L("http://")
+#define DIOURL_WEBURLID_SECURE _L("https://")
 
 enum DIOURL_HOSTTYPE
 {

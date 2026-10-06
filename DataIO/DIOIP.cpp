@@ -125,7 +125,7 @@ bool DIOIPADDRESS::GetXString(XSTRING& addressstring)
       _address[c] = address[c];
     }
 
-  addressstring.Format(__L("%d.%d.%d.%d") , _address[0], _address[1], _address[2], _address[3]);
+  addressstring.Format(_L("%d.%d.%d.%d") , _address[0], _address[1], _address[2], _address[3]);
 
   return addressstring.IsEmpty()?false:true;
 }
@@ -155,7 +155,7 @@ bool DIOIPADDRESS::GetDIOURL(DIOURL* url)
       _address[c] = address[c];
     }
 
-  url->Format(__L("%d.%d.%d.%d") , _address[0], _address[1], _address[2], _address[3]);
+  url->Format(_L("%d.%d.%d.%d") , _address[0], _address[1], _address[2], _address[3]);
 
   return url->IsEmpty()?false:true;
 }
@@ -307,14 +307,14 @@ bool DIOIPADDRESS::Set(XSTRING& addressstring)
   int   iip[DIOIP_MAXIPADDRESS] = { 0, 0, 0, 0 };
   XBYTE bip[DIOIP_MAXIPADDRESS] = { 0, 0, 0, 0 };
 
-  if(addressstring.GetNCharacters(__C('.')) != 3) return false;
+  if(addressstring.GetNCharacters(_C('.')) != 3) return false;
 
   for(XDWORD c=0; c<addressstring.GetSize(); c++)
     {
-      if((addressstring.Get()[c]<__C('0')) && (addressstring.Get()[c]>__C('9')) && (addressstring.Get()[c]!= __C('.'))) return false;
+      if((addressstring.Get()[c]<_C('0')) && (addressstring.Get()[c]>_C('9')) && (addressstring.Get()[c]!= _C('.'))) return false;
     }
 
-  addressstring.UnFormat(__L("%d.%d.%d.%d"), &iip[0], &iip[1], &iip[2], &iip[3]);
+  addressstring.UnFormat(_L("%d.%d.%d.%d"), &iip[0], &iip[1], &iip[2], &iip[3]);
 
   for(int c=0; c<DIOIP_MAXIPADDRESS; c++)
     {

@@ -136,8 +136,8 @@ bool DIOSTREAMTLSSIGNATURE::IsSupported(XWORD signaturescheme, CIPHERCERTIFICATE
   XSTRING* keyOID = certificate->GetPublicCipherKeyID();
   if(!keyOID) return false;
 
-  bool RSAE   = !keyOID->Compare(__L("1.2.840.113549.1.1.1"), false);
-  bool RSAPSS = !keyOID->Compare(__L("1.2.840.113549.1.1.10"), false);
+  bool RSAE   = !keyOID->Compare(_L("1.2.840.113549.1.1.1"), false);
+  bool RSAPSS = !keyOID->Compare(_L("1.2.840.113549.1.1.10"), false);
 
   switch(signaturescheme)
     {

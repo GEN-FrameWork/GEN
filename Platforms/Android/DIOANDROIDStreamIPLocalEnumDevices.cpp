@@ -142,7 +142,7 @@ bool DIOANDROIDSTREAMIPLOCALENUMDEVICES::Search()
             device->SetIndex(c);
 
             device->GetName()->Set(ifreq[c].ifr_name);
-            device->GetDescription()->Set(__L(""));
+            device->GetDescription()->Set(_L(""));
             device->GetMAC()->Set((XBYTE*)ifreq[c].ifr_hwaddr.sa_data);
 
             device->SetIPType(DIOSTREAMIPDEVICE_TYPE_UNKNOWN);
@@ -153,8 +153,8 @@ bool DIOANDROIDSTREAMIPLOCALENUMDEVICES::Search()
               }
              else
               {
-                if(device->GetName()->Find(__L("eth"), true)!=XSTRING_NOTFOUND)  device->SetIPType(DIOSTREAMIPDEVICE_TYPE_ETHERNET);
-                if(device->GetName()->Find(__L("wlan"), true)!=XSTRING_NOTFOUND) device->SetIPType(DIOSTREAMIPDEVICE_TYPE_WIFI);
+                if(device->GetName()->Find(_L("eth"), true)!=XSTRING_NOTFOUND)  device->SetIPType(DIOSTREAMIPDEVICE_TYPE_ETHERNET);
+                if(device->GetName()->Find(_L("wlan"), true)!=XSTRING_NOTFOUND) device->SetIPType(DIOSTREAMIPDEVICE_TYPE_WIFI);
               }
 
             XSTRING IP;

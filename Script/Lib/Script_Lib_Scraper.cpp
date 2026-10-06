@@ -100,10 +100,10 @@ bool SCRIPT_LIB_SCRAPER::AddLibraryFunctions(SCRIPT* script)
 
   this->script = script;
 
-  script->AddLibraryFunction(this, __L("Scraper_GetArg")   , Call_Scraper_GetArg);
-  script->AddLibraryFunction(this, __L("Scraper_GetArgInt"), Call_Scraper_GetArgInt);
-  script->AddLibraryFunction(this, __L("Scraper_SetResult"), Call_Scraper_SetResult);
-  script->AddLibraryFunction(this, __L("Scraper_GetResult"), Call_Scraper_GetResult);
+  script->AddLibraryFunction(this, _L("Scraper_GetArg")   , Call_Scraper_GetArg);
+  script->AddLibraryFunction(this, _L("Scraper_GetArgInt"), Call_Scraper_GetArgInt);
+  script->AddLibraryFunction(this, _L("Scraper_SetResult"), Call_Scraper_SetResult);
+  script->AddLibraryFunction(this, _L("Scraper_GetResult"), Call_Scraper_GetResult);
 
   return true;
 }

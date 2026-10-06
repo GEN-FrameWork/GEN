@@ -102,7 +102,7 @@ bool DIOWINDOWSSTREAMUARTLOCALENUMDEVICES::Search()
   HKEY  hkey;
   LONG  status;
 
-  status = RegOpenKeyEx(HKEY_LOCAL_MACHINE, __L("HARDWARE\\DEVICEMAP\\SERIALCOMM"), 0, KEY_QUERY_VALUE, &hkey);
+  status = RegOpenKeyEx(HKEY_LOCAL_MACHINE, _L("HARDWARE\\DEVICEMAP\\SERIALCOMM"), 0, KEY_QUERY_VALUE, &hkey);
   if(status==ERROR_SUCCESS)
     {
       DWORD   index  = 0;

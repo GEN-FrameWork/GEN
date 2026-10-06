@@ -102,14 +102,14 @@ bool GRPVECTORFILESVGOBJGRADIENT::ApplyData(XFILEXMLELEMENT* element)
 
   GRPVECTORFILESVGOBJ::ApplyData(element);                                     // id, etc.
 
-  XCHAR* valueunits = element->GetValueAttribute(__L("gradientUnits"));
+  XCHAR* valueunits = element->GetValueAttribute(_L("gradientUnits"));
   if(valueunits)
     {
       XSTRING unitstr(valueunits);
-      if(!unitstr.Compare(__L("userSpaceOnUse"), true))  units = GRPVECTORFILESVGGRADIENTUNITS_USERSPACEONUSE;
+      if(!unitstr.Compare(_L("userSpaceOnUse"), true))  units = GRPVECTORFILESVGGRADIENTUNITS_USERSPACEONUSE;
     }
 
-  XCHAR* valuetransform = element->GetValueAttribute(__L("gradientTransform"));
+  XCHAR* valuetransform = element->GetValueAttribute(_L("gradientTransform"));
   if(valuetransform)
     {
       XSTRING transformstr(valuetransform);
@@ -118,30 +118,30 @@ bool GRPVECTORFILESVGOBJGRADIENT::ApplyData(XFILEXMLELEMENT* element)
 
   if(GetObjType() == GRPVECTORFILESVGOBJTYPE_RADIALGRADIENT)
     {
-      cx = ParseCoordinate(element->GetValueAttribute(__L("cx")), 0.5);
-      cy = ParseCoordinate(element->GetValueAttribute(__L("cy")), 0.5);
-      r  = ParseCoordinate(element->GetValueAttribute(__L("r")) , 0.5);
-      fx = ParseCoordinate(element->GetValueAttribute(__L("fx")), cx);
-      fy = ParseCoordinate(element->GetValueAttribute(__L("fy")), cy);
+      cx = ParseCoordinate(element->GetValueAttribute(_L("cx")), 0.5);
+      cy = ParseCoordinate(element->GetValueAttribute(_L("cy")), 0.5);
+      r  = ParseCoordinate(element->GetValueAttribute(_L("r")) , 0.5);
+      fx = ParseCoordinate(element->GetValueAttribute(_L("fx")), cx);
+      fy = ParseCoordinate(element->GetValueAttribute(_L("fy")), cy);
     }
    else
     {
-      x1 = ParseCoordinate(element->GetValueAttribute(__L("x1")), 0.0);
-      y1 = ParseCoordinate(element->GetValueAttribute(__L("y1")), 0.0);
-      x2 = ParseCoordinate(element->GetValueAttribute(__L("x2")), 1.0);
-      y2 = ParseCoordinate(element->GetValueAttribute(__L("y2")), 0.0);
+      x1 = ParseCoordinate(element->GetValueAttribute(_L("x1")), 0.0);
+      y1 = ParseCoordinate(element->GetValueAttribute(_L("y1")), 0.0);
+      x2 = ParseCoordinate(element->GetValueAttribute(_L("x2")), 1.0);
+      y2 = ParseCoordinate(element->GetValueAttribute(_L("y2")), 0.0);
     }
 
   ParseStops(element);
 
-  XCHAR* valuehref = element->GetValueAttribute(__L("xlink:href"));
-  if(!valuehref)  valuehref = element->GetValueAttribute(__L("href"));
+  XCHAR* valuehref = element->GetValueAttribute(_L("xlink:href"));
+  if(!valuehref)  valuehref = element->GetValueAttribute(_L("href"));
 
   if(valuehref)
     {
       href = valuehref;
 
-      if(!href.IsEmpty() && (href[0] == __C('#')))
+      if(!href.IsEmpty() && (href[0] == _C('#')))
         {
           XSTRING stripped;
           href.Copy(1, (int)href.GetSize(), stripped);
@@ -174,17 +174,17 @@ bool GRPVECTORFILESVGOBJGRADIENT::ParseStops(XFILEXMLELEMENT* element)
       XFILEXMLELEMENT* child = element->GetElement(c);
       if(!child) continue;
       if(child->GetType() != XFILEXMLELEMENTTYPE_NORMAL) continue;
-      if(child->GetName().Compare(__L("stop"), true)) continue;                // not a <stop>
+      if(child->GetName().Compare(_L("stop"), true)) continue;                // not a <stop>
 
       if(nstops >= GRP2DGRADIENT_MAXSTOPS) break;
 
-      double offset = ParseCoordinate(child->GetValueAttribute(__L("offset")), 0.0);
+      double offset = ParseCoordinate(child->GetValueAttribute(_L("offset")), 0.0);
       if(offset < 0.0) offset = 0.0;
       if(offset > 1.0) offset = 1.0;
 
       GRP2DCOLOR_RGBA8 color(0, 0, 0);
       XSTRING          colorstr;
-      if(GetStopProperty(child, __L("stop-color"), colorstr))
+      if(GetStopProperty(child, _L("stop-color"), colorstr))
         {
           bool isnone = false;
           GRPVECTORFILESVGSTYLE::ParseColor(colorstr, color, isnone);
@@ -192,7 +192,7 @@ bool GRPVECTORFILESVGOBJGRADIENT::ParseStops(XFILEXMLELEMENT* element)
 
       double  stopopacity = 1.0;
       XSTRING opacitystr;
-      if(GetStopProperty(child, __L("stop-opacity"), opacitystr))
+      if(GetStopProperty(child, _L("stop-opacity"), opacitystr))
         {
           stopopacity = opacitystr.ConvertToDouble(0, NULL, false);
         }
@@ -229,15 +229,15 @@ double GRPVECTORFILESVGOBJGRADIENT::ParseCoordinate(XCHAR* value, double default
   if(!value) return defaultvalue;
 
   XSTRING valuestr(value);
-  valuestr.DeleteCharacter(__C(' '));
+  valuestr.DeleteCharacter(_C(' '));
 
   if(valuestr.IsEmpty()) return defaultvalue;
 
   bool percent = false;
-  if(valuestr[(int)valuestr.GetSize() - 1] == __C('%'))
+  if(valuestr[(int)valuestr.GetSize() - 1] == _C('%'))
     {
       percent = true;
-      valuestr.DeleteCharacter(__C('%'));
+      valuestr.DeleteCharacter(_C('%'));
     }
 
   double result = valuestr.ConvertToDouble(0, NULL, false);
@@ -271,23 +271,23 @@ bool GRPVECTORFILESVGOBJGRADIENT::GetStopProperty(XFILEXMLELEMENT* element, XCHA
       return true;
     }
 
-  XCHAR* style = element->GetValueAttribute(__L("style"));
+  XCHAR* style = element->GetValueAttribute(_L("style"));
   if(!style) return false;
 
   XSTRING stylestr(style);
 
   XSTRING key(name);
-  key += __L(":");
+  key += _L(":");
 
   int index = stylestr.Find(key.Get(), true, 0);
   if(index < 0) return false;
 
   int start = index + (int)key.GetSize();
-  int end   = stylestr.Find(__L(";"), false, start);
+  int end   = stylestr.Find(_L(";"), false, start);
   if(end < 0)  end = (int)stylestr.GetSize();
 
   stylestr.Copy(start, end, outvalue);
-  outvalue.DeleteCharacter(__C(' '));
+  outvalue.DeleteCharacter(_C(' '));
 
   return (!outvalue.IsEmpty());
 }

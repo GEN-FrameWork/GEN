@@ -48,7 +48,7 @@
 #define DIOWEBCLIENT_DEFAULTPORT        80
 #define DIOWEBCLIENT_DEFAULTSECUREPORT  443
 
-#define DIOWEBCLIENT_DEFAULTUSERAGENT   __L("User-Agent: Mozilla 5.0\r\n")
+#define DIOWEBCLIENT_DEFAULTUSERAGENT   _L("User-Agent: Mozilla 5.0\r\n")
 
 #define DIOWEBCLIENT_MAXREDIRECTS       5                                      // Hard cap on chained 301 redirects followed automatically
 

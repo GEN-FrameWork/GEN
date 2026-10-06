@@ -558,7 +558,7 @@ bool XWINDOWSREGISTRYMANAGER::CreateKey(HKEY handlekey, XCHAR* subkeystring, XWI
   subkeystr1.Slash_Normalize(true);
   subkeystr2 = subkeystr1;
 
-  subkeystr2.Split(__C('\\'), partkey);
+  subkeystr2.Split(_C('\\'), partkey);
 
   for(XDWORD c=0; c<partkey.GetSize(); c++)
      {
@@ -578,7 +578,7 @@ bool XWINDOWSREGISTRYMANAGER::CreateKey(HKEY handlekey, XCHAR* subkeystring, XWI
               }
           }
 
-        subkeystr3 +=__C('\\');
+        subkeystr3 +=_C('\\');
      }
 
   if(error == ERROR_SUCCESS)
@@ -687,7 +687,7 @@ bool XWINDOWSREGISTRYMANAGER::EnumKeys(XWINDOWSREGISTRYKEY& registrykey, XVECTOR
       status = RegEnumKeyEx(registrykey.GetHandle(), index, namekey.Get(), &size, 0, NULL, NULL, NULL);
       namekey.AdjustSize();
 
-      //XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, __L("--- %d"), status);
+      //XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, _L("--- %d"), status);
 
       if(status == ERROR_SUCCESS)
         {

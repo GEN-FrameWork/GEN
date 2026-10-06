@@ -211,7 +211,7 @@ bool GRPANDROIDSCREEN::Update(GRP2DCANVAS* canvas)
       if(!blitgles->Create(this))
         {
           GENBLITLOG("Update(canvas): blitgles->Create FAILED");
-          XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, __L("[Screen Android] BlitGLES create failed"));
+          XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, _L("[Screen Android] BlitGLES create failed"));
           GEN_DELETE blitgles;
           blitgles = NULL;
           return false;

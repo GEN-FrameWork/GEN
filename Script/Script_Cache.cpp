@@ -368,7 +368,7 @@ bool SCRIPT_CACHE::Cache_AllDirectory(XPATH& xpath)
       return false;
     }
       
-  if(xdir->FirstSearch(xpath.Get(), __L("*"), &element))
+  if(xdir->FirstSearch(xpath.Get(), _L("*"), &element))
     {
       do{ SCRIPT_TYPE type = SCRIPT::GetTypeByExtension(element.GetNameFile()->Get());
           if(type != SCRIPT_TYPE_UNKNOWN)
@@ -426,7 +426,7 @@ bool SCRIPT_CACHE::Cache_AllList(XVECTOR<XSTRING*>* listscripts)
             {
               XVECTOR<XSTRING*> namescripts;
 
-              linescripts->Split(__C(','), namescripts);
+              linescripts->Split(_C(','), namescripts);
 
               for(XDWORD d=0; d<namescripts.GetSize(); d++)
                 {
@@ -436,7 +436,7 @@ bool SCRIPT_CACHE::Cache_AllList(XVECTOR<XSTRING*>* listscripts)
               // Same rule as LoadScriptAndRun: one CFG line merges into one cached blob.
               if(!SCRIPT::HaveSameLanguage(&namescripts))
                 {
-                  XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, __L("Script cache list line rejected: mixed or unknown languages in \"%s\""), linescripts->Get());
+                  XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, _L("Script cache list line rejected: mixed or unknown languages in \"%s\""), linescripts->Get());
                   namescripts.DeleteContents();
                   namescripts.DeleteAll();
                   continue;
@@ -459,7 +459,7 @@ bool SCRIPT_CACHE::Cache_AllList(XVECTOR<XSTRING*>* listscripts)
                           XSTRING* nameentry = namescripts.Get(d);
                           if(!nameentry) continue;
 
-                          allpath += __C(',');  
+                          allpath += _C(',');  
                           allpath += nameentry->Get();  
                         }
                     

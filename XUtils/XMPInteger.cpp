@@ -2251,7 +2251,7 @@ bool XMPINTEGER::SetFromString(int radix, XCHAR* string)
 
       for(i=slen, j=0; i>0; i--, j++ )
         {
-          if(i==1 && string[i-1]==__C('-'))
+          if(i==1 && string[i-1]==_C('-'))
             {
               SetSign(-1);
               break;
@@ -2267,7 +2267,7 @@ bool XMPINTEGER::SetFromString(int radix, XCHAR* string)
 
       for(i=0; i<slen; i++)
         {
-          if(i==0 && string[i]==__C('-'))
+          if(i==0 && string[i]==_C('-'))
             {
               SetSign(-1);
               continue;
@@ -2330,7 +2330,7 @@ bool XMPINTEGER::GetToString(int radix, XSTRING& string)
   XSTRING     charshex;
 //int         n;
   
-  charshex = __L("0123456789ABCDEF");
+  charshex = _L("0123456789ABCDEF");
 
   string.Empty();
 
@@ -2345,7 +2345,7 @@ bool XMPINTEGER::GetToString(int radix, XSTRING& string)
 
   T.Ini();
 
-  if(GetSign() == -1) string.Add(__C('-'));
+  if(GetSign() == -1) string.Add(_C('-'));
 
   if(radix == 16)
     {

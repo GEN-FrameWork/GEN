@@ -51,10 +51,10 @@
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
 
 #define UI_MANAGER_LAYOUT_NOTFOUND          -1
-#define UI_MANAGER_LAYOUT_COMMON            __L("COMMON")
-#define UI_MANAGER_LAYOUT_TEXT_INI          __L("#[")
-#define UI_MANAGER_LAYOUT_TEXT_END          __L("]")
-#define UI_MANAGER_LAYOUT_TEXT_TRANSLATE    __L("TRANSLATE_")
+#define UI_MANAGER_LAYOUT_COMMON            _L("COMMON")
+#define UI_MANAGER_LAYOUT_TEXT_INI          _L("#[")
+#define UI_MANAGER_LAYOUT_TEXT_END          _L("]")
+#define UI_MANAGER_LAYOUT_TEXT_TRANSLATE    _L("TRANSLATE_")
 
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
 

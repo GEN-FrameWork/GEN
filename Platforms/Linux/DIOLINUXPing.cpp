@@ -201,7 +201,7 @@ bool DIOLINUXPING::Do(XDWORD nretries, XDWORD timebetweenchecks, bool exitfirstg
       XDWORD size = sendto(handle, (char*)&echorequest, sizeof(DIOPING_ECHOREQUEST), 0, (sockaddr*)&targetaddr, sizeof(struct sockaddr_in));
       if(size != sizeof(DIOPING_ECHOREQUEST))
         {
-          XTRACE_PRINTCOLOR(4, __L("Ping: not write packet! %s"), targetIP.Get());
+          XTRACE_PRINTCOLOR(4, _L("Ping: not write packet! %s"), targetIP.Get());
           break;
         }
 
@@ -261,28 +261,28 @@ bool DIOLINUXPING::Do(XDWORD nretries, XDWORD timebetweenchecks, bool exitfirstg
                       xevent.SetPingReply((DIOPINGREPLY*)replys.Get(replys.GetSize()-1));
                       PostEvent(&xevent);
 
-                      //XTRACE_PRINTCOLOR(1, __L("Ping: received! %s %s"), fromIP.Get(), targetIP.Get());
+                      //XTRACE_PRINTCOLOR(1, _L("Ping: received! %s %s"), fromIP.Get(), targetIP.Get());
 
                       if(!exitfirstgoodreply) GEN_XSLEEP.MilliSeconds(timebetweenchecks);
                     }
                    else
                     {
-                      //XTRACE_PRINTCOLOR(4, __L("Ping: application ID not equal! %s"), fromIP.Get());
+                      //XTRACE_PRINTCOLOR(4, _L("Ping: application ID not equal! %s"), fromIP.Get());
                     }
                 }
                else
                 {
-                  // XTRACE_PRINTCOLOR(4, __L("Ping: error Checksum! %s "), targetIP.Get());
+                  // XTRACE_PRINTCOLOR(4, _L("Ping: error Checksum! %s "), targetIP.Get());
                 }
             }
            else
             {
-              // XTRACE_PRINTCOLOR(4, __L("Ping: error CRC! %s "), targetIP.Get());
+              // XTRACE_PRINTCOLOR(4, _L("Ping: error CRC! %s "), targetIP.Get());
             }
         }
        else
         {
-          // XTRACE_PRINTCOLOR(4, __L("Ping: invalid packet! %s "), targetIP.Get());
+          // XTRACE_PRINTCOLOR(4, _L("Ping: invalid packet! %s "), targetIP.Get());
         }
 
       if(exitfirstgoodreply) nloop = 0; else nloop--;
@@ -294,7 +294,7 @@ bool DIOLINUXPING::Do(XDWORD nretries, XDWORD timebetweenchecks, bool exitfirstg
 
   if(!status)
     {
-      // XTRACE_PRINTCOLOR((status?1:4), __L("Ping to [%s]: %s"), targetIP.Get(), (status?__L("Ok."): __L("ERROR!")));
+      // XTRACE_PRINTCOLOR((status?1:4), _L("Ping to [%s]: %s"), targetIP.Get(), (status?_L("Ok."): _L("ERROR!")));
     }
 
   return status;

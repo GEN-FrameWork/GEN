@@ -149,9 +149,9 @@ void DIONODEITEM::SetCategory(XDWORD category)
 
   switch(category)
     {
-      case DIONODEITEM_CATEGORY_UNKNOWN                    : description = __L("unknown");                          break;
-      case DIONODEITEM_CATEGORY_SENSORHUMIDITYTEMPERATURE  : description = __L("Sensor Humidity/Temperature");      break;
-      case DIONODEITEM_CATEGORY_GPIO_DIGITAL               : description = __L("GPIO Digital");                     break; 
+      case DIONODEITEM_CATEGORY_UNKNOWN                    : description = _L("unknown");                          break;
+      case DIONODEITEM_CATEGORY_SENSORHUMIDITYTEMPERATURE  : description = _L("Sensor Humidity/Temperature");      break;
+      case DIONODEITEM_CATEGORY_GPIO_DIGITAL               : description = _L("GPIO Digital");                     break; 
     }
 }
 
@@ -452,20 +452,20 @@ bool DIONODEITEM::Serialize()
   
   UUID.GetToString(ID); 
   
-  Primitive_Add<XSTRING*>(&ID, __L("ID"));
-  Primitive_Add<int>(category, __L("category"));
-  Primitive_Add<XSTRING*>(&description, __L("description"));
-  Primitive_Add<bool>(issimulated, __L("simulated"));
-  Primitive_Add<XQWORD>(timetoupdate, __L("timetoupdate"));
+  Primitive_Add<XSTRING*>(&ID, _L("ID"));
+  Primitive_Add<int>(category, _L("category"));
+  Primitive_Add<XSTRING*>(&description, _L("description"));
+  Primitive_Add<bool>(issimulated, _L("simulated"));
+  Primitive_Add<XQWORD>(timetoupdate, _L("timetoupdate"));
 
   DIONODEITEMHANDLER* itemhandler =  ItemHandler_Get();
   if(itemhandler)
     {
-      Primitive_Add<int>(itemhandler->GetType(), __L("handler_type"));
-      Primitive_Add<XSTRING*>(itemhandler->GetName(), __L("handler_name"));
+      Primitive_Add<int>(itemhandler->GetType(), _L("handler_type"));
+      Primitive_Add<XSTRING*>(itemhandler->GetName(), _L("handler_name"));
     }
 
-  XVectorClass_Add<DIONODEITEMVALUE>(&values, __L("values"), __L("value"));  
+  XVectorClass_Add<DIONODEITEMVALUE>(&values, _L("values"), _L("value"));  
   
   return true;
 }
@@ -484,25 +484,25 @@ bool DIONODEITEM::Deserialize()
 {   
   XSTRING ID;
 
-  Primitive_Extract<XSTRING>(ID            , __L("ID"));
-  Primitive_Extract<XDWORD>(category       , __L("category"));
-  Primitive_Extract<XSTRING>(description   , __L("description"));
-  Primitive_Extract<bool>(issimulated      , __L("simulated"));
-  Primitive_Extract<XQWORD>(timetoupdate   , __L("timetoupdate"));
+  Primitive_Extract<XSTRING>(ID            , _L("ID"));
+  Primitive_Extract<XDWORD>(category       , _L("category"));
+  Primitive_Extract<XSTRING>(description   , _L("description"));
+  Primitive_Extract<bool>(issimulated      , _L("simulated"));
+  Primitive_Extract<XQWORD>(timetoupdate   , _L("timetoupdate"));
 
   DIONODEITEMHANDLER* itemhandler =  ItemHandler_Get();
   if(itemhandler)
     {
       XDWORD type;
 
-      Primitive_Extract<XDWORD>(type, __L("handler_type"));
+      Primitive_Extract<XDWORD>(type, _L("handler_type"));
       itemhandler->SetType(type);
 
 
-      Primitive_Extract<XSTRING>((*itemhandler->GetName()), __L("handler_name"));
+      Primitive_Extract<XSTRING>((*itemhandler->GetName()), _L("handler_name"));
     }
 
-  XVectorClass_Extract<DIONODEITEMVALUE>(&values, __L("values"), __L("value"));  
+  XVectorClass_Extract<DIONODEITEMVALUE>(&values, _L("values"), _L("value"));  
   
   UUID.SetFromString(ID);
 

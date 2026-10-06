@@ -188,8 +188,8 @@ bool XLICENSE::GenerateMachineID(XLICENSEID& licenseID)
 
   //GEN_XSYSTEM.GetOperativeSystemID(origin);
   
-  origin.AddFormat(__L(" %s"), GEN_XSYSTEM.GetBIOSSerialNumber()->Get());
-  origin.AddFormat(__L(" %s"), GEN_XSYSTEM.GetCPUSerialNumber()->Get());
+  origin.AddFormat(_L(" %s"), GEN_XSYSTEM.GetBIOSSerialNumber()->Get());
+  origin.AddFormat(_L(" %s"), GEN_XSYSTEM.GetCPUSerialNumber()->Get());
 
   origin.ConvertToUTF8(originbuffer);
     
@@ -473,7 +473,7 @@ bool XLICENSE::Get(XSTRING& licensestring)
     {
       XSTRING hexchar;
 
-      hexchar.Format(__L("%02X"), license->GetByte(c));
+      hexchar.Format(_L("%02X"), license->GetByte(c));
       licensestring += hexchar;
     }
 

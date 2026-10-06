@@ -111,7 +111,7 @@ bool XWINDOWSDRIVEIMAGEMANAGER::GetDrives(XVECTOR<XDRIVEIMAGEMANAGER_DRIVE*>& dr
         {
           // the "A" in path will get incremented by the # of bits
           // we've shifted
-          path.Format( __L("\\\\.\\%c:\\"), __C('A') + c);
+          path.Format( _L("\\\\.\\%c:\\"), _C('A') + c);
           if(CheckDriveType(path, ID))
             {
               XDRIVEIMAGEMANAGER_DRIVE* drive = GEN_NEW XDRIVEIMAGEMANAGER_DRIVE();
@@ -119,7 +119,7 @@ bool XWINDOWSDRIVEIMAGEMANAGER::GetDrives(XVECTOR<XDRIVEIMAGEMANAGER_DRIVE*>& dr
                 {
                   XSTRING label;
 
-                  drive->GetName()->Format(__L("%c:"), __C('A') + c);
+                  drive->GetName()->Format(_L("%c:"), _C('A') + c);
                   drive->GetPath()->Set(path);
                   drive->SetVolume(c);
                   drive->GetLabel()->Set(label);
@@ -370,7 +370,7 @@ bool XWINDOWSDRIVEIMAGEMANAGER::Close(XDRIVEIMAGEMANAGER_DRIVE& drive)
 HANDLE XWINDOWSDRIVEIMAGEMANAGER::GetHandleFromDevice(int device, XDWORD access)
 {
   XSTRING devicename;
-  devicename.Format(__L("\\\\.\\PhysicalDrive%d"), device);
+  devicename.Format(_L("\\\\.\\PhysicalDrive%d"), device);
 
   return CreateFile(devicename.Get(), access, FILE_SHARE_READ | FILE_SHARE_WRITE, NULL, OPEN_EXISTING, 0, NULL);
 }
@@ -392,7 +392,7 @@ HANDLE XWINDOWSDRIVEIMAGEMANAGER::GetHandleFromVolume(int volume, XDWORD access)
 {
   XSTRING  volumename;
 
-  volumename.Format(__L("\\\\.\\%c:"), __C('A') + volume);
+  volumename.Format(_L("\\\\.\\%c:"), _C('A') + volume);
 
   return CreateFile(volumename.Get(), access, FILE_SHARE_READ | FILE_SHARE_WRITE, NULL, OPEN_EXISTING, 0, NULL);
 }

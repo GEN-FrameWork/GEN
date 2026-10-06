@@ -103,7 +103,7 @@ bool SCRIPT_LIB_TIMER::AddLibraryFunctions(SCRIPT* script)
 
   this->script = script;
 
-  script->AddLibraryFunction(this, __L("Sleep"), Call_Sleep);
+  script->AddLibraryFunction(this, _L("Sleep"), Call_Sleep);
 
   return true;
 }

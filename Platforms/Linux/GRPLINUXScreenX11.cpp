@@ -1390,7 +1390,7 @@ void GRPLINUXSCREENX11::Chromes_ApplyStyle()
   Atom wmhintsatom = XInternAtom(display, "_MOTIF_WM_HINTS", False);
   if(wmhintsatom == None)
     {
-      XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, __L("[Screen X11] Error Atom _MOTIF_WM_HINTS (native chromes)"));
+      XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, _L("[Screen X11] Error Atom _MOTIF_WM_HINTS (native chromes)"));
       return;
     }
 
@@ -1904,7 +1904,7 @@ bool GRPLINUXSCREENX11::Create_Window(bool show)
 
   if(IsRunningOnWSL())
     {
-      XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, __L("[Screen X11] WSL detected; using X11 software path (no GPU / EGL->X11 SHM unsupported)"));
+      XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, _L("[Screen X11] WSL detected; using X11 software path (no GPU / EGL->X11 SHM unsupported)"));
     }
    else
     {
@@ -1933,7 +1933,7 @@ bool GRPLINUXSCREENX11::Create_Window(bool show)
 
           if(!opengl_visual_ok)
             {
-              XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, __L("[Screen X11] EGL visual failed; falling back to X11 software path"));
+              XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, _L("[Screen X11] EGL visual failed; falling back to X11 software path"));
               GEN_DELETE blitgles;
               blitgles = NULL;
             }
@@ -1976,14 +1976,14 @@ bool GRPLINUXSCREENX11::Create_Window(bool show)
           long shadowoff = 0;
           XChangeProperty(display, window, comptonshadow, XA_CARDINAL, 32, PropModeReplace, (unsigned char*)&shadowoff, 1);
           
-          //XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, __L("[Screen X11] _COMPTON_SHADOW=0 set (no compositor shadow on transparent window)"));
+          //XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, _L("[Screen X11] _COMPTON_SHADOW=0 set (no compositor shadow on transparent window)"));
         }
      
         XSetWindowAttributes swa;
         swa.override_redirect = True;
         XChangeWindowAttributes(display, window, CWOverrideRedirect, &swa);
         
-        //XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, __L("[Screen X11] override_redirect set on transparent window (no WM/WSLg frame shadow)"));
+        //XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, _L("[Screen X11] override_redirect set on transparent window (no WM/WSLg frame shadow)"));
       
     }
 
@@ -1995,7 +1995,7 @@ bool GRPLINUXSCREENX11::Create_Window(bool show)
 
       if(wm_state == None || wm_state_fullscreen == None)        
         {
-          XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, __L("[Screen X11] Error Atom FULLSCREEN  (fullscreen)"));
+          XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, _L("[Screen X11] Error Atom FULLSCREEN  (fullscreen)"));
         }
        else
         {           
@@ -2044,7 +2044,7 @@ bool GRPLINUXSCREENX11::Create_Window(bool show)
 
       if(wmhintsatom == None)
         {
-          XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, __L("[Screen X11] Error Atom _MOTIF_WM_HINTS (custom chromes)"));
+          XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, _L("[Screen X11] Error Atom _MOTIF_WM_HINTS (custom chromes)"));
         }
        else
         {
@@ -2095,11 +2095,11 @@ bool GRPLINUXSCREENX11::Create_Window(bool show)
       Atom          wmhintsatom = XInternAtom(display , "_MOTIF_WM_HINTS", True);
       MOTIFWMHINTS  hints; 
 
-      XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, __L("[Screen X11] Atom HINTS Decorations (no title) active"));
+      XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, _L("[Screen X11] Atom HINTS Decorations (no title) active"));
 
       if(wmhintsatom  == None)
         {
-          XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, __L("[Screen X11] Error Atom HINTS Decorations (no title)"));
+          XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, _L("[Screen X11] Error Atom HINTS Decorations (no title)"));
         }
        else
         {
@@ -2127,11 +2127,11 @@ bool GRPLINUXSCREENX11::Create_Window(bool show)
           Atom          wmhintsatom = XInternAtom(display , "_MOTIF_WM_HINTS", True);
           MOTIFWMHINTS  hints;
 
-          XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, __L("[Screen X11] Atom HINTS Decorations (no icons) active"));
+          XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, _L("[Screen X11] Atom HINTS Decorations (no icons) active"));
 
           if(wmhintsatom  == None)
             {
-              XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, __L("[Screen X11] Error Atom HINTS Decorations (no icons)"));
+              XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, _L("[Screen X11] Error Atom HINTS Decorations (no icons)"));
             }
            else
             { 
@@ -2150,11 +2150,11 @@ bool GRPLINUXSCREENX11::Create_Window(bool show)
       Atom wm_state             = XInternAtom(display, "_NET_WM_STATE", True);
       Atom wm_state_skiptaskbar = XInternAtom(display , "_NET_WM_STATE_SKIP_TASKBAR", True);
 
-      XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, __L("[Screen X11] Atom SKIP_TASKBAR active"));
+      XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, _L("[Screen X11] Atom SKIP_TASKBAR active"));
         
       if(wm_state == None || wm_state_skiptaskbar == None)
         {
-          XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, __L("[Screen X11] Error Atom SKIP_TASKBAR (No Icon Taskbar)"));
+          XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, _L("[Screen X11] Error Atom SKIP_TASKBAR (No Icon Taskbar)"));
         }
        else
         {
@@ -2167,11 +2167,11 @@ bool GRPLINUXSCREENX11::Create_Window(bool show)
       Atom wm_state       = XInternAtom(display, "_NET_WM_STATE", True);
       Atom wm_state_above = XInternAtom(display , "_NET_WM_STATE_ABOVE" , True);
 
-      XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, __L("[Screen X11] Atom ABOVE active"));
+      XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, _L("[Screen X11] Atom ABOVE active"));
 
       if(wm_state == None || wm_state_above == None)
         {
-          XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, __L("[Screen X11] Error Atom ABOVE (On top)"));
+          XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, _L("[Screen X11] Error Atom ABOVE (On top)"));
         }
        else
         {
@@ -2186,11 +2186,11 @@ bool GRPLINUXSCREENX11::Create_Window(bool show)
       Atom wm_opacity = XInternAtom(display, "_NET_WM_WINDOW_OPACITY", True);
       unsigned long opacity = (unsigned long)(0x01010101);
 
-      XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, __L("[Screen X11] Atom OPACITY active"));
+      XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, _L("[Screen X11] Atom OPACITY active"));
 
       if(wm_opacity == None)
         {
-          XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, __L("[Screen X11] Error Atom OPACITY (Transparent)"));
+          XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, _L("[Screen X11] Error Atom OPACITY (Transparent)"));
         }
        else
         {
@@ -2202,11 +2202,11 @@ bool GRPLINUXSCREENX11::Create_Window(bool show)
       Atom           wm_opacity = XInternAtom(display, "_NET_WM_WINDOW_OPACITY", True);      
       int            alpha = 0;
           
-      XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, __L("[Screen X11] Atom OPACITY active"));
+      XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, _L("[Screen X11] Atom OPACITY active"));
 
       if(wm_opacity == None)
         {
-          XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, __L("[Screen X11] Error Atom OPACITY (Transparent)"));
+          XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, _L("[Screen X11] Error Atom OPACITY (Transparent)"));
         }
        else
         {
@@ -2230,7 +2230,7 @@ bool GRPLINUXSCREENX11::Create_Window(bool show)
 
   if(blitgles && !blitgles->Create(this))
     {
-      XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, __L("[Screen X11] BlitGLES create failed; falling back to X11 software path"));
+      XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, _L("[Screen X11] BlitGLES create failed; falling back to X11 software path"));
       GEN_DELETE blitgles;
       blitgles = NULL;
     }
@@ -2238,7 +2238,7 @@ bool GRPLINUXSCREENX11::Create_Window(bool show)
   if(blitgles)
     {
       blitgles->SetFlipY(true);
-      XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, __L("[Screen X11] BlitGLES SetFlipY(true) — correcting Mesa EGL-to-X11 vertical flip"));
+      XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, _L("[Screen X11] BlitGLES SetFlipY(true) — correcting Mesa EGL-to-X11 vertical flip"));
 
       // The EGL surface Create() just built has never been cleared or presented -- its initial content is
       // whatever the driver leaves in a freshly allocated buffer, which is undefined and on several drivers
@@ -2504,7 +2504,7 @@ int GRPLINUXSCREENX11::GetTaskBarHeight()
   Atom atomworkarea = XInternAtom(display, "_NET_WORKAREA", True);
   if(atomworkarea == None) 
     {
-      //XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, __L("[Screen X11] Error Atom WORKAREA (Get Taskbar height)"));      
+      //XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, _L("[Screen X11] Error Atom WORKAREA (Get Taskbar height)"));      
       return 0;
     }
 
@@ -2517,7 +2517,7 @@ int GRPLINUXSCREENX11::GetTaskBarHeight()
   int status = XGetWindowProperty(display, root, atomworkarea, 0, 4 * sizeof(long), False, XA_CARDINAL, &actual_type, &actual_format, &nitems, &bytes_after, &data);
   if(status != Success || !data) 
     {
-      //XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, __L("[Screen X11] Error XGetWindowProperty (Get Taskbar height)"));     
+      //XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, _L("[Screen X11] Error XGetWindowProperty (Get Taskbar height)"));     
       return 0;
     }
     
@@ -2546,7 +2546,7 @@ bool GRPLINUXSCREENX11::ShowDebugNetSupportedPropertys()
   Atom netsupported = XInternAtom(display, "_NET_SUPPORTED", True);
   if(netsupported == None) 
     {
-      XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, __L("[Screen X11] Error NET_SUPPORTED"));          
+      XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, _L("[Screen X11] Error NET_SUPPORTED"));          
       return false;
     }
 
@@ -2559,7 +2559,7 @@ bool GRPLINUXSCREENX11::ShowDebugNetSupportedPropertys()
   int status = XGetWindowProperty(display, root, netsupported, 0, 1024, False, XA_ATOM, &type, &format, &nitems, &bytesafter, reinterpret_cast<unsigned char **>(&atoms));
   if(status != Success || type != XA_ATOM || format != 32) 
     {
-      XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, __L("[Screen X11] Failed to retrieve _NET_SUPPORTED property"));   
+      XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, _L("[Screen X11] Failed to retrieve _NET_SUPPORTED property"));   
 
       if(atoms) 
         {
@@ -2570,7 +2570,7 @@ bool GRPLINUXSCREENX11::ShowDebugNetSupportedPropertys()
     }
 
 
-  //XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, __L("[Screen X11] _NET_SUPPORTED Atoms [%d]: "), nitems);
+  //XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, _L("[Screen X11] _NET_SUPPORTED Atoms [%d]: "), nitems);
 
   for(unsigned long c=0; c<nitems; ++c) 
     {
@@ -2581,7 +2581,7 @@ bool GRPLINUXSCREENX11::ShowDebugNetSupportedPropertys()
 
           _atomname = atomname;
 
-          XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, __L("%s"), _atomname.Get());
+          XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, _L("%s"), _atomname.Get());
           
           XFree(atomname);
         }

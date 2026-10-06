@@ -42,17 +42,17 @@
 
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
 
-#define CIPHERKEYSFILEPEM_EXT                 __L(".PEM")
-#define CIPHERKEYSFILEKEY_EXT                 __L(".KEY")
-#define CIPHERKEYSFILECER_EXT                 __L(".CER")
+#define CIPHERKEYSFILEPEM_EXT                 _L(".PEM")
+#define CIPHERKEYSFILEKEY_EXT                 _L(".KEY")
+#define CIPHERKEYSFILECER_EXT                 _L(".CER")
 
-#define CIPHERKEYSFILEPEM_BEGINKEY            __L("-----BEGIN ")
-#define CIPHERKEYSFILEPEM_ENDKEY              __L("-----END ")
-#define CIPHERKEYSFILEPEM_FINISH              __L("-----")
+#define CIPHERKEYSFILEPEM_BEGINKEY            _L("-----BEGIN ")
+#define CIPHERKEYSFILEPEM_ENDKEY              _L("-----END ")
+#define CIPHERKEYSFILEPEM_FINISH              _L("-----")
 
-#define CIPHERKEYSFILEPEM_PUBLIC              __L("PUBLIC")
-#define CIPHERKEYSFILEPEM_PRIVATE             __L("PRIVATE")
-#define CIPHERKEYSFILEPEM_CERTIFICATE         __L("CERTIFICATE")
+#define CIPHERKEYSFILEPEM_PUBLIC              _L("PUBLIC")
+#define CIPHERKEYSFILEPEM_PRIVATE             _L("PRIVATE")
+#define CIPHERKEYSFILEPEM_CERTIFICATE         _L("CERTIFICATE")
 
 #define  CIPHERKEYSFILETYPE_CERTIFICATEX509   CIPHERKEYTYPE_LASTTYPE + 1
 

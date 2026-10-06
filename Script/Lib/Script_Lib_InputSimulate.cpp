@@ -108,13 +108,13 @@ bool SCRIPT_LIB_INPUTSIMULATE::AddLibraryFunctions(SCRIPT* script)
 
   this->script = script;
 
-  script->AddLibraryFunction(this, __L("InpSim_Key_Press"), Call_Key_Press);
-  script->AddLibraryFunction(this, __L("InpSim_Key_UnPress"), Call_Key_UnPress);
-  script->AddLibraryFunction(this, __L("InpSim_Key_Click"), Call_Key_Click);
-  script->AddLibraryFunction(this, __L("InpSim_Key_ClickByLiteral"), Call_Key_ClickByLiteral);
-  script->AddLibraryFunction(this, __L("InpSim_Key_ClickByText"), Call_Key_ClickByText);
-  script->AddLibraryFunction(this, __L("InpSim_Mouse_SetPos"), Call_Mouse_SetPos);
-  script->AddLibraryFunction(this, __L("InpSim_Mouse_Click"), Call_Mouse_Click);
+  script->AddLibraryFunction(this, _L("InpSim_Key_Press"), Call_Key_Press);
+  script->AddLibraryFunction(this, _L("InpSim_Key_UnPress"), Call_Key_UnPress);
+  script->AddLibraryFunction(this, _L("InpSim_Key_Click"), Call_Key_Click);
+  script->AddLibraryFunction(this, _L("InpSim_Key_ClickByLiteral"), Call_Key_ClickByLiteral);
+  script->AddLibraryFunction(this, _L("InpSim_Key_ClickByText"), Call_Key_ClickByText);
+  script->AddLibraryFunction(this, _L("InpSim_Mouse_SetPos"), Call_Mouse_SetPos);
+  script->AddLibraryFunction(this, _L("InpSim_Mouse_Click"), Call_Mouse_Click);
       
   return true;
 }

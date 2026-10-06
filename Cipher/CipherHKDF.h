@@ -44,8 +44,8 @@
 #define CIPHERHKDF_MAXLABELSIZE             255
 #define CIPHERHKDF_MAXCONTEXTSIZE           255
 
-#define CIPHERHKDF_LABELPREFIX_TLS13        __L("tls13 ")
-#define CIPHERHKDF_LABELPREFIX_QUIC         __L("quic ")
+#define CIPHERHKDF_LABELPREFIX_TLS13        _L("tls13 ")
+#define CIPHERHKDF_LABELPREFIX_QUIC         _L("quic ")
 
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
 

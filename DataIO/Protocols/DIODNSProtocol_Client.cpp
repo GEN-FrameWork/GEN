@@ -437,7 +437,7 @@ bool DIODNSPROTOCOLCLIENT::EncodeDNSFormat(XSTRING& URL, XBUFFER& EncodedURL)
     {
       for(XDWORD d=c; d<URL.GetSize(); d++)
         {
-          if(URL.Get()[d] != __C('.'))
+          if(URL.Get()[d] != _C('.'))
             {
               subsize++;  
             }
@@ -506,7 +506,7 @@ bool DIODNSPROTOCOLCLIENT::DecodeDNSFormat(XBUFFER& EncodedURL, XSTRING& URL)
 
       if(EncodedURL.Get()[c])
         {
-          URL.Add(__C('.'));              
+          URL.Add(_C('.'));              
         }
     }  
   

@@ -183,7 +183,7 @@ bool XLINUXPROCESSMANAGER::MakeCommand(XCHAR* command, XBUFFER* out, int* return
 * --------------------------------------------------------------------------------------------------------------------*/
 bool XLINUXPROCESSMANAGER::OpenURL(XCHAR* url)
 {
-  XSTRING command = __L("xdg-open ");
+  XSTRING command = _L("xdg-open ");
   int     result  = -1;
  
   command.Add(url);
@@ -260,7 +260,7 @@ bool XLINUXPROCESSMANAGER::Application_Execute(XCHAR* applicationpath, XCHAR* pa
 
   XSTRING cmd;
 
-  cmd  = __L("chmod 775 ");
+  cmd  = _L("chmod 775 ");
   cmd += applicationpath;
 
 
@@ -292,7 +292,7 @@ bool XLINUXPROCESSMANAGER::Application_Execute(XCHAR* applicationpath, XCHAR* pa
     {
       XSTRING   string;
       XBUFFER   xbuffer;
-      int       found = _params.Find(__L(" "), true, start);
+      int       found = _params.Find(_L(" "), true, start);
 
       if(found == XSTRING_NOTFOUND)
         {
@@ -491,10 +491,10 @@ bool XLINUXPROCESSMANAGER::Application_IsRunning(XCHAR* applicationname, XDWORD*
 
               nameall = first;
               nameall.SetOnlyNamefile();
-              nameall.DeleteCharacter(__C(' ') , XSTRINGCONTEXT_FROM_FIRST);
-              nameall.DeleteCharacter(__C('\t'), XSTRINGCONTEXT_FROM_FIRST);
-              nameall.DeleteCharacter(__C('\n'), XSTRINGCONTEXT_TO_END);
-              nameall.DeleteCharacter(__C('\r'), XSTRINGCONTEXT_TO_END);
+              nameall.DeleteCharacter(_C(' ') , XSTRINGCONTEXT_FROM_FIRST);
+              nameall.DeleteCharacter(_C('\t'), XSTRINGCONTEXT_FROM_FIRST);
+              nameall.DeleteCharacter(_C('\n'), XSTRINGCONTEXT_TO_END);
+              nameall.DeleteCharacter(_C('\r'), XSTRINGCONTEXT_TO_END);
 
               if(!nameall.Compare(applicationname, false))
                 {
@@ -562,16 +562,16 @@ bool XLINUXPROCESSMANAGER::Application_GetRunningList(XVECTOR<XPROCESS*>& applis
               
               nameall = first;
               nameall.SetOnlyNamefile();
-              nameall.DeleteCharacter(__C(' ') , XSTRINGCONTEXT_FROM_FIRST);
-              nameall.DeleteCharacter(__C('\t'), XSTRINGCONTEXT_FROM_FIRST);
-              nameall.DeleteCharacter(__C('\n'), XSTRINGCONTEXT_TO_END);
-              nameall.DeleteCharacter(__C('\r'), XSTRINGCONTEXT_TO_END);
+              nameall.DeleteCharacter(_C(' ') , XSTRINGCONTEXT_FROM_FIRST);
+              nameall.DeleteCharacter(_C('\t'), XSTRINGCONTEXT_FROM_FIRST);
+              nameall.DeleteCharacter(_C('\n'), XSTRINGCONTEXT_TO_END);
+              nameall.DeleteCharacter(_C('\r'), XSTRINGCONTEXT_TO_END);
 
               XPROCESS* xprocess = GEN_NEW XPROCESS();
               if(xprocess)
                 {                  
                   xprocess->SetID((XDWORD)lpid); 
-                  xprocess->GetPath()->Set(__L(""));
+                  xprocess->GetPath()->Set(_L(""));
                   xprocess->GetName()->Set(nameall); 
                                 
                   applist.Add(xprocess); 

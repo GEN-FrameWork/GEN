@@ -140,7 +140,7 @@ bool SNDFILEWAV::Open(XCHAR* path)
 
   if(!fileRIFF->ReadAllLists()) return false; 
 
-  format_list = fileRIFF->GetChunk(__L("fmt "), __L("WAVE"));
+  format_list = fileRIFF->GetChunk(_L("fmt "), _L("WAVE"));
   if(!format_list) return false;
 
   fileRIFF->GetFileBase()->SetPosition(format_list->GetPositionFileData());  
@@ -155,7 +155,7 @@ bool SNDFILEWAV::Open(XCHAR* path)
   channels          = format.num_channels;  
   samplerate        = format.sample_rate;
     
-  data_list = fileRIFF->GetChunk(__L("data"), __L("WAVE"));
+  data_list = fileRIFF->GetChunk(_L("data"), _L("WAVE"));
   if(!data_list) return false;
 
   dataoffsetinfile  = data_list->GetPositionFileData();

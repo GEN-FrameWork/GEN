@@ -106,7 +106,7 @@ DIOWINDOWSSTREAMUDP::DIOWINDOWSSTREAMUDP() : DIOSTREAMUDP() , XFSMACHINE(0)
             DIOWINDOWSUDPFSMEVENT_SENDINGDATA         , DIOWINDOWSUDPFSMSTATE_SENDINGDATA       ,
             XFSMACHINESTATE_EVENTDEFEND);
 
-  threadconnection = CREATEXTHREAD(XTHREADGROUPID_DIOSTREAMUDP, __L("DIOWINDOWSSTREAMUDP::DIOWINDOWSSTREAMUDP"), ThreadConnection, (void*)this);
+  threadconnection = CREATEXTHREAD(XTHREADGROUPID_DIOSTREAMUDP, _L("DIOWINDOWSSTREAMUDP::DIOWINDOWSSTREAMUDP"), ThreadConnection, (void*)this);
 }
 
 
@@ -277,7 +277,7 @@ int DIOWINDOWSSTREAMUDP::IsReadyConnect(SOCKET socket)
   int status2 = FD_ISSET(socket, &fdw) ? 1 : 0;
   int status3 = FD_ISSET(socket, &fds) ? 1 : 0;
 
-  //XTRACE_PRINTCOLOR(1, __L("UDP stream: r: %d, w: %d, s: %d"), status1, status2, status3);
+  //XTRACE_PRINTCOLOR(1, _L("UDP stream: r: %d, w: %d, s: %d"), status1, status2, status3);
 
   if(config->IsServer())
     {
@@ -416,9 +416,9 @@ void DIOWINDOWSSTREAMUDP::ThreadConnection(void* data)
                                                                       XSTRING address;
                                                                       XWORD   port;
 
-                                                                      address.Format(__L("%d.%d.%d.%d"), origin_addr.sin_addr.S_un.S_un_b.s_b1, origin_addr.sin_addr.S_un.S_un_b.s_b2, origin_addr.sin_addr.S_un.S_un_b.s_b3, origin_addr.sin_addr.S_un.S_un_b.s_b4);
+                                                                      address.Format(_L("%d.%d.%d.%d"), origin_addr.sin_addr.S_un.S_un_b.s_b1, origin_addr.sin_addr.S_un.S_un_b.s_b2, origin_addr.sin_addr.S_un.S_un_b.s_b3, origin_addr.sin_addr.S_un.S_un_b.s_b4);
 
-                                                                     // XTRACE_PRINTCOLOR(((size == 100)?XTRACE_COLOR_PURPLE:XTRACE_COLOR_BLUE) , __L("Read UDP from [%s] (%d)"), address.Get(), size);
+                                                                     // XTRACE_PRINTCOLOR(((size == 100)?XTRACE_COLOR_PURPLE:XTRACE_COLOR_BLUE) , _L("Read UDP from [%s] (%d)"), address.Get(), size);
 
                                                                       port =  ntohs(origin_addr.sin_port);
 

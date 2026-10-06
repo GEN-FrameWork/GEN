@@ -116,26 +116,26 @@ bool MYSQL_CONNECTION::Connect()
   DB_SQL_STRING databasetimeout;
   DB_SQL_STRING reconnect;
 
-  if(!FindOption(__L("URL"), &databaseurl))
+  if(!FindOption(_L("URL"), &databaseurl))
     {
-      database->Error(__L("DATABASE URL argument not supplied"));
+      database->Error(_L("DATABASE URL argument not supplied"));
       return false;
     }
 
-  if(!FindOption(__L("USER"), &databaseuser))
+  if(!FindOption(_L("USER"), &databaseuser))
     {
-      database->Error(__L("DATABASE User Name argument not supplied"));
+      database->Error(_L("DATABASE User Name argument not supplied"));
       return false;
     }
 
-  if(!FindOption(__L("PASSWORD"), &databasepassword))
+  if(!FindOption(_L("PASSWORD"), &databasepassword))
     {
-      database->Error(__L("DATABASE User Name argument not supplied"));
+      database->Error(_L("DATABASE User Name argument not supplied"));
       return false;
     }
 
-  FindOption(__L("DATABASE"), &databasename);
-  FindOption(__L("PORT"), &databaseport);
+  FindOption(_L("DATABASE"), &databasename);
+  FindOption(_L("PORT"), &databaseport);
   
   XBUFFER url;
   XBUFFER user;
@@ -151,7 +151,7 @@ bool MYSQL_CONNECTION::Connect()
 
   bool success=true;
 
-  if (FindOption(__L("RECONNECT"), &reconnect))
+  if (FindOption(_L("RECONNECT"), &reconnect))
   {
     int reconnect_opt = reconnect.ConvertToInt();
     mysql_options(connection, MYSQL_OPT_RECONNECT, &reconnect_opt);
@@ -162,7 +162,7 @@ bool MYSQL_CONNECTION::Connect()
     mysql_options(connection, MYSQL_OPT_RECONNECT, &reconnect_opt);
   }
 
-  if (FindOption(__L("TIMEOUT"), &databasetimeout))
+  if (FindOption(_L("TIMEOUT"), &databasetimeout))
   {
       int timeoutseconds=databasetimeout.ConvertToInt();
       mysql_options(connection, MYSQL_OPT_CONNECT_TIMEOUT, &timeoutseconds);

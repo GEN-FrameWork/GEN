@@ -34,7 +34,7 @@
 
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
 
-#define SCRIPT_LIB_NAME_CONSOLE  __L("Console")
+#define SCRIPT_LIB_NAME_CONSOLE  _L("Console")
 
 #define SCRIPT_SET_LIB_CONSOLE(script, appconsole)  { SCRIPT_LIB_CONSOLE* lib = (SCRIPT_LIB_CONSOLE*)script->GetLibrary(SCRIPT_LIB_NAME_CONSOLE); \
                                                       if(lib)                                                                                     \

@@ -94,7 +94,7 @@ DIOWINDOWSSTREAMUART::DIOWINDOWSSTREAMUART() : DIOSTREAMUART(), XFSMACHINE(0)
             DIOWINDOWSUARTFSMEVENT_WAITINGTOREAD        , DIOWINDOWSUARTFSMSTATE_WAITINGTOREAD     ,
             XFSMACHINESTATE_EVENTDEFEND);
 
-  threadconnection = CREATEXTHREAD(XTHREADGROUPID_DIOSTREAMUART, __L("DIOWINDOWSSTREAMUART::DIOWINDOWSSTREAMUART"), ThreadConnection, (void*)this);
+  threadconnection = CREATEXTHREAD(XTHREADGROUPID_DIOSTREAMUART, _L("DIOWINDOWSSTREAMUART::DIOWINDOWSSTREAMUART"), ThreadConnection, (void*)this);
 }
 
 
@@ -176,7 +176,7 @@ bool DIOWINDOWSSTREAMUART::Open()
     }
    else
     {
-      comport.Format(__L("\\\\.\\COM%d"), config->GetPort());
+      comport.Format(_L("\\\\.\\COM%d"), config->GetPort());
     }
 
   hcom = CreateFile(comport.Get(),

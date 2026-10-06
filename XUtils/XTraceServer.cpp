@@ -177,7 +177,7 @@ XTRACESERVER::XTRACESERVER()
   xmutexmessages = GEN_XFACTORY.Create_Mutex();
 
 #if defined(DIO_STREAMUDP_ACTIVE)
-  xthreadreadUDP = CREATEXTHREAD(XTHREADGROUPID_DIOSTREAM, __L("XTRACESERVER::ReadUDP"), ThreadReadUDPFunction, (void*)this);
+  xthreadreadUDP = CREATEXTHREAD(XTHREADGROUPID_DIOSTREAM, _L("XTRACESERVER::ReadUDP"), ThreadReadUDPFunction, (void*)this);
   if(xthreadreadUDP)
     {
       xthreadreadUDP->Ini(false);
@@ -185,7 +185,7 @@ XTRACESERVER::XTRACESERVER()
 #endif
 
 #if defined(DIO_STREAMUART_ACTIVE)
-  xthreadreadUART = CREATEXTHREAD(XTHREADGROUPID_DIOSTREAM, __L("XTRACESERVER::ReadUART"), ThreadReadUARTFunction, (void*)this);
+  xthreadreadUART = CREATEXTHREAD(XTHREADGROUPID_DIOSTREAM, _L("XTRACESERVER::ReadUART"), ThreadReadUARTFunction, (void*)this);
   if(xthreadreadUART)
     {
       xthreadreadUART->Ini(false);
@@ -250,7 +250,7 @@ bool XTRACESERVER::Ini(XWORD port)
 {
   XSTRING config;
 
-  config.Format(__L("*:%d"), port);
+  config.Format(_L("*:%d"), port);
 
   return Ini(&config);
 }

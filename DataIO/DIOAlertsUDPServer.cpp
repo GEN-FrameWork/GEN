@@ -122,7 +122,7 @@ bool DIOALERTSUDPSERVER::Ini(XCHAR* URL, int port)
           xmutexalert=GEN_XFACTORY.Create_Mutex();
           if(xmutexalert)
             {
-              threadread = CREATEXTHREAD(XTHREADGROUPID_DIOALERTS, __L("DIOALERTSUDPSERVER::Ini"), ThreadReadFunction, (void*)this);
+              threadread = CREATEXTHREAD(XTHREADGROUPID_DIOALERTS, _L("DIOALERTSUDPSERVER::Ini"), ThreadReadFunction, (void*)this);
               if(threadread)  status = threadread->Ini();
             }
         }

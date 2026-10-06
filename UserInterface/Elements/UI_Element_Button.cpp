@@ -66,7 +66,7 @@ UI_ELEMENT_BUTTON::UI_ELEMENT_BUTTON()
   Clean();   
 
   SetType(UI_ELEMENT_TYPE_BUTTON);
-  GetTypeString()->Set(__L("button"));   
+  GetTypeString()->Set(_L("button"));   
 }
 
 

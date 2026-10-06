@@ -220,7 +220,7 @@ bool UI_CSSSELECTOR::IsRootOnly()
   XSTRING* p = pseudos.Get(0);
   if(!p) return false;
 
-  return p->Compare(__L("root"), true) == 0;
+  return p->Compare(_L("root"), true) == 0;
 }
 
 
@@ -1139,7 +1139,7 @@ bool UI_STYLESHEET::SubstituteVars(XSTRING& in, XSTRING& out)
 
   while(pos < len)
     {
-      int found = in.Find(__L("var("), false, pos);
+      int found = in.Find(_L("var("), false, pos);
       if(found < 0)
         {
           // No more var(): copy the rest verbatim and finish.
@@ -1158,7 +1158,7 @@ bool UI_STYLESHEET::SubstituteVars(XSTRING& in, XSTRING& out)
         }
 
       int argsstart = found + 4;                 // skip "var("
-      int close     = in.FindCharacter(__C(')'), (XDWORD)argsstart);
+      int close     = in.FindCharacter(_C(')'), (XDWORD)argsstart);
       if(close < 0)
         {
           // Unterminated var(...): treat everything from "var(" onward as literal text.
@@ -1175,7 +1175,7 @@ bool UI_STYLESHEET::SubstituteVars(XSTRING& in, XSTRING& out)
       XSTRING varname;
       XSTRING fallback;
 
-      int comma = args.FindCharacter(__C(','));
+      int comma = args.FindCharacter(_C(','));
       if(comma >= 0)
         {
           args.Copy(0, comma, varname);
@@ -1188,14 +1188,14 @@ bool UI_STYLESHEET::SubstituteVars(XSTRING& in, XSTRING& out)
 
       // Trim whitespace around varname; trim only outer whitespace of fallback (interior commas / spaces are
       // legitimate parts of tuple values like "160,195,255").
-      varname.DeleteNoCharacters(__L(" \t\r\n"));
+      varname.DeleteNoCharacters(_L(" \t\r\n"));
 
       int  fb_len   = (int)fallback.GetSize();
       int  fb_start = 0;
       while(fb_start < fb_len)
         {
           XCHAR ch = fallback[fb_start];
-          if(ch != __C(' ') && ch != __C('\t') && ch != __C('\r') && ch != __C('\n')) break;
+          if(ch != _C(' ') && ch != _C('\t') && ch != _C('\r') && ch != _C('\n')) break;
           fb_start++;
         }
 
@@ -1203,7 +1203,7 @@ bool UI_STYLESHEET::SubstituteVars(XSTRING& in, XSTRING& out)
       while(fb_end > fb_start)
         {
           XCHAR ch = fallback[fb_end - 1];
-          if(ch != __C(' ') && ch != __C('\t') && ch != __C('\r') && ch != __C('\n')) break;
+          if(ch != _C(' ') && ch != _C('\t') && ch != _C('\r') && ch != _C('\n')) break;
           fb_end--;
         }
 
@@ -1254,13 +1254,13 @@ bool UI_STYLESHEET::HasPseudoRulesFor(XSTRING& elementtype, XSTRING& elementid, 
   // same identity (rare and harmless: we just do a re-resolve that changes nothing), and avoids a false
   // negative: any rule that could ever match this element is caught.
   XVECTOR<XSTRING*> allpseudos;
-  XSTRING           s_root       (__L("root"));
-  XSTRING           s_preselect  (__L("preselect"));
-  XSTRING           s_selected   (__L("selected"));
-  XSTRING           s_active     (__L("active"));
-  XSTRING           s_disabled   (__L("disabled"));
-  XSTRING           s_hover      (__L("hover"));
-  XSTRING           s_pressed    (__L("pressed"));
+  XSTRING           s_root       (_L("root"));
+  XSTRING           s_preselect  (_L("preselect"));
+  XSTRING           s_selected   (_L("selected"));
+  XSTRING           s_active     (_L("active"));
+  XSTRING           s_disabled   (_L("disabled"));
+  XSTRING           s_hover      (_L("hover"));
+  XSTRING           s_pressed    (_L("pressed"));
 
   allpseudos.Add(&s_root);
   allpseudos.Add(&s_preselect);

@@ -36,7 +36,7 @@
 
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
 
-#define SCRIPT_LIB_NAME_STRING   __L("String")
+#define SCRIPT_LIB_NAME_STRING   _L("String")
 
 
 

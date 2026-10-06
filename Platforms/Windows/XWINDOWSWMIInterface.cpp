@@ -210,7 +210,7 @@ XWINDOWSWMIINTERFACE::XWINDOWSWMIINTERFACE()
 {
   Clean();
 
-  rootdir = __L("ROOT\\CIMV2");
+  rootdir = _L("ROOT\\CIMV2");
 }
 
 
@@ -328,7 +328,7 @@ XWINDOWSWMIINTERFACE_RESULT* XWINDOWSWMIINTERFACE::DoQuery(XCHAR* query, XCHAR* 
   if(FAILED(hres))
     {
       result->SetError(XWINDOWSWMIINTERFACE_ERROR_IWBEMLOCATORFAILURE);
-      result->GetErrorDescription()->Format(__L("Failed to create IWbemLocator object. Error code: %d"), hres);
+      result->GetErrorDescription()->Format(_L("Failed to create IWbemLocator object. Error code: %d"), hres);
     }
    else
     {
@@ -352,7 +352,7 @@ XWINDOWSWMIINTERFACE_RESULT* XWINDOWSWMIINTERFACE::DoQuery(XCHAR* query, XCHAR* 
         if(FAILED(hres))
           {
             result->SetError(XWINDOWSWMIINTERFACE_ERROR_IWBEMSERVICECONNECTIONFAILURE);
-            result->GetErrorDescription()->Format(__L("Could not connect to Wbem service. Error code: %d"), hres);
+            result->GetErrorDescription()->Format(_L("Could not connect to Wbem service. Error code: %d"), hres);
           }
           else
           {
@@ -371,7 +371,7 @@ XWINDOWSWMIINTERFACE_RESULT* XWINDOWSWMIINTERFACE::DoQuery(XCHAR* query, XCHAR* 
             if(FAILED(hres))
               {
                 result->SetError(XWINDOWSWMIINTERFACE_ERROR_BLANKETPROXYSETFAILURE);
-                result->GetErrorDescription()->Format(__L("Could not set proxy blanket. Error code: %d"), hres);
+                result->GetErrorDescription()->Format(_L("Could not set proxy blanket. Error code: %d"), hres);
               }
               else
               {
@@ -384,7 +384,7 @@ XWINDOWSWMIINTERFACE_RESULT* XWINDOWSWMIINTERFACE::DoQuery(XCHAR* query, XCHAR* 
                 if(FAILED(hres))
                   {
                     result->SetError(XWINDOWSWMIINTERFACE_ERROR_BADQUERYFAILURE);
-                    result->GetErrorDescription()->Format(__L("Bad query. Error code: %d"), hres);
+                    result->GetErrorDescription()->Format(_L("Bad query. Error code: %d"), hres);
                   }
                   else
                   {
@@ -411,7 +411,7 @@ XWINDOWSWMIINTERFACE_RESULT* XWINDOWSWMIINTERFACE::DoQuery(XCHAR* query, XCHAR* 
                                 if(hr != S_OK)
                                   {
                                     result->SetError(XWINDOWSWMIINTERFACE_ERROR_PROPERTYEXTRACTIONFAILURE);
-                                    result->GetErrorDescription()->Format(__L("Couldn't extract property: %s from result of query. Error code: %d"), propertynameofresultobject, hres);
+                                    result->GetErrorDescription()->Format(_L("Couldn't extract property: %s from result of query. Error code: %d"), propertynameofresultobject, hres);
 
                                     break;
                                   }
@@ -475,7 +475,7 @@ XWINDOWSWMIINTERFACE_RESULT* XWINDOWSWMIINTERFACE::DoQuery(XCHAR* query, XCHAR* 
                                                           XSTRING* resultstr = GEN_NEW XSTRING();
                                                           if(resultstr)
                                                             {
-                                                              resultstr->Format(__L("%s"), (data?__L("true"):__L("false")));
+                                                              resultstr->Format(_L("%s"), (data?_L("true"):_L("false")));
                                                               result->GetResultsString()->Add(resultstr);
                                                             }
 
@@ -652,7 +652,7 @@ bool XWINDOWSWMIINTERFACE::DoQuery(XCHAR* _class, XCHAR* namedata, XSTRING& answ
 
   XSTRING xstringclass;
 
-  xstringclass.Format(__L("SELECT * FROM %s"), _class);
+  xstringclass.Format(_L("SELECT * FROM %s"), _class);
 
   result = DoQuery(xstringclass.Get(), namedata);
   if(result)
@@ -693,7 +693,7 @@ bool XWINDOWSWMIINTERFACE::DoQuery(XCHAR* _class, XCHAR* namedata, XVECTOR<XSTRI
 
   XSTRING xstringclass;
 
-  xstringclass.Format(__L("SELECT * FROM %s"), _class);
+  xstringclass.Format(_L("SELECT * FROM %s"), _class);
 
   result = DoQuery(xstringclass.Get(), namedata);
   if(result)
@@ -745,7 +745,7 @@ bool XWINDOWSWMIINTERFACE::DoQuery(XCHAR* _class, XCHAR* namedata, XVARIANT& ans
 
   XSTRING xstringclass;
 
-  xstringclass.Format(__L("SELECT * FROM %s"), _class);
+  xstringclass.Format(_L("SELECT * FROM %s"), _class);
 
   result = DoQuery(xstringclass.Get(), namedata);
   if(result)
@@ -786,7 +786,7 @@ bool XWINDOWSWMIINTERFACE::DoQuery(XCHAR* _class, XCHAR* namedata, XVECTOR<XVARI
 
   XSTRING xstringclass;
 
-  xstringclass.Format(__L("SELECT * FROM %s"), _class);
+  xstringclass.Format(_L("SELECT * FROM %s"), _class);
 
   result = DoQuery(xstringclass.Get(), namedata);
   if(result)
@@ -873,7 +873,7 @@ bool XWINDOWSWMIINTERFACE::NetWorkInterfaceEnable(int ID, bool enable)
       return false;
     }
 
-  BSTR methodname = SysAllocString(enable?__L("Enable"):__L("Disable"));
+  BSTR methodname = SysAllocString(enable?_L("Enable"):_L("Disable"));
   BSTR classname  = SysAllocString(L"Win32_NetworkAdapter");
 
   IWbemClassObject* pclass = NULL;
@@ -885,7 +885,7 @@ bool XWINDOWSWMIINTERFACE::NetWorkInterfaceEnable(int ID, bool enable)
   XSTRING           devicename;
   IWbemClassObject* poutparams = NULL;
 
-  devicename.Format(__L("Win32_NetworkAdapter.DeviceID=\"%d\""), ID);
+  devicename.Format(_L("Win32_NetworkAdapter.DeviceID=\"%d\""), ID);
 
   hres = psvc->ExecMethod(devicename.Get(), methodname, 0, NULL, NULL /*pClassInstance*/, &poutparams, NULL);
   if(FAILED(hres)) status = false;
@@ -975,7 +975,7 @@ bool XWINDOWSWMIINTERFACE::NetWorkInterfaceSetMetric(int ID, int metric)
 
   hres = pclass->GetMethod(methodname, 0, &pinparams, NULL);  
  
-  devicename.Format(__L("Win32_NetWorkAdapterConfiguration.Index=\"%d\""), ID);
+  devicename.Format(_L("Win32_NetWorkAdapterConfiguration.Index=\"%d\""), ID);
 
   hres = pclass->SpawnInstance(0, &pinparams);
   if(FAILED(hres)) status = false;
@@ -1041,7 +1041,7 @@ bool XWINDOWSWMIINTERFACE::NetWorkInterfaceSetMetric(int metric)
   hr = CoCreateInstance(CLSID_WbemLocator, 0, CLSCTX_INPROC_SERVER, IID_IWbemLocator, (LPVOID *) &pLoc); 
   if(FAILED(hr)) 
     {
-      XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, __L("Failed to create IWbemLocator object. Error code [0x%08X]"), hr);
+      XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, _L("Failed to create IWbemLocator object. Error code [0x%08X]"), hr);
       return false;
     }
 
@@ -1052,11 +1052,11 @@ bool XWINDOWSWMIINTERFACE::NetWorkInterfaceSetMetric(int metric)
   hr = pLoc->ConnectServer( BSTR(L"ROOT\\CIMV2"), NULL, NULL, 0, NULL, 0, 0, &pSvc);
   if(FAILED(hr))
     {
-      XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, __L("Could not connect. Error code [0x%08X]"), hr);
+      XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, _L("Could not connect. Error code [0x%08X]"), hr);
       return false;      
     }
 
-  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, __L("Connected to WMI"));
+  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, _L("Connected to WMI"));
 
 	// setting security for WMI
   // Set the proxy so that impersonation of the client occurs.
@@ -1064,7 +1064,7 @@ bool XWINDOWSWMIINTERFACE::NetWorkInterfaceSetMetric(int metric)
   hr = CoSetProxyBlanket(pSvc, RPC_C_AUTHN_WINNT, RPC_C_AUTHZ_NONE, NULL, RPC_C_AUTHN_LEVEL_CALL, RPC_C_IMP_LEVEL_IMPERSONATE, NULL, EOAC_NONE);
   if(FAILED(hr))
     {
-      XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, __L("Could not set proxy blanket. Error code [0x%08X]"), hr);
+      XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, _L("Could not set proxy blanket. Error code [0x%08X]"), hr);
       return false;      
     }
 
@@ -1095,7 +1095,7 @@ bool XWINDOWSWMIINTERFACE::NetWorkInterfaceSetMetric(int metric)
 			    hr = pEnum->Next(0, 1, &pObj, &uReturned);
 			    if(FAILED(hr))
 			      {
-              XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, __L("Get(IPConnectionMetric). Error code [0x%08X]"), hr);				      
+              XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, _L("Get(IPConnectionMetric). Error code [0x%08X]"), hr);				      
 				      break;
       			}
 
@@ -1115,7 +1115,7 @@ bool XWINDOWSWMIINTERFACE::NetWorkInterfaceSetMetric(int metric)
 
 			    if(FAILED(hr))
 			      {
-              XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, __L("Get(Index). Error code [0x%08X]"), hr);					      
+              XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, _L("Get(Index). Error code [0x%08X]"), hr);					      
 				      break;
       			}
 
@@ -1135,7 +1135,7 @@ bool XWINDOWSWMIINTERFACE::NetWorkInterfaceSetMetric(int metric)
 
 			    if(FAILED(hr))
 			      {
-              XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, __L("Get(IPConnectionMetric). Error code [0x%08X]"), hr);				      
+              XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, _L("Get(IPConnectionMetric). Error code [0x%08X]"), hr);				      
 				      break;
 			      }
 
@@ -1155,7 +1155,7 @@ bool XWINDOWSWMIINTERFACE::NetWorkInterfaceSetMetric(int metric)
 
 			    if(FAILED(hr))
 			      {
-              XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, __L("Get(Description). Error code [0x%08X]"), hr);				      
+              XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, _L("Get(Description). Error code [0x%08X]"), hr);				      
 				      break;
 			      }
 
@@ -1167,7 +1167,7 @@ bool XWINDOWSWMIINTERFACE::NetWorkInterfaceSetMetric(int metric)
 
          
 
-          XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, __L("Index [%2d] Metric [%2d] [%s] "), index, IPConnectionMetric, description_str.Get());			 
+          XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, _L("Index [%2d] Metric [%2d] [%s] "), index, IPConnectionMetric, description_str.Get());			 
 
 
           // -------------------------------------------------------------------
@@ -1185,7 +1185,7 @@ bool XWINDOWSWMIINTERFACE::NetWorkInterfaceSetMetric(int metric)
     			hr = pSvc->GetObject(Win32_NetWorkAdapterConfigurationStr, 0, NULL, &pClass, NULL);
 			    if(hr != WBEM_S_NO_ERROR)
 			      {
-              XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, __L("getting object Win32_NetWorkAdapterConfiguration. Error code [0x%08X]"), hr);					      
+              XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, _L("getting object Win32_NetWorkAdapterConfiguration. Error code [0x%08X]"), hr);					      
 				      break;
 			      }
 
@@ -1196,14 +1196,14 @@ bool XWINDOWSWMIINTERFACE::NetWorkInterfaceSetMetric(int metric)
 
 			    if(hr != WBEM_S_NO_ERROR)
 			      {				      
-              XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, __L("getting method SetIPConnectionMetric. Error code [0x%08X]"), hr);	
+              XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, _L("getting method SetIPConnectionMetric. Error code [0x%08X]"), hr);	
 				      break;
 			      }
 
 			    hr = pInClass->SpawnInstance(0, &pInInst);
 			    if(hr != WBEM_S_NO_ERROR)
 			      {
-              XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, __L("spawning instance. Error code [0x%08X]"), hr);					      
+              XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, _L("spawning instance. Error code [0x%08X]"), hr);					      
 				      break;
 			      }
 
@@ -1236,14 +1236,14 @@ bool XWINDOWSWMIINTERFACE::NetWorkInterfaceSetMetric(int metric)
 			    hr = pInInst->Put(L"IPConnectionMetric", 0, &varArg1, CIM_UINT32);
 			    if(FAILED(hr))
 			      {
-              XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, __L("Put(IPConnectionMetric). Error code [0x%08X]"), hr);							      
+              XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, _L("Put(IPConnectionMetric). Error code [0x%08X]"), hr);							      
       				break;
 			      }
           BSTR SetIPConnectionMetricStr = SysAllocString(L"SetIPConnectionMetric");
 			    hr = pSvc->ExecMethod(bstrObjPath, SetIPConnectionMetricStr, 0, NULL, pInInst, &pOutInst, NULL);
 			    if(hr != WBEM_S_NO_ERROR)
 			      {
-              XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, __L("executing SetIPConnectionMetric. Error code [0x%08X]"), hr);							      				      
+              XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, _L("executing SetIPConnectionMetric. Error code [0x%08X]"), hr);							      				      
 				      break;
 			      }
     
@@ -1255,7 +1255,7 @@ bool XWINDOWSWMIINTERFACE::NetWorkInterfaceSetMetric(int metric)
 		    	hr = pOutInst->Get(L"ReturnValue", 0, &ret_value, 0, 0);
 			    if(FAILED(hr))
 			      {
-              XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, __L("Get(ReturnValue). Error code [0x%08X]"), hr);							      
+              XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, _L("Get(ReturnValue). Error code [0x%08X]"), hr);							      
 				      break;
 			      }
 
@@ -1273,14 +1273,14 @@ bool XWINDOWSWMIINTERFACE::NetWorkInterfaceSetMetric(int metric)
 			    pObj->Release();    // Release objects not owned.            
 		    }
       
-      XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, __L("Number of objects returned is %d"), uTotal);    
+      XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, _L("Number of objects returned is %d"), uTotal);    
 	  }
    else
 	  {
-      XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, __L("querying WMI for network adapters. Error code [0x%08X]"), hr);	      
+      XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, _L("querying WMI for network adapters. Error code [0x%08X]"), hr);	      
 	  }
 
-  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, __L("Done"));
+  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, _L("Done"));
 
   pSvc->Release();
   pLoc->Release();     

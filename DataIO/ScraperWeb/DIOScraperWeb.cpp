@@ -275,7 +275,7 @@ bool DIOSCRAPERWEB::Do(XCHAR* namewebservice, int timeoutforurl, XSTRING* localI
       nodewebservice = root->GetElement(c);
       if(nodewebservice)
         {
-          namews = nodewebservice->GetValueAttribute(__L("name"));
+          namews = nodewebservice->GetValueAttribute(_L("name"));
           if(!namews.Compare(namewebservice)) break;
 
           nodewebservice = NULL;
@@ -296,7 +296,7 @@ bool DIOSCRAPERWEB::Do(XCHAR* namewebservice, int timeoutforurl, XSTRING* localI
               XBUFFER  webpage;
               DIOURL   url;
 
-              if(!ChangeURL(nodeweb->GetValueAttribute(__L("url")), url))
+              if(!ChangeURL(nodeweb->GetValueAttribute(_L("url")), url))
                 {
                   return false;
                 }
@@ -307,9 +307,9 @@ bool DIOSCRAPERWEB::Do(XCHAR* namewebservice, int timeoutforurl, XSTRING* localI
                     {
                       XSTRING format;
 
-                      format = nodeweb->GetValueAttribute(__L("format"));
+                      format = nodeweb->GetValueAttribute(_L("format"));
 
-                      if(!format.Compare(__L("JSON"), true))
+                      if(!format.Compare(_L("JSON"), true))
                         {
                           XFILEJSON* json = GEN_NEW XFILEJSON();
                           if(json)
@@ -328,12 +328,12 @@ bool DIOSCRAPERWEB::Do(XCHAR* namewebservice, int timeoutforurl, XSTRING* localI
                                       int      priority;
                                       XSTRING  namevalue;
 
-                                      name           = nodevalue->GetValueAttribute(__L("name"));
+                                      name           = nodevalue->GetValueAttribute(_L("name"));
 
-                                      prioritystring = nodevalue->GetValueAttribute(__L("priority"));
+                                      prioritystring = nodevalue->GetValueAttribute(_L("priority"));
                                       priority       = prioritystring.ConvertToInt();
 
-                                      namevalue      = nodevalue->GetValueAttribute(__L("namevalue"));
+                                      namevalue      = nodevalue->GetValueAttribute(_L("namevalue"));
 
                                       XFILEJSONVALUE* jsonvalue = json->GetValue(namevalue, NULL);
                                       if(jsonvalue)
@@ -343,7 +343,7 @@ bool DIOSCRAPERWEB::Do(XCHAR* namewebservice, int timeoutforurl, XSTRING* localI
                                               case XFILEJSONVALUETYPE_INTEGER           : { int     pvalue = (int)jsonvalue->GetValueInteger();
                                                                                             XSTRING string;
 
-                                                                                            string.Format(__L("%d"), pvalue);
+                                                                                            string.Format(_L("%d"), pvalue);
 
                                                                                             AddValue(name, string);
                                                                                           }
@@ -352,7 +352,7 @@ bool DIOSCRAPERWEB::Do(XCHAR* namewebservice, int timeoutforurl, XSTRING* localI
                                               case XFILEJSONVALUETYPE_DOUBLEINTEGER     : { long pvalue = (long)jsonvalue->GetValueDoubleInteger();
                                                                                             XSTRING string;
 
-                                                                                            string.Format(__L("%ld"), pvalue);
+                                                                                            string.Format(_L("%ld"), pvalue);
 
                                                                                             AddValue(name, string);
                                                                                           }
@@ -361,7 +361,7 @@ bool DIOSCRAPERWEB::Do(XCHAR* namewebservice, int timeoutforurl, XSTRING* localI
                                               case XFILEJSONVALUETYPE_FLOAT             : { float   pvalue = (float)jsonvalue->GetValueFloating();
                                                                                             XSTRING string;
 
-                                                                                            string.Format(__L("%f"), pvalue);
+                                                                                            string.Format(_L("%f"), pvalue);
 
                                                                                             AddValue(name, string);
                                                                                           }
@@ -370,7 +370,7 @@ bool DIOSCRAPERWEB::Do(XCHAR* namewebservice, int timeoutforurl, XSTRING* localI
                                               case XFILEJSONVALUETYPE_DOUBLEFLOAT       : { double  pvalue = (float)jsonvalue->GetValueDoubleFloat();
                                                                                             XSTRING string;
 
-                                                                                            string.Format(__L("%f"), pvalue);
+                                                                                            string.Format(_L("%f"), pvalue);
 
                                                                                             AddValue(name, string);
                                                                                           }
@@ -400,7 +400,7 @@ bool DIOSCRAPERWEB::Do(XCHAR* namewebservice, int timeoutforurl, XSTRING* localI
                             }
                         }
 
-                      if(!format.Compare(__L("HTML"), true))
+                      if(!format.Compare(_L("HTML"), true))
                         {
                           for(int d=0; d<nodeweb->GetNElements(); d++)
                             {
@@ -415,16 +415,16 @@ bool DIOSCRAPERWEB::Do(XCHAR* namewebservice, int timeoutforurl, XSTRING* localI
 
                                   XSTRING  value;
 
-                                  namevalue = nodevalue->GetValueAttribute(__L("name"));
+                                  namevalue = nodevalue->GetValueAttribute(_L("name"));
                                   namevalue.ConvertHexFormatChars();
 
-                                  prioritystring = nodevalue->GetValueAttribute(__L("priority"));
+                                  prioritystring = nodevalue->GetValueAttribute(_L("priority"));
                                   priority = prioritystring.ConvertToInt();
 
-                                  searchini = nodevalue->GetValueAttribute(__L("start"));
+                                  searchini = nodevalue->GetValueAttribute(_L("start"));
                                   searchini.ConvertHexFormatChars();
 
-                                  searchend = nodevalue->GetValueAttribute(__L("end"));;
+                                  searchend = nodevalue->GetValueAttribute(_L("end"));;
                                   searchend.ConvertHexFormatChars();
 
                                   if(ExtractString(searchini, searchend, &webpage, false, value))
@@ -799,8 +799,8 @@ bool DIOSCRAPERWEB::ExtractString(XSTRING& searchini, XSTRING& searchend, XBUFFE
 
   html.Copy(indexini + searchini.GetSize(), indexend, result);
 
-  result.DeleteCharacter(__C(' '), XSTRINGCONTEXT_FROM_FIRST);
-  result.DeleteCharacter(__C(' '), XSTRINGCONTEXT_TO_END);
+  result.DeleteCharacter(_C(' '), XSTRINGCONTEXT_FROM_FIRST);
+  result.DeleteCharacter(_C(' '), XSTRINGCONTEXT_TO_END);
 
   if(result.IsEmpty()) return false;
 

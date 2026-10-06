@@ -64,7 +64,7 @@ UI_ELEMENT_SCROLL::UI_ELEMENT_SCROLL()
   Clean();  
 
   SetType(UI_ELEMENT_TYPE_SCROLL);
-  GetTypeString()->Set(__L("scroll"));      
+  GetTypeString()->Set(_L("scroll"));      
 }
 
 

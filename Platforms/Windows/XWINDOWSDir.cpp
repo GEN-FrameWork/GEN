@@ -111,7 +111,7 @@ bool XWINDOWSDIR::Exist(XCHAR* path)
   if(xpath.IsEmpty())
     {
       XDWORD size = _MAXPATH;
-      xpath.AdjustSize(size, false, __L(" "));
+      xpath.AdjustSize(size, false, _L(" "));
 
       GetCurrentDirectory(size, xpath.Get());
     }
@@ -178,13 +178,13 @@ bool XWINDOWSDIR::Make(XCHAR* path, bool recursive)
           if(xpath.GetPathInSequence(index, pathpart))
             {
               xpathsequence += pathpart;
-              xpathsequence += __L("\\");
+              xpathsequence += _L("\\");
 
-              if(pathpart.Character_GetLast()!=__C(':'))
+              if(pathpart.Character_GetLast()!=_C(':'))
                 {
                   if(!Exist(xpathsequence.Get()))
                     {
-                      //XTRACE_PRINTCOLOR(2, __L("---> Make: %s"), xpathsequence.Get());
+                      //XTRACE_PRINTCOLOR(2, _L("---> Make: %s"), xpathsequence.Get());
 
                       int result = CreateDirectory(xpathsequence.Get(), NULL);
                       if(!result) 
@@ -263,7 +263,7 @@ bool XWINDOWSDIR::Delete(XCHAR* path, bool all)
   if(all)
     {
       xpathname     = path;
-      patternsearch = __L("*");
+      patternsearch = _L("*");
 
       if(FirstSearch(xpathname.Get(), patternsearch.Get(), &search))
         {
@@ -369,8 +369,8 @@ bool XWINDOWSDIR::FirstSearch(XCHAR* xpath, XCHAR* patternsearch, XDIRELEMENT* s
   
   XSTRING searchfilename(search->cFileName);
   
-  if((!searchfilename.Compare(__L(".")))||
-     (!searchfilename.Compare(__L(".."))))
+  if((!searchfilename.Compare(_L(".")))||
+     (!searchfilename.Compare(_L(".."))))
     {
       return NextSearch(searchelement);
     }
@@ -409,8 +409,8 @@ bool XWINDOWSDIR::NextSearch(XDIRELEMENT* searchelement)
 
    XSTRING searchfilename(search->cFileName);
    
-   if((!searchfilename.Compare(__L(".")))||
-      (!searchfilename.Compare(__L(".."))))
+   if((!searchfilename.Compare(_L(".")))||
+      (!searchfilename.Compare(_L(".."))))
      {
        return NextSearch(searchelement);
      }

@@ -94,7 +94,7 @@ bool DIOSTREAMCONFIGSTRING::GetToString(XSTRING* string)
 {
   if(!string)     return false;
 
-  string->Format(__L("%s:%d"), remoteURL.Get(), remoteport);
+  string->Format(_L("%s:%d"), remoteURL.Get(), remoteport);
 
   return true;
 }
@@ -147,16 +147,16 @@ bool DIOSTREAMCONFIGSTRING::SetFromString(XCHAR* string)
 
   if(_string.HaveHTTPID()) _string.DeleteHTTPID();
 
-  endurlaccess = _string.Find(__L("/"), true);
-  if(endurlaccess == XSTRING_NOTFOUND) endurlaccess = _string.Find(__L("\\"), true);
+  endurlaccess = _string.Find(_L("/"), true);
+  if(endurlaccess == XSTRING_NOTFOUND) endurlaccess = _string.Find(_L("\\"), true);
   if(endurlaccess == XSTRING_NOTFOUND) endurlaccess = _string.GetSize();
 
   _string.Copy(endurlaccess+1, urladd);
   _string.Copy(0, endurlaccess, urlall);
   urlall.Slash_Delete();
 
-  int havepassword = urlall.Find(__L("@"), true);
-  int haveport     = urlall.Find(__L(":"), true, (havepassword == XSTRING_NOTFOUND)?0:havepassword);
+  int havepassword = urlall.Find(_L("@"), true);
+  int haveport     = urlall.Find(_L(":"), true, (havepassword == XSTRING_NOTFOUND)?0:havepassword);
 
   login.AdjustSize(_MAXSTR*10);
   password.AdjustSize(_MAXSTR*10);
@@ -165,14 +165,14 @@ bool DIOSTREAMCONFIGSTRING::SetFromString(XCHAR* string)
   if(haveport== XSTRING_NOTFOUND)
     {
       if(havepassword == XSTRING_NOTFOUND)
-              urlall.UnFormat(__L("%s"), url.Get());
-         else urlall.UnFormat(__L("%s:%s@%s"), login.Get(), password.Get(), url.Get());
+              urlall.UnFormat(_L("%s"), url.Get());
+         else urlall.UnFormat(_L("%s:%s@%s"), login.Get(), password.Get(), url.Get());
     }
    else
     {
       if(havepassword == XSTRING_NOTFOUND)
-              urlall.UnFormat(__L("%s:%d"), url.Get(), &port);
-         else urlall.UnFormat(__L("%s:%s@%s:%d"), login.Get(), password.Get(), url.Get(), &port);
+              urlall.UnFormat(_L("%s:%d"), url.Get(), &port);
+         else urlall.UnFormat(_L("%s:%s@%s:%d"), login.Get(), password.Get(), url.Get(), &port);
     }
 
   login.AdjustSize();
@@ -180,7 +180,7 @@ bool DIOSTREAMCONFIGSTRING::SetFromString(XCHAR* string)
   url.AdjustSize();
 
 
-  if(!login.IsEmpty() || !password.IsEmpty())  remoteURL.AddFormat(__L("%s:%s@"), login.Get(), password.Get());
+  if(!login.IsEmpty() || !password.IsEmpty())  remoteURL.AddFormat(_L("%s:%s@"), login.Get(), password.Get());
 
   remoteURL.Add(url);
   if(urladd.Get()[0])

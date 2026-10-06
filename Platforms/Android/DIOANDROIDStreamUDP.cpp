@@ -132,7 +132,7 @@ DIOANDROIDSTREAMUDP::DIOANDROIDSTREAMUDP() : DIOSTREAMUDP() , XFSMACHINE(0)
             DIOANDROIDUDPFSMEVENT_SENDINGDATA         , DIOANDROIDUDPFSMSTATE_SENDINGDATA      ,
             XFSMACHINESTATE_EVENTDEFEND);
 
-  threadconnection = CREATEXTHREAD(XTHREADGROUPID_DIOSTREAMUDP, __L("DIOANDROIDSTREAMUDP::DIOANDROIDSTREAMUDP"), ThreadRunFunction, (void*)this);
+  threadconnection = CREATEXTHREAD(XTHREADGROUPID_DIOSTREAMUDP, _L("DIOANDROIDSTREAMUDP::DIOANDROIDSTREAMUDP"), ThreadRunFunction, (void*)this);
 }
 
 
@@ -389,11 +389,11 @@ void DIOANDROIDSTREAMUDP::ThreadRunFunction(void* thread)
 
                                                                     sscanf(inet_ntoa(origin_addr.sin_addr), "%d.%d.%d.%d", &_address[0], &_address[1], &_address[2], &_address[3]);
 
-                                                                    address.Format(__L("%d.%d.%d.%d"), _address[0], _address[1], _address[2], _address[3]);
+                                                                    address.Format(_L("%d.%d.%d.%d"), _address[0], _address[1], _address[2], _address[3]);
 
                                                                     port =  ntohs(origin_addr.sin_port);
 
-                                                                    //XTRACE_PRINTCOLOR(1, __L("Read UDP from [%s] (%d)"), address.Get(), size);
+                                                                    //XTRACE_PRINTCOLOR(1, _L("Read UDP from [%s] (%d)"), address.Get(), size);
 
                                                                     if(diostream->config->IsUsedDatagrams())
                                                                             diostream->AddDatagram(false, address.Get(), port, (XBYTE*)buffer, size);
@@ -448,7 +448,7 @@ void DIOANDROIDSTREAMUDP::ThreadRunFunction(void* thread)
 
                                                                             size = sendto(diostream->handle, (char*)datagram->GetData()->Get(), datagram->GetData()->GetSize(), 0, (sockaddr*)&target_addr, size_addr);
 
-                                                                            //XTRACE_PRINTCOLOR(1, __L("Write UDP to [%s] (%d)"), tmpremoteaddress.Get(), size);
+                                                                            //XTRACE_PRINTCOLOR(1, _L("Write UDP to [%s] (%d)"), tmpremoteaddress.Get(), size);
 
                                                                             if(size == -1)
                                                                               {

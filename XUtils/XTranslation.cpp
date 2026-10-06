@@ -330,7 +330,7 @@ bool XTRANSLATION::LoadLanguageAvailable()
   if(!xfilejson.ReadAllFile())     return false;
   if(!xfilejson.DecodeAllLines())  return false;
 
-  XFILEJSONARRAY* languages  = (XFILEJSONARRAY*)xfilejson.GetObj(__L("languages"));
+  XFILEJSONARRAY* languages  = (XFILEJSONARRAY*)xfilejson.GetObj(_L("languages"));
   if(languages)
     {
       for(XDWORD c=0; c<languages->GetValues()->GetSize(); c++)
@@ -468,7 +468,7 @@ bool XTRANSLATION::Translate_Load()
   int languageindex = GetIndexLanguageByCode(code);
   if(languageindex == -1) return false;
 
-  XFILEJSONARRAY* translations  = (XFILEJSONARRAY*)xfilejson.GetObj(__L("translations"));
+  XFILEJSONARRAY* translations  = (XFILEJSONARRAY*)xfilejson.GetObj(_L("translations"));
   if(translations)
     {
       for(XDWORD c=0; c<translations->GetValues()->GetSize(); c++)
@@ -544,7 +544,7 @@ void XTRANSLATION::Clean()
 {
   code  = XLANGUAGE_ISO_639_3_CODE_INVALID;
 
-  emptysentence = __L("--");
+  emptysentence = _L("--");
 
   for(XDWORD c=0; c<XTRANSLATION_MAXSENTENCES; c++)
     {

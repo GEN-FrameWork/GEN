@@ -107,11 +107,11 @@ bool SCRIPT_LIB_PROCESS::AddLibraryFunctions(SCRIPT* script)
 
   this->script = script;
 
-  script->AddLibraryFunction(this, __L("OpenURL"), Call_OpenURL);
-  script->AddLibraryFunction(this, __L("ExecApplication"), Call_ExecApplication);
-  script->AddLibraryFunction(this, __L("MakeCommand"), Call_MakeCommand);
-  script->AddLibraryFunction(this, __L("TerminateAplication"), Call_TerminateApplication);
-  script->AddLibraryFunction(this, __L("TerminateAplicationWithWindow"), Call_TerminateApplicationWithWindow);
+  script->AddLibraryFunction(this, _L("OpenURL"), Call_OpenURL);
+  script->AddLibraryFunction(this, _L("ExecApplication"), Call_ExecApplication);
+  script->AddLibraryFunction(this, _L("MakeCommand"), Call_MakeCommand);
+  script->AddLibraryFunction(this, _L("TerminateAplication"), Call_TerminateApplication);
+  script->AddLibraryFunction(this, _L("TerminateAplicationWithWindow"), Call_TerminateApplicationWithWindow);
 
   return true;
 }
@@ -264,7 +264,7 @@ void Call_ExecApplication(SCRIPT_LIB* library, SCRIPT* script, XVECTOR<XVARIANT*
 
       // Do not capture stdin/stdout: that path waits for process exit (and used CREATE_NO_WINDOW).
       // ExecApplication is meant to launch interactive GUI apps and return while they stay open.
-      status = GEN_XPROCESSMANAGER.Application_Execute(app_path->Get(), app_params?app_params->Get():__L(""), (XBUFFER*)NULL, (XBUFFER*)NULL, &returncode);    
+      status = GEN_XPROCESSMANAGER.Application_Execute(app_path->Get(), app_params?app_params->Get():_L(""), (XBUFFER*)NULL, (XBUFFER*)NULL, &returncode);    
       (*returnvalue) = status;  
       return;    
     }

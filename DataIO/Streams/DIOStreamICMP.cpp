@@ -376,7 +376,7 @@ XDWORD DIOSTREAMICMP::Read(XBYTE* buffer, XDWORD size)
 * --------------------------------------------------------------------------------------------------------------------*/
 XDWORD DIOSTREAMICMP::Write(XBYTE* buffer, XDWORD size)
 {
-  if(!AddDatagram(true, __L(""), buffer, size)) return 0;
+  if(!AddDatagram(true, _L(""), buffer, size)) return 0;
 
   if(!outbuffer->Add(buffer, size))  return 0;
 

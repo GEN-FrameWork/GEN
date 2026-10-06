@@ -620,7 +620,7 @@ bool CIPHER::GetResultString(XSTRING& stringhex)
     {
       XSTRING strbyte;
 
-      strbyte.Format(__L("%02x"), xbuffer->GetByte(c));
+      strbyte.Format(_L("%02x"), xbuffer->GetByte(c));
 
       stringhex += strbyte;
     }

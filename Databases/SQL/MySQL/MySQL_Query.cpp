@@ -109,12 +109,12 @@ bool MYSQL_QUERY::Execute()
   MYSQL_DATABASE* db    = static_cast<MYSQL_DATABASE*>  (database);
   MYSQL*          msql  = static_cast<MYSQL_CONNECTION*>(db->connection)->connection;
 
-  if(value.FindCharacter(__C('*'))!= NOTFOUND && value.Find(__L("COUNT(*)"), true)==XSTRING_NOTFOUND)
+  if(value.FindCharacter(_C('*'))!= NOTFOUND && value.Find(_L("COUNT(*)"), true)==XSTRING_NOTFOUND)
     {
       DB_SQL_STRING error;
 
       database->ClearPreviousErrors();
-      error.Set(__L("Wildcard * is discouraged and therefore disabled in this implementation"));
+      error.Set(_L("Wildcard * is discouraged and therefore disabled in this implementation"));
 
       database->Error(error.Get());
 
@@ -132,7 +132,7 @@ bool MYSQL_QUERY::Execute()
 
       database->ClearPreviousErrors();
 
-      error->description.Set(__L("void statement"));
+      error->description.Set(_L("void statement"));
       database->GetErrorList()->Add(error);
 
       if(database->IsTransactionStarted())  database->Rollback();
@@ -226,7 +226,7 @@ bool MYSQL_QUERY::Exec(MYSQL* db, char* sql)
 {
   if(!db)
     {
-      database->Error(__L("database not initialized"));
+      database->Error(_L("database not initialized"));
       return true;
     }
 
@@ -303,7 +303,7 @@ bool MYSQL_QUERY::Exec(MYSQL* db, char* sql)
               DB_SQL_ERROR* error = GEN_NEW DB_SQL_ERROR(DB_SQL_ERROR_TYPE_MEMORY_ERROR);
               if(!error) return false;
 
-              error->description.Set(__L("not enought memory for result"));
+              error->description.Set(_L("not enought memory for result"));
               database->GetErrorList()->Add(error);
               mysql_stmt_free_result(stmt);
               mysql_stmt_close(stmt);
@@ -399,7 +399,7 @@ bool MYSQL_QUERY::BindParametersToQuery()
   param = GEN_NEW MYSQL_BIND[statementbindings.GetSize()];
   if(!param)
     {
-      database->Error(__L("Not enought memory"));
+      database->Error(_L("Not enought memory"));
       return false;
     }
 
@@ -510,7 +510,7 @@ bool MYSQL_QUERY::BindParametersToResult()
   result->bindresults = GEN_NEW MYSQL_BIND[ncols];
   if(!result->bindresults)
     {
-      this->database->Error(__L("Not enought memory"));
+      this->database->Error(_L("Not enought memory"));
       return false;
     }
 

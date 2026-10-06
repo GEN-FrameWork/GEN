@@ -117,7 +117,7 @@ DB_SQL_DATABASE_TYPE SQLITE_DATABASE::GetType()
 * --------------------------------------------------------------------------------------------------------------------*/
 XCHAR* SQLITE_DATABASE::GetTypeName()
 {
-  return __L("SQLite");
+  return _L("SQLite");
 }
 
 
@@ -189,7 +189,7 @@ bool SQLITE_DATABASE::Rollback(XCHAR* savepoint)
        else
         {
           DB_SQL_STRING text;
-          text.Format(__L("ROLLBACK TO SAVEPOINT %s"), savepoint);
+          text.Format(_L("ROLLBACK TO SAVEPOINT %s"), savepoint);
 
           XBUFFER rollbacktext;
           
@@ -219,7 +219,7 @@ bool SQLITE_DATABASE::Rollback(XCHAR* savepoint)
 bool SQLITE_DATABASE::Savepoint(XCHAR* savepoint)
 {
   DB_SQL_STRING text;
-  text.Format(__L("SAVEPOINT %s"), savepoint);
+  text.Format(_L("SAVEPOINT %s"), savepoint);
 
   XBUFFER rollbacktext;
   
@@ -244,7 +244,7 @@ bool SQLITE_DATABASE::Savepoint(XCHAR* savepoint)
 bool SQLITE_DATABASE::ReleaseSavepoint(XCHAR* savepoint)
 {
   DB_SQL_STRING text;
-  text.Format(__L("RELEASE %s"), savepoint);
+  text.Format(_L("RELEASE %s"), savepoint);
 
   XBUFFER rollbacktext;
   
@@ -311,7 +311,7 @@ bool SQLITE_DATABASE::GetTables()
   tables.DeleteContents();
   tables.DeleteAll();
 
-  query->Set(__L("SELECT name FROM sqlite_master WHERE type='table'"));
+  query->Set(_L("SELECT name FROM sqlite_master WHERE type='table'"));
   if(query->Execute())
     {
       DB_SQL_RESULT* result=query->GetResult();
@@ -342,7 +342,7 @@ bool SQLITE_DATABASE::GetTables()
     }
    else
     {
-      Error(__L("Unable to obtain Tables"));
+      Error(_L("Unable to obtain Tables"));
       status = false;
     }
 
@@ -416,7 +416,7 @@ bool SQLITE_DATABASE::SetDatabaseEncoding(DB_SQL_DATABASE_ENCODING encodingtouse
       case DB_SQL_DATABASE_ENCODING_UTF8              : { DB_SQL_QUERY* query = CreateQuery();
                                                         if(!query) break;
 
-                                                        query->Set(__L("PRAGMA encoding=\"UTF-8\""));
+                                                        query->Set(_L("PRAGMA encoding=\"UTF-8\""));
                                                         int rc = query->Execute();
 
                                                         GEN_DELETE query;
@@ -440,7 +440,7 @@ bool SQLITE_DATABASE::SetDatabaseEncoding(DB_SQL_DATABASE_ENCODING encodingtouse
 
     }
 
-  Error (__L("Unable to set the charset encoding"));
+  Error (_L("Unable to set the charset encoding"));
 
   return false;
 }

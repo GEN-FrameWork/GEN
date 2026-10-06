@@ -83,7 +83,7 @@ enum XFEEDBACK_CODE
 #define XFEEDBACK_CODE_CREATETEXT(text, ...)      XSTRING XFEEDBACK_CODE_REFTEXT;                          \
                                                   XFEEDBACK_CODE_REFTEXT.Format(text, ## __VA_ARGS__);   
 
-#define XFEEDBACK_CONTROL_LOG_SECTIONID           __L("Feedback")
+#define XFEEDBACK_CONTROL_LOG_SECTIONID           _L("Feedback")
 
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
 

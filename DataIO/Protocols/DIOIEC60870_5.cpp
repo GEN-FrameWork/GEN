@@ -746,10 +746,10 @@ bool DIOIEC60870_5::Connect(XWORD addressfield, XBYTE addressPM, XDWORD keyPM, b
 
   switch(diostream->GetConfig()->GetType())
     {
-      case DIOSTREAMTYPE_UART  : XTRACE_PRINTCOLOR(1, __L("IEC60870_5 Connection to UART: "));
+      case DIOSTREAMTYPE_UART  : XTRACE_PRINTCOLOR(1, _L("IEC60870_5 Connection to UART: "));
                                   break;
 
-      case DIOSTREAMTYPE_TCPIP : XTRACE_PRINTCOLOR(1, __L("IEC60870_5 Connection to TCP/IP: "));
+      case DIOSTREAMTYPE_TCPIP : XTRACE_PRINTCOLOR(1, _L("IEC60870_5 Connection to TCP/IP: "));
                                   break;
 
                        default :  break;
@@ -761,7 +761,7 @@ bool DIOIEC60870_5::Connect(XWORD addressfield, XBYTE addressPM, XDWORD keyPM, b
 
   if(!diostream->WaitToConnected(timeout)) return false;
 
-  XTRACE_PRINTCOLOR(1, __L("IEC60870_5 Connected physical layer."));
+  XTRACE_PRINTCOLOR(1, _L("IEC60870_5 Connected physical layer."));
 
   this->addressfield      = addressfield;
   this->addressPM         = addressPM;
@@ -769,7 +769,7 @@ bool DIOIEC60870_5::Connect(XWORD addressfield, XBYTE addressPM, XDWORD keyPM, b
   this->inlittleendian    = inlittleendian;
   this->havelongaddress   = havelongaddress;
 
-  XTRACE_PRINTCOLOR(1, __L("IEC60870_5 Meter Address Field: %d, Address PM: %d, Key PM: %d"), addressfield, addressPM, keyPM);
+  XTRACE_PRINTCOLOR(1, _L("IEC60870_5 Meter Address Field: %d, Address PM: %d, Key PM: %d"), addressfield, addressPM, keyPM);
 
   canceloperations = false;
 

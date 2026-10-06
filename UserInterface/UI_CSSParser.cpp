@@ -105,7 +105,7 @@ bool UI_CSSPARSER::ParseFile(XPATH& pathfile, UI_STYLESHEET& out)
       XPATH* openfile = importstack.Get(c);
       if(openfile && (*openfile) == pathfile)
         {
-          XTRACE_PRINTCOLOR(XTRACE_COLOR_WARNING, __L("[CSS Parse] @import cycle detected: [%s] is already open, skipping"), pathfile.Get());
+          XTRACE_PRINTCOLOR(XTRACE_COLOR_WARNING, _L("[CSS Parse] @import cycle detected: [%s] is already open, skipping"), pathfile.Get());
           return false;
         }
     }
@@ -226,17 +226,17 @@ bool UI_CSSPARSER::ParseText(XSTRING& text, UI_STYLESHEET& out)
     {
       if(unterminated_comments > 0)
         {
-          XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, __L("[CSS Parse] ERROR: %d unterminated comment(s)%s%s -- rest of stylesheet may be truncated"), unterminated_comments, currentfilepath.IsEmpty() ? __L("") : __L(" in "), currentfilepath.IsEmpty() ? __L("") : currentfilepath.Get());
+          XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, _L("[CSS Parse] ERROR: %d unterminated comment(s)%s%s -- rest of stylesheet may be truncated"), unterminated_comments, currentfilepath.IsEmpty() ? _L("") : _L(" in "), currentfilepath.IsEmpty() ? _L("") : currentfilepath.Get());
         }
 
       if(discarded_rules > 0)
         {
-          XTRACE_PRINTCOLOR(XTRACE_COLOR_WARNING, __L("[CSS Parse] summary: kept %d rule(s), discarded %d%s%s"), rules_kept, discarded_rules, currentfilepath.IsEmpty() ? __L("") : __L(" in "), currentfilepath.IsEmpty() ? __L("") : currentfilepath.Get());
+          XTRACE_PRINTCOLOR(XTRACE_COLOR_WARNING, _L("[CSS Parse] summary: kept %d rule(s), discarded %d%s%s"), rules_kept, discarded_rules, currentfilepath.IsEmpty() ? _L("") : _L(" in "), currentfilepath.IsEmpty() ? _L("") : currentfilepath.Get());
         }
 
       if((len > 0) && (rules_kept == 0) && (discarded_rules > 0))
         {
-          XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, __L("[CSS Parse] ERROR: non-empty CSS produced ZERO kept rules (%d discarded)%s%s -- check for an early '*/' inside a block comment (prose with asterisk+slash). UI may paint fully transparent."), discarded_rules, currentfilepath.IsEmpty() ? __L("") : __L(" in "), currentfilepath.IsEmpty() ? __L("") : currentfilepath.Get());
+          XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, _L("[CSS Parse] ERROR: non-empty CSS produced ZERO kept rules (%d discarded)%s%s -- check for an early '*/' inside a block comment (prose with asterisk+slash). UI may paint fully transparent."), discarded_rules, currentfilepath.IsEmpty() ? _L("") : _L(" in "), currentfilepath.IsEmpty() ? _L("") : currentfilepath.Get());
         }
     }
 
@@ -264,9 +264,9 @@ bool UI_CSSPARSER::ParseText(XSTRING& text, UI_STYLESHEET& out)
 * --------------------------------------------------------------------------------------------------------------------*/
 bool UI_CSSPARSER::ParseInlineDeclarations(XSTRING& text, UI_STYLE& out)
 {
-  XSTRING wrapped = __L("{");
+  XSTRING wrapped = _L("{");
   wrapped += text;
-  wrapped += __L("}");
+  wrapped += _L("}");
 
   int pos = 0;
   return ReadDeclarationBlock(wrapped, pos, out);
@@ -302,7 +302,7 @@ void UI_CSSPARSER::ResolveLineColumn(XSTRING& text, int offset, int& outline, in
 
   for(int c=0; c<offset; c++)
     {
-      if(text[c] == __C('\n'))
+      if(text[c] == _C('\n'))
         {
           line++;
           linestart = c + 1;
@@ -334,20 +334,20 @@ void UI_CSSPARSER::SkipWhitespaceAndComments(XSTRING& text, int& pos)
     {
       XCHAR ch = text[pos];
 
-      if(ch == __C(' ') || ch == __C('\t') || ch == __C('\r') || ch == __C('\n'))
+      if(ch == _C(' ') || ch == _C('\t') || ch == _C('\r') || ch == _C('\n'))
         {
           pos++;
           continue;
         }
 
-      if(ch == __C('/') && (pos + 1) < len && text[pos + 1] == __C('*'))
+      if(ch == _C('/') && (pos + 1) < len && text[pos + 1] == _C('*'))
         {
           int commentstart = pos;
           pos += 2;
           bool closed = false;
           while(pos < len)
             {
-              if(text[pos] == __C('*') && (pos + 1) < len && text[pos + 1] == __C('/'))
+              if(text[pos] == _C('*') && (pos + 1) < len && text[pos + 1] == _C('/'))
                 {
                   pos += 2;
                   closed = true;
@@ -362,7 +362,7 @@ void UI_CSSPARSER::SkipWhitespaceAndComments(XSTRING& text, int& pos)
               unterminated_comments++;
               int line, col;
               ResolveLineColumn(text, commentstart, line, col);
-              XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, __L("[CSS Parse] ERROR: unterminated comment starting at line %d, column %d%s%s"), line, col, currentfilepath.IsEmpty() ? __L("") : __L(" in "), currentfilepath.IsEmpty() ? __L("") : currentfilepath.Get());
+              XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, _L("[CSS Parse] ERROR: unterminated comment starting at line %d, column %d%s%s"), line, col, currentfilepath.IsEmpty() ? _L("") : _L(" in "), currentfilepath.IsEmpty() ? _L("") : currentfilepath.Get());
             }
           continue;
         }
@@ -404,7 +404,7 @@ bool UI_CSSPARSER::ReadIdentifier(XSTRING& text, int& pos, XSTRING& outident)
     {
       XCHAR ch = text[pos];
 
-      if(ch == __C('\\'))
+      if(ch == _C('\\'))
         {
           pos++;
           if(pos < len)
@@ -416,7 +416,7 @@ bool UI_CSSPARSER::ReadIdentifier(XSTRING& text, int& pos, XSTRING& outident)
           continue;
         }
 
-      if(ch == __C('#') || ch == __C('.') || ch == __C(':')) break;
+      if(ch == _C('#') || ch == _C('.') || ch == _C(':')) break;
 
       outident += ch;
       pos++;
@@ -455,7 +455,7 @@ bool UI_CSSPARSER::ReadStringLiteral(XSTRING& text, int& pos, XSTRING& outstring
   if(pos >= len) return false;
 
   XCHAR quote = text[pos];
-  if(quote != __C('"') && quote != __C('\'')) return false;
+  if(quote != _C('"') && quote != _C('\'')) return false;
 
   pos++;
 
@@ -469,7 +469,7 @@ bool UI_CSSPARSER::ReadStringLiteral(XSTRING& text, int& pos, XSTRING& outstring
           return true;
         }
 
-      if(ch == __C('\\'))
+      if(ch == _C('\\'))
         {
           pos++;
           if(pos < len)
@@ -510,7 +510,7 @@ void UI_CSSPARSER::SkipStringLiteral(XSTRING& text, int& pos)
   if(pos >= len) return;
 
   XCHAR quote = text[pos];
-  if(quote != __C('"') && quote != __C('\'')) return;
+  if(quote != _C('"') && quote != _C('\'')) return;
 
   pos++;
 
@@ -520,7 +520,7 @@ void UI_CSSPARSER::SkipStringLiteral(XSTRING& text, int& pos)
 
       if(ch == quote) { pos++; return; }
 
-      if(ch == __C('\\'))
+      if(ch == _C('\\'))
         {
           pos++;
           if(pos < len) pos++;
@@ -562,18 +562,18 @@ bool UI_CSSPARSER::ReadSelectorList(XSTRING& text, int& pos, UI_CSSRULE* rule)
 
       // Phase 2: a quoted span (not part of GEN's supported selector grammar, but defensive against a stray
       // ',' or '{' inside one) is skipped atomically so it can never be mistaken for a selector-list delimiter.
-      if(ch == __C('"') || ch == __C('\''))
+      if(ch == _C('"') || ch == _C('\''))
         {
           SkipStringLiteral(text, pos);
           continue;
         }
 
-      if(ch == __C(',') || ch == __C('{'))
+      if(ch == _C(',') || ch == _C('{'))
         {
           UI_CSSSELECTOR* sel = ParseCompoundSelectorSequence(text, start, pos);
           if(sel) rule->GetSelectors().Add(sel);
 
-          if(ch == __C('{')) return true;
+          if(ch == _C('{')) return true;
 
           pos++;
           SkipWhitespaceAndComments(text, pos);
@@ -614,7 +614,7 @@ UI_CSSSELECTOR* UI_CSSPARSER::ParseCompoundSelector(XSTRING& text, int start, in
   while(i < tlen)
     {
       XCHAR ch = token[i];
-      if(ch != __C(' ') && ch != __C('\t') && ch != __C('\r') && ch != __C('\n')) break;
+      if(ch != _C(' ') && ch != _C('\t') && ch != _C('\r') && ch != _C('\n')) break;
       i++;
     }
 
@@ -622,7 +622,7 @@ UI_CSSSELECTOR* UI_CSSPARSER::ParseCompoundSelector(XSTRING& text, int start, in
   while(j > i)
     {
       XCHAR ch = token[j - 1];
-      if(ch != __C(' ') && ch != __C('\t') && ch != __C('\r') && ch != __C('\n')) break;
+      if(ch != _C(' ') && ch != _C('\t') && ch != _C('\r') && ch != _C('\n')) break;
       j--;
     }
 
@@ -632,7 +632,7 @@ UI_CSSSELECTOR* UI_CSSPARSER::ParseCompoundSelector(XSTRING& text, int start, in
   if(!sel) return NULL;
 
   // Universal selector "*": no restrictions at all.
-  if((j - i) == 1 && token[i] == __C('*'))
+  if((j - i) == 1 && token[i] == _C('*'))
     {
       sel->RecomputeSpecificity();
       return sel;
@@ -660,7 +660,7 @@ UI_CSSSELECTOR* UI_CSSPARSER::ParseCompoundSelector(XSTRING& text, int start, in
   while(tpos < tsize)
     {
       XCHAR marker = trimmed[tpos];
-      if(marker != __C('#') && marker != __C('.') && marker != __C(':'))
+      if(marker != _C('#') && marker != _C('.') && marker != _C(':'))
         {
           // Unknown character in selector: bail out but keep whatever we already parsed.
           break;
@@ -671,13 +671,13 @@ UI_CSSSELECTOR* UI_CSSPARSER::ParseCompoundSelector(XSTRING& text, int start, in
       XSTRING frag;
       if(ReadIdentifier(trimmed, tpos, frag))
         {
-          if(marker == __C('#'))
+          if(marker == _C('#'))
             {
               // If two ids are supplied on the same compound selector, the last one wins: no meaningful
               // semantics for two ids, and this matches how most CSS engines silently handle it.
               sel->GetID().Set(frag);
             }
-           else if(marker == __C('.'))
+           else if(marker == _C('.'))
             {
               sel->AddClass(frag.Get());
             }
@@ -732,10 +732,10 @@ UI_CSSSELECTOR* UI_CSSPARSER::ParseCompoundSelectorSequence(XSTRING& text, int s
   while(pos < end)
     {
       // Skip whitespace between compounds.
-      while(pos < end && (text[pos]==__C(' ')||text[pos]==__C('\t')||text[pos]==__C('\r')||text[pos]==__C('\n'))) pos++;
+      while(pos < end && (text[pos]==_C(' ')||text[pos]==_C('\t')||text[pos]==_C('\r')||text[pos]==_C('\n'))) pos++;
       if(pos >= end) break;
 
-      if(text[pos] == __C('>'))
+      if(text[pos] == _C('>'))
         {
           // A '>' with no compound before it in this range (leading '>', or two combinators in a row): bail
           // out of splitting and keep whatever spans were already found -- same "unknown syntax: keep what we
@@ -749,15 +749,15 @@ UI_CSSSELECTOR* UI_CSSPARSER::ParseCompoundSelectorSequence(XSTRING& text, int s
         {
           XCHAR ch = text[pos];
 
-          if(ch == __C('"') || ch == __C('\''))
+          if(ch == _C('"') || ch == _C('\''))
             {
               SkipStringLiteral(text, pos);
               if(pos > end) pos = end;
               continue;
             }
 
-          if(ch == __C('>')) break;
-          if(ch == __C(' ') || ch == __C('\t') || ch == __C('\r') || ch == __C('\n')) break;
+          if(ch == _C('>')) break;
+          if(ch == _C(' ') || ch == _C('\t') || ch == _C('\r') || ch == _C('\n')) break;
 
           pos++;
         }
@@ -770,15 +770,15 @@ UI_CSSSELECTOR* UI_CSSPARSER::ParseCompoundSelectorSequence(XSTRING& text, int s
 
       // Decide the combinator between THIS span and whatever comes next (meaningful only if another span
       // follows; harmless/never read otherwise).
-      while(pos < end && (text[pos]==__C(' ')||text[pos]==__C('\t')||text[pos]==__C('\r')||text[pos]==__C('\n'))) pos++;
+      while(pos < end && (text[pos]==_C(' ')||text[pos]==_C('\t')||text[pos]==_C('\r')||text[pos]==_C('\n'))) pos++;
 
       UI_CSSCOMBINATORTYPE combinator = UI_CSSCOMBINATOR_DESCENDANT;
 
-      if(pos < end && text[pos] == __C('>'))
+      if(pos < end && text[pos] == _C('>'))
         {
           combinator = UI_CSSCOMBINATOR_CHILD;
           pos++;
-          while(pos < end && (text[pos]==__C(' ')||text[pos]==__C('\t')||text[pos]==__C('\r')||text[pos]==__C('\n'))) pos++;
+          while(pos < end && (text[pos]==_C(' ')||text[pos]==_C('\t')||text[pos]==_C('\r')||text[pos]==_C('\n'))) pos++;
         }
 
       combinatorafter.Add(combinator);
@@ -834,7 +834,7 @@ bool UI_CSSPARSER::ReadDeclarationBlock(XSTRING& text, int& pos, UI_STYLE& decls
 {
   int len = (int)text.GetSize();
 
-  if(pos >= len || text[pos] != __C('{')) return false;
+  if(pos >= len || text[pos] != _C('{')) return false;
   pos++;
 
   while(pos < len)
@@ -842,7 +842,7 @@ bool UI_CSSPARSER::ReadDeclarationBlock(XSTRING& text, int& pos, UI_STYLE& decls
       SkipWhitespaceAndComments(text, pos);
       if(pos >= len) return false;
 
-      if(text[pos] == __C('}'))
+      if(text[pos] == _C('}'))
         {
           pos++;
           return true;
@@ -857,33 +857,33 @@ bool UI_CSSPARSER::ReadDeclarationBlock(XSTRING& text, int& pos, UI_STYLE& decls
         {
           XCHAR ch = text[pos];
 
-          if(ch == __C('"') || ch == __C('\''))
+          if(ch == _C('"') || ch == _C('\''))
             {
               SkipStringLiteral(text, pos);
               continue;
             }
 
-          if(ch == __C(':') || ch == __C(';') || ch == __C('}')) break;
+          if(ch == _C(':') || ch == _C(';') || ch == _C('}')) break;
           pos++;
         }
 
-      if(pos >= len || text[pos] != __C(':'))
+      if(pos >= len || text[pos] != _C(':'))
         {
           // Malformed declaration: skip to next ';' or '}' and try to keep parsing this block. Step 11: trace
           // it -- this is the one discard SkipToNextRule() never sees, since the enclosing rule is otherwise
           // fine and keeps being parsed. Phase 2: real (line, column), not a flat offset -- see ResolveLineColumn().
           int line, col;
           ResolveLineColumn(text, keystart, line, col);
-          XTRACE_PRINTCOLOR(XTRACE_COLOR_WARNING, __L("[CSS Parse] declaration discarded at line %d, column %d: no ':' found before ';'/'}'"), line, col);
+          XTRACE_PRINTCOLOR(XTRACE_COLOR_WARNING, _L("[CSS Parse] declaration discarded at line %d, column %d: no ':' found before ';'/'}'"), line, col);
 
-          while(pos < len && text[pos] != __C(';') && text[pos] != __C('}')) pos++;
-          if(pos < len && text[pos] == __C(';')) pos++;
+          while(pos < len && text[pos] != _C(';') && text[pos] != _C('}')) pos++;
+          if(pos < len && text[pos] == _C(';')) pos++;
           continue;
         }
 
       XSTRING key;
       text.Copy(keystart, pos, key);
-      key.DeleteNoCharacters(__L(" \t\r\n"));  // trim in-place
+      key.DeleteNoCharacters(_L(" \t\r\n"));  // trim in-place
 
       pos++;  // past ':'
 
@@ -899,13 +899,13 @@ bool UI_CSSPARSER::ReadDeclarationBlock(XSTRING& text, int& pos, UI_STYLE& decls
         {
           XCHAR ch = text[pos];
 
-          if(ch == __C('"') || ch == __C('\''))
+          if(ch == _C('"') || ch == _C('\''))
             {
               SkipStringLiteral(text, pos);
               continue;
             }
 
-          if(ch == __C(';') || ch == __C('}')) break;
+          if(ch == _C(';') || ch == _C('}')) break;
           pos++;
         }
 
@@ -916,7 +916,7 @@ bool UI_CSSPARSER::ReadDeclarationBlock(XSTRING& text, int& pos, UI_STYLE& decls
       while(valend > valstart)
         {
           XCHAR ch = text[valend - 1];
-          if(ch != __C(' ') && ch != __C('\t') && ch != __C('\r') && ch != __C('\n')) break;
+          if(ch != _C(' ') && ch != _C('\t') && ch != _C('\r') && ch != _C('\n')) break;
           valend--;
         }
 
@@ -927,7 +927,7 @@ bool UI_CSSPARSER::ReadDeclarationBlock(XSTRING& text, int& pos, UI_STYLE& decls
           decls.Set(key.Get(), value);
         }
 
-      if(pos < len && text[pos] == __C(';')) pos++;
+      if(pos < len && text[pos] == _C(';')) pos++;
     }
 
   return false;
@@ -958,13 +958,13 @@ void UI_CSSPARSER::SkipToNextRule(XSTRING& text, int& pos)
     {
       XCHAR ch = text[pos];
 
-      if(ch == __C('"') || ch == __C('\''))
+      if(ch == _C('"') || ch == _C('\''))
         {
           SkipStringLiteral(text, pos);
           continue;
         }
 
-      if(ch == __C('{'))
+      if(ch == _C('{'))
         {
           depth++;
           seen_brace = true;
@@ -972,7 +972,7 @@ void UI_CSSPARSER::SkipToNextRule(XSTRING& text, int& pos)
           continue;
         }
 
-      if(ch == __C('}'))
+      if(ch == _C('}'))
         {
           pos++;
           if(!seen_brace) return;
@@ -981,7 +981,7 @@ void UI_CSSPARSER::SkipToNextRule(XSTRING& text, int& pos)
           continue;
         }
 
-      if(!seen_brace && ch == __C(';'))
+      if(!seen_brace && ch == _C(';'))
         {
           pos++;
           return;
@@ -1015,23 +1015,23 @@ bool UI_CSSPARSER::ParseOneRuleOrAtRule(XSTRING& text, int& pos, UI_STYLESHEET& 
   if(pos >= len) return true;
 
   // Nested @media body ends at the closing '}' of the outer block -- caller stops when it sees that.
-  if(media_min_w && text[pos] == __C('}')) return true;
+  if(media_min_w && text[pos] == _C('}')) return true;
 
-  if(text[pos] == __C('@'))
+  if(text[pos] == _C('@'))
     {
       int     atrulestart = pos;
       int     kwend       = pos + 7; if(kwend > len) kwend = len;
       XSTRING atkeyword;
       text.Copy(pos, kwend, atkeyword);
 
-      if(!atkeyword.Compare(__L("@import"), true))
+      if(!atkeyword.Compare(_L("@import"), true))
         {
           if(media_min_w)
             {
               // @import inside @media is outside GEN's subset -- skip the statement.
               int line, col;
               ResolveLineColumn(text, atrulestart, line, col);
-              XTRACE_PRINTCOLOR(XTRACE_COLOR_WARNING, __L("[CSS Parse] @import inside @media ignored (line %d, column %d)"), line, col);
+              XTRACE_PRINTCOLOR(XTRACE_COLOR_WARNING, _L("[CSS Parse] @import inside @media ignored (line %d, column %d)"), line, col);
               pos += 7;
               SkipToNextRule(text, pos);
               return true;
@@ -1047,7 +1047,7 @@ bool UI_CSSPARSER::ParseOneRuleOrAtRule(XSTRING& text, int& pos, UI_STYLESHEET& 
             {
               int line, col;
               ResolveLineColumn(text, atrulestart, line, col);
-              XTRACE_PRINTCOLOR(XTRACE_COLOR_WARNING, __L("[CSS Parse] malformed @import discarded (line %d, column %d)"), line, col);
+              XTRACE_PRINTCOLOR(XTRACE_COLOR_WARNING, _L("[CSS Parse] malformed @import discarded (line %d, column %d)"), line, col);
               SkipToNextRule(text, pos);
             }
           return true;
@@ -1056,13 +1056,13 @@ bool UI_CSSPARSER::ParseOneRuleOrAtRule(XSTRING& text, int& pos, UI_STYLESHEET& 
       // "@media" is 6 chars -- compare by copying enough chars
       kwend = pos + 6; if(kwend > len) kwend = len;
       text.Copy(pos, kwend, atkeyword);
-      if(!atkeyword.Compare(__L("@media"), true))
+      if(!atkeyword.Compare(_L("@media"), true))
         {
           if(media_min_w)
             {
               int line, col;
               ResolveLineColumn(text, atrulestart, line, col);
-              XTRACE_PRINTCOLOR(XTRACE_COLOR_WARNING, __L("[CSS Parse] nested @media ignored (line %d, column %d)"), line, col);
+              XTRACE_PRINTCOLOR(XTRACE_COLOR_WARNING, _L("[CSS Parse] nested @media ignored (line %d, column %d)"), line, col);
               SkipToNextRule(text, pos);
               return true;
             }
@@ -1075,7 +1075,7 @@ bool UI_CSSPARSER::ParseOneRuleOrAtRule(XSTRING& text, int& pos, UI_STYLESHEET& 
             {
               int line, col;
               ResolveLineColumn(text, atrulestart, line, col);
-              XTRACE_PRINTCOLOR(XTRACE_COLOR_WARNING, __L("[CSS Parse] malformed @media discarded (line %d, column %d)"), line, col);
+              XTRACE_PRINTCOLOR(XTRACE_COLOR_WARNING, _L("[CSS Parse] malformed @media discarded (line %d, column %d)"), line, col);
               SkipToNextRule(text, pos);
               return true;
             }
@@ -1085,7 +1085,7 @@ bool UI_CSSPARSER::ParseOneRuleOrAtRule(XSTRING& text, int& pos, UI_STYLESHEET& 
               // Unsupported feature list (e.g. orientation) -- skip block, do not keep rules.
               int line, col;
               ResolveLineColumn(text, atrulestart, line, col);
-              XTRACE_PRINTCOLOR(XTRACE_COLOR_WARNING, __L("[CSS Parse] unsupported @media query ignored (line %d, column %d)"), line, col);
+              XTRACE_PRINTCOLOR(XTRACE_COLOR_WARNING, _L("[CSS Parse] unsupported @media query ignored (line %d, column %d)"), line, col);
               SkipToNextRule(text, pos);
               return true;
             }
@@ -1095,7 +1095,7 @@ bool UI_CSSPARSER::ParseOneRuleOrAtRule(XSTRING& text, int& pos, UI_STYLESHEET& 
 
       int line, col;
       ResolveLineColumn(text, atrulestart, line, col);
-      XTRACE_PRINTCOLOR(XTRACE_COLOR_WARNING, __L("[CSS Parse] unsupported at-rule ignored (line %d, column %d)"), line, col);
+      XTRACE_PRINTCOLOR(XTRACE_COLOR_WARNING, _L("[CSS Parse] unsupported at-rule ignored (line %d, column %d)"), line, col);
       SkipToNextRule(text, pos);
       return true;
     }
@@ -1111,10 +1111,10 @@ bool UI_CSSPARSER::ParseOneRuleOrAtRule(XSTRING& text, int& pos, UI_STYLESHEET& 
       int startline, startcol, endline, endcol;
       ResolveLineColumn(text, rulestartcolumn, startline, startcol);
       ResolveLineColumn(text, pos, endline, endcol);
-      XTRACE_PRINTCOLOR(XTRACE_COLOR_WARNING, __L("[CSS Parse] rule #%d discarded: malformed selector or declaration block (started at line %d, column %d; gave up at line %d, column %d)"), ruleindex, startline, startcol, endline, endcol);
+      XTRACE_PRINTCOLOR(XTRACE_COLOR_WARNING, _L("[CSS Parse] rule #%d discarded: malformed selector or declaration block (started at line %d, column %d; gave up at line %d, column %d)"), ruleindex, startline, startcol, endline, endcol);
       if(!currentfilepath.IsEmpty())
         {
-          XTRACE_PRINTCOLOR(XTRACE_COLOR_WARNING, __L("[CSS Parse] file [%s] rule #%d discarded (lines %d:%d .. %d:%d)"), currentfilepath.Get(), ruleindex, startline, startcol, endline, endcol);
+          XTRACE_PRINTCOLOR(XTRACE_COLOR_WARNING, _L("[CSS Parse] file [%s] rule #%d discarded (lines %d:%d .. %d:%d)"), currentfilepath.Get(), ruleindex, startline, startcol, endline, endcol);
         }
 
       discarded_rules++;
@@ -1127,10 +1127,10 @@ bool UI_CSSPARSER::ParseOneRuleOrAtRule(XSTRING& text, int& pos, UI_STYLESHEET& 
     {
       int line, col;
       ResolveLineColumn(text, rulestartcolumn, line, col);
-      XTRACE_PRINTCOLOR(XTRACE_COLOR_WARNING, __L("[CSS Parse] rule #%d dropped: parsed with %d selector(s) and %d declaration(s) (started at line %d, column %d)"), ruleindex, (int)rule->GetSelectors().GetSize(), (int)rule->GetDeclarations().GetProperties()->GetSize(), line, col);
+      XTRACE_PRINTCOLOR(XTRACE_COLOR_WARNING, _L("[CSS Parse] rule #%d dropped: parsed with %d selector(s) and %d declaration(s) (started at line %d, column %d)"), ruleindex, (int)rule->GetSelectors().GetSize(), (int)rule->GetDeclarations().GetProperties()->GetSize(), line, col);
       if(!currentfilepath.IsEmpty())
         {
-          XTRACE_PRINTCOLOR(XTRACE_COLOR_WARNING, __L("[CSS Parse] file [%s] rule #%d empty after parse (line %d, column %d)"), currentfilepath.Get(), ruleindex, line, col);
+          XTRACE_PRINTCOLOR(XTRACE_COLOR_WARNING, _L("[CSS Parse] file [%s] rule #%d empty after parse (line %d, column %d)"), currentfilepath.Get(), ruleindex, line, col);
         }
 
       discarded_rules++;
@@ -1204,7 +1204,7 @@ bool UI_CSSPARSER::ReadMediaCondition(XSTRING& text, int& pos, int& out_min_w, i
       SkipWhitespaceAndComments(text, pos);
       if(pos >= len) return false;
 
-      if(text[pos] == __C('{')) break;
+      if(text[pos] == _C('{')) break;
 
       // optional "and" between features
       if(saw_feature)
@@ -1213,10 +1213,10 @@ bool UI_CSSPARSER::ReadMediaCondition(XSTRING& text, int& pos, int& out_min_w, i
             {
               XSTRING andkw;
               text.Copy(pos, pos + 3, andkw);
-              if(!andkw.Compare(__L("and"), true))
+              if(!andkw.Compare(_L("and"), true))
                 {
                   // ensure word boundary
-                  if(pos + 3 >= len || text[pos + 3] == __C(' ') || text[pos + 3] == __C('\t') || text[pos + 3] == __C('\n') || text[pos + 3] == __C('\r') || text[pos + 3] == __C('('))
+                  if(pos + 3 >= len || text[pos + 3] == _C(' ') || text[pos + 3] == _C('\t') || text[pos + 3] == _C('\n') || text[pos + 3] == _C('\r') || text[pos + 3] == _C('('))
                     {
                       pos += 3;
                       SkipWhitespaceAndComments(text, pos);
@@ -1225,7 +1225,7 @@ bool UI_CSSPARSER::ReadMediaCondition(XSTRING& text, int& pos, int& out_min_w, i
             }
         }
 
-      if(pos >= len || text[pos] != __C('(')) return false;
+      if(pos >= len || text[pos] != _C('(')) return false;
       pos++;   // '('
 
       SkipWhitespaceAndComments(text, pos);
@@ -1233,13 +1233,13 @@ bool UI_CSSPARSER::ReadMediaCondition(XSTRING& text, int& pos, int& out_min_w, i
       if(!ReadIdentifier(text, pos, feature)) return false;
 
       SkipWhitespaceAndComments(text, pos);
-      if(pos >= len || text[pos] != __C(':')) return false;
+      if(pos >= len || text[pos] != _C(':')) return false;
       pos++;
 
       SkipWhitespaceAndComments(text, pos);
       // read number [px]
       int numstart = pos;
-      while(pos < len && ((text[pos] >= __C('0') && text[pos] <= __C('9')) || text[pos] == __C('.'))) pos++;
+      while(pos < len && ((text[pos] >= _C('0') && text[pos] <= _C('9')) || text[pos] == _C('.'))) pos++;
       if(pos == numstart) return false;
 
       XSTRING numstr;
@@ -1251,19 +1251,19 @@ bool UI_CSSPARSER::ReadMediaCondition(XSTRING& text, int& pos, int& out_min_w, i
         {
           XSTRING unit;
           text.Copy(pos, pos + 2, unit);
-          if(!unit.Compare(__L("px"), true)) pos += 2;
+          if(!unit.Compare(_L("px"), true)) pos += 2;
         }
 
       SkipWhitespaceAndComments(text, pos);
-      if(pos >= len || text[pos] != __C(')')) return false;
+      if(pos >= len || text[pos] != _C(')')) return false;
       pos++;
 
-      if(!feature.Compare(__L("min-width"), true))
+      if(!feature.Compare(_L("min-width"), true))
         {
           out_min_w = value;
           saw_feature = true;
         }
-       else if(!feature.Compare(__L("max-width"), true))
+       else if(!feature.Compare(_L("max-width"), true))
         {
           out_max_w = value;
           saw_feature = true;
@@ -1301,7 +1301,7 @@ bool UI_CSSPARSER::ParseMediaBlock(XSTRING& text, int& pos, UI_STYLESHEET& out, 
 {
   int len = (int)text.GetSize();
   SkipWhitespaceAndComments(text, pos);
-  if(pos >= len || text[pos] != __C('{')) return false;
+  if(pos >= len || text[pos] != _C('{')) return false;
   pos++;   // '{'
 
   int ruleindex  = 0;
@@ -1311,7 +1311,7 @@ bool UI_CSSPARSER::ParseMediaBlock(XSTRING& text, int& pos, UI_STYLESHEET& out, 
     {
       SkipWhitespaceAndComments(text, pos);
       if(pos >= len) break;
-      if(text[pos] == __C('}'))
+      if(text[pos] == _C('}'))
         {
           pos++;
           return true;
@@ -1360,12 +1360,12 @@ bool UI_CSSPARSER::ReadImportStatement(XSTRING& text, int& pos, XSTRING& outurl)
     {
       XSTRING maybeurl;
       text.Copy(pos, pos + 3, maybeurl);
-      if(!maybeurl.Compare(__L("url"), true))
+      if(!maybeurl.Compare(_L("url"), true))
         {
           sawurlwrapper = true;
           pos += 3;
           SkipWhitespaceAndComments(text, pos);
-          if(pos < len && text[pos] == __C('(')) pos++;
+          if(pos < len && text[pos] == _C('(')) pos++;
           SkipWhitespaceAndComments(text, pos);
         }
     }
@@ -1374,7 +1374,7 @@ bool UI_CSSPARSER::ReadImportStatement(XSTRING& text, int& pos, XSTRING& outurl)
 
   XCHAR quote = text[pos];
 
-  if(quote == __C('"') || quote == __C('\''))
+  if(quote == _C('"') || quote == _C('\''))
     {
       // Phase 2: reuse the shared string-literal reader instead of a duplicate ad hoc quote scan -- this also
       // gives the @import URL escape support ("\"") for free, consistent with every other quoted/identifier
@@ -1385,20 +1385,20 @@ bool UI_CSSPARSER::ReadImportStatement(XSTRING& text, int& pos, XSTRING& outurl)
     {
       // Bare token, only meaningful inside "url(...)" -- e.g. url(theme.css). Read up to ')' or ';'.
       int start = pos;
-      while(pos < len && text[pos] != __C(')') && text[pos] != __C(';')) pos++;
+      while(pos < len && text[pos] != _C(')') && text[pos] != _C(';')) pos++;
       text.Copy(start, pos, outurl);
-      outurl.DeleteNoCharacters(__L(" \t\r\n"));
+      outurl.DeleteNoCharacters(_L(" \t\r\n"));
     }
 
   SkipWhitespaceAndComments(text, pos);
-  if(sawurlwrapper && pos < len && text[pos] == __C(')'))
+  if(sawurlwrapper && pos < len && text[pos] == _C(')'))
     {
       pos++;
       SkipWhitespaceAndComments(text, pos);
     }
 
-  while(pos < len && text[pos] != __C(';')) pos++;
-  if(pos < len && text[pos] == __C(';')) pos++;
+  while(pos < len && text[pos] != _C(';')) pos++;
+  if(pos < len && text[pos] == _C(';')) pos++;
 
   return !outurl.IsEmpty();
 }
@@ -1429,7 +1429,7 @@ bool UI_CSSPARSER::ResolveAndParseImport(XSTRING& importurl, UI_STYLESHEET& out)
 
   if(currentfiledir.IsEmpty())
     {
-      XTRACE_PRINTCOLOR(XTRACE_COLOR_WARNING, __L("[CSS Parse] @import [%s] ignored: no file context (stylesheet text was parsed directly, not loaded from a file)"), importurl.Get());
+      XTRACE_PRINTCOLOR(XTRACE_COLOR_WARNING, _L("[CSS Parse] @import [%s] ignored: no file context (stylesheet text was parsed directly, not loaded from a file)"), importurl.Get());
       return false;
     }
 
@@ -1444,9 +1444,9 @@ bool UI_CSSPARSER::ResolveAndParseImport(XSTRING& importurl, UI_STYLESHEET& out)
   importdepth--;
 
   if(status)
-    XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, __L("[CSS Parse] @import [%s] merged"), importpath.Get());
+    XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, _L("[CSS Parse] @import [%s] merged"), importpath.Get());
    else
-    XTRACE_PRINTCOLOR(XTRACE_COLOR_WARNING, __L("[CSS Parse] @import [%s] not applied (missing, empty, or cyclic)"), importpath.Get());
+    XTRACE_PRINTCOLOR(XTRACE_COLOR_WARNING, _L("[CSS Parse] @import [%s] not applied (missing, empty, or cyclic)"), importpath.Get());
 
   return status;
 }

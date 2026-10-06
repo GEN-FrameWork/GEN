@@ -197,7 +197,7 @@ DIOSTM32STREAMI2C::DIOSTM32STREAMI2C() : DIOSTREAMI2C()
             DIOSTREAMI2C_FSMEVENT_WAITINGTOREAD   , DIOSTREAMI2C_FSMSTATE_WAITINGTOREAD    ,
             XFSMACHINESTATE_EVENTDEFEND);
 
-  threadconnection = CREATEXTHREAD(XTHREADGROUPID_DIOSTREAMI2C, __L("DIOSTM32STREAMI2C::DIOSTM32STREAMI2C"), ThreadConnection, (void*)this);
+  threadconnection = CREATEXTHREAD(XTHREADGROUPID_DIOSTREAMI2C, _L("DIOSTM32STREAMI2C::DIOSTM32STREAMI2C"), ThreadConnection, (void*)this);
 }
 
 
@@ -664,7 +664,7 @@ void HAL_I2C_SlaveRxCpltCallback(I2C_HandleTypeDef* hi2c)
 * --------------------------------------------------------------------------------------------------------------------*/
 void HAL_I2C_ErrorCallback(I2C_HandleTypeDef *hi2c)
 {
-  XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, __L("I2C comunication error  %d"), hi2c->ErrorCode);
+  XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, _L("I2C comunication error  %d"), hi2c->ErrorCode);
 }
 
 

@@ -99,7 +99,7 @@ bool DIONODEMANAGER::Ini()
   xmutexnodes=GEN_XFACTORY.Create_Mutex();
   if(!xmutexnodes) return false;
   
-  xthreadnodes = CREATEXTHREAD(XTHREADGROUPID_SCHEDULER, __L("DIONODEMANAGER::Ini"), ThreadNodes, (void*)this);
+  xthreadnodes = CREATEXTHREAD(XTHREADGROUPID_SCHEDULER, _L("DIONODEMANAGER::Ini"), ThreadNodes, (void*)this);
   if(!xthreadnodes) return false;
 
   return xthreadnodes->Ini();

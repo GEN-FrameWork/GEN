@@ -66,7 +66,7 @@ UI_ELEMENT_LISTBOX::UI_ELEMENT_LISTBOX()
   Clean();   
 
   SetType(UI_ELEMENT_TYPE_LISTBOX);
-  GetTypeString()->Set(__L("listbox"));  
+  GetTypeString()->Set(_L("listbox"));  
 }
 
 

@@ -554,13 +554,13 @@ const XINTERPOLATOR XINTERPOLATOR::operator = (XINTERPOLATOR& interpolator)
 * --------------------------------------------------------------------------------------------------------------------*/
 void XINTERPOLATOR::SetTarget(XDWORD target)
 {
-  //XTRACE_PRINTCOLOR(3,__L("XINTERPOLATOR::SetTarget(%d)"),target);
+  //XTRACE_PRINTCOLOR(3,_L("XINTERPOLATOR::SetTarget(%d)"),target);
 
   if(limits & XINTERPOLATOR_LIMITS_MAXIMUN)
     {
       if(target>max)
         {
-          //XTRACE_PRINTCOLOR(4,__L("Assigned over maximun: %d/%d"),target,max);
+          //XTRACE_PRINTCOLOR(4,_L("Assigned over maximun: %d/%d"),target,max);
 
           this->target  = max;
 
@@ -572,7 +572,7 @@ void XINTERPOLATOR::SetTarget(XDWORD target)
     {
       if(target < min)
         {
-          //XTRACE_PRINTCOLOR(4,__L("Assigned under minimun: %d/%d"),target,max);
+          //XTRACE_PRINTCOLOR(4,_L("Assigned under minimun: %d/%d"),target,max);
 
           this->target = min;
 

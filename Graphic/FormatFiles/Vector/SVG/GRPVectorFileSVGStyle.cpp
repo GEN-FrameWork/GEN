@@ -112,17 +112,17 @@ bool GRPVECTORFILESVGSTYLE::ApplyData(XFILEXMLELEMENT* element, GRPVECTORFILESVG
   // every element, at its correct (lowest) specificity -- every step below can still override it per element.
   if(stylesheet)
     {
-      XSTRING* universal = stylesheet->Get(__L("*"));
+      XSTRING* universal = stylesheet->Get(_L("*"));
       if(universal) ParseStyleAttribute(*universal);
     }
 
-  static XCHAR* presentationattrs[] = { __L("fill")          ,
-                                        __L("stroke")        ,
-                                        __L("stroke-width")  ,
-                                        __L("opacity")       ,
-                                        __L("fill-opacity")  ,
-                                        __L("stroke-opacity"),
-                                        __L("fill-rule")     ,
+  static XCHAR* presentationattrs[] = { _L("fill")          ,
+                                        _L("stroke")        ,
+                                        _L("stroke-width")  ,
+                                        _L("opacity")       ,
+                                        _L("fill-opacity")  ,
+                                        _L("stroke-opacity"),
+                                        _L("fill-rule")     ,
                                         NULL                 };
 
   for(int c=0; presentationattrs[c]; c++)
@@ -142,13 +142,13 @@ bool GRPVECTORFILESVGSTYLE::ApplyData(XFILEXMLELEMENT* element, GRPVECTORFILESVG
   // attribute, same as in a browser.
   if(stylesheet)
     {
-      XCHAR* valueclass = element->GetValueAttribute(__L("class"));
+      XCHAR* valueclass = element->GetValueAttribute(_L("class"));
       if(valueclass)
         {
           XSTRING classnames(valueclass);
 
           XVECTOR<XSTRING*> classlist;
-          classnames.Split(__C(' '), classlist, false);
+          classnames.Split(_C(' '), classlist, false);
 
           for(XDWORD c=0; c<classlist.GetSize(); c++)
             {
@@ -166,7 +166,7 @@ bool GRPVECTORFILESVGSTYLE::ApplyData(XFILEXMLELEMENT* element, GRPVECTORFILESVG
     }
 
   // The inline style attribute overrides the presentation attributes and the class="" CSS rules.
-  XCHAR* style = element->GetValueAttribute(__L("style"));
+  XCHAR* style = element->GetValueAttribute(_L("style"));
   if(style)
     {
       XSTRING strstyle(style);
@@ -365,14 +365,14 @@ void GRPVECTORFILESVGSTYLE::ExtractPaintServerID(XSTRING& value, XSTRING& id)
 {
   id.Empty();
 
-  int open  = value.Find(__L("("), false, 0);
-  int close = value.Find(__L(")"), false, 0);
+  int open  = value.Find(_L("("), false, 0);
+  int close = value.Find(_L(")"), false, 0);
 
   if((open < 0) || (close <= open)) return;
 
   int start = open + 1;
 
-  if(value[start] == __C('#'))  start++;
+  if(value[start] == _C('#'))  start++;
 
   value.Copy(start, close, id);
 }
@@ -480,17 +480,17 @@ bool GRPVECTORFILESVGSTYLE::IsFillRuleSpecified()            { return fillrulesp
 bool GRPVECTORFILESVGSTYLE::ApplyProperty(XSTRING& name, XSTRING& value)
 {
   XSTRING propname(name);
-  propname.DeleteCharacter(__C(' '));
+  propname.DeleteCharacter(_C(' '));
   propname.ToLowerCase();
 
   XSTRING propvalue(value);
-  propvalue.DeleteCharacter(__C(' '));
+  propvalue.DeleteCharacter(_C(' '));
 
   if(propvalue.IsEmpty()) return false;
 
-  if(!propname.Compare(__L("fill"), true))
+  if(!propname.Compare(_L("fill"), true))
     {
-      if(propvalue.Find(__L("url("), true, 0) == 0)
+      if(propvalue.Find(_L("url("), true, 0) == 0)
         {
           ExtractPaintServerID(propvalue, fillpaintid);
           fillispaintserver = true;
@@ -508,9 +508,9 @@ bool GRPVECTORFILESVGSTYLE::ApplyProperty(XSTRING& name, XSTRING& value)
             }
         }
     }
-   else if(!propname.Compare(__L("stroke"), true))
+   else if(!propname.Compare(_L("stroke"), true))
     {
-      if(propvalue.Find(__L("url("), true, 0) == 0)
+      if(propvalue.Find(_L("url("), true, 0) == 0)
         {
           ExtractPaintServerID(propvalue, strokepaintid);
           strokeispaintserver = true;
@@ -528,26 +528,26 @@ bool GRPVECTORFILESVGSTYLE::ApplyProperty(XSTRING& name, XSTRING& value)
             }
         }
     }
-   else if(!propname.Compare(__L("stroke-width"), true))
+   else if(!propname.Compare(_L("stroke-width"), true))
     {
       strokewidth          = propvalue.ConvertToDouble(0, NULL, false);
       strokewidthspecified = true;
     }
-   else if(!propname.Compare(__L("opacity"), true))
+   else if(!propname.Compare(_L("opacity"), true))
     {
       opacity = propvalue.ConvertToDouble(0, NULL, false);
     }
-   else if(!propname.Compare(__L("fill-opacity"), true))
+   else if(!propname.Compare(_L("fill-opacity"), true))
     {
       fillopacity = propvalue.ConvertToDouble(0, NULL, false);
     }
-   else if(!propname.Compare(__L("stroke-opacity"), true))
+   else if(!propname.Compare(_L("stroke-opacity"), true))
     {
       strokeopacity = propvalue.ConvertToDouble(0, NULL, false);
     }
-   else if(!propname.Compare(__L("fill-rule"), true))
+   else if(!propname.Compare(_L("fill-rule"), true))
     {
-      if(!propvalue.Compare(__L("evenodd"), true))  fillrule = GRP2DPATHFILLRULE_EVENODD;
+      if(!propvalue.Compare(_L("evenodd"), true))  fillrule = GRP2DPATHFILLRULE_EVENODD;
        else                                         fillrule = GRP2DPATHFILLRULE_NONZERO;
 
       fillrulespecified = true;
@@ -576,14 +576,14 @@ bool GRPVECTORFILESVGSTYLE::ApplyProperty(XSTRING& name, XSTRING& value)
 bool GRPVECTORFILESVGSTYLE::ParseStyleAttribute(XSTRING& style)
 {
   XVECTOR<XSTRING*> declarations;
-  style.Split(__C(';'), declarations, false);
+  style.Split(_C(';'), declarations, false);
 
   for(XDWORD c=0; c<declarations.GetSize(); c++)
     {
       XSTRING* declaration = declarations.Get(c);
       if(declaration && !declaration->IsEmpty())
         {
-          int colon = declaration->Find(__L(":"), false, 0);
+          int colon = declaration->Find(_L(":"), false, 0);
           if(colon > 0)
             {
               XSTRING name;
@@ -623,17 +623,17 @@ bool GRPVECTORFILESVGSTYLE::ParseColor(XSTRING& value, GRP2DCOLOR_RGBA8& color, 
   isnone = false;
 
   XSTRING str(value);
-  str.DeleteCharacter(__C(' '));
+  str.DeleteCharacter(_C(' '));
 
   if(str.IsEmpty()) return false;
 
-  if(!str.Compare(__L("none"), true))
+  if(!str.Compare(_L("none"), true))
     {
       isnone = true;
       return true;
     }
 
-  if(str[0] == __C('#'))
+  if(str[0] == _C('#'))
     {
       int len = (int)str.GetSize() - 1;
 
@@ -659,19 +659,19 @@ bool GRPVECTORFILESVGSTYLE::ParseColor(XSTRING& value, GRP2DCOLOR_RGBA8& color, 
       return false;
     }
 
-  if(str.Find(__L("rgb("), true, 0) == 0)
+  if(str.Find(_L("rgb("), true, 0) == 0)
     {
-      int open  = str.Find(__L("("), false, 0);
-      int close = str.Find(__L(")"), false, 0);
+      int open  = str.Find(_L("("), false, 0);
+      int close = str.Find(_L(")"), false, 0);
 
       if((open >= 0) && (close > open))
         {
           XSTRING inside;
           str.Copy(open+1, close, inside);
-          inside.Replace(__L(","), __L(" "));
+          inside.Replace(_L(","), _L(" "));
 
           XVECTOR<XSTRING*> tokens;
-          inside.Split(__C(' '), tokens, false);
+          inside.Split(_C(' '), tokens, false);
 
           int comp[3] = { 0, 0, 0 };
           int n       = 0;
@@ -702,26 +702,26 @@ bool GRPVECTORFILESVGSTYLE::ParseColor(XSTRING& value, GRP2DCOLOR_RGBA8& color, 
   // Basic named colors.
   struct GRPVECTORFILESVGNAMEDCOLOR { XCHAR* name;  int r;  int g;  int b; };
 
-  static GRPVECTORFILESVGNAMEDCOLOR namedcolors[] = { { __L("black")  ,   0,   0,   0 },
-                                                      { __L("white")  , 255, 255, 255 },
-                                                      { __L("red")    , 255,   0,   0 },
-                                                      { __L("green")  ,   0, 128,   0 },
-                                                      { __L("blue")   ,   0,   0, 255 },
-                                                      { __L("yellow") , 255, 255,   0 },
-                                                      { __L("cyan")   ,   0, 255, 255 },
-                                                      { __L("aqua")   ,   0, 255, 255 },
-                                                      { __L("magenta"), 255,   0, 255 },
-                                                      { __L("fuchsia"), 255,   0, 255 },
-                                                      { __L("gray")   , 128, 128, 128 },
-                                                      { __L("grey")   , 128, 128, 128 },
-                                                      { __L("silver") , 192, 192, 192 },
-                                                      { __L("maroon") , 128,   0,   0 },
-                                                      { __L("olive")  , 128, 128,   0 },
-                                                      { __L("lime")   ,   0, 255,   0 },
-                                                      { __L("teal")   ,   0, 128, 128 },
-                                                      { __L("navy")   ,   0,   0, 128 },
-                                                      { __L("purple") , 128,   0, 128 },
-                                                      { __L("orange") , 255, 165,   0 },
+  static GRPVECTORFILESVGNAMEDCOLOR namedcolors[] = { { _L("black")  ,   0,   0,   0 },
+                                                      { _L("white")  , 255, 255, 255 },
+                                                      { _L("red")    , 255,   0,   0 },
+                                                      { _L("green")  ,   0, 128,   0 },
+                                                      { _L("blue")   ,   0,   0, 255 },
+                                                      { _L("yellow") , 255, 255,   0 },
+                                                      { _L("cyan")   ,   0, 255, 255 },
+                                                      { _L("aqua")   ,   0, 255, 255 },
+                                                      { _L("magenta"), 255,   0, 255 },
+                                                      { _L("fuchsia"), 255,   0, 255 },
+                                                      { _L("gray")   , 128, 128, 128 },
+                                                      { _L("grey")   , 128, 128, 128 },
+                                                      { _L("silver") , 192, 192, 192 },
+                                                      { _L("maroon") , 128,   0,   0 },
+                                                      { _L("olive")  , 128, 128,   0 },
+                                                      { _L("lime")   ,   0, 255,   0 },
+                                                      { _L("teal")   ,   0, 128, 128 },
+                                                      { _L("navy")   ,   0,   0, 128 },
+                                                      { _L("purple") , 128,   0, 128 },
+                                                      { _L("orange") , 255, 165,   0 },
                                                       { NULL          ,   0,   0,   0 } };
 
   for(int c=0; namedcolors[c].name; c++)
@@ -751,9 +751,9 @@ bool GRPVECTORFILESVGSTYLE::ParseColor(XSTRING& value, GRP2DCOLOR_RGBA8& color, 
 * --------------------------------------------------------------------------------------------------------------------*/
 int GRPVECTORFILESVGSTYLE::HexValue(XCHAR character)
 {
-  if((character >= __C('0')) && (character <= __C('9')))  return (int)(character - __C('0'));
-  if((character >= __C('a')) && (character <= __C('f')))  return (int)(character - __C('a')) + 10;
-  if((character >= __C('A')) && (character <= __C('F')))  return (int)(character - __C('A')) + 10;
+  if((character >= _C('0')) && (character <= _C('9')))  return (int)(character - _C('0'));
+  if((character >= _C('a')) && (character <= _C('f')))  return (int)(character - _C('a')) + 10;
+  if((character >= _C('A')) && (character <= _C('F')))  return (int)(character - _C('A')) + 10;
 
   return 0;
 }

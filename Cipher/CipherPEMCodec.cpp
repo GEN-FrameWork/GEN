@@ -235,7 +235,7 @@ bool CIPHERPEMCODEC::PrivateKeyBlock_Decode(XVECTOR<XSTRING*>& lines, XSTRING& b
 
       if(!inblock)
         {
-          if((line->Find(__L("-----BEGIN "), true) != XSTRING_NOTFOUND) && (line->Find(__L("PRIVATE KEY-----"), true) != XSTRING_NOTFOUND))
+          if((line->Find(_L("-----BEGIN "), true) != XSTRING_NOTFOUND) && (line->Find(_L("PRIVATE KEY-----"), true) != XSTRING_NOTFOUND))
             {
               blockheader = (*line);
               keybase64.Empty();
@@ -245,7 +245,7 @@ bool CIPHERPEMCODEC::PrivateKeyBlock_Decode(XVECTOR<XSTRING*>& lines, XSTRING& b
           continue;
         }
 
-      if(line->Find(__L("-----END "), true) != XSTRING_NOTFOUND)
+      if(line->Find(_L("-----END "), true) != XSTRING_NOTFOUND)
         {
           if(keybase64.IsEmpty())
             {

@@ -729,7 +729,7 @@ XSTRING::~XSTRING()
 * --------------------------------------------------------------------------------------------------------------------*/
 XCHAR* XSTRING::Get() const
 {
-  if(!text) return __L("");
+  if(!text) return _L("");
 
   return text;
 }
@@ -1902,11 +1902,11 @@ bool XSTRING::DeleteCharacter(XCHAR character, XSTRINGCONTEXT context)
 * --------------------------------------------------------------------------------------------------------------------*/
 bool XSTRING::DeleteNoCharacters(XSTRINGCONTEXT context)
 {
-  bool status = DeleteCharacter(__C('\x09'), context);
+  bool status = DeleteCharacter(_C('\x09'), context);
 
-  if(status) status = DeleteCharacter(__C('\x0A'), context);
-  if(status) status = DeleteCharacter(__C('\x0D'), context);
-  if(status) status = DeleteCharacter(__C('\x20'), context);
+  if(status) status = DeleteCharacter(_C('\x0A'), context);
+  if(status) status = DeleteCharacter(_C('\x0D'), context);
+  if(status) status = DeleteCharacter(_C('\x20'), context);
 
   return status;
 }
@@ -1942,7 +1942,7 @@ int XSTRING::DeleteNoCharacters(XCHAR* n, int start, XSTRINGCONTEXT context)
                                                 XCHAR character = text[n];
                                                 bool  found     = false;
 
-                                                for(XDWORD e=0; needle.Get()[e] != __C('\0'); e++)
+                                                for(XDWORD e=0; needle.Get()[e] != _C('\0'); e++)
                                                   {
                                                     if(character == needle.Get()[e])
                                                       {
@@ -1965,7 +1965,7 @@ int XSTRING::DeleteNoCharacters(XCHAR* n, int start, XSTRINGCONTEXT context)
                                                 XCHAR character = text[n];
                                                 bool found = false;
 
-                                                for(XDWORD e = 0;  needle.Get()[e] != __C('\0'); e++)
+                                                for(XDWORD e = 0;  needle.Get()[e] != _C('\0'); e++)
                                                   {
                                                     if(character == needle.Get()[e])
                                                       {
@@ -1986,7 +1986,7 @@ int XSTRING::DeleteNoCharacters(XCHAR* n, int start, XSTRINGCONTEXT context)
                                                 XCHAR character = text[n];
                                                 bool found = false;
 
-                                                for(XDWORD e=0; needle.Get()[e] != __C('\0'); e++)
+                                                for(XDWORD e=0; needle.Get()[e] != _C('\0'); e++)
                                                   {
                                                     if(character == needle.Get()[e])
                                                       {
@@ -2001,7 +2001,7 @@ int XSTRING::DeleteNoCharacters(XCHAR* n, int start, XSTRINGCONTEXT context)
                                                 a++;
                                               }
 
-                                            text[a] = __C('\0');
+                                            text[a] = _C('\0');
 
                                             this->AdjustSize();
 
@@ -2050,18 +2050,18 @@ bool XSTRING::DeleteLastZeros()
       return false;
     }
 
-  if(FindCharacter(__C('.')) < 0)  
+  if(FindCharacter(_C('.')) < 0)  
     {
       return false;                                // integer: no fractional zeros to trim
     }
 
-  while(Character_GetLast() == __C('0'))
+  while(Character_GetLast() == _C('0'))
     {
       DeleteLastCharacter();
       status = true;
     }
 
-  if(Character_GetLast() == __C('.'))             // drop a dangling decimal point
+  if(Character_GetLast() == _C('.'))             // drop a dangling decimal point
     {
       DeleteLastCharacter();
       status = true;
@@ -2149,18 +2149,18 @@ bool XSTRING::Character_IsLowerCase(XCHAR character)
 * --------------------------------------------------------------------------------------------------------------------*/
 bool XSTRING::Character_IsNumber(XCHAR character, bool isextended)
 {  
-  if((character >= __C('0')) && (character <= '9'))  return true;
+  if((character >= _C('0')) && (character <= '9'))  return true;
 
   if(!isextended)
     {
       return false;
     }
 
-  if(character == __C('.')) return true;
-  if(character == __C(',')) return true;
-  if(character == __C('-')) return true;
-  if(character == __C('E')) return true;
-  if(character == __C('+')) return true;
+  if(character == _C('.')) return true;
+  if(character == _C(',')) return true;
+  if(character == _C('-')) return true;
+  if(character == _C('E')) return true;
+  if(character == _C('+')) return true;
 
   return false;
 }
@@ -2373,7 +2373,7 @@ bool XSTRING::IsDecimalNumber(int* ndecimals)
 
   for(XDWORD c=0;c<size;c++)
     {      
-      if((text[c] == __C('.')) || (text[c] == __C(',')))
+      if((text[c] == _C('.')) || (text[c] == _C(',')))
         {          
           (*ndecimals) = (size - c);
 
@@ -3247,7 +3247,7 @@ bool XSTRING::Insert(XSTRING& str, XDWORD position)
 * --------------------------------------------------------------------------------------------------------------------*/
 bool XSTRING::ConvertFromNULL(bool uppercase)
 {
-  Set(uppercase? __L("NULL") : __L("null"));
+  Set(uppercase? _L("NULL") : _L("null"));
 
   return true;
 }
@@ -3315,7 +3315,7 @@ bool XSTRING::ConvertFromShort(short value, const XCHAR* mask)
 
   memset(str, 0, XSTRING_MAXTEMPOSTR);
 
-  if(mask) _mask = mask; else _mask = __L("%hd");
+  if(mask) _mask = mask; else _mask = _L("%hd");
 
   XBUFFER charstr;
   
@@ -3352,7 +3352,7 @@ bool XSTRING::ConvertFromWord(XWORD value, const XCHAR* mask)
 
   memset(str, 0, XSTRING_MAXTEMPOSTR);
 
-  if(mask) _mask = mask; else _mask = __L("%hu");
+  if(mask) _mask = mask; else _mask = _L("%hu");
 
   XBUFFER charstr;
   
@@ -3389,7 +3389,7 @@ bool XSTRING::ConvertFromInt(int value, const XCHAR* mask)
 
   memset(str, 0, XSTRING_MAXTEMPOSTR);
 
-  if(mask) _mask = mask; else _mask = __L("%d");
+  if(mask) _mask = mask; else _mask = _L("%d");
 
 
   XBUFFER charstr;
@@ -3427,7 +3427,7 @@ bool XSTRING::ConvertFromDWord(XDWORD value, const XCHAR* mask)
 
   memset(str, 0, XSTRING_MAXTEMPOSTR);
 
-  if(mask) _mask = mask; else _mask = __L("%d");
+  if(mask) _mask = mask; else _mask = _L("%d");
 
   XBUFFER charstr;
   
@@ -3464,7 +3464,7 @@ bool XSTRING::ConvertFromLongLong(long long value, const XCHAR* mask)
 
   memset(str, 0, XSTRING_MAXTEMPOSTR);
 
-  if(mask) _mask = mask; else _mask = __L("%lld");
+  if(mask) _mask = mask; else _mask = _L("%lld");
 
   XBUFFER charstr;
   
@@ -3501,7 +3501,7 @@ bool XSTRING::ConvertFromQWord(XQWORD value, const XCHAR* mask)
 
   memset(str, 0, XSTRING_MAXTEMPOSTR);
 
-  if(mask) _mask = mask; else _mask = __L("%llu");
+  if(mask) _mask = mask; else _mask = _L("%llu");
 
   XBUFFER charstr;
   
@@ -3538,7 +3538,7 @@ bool XSTRING::ConvertFromFloat(float value, const XCHAR* mask)
 
   memset(str, 0, XSTRING_MAXTEMPOSTR);
 
-  if(mask) _mask = mask; else _mask = __L("%f");
+  if(mask) _mask = mask; else _mask = _L("%f");
 
   XBUFFER charstr;
   
@@ -3580,7 +3580,7 @@ bool XSTRING::ConvertFromDouble(double value, const XCHAR* mask)
 
   memset(str, 0, XSTRING_MAXTEMPOSTR);
 
-  if(mask) _mask = mask; else _mask = __L("%lf");
+  if(mask) _mask = mask; else _mask = _L("%lf");
   
   XBUFFER charstr;
   
@@ -3624,7 +3624,7 @@ bool XSTRING::ConvertHexFormatChars()
       character[0] = Get()[c];
       character[1] = Get()[c+1];
 
-      if((character[0]==__C('\\')) && (character[1]==__C('x')))
+      if((character[0]==_C('\\')) && (character[1]==_C('x')))
         {
           XSTRING   numberhex;
           XCHAR part[2] = { 0 , 0 };
@@ -3637,7 +3637,7 @@ bool XSTRING::ConvertHexFormatChars()
               numberhex.Add(part);
             }
 
-          numberhex.UnFormat(__L("%02X"), &part[0]);
+          numberhex.UnFormat(_L("%02X"), &part[0]);
 
           part[0]&=0x00FF;
           string.Add(part);
@@ -3675,7 +3675,7 @@ bool XSTRING::ConvertToHexString(XSTRING& string, bool uppercase)
 
   for(int c=0;c<(int)GetSize(); c++)
     {
-      datastr.Format(uppercase?__L("%02X"):__L("%02x"), Get()[c]);
+      datastr.Format(uppercase?_L("%02X"):_L("%02x"), Get()[c]);
       string.Add(datastr);
     }
 
@@ -3709,7 +3709,7 @@ bool XSTRING::ConvertHexStringToBuffer(XBUFFER& xbuffer)
 
       hexbytestr = hexbytechar;
 
-      hexbytestr.UnFormat(__L("%02X"), &data);
+      hexbytestr.UnFormat(_L("%02X"), &data);
       xbuffer.Add((XBYTE)data);
     }
 
@@ -3737,7 +3737,7 @@ bool XSTRING::ConvertHexStringFromBuffer(XBUFFER& xbuffer, bool uppercase)
     {
       XSTRING  hexbytestr;
 
-      hexbytestr.Format(uppercase?__L("%02X"):__L("%02x"), xbuffer.Get()[c]);
+      hexbytestr.Format(uppercase?_L("%02X"):_L("%02x"), xbuffer.Get()[c]);
       Add(hexbytestr);
     }
 
@@ -3767,7 +3767,7 @@ bool XSTRING::ConvertToBoolean()
     {
       if(!Compare(XT_L(XTRANSLATION_GEN_ID_NO)    , true) || 
          !Compare(XT_L(XTRANSLATION_GEN_ID_FALSE) , true) || 
-         !Compare(__L("0")     , true))                   
+         !Compare(_L("0")     , true))                   
         {
           result = false;
         }
@@ -3813,7 +3813,7 @@ int XSTRING::ConvertToInt(int index, const XCHAR* mask, bool checkvalidchars)
 
   if(mask)
          _mask = mask;
-    else _mask = __L("%d");
+    else _mask = _L("%d");
     
     
   XBUFFER charstr;
@@ -3855,7 +3855,7 @@ XDWORD XSTRING::ConvertToDWord(int index, const XCHAR* mask, bool checkvalidchar
   XSTRING  _mask;
   XDWORD   data = 0;
 
-  if(mask) _mask = mask; else _mask = __L("%d");
+  if(mask) _mask = mask; else _mask = _L("%d");
   
   XBUFFER charstr;
   XBUFFER charstr2;
@@ -3896,7 +3896,7 @@ long long XSTRING::ConvertToLongLong(int index, const XCHAR* mask, bool checkval
   XSTRING  _mask;
   long long  data = 0;
 
-  if(mask) _mask = mask; else _mask = __L("%lld");
+  if(mask) _mask = mask; else _mask = _L("%lld");
 
   XBUFFER charstr;
   XBUFFER charstr2;
@@ -3937,7 +3937,7 @@ XQWORD XSTRING::ConvertToQWord(int index, const XCHAR* mask, bool checkvalidchar
   XSTRING  _mask;
   XQWORD   data = 0;
 
-  if(mask) _mask = mask; else _mask = __L("%lld");
+  if(mask) _mask = mask; else _mask = _L("%lld");
 
   XBUFFER charstr;
   XBUFFER charstr2;
@@ -3978,7 +3978,7 @@ float XSTRING::ConvertToFloat(int index, const XCHAR* mask, bool checkvalidchars
   XSTRING  _mask;
   float  data = 0;
 
-  if(mask) _mask = mask; else _mask = __L("%f");
+  if(mask) _mask = mask; else _mask = _L("%f");
 
   XBUFFER charstr;
   XBUFFER charstr2;
@@ -4019,7 +4019,7 @@ double XSTRING::ConvertToDouble(int index, const XCHAR* mask, bool checkvalidcha
   XSTRING  _mask;
   double     data = 0;
 
-  if(mask) _mask = mask; else _mask = __L("%lf");
+  if(mask) _mask = mask; else _mask = _L("%lf");
 
   XBUFFER charstr;
   XBUFFER charstr2;
@@ -4227,7 +4227,7 @@ bool XSTRING::ConvertASCIICharacterToUnicode(XBYTE asciicharacter, XCHAR& charac
 
   if(!character)
     {
-      character = __C('_');
+      character = _C('_');
       return false;
     }
 
@@ -5228,82 +5228,82 @@ bool XSTRING::ConvertFromDoubleToSpanishText(double value, bool withintegerpart,
       double _integerpart;
       double _decimalpart;
 
-      if(integerpart == 0) Set(__L("cero"));
-        else if(integerpart ==  1) Set(__L("uno"));
-        else if(integerpart ==  2) Set(__L("dos"));
-        else if(integerpart ==  3) Set(__L("tres"));
-        else if(integerpart ==  4) Set(__L("cuatro"));
-        else if(integerpart ==  5) Set(__L("cinco"));
-        else if(integerpart ==  6) Set(__L("seis"));
-        else if(integerpart ==  7) Set(__L("siete"));
-        else if(integerpart ==  8) Set(__L("ocho"));
-        else if(integerpart ==  9) Set(__L("nueve"));
-        else if(integerpart == 10) Set(__L("diez"));
-        else if(integerpart == 11) Set(__L("once"));
-        else if(integerpart == 12) Set(__L("doce"));
-        else if(integerpart == 13) Set(__L("trece"));
-        else if(integerpart == 14) Set(__L("catorce"));
-        else if(integerpart == 15) Set(__L("quince"));
+      if(integerpart == 0) Set(_L("cero"));
+        else if(integerpart ==  1) Set(_L("uno"));
+        else if(integerpart ==  2) Set(_L("dos"));
+        else if(integerpart ==  3) Set(_L("tres"));
+        else if(integerpart ==  4) Set(_L("cuatro"));
+        else if(integerpart ==  5) Set(_L("cinco"));
+        else if(integerpart ==  6) Set(_L("seis"));
+        else if(integerpart ==  7) Set(_L("siete"));
+        else if(integerpart ==  8) Set(_L("ocho"));
+        else if(integerpart ==  9) Set(_L("nueve"));
+        else if(integerpart == 10) Set(_L("diez"));
+        else if(integerpart == 11) Set(_L("once"));
+        else if(integerpart == 12) Set(_L("doce"));
+        else if(integerpart == 13) Set(_L("trece"));
+        else if(integerpart == 14) Set(_L("catorce"));
+        else if(integerpart == 15) Set(_L("quince"));
         else if(integerpart < 20)
                {
-                  Set(__L("dieci"));
+                  Set(_L("dieci"));
                   tmp.ConvertFromDoubleToSpanishText(integerpart - 10, true, false, _integerpart, _decimalpart);
                   Add(tmp);
                 }
-               else if(integerpart == 20) Set(__L("veinte"));
+               else if(integerpart == 20) Set(_L("veinte"));
                       else if(integerpart < 30)
                             {
-                              Set(__L("veinti"));
+                              Set(_L("veinti"));
                               tmp.ConvertFromDoubleToSpanishText(integerpart - 20, true, false, _integerpart, _decimalpart);
                               Add(tmp);
                              }
-                            else if(integerpart == 30) Set(__L("treinta"));
-                            else if(integerpart == 40) Set(__L("cuarenta"));
-                            else if(integerpart == 50) Set(__L("cincuenta"));
-                            else if(integerpart == 60) Set(__L("sesenta"));
-                            else if(integerpart == 70) Set(__L("setenta"));
-                            else if(integerpart == 80) Set(__L("ochenta"));
-                            else if(integerpart == 90) Set(__L("noventa"));
+                            else if(integerpart == 30) Set(_L("treinta"));
+                            else if(integerpart == 40) Set(_L("cuarenta"));
+                            else if(integerpart == 50) Set(_L("cincuenta"));
+                            else if(integerpart == 60) Set(_L("sesenta"));
+                            else if(integerpart == 70) Set(_L("setenta"));
+                            else if(integerpart == 80) Set(_L("ochenta"));
+                            else if(integerpart == 90) Set(_L("noventa"));
                             else if(integerpart < 100)
                                    {
                                      ConvertFromDoubleToSpanishText(Truncate(integerpart/10) * 10, true, false, _integerpart, _decimalpart);
-                                     Add(__L(" y "));
+                                     Add(_L(" y "));
                                      tmp.ConvertFromDoubleToSpanishText(fmod(integerpart, (double)10), true, false, _integerpart, _decimalpart);
                                      Add(tmp);
                                    }
-                                  else if(integerpart == 100) Set(__L("cien"));
+                                  else if(integerpart == 100) Set(_L("cien"));
                                   else if(integerpart < 200)
                                          {
-                                           Set(__L("ciento "));
+                                           Set(_L("ciento "));
                                            tmp.ConvertFromDoubleToSpanishText(integerpart - 100, true, false, _integerpart, _decimalpart);
                                            Add(tmp);
                                          }
                                         else if((integerpart == 200) || (integerpart == 300) || (integerpart == 400) || (integerpart == 600) || (integerpart == 800))
                                                {
                                                  ConvertFromDoubleToSpanishText(Truncate(integerpart / 100), true, false, _integerpart, _decimalpart);
-                                                 Add(__L("cientos"));
+                                                 Add(_L("cientos"));
                                                }
-                                              else if(integerpart == 500) Set(__L("quinientos"));
-                                              else if(integerpart == 700) Set(__L("setecientos"));
-                                              else if(integerpart == 900) Set(__L("novecientos"));
+                                              else if(integerpart == 500) Set(_L("quinientos"));
+                                              else if(integerpart == 700) Set(_L("setecientos"));
+                                              else if(integerpart == 900) Set(_L("novecientos"));
                                               else if(integerpart < 1000)
                                                    {
                                                      ConvertFromDoubleToSpanishText(Truncate(integerpart / 100) * 100, true, false, _integerpart, _decimalpart);
-                                                     Add(__L(" "));
+                                                     Add(_L(" "));
                                                      tmp.ConvertFromDoubleToSpanishText(fmod(integerpart, (double)100), true, false, _integerpart, _decimalpart);
                                                      Add(tmp);
                                                    }
-                                                  else if(integerpart == 1000) Set(__L("mil"));
+                                                  else if(integerpart == 1000) Set(_L("mil"));
                                                   else if(integerpart < 2000)
                                                         {
-                                                          Set(__L("mil "));
+                                                          Set(_L("mil "));
                                                           tmp.ConvertFromDoubleToSpanishText(fmod(integerpart, (double)1000), true, false, _integerpart, _decimalpart);
                                                           Add(tmp);
                                                         }
                                                       else if(integerpart < 1000000)
                                                               {
                                                                 ConvertFromDoubleToSpanishText(Truncate(integerpart / 1000), true, false, _integerpart, _decimalpart);
-                                                                Add(__L(" mil"));
+                                                                Add(_L(" mil"));
                                                                 if((fmod(integerpart, (double)1000)) > 0)
                                                                   {
                                                                     Add(" ");
@@ -5311,41 +5311,41 @@ bool XSTRING::ConvertFromDoubleToSpanishText(double value, bool withintegerpart,
                                                                     Add(tmp);
                                                                   }
                                                               }
-                                                            else if(integerpart == 1000000) Set(__L("un millon"));
+                                                            else if(integerpart == 1000000) Set(_L("un millon"));
                                                             else if(integerpart < 2000000)
                                                                     {
-                                                                      Set(__L("un millon"));
+                                                                      Set(_L("un millon"));
                                                                       tmp.ConvertFromDoubleToSpanishText(fmod(integerpart, (double)1000000), true, false, _integerpart, _decimalpart);
                                                                       Add(tmp);
                                                                     }
                                                                    else if(integerpart < 1000000000000LL)
                                                                           {
                                                                              ConvertFromDoubleToSpanishText((integerpart / 1000000), true, false, _integerpart, _decimalpart);
-                                                                             Add(__L(" millones"));
+                                                                             Add(_L(" millones"));
                                                                              if((integerpart - Truncate(integerpart / 1000000) * 1000000) > 0)
                                                                                {
-                                                                                 Add(__L(" "));
+                                                                                 Add(_L(" "));
                                                                                  tmp.ConvertFromDoubleToSpanishText(integerpart - Truncate(integerpart / 1000000) * 1000000, true, false, _integerpart, _decimalpart);
                                                                                  Add(tmp);
                                                                                }
                                                                           }
                                                                          else
                                                                           {
-                                                                            if(integerpart == 1000000000000LL) Set(__L("un billon"));
+                                                                            if(integerpart == 1000000000000LL) Set(_L("un billon"));
                                                                               else if(integerpart < 2000000000000LL)
                                                                                 {
-                                                                                  Set(__L("un billon"));
+                                                                                  Set(_L("un billon"));
                                                                                   tmp.ConvertFromDoubleToSpanishText(Truncate(integerpart / 1000000000000LL) * 1000000000000LL, true, false, _integerpart, _decimalpart);
                                                                                   Add(tmp);
                                                                                 }
                                                                                else
                                                                                 {
                                                                                    ConvertFromDoubleToSpanishText(Truncate(integerpart / 1000000000000LL), true, false, _integerpart, _decimalpart);
-                                                                                   Add(__L(" billones"));
+                                                                                   Add(_L(" billones"));
 
                                                                                    if((integerpart - Truncate(integerpart / 1000000000000LL) * 1000000000000LL) > 0)
                                                                                      {
-                                                                                       Add(__L(" "));
+                                                                                       Add(_L(" "));
                                                                                        tmp.ConvertFromDoubleToSpanishText(integerpart - Truncate(integerpart / 1000000000000LL) * 1000000000000LL, true, false, _integerpart, _decimalpart);
                                                                                        Add(tmp);
                                                                                      }
@@ -5366,7 +5366,7 @@ bool XSTRING::ConvertFromDoubleToSpanishText(double value, bool withintegerpart,
 
       if(ipart)
         {
-          if(withintegerpart) Add(__L(" con "));
+          if(withintegerpart) Add(_L(" con "));
           tmp.ConvertFromDoubleToSpanishText(ipart, true, false, _integerpart, _decimalpart);
           Add(tmp);
 
@@ -5501,11 +5501,11 @@ bool XSTRING::FormatArg(const XCHAR* mask, va_list* arg, bool isspecialweb)
         {
           switch(mask[c])
             {
-              case __C('%')   : { int  nparam = 1;
+              case _C('%')   : { int  nparam = 1;
                                   bool end    = false;
 
                                   memset(param, 0, 16*sizeof(XCHAR));
-                                  param[0] = __C('%');
+                                  param[0] = _C('%');
 
                                   c++;
 
@@ -5515,8 +5515,8 @@ bool XSTRING::FormatArg(const XCHAR* mask, va_list* arg, bool isspecialweb)
 
                                       switch(mask[c])
                                         {
-                                          case __C('c')   :
-                                          case __C('C')   : { XCHAR character;
+                                          case _C('c')   :
+                                          case _C('C')   : { XCHAR character;
 
                                                               #if defined(LINUX) || defined(ANDROID) || defined(MICROCONTROLLER)
                                                               character = (XCHAR)va_arg((*arg), XDWORD);
@@ -5529,13 +5529,13 @@ bool XSTRING::FormatArg(const XCHAR* mask, va_list* arg, bool isspecialweb)
                                                             }
                                                             break;
    
-                                          case __C('i')   :
-                                          case __C('o')   :                                         
-                                          case __C('x')   :
-                                          case __C('X')   : { bool large = false;
+                                          case _C('i')   :
+                                          case _C('o')   :                                         
+                                          case _C('x')   :
+                                          case _C('X')   : { bool large = false;
                                                               for(int l=0; l<(int)XSTRING::GetSize(param); l++)
                                                                 {
-                                                                  if(param[l] == __C('l')) large = true;
+                                                                  if(param[l] == _C('l')) large = true;
                                                                 }
 
                                                               if(!large)
@@ -5552,18 +5552,18 @@ bool XSTRING::FormatArg(const XCHAR* mask, va_list* arg, bool isspecialweb)
                                                             }                                                           
                                                             break;
 
-                                          case __C('d')   :                                       
-                                          case __C('u')   : { bool large    = false;
+                                          case _C('d')   :                                       
+                                          case _C('u')   : { bool large    = false;
                                                               bool shortint = false;
     
                                                               for(int d=0; d<(int)XSTRING::GetSize(param); d++)
                                                                 {
-                                                                  if(param[d] == __C('l')) 
+                                                                  if(param[d] == _C('l')) 
                                                                     {
                                                                       large = true;
                                                                     }
 
-                                                                  if(param[d] == __C('h')) 
+                                                                  if(param[d] == _C('h')) 
                                                                     {
                                                                       shortint = true;
                                                                     }
@@ -5571,14 +5571,14 @@ bool XSTRING::FormatArg(const XCHAR* mask, va_list* arg, bool isspecialweb)
 
                                                               if(shortint)
                                                                 {
-                                                                  if(mask[c] == __C('d')) 
+                                                                  if(mask[c] == _C('d')) 
                                                                     {
                                                                       short value = (short)va_arg((*arg), int);
                                                                       str.ConvertFromShort(value, param);
                                                                       end  = true;
                                                                     }
 
-                                                                  if(mask[c] == __C('u')) 
+                                                                  if(mask[c] == _C('u')) 
                                                                     {
                                                                       XWORD value = (XWORD)va_arg((*arg), int);
                                                                       str.ConvertFromWord(value, param);
@@ -5588,14 +5588,14 @@ bool XSTRING::FormatArg(const XCHAR* mask, va_list* arg, bool isspecialweb)
 
                                                               if((!shortint) && (!large))
                                                                 {
-                                                                  if(mask[c] == __C('d')) 
+                                                                  if(mask[c] == _C('d')) 
                                                                     {
                                                                       int value = (int)va_arg((*arg), int);
                                                                       str.ConvertFromInt(value, param);
                                                                       end  = true;
                                                                     }
 
-                                                                  if(mask[c] == __C('u')) 
+                                                                  if(mask[c] == _C('u')) 
                                                                     {
                                                                       XDWORD value = (XDWORD)va_arg((*arg), int);
                                                                       str.ConvertFromDWord(value, param);
@@ -5605,14 +5605,14 @@ bool XSTRING::FormatArg(const XCHAR* mask, va_list* arg, bool isspecialweb)
 
                                                               if(large)
                                                                 {
-                                                                  if(mask[c] == __C('d')) 
+                                                                  if(mask[c] == _C('d')) 
                                                                     {
                                                                       long long value = (long long)va_arg((*arg), long long);
                                                                       str.ConvertFromLongLong(value, param);
                                                                       end  = true;
                                                                     }
                                                               
-                                                                  if(mask[c] == __C('u')) 
+                                                                  if(mask[c] == _C('u')) 
                                                                     {
                                                                       XQWORD value = va_arg((*arg), long long);
                                                                       str.ConvertFromLongLong(value, param);  
@@ -5622,10 +5622,10 @@ bool XSTRING::FormatArg(const XCHAR* mask, va_list* arg, bool isspecialweb)
                                                             }
                                                             break;
 
-                                          case __C('f')   : { bool large = false;
+                                          case _C('f')   : { bool large = false;
                                                               for(int d=0; d<(int)XSTRING::GetSize(param); d++)
                                                                 {
-                                                                  if(param[d] == __C('l')) large = true;
+                                                                  if(param[d] == _C('l')) large = true;
                                                                 }
 
                                                               if(!large)
@@ -5643,23 +5643,23 @@ bool XSTRING::FormatArg(const XCHAR* mask, va_list* arg, bool isspecialweb)
                                                             }
                                                             break;
 
-                                          case __C('g')   :
-                                          case __C('G')   : { double data = va_arg((*arg), double);
+                                          case _C('g')   :
+                                          case _C('G')   : { double data = va_arg((*arg), double);
 
                                                               str.ConvertFromDouble(data, param);
                                                               end  = true;
                                                             }
                                                             break;
 
-                                          case __C('e')   :
-                                          case __C('E')   :
+                                          case _C('e')   :
+                                          case _C('E')   :
 
-                                          case __C('n')   :
-                                          case __C('p')   : end = true;
+                                          case _C('n')   :
+                                          case _C('p')   : end = true;
                                                             break;
 
-                                          case __C('s')   :
-                                          case __C('S')   : { str = (XCHAR*)va_arg((*arg), XCHAR*);
+                                          case _C('s')   :
+                                          case _C('S')   : { str = (XCHAR*)va_arg((*arg), XCHAR*);
 
                                                               XSTRING sizestr;
 
@@ -5667,15 +5667,15 @@ bool XSTRING::FormatArg(const XCHAR* mask, va_list* arg, bool isspecialweb)
                                                               if(sizestr.GetSize()>2)
                                                                 {
                                                                   sizestr.ToUpperCase();
-                                                                  sizestr.DeleteCharacter(__C('%'));
-                                                                  sizestr.DeleteCharacter(__C('S'));
+                                                                  sizestr.DeleteCharacter(_C('%'));
+                                                                  sizestr.DeleteCharacter(_C('S'));
 
                                                                   if(!sizestr.IsEmpty())
                                                                     {
                                                                       int sizeadjust = sizestr.ConvertToInt();
                                                                       if(abs((int)sizeadjust) > (int)str.GetSize())
                                                                         {
-                                                                          str.AdjustSize(abs((int)sizeadjust), (sizeadjust>0)?true:false, isspecialweb?__L("&nbsp"):__L(" "), isspecialweb);
+                                                                          str.AdjustSize(abs((int)sizeadjust), (sizeadjust>0)?true:false, isspecialweb?_L("&nbsp"):_L(" "), isspecialweb);
                                                                         }
                                                                     }
                                                                 }
@@ -5684,11 +5684,11 @@ bool XSTRING::FormatArg(const XCHAR* mask, va_list* arg, bool isspecialweb)
                                                             }
                                                             break;
 
-                                          case __C('%')   : str = __L("%");
+                                          case _C('%')   : str = _L("%");
                                                             end = true;
                                                             break;
 
-                                          case __C('\x0') : end = true;
+                                          case _C('\x0') : end = true;
                                                             break;
 
                                               default     : break;
@@ -5700,14 +5700,14 @@ bool XSTRING::FormatArg(const XCHAR* mask, va_list* arg, bool isspecialweb)
                                 }
                                 break;
 
-              case __C('<')   : { openlabel = true;
+              case _C('<')   : { openlabel = true;
                                   XCHAR character[2]={ mask[c], 0 };
                                   str.Set(character);
                                   c++;
                                 }
                                 break;
 
-              case __C('>')   : { openlabel = false;
+              case _C('>')   : { openlabel = false;
                                   XCHAR character[2]={ mask[c], 0 };
                                   str.Set(character);
                                   c++;
@@ -5716,7 +5716,7 @@ bool XSTRING::FormatArg(const XCHAR* mask, va_list* arg, bool isspecialweb)
 
               case 0x0A       : if(isspecialweb && (!openlabel))
                                   {
-                                    str = __L("<br />");
+                                    str = _L("<br />");
                                   }
                                  else
                                   {
@@ -5728,7 +5728,7 @@ bool XSTRING::FormatArg(const XCHAR* mask, va_list* arg, bool isspecialweb)
 
               case 0x20       : if(isspecialweb && (!openlabel))
                                   {
-                                    str = __L("&nbsp");
+                                    str = _L("&nbsp");
                                   }
                                  else
                                   {
@@ -5742,7 +5742,7 @@ bool XSTRING::FormatArg(const XCHAR* mask, va_list* arg, bool isspecialweb)
                                   XDWORD  value       = (XDWORD)mask[c];
 
                                   if(isspecialweb && (!openlabel) && (value > 128))
-                                        str.Format(__L("&#%d"), value);
+                                        str.Format(_L("&#%d"), value);
                                    else str.Set(character);
 
                                   c++;
@@ -5858,8 +5858,8 @@ bool XSTRING::UnFormat(const XCHAR* mask, ...)
 
           switch(mask[c])
             {
-              case __C('%')   : memset(param, 0, 16*sizeof(XCHAR));
-                                param[0] = __C('%');
+              case _C('%')   : memset(param, 0, 16*sizeof(XCHAR));
+                                param[0] = _C('%');
 
                                 nparam = 1;
                                 end    = false;
@@ -5872,36 +5872,36 @@ bool XSTRING::UnFormat(const XCHAR* mask, ...)
 
                                     switch(mask[c])
                                       {
-                                        case __C('c')   :
-                                        case __C('C')   : { value_xchar = (XCHAR*)va_arg(arg, XCHAR*);
+                                        case _C('c')   :
+                                        case _C('C')   : { value_xchar = (XCHAR*)va_arg(arg, XCHAR*);
                                                             if(value_xchar) (*value_xchar) = Get()[indextext];
                                                             indextext++;
                                                             end  = true;
                                                           }
                                                           break;
 
-                                        case __C('i')   :
-                                        case __C('o')   :
-                                        case __C('x')   :
-                                        case __C('X')   : { value_int = (int*)va_arg(arg, int*);
+                                        case _C('i')   :
+                                        case _C('o')   :
+                                        case _C('x')   :
+                                        case _C('X')   : { value_int = (int*)va_arg(arg, int*);
 
                                                             if(value_int) (*value_int) = ConvertToInt(indextext, (XCHAR*)param, false);
                                                             end  = true;
                                                           }              
                                                           break;
 
-                                        case __C('d')   :                                       
-                                        case __C('u')   : { bool large    = false;
+                                        case _C('d')   :                                       
+                                        case _C('u')   : { bool large    = false;
                                                             bool shortint = false;
     
                                                             for(int d=0; d<(int)XSTRING::GetSize(param); d++)
                                                               {
-                                                                if(param[d] == __C('l')) 
+                                                                if(param[d] == _C('l')) 
                                                                   {
                                                                     large = true;
                                                                   }
 
-                                                                if(param[d] == __C('h')) 
+                                                                if(param[d] == _C('h')) 
                                                                   {
                                                                     shortint = true;
                                                                   }
@@ -5909,7 +5909,7 @@ bool XSTRING::UnFormat(const XCHAR* mask, ...)
 
                                                             if(shortint)
                                                               {
-                                                                if(mask[c] == __C('d')) 
+                                                                if(mask[c] == _C('d')) 
                                                                   {
                                                                     value_short = (short*)va_arg(arg, int*);
 
@@ -5917,7 +5917,7 @@ bool XSTRING::UnFormat(const XCHAR* mask, ...)
                                                                     end  = true;
                                                                   }
 
-                                                                if(mask[c] == __C('u')) 
+                                                                if(mask[c] == _C('u')) 
                                                                   {
                                                                     value_word = (XWORD*)va_arg(arg, int*);
 
@@ -5928,7 +5928,7 @@ bool XSTRING::UnFormat(const XCHAR* mask, ...)
 
                                                             if((!shortint) && (!large))
                                                               {
-                                                                if(mask[c] == __C('d')) 
+                                                                if(mask[c] == _C('d')) 
                                                                   {
                                                                     value_int = (int*)va_arg(arg, int*);
 
@@ -5936,7 +5936,7 @@ bool XSTRING::UnFormat(const XCHAR* mask, ...)
                                                                     end  = true;
                                                                   }
 
-                                                                if(mask[c] == __C('u')) 
+                                                                if(mask[c] == _C('u')) 
                                                                   {
                                                                     value_dword = (XDWORD*)va_arg(arg, int*);
 
@@ -5947,7 +5947,7 @@ bool XSTRING::UnFormat(const XCHAR* mask, ...)
 
                                                             if(large)
                                                               {
-                                                                if(mask[c] == __C('d')) 
+                                                                if(mask[c] == _C('d')) 
                                                                   {
                                                                     value_longlong = (long long*)va_arg(arg, long long*);
 
@@ -5955,7 +5955,7 @@ bool XSTRING::UnFormat(const XCHAR* mask, ...)
                                                                     end  = true;
                                                                   }
 
-                                                                if(mask[c] == __C('u')) 
+                                                                if(mask[c] == _C('u')) 
                                                                   {
                                                                     value_qword = (XQWORD*)va_arg(arg, long long*);
 
@@ -5966,10 +5966,10 @@ bool XSTRING::UnFormat(const XCHAR* mask, ...)
                                                           }
                                                           break;
 
-                                        case __C('f')   : { bool large = false;
+                                        case _C('f')   : { bool large = false;
                                                             for(int d=0; d<(int)XSTRING::GetSize(param); d++)
                                                               {
-                                                                if(param[d] == __C('l')) large = true;
+                                                                if(param[d] == _C('l')) large = true;
                                                               }
 
                                                             if(!large)
@@ -5987,8 +5987,8 @@ bool XSTRING::UnFormat(const XCHAR* mask, ...)
                                                           }
                                                           break;
 
-                                        case __C('g')   :
-                                        case __C('G')   : { value_double = (double*)va_arg(arg, double*);
+                                        case _C('g')   :
+                                        case _C('G')   : { value_double = (double*)va_arg(arg, double*);
 
                                                             if(value_double) (*value_double) = ConvertToDouble(indextext, (XCHAR*)param, false);
 
@@ -5996,15 +5996,15 @@ bool XSTRING::UnFormat(const XCHAR* mask, ...)
                                                           }
                                                           break;
 
-                                        case __C('e')   :
-                                        case __C('E')   :
+                                        case _C('e')   :
+                                        case _C('E')   :
 
-                                        case __C('n')   :
-                                        case __C('p')   : end = true;
+                                        case _C('n')   :
+                                        case _C('p')   : end = true;
                                                           break;
 
-                                        case __C('s')   :
-                                        case __C('S')   : { value_xchar = (XCHAR*)va_arg(arg, XCHAR*);
+                                        case _C('s')   :
+                                        case _C('S')   : { value_xchar = (XCHAR*)va_arg(arg, XCHAR*);
                                                             if(!value_xchar) 
                                                               {
                                                                 break;
@@ -6013,7 +6013,7 @@ bool XSTRING::UnFormat(const XCHAR* mask, ...)
                                                             XSTRING string;
 
                                                             int d = 0;
-                                                            while(text[d+indextext]!=mask[c+1] /*&& text[d+indextext]!=__C(' ')*/)
+                                                            while(text[d+indextext]!=mask[c+1] /*&& text[d+indextext]!=_C(' ')*/)
                                                               {
                                                                 if(!text[indextext+d]) break;
                                                                 d++;
@@ -6045,25 +6045,25 @@ bool XSTRING::UnFormat(const XCHAR* mask, ...)
                                                           }
                                                           break;
 
-                                        case __C('%')   : end = true;
+                                        case _C('%')   : end = true;
                                                           break;
 
-                                        case __C('[')   : inbrackets  = true;
+                                        case _C('[')   : inbrackets  = true;
                                                           break;
 
-                                        case __C(']')   : if(inbrackets)
+                                        case _C(']')   : if(inbrackets)
                                                             {
                                                               value_xchar = (XCHAR*)va_arg(arg, XCHAR*);
 
                                                               ConvertStringWithMask(param, &text[indextext], value_xchar);
                                                               indextext += GetSize(value_xchar);
 
-                                                              if((mask[c+1] == __C('s')) || (mask[c+1] == __C('S'))) c++;
+                                                              if((mask[c+1] == _C('s')) || (mask[c+1] == _C('S'))) c++;
                                                               end = true;
                                                             }
                                                           break;
 
-                                        case __C('\x0') : end = true;
+                                        case _C('\x0') : end = true;
                                                           break;
 
                                             default     : break;
@@ -6073,7 +6073,7 @@ bool XSTRING::UnFormat(const XCHAR* mask, ...)
 
                                     if(end)
                                       {
-                                        if(mask[c]!=__C('%'))
+                                        if(mask[c]!=_C('%'))
                                           {
                                             while(text[indextext] != mask[c])
                                               {
@@ -6083,7 +6083,7 @@ bool XSTRING::UnFormat(const XCHAR* mask, ...)
                                           }
                                          else
                                           {
-                                            //if(text[indextext] ==__C(' ')) indextext++;
+                                            //if(text[indextext] ==_C(' ')) indextext++;
                                           }
                                       }
 
@@ -6201,7 +6201,7 @@ bool XSTRING::AdjustSize(XDWORD size, bool ahead, XCHAR* characters, bool addstr
               for(int c=0;c<diference;c++)
                 {
                   text[c+diference] = text[c];
-                  text[c] = __C('-');
+                  text[c] = _C('-');
                 }
             }
         }
@@ -6234,7 +6234,7 @@ bool XSTRING::AdjustSize()
       return FreeBuffer();
     }
 
-  return AdjustSize(c, false, __L(" "), false);
+  return AdjustSize(c, false, _L(" "), false);
 }
 
 
@@ -6326,9 +6326,9 @@ bool XSTRING::GetTypeOfLineEnd(XSTRING& lineend)
 
   for(XDWORD c=0; c<GetSize()-1; c++)
     {
-      if(Get()[c] == __C('\n'))
+      if(Get()[c] == _C('\n'))
         {
-          if(Get()[c+1] == __C('\r'))
+          if(Get()[c+1] == _C('\r'))
             {
               combinations[2]++;
               c+=2;
@@ -6337,9 +6337,9 @@ bool XSTRING::GetTypeOfLineEnd(XSTRING& lineend)
         }
        else
         {
-          if(Get()[c] == __C('\r'))
+          if(Get()[c] == _C('\r'))
             {
-              if(Get()[c+1] == __C('\n'))
+              if(Get()[c+1] == _C('\n'))
                 {
                   combinations[3]++;
                   c+=2;
@@ -6351,25 +6351,25 @@ bool XSTRING::GetTypeOfLineEnd(XSTRING& lineend)
 
   if((combinations[0] >= combinations[1]) && (combinations[0] >= combinations[2]) && (combinations[0] >= combinations[3]))
     {
-      lineend = __L("\n");
+      lineend = _L("\n");
     }
    else
     {
       if((combinations[1] >= combinations[0]) && (combinations[1] >= combinations[2]) && (combinations[1] >= combinations[3]))
         {
-          lineend = __L("\r");
+          lineend = _L("\r");
         }
        else
         {
           if((combinations[2] >= combinations[0]) && (combinations[2] >= combinations[1]) && (combinations[2] >= combinations[3]))
             {
-              lineend = __L("\n\r");
+              lineend = _L("\n\r");
             }
            else
             {
               if((combinations[3] >= combinations[0]) && (combinations[3] >= combinations[1]) && (combinations[3] >= combinations[2]))
                 {
-                  lineend = __L("\r\n");
+                  lineend = _L("\r\n");
                 }
             }
         }

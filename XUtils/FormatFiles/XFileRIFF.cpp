@@ -412,7 +412,7 @@ bool XFILERIFF::ReadAllLists()
       XSTRING string;
       ConvertDWORDtoString(typelist, string);
 
-      //XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, __L("[LIST] %s"), string.Get());   
+      //XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, _L("[LIST] %s"), string.Get());   
  
       root = GEN_NEW XFILERIFF_LIST_NODE(root_data);
       if(root) 
@@ -456,7 +456,7 @@ XQWORD XFILERIFF::ReadNodeLists(XFILERIFF_LIST_NODE* node)
   XFILERIFF_LIST_NODE*  subnode           = NULL;    
 //static XSTRING        tabulated;
 
-//tabulated.Add(__L("  "));
+//tabulated.Add(_L("  "));
    
   do{ if(!xfilebase->Read((XBYTE*)data, sizeof(XDWORD)*2)) return 0;
       currentsizenode += (sizeof(XDWORD)*2);
@@ -484,7 +484,7 @@ XQWORD XFILERIFF::ReadNodeLists(XFILERIFF_LIST_NODE* node)
           XSTRING string;
           ConvertDWORDtoString(data[2], string);
        
-          //XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, __L("%s[LIST] %s"), tabulated.Get(), string.Get());  
+          //XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, _L("%s[LIST] %s"), tabulated.Get(), string.Get());  
        
           XQWORD inc = ReadNodeLists(subnode);               
           currentsizenode += inc;                           
@@ -508,7 +508,7 @@ XQWORD XFILERIFF::ReadNodeLists(XFILERIFF_LIST_NODE* node)
           XSTRING string;
           ConvertDWORDtoString(data[0], string);
 
-          //XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, __L("%s%s"), tabulated.Get(), string.Get()); 
+          //XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, _L("%s%s"), tabulated.Get(), string.Get()); 
                  
           XDWORD inc = list->GetSize(); 
 
@@ -1088,7 +1088,7 @@ bool XFILERIFF::ConvertDWORDtoString(XDWORD data, XSTRING& string)
   characters[2] = (XCHAR)((data >> 8)  & 0x000000FF);
   characters[3] = (XCHAR)((data)       & 0x000000FF);
 
-  string.Format(__L("%C%C%C%C"), characters[3], characters[2], characters[1], characters[0]);
+  string.Format(_L("%C%C%C%C"), characters[3], characters[2], characters[1], characters[0]);
 
   string.ToUpperCase();
 

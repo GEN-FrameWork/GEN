@@ -44,7 +44,7 @@
 
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
 
-#define DIOAIOBIMAINBOARD_I2CDEVICENAME           __L("/dev/i2c-1")
+#define DIOAIOBIMAINBOARD_I2CDEVICENAME           _L("/dev/i2c-1")
 
 #define DIOAIOBIMAINBOARD_I2CDIGIGPIO_ID_IN       0x3C
 #define DIOAIOBIMAINBOARD_I2CDIGIGPIO_ID_OUT      0x3D
@@ -93,7 +93,7 @@ enum DIOAIOBIMAINBOARD_I2CDIGIGPIO
 
 #define DIOAIOBIMAINBOARD_DEFAULTTIMEOUT          10
 
-#define DIOAIOBIMAINBOARD_LOGSECTIONID            __L("AIOBI MainBoard")
+#define DIOAIOBIMAINBOARD_LOGSECTIONID            _L("AIOBI MainBoard")
 
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
 

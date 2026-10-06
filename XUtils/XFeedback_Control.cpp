@@ -219,10 +219,10 @@ XFEEDBACK_CONTROL::XFEEDBACK_CONTROL()
 
   isactive = true;
 
-  AddFeedbakText(XFEEDBACK_CODE_UNKNOWN, __L("Unknown"));
-  AddFeedbakText(XFEEDBACK_CODE_INVALIDPARAMFUNCTION, __L("The %d parameter [%s] function [%s] call was invalid."));
-  AddFeedbakText(XFEEDBACK_CODE_INVALIDMEMORYALLOCATION, __L("Invalid memory allocation in variable [%s] of function [%s]."));
-  AddFeedbakText(XFEEDBACK_CODE_ERRORINFUNCTION, __L("Error in function [%s]: %s"));
+  AddFeedbakText(XFEEDBACK_CODE_UNKNOWN, _L("Unknown"));
+  AddFeedbakText(XFEEDBACK_CODE_INVALIDPARAMFUNCTION, _L("The %d parameter [%s] function [%s] call was invalid."));
+  AddFeedbakText(XFEEDBACK_CODE_INVALIDMEMORYALLOCATION, _L("Invalid memory allocation in variable [%s] of function [%s]."));
+  AddFeedbakText(XFEEDBACK_CODE_ERRORINFUNCTION, _L("Error in function [%s]: %s"));
 }
 
 
@@ -362,7 +362,7 @@ bool XFEEDBACK_CONTROL::AddFeedbak(char const* namefile, XFEEDBACK_CODE code, in
 
   
 
-             GEN_XLOG.AddEntry(XLOGLEVEL_WARNING, XFEEDBACK_CONTROL_LOG_SECTIONID, false, __L("%05d line %d, module %s -> %s"), feedbacks.GetSize() + 1, feedback->GetModuleLine(), feedback->GetModuleName()->Get(), feedback->GetText()->Get());       
+             GEN_XLOG.AddEntry(XLOGLEVEL_WARNING, XFEEDBACK_CONTROL_LOG_SECTIONID, false, _L("%05d line %d, module %s -> %s"), feedbacks.GetSize() + 1, feedback->GetModuleLine(), feedback->GetModuleName()->Get(), feedback->GetText()->Get());       
 
 
               
@@ -395,23 +395,23 @@ bool XFEEDBACK_CONTROL::DisplayAll()
 /*
   XBYTE   level     = (!nfeedback?XTRACE_COLOR_BLUE:XTRACE_COLOR_RED);
 
-  XTRACE_PRINT(__L(" "));
-  XTRACE_PRINTHEADER((level | XTRACE_LEVEL_WITHCOLOR), (!nfeedback)?__L("ALL FEEDBACK ENTRYS"):__L("NOT FEEDBACK ENTRYS"));
-  XTRACE_PRINT(__L(" "));
+  XTRACE_PRINT(_L(" "));
+  XTRACE_PRINTHEADER((level | XTRACE_LEVEL_WITHCOLOR), (!nfeedback)?_L("ALL FEEDBACK ENTRYS"):_L("NOT FEEDBACK ENTRYS"));
+  XTRACE_PRINT(_L(" "));
   */
 
   if(nfeedback)
     {
       XSTRING title;
 
-      XTRACE_PRINTCOLOR(XTRACE_COLOR_PURPLE, __L(" "));
-      XTRACE_PRINTHEADER((XTRACE_COLOR_PURPLE | XTRACE_LEVEL_WITHCOLOR), __L("ALL FEEDBACK ENTRYS"));
-      XTRACE_PRINTCOLOR(XTRACE_COLOR_PURPLE, __L(" "));
+      XTRACE_PRINTCOLOR(XTRACE_COLOR_PURPLE, _L(" "));
+      XTRACE_PRINTHEADER((XTRACE_COLOR_PURPLE | XTRACE_LEVEL_WITHCOLOR), _L("ALL FEEDBACK ENTRYS"));
+      XTRACE_PRINTCOLOR(XTRACE_COLOR_PURPLE, _L(" "));
            
-      title.Format(__L("%-8s %-5s %-72s %s"), __L("Index"), __L("Line"), __L("Module"), __L("Description"));  
+      title.Format(_L("%-8s %-5s %-72s %s"), _L("Index"), _L("Line"), _L("Module"), _L("Description"));  
 
-      XTRACE_PRINTCOLOR(XTRACE_COLOR_PURPLE, __L("Number feedbacks  : %d"), nfeedback);
-      XTRACE_PRINTCOLOR(XTRACE_COLOR_PURPLE, __L(" "));
+      XTRACE_PRINTCOLOR(XTRACE_COLOR_PURPLE, _L("Number feedbacks  : %d"), nfeedback);
+      XTRACE_PRINTCOLOR(XTRACE_COLOR_PURPLE, _L(" "));
       XTRACE_PRINTCOLOR(XTRACE_COLOR_PURPLE, title.Get());
       
       for(XDWORD c=0; c<nfeedback; c++)
@@ -420,7 +420,7 @@ bool XFEEDBACK_CONTROL::DisplayAll()
 
           if(feedback)
             {              
-              XTRACE_PRINTCOLOR(XTRACE_COLOR_PURPLE, __L("%08d %05d %-72s %s"), c+1, feedback->GetModuleLine(), feedback->GetModuleName()->Get(), feedback->GetText()->Get());                                                                               
+              XTRACE_PRINTCOLOR(XTRACE_COLOR_PURPLE, _L("%08d %05d %-72s %s"), c+1, feedback->GetModuleLine(), feedback->GetModuleName()->Get(), feedback->GetText()->Get());                                                                               
             }
         }
 

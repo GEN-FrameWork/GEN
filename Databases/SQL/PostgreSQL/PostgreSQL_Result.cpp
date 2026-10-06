@@ -216,7 +216,7 @@ bool POSTGRESQL_RESULT::ProcessRow()
           DB_SQL_ERROR* error=GEN_NEW DB_SQL_ERROR(DB_SQL_ERROR_TYPE_MEMORY_ERROR);
           if(!error) return false;
 
-          error->description.Set(__L("not enought memory for result"));
+          error->description.Set(_L("not enought memory for result"));
           query->database->GetErrorList()->Add(error);
 
           return true;
@@ -236,7 +236,7 @@ bool POSTGRESQL_RESULT::ProcessRow()
           DB_SQL_ERROR* error = GEN_NEW DB_SQL_ERROR(DB_SQL_ERROR_TYPE_MEMORY_ERROR);
           if(!error) return false;
 
-          error->description.Set(__L("not enought memory for result"));
+          error->description.Set(_L("not enought memory for result"));
           query->database->GetErrorList()->Add(error);
 
           return true;
@@ -313,7 +313,7 @@ bool POSTGRESQL_RESULT::ProcessRow()
                                             (*variant)  = data;
                                             }
                                             else
-                                              (*variant)  = __L("");
+                                              (*variant)  = _L("");
                                           }
                                           break;
 
@@ -330,7 +330,7 @@ bool POSTGRESQL_RESULT::ProcessRow()
                                             (*variant)  = data;
                                             }
                                             else
-                                              (*variant)  = __L("");
+                                              (*variant)  = _L("");
                                           }
                                           break;
 

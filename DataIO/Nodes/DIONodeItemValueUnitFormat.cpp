@@ -153,9 +153,9 @@ XVARIANT* DIONODEITEMVALUEUNITFORMAT::GetSymbol()
 * --------------------------------------------------------------------------------------------------------------------*/
 bool DIONODEITEMVALUEUNITFORMAT::Serialize()
 {  
-  Primitive_Add<int>(type           , __L("type"));
-  Primitive_Add<XVARIANT*>(&name    , __L("name"));
-  Primitive_Add<XVARIANT*>(&symbol  , __L("symbol"));
+  Primitive_Add<int>(type           , _L("type"));
+  Primitive_Add<XVARIANT*>(&name    , _L("name"));
+  Primitive_Add<XVARIANT*>(&symbol  , _L("symbol"));
     
   return true;
 }
@@ -172,9 +172,9 @@ bool DIONODEITEMVALUEUNITFORMAT::Serialize()
 * --------------------------------------------------------------------------------------------------------------------*/
 bool DIONODEITEMVALUEUNITFORMAT::Deserialize()
 {
-  Primitive_Extract<XDWORD>(type       , __L("type"));
-  Primitive_Extract<XVARIANT>(name     , __L("name"));
-  Primitive_Extract<XVARIANT>(symbol   , __L("symbol"));
+  Primitive_Extract<XDWORD>(type       , _L("type"));
+  Primitive_Extract<XVARIANT>(name     , _L("name"));
+  Primitive_Extract<XVARIANT>(symbol   , _L("symbol"));
 
   return true;
 }
@@ -194,22 +194,22 @@ void DIONODEITEMVALUEUNITFORMAT::GetDefaultName()
       case DIONODEITEMVALUE_UNITSFORMAT_TYPE_UNKNOWN              : 
                                                   default         : break; 
 
-      case DIONODEITEMVALUE_UNITSFORMAT_TYPE_SIMPLE               : name = __L("simple");                   
+      case DIONODEITEMVALUE_UNITSFORMAT_TYPE_SIMPLE               : name = _L("simple");                   
                                                                     break; 
 
-      case DIONODEITEMVALUE_UNITSFORMAT_TYPE_BOOLEAN              : name = __L("active/deactive (boolean)");                  
+      case DIONODEITEMVALUE_UNITSFORMAT_TYPE_BOOLEAN              : name = _L("active/deactive (boolean)");                  
                                                                     break;  
 
-      case DIONODEITEMVALUE_UNITSFORMAT_TYPE_RELATIVEHUMIDITY     : name = __L("relative humidity");        
+      case DIONODEITEMVALUE_UNITSFORMAT_TYPE_RELATIVEHUMIDITY     : name = _L("relative humidity");        
                                                                     break; 
 
-      case DIONODEITEMVALUE_UNITSFORMAT_TYPE_CELSIUSDEGREE        : name = __L("Celsius degree");           
+      case DIONODEITEMVALUE_UNITSFORMAT_TYPE_CELSIUSDEGREE        : name = _L("Celsius degree");           
                                                                     break;            
 
-      case DIONODEITEMVALUE_UNITSFORMAT_TYPE_FAHRENHEITDEGREE     : name = __L("Fahrenheit degree");        
+      case DIONODEITEMVALUE_UNITSFORMAT_TYPE_FAHRENHEITDEGREE     : name = _L("Fahrenheit degree");        
                                                                     break;    
 
-      case DIONODEITEMVALUE_UNITSFORMAT_TYPE_KELVINDEGREE         : name = __L("Kelvin degree");            
+      case DIONODEITEMVALUE_UNITSFORMAT_TYPE_KELVINDEGREE         : name = _L("Kelvin degree");            
                                                                     break;                                                               
     }
 }
@@ -231,13 +231,13 @@ void DIONODEITEMVALUEUNITFORMAT::GetDefaultSymbol()
       case DIONODEITEMVALUE_UNITSFORMAT_TYPE_SIMPLE               :  
       case DIONODEITEMVALUE_UNITSFORMAT_TYPE_BOOLEAN              : break;  
 
-      case DIONODEITEMVALUE_UNITSFORMAT_TYPE_RELATIVEHUMIDITY     : symbol = __L("%");           
+      case DIONODEITEMVALUE_UNITSFORMAT_TYPE_RELATIVEHUMIDITY     : symbol = _L("%");           
                                                                     break; 
 
       case DIONODEITEMVALUE_UNITSFORMAT_TYPE_CELSIUSDEGREE        : { XSTRING typestr;
 
                                                                       typestr += (XCHAR)0x00B0;        
-                                                                      typestr += __C('C');                                                                             
+                                                                      typestr += _C('C');                                                                             
 
                                                                       symbol = typestr.Get();
                                                                     }
@@ -246,13 +246,13 @@ void DIONODEITEMVALUEUNITFORMAT::GetDefaultSymbol()
       case DIONODEITEMVALUE_UNITSFORMAT_TYPE_FAHRENHEITDEGREE     : { XSTRING typestr;
 
                                                                       typestr += (XCHAR)0x00B0;        
-                                                                      typestr += __C('F');                                                                             
+                                                                      typestr += _C('F');                                                                             
 
                                                                       symbol = typestr.Get();
                                                                     }
                                                                     break;  
   
-      case DIONODEITEMVALUE_UNITSFORMAT_TYPE_KELVINDEGREE         : symbol = __L("K");           
+      case DIONODEITEMVALUE_UNITSFORMAT_TYPE_KELVINDEGREE         : symbol = _L("K");           
                                                                     break;   
 
                                                         default   : break;

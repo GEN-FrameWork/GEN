@@ -105,17 +105,17 @@ bool SCRIPT_LIB_TRACE::AddLibraryFunctions(SCRIPT* script)
 
   this->script = script;
 
-  script->AddLibraryFunction(this, __L("TraceClearScreen")         , Call_TraceClearScreen);
-  script->AddLibraryFunction(this, __L("TraceClearMsgsStatus")     , Call_TraceClearMsgsStatus);
-  script->AddLibraryFunction(this, __L("TracePrintColor")          , Call_TracePrintColor);
-  script->AddLibraryFunction(this, __L("TracePrintMsgTests")       , Call_TracePrintMsgTests);
-  script->AddLibraryFunction(this, __L("TraceTests_Load")          , Call_TraceTests_Load);
-  script->AddLibraryFunction(this, __L("TraceTests_Exists")        , Call_TraceTests_Exists);
-  script->AddLibraryFunction(this, __L("TraceTests_GetDescription"), Call_TraceTests_GetDescription);
-  script->AddLibraryFunction(this, __L("TraceTests_DeleteAll")     , Call_TraceTests_DeleteAll);
+  script->AddLibraryFunction(this, _L("TraceClearScreen")         , Call_TraceClearScreen);
+  script->AddLibraryFunction(this, _L("TraceClearMsgsStatus")     , Call_TraceClearMsgsStatus);
+  script->AddLibraryFunction(this, _L("TracePrintColor")          , Call_TracePrintColor);
+  script->AddLibraryFunction(this, _L("TracePrintMsgTests")       , Call_TracePrintMsgTests);
+  script->AddLibraryFunction(this, _L("TraceTests_Load")          , Call_TraceTests_Load);
+  script->AddLibraryFunction(this, _L("TraceTests_Exists")        , Call_TraceTests_Exists);
+  script->AddLibraryFunction(this, _L("TraceTests_GetDescription"), Call_TraceTests_GetDescription);
+  script->AddLibraryFunction(this, _L("TraceTests_DeleteAll")     , Call_TraceTests_DeleteAll);
 
   // Compatibility: eliminate in a future
-  script->AddLibraryFunction(this, __L("XTRACE_PRINTCOLOR"), Call_TracePrintColor);
+  script->AddLibraryFunction(this, _L("XTRACE_PRINTCOLOR"), Call_TracePrintColor);
 
   return true;
 }
@@ -291,14 +291,14 @@ void Call_TracePrintColor(SCRIPT_LIB* library, SCRIPT* script, XVECTOR<XVARIANT*
 
                             switch(mask[c])
                               {
-                                case __C('c')   :
-                                case __C('C')   :
-                                case __C('d')   :
-                                case __C('i')   :
-                                case __C('o')   :
-                                case __C('u')   :
-                                case __C('x')   :
-                                case __C('X')   : { int value = 0;
+                                case _C('c')   :
+                                case _C('C')   :
+                                case _C('d')   :
+                                case _C('i')   :
+                                case _C('o')   :
+                                case _C('u')   :
+                                case _C('x')   :
+                                case _C('X')   : { int value = 0;
                                                     library->GetParamConverted(params->Get(paramindex), value);
                                                     string.Format(param, value);
                                                     paramindex++;
@@ -306,7 +306,7 @@ void Call_TracePrintColor(SCRIPT_LIB* library, SCRIPT* script, XVECTOR<XVARIANT*
                                                   }
                                                   break;
 
-                                case __C('f')   : { float value = 0.0f;
+                                case _C('f')   : { float value = 0.0f;
                                                     library->GetParamConverted(params->Get(paramindex), value);
                                                     string.Format(param, value);
                                                     paramindex++;
@@ -314,18 +314,18 @@ void Call_TracePrintColor(SCRIPT_LIB* library, SCRIPT* script, XVECTOR<XVARIANT*
                                                   }
                                                   break;
 
-                                case __C('g')   :
-                                case __C('G')   :
+                                case _C('g')   :
+                                case _C('G')   :
 
-                                case __C('e')   :
-                                case __C('E')   :
+                                case _C('e')   :
+                                case _C('E')   :
 
-                                case __C('n')   :
-                                case __C('p')   : end = true;
+                                case _C('n')   :
+                                case _C('p')   : end = true;
                                                   break;
 
-                                case __C('s')   :
-                                case __C('S')   : { XVARIANT variantparam = (*params->Get(paramindex));
+                                case _C('s')   :
+                                case _C('S')   : { XVARIANT variantparam = (*params->Get(paramindex));
                                                     paramindex++;
                                                     // Pass data as a string value — do not re-parse '%' inside it.
                                                     string = (XCHAR*)variantparam;
@@ -333,11 +333,11 @@ void Call_TracePrintColor(SCRIPT_LIB* library, SCRIPT* script, XVECTOR<XVARIANT*
                                                   }
                                                   break;
 
-                                case __C('%')   : string = __L("%");
+                                case _C('%')   : string = _L("%");
                                                   end = true;
                                                   break;
 
-                                case __C('\0')  : end = true;
+                                case _C('\0')  : end = true;
                                                   break;
 
                                       default   : break;

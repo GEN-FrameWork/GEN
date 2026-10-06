@@ -140,7 +140,7 @@ bool DIOLINUXNETWORKMANAGER::Enable(bool on)
   message.GetPath()->Set(DIOLINUXNETWORKMANAGER_DEFAULT_DBUS_PATH);
   message.GetIFace()->Set(DIOLINUXNETWORKMANAGER_DEFAULT_DBUS_IFACE_MAIN);
 
-  message.GetMethod()->Set(__L("Enable"));
+  message.GetMethod()->Set(_L("Enable"));
 
   status = message.Create();
   if(status)
@@ -161,7 +161,7 @@ bool DIOLINUXNETWORKMANAGER::Enable(bool on)
     }
     else 
     {
-      XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, __L("[DBUS] Error create message [%s] [%s]"), message.GetIFace()->Get(), message.GetMethod()->Get());
+      XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, _L("[DBUS] Error create message [%s] [%s]"), message.GetIFace()->Get(), message.GetMethod()->Get());
     }
 
   return status;
@@ -190,7 +190,7 @@ DIOLINUXNETWORKMANAGER_STATE DIOLINUXNETWORKMANAGER::GetConnectionState()
   message.GetPath()->Set(DIOLINUXNETWORKMANAGER_DEFAULT_DBUS_PATH);
   message.GetIFace()->Set(DIOLINUXNETWORKMANAGER_DEFAULT_DBUS_IFACE_MAIN);
 
-  message.GetMethod()->Set(__L("state"));
+  message.GetMethod()->Set(_L("state"));
 
   status = message.Create();
   if(status)
@@ -222,7 +222,7 @@ DIOLINUXNETWORKMANAGER_STATE DIOLINUXNETWORKMANAGER::GetConnectionState()
     }
     else 
     {
-      XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, __L("[DBUS] Error create message [%s] [%s]"), message.GetIFace()->Get(), message.GetMethod()->Get());
+      XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, _L("[DBUS] Error create message [%s] [%s]"), message.GetIFace()->Get(), message.GetMethod()->Get());
     }
 
   return state;
@@ -257,7 +257,7 @@ bool DIOLINUXNETWORKMANAGER::GetDevices(XVECTOR<DIOSTREAMDEVICEIP*>& devices)
         {      
           deviceIP->SetIndex(c);
 
-          GetProperty(DIOLINUXNETWORKMANAGER_DEFAULT_DBUS_IFACE_DEVICE, pathdevices.Get(c)->Get(), __L("DeviceType") , value);  
+          GetProperty(DIOLINUXNETWORKMANAGER_DEFAULT_DBUS_IFACE_DEVICE, pathdevices.Get(c)->Get(), _L("DeviceType") , value);  
           XDWORD devicetype = value;
 
           deviceIP->SetIPType(DIOSTREAMIPDEVICE_TYPE_UNKNOWN);
@@ -318,22 +318,22 @@ bool DIOLINUXNETWORKMANAGER::GetDevices(XVECTOR<DIOSTREAMDEVICEIP*>& devices)
                                    default      : break; 
             }
 
-          GetProperty(DIOLINUXNETWORKMANAGER_DEFAULT_DBUS_IFACE_DEVICE, pathdevices.Get(c)->Get(), __L("Interface"), value); 
+          GetProperty(DIOLINUXNETWORKMANAGER_DEFAULT_DBUS_IFACE_DEVICE, pathdevices.Get(c)->Get(), _L("Interface"), value); 
           value.ToString(valuestr);
           deviceIP->GetName()->Set(valuestr.Get());
           value.Set();
 
-          GetProperty(DIOLINUXNETWORKMANAGER_DEFAULT_DBUS_IFACE_DEVICE, pathdevices.Get(c)->Get(), __L("Udi") , value);  
+          GetProperty(DIOLINUXNETWORKMANAGER_DEFAULT_DBUS_IFACE_DEVICE, pathdevices.Get(c)->Get(), _L("Udi") , value);  
           value.ToString(valuestr);
           deviceIP->GetResource()->Set(valuestr.Get());
         
 
       
 
-          GetProperty(DIOLINUXNETWORKMANAGER_DEFAULT_DBUS_IFACE_DEVICE, pathdevices.Get(c)->Get(), __L("Ip4Config") , value);  
+          GetProperty(DIOLINUXNETWORKMANAGER_DEFAULT_DBUS_IFACE_DEVICE, pathdevices.Get(c)->Get(), _L("Ip4Config") , value);  
           value.ToString(valuestr);
-          GetProperty(DIOLINUXNETWORKMANAGER_DEFAULT_DBUS_IFACE_IP4CONFIG, valuestr.Get(), __L("Gateway"), value);        
-          GetProperty(DIOLINUXNETWORKMANAGER_DEFAULT_DBUS_IFACE_IP4CONFIG, valuestr.Get(), __L("AddressData"), value);  
+          GetProperty(DIOLINUXNETWORKMANAGER_DEFAULT_DBUS_IFACE_IP4CONFIG, valuestr.Get(), _L("Gateway"), value);        
+          GetProperty(DIOLINUXNETWORKMANAGER_DEFAULT_DBUS_IFACE_IP4CONFIG, valuestr.Get(), _L("AddressData"), value);  
 
           devices.Add(deviceIP);
         }          
@@ -434,7 +434,7 @@ bool DIOLINUXNETWORKMANAGER::GetDevicePathList(XVECTOR<XSTRING*>& pathdevices)
   message.GetPath()->Set(DIOLINUXNETWORKMANAGER_DEFAULT_DBUS_PATH);
   message.GetIFace()->Set(DIOLINUXNETWORKMANAGER_DEFAULT_DBUS_IFACE_MAIN);
 
-  message.GetMethod()->Set(__L("GetDevices"));
+  message.GetMethod()->Set(_L("GetDevices"));
 
   status = message.Create();
   if(!status) return false;
@@ -447,12 +447,12 @@ bool DIOLINUXNETWORKMANAGER::GetDevicePathList(XVECTOR<XSTRING*>& pathdevices)
         {         
           for(int c=0; c<pathdevices.GetSize(); c++)
             {
-              XTRACE_PRINTCOLOR((status?XTRACE_COLOR_BLUE:XTRACE_COLOR_RED), __L("%s"), pathdevices.Get(c)->Get());
+              XTRACE_PRINTCOLOR((status?XTRACE_COLOR_BLUE:XTRACE_COLOR_RED), _L("%s"), pathdevices.Get(c)->Get());
             }          
         }
        else
         {
-          XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, __L("[DBUS] Error get result ..."));    
+          XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, _L("[DBUS] Error get result ..."));    
         } 
                   
       reply.Delete();
@@ -513,7 +513,7 @@ bool DIOLINUXNETWORKMANAGER::GetProperty(XCHAR* iface, XCHAR* pathdevice, XCHAR*
               case XVARIANT_TYPE_INTEGER        : { XDWORD value;
                                                     value = (XDWORD)result;
 
-                                                    XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, __L("Property INTEGER : %08X"), value);      
+                                                    XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, _L("Property INTEGER : %08X"), value);      
                                                   } 
                                                   break;
                                                   
@@ -526,7 +526,7 @@ bool DIOLINUXNETWORKMANAGER::GetProperty(XCHAR* iface, XCHAR* pathdevice, XCHAR*
               case XVARIANT_TYPE_STRING         : { XSTRING value;
                                                     result.ToString(value);
 
-                                                    XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, __L("Property STRING : %s"), value.Get());      
+                                                    XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, _L("Property STRING : %s"), value.Get());      
                                                   } 
                                                   break;
 
@@ -563,7 +563,7 @@ void DIOLINUXNETWORKMANAGER::HandleEvent_Signal(DIOLINUXDBUS_XEVENT* event)
       case DIOLINUXDBUS_XEVENT_TYPE_SIGNAL      : { DIOLINUXDBUS_SIGNAL* signal = event->GetSignal();
                                                     if(signal)
                                                       { 
-                                                        XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, __L("[Network Manager] Signal [%s] [%s]"), signal->GetType()->Get(), signal->GetName()->Get()); 
+                                                        XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, _L("[Network Manager] Signal [%s] [%s]"), signal->GetType()->Get(), signal->GetName()->Get()); 
                                                       }
                                                   }
                                                   break;

@@ -109,11 +109,11 @@ bool SCRIPT_LIB_LOG::AddLibraryFunctions(SCRIPT* script)
 
   this->script = script;
 
-  script->AddLibraryFunction(this, __L("Log_Ini"), Call_Log_Ini);
-  script->AddLibraryFunction(this, __L("Log_CFG_SetLimit"), Call_Log_CFG_SetLimit);
-  script->AddLibraryFunction(this, __L("Log_CFG_SetFilters"), Call_Log_CFG_SetFilters);
-  script->AddLibraryFunction(this, __L("Log_CFG_SetBackup"), Call_Log_CFG_SetBackup);
-  script->AddLibraryFunction(this, __L("Log_AddEntry"), Call_Log_AddEntry);
+  script->AddLibraryFunction(this, _L("Log_Ini"), Call_Log_Ini);
+  script->AddLibraryFunction(this, _L("Log_CFG_SetLimit"), Call_Log_CFG_SetLimit);
+  script->AddLibraryFunction(this, _L("Log_CFG_SetFilters"), Call_Log_CFG_SetFilters);
+  script->AddLibraryFunction(this, _L("Log_CFG_SetBackup"), Call_Log_CFG_SetBackup);
+  script->AddLibraryFunction(this, _L("Log_AddEntry"), Call_Log_AddEntry);
   
   return true;
 }
@@ -419,14 +419,14 @@ void Call_Log_AddEntry(SCRIPT_LIB* library, SCRIPT* script, XVECTOR<XVARIANT*>* 
 
                             switch(mask[c])
                               {
-                                case __C('c')   :
-                                case __C('C')   :
-                                case __C('d')   :
-                                case __C('i')   :
-                                case __C('o')   :
-                                case __C('u')   :
-                                case __C('x')   :
-                                case __C('X')   : { int value = 0;
+                                case _C('c')   :
+                                case _C('C')   :
+                                case _C('d')   :
+                                case _C('i')   :
+                                case _C('o')   :
+                                case _C('u')   :
+                                case _C('x')   :
+                                case _C('X')   : { int value = 0;
                                                     library->GetParamConverted(params->Get(paramindex), value);
                                                     string.Format(param, value);
                                                     paramindex++;
@@ -434,7 +434,7 @@ void Call_Log_AddEntry(SCRIPT_LIB* library, SCRIPT* script, XVECTOR<XVARIANT*>* 
                                                   }
                                                   break;
 
-                                case __C('f')   : { float value = 0.0f;
+                                case _C('f')   : { float value = 0.0f;
                                                     library->GetParamConverted(params->Get(paramindex), value);
                                                     string.Format(param, value);
                                                     paramindex++;
@@ -442,18 +442,18 @@ void Call_Log_AddEntry(SCRIPT_LIB* library, SCRIPT* script, XVECTOR<XVARIANT*>* 
                                                   }
                                                   break;
 
-                                case __C('g')   :
-                                case __C('G')   :
+                                case _C('g')   :
+                                case _C('G')   :
 
-                                case __C('e')   :
-                                case __C('E')   :
+                                case _C('e')   :
+                                case _C('E')   :
 
-                                case __C('n')   :
-                                case __C('p')   : end = true;
+                                case _C('n')   :
+                                case _C('p')   : end = true;
                                                   break;
 
-                                case __C('s')   :
-                                case __C('S')   : { XVARIANT variantparam = (*params->Get(paramindex));
+                                case _C('s')   :
+                                case _C('S')   : { XVARIANT variantparam = (*params->Get(paramindex));
                                                     paramindex++;
                                                     // Pass data as a string value — do not re-parse '%' inside it.
                                                     string = (XCHAR*)variantparam;
@@ -461,11 +461,11 @@ void Call_Log_AddEntry(SCRIPT_LIB* library, SCRIPT* script, XVECTOR<XVARIANT*>* 
                                                   }
                                                   break;
 
-                                case __C('%')   : string = __L("%");
+                                case _C('%')   : string = _L("%");
                                                   end = true;
                                                   break;
 
-                                case __C('\0')  : end = true;
+                                case _C('\0')  : end = true;
                                                   break;
 
                                       default   : break;

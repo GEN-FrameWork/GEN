@@ -40,8 +40,8 @@
 
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
 
-#define DIOSCRAPERWEBPUBLICIP_SCRIPTPATH    __L("publicip.g")
-#define DIOSCRAPERWEBPUBLICIP_CACHEASK      __L("public IP ID")
+#define DIOSCRAPERWEBPUBLICIP_SCRIPTPATH    _L("publicip.g")
+#define DIOSCRAPERWEBPUBLICIP_CACHEASK      _L("public IP ID")
 #define DIOSCRAPERWEBPUBLICIP_MAXTIMEOUT    DIOSCRAPERSCRIPT_DEFAULT_TIMEOUT
 
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/

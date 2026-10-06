@@ -52,16 +52,16 @@ enum DIOCLIPROTOCOL_ERROR
   DIOCLIPROTOCOL_ERROR_NOTANSWER                   ,
 };
 
-#define DIOCLIPROTOCOL_MARK_DONOTANSWER     __C('#')
-#define DIOCLIPROTOCOL_MARK_ISANSWER        __C('>')
-#define DIOCLIPROTOCOL_MARK_ORIGIN          __L("[@]")
-#define DIOCLIPROTOCOL_MARK_TARGET          __L("[$]") 
-#define DIOCLIPROTOCOL_MARK_BROADCAST       __L("[*]") 
-#define DIOCLIPROTOCOL_MARK_ANSWER          __L("[-]") 
-#define DIOCLIPROTOCOL_MARK_CRC32           __L("[|]") 
+#define DIOCLIPROTOCOL_MARK_DONOTANSWER     _C('#')
+#define DIOCLIPROTOCOL_MARK_ISANSWER        _C('>')
+#define DIOCLIPROTOCOL_MARK_ORIGIN          _L("[@]")
+#define DIOCLIPROTOCOL_MARK_TARGET          _L("[$]") 
+#define DIOCLIPROTOCOL_MARK_BROADCAST       _L("[*]") 
+#define DIOCLIPROTOCOL_MARK_ANSWER          _L("[-]") 
+#define DIOCLIPROTOCOL_MARK_CRC32           _L("[|]") 
 
-#define DIOCLIPROTOCOL_OK                   __L("ok")
-#define DIOCLIPROTOCOL_ERROR                __L("error")
+#define DIOCLIPROTOCOL_OK                   _L("ok")
+#define DIOCLIPROTOCOL_ERROR                _L("error")
 
 #define DIOCLIPROTOCOL_TIMEOUT              5  //Seconds
 

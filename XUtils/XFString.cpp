@@ -155,7 +155,7 @@ int XFSTRING::Fast_ConvertToInt(int index)
 {
   int result = 0;
 
-  swscanf(&text[index], __L("%d"), &result);
+  swscanf(&text[index], _L("%d"), &result);
   return result;
 }
 
@@ -175,7 +175,7 @@ XDWORD XFSTRING::Fast_ConvertToDWord(int index)
 {
   XDWORD result = 0;
 
-  swscanf(&text[index], __L("%u"), &result);
+  swscanf(&text[index], _L("%u"), &result);
 
   return result;
 }
@@ -196,7 +196,7 @@ XQWORD XFSTRING::Fast_ConvertToQWord(int index)
 {
   XQWORD result = 0;
 
-  swscanf(&text[index], __L("%lld"), &result);
+  swscanf(&text[index], _L("%lld"), &result);
 
   return result;
 }
@@ -217,7 +217,7 @@ XQWORDSIG XFSTRING::Fast_ConvertToSQWord(int index)
 {
   XQWORDSIG result = 0;
 
-  swscanf(&text[index], __L("%lld"), &result);
+  swscanf(&text[index], _L("%lld"), &result);
 
   return result;
 }
@@ -238,7 +238,7 @@ float XFSTRING::Fast_ConvertToFloat(int index)
 {
   float result = 0;
 
-  swscanf(&text[index], __L("%f"), &result);
+  swscanf(&text[index], _L("%f"), &result);
 
   return result;
 }
@@ -259,7 +259,7 @@ double XFSTRING::Fast_ConvertToDouble(int index)
 {
   double result = 0;
 
-  swscanf(&text[index], __L("%lf"), &result);
+  swscanf(&text[index], _L("%lf"), &result);
 
   return result;
 }

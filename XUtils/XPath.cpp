@@ -1026,7 +1026,7 @@ bool XPATH::DeleteDrive()
   if(IsEmpty())    return false;
   if(GetSize()<=2) return false;
 
-  if(Get()[1]!=__C(':')) return false;
+  if(Get()[1]!=_C(':')) return false;
 
   XPATH xpath2;
 
@@ -1069,7 +1069,7 @@ bool XPATH::Slash_HaveAtLast()
 {
   XCHAR character = Character_GetLast();
   
-  if((character == __C('\\')) || (character == __C('/'))) return true;
+  if((character == _C('\\')) || (character == _C('/'))) return true;
 
   return false;
 }
@@ -1094,8 +1094,8 @@ bool XPATH::Slash_Add()
 
   while(c < GetSize())
     {
-      if(str[c]==__C('/'))  count[0]++;
-      if(str[c]==__C('\\')) count[1]++;
+      if(str[c]==_C('/'))  count[0]++;
+      if(str[c]==_C('\\')) count[1]++;
 
       c++;
     }
@@ -1137,11 +1137,11 @@ bool XPATH::Slash_Normalize(bool inverse)
     {
       if(inverse)
        {
-         if(str[c]==__C('/'))  str[c] = __C('\\');
+         if(str[c]==_C('/'))  str[c] = _C('\\');
        }
       else
        {
-         if(str[c]==__C('\\')) str[c] = __C('/');
+         if(str[c]==_C('\\')) str[c] = _C('/');
        }
 
       c++;
@@ -1198,7 +1198,7 @@ bool XPATH::AddToNameFile(bool isprefix, XCHAR* tag)
 
   if(!Split(&drive, &xpath, &name, &ext)) return false;
 
-  //if(!drive.IsEmpty()) drive.Add(__L("/"));
+  //if(!drive.IsEmpty()) drive.Add(_L("/"));
 
   xpath.Slash_Add();
 
@@ -1213,7 +1213,7 @@ bool XPATH::AddToNameFile(bool isprefix, XCHAR* tag)
       newname += tag;
     }
 
-  Format(__L("%s%s%s%s"), drive.Get(), xpath.Get(), newname.Get(), ext.Get());
+  Format(_L("%s%s%s%s"), drive.Get(), xpath.Get(), newname.Get(), ext.Get());
 
   return true;
 }
@@ -1247,7 +1247,7 @@ bool XPATH::Create(int nelements, ...)
       xpath = (XCHAR*)va_arg(arg, XCHAR*);
       if(!xpath.IsEmpty())
         {
-          if(c && xpath.Character_GetFirst()!=__C('.'))
+          if(c && xpath.Character_GetFirst()!=_C('.'))
             {
               Slash_Add();
             }
@@ -1301,7 +1301,7 @@ bool XPATH::Create(XPATHSMANAGERSECTIONTYPE sectiontype, int nelements, ...)
       xpath = (XCHAR*)va_arg(arg, XCHAR*);
       if(!xpath.IsEmpty())
         {
-          if(c && xpath.Character_GetFirst()!=__C('.'))
+          if(c && xpath.Character_GetFirst()!=_C('.'))
             {
               Slash_Add();
             }
@@ -1348,7 +1348,7 @@ bool XPATH::Split(XSTRING* drive, XPATH* xpath, XSTRING* name, XSTRING* ext)
   c = 0;
   while(pathstr[c])
     {
-      if(pathstr[c]==__C(':'))
+      if(pathstr[c]==_C(':'))
         {
           if(drive) Copy(0, c+1, (*drive));
 
@@ -1362,12 +1362,12 @@ bool XPATH::Split(XSTRING* drive, XPATH* xpath, XSTRING* name, XSTRING* ext)
   c = (GetSize()-1);
   while(pathstr[c])
     {
-      if((pathstr[c]==__C('\\')) || (pathstr[c]==__C('/')))
+      if((pathstr[c]==_C('\\')) || (pathstr[c]==_C('/')))
         {
           break;
         }
 
-      if(pathstr[c]==__C('.'))
+      if(pathstr[c]==_C('.'))
         {
           if(ext) Copy(c, GetSize(), (*ext));
 
@@ -1381,9 +1381,9 @@ bool XPATH::Split(XSTRING* drive, XPATH* xpath, XSTRING* name, XSTRING* ext)
   c = (iext)?iext:GetSize();
   while(c>=0)
     {
-      if((!c) || pathstr[c]==__C('\\') || pathstr[c]==__C('/')  || pathstr[c]==__C(':'))
+      if((!c) || pathstr[c]==_C('\\') || pathstr[c]==_C('/')  || pathstr[c]==_C(':'))
         {
-          if(pathstr[c]==__C('\\') || pathstr[c]==__C('/') || pathstr[c]==__C(':')) c++;
+          if(pathstr[c]==_C('\\') || pathstr[c]==_C('/') || pathstr[c]==_C(':')) c++;
 
           if(name) Copy(c, (iext)?iext:GetSize(), (*name));
 
@@ -1448,7 +1448,7 @@ bool XPATH::Split(XSTRING* drive, XVECTOR<XSTRING*>& subpaths, XSTRING* name, XS
             }
         }
       
-      if((_xpath[c]==__C('\\')) || (_xpath[c]==__C('/')) || (c == _xpath.GetSize()))
+      if((_xpath[c]==_C('\\')) || (_xpath[c]==_C('/')) || (c == _xpath.GetSize()))
         {
           if(!c)
             {

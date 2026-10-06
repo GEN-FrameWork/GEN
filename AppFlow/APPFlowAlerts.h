@@ -59,7 +59,7 @@ enum APPFLOW_ALERT_STATUS
   APPFLOW_ALERT_STATUS_ACTIVE              ,  
 };
 
-#define APPFLOW_ALERTS_WEBALERTCMD   __L("alert")
+#define APPFLOW_ALERTS_WEBALERTCMD   _L("alert")
 
 #define APPFLOW_ALERTS               APPFLOWALERTS ::GetInstance()
 

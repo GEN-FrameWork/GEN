@@ -122,7 +122,7 @@ bool DIOWINDOWSPCAP::Capture_Start(DIOPCAPNETINTERFACE* netinterface, bool promi
   if(handle == NULL) return false;
 
 
-  threadcapture = CREATEXTHREAD(XTHREADGROUPID_DIOPCAP, __L("DIOWINDOWSPCAP::Capture_Start"), ThreadCapture, (void*)this);
+  threadcapture = CREATEXTHREAD(XTHREADGROUPID_DIOPCAP, _L("DIOWINDOWSPCAP::Capture_Start"), ThreadCapture, (void*)this);
   if(!threadcapture) return false;
 
   return threadcapture->Ini();

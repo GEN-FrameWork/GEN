@@ -107,42 +107,42 @@ XSYSTEM_HARDWARETYPE XSTM32SYSTEM::GetTypeHardware(int* revision)
 * --------------------------------------------------------------------------------------------------------------------*/
 XSYSTEM_PLATFORM XSTM32SYSTEM::GetPlatform(XSTRING* namestring)
 {
-  if(namestring)  namestring->Set(__L("STM32"));
+  if(namestring)  namestring->Set(_L("STM32"));
     
   #if defined(STM32F072xB)
-  if(namestring)  namestring->Set(__L("STM32F072xB"));
+  if(namestring)  namestring->Set(_L("STM32F072xB"));
   #endif
 
   #if defined(STM32F303xC) 
-  if(namestring)  namestring->Set(__L("STM32F303xC"));
+  if(namestring)  namestring->Set(_L("STM32F303xC"));
   #endif
   
   #if defined(STM32F303xE)
-  if(namestring)  namestring->Set(__L("STM32F303xE"));
+  if(namestring)  namestring->Set(_L("STM32F303xE"));
   #endif
 
   #if defined(STM32F407xx) 
-  if(namestring)  namestring->Set(__L("STM32F407xx"));
+  if(namestring)  namestring->Set(_L("STM32F407xx"));
   #endif
   
   #if defined(STM32F411xE)  
-  if(namestring)  namestring->Set(__L("STM32F411xE"));  
+  if(namestring)  namestring->Set(_L("STM32F411xE"));  
   #endif
       
   #if defined(STM32F446xx)
-  if(namestring)  namestring->Set(__L("STM32F446xx"));
+  if(namestring)  namestring->Set(_L("STM32F446xx"));
   #endif
 
   #if defined(STM32WB55xx)
-  if(namestring)  namestring->Set(__L("STM32WB55xx"));
+  if(namestring)  namestring->Set(_L("STM32WB55xx"));
   #endif
   
   #if defined(STM32WB5Mxx)
-  if(namestring)  namestring->Set(__L("STM32WB5Mxx"));  
+  if(namestring)  namestring->Set(_L("STM32WB5Mxx"));  
   #endif
     
   #if defined(STM32WB35xx)
-  if(namestring)  namestring->Set(__L("STM32WB35xx"));
+  if(namestring)  namestring->Set(_L("STM32WB35xx"));
   #endif
 
   return XSYSTEM_PLATFORM_STM32;  

@@ -288,8 +288,8 @@ bool DIOCOREPROTOCOL_REGISTERDATA::CreateIDMachine(XUUID& ID)
 
   ID.Empty();
   
-  origin.AddFormat(__L(" %s"), GEN_XSYSTEM.GetBIOSSerialNumber()->Get());
-  origin.AddFormat(__L(" %s"), GEN_XSYSTEM.GetCPUSerialNumber()->Get());
+  origin.AddFormat(_L(" %s"), GEN_XSYSTEM.GetBIOSSerialNumber()->Get());
+  origin.AddFormat(_L(" %s"), GEN_XSYSTEM.GetCPUSerialNumber()->Get());
 
   origin.ConvertToUTF8(originbuffer);
     
@@ -361,7 +361,7 @@ bool DIOCOREPROTOCOL_REGISTERDATA::ShowDebug()
       GEN_DELETE serializationmethod;
     }     
 
-  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, __L("Register data:"));
+  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, _L("Register data:"));
   classcontent.ShowTraceJSON(XTRACE_COLOR_BLUE);      
 
   return true;

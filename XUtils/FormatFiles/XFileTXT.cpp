@@ -613,10 +613,10 @@ XSTRING* XFILETXT::GetLF(XFILETXTTYPELF typeLF)
     {
       case XFILETXTTYPELF_UNKNOWN : break;
 
-      case XFILETXTTYPELF_0A      : LF = __L("\n");    break;
-      case XFILETXTTYPELF_0D      : LF = __L("\r");    break;
-      case XFILETXTTYPELF_0A0D    : LF = __L("\n\r");  break;
-      case XFILETXTTYPELF_0D0A    : LF = __L("\r\n");  break;
+      case XFILETXTTYPELF_0A      : LF = _L("\n");    break;
+      case XFILETXTTYPELF_0D      : LF = _L("\r");    break;
+      case XFILETXTTYPELF_0A0D    : LF = _L("\n\r");  break;
+      case XFILETXTTYPELF_0D0A    : LF = _L("\r\n");  break;
 
                      default      : break; 
     }

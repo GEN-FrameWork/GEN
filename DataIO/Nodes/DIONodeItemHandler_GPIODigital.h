@@ -43,7 +43,7 @@ class DIONODEITEMHANDLER_ENTRYGPIO
 {
   public: 
                                             DIONODEITEMHANDLER_ENTRYGPIO      ();
-                                            DIONODEITEMHANDLER_ENTRYGPIO      (XDWORD entryID, bool writemode, int GPIO = DIONODEITEMHANDLER_INVALIDPARAM, int pin = DIONODEITEMHANDLER_INVALIDPARAM, XCHAR* description = __L(""));
+                                            DIONODEITEMHANDLER_ENTRYGPIO      (XDWORD entryID, bool writemode, int GPIO = DIONODEITEMHANDLER_INVALIDPARAM, int pin = DIONODEITEMHANDLER_INVALIDPARAM, XCHAR* description = _L(""));
     virtual                                ~DIONODEITEMHANDLER_ENTRYGPIO      ();
 
     XDWORD                                  GetEntryID                        ();

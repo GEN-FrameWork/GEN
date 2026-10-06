@@ -99,8 +99,8 @@ bool GRPVECTORFILESVGCONFIG::ApplyData(XFILEXMLELEMENT* elementsvg)
 {
   if(!elementsvg) return false;
 
-  XCHAR* valuewidth  = elementsvg->GetValueAttribute(__L("width"));
-  XCHAR* valueheight = elementsvg->GetValueAttribute(__L("height"));
+  XCHAR* valuewidth  = elementsvg->GetValueAttribute(_L("width"));
+  XCHAR* valueheight = elementsvg->GetValueAttribute(_L("height"));
 
   if(valuewidth)
     {
@@ -114,14 +114,14 @@ bool GRPVECTORFILESVGCONFIG::ApplyData(XFILEXMLELEMENT* elementsvg)
       height = str.ConvertToDouble(0, NULL, false);
     }
 
-  XCHAR* valueviewbox = elementsvg->GetValueAttribute(__L("viewBox"));
+  XCHAR* valueviewbox = elementsvg->GetValueAttribute(_L("viewBox"));
   if(valueviewbox)
     {
       XSTRING strviewbox(valueviewbox);
-      strviewbox.Replace(__L(","), __L(" "));
+      strviewbox.Replace(_L(","), _L(" "));
 
       XVECTOR<XSTRING*> tokens;
-      strviewbox.Split(__C(' '), tokens, false);
+      strviewbox.Split(_C(' '), tokens, false);
 
       if(tokens.GetSize() >= 4)
         {
@@ -137,7 +137,7 @@ bool GRPVECTORFILESVGCONFIG::ApplyData(XFILEXMLELEMENT* elementsvg)
       tokens.DeleteAll();
     }
 
-  XCHAR* valuepreserve = elementsvg->GetValueAttribute(__L("preserveAspectRatio"));
+  XCHAR* valuepreserve = elementsvg->GetValueAttribute(_L("preserveAspectRatio"));
   if(valuepreserve)
     {
       preserveaspectratio = valuepreserve;

@@ -71,7 +71,7 @@ DIOWEBSERVER_PLUGIN_CGI::DIOWEBSERVER_PLUGIN_CGI()
 {
   Clean();
 
-  GetName()->Set(__L("CGI Pluging"));
+  GetName()->Set(_L("CGI Pluging"));
 }
 
 
@@ -160,32 +160,32 @@ bool DIOWEBSERVER_PLUGIN_CGI::PageExtension(XPATH& pathfile, DIOWEBSERVER_REQUES
         {
           in.Add((*request->GetData()));
 
-          sizeinstr.Format(__L("%d"), sizein);
+          sizeinstr.Format(_L("%d"), sizein);
         }
     }
 
   switch(request->GetMethod())
     {
-      case DIOWEBHEADER_METHOD_GET     : methodstring = __L("\"GET\"");       break;
-      case DIOWEBHEADER_METHOD_POST    : methodstring = __L("\"POST\"");      break;
-      case DIOWEBHEADER_METHOD_PUT     : methodstring = __L("\"PUT\"");       break;
-      case DIOWEBHEADER_METHOD_DELETE  : methodstring = __L("\"DELETE\"");    break;
+      case DIOWEBHEADER_METHOD_GET     : methodstring = _L("\"GET\"");       break;
+      case DIOWEBHEADER_METHOD_POST    : methodstring = _L("\"POST\"");      break;
+      case DIOWEBHEADER_METHOD_PUT     : methodstring = _L("\"PUT\"");       break;
+      case DIOWEBHEADER_METHOD_DELETE  : methodstring = _L("\"DELETE\"");    break;
                           default      : break;
     }
 
 
-  GEN_XSYSTEM.SetEnviromentVariable(__L("GATEWAY_INTERFACE") , __L("CGI/1.1"));
-  GEN_XSYSTEM.SetEnviromentVariable(__L("REQUEST_METHOD"), __L("POST"));
-  GEN_XSYSTEM.SetEnviromentVariable(__L("SCRIPT_FILENAME"), pathfile.Get());
-  GEN_XSYSTEM.SetEnviromentVariable(__L("CONTENT_LENGTH"), sizeinstr.Get());
-  GEN_XSYSTEM.SetEnviromentVariable(__L("REDIRECT_STATUS"), __L("true"));
-  GEN_XSYSTEM.SetEnviromentVariable(__L("CONTENT_TYPE"), __L("application/x-www-form-urlencoded"));
+  GEN_XSYSTEM.SetEnviromentVariable(_L("GATEWAY_INTERFACE") , _L("CGI/1.1"));
+  GEN_XSYSTEM.SetEnviromentVariable(_L("REQUEST_METHOD"), _L("POST"));
+  GEN_XSYSTEM.SetEnviromentVariable(_L("SCRIPT_FILENAME"), pathfile.Get());
+  GEN_XSYSTEM.SetEnviromentVariable(_L("CONTENT_LENGTH"), sizeinstr.Get());
+  GEN_XSYSTEM.SetEnviromentVariable(_L("REDIRECT_STATUS"), _L("true"));
+  GEN_XSYSTEM.SetEnviromentVariable(_L("CONTENT_TYPE"), _L("application/x-www-form-urlencoded"));
 
   // Standard CGI/1.1 convention (also followed by PHP's $_SERVER['HTTPS']): only set, and only to "on", when the
   // request arrived over TLS -- absent entirely for plain HTTP, never set to "off".
-  if(istls) GEN_XSYSTEM.SetEnviromentVariable(__L("HTTPS"), __L("on"));
+  if(istls) GEN_XSYSTEM.SetEnviromentVariable(_L("HTTPS"), _L("on"));
 
-  if(request->GetMethod() == DIOWEBHEADER_METHOD_GET) GEN_XSYSTEM.SetEnviromentVariable(__L("QUERY_STRING"), allparam.GetSize()?allparam.Get():__L("\"\""));
+  if(request->GetMethod() == DIOWEBHEADER_METHOD_GET) GEN_XSYSTEM.SetEnviromentVariable(_L("QUERY_STRING"), allparam.GetSize()?allparam.Get():_L("\"\""));
 
   status = GEN_XPROCESSMANAGER.Application_Execute(pathexec.Get(), NULL, &in, &out, &returnerror);
 
@@ -194,15 +194,15 @@ bool DIOWEBSERVER_PLUGIN_CGI::PageExtension(XPATH& pathfile, DIOWEBSERVER_REQUES
       result.Add(out);
     }
 
-  GEN_XSYSTEM.DelEnviromentVariable(__L("GATEWAY_INTERFACE"));
-  GEN_XSYSTEM.DelEnviromentVariable(__L("REQUEST_METHOD"));
-  GEN_XSYSTEM.DelEnviromentVariable(__L("SCRIPT_FILENAME"));
-  GEN_XSYSTEM.DelEnviromentVariable(__L("CONTENT_LENGTH"));
-  GEN_XSYSTEM.DelEnviromentVariable(__L("REDIRECT_STATUS"));
-  GEN_XSYSTEM.DelEnviromentVariable(__L("CONTENT_TYPE"));
-  GEN_XSYSTEM.DelEnviromentVariable(__L("QUERY_STRING"));
+  GEN_XSYSTEM.DelEnviromentVariable(_L("GATEWAY_INTERFACE"));
+  GEN_XSYSTEM.DelEnviromentVariable(_L("REQUEST_METHOD"));
+  GEN_XSYSTEM.DelEnviromentVariable(_L("SCRIPT_FILENAME"));
+  GEN_XSYSTEM.DelEnviromentVariable(_L("CONTENT_LENGTH"));
+  GEN_XSYSTEM.DelEnviromentVariable(_L("REDIRECT_STATUS"));
+  GEN_XSYSTEM.DelEnviromentVariable(_L("CONTENT_TYPE"));
+  GEN_XSYSTEM.DelEnviromentVariable(_L("QUERY_STRING"));
 
-  if(istls) GEN_XSYSTEM.DelEnviromentVariable(__L("HTTPS"));
+  if(istls) GEN_XSYSTEM.DelEnviromentVariable(_L("HTTPS"));
 
   return status;
 }

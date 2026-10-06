@@ -34,7 +34,7 @@
 
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
 
-#define SCRIPT_LIB_NAME_RANDOM  __L("Random")
+#define SCRIPT_LIB_NAME_RANDOM  _L("Random")
 
 
 

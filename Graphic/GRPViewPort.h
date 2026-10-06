@@ -44,7 +44,7 @@ enum GRPVIEWPORT_PROJECTIONTYPE
   GRPVIEWPORT_PROJECTIONTYPE_PIXELS        ,
 };
 
-#define GRPVIEWPORT_ID_MAIN   __L("mainviewport")
+#define GRPVIEWPORT_ID_MAIN   _L("mainviewport")
 
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
 

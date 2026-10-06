@@ -39,7 +39,7 @@
 
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
 
-#define DIOSCRAPERWEBUSERAGENTID_SCRIPTPATH    __L("useragentid.g")
+#define DIOSCRAPERWEBUSERAGENTID_SCRIPTPATH    _L("useragentid.g")
 #define DIOSCRAPERWEBUSERAGENTID_MAXTIMEOUT    DIOSCRAPERSCRIPT_DEFAULT_TIMEOUT
 
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/

@@ -103,21 +103,21 @@ bool SCRIPT_LIB_STRING::AddLibraryFunctions(SCRIPT* script)
 
   this->script = script;
 
-  script->AddLibraryFunction(this, __L("AddString")       , Call_AddString);
-  script->AddLibraryFunction(this, __L("FindString")      , Call_FindString);
-  script->AddLibraryFunction(this, __L("CompareString")   , Call_CompareString);
-  script->AddLibraryFunction(this, __L("ReplaceString")   , Call_ReplaceString);
-  script->AddLibraryFunction(this, __L("ReplaceAllString"), Call_ReplaceAllString);
-  script->AddLibraryFunction(this, __L("SPrintf")         , Call_SPrintf);
-  script->AddLibraryFunction(this, __L("GetStringSize")   , Call_GetStringSize);
-  script->AddLibraryFunction(this, __L("IsEmptyString")   , Call_IsEmptyString);
-  script->AddLibraryFunction(this, __L("SubString")       , Call_SubString);
-  script->AddLibraryFunction(this, __L("SubStringFrom")   , Call_SubStringFrom);
-  script->AddLibraryFunction(this, __L("ExtractBetween")  , Call_ExtractBetween);
-  script->AddLibraryFunction(this, __L("TrimString")      , Call_TrimString);
-  script->AddLibraryFunction(this, __L("ToUpperString")   , Call_ToUpperString);
-  script->AddLibraryFunction(this, __L("ToLowerString")   , Call_ToLowerString);
-  script->AddLibraryFunction(this, __L("GetCharString")   , Call_GetCharString);
+  script->AddLibraryFunction(this, _L("AddString")       , Call_AddString);
+  script->AddLibraryFunction(this, _L("FindString")      , Call_FindString);
+  script->AddLibraryFunction(this, _L("CompareString")   , Call_CompareString);
+  script->AddLibraryFunction(this, _L("ReplaceString")   , Call_ReplaceString);
+  script->AddLibraryFunction(this, _L("ReplaceAllString"), Call_ReplaceAllString);
+  script->AddLibraryFunction(this, _L("SPrintf")         , Call_SPrintf);
+  script->AddLibraryFunction(this, _L("GetStringSize")   , Call_GetStringSize);
+  script->AddLibraryFunction(this, _L("IsEmptyString")   , Call_IsEmptyString);
+  script->AddLibraryFunction(this, _L("SubString")       , Call_SubString);
+  script->AddLibraryFunction(this, _L("SubStringFrom")   , Call_SubStringFrom);
+  script->AddLibraryFunction(this, _L("ExtractBetween")  , Call_ExtractBetween);
+  script->AddLibraryFunction(this, _L("TrimString")      , Call_TrimString);
+  script->AddLibraryFunction(this, _L("ToUpperString")   , Call_ToUpperString);
+  script->AddLibraryFunction(this, _L("ToLowerString")   , Call_ToLowerString);
+  script->AddLibraryFunction(this, _L("GetCharString")   , Call_GetCharString);
 
   return true;
 }
@@ -431,14 +431,14 @@ void Call_SPrintf(SCRIPT_LIB* library, SCRIPT* script, XVECTOR<XVARIANT*>* param
 
                             switch(mask[c])
                               {
-                                case __C('c')   :
-                                case __C('C')   :
-                                case __C('d')   :
-                                case __C('i')   :
-                                case __C('o')   :
-                                case __C('u')   :
-                                case __C('x')   :
-                                case __C('X')   : { int value = 0;
+                                case _C('c')   :
+                                case _C('C')   :
+                                case _C('d')   :
+                                case _C('i')   :
+                                case _C('o')   :
+                                case _C('u')   :
+                                case _C('x')   :
+                                case _C('X')   : { int value = 0;
                                                     library->GetParamConverted(params->Get(paramindex), value);
                                                     string.Format(param, value);
                                                     paramindex++;
@@ -446,7 +446,7 @@ void Call_SPrintf(SCRIPT_LIB* library, SCRIPT* script, XVECTOR<XVARIANT*>* param
                                                   }
                                                   break;
 
-                                case __C('f')   : { float value = 0;
+                                case _C('f')   : { float value = 0;
                                                     library->GetParamConverted(params->Get(paramindex), value);
                                                     string.Format(param, value);
                                                     paramindex++;
@@ -454,18 +454,18 @@ void Call_SPrintf(SCRIPT_LIB* library, SCRIPT* script, XVECTOR<XVARIANT*>* param
                                                   }
                                                   break;
 
-                                case __C('g')   :
-                                case __C('G')   :
+                                case _C('g')   :
+                                case _C('G')   :
 
-                                case __C('e')   :
-                                case __C('E')   :
+                                case _C('e')   :
+                                case _C('E')   :
 
-                                case __C('n')   :
-                                case __C('p')   : end = true;
+                                case _C('n')   :
+                                case _C('p')   : end = true;
                                                   break;
 
-                                case __C('s')   :
-                                case __C('S')   : { XVARIANT variantparam = (*params->Get(paramindex));
+                                case _C('s')   :
+                                case _C('S')   : { XVARIANT variantparam = (*params->Get(paramindex));
                                                     paramindex++;
                                                     // Pass data as a string value — do not re-parse '%' inside it.
                                                     string = (XCHAR*)variantparam;
@@ -473,11 +473,11 @@ void Call_SPrintf(SCRIPT_LIB* library, SCRIPT* script, XVECTOR<XVARIANT*>* param
                                                   }
                                                   break;
 
-                                case __C('%')   : string = __L("%");
+                                case _C('%')   : string = _L("%");
                                                   end = true;
                                                   break;
 
-                                case __C('\0')  : end = true;
+                                case _C('\0')  : end = true;
                                                   break;
 
                                       default   : break;
@@ -793,8 +793,8 @@ void Call_TrimString(SCRIPT_LIB* library, SCRIPT* script, XVECTOR<XVARIANT*>* pa
       return;
     }
 
-  text.DeleteNoCharacters(__L(" \t\r\n"), 0, XSTRINGCONTEXT_FROM_FIRST);
-  text.DeleteNoCharacters(__L(" \t\r\n"), 0, XSTRINGCONTEXT_TO_END);
+  text.DeleteNoCharacters(_L(" \t\r\n"), 0, XSTRINGCONTEXT_FROM_FIRST);
+  text.DeleteNoCharacters(_L(" \t\r\n"), 0, XSTRINGCONTEXT_TO_END);
 
   (*returnvalue) = text;
 }

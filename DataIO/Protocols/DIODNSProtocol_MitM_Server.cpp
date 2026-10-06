@@ -113,7 +113,7 @@ bool DIODNSPROTOCOL_MITM_SERVER::Ini()
   XSTRING servercfgstr;
 
   diostreamudpcfg.SetMode(DIOSTREAMMODE_SERVER);
-  diostreamudpcfg.GetRemoteURL()->Set(__L("localhost"));  
+  diostreamudpcfg.GetRemoteURL()->Set(_L("localhost"));  
   diostreamudpcfg.SetRemotePort(DIODNSPROTOCOL_DEFAULTPORT);  
   diostreamudpcfg.SetIsUsedDatagrams(false);
   
@@ -126,12 +126,12 @@ bool DIODNSPROTOCOL_MITM_SERVER::Ini()
       return false;
     }
 
-  AddDNSServer(__L("8.8.8.8"));
-  AddDNSServer(__L("8.8.4.4"));
-  //AddDNSServer(__L("64.6.64.6"));
-  //AddDNSServer(__L("64.6.65.6"));
+  AddDNSServer(_L("8.8.8.8"));
+  AddDNSServer(_L("8.8.4.4"));
+  //AddDNSServer(_L("64.6.64.6"));
+  //AddDNSServer(_L("64.6.65.6"));
   
-  serverthread = GEN_XFACTORY.CreateThread(XTHREADGROUPID_DIODNSRESOLVED, __L("DIODNSPROTOCOL_MITM_SERVER::Ini"), DIODNSPROTOCOL_MITM_SERVER::ThreadServer, this);  
+  serverthread = GEN_XFACTORY.CreateThread(XTHREADGROUPID_DIODNSRESOLVED, _L("DIODNSPROTOCOL_MITM_SERVER::Ini"), DIODNSPROTOCOL_MITM_SERVER::ThreadServer, this);  
   if(!serverthread)
     {
       GEN_XFACTORY.Delete_Mutex(servermutex);
@@ -224,7 +224,7 @@ bool DIODNSPROTOCOL_MITM_SERVER::Update()
   XDWORD sizeread = diostreamudp->Read(receivedbuffer[0]);
   if(!sizeread)
     {
-      XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, __L("[DSN MitM Server] Error to Read header"));      
+      XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, _L("[DSN MitM Server] Error to Read header"));      
       return false;
     }  
   
@@ -260,19 +260,19 @@ bool DIODNSPROTOCOL_MITM_SERVER::Update()
       DIODNSRESOLVER_DNSSERVER* DNSserver = dnsservers.Get(c);
       if(DNSserver)
         {
-          XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, __L("[DSN MitM Server] %d server..."), c);      
+          XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, _L("[DSN MitM Server] %d server..."), c);      
 
           status = Detour(DNSserver, receivedbuffer[0], receivedbuffer[1]);
           if(status)
             {
-              XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, __L("[DSN MitM Server] Buffer receiver"));      
+              XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, _L("[DSN MitM Server] Buffer receiver"));      
               XTRACE_PRINTDATABLOCKCOLOR(XTRACE_COLOR_BLUE, receivedbuffer[1]); 
 
               break;          
             }
            else
             {
-              XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, __L("[DSN MitM Server] Error to Detour"));      
+              XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, _L("[DSN MitM Server] Error to Detour"));      
             }                 
         }    
     }
@@ -293,12 +293,12 @@ bool DIODNSPROTOCOL_MITM_SERVER::Update()
         } 
        else
         {
-          XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, __L("[DSN MitM Server] Error to Write answer buffer"));      
+          XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, _L("[DSN MitM Server] Error to Write answer buffer"));      
         }                          
     }
    else
     {
-      XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, __L("[DSN MitM Server] Error to Write answer"));      
+      XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, _L("[DSN MitM Server] Error to Write answer"));      
     }     
      
   return status;

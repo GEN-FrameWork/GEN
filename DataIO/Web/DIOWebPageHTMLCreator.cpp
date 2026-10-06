@@ -504,7 +504,7 @@ bool DIOWEBPAGEHTMLCREATOR::Printf(XCHAR* mask, ...)
   //--------------------------------------------------
   // To See better the sorce code of WEB page
   #ifdef DEBUG_ACTIVE
-  //Add(__L("\n"));
+  //Add(_L("\n"));
   #endif
 
   return true;
@@ -529,7 +529,7 @@ bool DIOWEBPAGEHTMLCREATOR::Print(XCHAR* text)
   //--------------------------------------------------
   // To See better the sorce code of WEB page
   #ifdef DEBUG_ACTIVE
-  //Add(__L("\n"));
+  //Add(_L("\n"));
   #endif
 
   return true;
@@ -552,7 +552,7 @@ bool DIOWEBPAGEHTMLCREATOR::Table_Ini(int border, XCHAR* addstyle)
 {
   this->tableborder = border;
 
-  Printf(__L("<table style=\"border-collapse: collapse; %s \">"), (addstyle?addstyle:__L("")));
+  Printf(_L("<table style=\"border-collapse: collapse; %s \">"), (addstyle?addstyle:_L("")));
 
   return true;
 }
@@ -576,7 +576,7 @@ bool DIOWEBPAGEHTMLCREATOR::Table_Line(int ncolumns, ...)
 
   va_start(arg, ncolumns);
 
-  Printf(__L("<tr>"));
+  Printf(_L("<tr>"));
 
   for(int c=0; c<ncolumns; c++)
     {
@@ -592,17 +592,17 @@ bool DIOWEBPAGEHTMLCREATOR::Table_Line(int ncolumns, ...)
 
       switch(align)
         {
-          case DIOWEBPAGEHTMLCREATORALIGN_NONE   : alignstr = __L("");        break;
-          case DIOWEBPAGEHTMLCREATORALIGN_LEFT   : alignstr = __L("left");    break;
-          case DIOWEBPAGEHTMLCREATORALIGN_RIGHT  : alignstr = __L("right");   break;
-          case DIOWEBPAGEHTMLCREATORALIGN_CENTER : alignstr = __L("center");  break;
+          case DIOWEBPAGEHTMLCREATORALIGN_NONE   : alignstr = _L("");        break;
+          case DIOWEBPAGEHTMLCREATORALIGN_LEFT   : alignstr = _L("left");    break;
+          case DIOWEBPAGEHTMLCREATORALIGN_RIGHT  : alignstr = _L("right");   break;
+          case DIOWEBPAGEHTMLCREATORALIGN_CENTER : alignstr = _L("center");  break;
         }
 
-      Printf(__L("<td style=\"border: %dpx solid silver;\" width=\"%d\" align=\"%s\">%s</td>"), tableborder, width, alignstr.Get(), textrev.Get());
+      Printf(_L("<td style=\"border: %dpx solid silver;\" width=\"%d\" align=\"%s\">%s</td>"), tableborder, width, alignstr.Get(), textrev.Get());
 
     }
 
-  Printf(__L("</tr>"));
+  Printf(_L("</tr>"));
 
   va_end(arg);
 
@@ -635,11 +635,11 @@ bool DIOWEBPAGEHTMLCREATOR::Table_Line(XCHAR* colorbackground, int ncolumns, ...
 
   if(!color.IsEmpty())
     {
-      tr = __L("<tr bgcolor=\"");
+      tr = _L("<tr bgcolor=\"");
       tr += colorbackground;
       tr += "\">";
     }
-   else tr = __L("<tr>");
+   else tr = _L("<tr>");
 
   Printf(tr.Get());
 
@@ -657,16 +657,16 @@ bool DIOWEBPAGEHTMLCREATOR::Table_Line(XCHAR* colorbackground, int ncolumns, ...
 
       switch(align)
         {
-          case DIOWEBPAGEHTMLCREATORALIGN_NONE   : alignstr = __L("");        break;
-          case DIOWEBPAGEHTMLCREATORALIGN_LEFT   : alignstr = __L("left");    break;
-          case DIOWEBPAGEHTMLCREATORALIGN_RIGHT  : alignstr = __L("right");   break;
-          case DIOWEBPAGEHTMLCREATORALIGN_CENTER : alignstr = __L("center");  break;
+          case DIOWEBPAGEHTMLCREATORALIGN_NONE   : alignstr = _L("");        break;
+          case DIOWEBPAGEHTMLCREATORALIGN_LEFT   : alignstr = _L("left");    break;
+          case DIOWEBPAGEHTMLCREATORALIGN_RIGHT  : alignstr = _L("right");   break;
+          case DIOWEBPAGEHTMLCREATORALIGN_CENTER : alignstr = _L("center");  break;
         }
 
-      Printf(__L("<td style=\"border: %dpx solid silver;\" width=\"%d\" align=\"%s\">%s</td>"), tableborder, width, alignstr.Get(), textrev.Get());
+      Printf(_L("<td style=\"border: %dpx solid silver;\" width=\"%d\" align=\"%s\">%s</td>"), tableborder, width, alignstr.Get(), textrev.Get());
     }
 
-  Printf(__L("</tr>"));
+  Printf(_L("</tr>"));
 
   va_end(arg);
 
@@ -692,7 +692,7 @@ bool DIOWEBPAGEHTMLCREATOR::Table_LineColor(int ncolumns, ...)
 
   va_start(arg, ncolumns);
 
-  Printf(__L("<tr>"));
+  Printf(_L("<tr>"));
 
   for(int c=0; c<ncolumns; c++)
     {
@@ -710,16 +710,16 @@ bool DIOWEBPAGEHTMLCREATOR::Table_LineColor(int ncolumns, ...)
 
       switch(align)
         {
-          case DIOWEBPAGEHTMLCREATORALIGN_NONE   : alignstr = __L("");        break;
-          case DIOWEBPAGEHTMLCREATORALIGN_LEFT   : alignstr = __L("left");    break;
-          case DIOWEBPAGEHTMLCREATORALIGN_RIGHT  : alignstr = __L("right");   break;
-          case DIOWEBPAGEHTMLCREATORALIGN_CENTER : alignstr = __L("center");  break;
+          case DIOWEBPAGEHTMLCREATORALIGN_NONE   : alignstr = _L("");        break;
+          case DIOWEBPAGEHTMLCREATORALIGN_LEFT   : alignstr = _L("left");    break;
+          case DIOWEBPAGEHTMLCREATORALIGN_RIGHT  : alignstr = _L("right");   break;
+          case DIOWEBPAGEHTMLCREATORALIGN_CENTER : alignstr = _L("center");  break;
         }
 
-      Printf(__L("<td bgcolor=\"%s\" style=\"border: %dpx solid silver;\" width=\"%d\" align=\"%s\"><font color=\"%s\">%s</font></td>"), colorbkg, tableborder, width, alignstr.Get(), colortxt, textrev.Get());
+      Printf(_L("<td bgcolor=\"%s\" style=\"border: %dpx solid silver;\" width=\"%d\" align=\"%s\"><font color=\"%s\">%s</font></td>"), colorbkg, tableborder, width, alignstr.Get(), colortxt, textrev.Get());
     }
 
-  Printf(__L("</tr>"));
+  Printf(_L("</tr>"));
 
   va_end(arg);
 
@@ -738,7 +738,7 @@ bool DIOWEBPAGEHTMLCREATOR::Table_LineColor(int ncolumns, ...)
 * --------------------------------------------------------------------------------------------------------------------*/
 bool DIOWEBPAGEHTMLCREATOR::Table_End()
 {
-  Printf(__L("</table>"));
+  Printf(_L("</table>"));
   return true;
 }
 
@@ -762,8 +762,8 @@ bool DIOWEBPAGEHTMLCREATOR::AddAutoRefresh(int refresh, XSTRING* url)
   XSTRING meta;
 
   if(url)
-        meta.Format(__L("<META http-equiv=\"refresh\" content=\"%d;URL=%s\"/>"), refresh, url->Get());
-   else meta.Format(__L("<META http-equiv=\"refresh\" content=\"%d;\"/>"), refresh);
+        meta.Format(_L("<META http-equiv=\"refresh\" content=\"%d;URL=%s\"/>"), refresh, url->Get());
+   else meta.Format(_L("<META http-equiv=\"refresh\" content=\"%d;\"/>"), refresh);
 
   Add(meta.Get());
 
@@ -881,7 +881,7 @@ DIOWEBPAGEHTMLCREATORTAGXENGINESTATUS DIOWEBPAGEHTMLCREATOR::CheckXTAG(XSTRING* 
 
   if(!intag)
     {
-      index[0] = originalline->Find(__L("<?"), true);
+      index[0] = originalline->Find(_L("<?"), true);
       if(index[0]!=XSTRING_NOTFOUND)
         {
           index[1] = originalline->Find(DIOWEBPAGEHTMLCREATOR_TAGXENGINE, true);
@@ -891,7 +891,7 @@ DIOWEBPAGEHTMLCREATORTAGXENGINESTATUS DIOWEBPAGEHTMLCREATOR::CheckXTAG(XSTRING* 
 
               originalline->Copy(0, index[0], inioutputline);
 
-              index[2] = originalline->Find(__L("?>"), true);
+              index[2] = originalline->Find(_L("?>"), true);
               if(index[2]!=XSTRING_NOTFOUND)
                 {
                   XSTRING endline;
@@ -915,7 +915,7 @@ DIOWEBPAGEHTMLCREATORTAGXENGINESTATUS DIOWEBPAGEHTMLCREATOR::CheckXTAG(XSTRING* 
     }
    else
     {
-      index[0] = originalline->Find(__L("?>"), true);
+      index[0] = originalline->Find(_L("?>"), true);
       if(index[0]!=XSTRING_NOTFOUND)
         {
           XSTRING TAGstring;

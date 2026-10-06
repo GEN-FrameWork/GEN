@@ -87,7 +87,7 @@ DIOTEMHUMSENSORAM2301::DIOTEMHUMSENSORAM2301(int pindata, bool activatecache) : 
       xmutexread=GEN_XFACTORY.Create_Mutex();
       if(xmutexread)
         {
-          threadcache  = CREATEXTHREAD(XTHREADGROUPID_DIOSTREAM, __L("DIOTEMHUMSENSORAM2301::DIOSENSORAOSONGAM2301"), ThreadRunFunction, (void*)this);
+          threadcache  = CREATEXTHREAD(XTHREADGROUPID_DIOSTREAM, _L("DIOTEMHUMSENSORAM2301::DIOSENSORAOSONGAM2301"), ThreadRunFunction, (void*)this);
           if(!threadcache) return;
 
           threadcache->SetPriority(XTHREADPRIORITY_REALTIME);

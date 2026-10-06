@@ -39,7 +39,7 @@
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
 
 
-#define SCRIPT_LIB_NAME_INPUTSIMULATE   __L("InpSimulate")
+#define SCRIPT_LIB_NAME_INPUTSIMULATE   _L("InpSimulate")
 
 
 

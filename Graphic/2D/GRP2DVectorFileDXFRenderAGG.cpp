@@ -340,17 +340,17 @@ bool GRP2DVECTORFILEDXFRENDERAGG::ComputeExtents(GRPVECTORFILEDXFTEXTSECTIONENTI
       double px[4];   double py[4];   int npoints = 0;
       double cx = 0.0;   double cy = 0.0;   double rr = 0.0;   bool isradial = false;
 
-      if(!name->Compare(__L("LINE"), true))
+      if(!name->Compare(_L("LINE"), true))
         {
           double x0; double y0; double x1; double y1;
           if(GetValueDouble(entity, 10, x0) && GetValueDouble(entity, 20, y0)) { px[npoints]=x0; py[npoints]=y0; npoints++; }
           if(GetValueDouble(entity, 11, x1) && GetValueDouble(entity, 21, y1)) { px[npoints]=x1; py[npoints]=y1; npoints++; }
         }
-       else if(!name->Compare(__L("CIRCLE"), true) || !name->Compare(__L("ARC"), true))
+       else if(!name->Compare(_L("CIRCLE"), true) || !name->Compare(_L("ARC"), true))
         {
           if(GetValueDouble(entity, 10, cx) && GetValueDouble(entity, 20, cy) && GetValueDouble(entity, 40, rr))  isradial = true;
         }
-       else if(!name->Compare(__L("ELLIPSE"), true))
+       else if(!name->Compare(_L("ELLIPSE"), true))
         {
           double mx; double my;
           if(GetValueDouble(entity, 10, cx) && GetValueDouble(entity, 20, cy) && GetValueDouble(entity, 11, mx) && GetValueDouble(entity, 21, my))
@@ -359,12 +359,12 @@ bool GRP2DVECTORFILEDXFRENDERAGG::ComputeExtents(GRPVECTORFILEDXFTEXTSECTIONENTI
               isradial = true;
             }
         }
-       else if(!name->Compare(__L("POINT"), true) || !name->Compare(__L("VERTEX"), true))
+       else if(!name->Compare(_L("POINT"), true) || !name->Compare(_L("VERTEX"), true))
         {
           double x0; double y0;
           if(GetValueDouble(entity, 10, x0) && GetValueDouble(entity, 20, y0)) { px[npoints]=x0; py[npoints]=y0; npoints++; }
         }
-       else if(!name->Compare(__L("TEXT"), true) || !name->Compare(__L("MTEXT"), true))
+       else if(!name->Compare(_L("TEXT"), true) || !name->Compare(_L("MTEXT"), true))
         {
           // TEXT / MTEXT contribute more than their insertion point : the glyph block extends to the right (and
           // downward) from the insertion and may be rotated (code 50). Ignoring that width made text anchored at the
@@ -381,7 +381,7 @@ bool GRP2DVECTORFILEDXFRENDERAGG::ComputeExtents(GRPVECTORFILEDXFTEXTSECTIONENTI
               int    nlines = 1;
               int    attach = 1;
 
-              if(!name->Compare(__L("MTEXT"), true))
+              if(!name->Compare(_L("MTEXT"), true))
                 {
                   XSTRING raw;                                                       // assemble the full string (continuation 3* + final 1) exactly like RenderMText
                   XVECTOR<GRPVECTORFILEDXFVALUE*>* mvalues = entity->GetValues();
@@ -464,7 +464,7 @@ bool GRP2DVECTORFILEDXFRENDERAGG::ComputeExtents(GRPVECTORFILEDXFTEXTSECTIONENTI
                 }
             }
         }
-       else if(!name->Compare(__L("LWPOLYLINE"), true) || !name->Compare(__L("SPLINE"), true))
+       else if(!name->Compare(_L("LWPOLYLINE"), true) || !name->Compare(_L("SPLINE"), true))
         {
           XVECTOR<GRPVECTORFILEDXFVALUE*>* values = entity->GetValues();       // every code 10 / 20 pair is a point (control point for SPLINE)
           double vx = 0.0;   bool havex = false;
@@ -490,7 +490,7 @@ bool GRP2DVECTORFILEDXFRENDERAGG::ComputeExtents(GRPVECTORFILEDXFTEXTSECTIONENTI
                 }
             }
         }
-       else if(!name->Compare(__L("INSERT"), true))
+       else if(!name->Compare(_L("INSERT"), true))
         {
           double bx; double by;
           GRPVECTORFILEDXFTEXTSECTIONENTITIES* blockentities = GetBlockEntities(entity, bx, by);
@@ -548,7 +548,7 @@ bool GRP2DVECTORFILEDXFRENDERAGG::ComputeExtents(GRPVECTORFILEDXFTEXTSECTIONENTI
                 }
             }
         }
-       else if(!name->Compare(__L("SOLID"), true) || !name->Compare(__L("TRACE"), true) || !name->Compare(__L("3DFACE"), true))
+       else if(!name->Compare(_L("SOLID"), true) || !name->Compare(_L("TRACE"), true) || !name->Compare(_L("3DFACE"), true))
         {
           int cornercode[4] = { 10, 11, 12, 13 };                              // SOLID / TRACE / 3DFACE corners
 
@@ -567,7 +567,7 @@ bool GRP2DVECTORFILEDXFRENDERAGG::ComputeExtents(GRPVECTORFILEDXFTEXTSECTIONENTI
                 }
             }
         }
-       else if(!name->Compare(__L("DIMENSION"), true))
+       else if(!name->Compare(_L("DIMENSION"), true))
         {
           double bx; double by;
           GRPVECTORFILEDXFTEXTSECTIONENTITIES* dimentities = GetBlockEntities(entity, bx, by);
@@ -584,7 +584,7 @@ bool GRP2DVECTORFILEDXFRENDERAGG::ComputeExtents(GRPVECTORFILEDXFTEXTSECTIONENTI
                 }
             }
         }
-       else if(!name->Compare(__L("HATCH"), true))
+       else if(!name->Compare(_L("HATCH"), true))
         {
           XVECTOR<GRPVECTORFILEDXFVALUE*>* values = entity->GetValues();       // approximate bbox from the boundary points (10/20 and 11/21 pairs)
 
@@ -643,10 +643,10 @@ bool GRP2DVECTORFILEDXFRENDERAGG::ComputeExtents(GRPVECTORFILEDXFTEXTSECTIONENTI
         {
           GRPVECTORFILEDXFTEXTSECTIONHEADER* header = config->GetHeader();
 
-          XVARIANT* vminx = header->GetVariable(__L("$EXTMIN_10"));            // header stores points as "$EXTMIN_10_X" / "$EXTMIN_20_Y"
-          XVARIANT* vminy = header->GetVariable(__L("$EXTMIN_20"));
-          XVARIANT* vmaxx = header->GetVariable(__L("$EXTMAX_10"));
-          XVARIANT* vmaxy = header->GetVariable(__L("$EXTMAX_20"));
+          XVARIANT* vminx = header->GetVariable(_L("$EXTMIN_10"));            // header stores points as "$EXTMIN_10_X" / "$EXTMIN_20_Y"
+          XVARIANT* vminy = header->GetVariable(_L("$EXTMIN_20"));
+          XVARIANT* vmaxx = header->GetVariable(_L("$EXTMAX_10"));
+          XVARIANT* vmaxy = header->GetVariable(_L("$EXTMAX_20"));
 
           if(vminx && vminy && vmaxx && vmaxy)
             {
@@ -791,22 +791,22 @@ bool GRP2DVECTORFILEDXFRENDERAGG::RenderEntity(GRPVECTORFILEDXFENTITY* entity, G
   XSTRING*         name  = entity->GetName();
   GRP2DCOLOR_RGBA8 color = ResolveColor(entity);
 
-  if     (!name->Compare(__L("LINE")      , true))  return RenderLine      (entity, color, contextcanvas);
-  else if(!name->Compare(__L("CIRCLE")    , true))  return RenderCircle    (entity, color, contextcanvas);
-  else if(!name->Compare(__L("ARC")       , true))  return RenderArc       (entity, color, contextcanvas);
-  else if(!name->Compare(__L("ELLIPSE")   , true))  return RenderEllipse   (entity, color, contextcanvas);
-  else if(!name->Compare(__L("LWPOLYLINE"), true))  return RenderLWPolyLine(entity, color, contextcanvas);
-  else if(!name->Compare(__L("POLYLINE")  , true))  return RenderPolyLine  (entity, entities, index, color, contextcanvas);
-  else if(!name->Compare(__L("POINT")     , true))  return RenderPoint     (entity, color, contextcanvas);
-  else if(!name->Compare(__L("TEXT")      , true))  return drawtext ? RenderText(entity, color, contextcanvas) : true;
-  else if(!name->Compare(__L("MTEXT")     , true))  return drawtext ? RenderMText(entity, color, contextcanvas) : true;
-  else if(!name->Compare(__L("3DFACE")    , true))  return Render3DFace    (entity, color, contextcanvas);
-  else if(!name->Compare(__L("SPLINE")    , true))  return RenderSpline    (entity, color, contextcanvas);
-  else if(!name->Compare(__L("INSERT")    , true))  return RenderInsert    (entity);
-  else if(!name->Compare(__L("SOLID")     , true))  return RenderSolid     (entity, color, contextcanvas);
-  else if(!name->Compare(__L("TRACE")     , true))  return RenderSolid     (entity, color, contextcanvas);
-  else if(!name->Compare(__L("HATCH")     , true))  return RenderHatch     (entity, color, contextcanvas);
-  else if(!name->Compare(__L("DIMENSION") , true))  return RenderDimension (entity);
+  if     (!name->Compare(_L("LINE")      , true))  return RenderLine      (entity, color, contextcanvas);
+  else if(!name->Compare(_L("CIRCLE")    , true))  return RenderCircle    (entity, color, contextcanvas);
+  else if(!name->Compare(_L("ARC")       , true))  return RenderArc       (entity, color, contextcanvas);
+  else if(!name->Compare(_L("ELLIPSE")   , true))  return RenderEllipse   (entity, color, contextcanvas);
+  else if(!name->Compare(_L("LWPOLYLINE"), true))  return RenderLWPolyLine(entity, color, contextcanvas);
+  else if(!name->Compare(_L("POLYLINE")  , true))  return RenderPolyLine  (entity, entities, index, color, contextcanvas);
+  else if(!name->Compare(_L("POINT")     , true))  return RenderPoint     (entity, color, contextcanvas);
+  else if(!name->Compare(_L("TEXT")      , true))  return drawtext ? RenderText(entity, color, contextcanvas) : true;
+  else if(!name->Compare(_L("MTEXT")     , true))  return drawtext ? RenderMText(entity, color, contextcanvas) : true;
+  else if(!name->Compare(_L("3DFACE")    , true))  return Render3DFace    (entity, color, contextcanvas);
+  else if(!name->Compare(_L("SPLINE")    , true))  return RenderSpline    (entity, color, contextcanvas);
+  else if(!name->Compare(_L("INSERT")    , true))  return RenderInsert    (entity);
+  else if(!name->Compare(_L("SOLID")     , true))  return RenderSolid     (entity, color, contextcanvas);
+  else if(!name->Compare(_L("TRACE")     , true))  return RenderSolid     (entity, color, contextcanvas);
+  else if(!name->Compare(_L("HATCH")     , true))  return RenderHatch     (entity, color, contextcanvas);
+  else if(!name->Compare(_L("DIMENSION") , true))  return RenderDimension (entity);
 
   return true;                                                                 // unsupported entity : silently skipped
 }
@@ -1113,7 +1113,7 @@ bool GRP2DVECTORFILEDXFRENDERAGG::RenderPolyLine(GRPVECTORFILEDXFENTITY* entity,
 
       XSTRING* nextname = next->GetName();
 
-      if(!nextname->Compare(__L("VERTEX"), true))
+      if(!nextname->Compare(_L("VERTEX"), true))
         {
           double x; double y;
           if(GetValueDouble(next, 10, x) && GetValueDouble(next, 20, y))
@@ -1124,7 +1124,7 @@ bool GRP2DVECTORFILEDXFRENDERAGG::RenderPolyLine(GRPVECTORFILEDXFENTITY* entity,
 
           c++;
         }
-       else if(!nextname->Compare(__L("SEQEND"), true))
+       else if(!nextname->Compare(_L("SEQEND"), true))
         {
           break;                                                               // end of the vertex list
         }
@@ -1259,8 +1259,8 @@ bool GRP2DVECTORFILEDXFRENDERAGG::RenderText(GRPVECTORFILEDXFENTITY* entity, GRP
 * --------------------------------------------------------------------------------------------------------------------*/
 static bool MTextIsArgCode(XCHAR d)
 {
-  return (d == __C('f')) || (d == __C('F')) || (d == __C('c')) || (d == __C('C')) || (d == __C('H')) ||
-         (d == __C('W')) || (d == __C('Q')) || (d == __C('A')) || (d == __C('T')) || (d == __C('p'));
+  return (d == _C('f')) || (d == _C('F')) || (d == _C('c')) || (d == _C('C')) || (d == _C('H')) ||
+         (d == _C('W')) || (d == _C('Q')) || (d == _C('A')) || (d == _C('T')) || (d == _C('p'));
 }
 
 
@@ -1277,7 +1277,7 @@ static bool MTextIsArgCode(XCHAR d)
 * --------------------------------------------------------------------------------------------------------------------*/
 static bool MTextIsToggle(XCHAR d)
 {
-  return (d == __C('L')) || (d == __C('l')) || (d == __C('O')) || (d == __C('o')) || (d == __C('K')) || (d == __C('k'));
+  return (d == _C('L')) || (d == _C('l')) || (d == _C('O')) || (d == _C('o')) || (d == _C('K')) || (d == _C('k'));
 }
 
 
@@ -1307,37 +1307,37 @@ static void MTextDecode(XCHAR* raw, XVECTOR<XSTRING*>& lines)
     {
       XCHAR c = raw[i];
 
-      if((c == __C('\\')) && ((i + 1) < n))
+      if((c == _C('\\')) && ((i + 1) < n))
         {
           XCHAR d = raw[i + 1];
 
-          if     (d == __C('P')) { lines.Add(cur);  cur = GEN_NEW XSTRING();  if(!cur) return;  i += 2; }   // paragraph break -> new line
-          else if(d == __C('~')) { cur->Add(__C(' '));   i += 2; }                                          // non-breaking space
-          else if(d == __C('\\')){ cur->Add(__C('\\'));  i += 2; }                                          // literal backslash
-          else if(d == __C('{')) { cur->Add(__C('{'));   i += 2; }                                          // literal brace
-          else if(d == __C('}')) { cur->Add(__C('}'));   i += 2; }
+          if     (d == _C('P')) { lines.Add(cur);  cur = GEN_NEW XSTRING();  if(!cur) return;  i += 2; }   // paragraph break -> new line
+          else if(d == _C('~')) { cur->Add(_C(' '));   i += 2; }                                          // non-breaking space
+          else if(d == _C('\\')){ cur->Add(_C('\\'));  i += 2; }                                          // literal backslash
+          else if(d == _C('{')) { cur->Add(_C('{'));   i += 2; }                                          // literal brace
+          else if(d == _C('}')) { cur->Add(_C('}'));   i += 2; }
           else if(MTextIsArgCode(d))                                                                        // \f \H \C ... ; -> drop up to ';'
             {
               i += 2;
-              while((i < n) && (raw[i] != __C(';'))) i++;
+              while((i < n) && (raw[i] != _C(';'))) i++;
               if(i < n) i++;
             }
           else if(MTextIsToggle(d)) { i += 2; }                                                             // \L \O \K -> drop
-          else if(d == __C('S'))                                                                            // \S num (^|/|#) den ; -> "num/den"
+          else if(d == _C('S'))                                                                            // \S num (^|/|#) den ; -> "num/den"
             {
               i += 2;
-              while((i < n) && (raw[i] != __C(';')))
+              while((i < n) && (raw[i] != _C(';')))
                 {
                   XCHAR s = raw[i];
-                  cur->Add(((s == __C('^')) || (s == __C('/')) || (s == __C('#'))) ? __C('/') : s);
+                  cur->Add(((s == _C('^')) || (s == _C('/')) || (s == _C('#'))) ? _C('/') : s);
                   i++;
                 }
               if(i < n) i++;
             }
           else { cur->Add(d);  i += 2; }                                                                    // unknown control -> drop the backslash, keep the char
         }
-       else if(c == __C('{')) { i++; }                                                                      // grouping brace -> strip
-       else if(c == __C('}')) { i++; }
+       else if(c == _C('{')) { i++; }                                                                      // grouping brace -> strip
+       else if(c == _C('}')) { i++; }
        else                   { cur->Add(c);  i++; }
     }
 
@@ -2610,7 +2610,7 @@ GRP2DCOLOR_RGBA8 GRP2DVECTORFILEDXFRENDERAGG::ResolveColor(GRPVECTORFILEDXFENTIT
 
       if(value->GetType() == 62)  { aci = (int)(*value->GetData());  haveexplicit = true;  break; }
 
-      if(!value->GetName()->Compare(__L("G_COLOR_NUMBER"), true))  { aci = (int)(*value->GetData());  haveexplicit = true;  break; }
+      if(!value->GetName()->Compare(_L("G_COLOR_NUMBER"), true))  { aci = (int)(*value->GetData());  haveexplicit = true;  break; }
     }
 
   if(!haveexplicit || (aci == 256) || (aci == 0))                              // no explicit color, or ByLayer (256) / ByBlock (0) -> use the entity's layer color
@@ -2683,7 +2683,7 @@ void GRP2DVECTORFILEDXFRENDERAGG::BuildLayerTable(GRPVECTORFILEDXF* dxf)
                     }
                 }
 
-              inlayer  = (valline->Compare(__L("LAYER"), true) == 0);
+              inlayer  = (valline->Compare(_L("LAYER"), true) == 0);
               havename = false;
               aci      = 7;
               name.Empty();
@@ -2762,7 +2762,7 @@ XCHAR* GRP2DVECTORFILEDXFRENDERAGG::GetLayerName(GRPVECTORFILEDXFENTITY* entity)
 
       if(value->GetType() == 8)  return (XCHAR*)(*value->GetData());
 
-      if(value->GetName() && !value->GetName()->Compare(__L("G_LAYER_NAME"), true))  return (XCHAR*)(*value->GetData());
+      if(value->GetName() && !value->GetName()->Compare(_L("G_LAYER_NAME"), true))  return (XCHAR*)(*value->GetData());
     }
 
   return NULL;

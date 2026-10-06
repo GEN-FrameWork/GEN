@@ -222,13 +222,13 @@ bool DIOSTREAMUSBCONFIG::GetToString(XSTRING* string)
 
   if(vendorID && productID && classdev)
     {
-      string->Format(__L("0x%04X,0x%04X,%d"), vendorID, productID, classdev);
+      string->Format(_L("0x%04X,0x%04X,%d"), vendorID, productID, classdev);
       return true;
     }
 
   if(!location.IsEmpty() && classdev)
     {
-      string->Format(__L("%s,%d"), location.Get(), classdev);
+      string->Format(_L("%s,%d"), location.Get(), classdev);
       return true;
     }
 
@@ -277,7 +277,7 @@ bool DIOSTREAMUSBCONFIG::SetFromString(XCHAR* string)
         {
           XSTRING _location;
 
-          _string.UnFormat(__L("%s,%d"), location.Get(), &classdev);
+          _string.UnFormat(_L("%s,%d"), location.Get(), &classdev);
 
           location = _location;
           classdev = (DIOSTREAMDEVICEUSBCLASS)_classdev;
@@ -289,7 +289,7 @@ bool DIOSTREAMUSBCONFIG::SetFromString(XCHAR* string)
   XDWORD _vendorID  = 0;
   XDWORD _productID = 0;
 
-  _string.UnFormat(__L("0x%04X,0x%04X,%d"), &_vendorID, &_productID, &_classdev);
+  _string.UnFormat(_L("0x%04X,0x%04X,%d"), &_vendorID, &_productID, &_classdev);
 
   vendorID  = _vendorID;
   productID = _productID;

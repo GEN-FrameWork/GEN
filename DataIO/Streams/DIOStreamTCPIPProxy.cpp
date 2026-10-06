@@ -317,22 +317,22 @@ bool DIOSTREAMTCPIPPROXY::ConnectHTTP(DIOSTREAM* stream, DIOSTREAMTCPIPPROXYCFG*
   XSTRING request;
   XSTRING line;
 
-  request.Format(__L("CONNECT %s:%d HTTP/1.1\r\nHost: %s:%d\r\n"), target, targetport, target, targetport);
+  request.Format(_L("CONNECT %s:%d HTTP/1.1\r\nHost: %s:%d\r\n"), target, targetport, target, targetport);
 
   if(!cfg->GetLogin()->IsEmpty() || !cfg->GetPassword()->IsEmpty())
     {
       XSTRING credentials;
       XSTRING credentialsbase64;
 
-      credentials.Format(__L("%s:%s"), cfg->GetLogin()->Get(), cfg->GetPassword()->Get());
+      credentials.Format(_L("%s:%s"), cfg->GetLogin()->Get(), cfg->GetPassword()->Get());
       credentials.ConvertToBase64(credentialsbase64);
 
-      request += __L("Proxy-Authorization: Basic ");
+      request += _L("Proxy-Authorization: Basic ");
       request += credentialsbase64;
-      request += __L("\r\n");
+      request += _L("\r\n");
     }
 
-  request += __L("Proxy-Connection: Keep-Alive\r\n\r\n");
+  request += _L("Proxy-Connection: Keep-Alive\r\n\r\n");
 
   if(!stream->WriteStr(request)) return false;
   if(!stream->WaitToFlushOutXBuffer(timeout)) return false;
@@ -343,7 +343,7 @@ bool DIOSTREAMTCPIPPROXY::ConnectHTTP(DIOSTREAM* stream, DIOSTREAMTCPIPPROXYCFG*
   XSTRING protocol;
 
   protocol.AdjustSize(32);
-  if(!line.UnFormat(__L("%s %d"), protocol.Get(), &statuscode)) return false;
+  if(!line.UnFormat(_L("%s %d"), protocol.Get(), &statuscode)) return false;
   protocol.AdjustSize();
 
   if((statuscode < 200) || (statuscode > 299)) return false;

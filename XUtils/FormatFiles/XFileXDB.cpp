@@ -214,7 +214,7 @@ bool XFILEXDB::OpenFile()
       GetPrimaryFile()->Read((XBYTE*)&ID, sizeof(XDWORD));
       GetPrimaryFile()->Read((XBYTE*)&filepos , sizeof(XDWORD));
 
-      //XTRACE_PRINTCOLOR(1,__L("ID: %08X"), ID);
+      //XTRACE_PRINTCOLOR(1,_L("ID: %08X"), ID);
 
       indexmap.Add(ID, filepos);
     }

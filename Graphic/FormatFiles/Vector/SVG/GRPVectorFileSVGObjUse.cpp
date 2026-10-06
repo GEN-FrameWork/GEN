@@ -100,14 +100,14 @@ bool GRPVECTORFILESVGOBJUSE::ApplyData(XFILEXMLELEMENT* element)
 
   GRPVECTORFILESVGOBJ::ApplyData(element);
 
-  XCHAR* valuehref = element->GetValueAttribute(__L("xlink:href"));
-  if(!valuehref)  valuehref = element->GetValueAttribute(__L("href"));
+  XCHAR* valuehref = element->GetValueAttribute(_L("xlink:href"));
+  if(!valuehref)  valuehref = element->GetValueAttribute(_L("href"));
 
   if(valuehref)
     {
       href = valuehref;
 
-      if(!href.IsEmpty() && (href[0] == __C('#')))
+      if(!href.IsEmpty() && (href[0] == _C('#')))
         {
           XSTRING stripped;
           href.Copy(1, (int)href.GetSize(), stripped);
@@ -115,8 +115,8 @@ bool GRPVECTORFILESVGOBJUSE::ApplyData(XFILEXMLELEMENT* element)
         }
     }
 
-  x = element->GetFloatValueAttribute(__L("x"));
-  y = element->GetFloatValueAttribute(__L("y"));
+  x = element->GetFloatValueAttribute(_L("x"));
+  y = element->GetFloatValueAttribute(_L("y"));
 
   return true;
 }

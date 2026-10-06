@@ -180,7 +180,7 @@ bool DIOSCRAPERSCRIPT::SetArgInt(XCHAR* name, int value)
 {
   XSTRING stringvalue;
 
-  stringvalue.Format(__L("%d"), value);
+  stringvalue.Format(_L("%d"), value);
   return SetArg(name, stringvalue);
 }
 

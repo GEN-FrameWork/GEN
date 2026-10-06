@@ -227,7 +227,7 @@ bool GRPLINUXSCREENWAYLAND::ConnectDisplay()
   display = wl_display_connect(NULL);
   if(!display)
     {
-      XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, __L("[Screen Wayland] wl_display_connect failed (no compositor / WAYLAND_DISPLAY not set)"));
+      XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, _L("[Screen Wayland] wl_display_connect failed (no compositor / WAYLAND_DISPLAY not set)"));
       return false;
     }
 
@@ -266,7 +266,7 @@ bool GRPLINUXSCREENWAYLAND::BindGlobals()
 
   if(!compositor || !xdgwmbase)
     {
-      XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, __L("[Screen Wayland] compositor and/or xdg_wm_base global not advertised by the compositor"));
+      XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, _L("[Screen Wayland] compositor and/or xdg_wm_base global not advertised by the compositor"));
       return false;
     }
 
@@ -552,7 +552,7 @@ bool GRPLINUXSCREENWAYLAND::Create_Surface(bool show)
     {
       if(!blitgles->Create(this))
         {
-          XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, __L("[Screen Wayland] BlitGLES create failed; falling back to Wayland SHM software path"));
+          XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, _L("[Screen Wayland] BlitGLES create failed; falling back to Wayland SHM software path"));
           GEN_DELETE blitgles;
           blitgles = NULL;
         }
@@ -2391,7 +2391,7 @@ void GRPLINUXSCREENWAYLAND::Buffer_Release(void* data, struct wl_buffer* buffer)
 * --------------------------------------------------------------------------------------------------------------------*/
 void GRPLINUXSCREENWAYLAND::Decoration_Configure(void* data, struct zxdg_toplevel_decoration_v1* decoration, XDWORD mode)
 {
-  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, __L("[Screen Wayland] xdg-decoration: compositor granted mode %s"), (mode == ZXDG_TOPLEVEL_DECORATION_V1_MODE_SERVER_SIDE) ? __L("SERVER_SIDE (native)") : __L("CLIENT_SIDE (app must draw its own)"));
+  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, _L("[Screen Wayland] xdg-decoration: compositor granted mode %s"), (mode == ZXDG_TOPLEVEL_DECORATION_V1_MODE_SERVER_SIDE) ? _L("SERVER_SIDE (native)") : _L("CLIENT_SIDE (app must draw its own)"));
 }
 #endif
 

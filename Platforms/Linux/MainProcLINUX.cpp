@@ -725,6 +725,10 @@ int main(int argc, char* argv[])
   mainproclinux.CreateParams(argc, argv);
 
   int status = 0;
+
+  #ifdef GOOGLETEST_ACTIVE
+  int returngoogletest = 0;
+  #endif
   
   #ifdef APPFLOW_ACTIVE
   if(!mainproclinux.Ini(&GEN_appmain, APPFLOWBASE_MODE_TYPE_APPLICATION))
@@ -738,8 +742,8 @@ int main(int argc, char* argv[])
   if(!status)
     {
       #ifdef GOOGLETEST_ACTIVE      
-      int code = RUN_ALL_TESTS();
-      if(code)
+      returngoogletest = RUN_ALL_TESTS();
+      if(returngoogletest)
         {
           status = 1; 
         }
@@ -763,6 +767,12 @@ int main(int argc, char* argv[])
   mainproclinux.GetXPathExec()->Empty();
 
   mainproclinux.End();
+
+  #ifdef GOOGLETEST_ACTIVE
+  // Match Windows MainProc: unit-test process exit code is gtest's, not AppFlow exit type
+  // (tests may temporarily SetExitType and leave a non-zero value that would fail the stage).
+  returncode = returngoogletest;
+  #endif
       
   return returncode;
 }
@@ -906,62 +916,62 @@ static void Signal_Handler(int sign)
   switch(sign)
     {
       case SIGSEGV    : iserror     = true;
-                        signalstr   = __L("SIGSEGV");
-                        description = __L("Segmentation fault.");
+                        signalstr   = _L("SIGSEGV");
+                        description = _L("Segmentation fault.");
                         break;
 
       case SIGBUS     : iserror     = true;
-                        signalstr   = __L("SIGBUS");
-                        description = __L("Bus fault.");
+                        signalstr   = _L("SIGBUS");
+                        description = _L("Bus fault.");
                         break;
 
       case SIGFPE     : iserror     = true;
-                        signalstr   = __L("SIGFPE");
-                        description = __L("Erroneous arithmetic operation (such as divide by zero).");
+                        signalstr   = _L("SIGFPE");
+                        description = _L("Erroneous arithmetic operation (such as divide by zero).");
                         break;
 
       case SIGABRT    : iserror     = true;
-                        signalstr   = __L("SIGABRT");
-                        description = __L("Error: Abnormal termination condition.");
+                        signalstr   = _L("SIGABRT");
+                        description = _L("Error: Abnormal termination condition.");
                         break;
 
       case SIGSTKFLT  : iserror     = true;
-                        signalstr   = __L("SIGSTKFLT");
-                        description = __L("Error: Stack fault.");
+                        signalstr   = _L("SIGSTKFLT");
+                        description = _L("Error: Stack fault.");
                         break;
 
       case SIGILL     : iserror     = true;
-                        signalstr   = __L("SIGILL");
-                        description = __L("Error: Illegal instruction.");
+                        signalstr   = _L("SIGILL");
+                        description = _L("Error: Illegal instruction.");
                         break;
 
-      case SIGHUP     : signalstr   = __L("SIGHUP");
-                        description = __L("Program hanged up.");
+      case SIGHUP     : signalstr   = _L("SIGHUP");
+                        description = _L("Program hanged up.");
                         break;
 
-      case SIGTERM    : signalstr   = __L("SIGTERM");
-                        description = __L("Termination request, sent to the program.");
+      case SIGTERM    : signalstr   = _L("SIGTERM");
+                        description = _L("Termination request, sent to the program.");
                         break;
 
-      case SIGINT     : signalstr   = __L("SIGINT");
-                        description = __L("External interrupt, usually initiated by the user.");
+      case SIGINT     : signalstr   = _L("SIGINT");
+                        description = _L("External interrupt, usually initiated by the user.");
                         break;
 
-      case SIGQUIT    : signalstr   = __L("SIGQUIT");
-                        description = __L("Terminal quit.");
+      case SIGQUIT    : signalstr   = _L("SIGQUIT");
+                        description = _L("Terminal quit.");
                         break;
 
-      case SIGTSTP    : signalstr   = __L("SIGTSTP");
-                        description = __L("Terminal stop signalstr.");
+      case SIGTSTP    : signalstr   = _L("SIGTSTP");
+                        description = _L("Terminal stop signalstr.");
                         break;
 
       case SIGUSR1    :
-      case SIGUSR2    : signalstr = __L("SIGUSR");
-                        description = __L("User signal received.");
+      case SIGUSR2    : signalstr = _L("SIGUSR");
+                        description = _L("User signal received.");
                         break;
     }
 
-  Signal_Printf(iserror, LOG_SIGNAL, __L("[%s %d] Error: %s"), signalstr.Get(), sign, description.Get());
+  Signal_Printf(iserror, LOG_SIGNAL, _L("[%s %d] Error: %s"), signalstr.Get(), sign, description.Get());
 
   #ifdef APPFLOW_ACTIVE
   if(app)
@@ -971,7 +981,7 @@ static void Signal_Handler(int sign)
           XSTRING string2;
         
           app->GetTimerGlobal()->GetMeasureString(string2, true);
-          Signal_Printf(iserror, LOG_SIGNAL, __L("Time working: %s."), string2.Get());
+          Signal_Printf(iserror, LOG_SIGNAL, _L("Time working: %s."), string2.Get());
         }
     }
   #endif
@@ -985,7 +995,7 @@ static void Signal_Handler(int sign)
       case SIGSTKFLT  :
       case SIGILL     : { Signal_PrintfStackTrace();
   
-                          string.Format(__L("SIGNAL %s: %s"), signalstr.Get(), description.Get());
+                          string.Format(_L("SIGNAL %s: %s"), signalstr.Get(), description.Get());
 
                           #ifdef DIO_ALERTS_ACTIVE
                           DIOALERT* alert = GEN_DIOALERTS.CreateAlert(DIOALERTLEVEL_DANGER, string.Get(), allexceptiontext.Get());
@@ -1051,7 +1061,7 @@ static void Signal_Handler(int sign)
 
                           if(Signal_RunLevel(previous, actual))
                             {
-                              if(actual == __C('0'))
+                              if(actual == _C('0'))
                                 {
                                   #ifdef APPFLOW_ACTIVE
                                   if(app) 
@@ -1120,7 +1130,7 @@ bool Signal_Printf(bool iserror, XCHAR* title, XCHAR* mask, ...)
   #endif
 
   allexceptiontext += outstring;
-  allexceptiontext += __L("\r\n");
+  allexceptiontext += _L("\r\n");
 
   #ifdef XTRACE_ACTIVE
   if(!do_log)
@@ -1153,7 +1163,7 @@ static inline bool Signal_ResolveFunctionName(void* addr, XSTRING& namefunc)
 
   namefunc.Empty();
 
-  namefunc = __L("?");
+  namefunc = _L("?");
 
   if(dladdr(addr, &info) == 0)
     {    
@@ -1205,10 +1215,10 @@ static inline void Signal_PrintfStackTrace(FILE *out, unsigned int max_frames)
 
   if(addrlen == 0)
     {
-      Signal_Printf(true, LOG_SIGNAL, __L("Stack trace: Not available."));
+      Signal_Printf(true, LOG_SIGNAL, _L("Stack trace: Not available."));
       return;
 
-    } else Signal_Printf(true, LOG_SIGNAL, __L("Stack trace: (%d) calls"), addrlen);
+    } else Signal_Printf(true, LOG_SIGNAL, _L("Stack trace: (%d) calls"), addrlen);
 
   char** symbollist = backtrace_symbols(addrlist, addrlen);
 
@@ -1219,7 +1229,7 @@ static inline void Signal_PrintfStackTrace(FILE *out, unsigned int max_frames)
 
       Signal_ResolveFunctionName(addrlist[c], namefunc);
       
-      Signal_Printf(true, LOG_SIGNAL, __L("[%-64s] %s"), namefunc.Get(), symbolstr.Get());      
+      Signal_Printf(true, LOG_SIGNAL, _L("[%-64s] %s"), namefunc.Get(), symbolstr.Get());      
     }
 }
 
@@ -1251,7 +1261,7 @@ bool Signal_RunLevel(XCHAR& previous, XCHAR& actual)
       if(ut->ut_type == RUN_LVL)
         {
           previous = (XCHAR)(ut->ut_pid / 256);
-          if(!previous) previous = __C('N');
+          if(!previous) previous = _C('N');
 
           actual   = (XCHAR)(ut->ut_pid % 256);
 

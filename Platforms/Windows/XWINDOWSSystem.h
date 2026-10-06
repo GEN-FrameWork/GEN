@@ -176,7 +176,7 @@ class XWINDOWSSYSTEM_PERFCOUNTERS
 																									LONG							result;
 
 																									XSTRING keyname;
-																									keyname.Format(__L("%d"), objectindex);
+																									keyname.Format(_L("%d"), objectindex);
 
 																									buffer.Reset();
 																									while((result = RegQueryValueEx( HKEY_PERFORMANCE_DATA	,	keyname.Get()

@@ -36,7 +36,7 @@
 
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
 
-#define SCRIPT_LIB_NAME_DEVTEST  __L("Developed Test")
+#define SCRIPT_LIB_NAME_DEVTEST  _L("Developed Test")
 
 
 

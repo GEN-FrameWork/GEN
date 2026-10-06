@@ -73,6 +73,8 @@ class INPSIMULATE
 
   protected:
 
+    virtual bool        IsCapsLockActive        ();
+
   private:
 
     void                Clean                   ();

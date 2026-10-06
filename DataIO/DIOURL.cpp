@@ -77,12 +77,12 @@ static bool DIOURL_IsIPv4Range(const XCHAR* host, XDWORD length)
 
   for(XDWORD c=0; c<length; c++)
     {
-      if((host[c] >= __C('0')) && (host[c] <= __C('9')))
+      if((host[c] >= _C('0')) && (host[c] <= _C('9')))
         {
-          value = (value * 10) + (host[c] - __C('0'));
+          value = (value * 10) + (host[c] - _C('0'));
           if(++digits > 3 || value > 255) return false;
         }
-       else if(host[c] == __C('.'))
+       else if(host[c] == _C('.'))
         {
           if(!digits || ++parts > 3) return false;
           value = 0;
@@ -135,21 +135,21 @@ static bool DIOURL_IsIPv6(XCHAR* host)
 
   XDWORD start = 0;
   XDWORD end = length;
-  if(host[0] == __C('['))
+  if(host[0] == _C('['))
     {
-      if(length < 3 || host[length-1] != __C(']')) return false;
+      if(length < 3 || host[length-1] != _C(']')) return false;
       start = 1;
       end = length - 1;
     }
-   else if(host[length-1] == __C(']')) return false;
+   else if(host[length-1] == _C(']')) return false;
 
   XDWORD groups = 0;
   XDWORD position = start;
   bool   compressed = false;
 
-  if(position < end && host[position] == __C(':'))
+  if(position < end && host[position] == _C(':'))
     {
-      if((position + 1) >= end || host[position+1] != __C(':')) return false;
+      if((position + 1) >= end || host[position+1] != _C(':')) return false;
       compressed = true;
       position += 2;
       if(position == end) return true;
@@ -159,10 +159,10 @@ static bool DIOURL_IsIPv6(XCHAR* host)
     {
       XDWORD segmentstart = position;
       bool ipv4tail = false;
-      while(position < end && host[position] != __C(':'))
+      while(position < end && host[position] != _C(':'))
         {
-          if(host[position] == __C('%')) return false;
-          if(host[position] == __C('.')) ipv4tail = true;
+          if(host[position] == _C('%')) return false;
+          if(host[position] == _C('.')) ipv4tail = true;
           position++;
         }
 
@@ -178,16 +178,16 @@ static bool DIOURL_IsIPv6(XCHAR* host)
         {
           if(segmentsize > 4) return false;
           for(XDWORD c=segmentstart; c<position; c++)
-            if(!((host[c] >= __C('0') && host[c] <= __C('9')) ||
-                 (host[c] >= __C('a') && host[c] <= __C('f')) ||
-                 (host[c] >= __C('A') && host[c] <= __C('F')))) return false;
+            if(!((host[c] >= _C('0') && host[c] <= _C('9')) ||
+                 (host[c] >= _C('a') && host[c] <= _C('f')) ||
+                 (host[c] >= _C('A') && host[c] <= _C('F')))) return false;
           groups++;
         }
 
       if(groups > 8) return false;
       if(position == end) break;
 
-      if((position + 1) < end && host[position+1] == __C(':'))
+      if((position + 1) < end && host[position+1] == _C(':'))
         {
           if(compressed) return false;
           compressed = true;
@@ -245,7 +245,7 @@ static bool DIOURL_IDNACodePointAllowed(XDWORD point, bool first)
 * --------------------------------------------------------------------------------------------------------------------*/
 static XBYTE DIOURL_PunycodeDigit(XDWORD digit)
 {
-  return (XBYTE)((digit < 26)?(__C('a') + digit):(__C('0') + digit - 26));
+  return (XBYTE)((digit < 26)?(_C('a') + digit):(_C('0') + digit - 26));
 }
 
 /**-------------------------------------------------------------------------------------------------------------------
@@ -309,9 +309,9 @@ static bool DIOURL_PunycodeLabel(XSTRING& label, XSTRING& output)
       if(point < 0x80)
         {
           XCHAR character = (XCHAR)point;
-          if(character >= __C('A') && character <= __C('Z')) character += (__C('a') - __C('A'));
-          if(!((character >= __C('a') && character <= __C('z')) ||
-               (character >= __C('0') && character <= __C('9')) || character == __C('-'))) return false;
+          if(character >= _C('A') && character <= _C('Z')) character += (_C('a') - _C('A'));
+          if(!((character >= _C('a') && character <= _C('z')) ||
+               (character >= _C('0') && character <= _C('9')) || character == _C('-'))) return false;
           output.Add(character);
           basic++;
         }
@@ -319,14 +319,14 @@ static bool DIOURL_PunycodeLabel(XSTRING& label, XSTRING& output)
 
   if(basic == points.GetSize())
     {
-      if(output.IsEmpty() || output.GetSize() > 63 || output[0] == __C('-') || output.Character_GetLast() == __C('-')) return false;
+      if(output.IsEmpty() || output.GetSize() > 63 || output[0] == _C('-') || output.Character_GetLast() == _C('-')) return false;
       return true;
     }
 
   XSTRING encoded;
-  encoded = __L("xn--");
+  encoded = _L("xn--");
   encoded += output;
-  if(basic) encoded.Add(__C('-'));
+  if(basic) encoded.Add(_C('-'));
 
   XDWORD n = 128;
   XDWORD delta = 0;
@@ -412,8 +412,8 @@ bool DIOURL::Host_Canonicalize(XCHAR* host, XSTRING& canonicalhost, DIOURL_HOSTT
   source = host;
   if(type == DIOURL_HOSTTYPE_IPV6)
     {
-      if(source[0] == __C('[')) source.DeleteCharacters(0, 1);
-      if(source.Character_GetLast() == __C(']')) source.DeleteLastCharacter();
+      if(source[0] == _C('[')) source.DeleteCharacters(0, 1);
+      if(source.Character_GetLast() == _C(']')) source.DeleteLastCharacter();
       source.ToLowerCase();
       canonicalhost = source;
       return true;
@@ -428,15 +428,15 @@ bool DIOURL::Host_Canonicalize(XCHAR* host, XSTRING& canonicalhost, DIOURL_HOSTT
   for(XDWORD c=0; c<source.GetSize(); c++)
     {
       XDWORD point=(XDWORD)source[c];
-      if(point == 0x3002 || point == 0xFF0E || point == 0xFF61) point = __C('.');
+      if(point == 0x3002 || point == 0xFF0E || point == 0xFF61) point = _C('.');
       else if(point >= 0xFF01 && point <= 0xFF5E) point -= 0xFEE0; // UTS #46 width mapping
-      else if(point == 0x3000) point = __C(' ');
+      else if(point == 0x3000) point = _C(' ');
 
       // UTS #46 deviation mappings (non-transitional form) and canonical
       // sigma folding. Local tables keep IDNA portable (no IdnToAscii / normaliz).
       if(point == 0x03C2) point = 0x03C3;
       if(point == 0x1E9E) point = 0x00DF;
-      if(point == 0x00DF) { mapped.Add(__C('s')); mapped.Add(__C('s')); continue; }
+      if(point == 0x00DF) { mapped.Add(_C('s')); mapped.Add(_C('s')); continue; }
       mapped.Add((XCHAR)point);
     }
   source = mapped;
@@ -445,21 +445,21 @@ bool DIOURL::Host_Canonicalize(XCHAR* host, XSTRING& canonicalhost, DIOURL_HOSTT
   // the label validity and punycode steps.
   source.ToLowerCase();
 
-  if(source.Character_GetLast() == __C('.')) source.DeleteLastCharacter();
+  if(source.Character_GetLast() == _C('.')) source.DeleteLastCharacter();
   if(source.IsEmpty()) return false;
 
   XDWORD start = 0;
   while(start < source.GetSize())
     {
       XDWORD end = start;
-      while(end < source.GetSize() && source[end] != __C('.')) end++;
+      while(end < source.GetSize() && source[end] != _C('.')) end++;
       if(end == start) return false;
 
       XSTRING label;
       XSTRING encoded;
       source.Copy(start, end, label);
       if(!DIOURL_PunycodeLabel(label, encoded)) return false;
-      if(!canonicalhost.IsEmpty()) canonicalhost.Add(__C('.'));
+      if(!canonicalhost.IsEmpty()) canonicalhost.Add(_C('.'));
       canonicalhost += encoded;
       start = end + 1;
     }
@@ -622,10 +622,10 @@ bool DIOURL::GetHTTPServer(XSTRING& server, XSTRING& login, XSTRING& password)
 
   if(IsEmpty()) return false;
 
-  Copy(DIOURL_WEBURLID, __L("/"), true, 0, server);
+  Copy(DIOURL_WEBURLID, _L("/"), true, 0, server);
   if(server.IsEmpty())
     {
-      int index = Find(__L("/"), true);
+      int index = Find(_L("/"), true);
       if(index != XSTRING_NOTFOUND)
         {
           Copy(0, index, server);
@@ -635,7 +635,7 @@ bool DIOURL::GetHTTPServer(XSTRING& server, XSTRING& login, XSTRING& password)
 
   if(server.IsEmpty()) return false;
 
-  int indexlp = server.Find(__L("@"), true);
+  int indexlp = server.Find(_L("@"), true);
   if(indexlp!=XSTRING_NOTFOUND)
     {
       XSTRING  lpstring;
@@ -643,7 +643,7 @@ bool DIOURL::GetHTTPServer(XSTRING& server, XSTRING& login, XSTRING& password)
       server.Copy(0, indexlp, lpstring);
       server.DeleteCharacters(0, indexlp+1);
 
-      int indexp = lpstring.Find(__L(":"), true);
+      int indexp = lpstring.Find(_L(":"), true);
       if(indexp!=XSTRING_NOTFOUND)
         {
           lpstring.Copy(0, indexp, login);
@@ -681,7 +681,7 @@ bool DIOURL::GetHTTPResource(XSTRING& resource)
         index  = 0;
    else index += weburlid.GetSize();
 
-  index = Find(__L("/"), true, index);
+  index = Find(_L("/"), true, index);
   if(index != XSTRING_NOTFOUND)
     {
       Copy(index, GetSize(), resource);
@@ -710,7 +710,7 @@ bool DIOURL::IsAURL()
     {
       if(!text[c]) break;
   
-      if((text[c] >= __C('0')) && (text[c] <= '9') || (text[c] == __C('.'))) 
+      if((text[c] >= _C('0')) && (text[c] <= '9') || (text[c] == _C('.'))) 
         {
           
 
@@ -837,13 +837,13 @@ bool DIOURL::Slash_Add()
   int c=0;
   while(str[c])
     {
-      if(str[c]==__C('/'))  count[0]++;
-      if(str[c]==__C('\\')) count[1]++;
+      if(str[c]==_C('/'))  count[0]++;
+      if(str[c]==_C('\\')) count[1]++;
 
       c++;
     }
 
-  if((Character_GetLast()!=__C('\\')) && (Character_GetLast()!=__C('/')))
+  if((Character_GetLast()!=_C('\\')) && (Character_GetLast()!=_C('/')))
     {
       if(count[0]>count[1])
              Add("/");
@@ -876,7 +876,7 @@ bool DIOURL::Slash_Normalize()
 
   while(str[c])
     {
-      if(str[c]==__C('\\')) str[c] = __C('/');
+      if(str[c]==_C('\\')) str[c] = _C('/');
       c++;
     }
 
@@ -897,7 +897,7 @@ bool DIOURL::Slash_Delete()
 {
   bool status = false;
 
-  if((Character_GetLast()==__C('\\')) || (Character_GetLast()==__C('/')))
+  if((Character_GetLast()==_C('\\')) || (Character_GetLast()==_C('/')))
     {
       DeleteCharacter('\\' , XSTRINGCONTEXT_TO_END);
       DeleteCharacter('/'  , XSTRINGCONTEXT_TO_END);
@@ -922,8 +922,8 @@ bool DIOURL::Slash_Delete()
 * --------------------------------------------------------------------------------------------------------------------*/
 bool DIOURL::IsUnsafeChar(XCHAR character)
 {
-  //XSTRING safecharacters(__L("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_.~!*'();:@=+$,/?[]"));
-  XSTRING safecharacters(__L("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_/\\."));
+  //XSTRING safecharacters(_L("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_.~!*'();:@=+$,/?[]"));
+  XSTRING safecharacters(_L("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_/\\."));
 
   for(int c=0; c<(int)safecharacters.GetSize(); c++)
     {
@@ -953,8 +953,8 @@ bool DIOURL::EncodeUnsafeChar(XCHAR character, XSTRING& encodechar)
   encodechar.Empty();
 
   if(character&0xFF00)
-        encodechar.Format(__L("%%%02X%%%02X"), (normalizechar>>8), (normalizechar&0x00FF));
-   else encodechar.Format(__L("%%%02X"), normalizechar);
+        encodechar.Format(_L("%%%02X%%%02X"), (normalizechar>>8), (normalizechar&0x00FF));
+   else encodechar.Format(_L("%%%02X"), normalizechar);
 
   return true;
 }
@@ -989,13 +989,13 @@ bool DIOURL::EncodeUnsafeCharsFromString(XSTRING& string)
 
           switch(string.Get()[c])
             {
-              case __C('&')  : if(string.Get()[c+1] == __C(' '))
+              case _C('&')  : if(string.Get()[c+1] == _C(' '))
                                      EncodeUnsafeChar(string.Get()[c], encodechar);
                                 else Add(string.Get()[c]);
                                break;
 
-              case __C('\\') :
-              case __C('%')  :
+              case _C('\\') :
+              case _C('%')  :
                     default  : EncodeUnsafeChar(string.Get()[c], encodechar);
                                break;
             }
@@ -1078,13 +1078,13 @@ bool DIOURL::EncodeUnsafeCharsFromBuffer(XBUFFER& xbuffer)
 
           switch(xbuffer.Get()[c])
             {
-              case __C('&')  : if(xbuffer.GetByte(c+1) == __C(' '))
+              case _C('&')  : if(xbuffer.GetByte(c+1) == _C(' '))
                                      EncodeUnsafeChar(xbuffer.GetByte(c), encodechar);
                                 else Add(xbuffer.GetByte(c));
                                break;
 
-              case __C('\\') :
-              case __C('%')  :
+              case _C('\\') :
+              case _C('%')  :
                     default  : EncodeUnsafeChar(xbuffer.GetByte(c), encodechar);
                                break;
             }
@@ -1141,37 +1141,54 @@ bool DIOURL::DecodeUnsafeCharsToString(XSTRING& string)
 
   for(int c=0;c<(int)GetSize();c++)
     {
-      XCHAR character[2] = { 0 , 0 };
+      XCHAR character = Get()[c];
 
-      character[0] = Get()[c];
-
-      if(character[0]==__C('%'))
+      if(character == _C('%'))
         {
-          XSTRING   numberhex;
-          XCHAR part[2] = { 0 , 0 };
-
-          c++;
-
-          for(int d=0;d<2;d++)
+          // Only decode valid %HH escapes (two hex digits). Leave lone '%' and
+          // C/C++ masks such as %s / %d / %c untouched when they are not %HH.
+          if((c + 2) < (int)GetSize())
             {
-              part[0] = Get()[c+d];
-              numberhex.Add(part);
+              XCHAR h1 = Get()[c + 1];
+              XCHAR h2 = Get()[c + 2];
+              bool  h1hex = (((h1 >= _C('0')) && (h1 <= _C('9'))) ||
+                             ((h1 >= _C('A')) && (h1 <= _C('F'))) ||
+                             ((h1 >= _C('a')) && (h1 <= _C('f'))));
+              bool  h2hex = (((h2 >= _C('0')) && (h2 <= _C('9'))) ||
+                             ((h2 >= _C('A')) && (h2 <= _C('F'))) ||
+                             ((h2 >= _C('a')) && (h2 <= _C('f'))));
+
+              if(h1hex && h2hex)
+                {
+                  XSTRING numberhex;
+                  XCHAR   part[2] = { 0 , 0 };
+
+                  part[0] = h1;
+                  numberhex.Add(part);
+                  part[0] = h2;
+                  numberhex.Add(part);
+
+                  numberhex.UnFormat(_L("%02X"), &part[0]);
+                  part[0] &= 0x00FF;
+                  string.Add(part);
+
+                  c += 2;
+                  continue;
+                }
             }
 
-          numberhex.UnFormat(__L("%02X"), &part[0]);
-
-          part[0]&=0x00FF;
-          string.Add(part);
-
-          c++;
+          string.Add(character);
         }
        else
         {
-          if(character[0]==__C('+'))
+          if(character == _C('+'))
             {
-              string.Add(__C(' '));
+              string.Add(_C(' '));
             }
-           else string.Add(character);
+           else
+            {
+              string.Add(character);
+            }
         }
     }
 
@@ -1324,14 +1341,14 @@ bool DIOURL::GetExtension(XSTRING& extension)
   int indexext;
   for(indexext = GetSize(); indexext>0; indexext--)
     {
-      if(Get()[indexext] == __C('.'))
+      if(Get()[indexext] == _C('.'))
         {
           break;
         }
 
-      if((Get()[indexext] == __C('\\')) ||
-          Get()[indexext] == __C('/')   ||
-          Get()[indexext] == __C(':'))
+      if((Get()[indexext] == _C('\\')) ||
+          Get()[indexext] == _C('/')   ||
+          Get()[indexext] == _C(':'))
         {
           indexext = -1;
           break;
@@ -1362,9 +1379,9 @@ bool DIOURL::GetFileName(XSTRING& filename)
   int indexext;
   for(indexext = GetSize(); indexext>0; indexext--)
     {
-      if((Get()[indexext] == __C('\\')) ||
-          Get()[indexext] == __C('/')   ||
-          Get()[indexext] == __C(':'))
+      if((Get()[indexext] == _C('\\')) ||
+          Get()[indexext] == _C('/')   ||
+          Get()[indexext] == _C(':'))
         {
           Copy(indexext+1, filename);
           break;

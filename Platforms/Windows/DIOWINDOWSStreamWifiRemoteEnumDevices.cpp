@@ -146,18 +146,18 @@ bool DIOWINDOWSSTREAMWIFIREMOTEENUMDEVICES::Search()
 
       switch (interfacelinfo->isState)
         {
-          case wlan_interface_state_not_ready               : line = __L("Not ready");                                                      break;
-          case wlan_interface_state_connected               : line = __L("Connected");                                                      break;
-          case wlan_interface_state_ad_hoc_network_formed   : line = __L("First node in a ad hoc network");                                 break;
-          case wlan_interface_state_disconnecting           : line = __L("Disconnecting");                                                  break;
-          case wlan_interface_state_disconnected            : line = __L("Not connected");                                                  break;
-          case wlan_interface_state_associating             : line = __L("Attempting to associate with a network");                         break;
-          case wlan_interface_state_discovering             : line = __L("Auto configuration is discovering settings for the network");     break;
-          case wlan_interface_state_authenticating          : line = __L("In process of authenticating");                                   break;
-                                          default           : line.Format(__L("Unknown state %ld"), interfacelinfo->isState);               break;
+          case wlan_interface_state_not_ready               : line = _L("Not ready");                                                      break;
+          case wlan_interface_state_connected               : line = _L("Connected");                                                      break;
+          case wlan_interface_state_ad_hoc_network_formed   : line = _L("First node in a ad hoc network");                                 break;
+          case wlan_interface_state_disconnecting           : line = _L("Disconnecting");                                                  break;
+          case wlan_interface_state_disconnected            : line = _L("Not connected");                                                  break;
+          case wlan_interface_state_associating             : line = _L("Attempting to associate with a network");                         break;
+          case wlan_interface_state_discovering             : line = _L("Auto configuration is discovering settings for the network");     break;
+          case wlan_interface_state_authenticating          : line = _L("In process of authenticating");                                   break;
+                                          default           : line.Format(_L("Unknown state %ld"), interfacelinfo->isState);               break;
         }
 
-     // XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, __L("[Wi-Fi enum] Interface State[%d]: %s"), i, line.Get());
+     // XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, _L("[Wi-Fi enum] Interface State[%d]: %s"), i, line.Get());
 
 
 
@@ -332,11 +332,11 @@ bool DIOWINDOWSSTREAMWIFIREMOTEENUMDEVICES::SetAllConnectionInAutomaticMode(bool
               filexml.AddLine(profileXML);
               filexml.DecodeAllLines();
 
-              nameelement = __L("connectionMode");
+              nameelement = _L("connectionMode");
               XFILEXMLELEMENT* element = filexml.SearchElement(nameelement, index, NULL);
               if(element)
                 {
-                  element->SetValue(automaticmodeactive?__L("auto"):__L("manual"));
+                  element->SetValue(automaticmodeactive?_L("auto"):_L("manual"));
                 }
 
               filexml.EncodeAllLines(false);
@@ -454,11 +454,11 @@ bool DIOWINDOWSSTREAMWIFIREMOTEENUMDEVICES::SetAllConnectionStatus(bool activate
                   result = WlanSetInterface(handleclient, &interfacelinfo->InterfaceGuid, wlan_intf_opcode_radio_state, sizeof(WLAN_PHY_RADIO_STATE), pdata, NULL);
                   if(result == ERROR_SUCCESS)
                     {
-                      //XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, __L("Wifi Activated.")); 
+                      //XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, _L("Wifi Activated.")); 
                     }
                    else
                     {
-                      //XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, __L("Wifi Activate Error!")); 
+                      //XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, _L("Wifi Activate Error!")); 
                     }    
                 }
             }         

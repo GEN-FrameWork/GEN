@@ -180,7 +180,7 @@ bool DIOLINUXDBUS_MESSAGE::Create()
     }
    else
     {
-      XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, __L("[DBUS] ERROR: Unable to allocate memory for the message!"));
+      XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, _L("[DBUS] ERROR: Unable to allocate memory for the message!"));
     }
 
 
@@ -752,9 +752,9 @@ bool DIOLINUXDBUS::Ini(DBusBusType type)
     }
  
   connection_name = dbus_bus_get_unique_name(connection);
-  XTRACE_PRINTCOLOR(XTRACE_COLOR_GREEN, __L("[DBUS] Ini connection [%08X] %s ... "), connection, connection_name.Get());
+  XTRACE_PRINTCOLOR(XTRACE_COLOR_GREEN, _L("[DBUS] Ini connection [%08X] %s ... "), connection, connection_name.Get());
     
-  thread_signals = CREATEXTHREAD(XTHREADGROUPID_DIOLINUXDBUS, __L("DIOLINUXDBUS::Ini"), Thread_Signals, (void*)this);
+  thread_signals = CREATEXTHREAD(XTHREADGROUPID_DIOLINUXDBUS, _L("DIOLINUXDBUS::Ini"), Thread_Signals, (void*)this);
   if(!thread_signals) return false;
 
   return thread_signals->Ini();
@@ -800,7 +800,7 @@ bool DIOLINUXDBUS::CallMethod(DIOLINUXDBUS_MESSAGE& message, DIOLINUXDBUS_MESSAG
   
   if(!connection) 
     { 
-      XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, __L("[DBUS] Connection invalid! "));
+      XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, _L("[DBUS] Connection invalid! "));
       return false;
     }
     
@@ -842,7 +842,7 @@ bool DIOLINUXDBUS::Signal_Add(XCHAR* type, XCHAR* name)
 
   if(!Signal_IsTypeAdd(type))
     {
-      typestr.Format(__L("type='signal', interface='%s'"), type); 
+      typestr.Format(_L("type='signal', interface='%s'"), type); 
 
       XBUFFER charstr;
       
@@ -857,7 +857,7 @@ bool DIOLINUXDBUS::Signal_Add(XCHAR* type, XCHAR* name)
           status = false;   
         }
 
-      //XTRACE_PRINTCOLOR((status?XTRACE_COLOR_BLUE:XTRACE_COLOR_RED), __L("[DBUS] Signal Add Type [%s] ..."), typestr.Get()); 
+      //XTRACE_PRINTCOLOR((status?XTRACE_COLOR_BLUE:XTRACE_COLOR_RED), _L("[DBUS] Signal Add Type [%s] ..."), typestr.Get()); 
     }
 
   if(!status) return status;
@@ -872,7 +872,7 @@ bool DIOLINUXDBUS::Signal_Add(XCHAR* type, XCHAR* name)
 
     } else status = false;
     
-  //XTRACE_PRINTCOLOR((status?XTRACE_COLOR_BLUE:XTRACE_COLOR_RED), __L("[DBUS] Signal Add Name [%s] ..."), name); 
+  //XTRACE_PRINTCOLOR((status?XTRACE_COLOR_BLUE:XTRACE_COLOR_RED), _L("[DBUS] Signal Add Name [%s] ..."), name); 
 
   return status;
 }
@@ -994,7 +994,7 @@ bool DIOLINUXDBUS::TraceError(DBusError& error)
   error_name    = error.name;
   error_message = error.message;
 
-  XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, __L("[DBUS] Error %s : [%s] "), error_name.Get(), error_message.Get());
+  XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, _L("[DBUS] Error %s : [%s] "), error_name.Get(), error_message.Get());
 
   dbus_error_free(&error);  
 
@@ -1030,7 +1030,7 @@ void DIOLINUXDBUS::Thread_Signals(void* param)
       return;
     }
 
-  //XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, __L("[DBUS] Message ...")); 
+  //XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, _L("[DBUS] Message ...")); 
 
   DIOLINUXDBUS_SIGNAL*  signal        = NULL;
   bool                  found_signal  = false;
@@ -1079,7 +1079,7 @@ void DIOLINUXDBUS::Thread_Signals(void* param)
 
       dbus->PostEvent(&xevent);
 
-      //XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, __L("[DBUS] Signal produced [%s] [%s] ..."), signal->GetType()->Get(), signal->GetName()->Get());    
+      //XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, _L("[DBUS] Signal produced [%s] [%s] ..."), signal->GetType()->Get(), signal->GetName()->Get());    
     }   
    else
     {

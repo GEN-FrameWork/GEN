@@ -108,22 +108,22 @@ bool SCRIPT_LIB_SYSTEM::AddLibraryFunctions(SCRIPT* script)
 
   this->script = script;
 
-  script->AddLibraryFunction(this, __L("System_GetType"), Call_System_GetType);
-  script->AddLibraryFunction(this, __L("System_GetOperativeSystemID"), Call_System_GetOperativeSystemID);
-  script->AddLibraryFunction(this, __L("System_GetHardwareType"), Call_System_GetHardwareType);
-  script->AddLibraryFunction(this, __L("System_IsWindows"), Call_System_IsWindows);
-  script->AddLibraryFunction(this, __L("System_IsLinux"), Call_System_IsLinux);
-  script->AddLibraryFunction(this, __L("System_IsAndroid"), Call_System_IsAndroid);
-  script->AddLibraryFunction(this, __L("System_GetLanguageSO"), Call_System_GetLanguageSO);
-  script->AddLibraryFunction(this, __L("System_GetUser"), Call_System_GetUser);
-  script->AddLibraryFunction(this, __L("System_GetDomain"), Call_System_GetDomain);
-  script->AddLibraryFunction(this, __L("System_GetFreeMemoryPercent"), Call_System_GetFreeMemoryPercent);
-  script->AddLibraryFunction(this, __L("System_GetPathExecApplication"), Call_System_GetPathExecApplication);
+  script->AddLibraryFunction(this, _L("System_GetType"), Call_System_GetType);
+  script->AddLibraryFunction(this, _L("System_GetOperativeSystemID"), Call_System_GetOperativeSystemID);
+  script->AddLibraryFunction(this, _L("System_GetHardwareType"), Call_System_GetHardwareType);
+  script->AddLibraryFunction(this, _L("System_IsWindows"), Call_System_IsWindows);
+  script->AddLibraryFunction(this, _L("System_IsLinux"), Call_System_IsLinux);
+  script->AddLibraryFunction(this, _L("System_IsAndroid"), Call_System_IsAndroid);
+  script->AddLibraryFunction(this, _L("System_GetLanguageSO"), Call_System_GetLanguageSO);
+  script->AddLibraryFunction(this, _L("System_GetUser"), Call_System_GetUser);
+  script->AddLibraryFunction(this, _L("System_GetDomain"), Call_System_GetDomain);
+  script->AddLibraryFunction(this, _L("System_GetFreeMemoryPercent"), Call_System_GetFreeMemoryPercent);
+  script->AddLibraryFunction(this, _L("System_GetPathExecApplication"), Call_System_GetPathExecApplication);
 
-  script->AddLibraryFunction(this, __L("System_Reboot"), Call_System_Reboot);
-  script->AddLibraryFunction(this, __L("System_PowerOff"), Call_System_PowerOff);
-  script->AddLibraryFunction(this, __L("System_Logout"), Call_System_Logout);
-  script->AddLibraryFunction(this, __L("System_GetEnviromentVar"), Call_System_GetEnviromentVar);
+  script->AddLibraryFunction(this, _L("System_Reboot"), Call_System_Reboot);
+  script->AddLibraryFunction(this, _L("System_PowerOff"), Call_System_PowerOff);
+  script->AddLibraryFunction(this, _L("System_Logout"), Call_System_Logout);
+  script->AddLibraryFunction(this, _L("System_GetEnviromentVar"), Call_System_GetEnviromentVar);
 
   return true;
 }

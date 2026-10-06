@@ -158,7 +158,7 @@ bool DIOANDROIDSTREAMUSBLOCALENUMDEVICES::Search()
 
           if(!resource.IsEmpty())
             {
-              if(resource.Find(__L("/dev/bus/"), true) == XSTRING_NOTFOUND)
+              if(resource.Find(_L("/dev/bus/"), true) == XSTRING_NOTFOUND)
                 {
                   int       port;
                   int       empty[2];
@@ -167,23 +167,23 @@ bool DIOANDROIDSTREAMUSBLOCALENUMDEVICES::Search()
                   string[0].AdjustSize(_MAXSTR);
                   string[1].AdjustSize(_MAXSTR);
 
-                  devicepath.UnFormat(__L("%s-%d.%d:%d%s"), string[0].Get(), &empty[0], &port, &empty[1], string[1].Get());
+                  devicepath.UnFormat(_L("%s-%d.%d:%d%s"), string[0].Get(), &empty[0], &port, &empty[1], string[1].Get());
 
                   string[0].AdjustSize();
                   string[1].AdjustSize();
 
-                  //XTRACE_PRINTCOLOR(2, __L("%s - [port %d] class[%s]"), devicepath.Get(), port, classstr.Get());
+                  //XTRACE_PRINTCOLOR(2, _L("%s - [port %d] class[%s]"), devicepath.Get(), port, classstr.Get());
 
                   DIOSTREAMDEVICEUSB* device = GEN_NEW DIOSTREAMDEVICEUSB();
                   if(device)
                     {
-                      vid.UnFormat(__L("%08X"), &vendorID);
-                      pid.UnFormat(__L("%08X"), &productID);
+                      vid.UnFormat(_L("%08X"), &vendorID);
+                      pid.UnFormat(_L("%08X"), &productID);
 
                       device->SetIndex(index);
                       device->SetType(DIOSTREAMDEVICE_TYPE_USB);
 
-                      device->GetLocation()->Format(__L("Port_#%04d.Hub_#%04d"), port, hubstr.ConvertToInt());
+                      device->GetLocation()->Format(_L("Port_#%04d.Hub_#%04d"), port, hubstr.ConvertToInt());
                       device->GetDescription()->Set(udev_device_get_sysattr_value(udevdevice, "product"));
                       device->GetResource()->Set(resource);
 

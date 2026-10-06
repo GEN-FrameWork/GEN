@@ -505,7 +505,7 @@ DIOCOREPROTOCOL::DIOCOREPROTOCOL(DIOCOREPROTOCOL_CFG* protocolCFG, DIOSTREAM* di
         }
     }  
 
-  base64headermagic.Format(__L("%c%c%c%c"), ((DIOCOREPROTOCOL_HEADER_MAGIC_ID >> 24) & 0x000000FF), ((DIOCOREPROTOCOL_HEADER_MAGIC_ID >> 16) & 0x000000FF), ((DIOCOREPROTOCOL_HEADER_MAGIC_ID >> 8) & 0x000000FF), (DIOCOREPROTOCOL_HEADER_MAGIC_ID & 0x000000FF));
+  base64headermagic.Format(_L("%c%c%c%c"), ((DIOCOREPROTOCOL_HEADER_MAGIC_ID >> 24) & 0x000000FF), ((DIOCOREPROTOCOL_HEADER_MAGIC_ID >> 16) & 0x000000FF), ((DIOCOREPROTOCOL_HEADER_MAGIC_ID >> 8) & 0x000000FF), (DIOCOREPROTOCOL_HEADER_MAGIC_ID & 0x000000FF));
  
 
   this->protocolCFG = protocolCFG;
@@ -745,7 +745,7 @@ XDWORD DIOCOREPROTOCOL::ReceivedMsg(DIOCOREPROTOCOL_HEADER& header, XBUFFER& con
 
       base64senddata.ConvertFromUTF8(dataread);
 
-      base64headermask.Format(__L("%s"), base64headermagic.Get()); 
+      base64headermask.Format(_L("%s"), base64headermagic.Get()); 
       base64senddata.Copy(0, sizeprelude, base64header);
     
       base64header.Copy(0, 4, extract);
@@ -755,13 +755,13 @@ XDWORD DIOCOREPROTOCOL::ReceivedMsg(DIOCOREPROTOCOL_HEADER& header, XBUFFER& con
         }
 
       base64header.Copy(4, 14, extract);
-      if(!extract.UnFormat(__L("%10d"), &base64size))
+      if(!extract.UnFormat(_L("%10d"), &base64size))
         {
           return 0;
         }
 
       base64header.Copy(14, 22, extract);
-      if(!extract.UnFormat(__L("%08x"), &CRC32value))
+      if(!extract.UnFormat(_L("%08x"), &CRC32value))
         {
           return 0;
         }
@@ -787,7 +787,7 @@ XDWORD DIOCOREPROTOCOL::ReceivedMsg(DIOCOREPROTOCOL_HEADER& header, XBUFFER& con
       /*
       XBYTE color = XTRACE_COLOR_GREEN;
 
-      XTRACE_PRINTCOLOR(color, __L("READ < < < < < < < < < < < <"));   
+      XTRACE_PRINTCOLOR(color, _L("READ < < < < < < < < < < < <"));   
       XTRACE_PRINTDATABLOCKCOLOR(color, debugdata); 
       */           
       // ------------------------------------------------------------------------------------------------------------------------
@@ -886,7 +886,7 @@ XDWORD DIOCOREPROTOCOL::ReceivedMsg(DIOCOREPROTOCOL_HEADER& header, XBUFFER& con
 
                                   if(!status)
                                     {
-                                      XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, __L("[DIO Core Protocol Header] Error to read msg: to decompress header"));
+                                      XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, _L("[DIO Core Protocol Header] Error to read msg: to decompress header"));
                                     }
                                 }
                                else
@@ -897,7 +897,7 @@ XDWORD DIOCOREPROTOCOL::ReceivedMsg(DIOCOREPROTOCOL_HEADER& header, XBUFFER& con
 
                                   if(!status)
                                     {
-                                      XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, __L("[DIO Core Protocol Header] Error to read msg: to get header"));
+                                      XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, _L("[DIO Core Protocol Header] Error to read msg: to get header"));
                                     }
                                 }
 
@@ -943,7 +943,7 @@ XDWORD DIOCOREPROTOCOL::ReceivedMsg(DIOCOREPROTOCOL_HEADER& header, XBUFFER& con
 
                                           if(!status)
                                             {
-                                              XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, __L("[DIO Core Protocol Header] Error to read msg: to decompress content"));
+                                              XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, _L("[DIO Core Protocol Header] Error to read msg: to decompress content"));
                                             }
                                         }
                                        else
@@ -955,7 +955,7 @@ XDWORD DIOCOREPROTOCOL::ReceivedMsg(DIOCOREPROTOCOL_HEADER& header, XBUFFER& con
 
                                               if(!status)
                                                 {
-                                                  XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, __L("[DIO Core Protocol Header] Error to read msg: to get content"));
+                                                  XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, _L("[DIO Core Protocol Header] Error to read msg: to get content"));
                                                 }
                                             }
                                         }
@@ -978,7 +978,7 @@ XDWORD DIOCOREPROTOCOL::ReceivedMsg(DIOCOREPROTOCOL_HEADER& header, XBUFFER& con
                               color = XTRACE_COLOR_BLUE;      
                             }
 
-                          XTRACE_PRINTCOLOR(color, __L("READ -----------------------------------------------------------------------------------------------"));   
+                          XTRACE_PRINTCOLOR(color, _L("READ -----------------------------------------------------------------------------------------------"));   
                           XTRACE_PRINTDATABLOCKCOLOR(color, dataread.Get(), sizeread +  index); 
                           */
                           // ------------------------------------------------------------------------------------------------------------------------
@@ -988,7 +988,7 @@ XDWORD DIOCOREPROTOCOL::ReceivedMsg(DIOCOREPROTOCOL_HEADER& header, XBUFFER& con
                               status = readbuffer->Extract(NULL, 0, base64size);  
                               if(!status)
                                 {
-                                  XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, __L("[DIO Core Protocol Header] Error to read msg: eliminate buffer used: %d"), base64size);
+                                  XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, _L("[DIO Core Protocol Header] Error to read msg: eliminate buffer used: %d"), base64size);
                                 }
                             }
                            else 
@@ -996,7 +996,7 @@ XDWORD DIOCOREPROTOCOL::ReceivedMsg(DIOCOREPROTOCOL_HEADER& header, XBUFFER& con
                               status = readbuffer->Extract(NULL, 0, sizeread + offsetini);  
                               if(!status)
                                 {
-                                  XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, __L("[DIO Core Protocol Header] Error to read msg: eliminate buffer used: %d + %d"), sizeread, index);
+                                  XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, _L("[DIO Core Protocol Header] Error to read msg: eliminate buffer used: %d + %d"), sizeread, index);
                                 }
                             }
                      
@@ -1004,32 +1004,32 @@ XDWORD DIOCOREPROTOCOL::ReceivedMsg(DIOCOREPROTOCOL_HEADER& header, XBUFFER& con
                         }
                        else
                         {
-                          XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, __L("[DIO Core Protocol Header] Error to read msg: not read size header")); 
+                          XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, _L("[DIO Core Protocol Header] Error to read msg: not read size header")); 
                         }           
                     }
                    else
                     {
-                      XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, __L("[DIO Core Protocol Header] Error to read msg: not read header CRC")); 
+                      XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, _L("[DIO Core Protocol Header] Error to read msg: not read header CRC")); 
                     }           
                 }
                else
                 {
-                  XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, __L("[DIO Core Protocol Header] Error to read msg: not read size header cmp")); 
+                  XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, _L("[DIO Core Protocol Header] Error to read msg: not read size header cmp")); 
                 }           
             }
            else
             {
-              XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, __L("[DIO Core Protocol Header] Error to read msg: not read size header")); 
+              XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, _L("[DIO Core Protocol Header] Error to read msg: not read size header")); 
             }           
         }
        else
         {
-          XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, __L("[DIO Core Protocol Header] Error to read msg: not found magic")); 
+          XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, _L("[DIO Core Protocol Header] Error to read msg: not found magic")); 
         }           
     }
    else
     {
-      XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, __L("[DIO Core Protocol Header] Error to read msg: read magic")); 
+      XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, _L("[DIO Core Protocol Header] Error to read msg: read magic")); 
     }
    
   return sizeread;
@@ -1686,11 +1686,11 @@ bool DIOCOREPROTOCOL::ShowDebug(bool send, DIOCOREPROTOCOL_HEADER* header, XBUFF
     {
       colormsg = XTRACE_COLOR_GREEN;
   
-      title.Format(__L("[CoreProtocol] Read message [%5d bytes] : "), sizeallmessage); 
+      title.Format(_L("[CoreProtocol] Read message [%5d bytes] : "), sizeallmessage); 
     }  
    else 
     {
-      title.Format(__L("[CoreProtocol] Write message [%5d bytes] : "), sizeallmessage);  
+      title.Format(_L("[CoreProtocol] Write message [%5d bytes] : "), sizeallmessage);  
     }
 
   if(!showlongformat)
@@ -1702,9 +1702,9 @@ bool DIOCOREPROTOCOL::ShowDebug(bool send, DIOCOREPROTOCOL_HEADER* header, XBUFF
 
       #ifdef DIOCOREPROTOCOL_HUMANFORMAT_ACTIVE
       header->GetOperationToString(operationstring);
-      title.AddFormat(__L("%-20s %-15s [%s] "), ID_message.Get(), operationstring.Get(), header->GetOperationParam()->Get()); 
+      title.AddFormat(_L("%-20s %-15s [%s] "), ID_message.Get(), operationstring.Get(), header->GetOperationParam()->Get()); 
       #else
-      title.AddFormat(__L("%-20s %03d [%s] "), ID_message.Get(), header->GetOperation(), header->GetOperationParam()->Get()); 
+      title.AddFormat(_L("%-20s %03d [%s] "), ID_message.Get(), header->GetOperation(), header->GetOperationParam()->Get()); 
       #endif
 
       XTRACE_PRINTCOLOR(colormsg, title.Get()); 
@@ -1930,7 +1930,7 @@ bool DIOCOREPROTOCOL::SendData(XBUFFER& senddata)
 
       base64senddata.ConvertBinaryToBase64(senddata);   
 
-      base64header.Format(__L("%s%010d%08X"), base64headermagic.Get(), base64senddata.GetSize(), CRC32value); 
+      base64header.Format(_L("%s%010d%08X"), base64headermagic.Get(), base64senddata.GetSize(), CRC32value); 
       base64senddata.Insert(base64header, 0);          
       base64senddata.ConvertToUTF8(senddata, false);
     }
@@ -1940,7 +1940,7 @@ bool DIOCOREPROTOCOL::SendData(XBUFFER& senddata)
   /*
   XBYTE color = XTRACE_COLOR_PURPLE;
 
-  XTRACE_PRINTCOLOR(color, __L("WRITE > > > > > > > > > > >"));     
+  XTRACE_PRINTCOLOR(color, _L("WRITE > > > > > > > > > > >"));     
   XTRACE_PRINTDATABLOCKCOLOR(color, senddata);   
   */
   

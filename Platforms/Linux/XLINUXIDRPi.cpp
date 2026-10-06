@@ -154,7 +154,7 @@ bool XLINUXIDRPI::DetectBoard(RPI_MODEL& model, int& megabytes, float& revision)
   XFILETXT* xfiletxt;
   bool      status = false;
 
-  xpath = __L("/proc/cpuinfo");
+  xpath = _L("/proc/cpuinfo");
   
   xfiletxt = GEN_NEW XFILETXT();
   if(!xfiletxt) return false;
@@ -168,9 +168,9 @@ bool XLINUXIDRPI::DetectBoard(RPI_MODEL& model, int& megabytes, float& revision)
           XSTRING* line = xfiletxt->GetLine(c);
           if(line)
             {
-              if(line->Find(__L("Revision"), false) != XSTRING_NOTFOUND)
+              if(line->Find(_L("Revision"), false) != XSTRING_NOTFOUND)
                 {
-                  int position = line->Find(__L(":"), true);
+                  int position = line->Find(_L(":"), true);
                   if(position != XSTRING_NOTFOUND)
                     {
                       line->DeleteCharacters(0, position+1);
@@ -180,40 +180,40 @@ bool XLINUXIDRPI::DetectBoard(RPI_MODEL& model, int& megabytes, float& revision)
 
                       // https://www.raspberrypi.org/documentation/hardware/raspberrypi/revision-codes/README.md
 
-                      if(!line->Compare(__L("0002")   , true))  { model = RPI_MODEL_B;                megabytes = 256;      revision = 1.0f; }
-                      if(!line->Compare(__L("0003")   , true))  { model = RPI_MODEL_B;                megabytes = 256;      revision = 1.0f; }
-                      if(!line->Compare(__L("0004")   , true))  { model = RPI_MODEL_B;                megabytes = 256;      revision = 2.0f; }
-                      if(!line->Compare(__L("0005")   , true))  { model = RPI_MODEL_B;                megabytes = 256;      revision = 2.0f; }
-                      if(!line->Compare(__L("0006")   , true))  { model = RPI_MODEL_B;                megabytes = 256;      revision = 2.0f; }
-                      if(!line->Compare(__L("0007")   , true))  { model = RPI_MODEL_A;                megabytes = 256;      revision = 2.0f; }
-                      if(!line->Compare(__L("0008")   , true))  { model = RPI_MODEL_A;                megabytes = 256;      revision = 2.0f; }
-                      if(!line->Compare(__L("0009")   , true))  { model = RPI_MODEL_A;                megabytes = 256;      revision = 2.0f; }
-                      if(!line->Compare(__L("000d")   , true))  { model = RPI_MODEL_B;                megabytes = 512;      revision = 2.0f; }
-                      if(!line->Compare(__L("000e")   , true))  { model = RPI_MODEL_B;                megabytes = 512;      revision = 2.0f; }
-                      if(!line->Compare(__L("000f")   , true))  { model = RPI_MODEL_B;                megabytes = 512;      revision = 2.0f; }
-                      if(!line->Compare(__L("0010")   , true))  { model = RPI_MODEL_B_PLUS;           megabytes = 512;      revision = 1.0f; }
-                      if(!line->Compare(__L("0011")   , true))  { model = RPI_MODEL_COMPUTERMODULE;   megabytes = 512;      revision = 1.0f; }
-                      if(!line->Compare(__L("0012")   , true))  { model = RPI_MODEL_A_PLUS;           megabytes = 256;      revision = 1.0f; }
-                      if(!line->Compare(__L("0013")   , true))  { model = RPI_MODEL_B_PLUS;           megabytes = 512;      revision = 1.2f; }
-                      if(!line->Compare(__L("a01041") , true))  { model = RPI_MODEL_B_2;              megabytes = 1024;     revision = 1.1f; }
-                      if(!line->Compare(__L("a21041") , true))  { model = RPI_MODEL_B_2;              megabytes = 1024;     revision = 1.1f; }
-                      if(!line->Compare(__L("900092") , true))  { model = RPI_MODEL_ZERO;             megabytes = 512;      revision = 1.2f; }
-                      if(!line->Compare(__L("900093") , true))  { model = RPI_MODEL_ZERO;             megabytes = 512;      revision = 1.2f; }
-                      if(!line->Compare(__L("a220a0") , true))  { model = RPI_MODEL_CM3;            	megabytes = 1024;     revision = 1.0f; }
-                      if(!line->Compare(__L("a02082") , true))  { model = RPI_MODEL_B_3;              megabytes = 1024;     revision = 1.2f; }
-                      if(!line->Compare(__L("a22082") , true))  { model = RPI_MODEL_B_3;              megabytes = 1024;     revision = 1.2f; }
-                      if(!line->Compare(__L("a22083") , true))  { model = RPI_MODEL_B_3;              megabytes = 1024;     revision = 1.3f; }	
-                      if(!line->Compare(__L("a02100") , true))  { model = RPI_MODEL_CM3P;            	megabytes = 1024;     revision = 1.0f; }
-                      if(!line->Compare(__L("a020d3") , true))  { model = RPI_MODEL_B_3P;             megabytes = 1024;     revision = 1.2f; }                      
-                      if(!line->Compare(__L("a03111") , true))  { model = RPI_MODEL_B_4;              megabytes = 1024;     revision = 1.1f; }
-                      if(!line->Compare(__L("b03111") , true))  { model = RPI_MODEL_B_4;              megabytes = 2048;     revision = 1.1f; }
-                      if(!line->Compare(__L("b03112") , true))  { model = RPI_MODEL_B_4;              megabytes = 2048;     revision = 1.2f; }
-                      if(!line->Compare(__L("c03111") , true))  { model = RPI_MODEL_B_4;              megabytes = 4096;     revision = 1.1f; }
-                      if(!line->Compare(__L("c03112") , true))  { model = RPI_MODEL_B_4;              megabytes = 4096;     revision = 1.2f; }
-                      if(!line->Compare(__L("c04170") , true))  { model = RPI_MODEL_B_5;              megabytes = 4096;     revision = 1.0f; }
-                      if(!line->Compare(__L("d04170") , true))  { model = RPI_MODEL_B_5;              megabytes = 8192;     revision = 1.0f; }                                                                        
+                      if(!line->Compare(_L("0002")   , true))  { model = RPI_MODEL_B;                megabytes = 256;      revision = 1.0f; }
+                      if(!line->Compare(_L("0003")   , true))  { model = RPI_MODEL_B;                megabytes = 256;      revision = 1.0f; }
+                      if(!line->Compare(_L("0004")   , true))  { model = RPI_MODEL_B;                megabytes = 256;      revision = 2.0f; }
+                      if(!line->Compare(_L("0005")   , true))  { model = RPI_MODEL_B;                megabytes = 256;      revision = 2.0f; }
+                      if(!line->Compare(_L("0006")   , true))  { model = RPI_MODEL_B;                megabytes = 256;      revision = 2.0f; }
+                      if(!line->Compare(_L("0007")   , true))  { model = RPI_MODEL_A;                megabytes = 256;      revision = 2.0f; }
+                      if(!line->Compare(_L("0008")   , true))  { model = RPI_MODEL_A;                megabytes = 256;      revision = 2.0f; }
+                      if(!line->Compare(_L("0009")   , true))  { model = RPI_MODEL_A;                megabytes = 256;      revision = 2.0f; }
+                      if(!line->Compare(_L("000d")   , true))  { model = RPI_MODEL_B;                megabytes = 512;      revision = 2.0f; }
+                      if(!line->Compare(_L("000e")   , true))  { model = RPI_MODEL_B;                megabytes = 512;      revision = 2.0f; }
+                      if(!line->Compare(_L("000f")   , true))  { model = RPI_MODEL_B;                megabytes = 512;      revision = 2.0f; }
+                      if(!line->Compare(_L("0010")   , true))  { model = RPI_MODEL_B_PLUS;           megabytes = 512;      revision = 1.0f; }
+                      if(!line->Compare(_L("0011")   , true))  { model = RPI_MODEL_COMPUTERMODULE;   megabytes = 512;      revision = 1.0f; }
+                      if(!line->Compare(_L("0012")   , true))  { model = RPI_MODEL_A_PLUS;           megabytes = 256;      revision = 1.0f; }
+                      if(!line->Compare(_L("0013")   , true))  { model = RPI_MODEL_B_PLUS;           megabytes = 512;      revision = 1.2f; }
+                      if(!line->Compare(_L("a01041") , true))  { model = RPI_MODEL_B_2;              megabytes = 1024;     revision = 1.1f; }
+                      if(!line->Compare(_L("a21041") , true))  { model = RPI_MODEL_B_2;              megabytes = 1024;     revision = 1.1f; }
+                      if(!line->Compare(_L("900092") , true))  { model = RPI_MODEL_ZERO;             megabytes = 512;      revision = 1.2f; }
+                      if(!line->Compare(_L("900093") , true))  { model = RPI_MODEL_ZERO;             megabytes = 512;      revision = 1.2f; }
+                      if(!line->Compare(_L("a220a0") , true))  { model = RPI_MODEL_CM3;            	megabytes = 1024;     revision = 1.0f; }
+                      if(!line->Compare(_L("a02082") , true))  { model = RPI_MODEL_B_3;              megabytes = 1024;     revision = 1.2f; }
+                      if(!line->Compare(_L("a22082") , true))  { model = RPI_MODEL_B_3;              megabytes = 1024;     revision = 1.2f; }
+                      if(!line->Compare(_L("a22083") , true))  { model = RPI_MODEL_B_3;              megabytes = 1024;     revision = 1.3f; }	
+                      if(!line->Compare(_L("a02100") , true))  { model = RPI_MODEL_CM3P;            	megabytes = 1024;     revision = 1.0f; }
+                      if(!line->Compare(_L("a020d3") , true))  { model = RPI_MODEL_B_3P;             megabytes = 1024;     revision = 1.2f; }                      
+                      if(!line->Compare(_L("a03111") , true))  { model = RPI_MODEL_B_4;              megabytes = 1024;     revision = 1.1f; }
+                      if(!line->Compare(_L("b03111") , true))  { model = RPI_MODEL_B_4;              megabytes = 2048;     revision = 1.1f; }
+                      if(!line->Compare(_L("b03112") , true))  { model = RPI_MODEL_B_4;              megabytes = 2048;     revision = 1.2f; }
+                      if(!line->Compare(_L("c03111") , true))  { model = RPI_MODEL_B_4;              megabytes = 4096;     revision = 1.1f; }
+                      if(!line->Compare(_L("c03112") , true))  { model = RPI_MODEL_B_4;              megabytes = 4096;     revision = 1.2f; }
+                      if(!line->Compare(_L("c04170") , true))  { model = RPI_MODEL_B_5;              megabytes = 4096;     revision = 1.0f; }
+                      if(!line->Compare(_L("d04170") , true))  { model = RPI_MODEL_B_5;              megabytes = 8192;     revision = 1.0f; }                                                                        
                             
-                      // XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, __L(" Rpi ID: %d"), model);
+                      // XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, _L(" Rpi ID: %d"), model);
    
                       if(model != RPI_MODEL_UNKNOWN)
                         {

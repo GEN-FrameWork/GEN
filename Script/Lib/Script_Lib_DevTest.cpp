@@ -99,7 +99,7 @@ bool SCRIPT_LIB_DEVTEST::AddLibraryFunctions(SCRIPT* script)
 
   this->script = script;
 
-  script->AddLibraryFunction(this, __L("DevTest_Func1"), Call_DevTest_Func1);
+  script->AddLibraryFunction(this, _L("DevTest_Func1"), Call_DevTest_Func1);
   
   return true;
 }
@@ -146,7 +146,7 @@ void Call_DevTest_Func1(SCRIPT_LIB* library, SCRIPT* script, XVECTOR<XVARIANT*>*
 
   XSTRING rvalues;
 
-  rvalues = __L("{" " name : \"Pepe\" ," " totalscore : 1000 ," " gamesplayed : 10 " "}");
+  rvalues = _L("{" " name : \"Pepe\" ," " totalscore : 1000 ," " gamesplayed : 10 " "}");
 
   (*returnvalue) = rvalues;
 }

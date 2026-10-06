@@ -433,7 +433,7 @@ bool DIOOBEXPUSH::Ini(int timeout)
         {
           if(diostream->WaitToConnected(timeout))
             {
-              xthreadobex = CREATEXTHREAD(XTHREADGROUPID_DIOSTREAM, __L("DIOOBEXPUSH::Ini"), ThreadSend, (void*)this);
+              xthreadobex = CREATEXTHREAD(XTHREADGROUPID_DIOSTREAM, _L("DIOOBEXPUSH::Ini"), ThreadSend, (void*)this);
               if(xthreadobex)
                 {
                   xthreadobex->Ini(false);

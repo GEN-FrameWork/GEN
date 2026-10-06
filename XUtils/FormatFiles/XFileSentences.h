@@ -39,9 +39,9 @@
 
 #define XFILESENTENCES_TYPE           (XFILE_TYPE_GENERIC | XFILE_FEATURES_HASH)
 #define XFILESENTENCES_VERSION        0x0100
-#define XFILESENTENCES_IDSTRING       __L("[Sentences File]")
+#define XFILESENTENCES_IDSTRING       _L("[Sentences File]")
 
-#define XFILESENTENCES_EXTENSION      __L(".sen");
+#define XFILESENTENCES_EXTENSION      _L(".sen");
 
 
 

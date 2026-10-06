@@ -134,16 +134,16 @@ bool SCRIPT_LIB_SCREEN::AddLibraryFunctions(SCRIPT* script)
 
   this->script = script;
 
-  script->AddLibraryFunction(this, __L("Screen_GetPosX"), Call_Screen_GetPosX);
-  script->AddLibraryFunction(this, __L("Screen_GetPosY"), Call_Screen_GetPosY);
-  script->AddLibraryFunction(this, __L("Screen_GetPosXY"), Call_Screen_GetPosXY);
-  script->AddLibraryFunction(this, __L("Screen_WaitBitmap"), Call_Screen_WaitBitmap);
-  script->AddLibraryFunction(this, __L("Screen_SetBmpFindCFG"), Call_Screen_SetBmpFindCFG);
-  script->AddLibraryFunction(this, __L("Screen_SetFocus"), Call_Screen_SetFocus);
-  script->AddLibraryFunction(this, __L("Screen_SetPosition"), Call_Screen_SetPosition);
-  script->AddLibraryFunction(this, __L("Screen_Resize"), Call_Screen_Resize);
-  script->AddLibraryFunction(this, __L("Screen_Minimize"), Call_Screen_Minimize);
-  script->AddLibraryFunction(this, __L("Screen_Maximize"), Call_Screen_Maximize);
+  script->AddLibraryFunction(this, _L("Screen_GetPosX"), Call_Screen_GetPosX);
+  script->AddLibraryFunction(this, _L("Screen_GetPosY"), Call_Screen_GetPosY);
+  script->AddLibraryFunction(this, _L("Screen_GetPosXY"), Call_Screen_GetPosXY);
+  script->AddLibraryFunction(this, _L("Screen_WaitBitmap"), Call_Screen_WaitBitmap);
+  script->AddLibraryFunction(this, _L("Screen_SetBmpFindCFG"), Call_Screen_SetBmpFindCFG);
+  script->AddLibraryFunction(this, _L("Screen_SetFocus"), Call_Screen_SetFocus);
+  script->AddLibraryFunction(this, _L("Screen_SetPosition"), Call_Screen_SetPosition);
+  script->AddLibraryFunction(this, _L("Screen_Resize"), Call_Screen_Resize);
+  script->AddLibraryFunction(this, _L("Screen_Minimize"), Call_Screen_Minimize);
+  script->AddLibraryFunction(this, _L("Screen_Maximize"), Call_Screen_Maximize);
       
   return true;
 }
@@ -370,7 +370,7 @@ bool Script_Lib_Screen_ResolvePos(SCRIPT_LIB* library, SCRIPT* script, XVECTOR<X
 
                                               GEN_XPATHSMANAGER.GetPathOfSection(XPATHSMANAGERSECTIONTYPE_GRAPHICS, xpathbitmaptest);
                                               xpathbitmaptest.Slash_Add();
-                                              xpathbitmaptest.Add(__L("back.png"));
+                                              xpathbitmaptest.Add(_L("back.png"));
 
                                               bitmapfileref->Save(xpathbitmaptest, bitmapscreen);
                                               #endif

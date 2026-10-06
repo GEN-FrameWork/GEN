@@ -110,9 +110,9 @@ bool SCRIPT_LIB_CONSOLE::AddLibraryFunctions(SCRIPT* script)
 
   this->script = script;
 
-  script->AddLibraryFunction(this, __L("Console_GetChar"), Call_Console_GetChar);
-  script->AddLibraryFunction(this, __L("Console_PutChar"), Call_Console_PutChar);
-  script->AddLibraryFunction(this, __L("Console_Printf"), Call_Console_Printf);
+  script->AddLibraryFunction(this, _L("Console_GetChar"), Call_Console_GetChar);
+  script->AddLibraryFunction(this, _L("Console_PutChar"), Call_Console_PutChar);
+  script->AddLibraryFunction(this, _L("Console_Printf"), Call_Console_Printf);
 
   return true;
 }
@@ -246,7 +246,7 @@ void Call_Console_PutChar(SCRIPT_LIB* library, SCRIPT* script, XVECTOR<XVARIANT*
   XCONSOLE* console = ((SCRIPT_LIB_CONSOLE*)library)->GetConsole();
   if(!console) return;
 
-  console->Printf(__L("%c"), character);
+  console->Printf(_L("%c"), character);
 }
 
 
@@ -311,14 +311,14 @@ void Call_Console_Printf(SCRIPT_LIB* library, SCRIPT* script, XVECTOR<XVARIANT*>
 
                             switch(mask[c])
                               {
-                                case __C('c')   :
-                                case __C('C')   :
-                                case __C('d')   :
-                                case __C('i')   :
-                                case __C('o')   :
-                                case __C('u')   :
-                                case __C('x')   :
-                                case __C('X')   : { int value = 0;
+                                case _C('c')   :
+                                case _C('C')   :
+                                case _C('d')   :
+                                case _C('i')   :
+                                case _C('o')   :
+                                case _C('u')   :
+                                case _C('x')   :
+                                case _C('X')   : { int value = 0;
                                                     library->GetParamConverted(params->Get(paramindex), value);
                                                     string.Format(param, value);
                                                     paramindex++;
@@ -326,7 +326,7 @@ void Call_Console_Printf(SCRIPT_LIB* library, SCRIPT* script, XVECTOR<XVARIANT*>
                                                   }
                                                   break;
 
-                                case __C('f')   : { float value = 0;
+                                case _C('f')   : { float value = 0;
                                                     library->GetParamConverted(params->Get(paramindex), value);
                                                     string.Format(param, value);
                                                     paramindex++;
@@ -334,18 +334,18 @@ void Call_Console_Printf(SCRIPT_LIB* library, SCRIPT* script, XVECTOR<XVARIANT*>
                                                   }
                                                   break;
 
-                                case __C('g')   :
-                                case __C('G')   :
+                                case _C('g')   :
+                                case _C('G')   :
 
-                                case __C('e')   :
-                                case __C('E')   :
+                                case _C('e')   :
+                                case _C('E')   :
 
-                                case __C('n')   :
-                                case __C('p')   : end = true;
+                                case _C('n')   :
+                                case _C('p')   : end = true;
                                                   break;
 
-                                case __C('s')   :
-                                case __C('S')   : { XVARIANT variantparam = (*params->Get(paramindex));
+                                case _C('s')   :
+                                case _C('S')   : { XVARIANT variantparam = (*params->Get(paramindex));
                                                     paramindex++;
                                                     // Pass data as a string value — do not re-parse '%' inside it.
                                                     string = (XCHAR*)variantparam;
@@ -353,11 +353,11 @@ void Call_Console_Printf(SCRIPT_LIB* library, SCRIPT* script, XVECTOR<XVARIANT*>
                                                   }
                                                   break;
 
-                                case __C('%')   : string = __L("%");
+                                case _C('%')   : string = _L("%");
                                                   end = true;
                                                   break;
 
-                                case __C('\0')  : end = true;
+                                case _C('\0')  : end = true;
                                                   break;
 
                                       default   : break;

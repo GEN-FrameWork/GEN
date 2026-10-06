@@ -134,7 +134,7 @@ DIOLINUXSTREAMUDP::DIOLINUXSTREAMUDP() : DIOSTREAMUDP() , XFSMACHINE(0)
             DIOLINUXUDPFSMEVENT_SENDINGDATA         , DIOLINUXUDPFSMSTATE_SENDINGDATA      ,
             XFSMACHINESTATE_EVENTDEFEND);
 
-  threadconnection = CREATEXTHREAD(XTHREADGROUPID_DIOSTREAMUDP, __L("DIOLINUXSTREAMUDP::DIOLINUXSTREAMUDP"), ThreadRunFunction, (void*)this);
+  threadconnection = CREATEXTHREAD(XTHREADGROUPID_DIOSTREAMUDP, _L("DIOLINUXSTREAMUDP::DIOLINUXSTREAMUDP"), ThreadRunFunction, (void*)this);
 }
 
 
@@ -446,11 +446,11 @@ void DIOLINUXSTREAMUDP::ThreadRunFunction(void* thread)
 
                                                                   sscanf(inet_ntoa(origin_addr.sin_addr), "%d.%d.%d.%d", &_address[0], &_address[1], &_address[2], &_address[3]);
 
-                                                                  address.Format(__L("%d.%d.%d.%d"), _address[0], _address[1], _address[2], _address[3]);
+                                                                  address.Format(_L("%d.%d.%d.%d"), _address[0], _address[1], _address[2], _address[3]);
 
                                                                   port = ntohs(origin_addr.sin_port);
 
-                                                                  //XTRACE_PRINTCOLOR(1, __L("Read UDP from [%s] (%d)"), address.Get(), size);
+                                                                  //XTRACE_PRINTCOLOR(1, _L("Read UDP from [%s] (%d)"), address.Get(), size);
 
                                                                   if(diostream->config->IsUsedDatagrams())
                                                                           diostream->AddDatagram(false, address.Get(), port, (XBYTE*)buffer, size);

@@ -281,7 +281,7 @@ GRPVECTORFILERESULT GRPVECTORFILESVG::BuildFromXML(XFILEXML* file)
     }
 
   XFILEXMLELEMENT* xmlroot = file->GetRoot();
-  if(xmlroot && !xmlroot->GetName().Compare(__L("svg"), true))
+  if(xmlroot && !xmlroot->GetName().Compare(_L("svg"), true))
     {
       config.ApplyData(xmlroot);
 
@@ -374,7 +374,7 @@ bool GRPVECTORFILESVG::DetectIsSVG(XFILETXT* file, int nlinesmax)
       XSTRING* line = file->GetLine(c);
       if(line)
         {
-          if(line->Find(__L("<svg"), true, 0) >= 0)
+          if(line->Find(_L("<svg"), true, 0) >= 0)
             {
               return true;
             }

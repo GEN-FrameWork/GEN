@@ -310,7 +310,7 @@ bool DIODNSRESOLVER::ResolveURL(XCHAR* URL, DIOIP& IPresolved, int querytype, XD
 
   if(!listhostresolved.GetSize())
     {
-      GEN_DIODNSRESOLVER.Host_Add(__L("localhost"), __L("127.0.0.1"));
+      GEN_DIODNSRESOLVER.Host_Add(_L("localhost"), _L("127.0.0.1"));
     }
 
   DIOURL url;
@@ -330,10 +330,10 @@ bool DIODNSRESOLVER::ResolveURL(XCHAR* URL, DIOIP& IPresolved, int querytype, XD
 
           if(!listDNSservers.GetSize())
             {
-              GEN_DIODNSRESOLVER.DNSServer_AddDNSServer(__L("8.8.8.8"));
-              GEN_DIODNSRESOLVER.DNSServer_AddDNSServer(__L("8.8.4.4"));
-              GEN_DIODNSRESOLVER.DNSServer_AddDNSServer(__L("64.6.64.6"));
-              GEN_DIODNSRESOLVER.DNSServer_AddDNSServer(__L("64.6.65.6"));
+              GEN_DIODNSRESOLVER.DNSServer_AddDNSServer(_L("8.8.8.8"));
+              GEN_DIODNSRESOLVER.DNSServer_AddDNSServer(_L("8.8.4.4"));
+              GEN_DIODNSRESOLVER.DNSServer_AddDNSServer(_L("64.6.64.6"));
+              GEN_DIODNSRESOLVER.DNSServer_AddDNSServer(_L("64.6.65.6"));
             }
 
           DIODNSPROTOCOLCLIENT* dnsprotocolclient = GEN_NEW DIODNSPROTOCOLCLIENT();
@@ -444,7 +444,7 @@ bool DIODNSRESOLVER::DNSServer_AddDNSServer(XCHAR* server)
 
   string = server;
   IPstring.AdjustSize(_MAXSTR);
-  string.UnFormat(__L("%s:%d"), IPstring.Get(), &port);
+  string.UnFormat(_L("%s:%d"), IPstring.Get(), &port);
   IPstring.AdjustSize();
 
   if(IPstring.IsEmpty())

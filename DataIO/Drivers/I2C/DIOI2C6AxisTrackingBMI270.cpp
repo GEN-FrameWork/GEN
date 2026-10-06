@@ -679,7 +679,7 @@ XBYTE DIOI2C6AXISTRACKINGBMI270::Update()
   // To check the interrupt status of any-motion. 
   if(int_status & DIOI2C6AXISTRACKINGBMI270_ANY_MOT_STATUS_MASK)
     {
-      // XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, __L("[ACCEL] Any-motion interrupt is generated"));         
+      // XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, _L("[ACCEL] Any-motion interrupt is generated"));         
       any_motion          = 1;       
     }
    else
@@ -690,7 +690,7 @@ XBYTE DIOI2C6AXISTRACKINGBMI270::Update()
   // To check the interrupt status of no-motion. 
   if(int_status & DIOI2C6AXISTRACKINGBMI270_NO_MOT_STATUS_MASK)
     {      
-      // XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, __L("[ACCEL] No-motion interrupt is generated"));       
+      // XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, _L("[ACCEL] No-motion interrupt is generated"));       
       no_motion           = 1;      
     }
    else
@@ -701,7 +701,7 @@ XBYTE DIOI2C6AXISTRACKINGBMI270::Update()
   // To check the interrupt status of no-motion. 
   if(int_status & DIOI2C6AXISTRACKINGBMI270_SIG_MOT_STATUS_MASK)
     {
-      // XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, __L("[ACCEL] Significant motion interrupt is generated"));  
+      // XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, _L("[ACCEL] Significant motion interrupt is generated"));  
       sig_motion          = 1;      
     }
    else
@@ -711,7 +711,7 @@ XBYTE DIOI2C6AXISTRACKINGBMI270::Update()
     
   if(int_status & DIOI2C6AXISTRACKINGBMI270_STEP_CNT_STATUS_MASK)
     {
-      // XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, __L("[ACCEL] Counter interrupt is generated"));       
+      // XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, _L("[ACCEL] Counter interrupt is generated"));       
       step_event          = 1;      
     }
    else
@@ -721,7 +721,7 @@ XBYTE DIOI2C6AXISTRACKINGBMI270::Update()
     
   if(int_status & DIOI2C6AXISTRACKINGBMI270_STEP_ACT_STATUS_MASK)
     {
-      // XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, __L("[ACCEL] Activity interrupt is generated"));      
+      // XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, _L("[ACCEL] Activity interrupt is generated"));      
     }
 	
   prev_status = (XDWORDSIG)int_status;
@@ -990,7 +990,7 @@ bool DIOI2C6AXISTRACKINGBMI270::Inicializate()
                     rslt = bmi270_map_feat_int(sens_int, 4, &bmi2_dev);
                     bmi2_error_codes_print_result(rslt);
                     
-                    // XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, __L("[ACCEL: Move the board]"));                  
+                    // XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, _L("[ACCEL: Move the board]"));                  
                 }
           }
     }
@@ -1359,39 +1359,39 @@ void DIOI2C6AXISTRACKINGBMI270::bmi2_error_codes_print_result(XBYTESIG rslt)
   switch (rslt)
     {
       case BMI2_OK                            :                                                                                                                                                                                                                                                                                 break;
-      case BMI2_W_FIFO_EMPTY                  : XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, __L("[Warning [%d] : FIFO empty]"), rslt);              						                                                                                                                                                                        break;            
-      case BMI2_W_PARTIAL_READ                : XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, __L("Warning [%d] : FIFO partial read"), rslt);                                                                                                                                                                                             break;            
-      case BMI2_E_NULL_PTR                    : XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, __L("Error [%d] : Null pointer error. It occurs when the user tries to assign value (not address) to a pointer, which has been initialized to NULL."), rslt);                                                                               break;
-      case BMI2_E_COM_FAIL                    : XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, __L("Error [%d] : Communication failure error. It occurs due to read/write operation failure and also due " "to power failure during communication"), rslt);                                                                                break;
-      case BMI2_E_DEV_NOT_FOUND               : XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, __L("Error [%d] : Device not found error. It occurs when the device chip id is incorrectly read"), rslt);                                                                                                                                   break;
-      case BMI2_E_INVALID_SENSOR              : XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, __L("Error [%d] : Invalid sensor error. It occurs when there is a mismatch in the requested feature with the " "available one "), rslt);                                                                                                    break;
-      case BMI2_E_SELF_TEST_FAIL              : XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, __L("Error [%d] : Self-test failed error. It occurs when the validation of accel self-test data is " "not satisfied "), rslt);                                                                                                              break;
-      case BMI2_E_INVALID_INT_PIN             : XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, __L("Error [%d] : Invalid interrupt pin error. It occurs when the user tries to configure interrupt pins " "apart from INT1 and INT2 "), rslt);                                                                                             break;
-      case BMI2_E_OUT_OF_RANGE                : XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, __L("Error [%d] : Out of range error. It occurs when the data exceeds from filtered or unfiltered data from " "fifo and also when the range exceeds the maximum range for accel and gyro while performing FOC "), rslt);                    break;
-      case BMI2_E_ACC_INVALID_CFG             : XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, __L("Error [%d] : Invalid Accel configuration error. It occurs when there is an error in accel configuration" " register which could be one among range, BW or filter performance in reg address 0x40"), rslt);                             break;
-      case BMI2_E_GYRO_INVALID_CFG            : XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, __L("Error [%d] : Invalid Gyro configuration error. It occurs when there is a error in gyro configuration" "register which could be one among range, BW or filter performance in reg address 0x42 "), rslt);                                break;
-      case BMI2_E_ACC_GYR_INVALID_CFG         : XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, __L("Error [%d] : Invalid Accel-Gyro configuration error. It occurs when there is a error in accel and gyro" " configuration registers which could be one among range, BW or filter performance in reg address 0x40 " "and 0x42"), rslt);   break;
-      case BMI2_E_CONFIG_LOAD                 : XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, __L("Error [%d] : Configuration load error. It occurs when failure observed while loading the configuration " "into the sensor "), rslt);                                                                                                   break;
-      case BMI2_E_INVALID_PAGE                : XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, __L("Error [%d] : Invalid page error. It occurs due to failure in writing the correct feature configuration " "from selected page "), rslt);                                                                                                break;
-      case BMI2_E_SET_APS_FAIL                : XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, __L("Error [%d] : APS failure error. It occurs due to failure in write of advance power mode configuration " "register "), rslt);                                                                                                           break;
-      case BMI2_E_AUX_INVALID_CFG             : XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, __L("Error [%d] : Invalid AUX configuration error. It occurs when the auxiliary interface settings are not " "enabled properly "), rslt);                                                                                                   break;
-      case BMI2_E_AUX_BUSY                    : XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, __L("Error [%d] : AUX busy error. It occurs when the auxiliary interface buses are engaged while configuring" " the AUX "), rslt);                                                                                                          break;
-      case BMI2_E_REMAP_ERROR                 : XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, __L("Error [%d] : Remap error. It occurs due to failure in assigning the remap axes data for all the axes " "after change in axis position "), rslt);                                                                                       break;
-      case BMI2_E_GYR_USER_GAIN_UPD_FAIL      :	XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, __L("Error [%d] : Gyro user gain update fail error. It occurs when the reading of user gain update status " "fails "), rslt);                                                                                                               break;
-      case BMI2_E_SELF_TEST_NOT_DONE          : XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, __L("Error [%d] : Self-test not done error. It occurs when the self-test process is ongoing or not " "completed "), rslt);			                                                                                                            break;
-      case BMI2_E_INVALID_INPUT               : XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, __L("Error [%d] : Invalid input error. It occurs when the sensor input validity fails "), rslt);                                                                                                                                            break;
-      case BMI2_E_INVALID_STATUS              : XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, __L("Error [%d] : Invalid status error. It occurs when the feature/sensor validity fails "), rslt);                                                                                                                                       	break;
-      case BMI2_E_CRT_ERROR                   : XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, __L("Error [%d] : CRT error. It occurs when the CRT test has failed "), rslt);	                                                                                                                                                            break;
-      case BMI2_E_ST_ALREADY_RUNNING          : XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, __L("Error [%d] : Self-test already running error. It occurs when the self-test is already running and " "another has been initiated "), rslt);		                                                                                          break;
-      case BMI2_E_CRT_READY_FOR_DL_FAIL_ABORT : XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, __L("Error [%d] : CRT ready for download fail abort error. It occurs when download in CRT fails due to wrong " "address location "), rslt);	                                                                                                break;
-      case BMI2_E_DL_ERROR                    : XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, __L("Error [%d] : Download error. It occurs when write length exceeds that of the maximum burst length "), rslt);				                                                                                                                    break;
-      case BMI2_E_PRECON_ERROR                : XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, __L("Error [%d] : Pre-conditional error. It occurs when precondition to start the feature was not " "completed "), rslt);                                                                                                                  break;
-      case BMI2_E_ABORT_ERROR                 : XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, __L("Error [%d] : Abort error. It occurs when the device was shaken during CRT test "), rslt);				                                                                                                                                      break;
-      case BMI2_E_WRITE_CYCLE_ONGOING         : XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, __L("Error [%d] : Write cycle ongoing error. It occurs when the write cycle is already running and another " "has been initiated "), rslt);	                                                                                                break;
-      case BMI2_E_ST_NOT_RUNING               : XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, __L("Error [%d] : Self-test is not running error. It occurs when self-test running is disabled while it's " "running "), rslt);				                                                                                                      break;
-      case BMI2_E_DATA_RDY_INT_FAILED         : XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, __L("Error [%d] : Data ready interrupt error. It occurs when the sample count exceeds the FOC sample limit " "and data ready status is not updated "), rslt);	                                                                              break;
-      case BMI2_E_INVALID_FOC_POSITION        : XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, __L("Error [%d] : Invalid FOC position error. It occurs when average FOC data is obtained for the wrong" " axes "), rslt);	                                                                                                                break;
-                                   default    : XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, __L("Error [%d] : Unknown error code "), rslt);                                                                                                                                                                                             break;
+      case BMI2_W_FIFO_EMPTY                  : XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, _L("[Warning [%d] : FIFO empty]"), rslt);              						                                                                                                                                                                        break;            
+      case BMI2_W_PARTIAL_READ                : XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, _L("Warning [%d] : FIFO partial read"), rslt);                                                                                                                                                                                             break;            
+      case BMI2_E_NULL_PTR                    : XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, _L("Error [%d] : Null pointer error. It occurs when the user tries to assign value (not address) to a pointer, which has been initialized to NULL."), rslt);                                                                               break;
+      case BMI2_E_COM_FAIL                    : XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, _L("Error [%d] : Communication failure error. It occurs due to read/write operation failure and also due " "to power failure during communication"), rslt);                                                                                break;
+      case BMI2_E_DEV_NOT_FOUND               : XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, _L("Error [%d] : Device not found error. It occurs when the device chip id is incorrectly read"), rslt);                                                                                                                                   break;
+      case BMI2_E_INVALID_SENSOR              : XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, _L("Error [%d] : Invalid sensor error. It occurs when there is a mismatch in the requested feature with the " "available one "), rslt);                                                                                                    break;
+      case BMI2_E_SELF_TEST_FAIL              : XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, _L("Error [%d] : Self-test failed error. It occurs when the validation of accel self-test data is " "not satisfied "), rslt);                                                                                                              break;
+      case BMI2_E_INVALID_INT_PIN             : XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, _L("Error [%d] : Invalid interrupt pin error. It occurs when the user tries to configure interrupt pins " "apart from INT1 and INT2 "), rslt);                                                                                             break;
+      case BMI2_E_OUT_OF_RANGE                : XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, _L("Error [%d] : Out of range error. It occurs when the data exceeds from filtered or unfiltered data from " "fifo and also when the range exceeds the maximum range for accel and gyro while performing FOC "), rslt);                    break;
+      case BMI2_E_ACC_INVALID_CFG             : XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, _L("Error [%d] : Invalid Accel configuration error. It occurs when there is an error in accel configuration" " register which could be one among range, BW or filter performance in reg address 0x40"), rslt);                             break;
+      case BMI2_E_GYRO_INVALID_CFG            : XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, _L("Error [%d] : Invalid Gyro configuration error. It occurs when there is a error in gyro configuration" "register which could be one among range, BW or filter performance in reg address 0x42 "), rslt);                                break;
+      case BMI2_E_ACC_GYR_INVALID_CFG         : XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, _L("Error [%d] : Invalid Accel-Gyro configuration error. It occurs when there is a error in accel and gyro" " configuration registers which could be one among range, BW or filter performance in reg address 0x40 " "and 0x42"), rslt);   break;
+      case BMI2_E_CONFIG_LOAD                 : XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, _L("Error [%d] : Configuration load error. It occurs when failure observed while loading the configuration " "into the sensor "), rslt);                                                                                                   break;
+      case BMI2_E_INVALID_PAGE                : XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, _L("Error [%d] : Invalid page error. It occurs due to failure in writing the correct feature configuration " "from selected page "), rslt);                                                                                                break;
+      case BMI2_E_SET_APS_FAIL                : XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, _L("Error [%d] : APS failure error. It occurs due to failure in write of advance power mode configuration " "register "), rslt);                                                                                                           break;
+      case BMI2_E_AUX_INVALID_CFG             : XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, _L("Error [%d] : Invalid AUX configuration error. It occurs when the auxiliary interface settings are not " "enabled properly "), rslt);                                                                                                   break;
+      case BMI2_E_AUX_BUSY                    : XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, _L("Error [%d] : AUX busy error. It occurs when the auxiliary interface buses are engaged while configuring" " the AUX "), rslt);                                                                                                          break;
+      case BMI2_E_REMAP_ERROR                 : XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, _L("Error [%d] : Remap error. It occurs due to failure in assigning the remap axes data for all the axes " "after change in axis position "), rslt);                                                                                       break;
+      case BMI2_E_GYR_USER_GAIN_UPD_FAIL      :	XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, _L("Error [%d] : Gyro user gain update fail error. It occurs when the reading of user gain update status " "fails "), rslt);                                                                                                               break;
+      case BMI2_E_SELF_TEST_NOT_DONE          : XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, _L("Error [%d] : Self-test not done error. It occurs when the self-test process is ongoing or not " "completed "), rslt);			                                                                                                            break;
+      case BMI2_E_INVALID_INPUT               : XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, _L("Error [%d] : Invalid input error. It occurs when the sensor input validity fails "), rslt);                                                                                                                                            break;
+      case BMI2_E_INVALID_STATUS              : XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, _L("Error [%d] : Invalid status error. It occurs when the feature/sensor validity fails "), rslt);                                                                                                                                       	break;
+      case BMI2_E_CRT_ERROR                   : XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, _L("Error [%d] : CRT error. It occurs when the CRT test has failed "), rslt);	                                                                                                                                                            break;
+      case BMI2_E_ST_ALREADY_RUNNING          : XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, _L("Error [%d] : Self-test already running error. It occurs when the self-test is already running and " "another has been initiated "), rslt);		                                                                                          break;
+      case BMI2_E_CRT_READY_FOR_DL_FAIL_ABORT : XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, _L("Error [%d] : CRT ready for download fail abort error. It occurs when download in CRT fails due to wrong " "address location "), rslt);	                                                                                                break;
+      case BMI2_E_DL_ERROR                    : XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, _L("Error [%d] : Download error. It occurs when write length exceeds that of the maximum burst length "), rslt);				                                                                                                                    break;
+      case BMI2_E_PRECON_ERROR                : XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, _L("Error [%d] : Pre-conditional error. It occurs when precondition to start the feature was not " "completed "), rslt);                                                                                                                  break;
+      case BMI2_E_ABORT_ERROR                 : XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, _L("Error [%d] : Abort error. It occurs when the device was shaken during CRT test "), rslt);				                                                                                                                                      break;
+      case BMI2_E_WRITE_CYCLE_ONGOING         : XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, _L("Error [%d] : Write cycle ongoing error. It occurs when the write cycle is already running and another " "has been initiated "), rslt);	                                                                                                break;
+      case BMI2_E_ST_NOT_RUNING               : XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, _L("Error [%d] : Self-test is not running error. It occurs when self-test running is disabled while it's " "running "), rslt);				                                                                                                      break;
+      case BMI2_E_DATA_RDY_INT_FAILED         : XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, _L("Error [%d] : Data ready interrupt error. It occurs when the sample count exceeds the FOC sample limit " "and data ready status is not updated "), rslt);	                                                                              break;
+      case BMI2_E_INVALID_FOC_POSITION        : XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, _L("Error [%d] : Invalid FOC position error. It occurs when average FOC data is obtained for the wrong" " axes "), rslt);	                                                                                                                break;
+                                   default    : XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, _L("Error [%d] : Unknown error code "), rslt);                                                                                                                                                                                             break;
     }
 }
 

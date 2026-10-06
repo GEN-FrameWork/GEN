@@ -59,11 +59,11 @@
 
 #ifdef APPFLOW_CFG_GENERAL_ACTIVE
 
-#define APPFLOW_CFG_SECTION_GENERAL                                                   __L("general")
-#define APPFLOW_CFG_SCRAPERWEBSCRIPTURLDOWNLOAD                                       __L("scraperwebscripturldownload")
-#define APPFLOW_CFG_SHOWDETAILINFO                                                    __L("showdetailinfo")
+#define APPFLOW_CFG_SECTION_GENERAL                                                   _L("general")
+#define APPFLOW_CFG_SCRAPERWEBSCRIPTURLDOWNLOAD                                       _L("scraperwebscripturldownload")
+#define APPFLOW_CFG_SHOWDETAILINFO                                                    _L("showdetailinfo")
 #ifdef  XTRACE_ACTIVE
-#define APPFLOW_CFG_TRACETARGET                                                       __L("trace_target")
+#define APPFLOW_CFG_TRACETARGET                                                       _L("trace_target")
 #endif
 
 #endif
@@ -71,45 +71,45 @@
 
 #ifdef APPFLOW_CFG_CHECKRESOURCESHARDWARE_ACTIVE
 
-#define APPFLOW_CFG_SECTION_CHECKRESOURCESHARDWARE                                    __L("check resources hardware")
-#define APPFLOW_CFG_CHECKRESOURCESHARDWARE_MEMSTATUSCHECKCADENCE                      __L("memstatuscheckcadenceseconds")
-#define APPFLOW_CFG_CHECKRESOURCESHARDWARE_MEMSTATUSLIMITPERCENT                      __L("memstatuslimitpercent")
-#define APPFLOW_CFG_CHECKRESOURCESHARDWARE_TOTALCPUUSAGECHECKCADENCE                  __L("totalcpuusagecheckcadenceseconds")
-#define APPFLOW_CFG_CHECKRESOURCESHARDWARE_TOTALCPUUSAGELIMITPERCENT                  __L("totalcpuusagelimitpercent")
-#define APPFLOW_CFG_CHECKRESOURCESHARDWARE_APPCPUUSAGEPROCESSNAME                     __L("appcpuusageprocessname")
-#define APPFLOW_CFG_CHECKRESOURCESHARDWARE_APPCPUUSAGECHECKCADENCE                    __L("appcpuusagecheckcadenceseconds")
-#define APPFLOW_CFG_CHECKRESOURCESHARDWARE_APPCPUUSAGELIMITPERCENT                    __L("appcpuusagelimitpercent")
+#define APPFLOW_CFG_SECTION_CHECKRESOURCESHARDWARE                                    _L("check resources hardware")
+#define APPFLOW_CFG_CHECKRESOURCESHARDWARE_MEMSTATUSCHECKCADENCE                      _L("memstatuscheckcadenceseconds")
+#define APPFLOW_CFG_CHECKRESOURCESHARDWARE_MEMSTATUSLIMITPERCENT                      _L("memstatuslimitpercent")
+#define APPFLOW_CFG_CHECKRESOURCESHARDWARE_TOTALCPUUSAGECHECKCADENCE                  _L("totalcpuusagecheckcadenceseconds")
+#define APPFLOW_CFG_CHECKRESOURCESHARDWARE_TOTALCPUUSAGELIMITPERCENT                  _L("totalcpuusagelimitpercent")
+#define APPFLOW_CFG_CHECKRESOURCESHARDWARE_APPCPUUSAGEPROCESSNAME                     _L("appcpuusageprocessname")
+#define APPFLOW_CFG_CHECKRESOURCESHARDWARE_APPCPUUSAGECHECKCADENCE                    _L("appcpuusagecheckcadenceseconds")
+#define APPFLOW_CFG_CHECKRESOURCESHARDWARE_APPCPUUSAGELIMITPERCENT                    _L("appcpuusagelimitpercent")
 
 #endif
 
 
 #ifdef APPFLOW_CFG_INTERNETSERVICES_ACTIVE
 
-#define APPFLOW_CFG_SECTION_INTERNETSERVICES                                          __L("internet services")
-#define APPFLOW_CFG_INTERNETSERVICES_CHECKINTERNETSTATUSCADENCE                       __L("checkinternetstatuscadenceseconds")
-#define APPFLOW_CFG_INTERNETSERVICES_DONOTLETINTERNETCONNECTIONMATTER                 __L("donotletinternetconnectionmatter")  
-#define APPFLOW_CFG_INTERNETSERVICES_CHECKIPSCHANGECADENCE                            __L("checkipschangecadenceseconds")
-#define APPFLOW_CFG_INTERNETSERVICES_UPDATETIMEBYNTPCADENCE                           __L("updatetimebyntpcadencehours")
-#define APPFLOW_CFG_INTERNETSERVICES_UPDATETIMENTPSERVER                              __L("updatetimentpserver")
-#define APPFLOW_CFG_INTERNETSERVICES_UPDATETIMENTPMERIDIANDIFFERENCE                  __L("updatetimentpmeridiandifference")
-#define APPFLOW_CFG_INTERNETSERVICES_UPDATETIMENTPUSEDAYLIGHTSAVING                   __L("updatetimentpusedaylightsaving")
+#define APPFLOW_CFG_SECTION_INTERNETSERVICES                                          _L("internet services")
+#define APPFLOW_CFG_INTERNETSERVICES_CHECKINTERNETSTATUSCADENCE                       _L("checkinternetstatuscadenceseconds")
+#define APPFLOW_CFG_INTERNETSERVICES_DONOTLETINTERNETCONNECTIONMATTER                 _L("donotletinternetconnectionmatter")  
+#define APPFLOW_CFG_INTERNETSERVICES_CHECKIPSCHANGECADENCE                            _L("checkipschangecadenceseconds")
+#define APPFLOW_CFG_INTERNETSERVICES_UPDATETIMEBYNTPCADENCE                           _L("updatetimebyntpcadencehours")
+#define APPFLOW_CFG_INTERNETSERVICES_UPDATETIMENTPSERVER                              _L("updatetimentpserver")
+#define APPFLOW_CFG_INTERNETSERVICES_UPDATETIMENTPMERIDIANDIFFERENCE                  _L("updatetimentpmeridiandifference")
+#define APPFLOW_CFG_INTERNETSERVICES_UPDATETIMENTPUSEDAYLIGHTSAVING                   _L("updatetimentpusedaylightsaving")
 
 #define APPFLOW_CFG_INTERNETSERVICES_UPDATETIMENTPMERIDIANDIFFERENCE_AUTO             25
 
 
 #ifdef APPFLOW_CFG_DNSRESOLVER_ACTIVE
 
-#define APPFLOW_CFG_SECTION_DNSRESOLVER                                               __L("dns resolved")
-#define APPFLOW_CFG_DNSRESOLVER_HOSTRESOLVED                                          __L("host_resolved")
-#define APPFLOW_CFG_DNSRESOLVER_DNSSERVER                                             __L("dns_server")
+#define APPFLOW_CFG_SECTION_DNSRESOLVER                                               _L("dns resolved")
+#define APPFLOW_CFG_DNSRESOLVER_HOSTRESOLVED                                          _L("host_resolved")
+#define APPFLOW_CFG_DNSRESOLVER_DNSSERVER                                             _L("dns_server")
 
 #endif
 
 
 #ifdef APPFLOW_CFG_DYNDNSMANAGER_ACTIVE
 
-#define APPFLOW_CFG_SECTION_DYNDNSMANAGER                                             __L("dyndns manager")
-#define APPFLOW_CFG_DYNDNSMANAGER_URL                                                 __L("url")
+#define APPFLOW_CFG_SECTION_DYNDNSMANAGER                                             _L("dyndns manager")
+#define APPFLOW_CFG_DYNDNSMANAGER_URL                                                 _L("url")
 
 #endif
 
@@ -118,47 +118,47 @@
 
 #ifdef APPFLOW_CFG_DIOLOCATION_ACTIVE
 
-#define APPFLOW_CFG_SECTION_LOCATION                                                  __L("location")
-#define APPFLOW_CFG_CENTERNAME                                                        __L("name")
-#define APPFLOW_CFG_LOCATION_STREET                                                   __L("street")
-#define APPFLOW_CFG_LOCATION_TOWN                                                     __L("city")
-#define APPFLOW_CFG_LOCATION_STATE                                                    __L("state")
-#define APPFLOW_CFG_LOCATION_COUNTRY                                                  __L("country")
-#define APPFLOW_CFG_LOCATION_POSTALCODE                                               __L("postalcode")
+#define APPFLOW_CFG_SECTION_LOCATION                                                  _L("location")
+#define APPFLOW_CFG_CENTERNAME                                                        _L("name")
+#define APPFLOW_CFG_LOCATION_STREET                                                   _L("street")
+#define APPFLOW_CFG_LOCATION_TOWN                                                     _L("city")
+#define APPFLOW_CFG_LOCATION_STATE                                                    _L("state")
+#define APPFLOW_CFG_LOCATION_COUNTRY                                                  _L("country")
+#define APPFLOW_CFG_LOCATION_POSTALCODE                                               _L("postalcode")
 
 #endif
 
 
 #ifdef APPFLOW_CFG_APPUPDATE_ACTIVE
 
-#define APPFLOW_CFG_SECTION_APPLICATIONUPDATE                                         __L("applicationupdate")
-#define APPFLOW_CFG_APPLICATIONUPDATE_ISACTIVE                                        __L("isactive")
-#define APPFLOW_CFG_APPLICATIONUPDATE_URL                                             __L("url")
-#define APPFLOW_CFG_APPLICATIONUPDATE_PORT                                            __L("port")
-#define APPFLOW_CFG_APPLICATIONUPDATE_CHECKCADENCE                                    __L("checkcadenceminutes")
-#define APPFLOW_CFG_APPLICATIONUPDATE_CHECKTIME                                       __L("checktime")
-#define APPFLOW_CFG_APPLICATIONUPDATE_MAXRESTORATIONS                                 __L("maxrestorations")
+#define APPFLOW_CFG_SECTION_APPLICATIONUPDATE                                         _L("applicationupdate")
+#define APPFLOW_CFG_APPLICATIONUPDATE_ISACTIVE                                        _L("isactive")
+#define APPFLOW_CFG_APPLICATIONUPDATE_URL                                             _L("url")
+#define APPFLOW_CFG_APPLICATIONUPDATE_PORT                                            _L("port")
+#define APPFLOW_CFG_APPLICATIONUPDATE_CHECKCADENCE                                    _L("checkcadenceminutes")
+#define APPFLOW_CFG_APPLICATIONUPDATE_CHECKTIME                                       _L("checktime")
+#define APPFLOW_CFG_APPLICATIONUPDATE_MAXRESTORATIONS                                 _L("maxrestorations")
 
 #endif
 
 
 #ifdef APPFLOW_CFG_WEBSERVER_ACTIVE
 
-#define APPFLOW_CFG_SECTION_WEBSERVER                                                 __L("webserver")
-#define APPFLOW_CFG_WEBSERVER_LOCALADDR                                               __L("localaddr")
-#define APPFLOW_CFG_WEBSERVER_PORT                                                    __L("port")
-#define APPFLOW_CFG_WEBSERVER_TIMEOUTTOSERVERPAGE                                     __L("timeouttoserverpage")
-#define APPFLOW_CFG_WEBSERVER_AUTHENTICATEDACCESS                                     __L("isauthenticatedaccess")
-#define APPFLOW_CFG_WEBSERVER_LOGIN                                                   __L("login")
-#define APPFLOW_CFG_WEBSERVER_PASSWORD                                                __L("password")
-#define APPFLOW_CFG_WEBSERVER_PATH_RESOURCES                                          __L("path_resources")
-#define APPFLOW_CFG_WEBSERVER_PATH_PHP                                                __L("path_php")
+#define APPFLOW_CFG_SECTION_WEBSERVER                                                 _L("webserver")
+#define APPFLOW_CFG_WEBSERVER_LOCALADDR                                               _L("localaddr")
+#define APPFLOW_CFG_WEBSERVER_PORT                                                    _L("port")
+#define APPFLOW_CFG_WEBSERVER_TIMEOUTTOSERVERPAGE                                     _L("timeouttoserverpage")
+#define APPFLOW_CFG_WEBSERVER_AUTHENTICATEDACCESS                                     _L("isauthenticatedaccess")
+#define APPFLOW_CFG_WEBSERVER_LOGIN                                                   _L("login")
+#define APPFLOW_CFG_WEBSERVER_PASSWORD                                                _L("password")
+#define APPFLOW_CFG_WEBSERVER_PATH_RESOURCES                                          _L("path_resources")
+#define APPFLOW_CFG_WEBSERVER_PATH_PHP                                                _L("path_php")
 
 #ifdef DIO_STREAMTLS_ACTIVE
 
-#define APPFLOW_CFG_WEBSERVER_PATH_PRIVATEKEY                                         __L("path_privatekey")
-#define APPFLOW_CFG_WEBSERVER_PATH_CERTIFICATE                                        __L("path_certificate")
-#define APPFLOW_CFG_WEBSERVER_PRIVATEKEY_PASSWORD                                      __L("privatekey_password")
+#define APPFLOW_CFG_WEBSERVER_PATH_PRIVATEKEY                                         _L("path_privatekey")
+#define APPFLOW_CFG_WEBSERVER_PATH_CERTIFICATE                                        _L("path_certificate")
+#define APPFLOW_CFG_WEBSERVER_PRIVATEKEY_PASSWORD                                      _L("privatekey_password")
 #endif
 
 #endif
@@ -166,57 +166,57 @@
 
 #ifdef APPFLOW_CFG_ALERTS_ACTIVE
 
-#define APPFLOW_CFG_SECTION_ALERTS                                                    __L("alerts")
-#define APPFLOW_CFG_ALERTS_ISACTIVE                                                   __L("isactive")
-#define APPFLOW_CFG_ALERTS_CONDITION                                                  __L("condition")
-#define APPFLOW_CFG_ALERTS_SMTP_ISACTIVE                                              __L("smtp_isactive")
-#define APPFLOW_CFG_ALERTS_SMTP_URL                                                   __L("smtp_url")
-#define APPFLOW_CFG_ALERTS_SMTP_PORT                                                  __L("smtp_port")
-#define APPFLOW_CFG_ALERTS_SMTP_LOGIN                                                 __L("smtp_login")
-#define APPFLOW_CFG_ALERTS_SMTP_PASSWORD                                              __L("smtp_password")
-#define APPFLOW_CFG_ALERTS_SMTP_SENDER                                                __L("smtp_sender")
-#define APPFLOW_CFG_ALERTS_SMTP_RECIPIENT                                             __L("smtp_recipient")
+#define APPFLOW_CFG_SECTION_ALERTS                                                    _L("alerts")
+#define APPFLOW_CFG_ALERTS_ISACTIVE                                                   _L("isactive")
+#define APPFLOW_CFG_ALERTS_CONDITION                                                  _L("condition")
+#define APPFLOW_CFG_ALERTS_SMTP_ISACTIVE                                              _L("smtp_isactive")
+#define APPFLOW_CFG_ALERTS_SMTP_URL                                                   _L("smtp_url")
+#define APPFLOW_CFG_ALERTS_SMTP_PORT                                                  _L("smtp_port")
+#define APPFLOW_CFG_ALERTS_SMTP_LOGIN                                                 _L("smtp_login")
+#define APPFLOW_CFG_ALERTS_SMTP_PASSWORD                                              _L("smtp_password")
+#define APPFLOW_CFG_ALERTS_SMTP_SENDER                                                _L("smtp_sender")
+#define APPFLOW_CFG_ALERTS_SMTP_RECIPIENT                                             _L("smtp_recipient")
 
-#define APPFLOW_CFG_ALERTS_SMS_ISACTIVE                                               __L("sms_isactive")
-#define APPFLOW_CFG_ALERTS_SMS_RECIPIENT                                              __L("sms_recipient")
+#define APPFLOW_CFG_ALERTS_SMS_ISACTIVE                                               _L("sms_isactive")
+#define APPFLOW_CFG_ALERTS_SMS_RECIPIENT                                              _L("sms_recipient")
 
-#define APPFLOW_CFG_ALERTS_WEB_ISACTIVE                                               __L("web_isactive")
-#define APPFLOW_CFG_ALERTS_WEB_UISUSEGET                                              __L("web_isuseget")
-#define APPFLOW_CFG_ALERTS_WEB_RECIPIENT                                              __L("web_recipient")
+#define APPFLOW_CFG_ALERTS_WEB_ISACTIVE                                               _L("web_isactive")
+#define APPFLOW_CFG_ALERTS_WEB_UISUSEGET                                              _L("web_isuseget")
+#define APPFLOW_CFG_ALERTS_WEB_RECIPIENT                                              _L("web_recipient")
 
-#define APPFLOW_CFG_ALERTS_UDP_ISACTIVE                                               __L("udp_isactive")
-#define APPFLOW_CFG_ALERTS_UDP_PORT                                                   __L("udp_port")
-#define APPFLOW_CFG_ALERTS_UDP_RECIPIENT                                              __L("udp_recipient")
+#define APPFLOW_CFG_ALERTS_UDP_ISACTIVE                                               _L("udp_isactive")
+#define APPFLOW_CFG_ALERTS_UDP_PORT                                                   _L("udp_port")
+#define APPFLOW_CFG_ALERTS_UDP_RECIPIENT                                              _L("udp_recipient")
 
 #endif
 
 
 #ifdef APPFLOW_CFG_SCRIPTS_ACTIVE
 
-#define APPFLOW_CFG_SECTION_SCRIPTS                                                   __L("scriptslist")
-#define APPFLOW_CFG_SCRIPTS_SCRIPT                                                    __L("scripts")  
+#define APPFLOW_CFG_SECTION_SCRIPTS                                                   _L("scriptslist")
+#define APPFLOW_CFG_SCRIPTS_SCRIPT                                                    _L("scripts")  
 
 #endif
 
 
 #ifdef APPFLOW_CFG_LOG_ACTIVE
 
-#define APPFLOW_CFG_SECTION_LOG                                                       __L("log")
-#define APPFLOW_CFG_LOG_ISACTIVE                                                      __L("isactive")
-#define APPFLOW_CFG_LOG_BACKUPISACTIVE                                                __L("backupisactive")
-#define APPFLOW_CFG_LOG_BACKUPMAXFILES                                                __L("backupmaxfiles")
-#define APPFLOW_CFG_LOG_BACKUPISCOMPRESS                                              __L("backupiscompress")
-#define APPFLOW_CFG_LOG_ACTIVESECTIONSID                                              __L("activesectionsID")
-#define APPFLOW_CFG_LOG_LEVELMASK                                                     __L("levelmask")
-#define APPFLOW_CFG_LOG_MAXSIZE                                                       __L("maxsize")
-#define APPFLOW_CFG_LOG_REDUCTIONPERCENT                                              __L("reductionpercent")
+#define APPFLOW_CFG_SECTION_LOG                                                       _L("log")
+#define APPFLOW_CFG_LOG_ISACTIVE                                                      _L("isactive")
+#define APPFLOW_CFG_LOG_BACKUPISACTIVE                                                _L("backupisactive")
+#define APPFLOW_CFG_LOG_BACKUPMAXFILES                                                _L("backupmaxfiles")
+#define APPFLOW_CFG_LOG_BACKUPISCOMPRESS                                              _L("backupiscompress")
+#define APPFLOW_CFG_LOG_ACTIVESECTIONSID                                              _L("activesectionsID")
+#define APPFLOW_CFG_LOG_LEVELMASK                                                     _L("levelmask")
+#define APPFLOW_CFG_LOG_MAXSIZE                                                       _L("maxsize")
+#define APPFLOW_CFG_LOG_REDUCTIONPERCENT                                              _L("reductionpercent")
 
 // ID Sections "generic" of LOG
-#define APPFLOW_CFG_LOG_SECTIONID_INITIATION                                          __L("Ini")
-#define APPFLOW_CFG_LOG_SECTIONID_GENERIC                                             __L("General")
-#define APPFLOW_CFG_LOG_SECTIONID_CONNEXIONS                                          __L("Connexions")
-#define APPFLOW_CFG_LOG_SECTIONID_STATUSAPP                                           __L("Status")
-#define APPFLOW_CFG_LOG_SECTIONID_ENDING                                              __L("End")
+#define APPFLOW_CFG_LOG_SECTIONID_INITIATION                                          _L("Ini")
+#define APPFLOW_CFG_LOG_SECTIONID_GENERIC                                             _L("General")
+#define APPFLOW_CFG_LOG_SECTIONID_CONNEXIONS                                          _L("Connexions")
+#define APPFLOW_CFG_LOG_SECTIONID_STATUSAPP                                           _L("Status")
+#define APPFLOW_CFG_LOG_SECTIONID_ENDING                                              _L("End")
 
 #endif
 

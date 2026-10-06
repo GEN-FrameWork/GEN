@@ -63,7 +63,7 @@ XSTM32FILE::XSTM32FILE(): XFILE()
   
   XSTRING root;
   
-  root = __L("/");
+  root = _L("/");
     
   XBUFFER xbufferexchange;
   root.ConvertToBufferExchange(xbufferexchange);

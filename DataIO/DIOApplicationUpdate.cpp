@@ -598,7 +598,7 @@ bool DIOAPPLICATIONUPDATE::GetVersionAvailable(DIOURL& url, int port, DIOAPPLICA
 
               index = 0;
 
-              do{ key.Format(__L("%s%d"), DIOAPPLICATIONUPDATE_FILESSECTION_FILES, index);
+              do{ key.Format(_L("%s%d"), DIOAPPLICATIONUPDATE_FILESSECTION_FILES, index);
 
                   ini->ReadValue(DIOAPPLICATIONUPDATE_FILESSECTION, key, value);
                   if(!value.IsEmpty())
@@ -607,11 +607,11 @@ bool DIOAPPLICATIONUPDATE::GetVersionAvailable(DIOURL& url, int port, DIOAPPLICA
                       int       sizefile = 0;
                       XDWORD    CRC32    = 0;
 
-                      int comma=value.FindCharacter(__C(','));
+                      int comma=value.FindCharacter(_C(','));
                       XSTRING name;
                       value.Copy(0, comma, name);
                       value.DeleteCharacters(0, comma+1);
-                      value.UnFormat(__L("%d,%08X"), &sizefile, &CRC32);
+                      value.UnFormat(_L("%d,%08X"), &sizefile, &CRC32);
                       xpathfile.Set(name.Get());
 
                       if(xpathfile.GetSize() && sizefile && CRC32)
@@ -778,7 +778,7 @@ bool DIOAPPLICATIONUPDATE::Download(DIOURL& url, int port, XCHAR* addtargetpath,
 
       //-------------------------------------------------------------
       // Descompress File
-      if(!extenxion.Compare(__L(".zip"), true))
+      if(!extenxion.Compare(_L(".zip"), true))
         {
           XFILEUNZIP* unzip = GEN_NEW XFILEUNZIP();
           if(unzip)
@@ -1110,7 +1110,7 @@ bool DIOAPPLICATIONUPDATE::DeleteFilesRenamed(XPATH& xpathtocheck)
   xdir=GEN_XFACTORY.Create_Dir();
   if(!xdir) return false;
 
-  if(xdir->FirstSearch(xpathtocheck, __L("*") , &xdirelement))
+  if(xdir->FirstSearch(xpathtocheck, _L("*") , &xdirelement))
     {
       XPATH xpathadd;
 
@@ -1217,10 +1217,10 @@ bool DIOAPPLICATIONUPDATE::RestartApplication(DIOAPPLICATIONUPDATE_ERROR& error)
   appname = applicationname.Get();  
   //appname.ToLowerCase();
 
-  command.Format(__L("%s/%s"), xpathrootapp.Get(), appname.Get());
+  command.Format(_L("%s/%s"), xpathrootapp.Get(), appname.Get());
 
   #ifdef WINDOWS
-  command += __L(".exe");
+  command += _L(".exe");
   #endif
 
   GEN_XPROCESSMANAGER.Application_Execute(command.Get(), NULL);
@@ -1258,7 +1258,7 @@ bool DIOAPPLICATIONUPDATE::GetListOfVersionsToRestore(XVECTOR<DIOAPPLICATIONUPDA
   dir_mask += DIOAPPLICATIONUPDATE_RESTOREDIR_MASK;
 
   searchstring  = DIOAPPLICATIONUPDATE_RESTOREDIR_ID;
-  searchstring += __L("*");
+  searchstring += _L("*");
 
   if(xdir->FirstSearch(xpathrootapp, searchstring.Get() , &xdirelement))
     {
@@ -1656,7 +1656,7 @@ bool DIOAPPLICATIONUPDATE::FilesToUpdate_CreateList(XPATH& xpathupdate)
   xdir=GEN_XFACTORY.Create_Dir();
   if(!xdir) return false;
 
-  if(xdir->FirstSearch(xpathupdate, __L("*") , &xdirelement))
+  if(xdir->FirstSearch(xpathupdate, _L("*") , &xdirelement))
     {
       XPATH xpathadd;
 

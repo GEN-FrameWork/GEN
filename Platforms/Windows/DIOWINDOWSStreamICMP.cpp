@@ -111,7 +111,7 @@ DIOWINDOWSSTREAMICMP::DIOWINDOWSSTREAMICMP() : DIOSTREAMICMP(), XFSMACHINE(0)
             DIOWINDOWSICMPFSMEVENT_SENDINGDATA          , DIOWINDOWSICMPFSMSTATE_SENDINGDATA        ,
             XFSMACHINESTATE_EVENTDEFEND);
 
-  threadconnection = CREATEXTHREAD(XTHREADGROUPID_DIOSTREAMICMP, __L("DIOWINDOWSSTREAMICMP::DIOWINDOWSSTREAMICMP"), ThreadConnection, (void*)this);
+  threadconnection = CREATEXTHREAD(XTHREADGROUPID_DIOSTREAMICMP, _L("DIOWINDOWSSTREAMICMP::DIOWINDOWSSTREAMICMP"), ThreadConnection, (void*)this);
 }
 
 
@@ -406,7 +406,7 @@ void DIOWINDOWSSTREAMICMP::ThreadConnection(void* data)
                                                                       {
                                                                         XSTRING address;
 
-                                                                        address.Format(__L("%d.%d.%d.%d"), origin_addr.sin_addr.S_un.S_un_b.s_b1, origin_addr.sin_addr.S_un.S_un_b.s_b2, origin_addr.sin_addr.S_un.S_un_b.s_b3, origin_addr.sin_addr.S_un.S_un_b.s_b4);
+                                                                        address.Format(_L("%d.%d.%d.%d"), origin_addr.sin_addr.S_un.S_un_b.s_b1, origin_addr.sin_addr.S_un.S_un_b.s_b2, origin_addr.sin_addr.S_un.S_un_b.s_b3, origin_addr.sin_addr.S_un.S_un_b.s_b4);
 
                                                                         diostream->AddDatagram(false, address.Get(), (XBYTE*)buffer, size);
                                                                         diostream->inbuffer->Add(buffer, size);
@@ -462,7 +462,7 @@ void DIOWINDOWSSTREAMICMP::ThreadConnection(void* data)
 
                                                                             if(size == SOCKET_ERROR)
                                                                               {
-                                                                                //XTRACE_PRINTCOLOR(4, __L("Write ICMP to [%s] (%d) ERROR!"), tmpremoteaddress.Get(), size);
+                                                                                //XTRACE_PRINTCOLOR(4, _L("Write ICMP to [%s] (%d) ERROR!"), tmpremoteaddress.Get(), size);
 
                                                                                 diostream->SetEvent(DIOWINDOWSICMPFSMEVENT_DISCONNECTING);
                                                                                 break;
@@ -470,7 +470,7 @@ void DIOWINDOWSSTREAMICMP::ThreadConnection(void* data)
 
                                                                             if(size)
                                                                               {
-                                                                                //XTRACE_PRINTCOLOR(1, __L("Write ICMP to [%s] (%d)"), tmpremoteaddress.Get(), size);
+                                                                                //XTRACE_PRINTCOLOR(1, _L("Write ICMP to [%s] (%d)"), tmpremoteaddress.Get(), size);
 
                                                                                 diostream->outbuffer->Extract(NULL, 0 , datagram->GetData()->GetSize());
                                                                                 diostream->DeleteDatagram(indexdatagram);

@@ -359,7 +359,7 @@ bool DIOPROTOCOL_CONNECTIONSMANAGER::Ini(bool isserver, DIOSTREAMCONFIG* diostre
   xtimerconnections=GEN_XFACTORY.CreateTimer();
   if(xtimerconnections)
     {      
-      xthreadconnections = CREATEXTHREAD(XTHREADGROUPID_DIOPROTOCOL_CONNECTIONMANAGER, __L("DIOPROTOCOL_CONNECTIONSMANAGER::Ini"), ThreadProtocolConnections, (void*)this);
+      xthreadconnections = CREATEXTHREAD(XTHREADGROUPID_DIOPROTOCOL_CONNECTIONMANAGER, _L("DIOPROTOCOL_CONNECTIONSMANAGER::Ini"), ThreadProtocolConnections, (void*)this);
       if(xthreadconnections)
         {
           if(!xthreadconnections->Ini()) return false;
@@ -1475,7 +1475,7 @@ void DIOPROTOCOL_CONNECTIONSMANAGER::ManageProtocolConnectionsClient()
 
   if(xtimerclienttry->GetMeasureSeconds() <= DIOPROTOCOL_CONNECTIONS_DEFAULTIMETRYCONNECTIONS) return;
 
-  //DEBUG_PRINT(__L("---------------------------------------------------------------"));
+  //DEBUG_PRINT(_L("---------------------------------------------------------------"));
 
   for(int c=0;c<(int)targetURLs.GetSize();c++)
     {
@@ -1584,7 +1584,7 @@ void DIOPROTOCOL_CONNECTIONSMANAGER::ManageProtocolConnectionsClient()
                               GEN_XSLEEP.MilliSeconds(50);
                             }
 
-                         XTRACE_PRINTCOLOR(1, __L("Trying to connect to %s [%s]: %s (%d) seconds."), URLclient->Get(), scfg->GetRemoteURL()->Get(), protocolconnection?__L("Connected!."):__L("Not Connected!."), xtimerconnections->GetMeasureSeconds());
+                         XTRACE_PRINTCOLOR(1, _L("Trying to connect to %s [%s]: %s (%d) seconds."), URLclient->Get(), scfg->GetRemoteURL()->Get(), protocolconnection?_L("Connected!."):_L("Not Connected!."), xtimerconnections->GetMeasureSeconds());
                         }
                        else
                         {
@@ -1686,7 +1686,7 @@ void DIOPROTOCOL_CONNECTIONSMANAGER::ThreadProtocolConnections(void* param)
                             }
                         }
 
-                     XTRACE_PRINTCOLOR((protocol->IsInitialized()?2:4), __L("Protocol Connection Manager: %s Init Protocol %s") , protocolconnections->isserver?__L("Server"):__L("Client"), protocol->IsInitialized()?__L("Ok!"):__L("ERROR!"));
+                     XTRACE_PRINTCOLOR((protocol->IsInitialized()?2:4), _L("Protocol Connection Manager: %s Init Protocol %s") , protocolconnections->isserver?_L("Server"):_L("Client"), protocol->IsInitialized()?_L("Ok!"):_L("ERROR!"));
 
                       if(!protocol->IsInitialized())
                         {
@@ -1704,7 +1704,7 @@ void DIOPROTOCOL_CONNECTIONSMANAGER::ThreadProtocolConnections(void* param)
                             {
                               protocolconnections->ProtocolConnections_Disconnect(c);
 
-                             XTRACE_PRINTCOLOR(status?1:4, __L("Protocol Connection Manager: Check connection protocol %s"), status?__L("Ok!"):__L("ERROR!"));
+                             XTRACE_PRINTCOLOR(status?1:4, _L("Protocol Connection Manager: Check connection protocol %s"), status?_L("Ok!"):_L("ERROR!"));
                             }
                         }
                     }

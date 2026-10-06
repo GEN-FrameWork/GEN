@@ -247,44 +247,44 @@ bool DIOLINUXWIFIMANAGERMODE::WPA_SetMode(int mode, XCHAR* SSID, XCHAR* password
 
   if(indexnet == -1)
     {
-      command.Format(__L("%s add_network"), prefixcommand.Get());
+      command.Format(_L("%s add_network"), prefixcommand.Get());
       WPA_CLI_Command(command, output);
 
-      output.DeleteCharacter(__C('\n'));
-      output.DeleteCharacter(__C('\r'));
+      output.DeleteCharacter(_C('\n'));
+      output.DeleteCharacter(_C('\r'));
 
       indexnet = output.ConvertToInt();
     }
    
-  status = WPA_SetValue(indexnet, __L("ssid"), SSID, true);
+  status = WPA_SetValue(indexnet, _L("ssid"), SSID, true);
   if(!status) return false;
 
   if(password)
     {
-      status = WPA_SetValue(indexnet, __L("psk"), password, false);
+      status = WPA_SetValue(indexnet, _L("psk"), password, false);
       if(!status) return false;
     }
    else
     {
-      status = WPA_SetValue(indexnet, __L("key_mgmt"), __L("NONE"), false);
+      status = WPA_SetValue(indexnet, _L("key_mgmt"), _L("NONE"), false);
       if(!status) return false;
     }
       
-  modestr.Format(__L("%d"), mode);
+  modestr.Format(_L("%d"), mode);
 
-  status = WPA_SetValue(indexnet, __L("mode"), modestr.Get(), false);
+  status = WPA_SetValue(indexnet, _L("mode"), modestr.Get(), false);
   if(!status) return false;
 
   if(mode == 2)
     {
-      command.Format(__L("%s ap_scan 1"), prefixcommand.Get());
+      command.Format(_L("%s ap_scan 1"), prefixcommand.Get());
       WPA_CLI_Command(command, output);
     }  
   
-  command.Format(__L("%s enable_network %d"), prefixcommand.Get(), indexnet);
+  command.Format(_L("%s enable_network %d"), prefixcommand.Get(), indexnet);
   status = WPA_CLI_Command(command, output);
 
-  command.Format(__L("%s reconnect"), prefixcommand.Get(), indexnet);
+  command.Format(_L("%s reconnect"), prefixcommand.Get(), indexnet);
   status = WPA_CLI_Command(command, output);
  
   if(mode == 0)
@@ -297,27 +297,27 @@ bool DIOLINUXWIFIMANAGERMODE::WPA_SetMode(int mode, XCHAR* SSID, XCHAR* password
           XBUFFER in;
           XBUFFER out;
 
-          param.Format(__L("-x"));   
-          GEN_XPROCESSMANAGER.Application_Execute(__L("/sbin/dhcpcd"), param.Get(), &in, &out, &returncode);
+          param.Format(_L("-x"));   
+          GEN_XPROCESSMANAGER.Application_Execute(_L("/sbin/dhcpcd"), param.Get(), &in, &out, &returncode);
         }
 
       for(int c=0; c<10; c++)
         {
-          GEN_XPROCESSMANAGER.MakeSystemCommand(__L("killall -9 dhcpcd"));                
+          GEN_XPROCESSMANAGER.MakeSystemCommand(_L("killall -9 dhcpcd"));                
         }
 
-      param.Format(__L("-4 -t 15 %s"), netinterface.Get());
+      param.Format(_L("-4 -t 15 %s"), netinterface.Get());
 
-      XTRACE_PRINTCOLOR(XTRACE_COLOR_PURPLE, __L("dhcpcd: %s"), param.Get());
+      XTRACE_PRINTCOLOR(XTRACE_COLOR_PURPLE, _L("dhcpcd: %s"), param.Get());
  
-      GEN_XPROCESSMANAGER.Application_Execute(__L("/sbin/dhcpcd"), param.Get(), NULL, &outputbuffer, &returncode);
-      XTRACE_PRINTCOLOR(XTRACE_COLOR_PURPLE, __L("dhclient %s %d"), output.Get(), returncode);
+      GEN_XPROCESSMANAGER.Application_Execute(_L("/sbin/dhcpcd"), param.Get(), NULL, &outputbuffer, &returncode);
+      XTRACE_PRINTCOLOR(XTRACE_COLOR_PURPLE, _L("dhclient %s %d"), output.Get(), returncode);
 
       status = false;
       outputbuffer.Add((XBYTE)0x00);
       output = (char*)outputbuffer.Get();
 
-      if(output.Find(__L("rebinding lease"), true) != XSTRING_NOTFOUND) status = true;
+      if(output.Find(_L("rebinding lease"), true) != XSTRING_NOTFOUND) status = true;
       
 
       for(int c=0; c<10; c++)
@@ -325,13 +325,13 @@ bool DIOLINUXWIFIMANAGERMODE::WPA_SetMode(int mode, XCHAR* SSID, XCHAR* password
           XBUFFER in;
           XBUFFER out;  
 
-          param.Format(__L("-x"));   
-          GEN_XPROCESSMANAGER.Application_Execute(__L("/sbin/dhcpcd"), param.Get(), &in, &out, &returncode);
+          param.Format(_L("-x"));   
+          GEN_XPROCESSMANAGER.Application_Execute(_L("/sbin/dhcpcd"), param.Get(), &in, &out, &returncode);
         }
 
       for(int c=0; c<10; c++)
         {          
-          GEN_XPROCESSMANAGER.MakeSystemCommand(__L("killall -9 dhcpcd"));                
+          GEN_XPROCESSMANAGER.MakeSystemCommand(_L("killall -9 dhcpcd"));                
         }
     }  
 
@@ -344,13 +344,13 @@ bool DIOLINUXWIFIMANAGERMODE::WPA_SetMode(int mode, XCHAR* SSID, XCHAR* password
 
       //GEN_XSLEEP.Seconds(2);
 
-      param = __L("-v wlan0");
+      param = _L("-v wlan0");
 
-      XTRACE_PRINTCOLOR(XTRACE_COLOR_PURPLE, __L("dhclient ... "));
+      XTRACE_PRINTCOLOR(XTRACE_COLOR_PURPLE, _L("dhclient ... "));
  
-      GEN_XPROCESSMANAGER.Application_Execute(__L("/sbin/dhclient"), param.Get(), &input, &output, &returncode);
+      GEN_XPROCESSMANAGER.Application_Execute(_L("/sbin/dhclient"), param.Get(), &input, &output, &returncode);
 
-      XTRACE_PRINTCOLOR(XTRACE_COLOR_PURPLE, __L("dhclient %s %d"), output.Get(), returncode);
+      XTRACE_PRINTCOLOR(XTRACE_COLOR_PURPLE, _L("dhclient %s %d"), output.Get(), returncode);
     }  
   */
 
@@ -361,13 +361,13 @@ bool DIOLINUXWIFIMANAGERMODE::WPA_SetMode(int mode, XCHAR* SSID, XCHAR* password
       XSTRING   command;
       int       returncode = 0;
    
-      command = __L("/sbin/dhclient -v wlan0");
+      command = _L("/sbin/dhclient -v wlan0");
 
-      XTRACE_PRINTCOLOR(XTRACE_COLOR_PURPLE, __L("dhclient ... "));
+      XTRACE_PRINTCOLOR(XTRACE_COLOR_PURPLE, _L("dhclient ... "));
  
       GEN_XPROCESSMANAGER.MakeCommand(command.Get(), &output, &returncode);
 
-      XTRACE_PRINTCOLOR(XTRACE_COLOR_PURPLE, __L("dhclient %s %d"), output.Get(), returncode);
+      XTRACE_PRINTCOLOR(XTRACE_COLOR_PURPLE, _L("dhclient %s %d"), output.Get(), returncode);
     }  
   */
 
@@ -375,12 +375,12 @@ bool DIOLINUXWIFIMANAGERMODE::WPA_SetMode(int mode, XCHAR* SSID, XCHAR* password
     {
       if(status)
         {
-          command.Format(__L("%s save_config"), prefixcommand.Get());
+          command.Format(_L("%s save_config"), prefixcommand.Get());
           status = WPA_CLI_Command(command, output);
       
           if(status)
             {
-              command.Format(__L("%s reconfigure"), prefixcommand.Get());
+              command.Format(_L("%s reconfigure"), prefixcommand.Get());
               status = WPA_CLI_Command(command, output);
             }
         }
@@ -408,22 +408,22 @@ bool DIOLINUXWIFIMANAGERMODE::WPA_IsDisconnected()
   
   prefixcommand.Format(DIOLINUXWIFIMANAGERMODE_PREFIXCOMMAND, netinterface.Get());
 
-  command.Format(__L("%s status"), prefixcommand.Get());
+  command.Format(_L("%s status"), prefixcommand.Get());
   WPA_CLI_Command(command, output);
 
-  if(output.Find(__L("wpa_state=INACTIVE"), true) != XSTRING_NOTFOUND) 
+  if(output.Find(_L("wpa_state=INACTIVE"), true) != XSTRING_NOTFOUND) 
     { 
       status = true;
     }
    else 
     {
-      if(output.Find(__L("wpa_state=DISCONNECTED"), true) != XSTRING_NOTFOUND) 
+      if(output.Find(_L("wpa_state=DISCONNECTED"), true) != XSTRING_NOTFOUND) 
         {
           status = true;
         }
        else 
         {
-          if(output.Find(__L("wpa_state=COMPLETED"), true) != XSTRING_NOTFOUND) 
+          if(output.Find(_L("wpa_state=COMPLETED"), true) != XSTRING_NOTFOUND) 
             { 
               status = false; 
             }
@@ -452,7 +452,7 @@ bool DIOLINUXWIFIMANAGERMODE::WPA_Disconnect()
   
   prefixcommand.Format(DIOLINUXWIFIMANAGERMODE_PREFIXCOMMAND, netinterface.Get());
 
-  command.Format(__L("%s disconnect"), prefixcommand.Get());
+  command.Format(_L("%s disconnect"), prefixcommand.Get());
   status =  WPA_CLI_Command(command, output);
 
   WPA_RemoveAllNetworks();
@@ -481,11 +481,11 @@ bool DIOLINUXWIFIMANAGERMODE::WPA_RemoveAllNetworks()
 
   for(int c=0; c<32; c++)
     {
-      command.Format(__L("%s remove_network %d"), prefixcommand.Get(), c);    
+      command.Format(_L("%s remove_network %d"), prefixcommand.Get(), c);    
       status = WPA_CLI_Command(command, output);     
     } 
       
-  command.Format(__L("%s save_config"), prefixcommand.Get());
+  command.Format(_L("%s save_config"), prefixcommand.Get());
   status = WPA_CLI_Command(command, output);
   
   return status;
@@ -517,11 +517,11 @@ bool DIOLINUXWIFIMANAGERMODE::WPA_SetValue(int indexnetwork, XCHAR* namevalue, X
 
   if(isstring)  
     {
-      command.Format(__L("%s set_network %d %s \"%s\"") , prefixcommand.Get(), indexnetwork, namevalue, value);          
+      command.Format(_L("%s set_network %d %s \"%s\"") , prefixcommand.Get(), indexnetwork, namevalue, value);          
     }
    else  
     {
-      command.Format(__L("%s set_network %d %s %s"), prefixcommand.Get(), indexnetwork, namevalue, value);    
+      command.Format(_L("%s set_network %d %s %s"), prefixcommand.Get(), indexnetwork, namevalue, value);    
     }
 
   status = WPA_CLI_Command(command, output);
@@ -573,16 +573,16 @@ bool DIOLINUXWIFIMANAGERMODE::WPA_GetListRemoteAP(XVECTOR<XSTRING*>& nameAPs)
 
   prefixcommand.Format(DIOLINUXWIFIMANAGERMODE_PREFIXCOMMAND, netinterface.Get());
 
-  command.Format(__L("%s scan") , prefixcommand.Get());     
+  command.Format(_L("%s scan") , prefixcommand.Get());     
   status = WPA_CLI_Command(command, output);
   if(!status) return false;
 
   GEN_XSLEEP.Seconds(3);
 
-  command.Format(__L("%s scan_results") , prefixcommand.Get());     
+  command.Format(_L("%s scan_results") , prefixcommand.Get());     
   status = WPA_CLI_Command(command, output);
 
-  int indexfr =  output.Find(__L("\n"), true);
+  int indexfr =  output.Find(_L("\n"), true);
   if(indexfr == XSTRING_NOTFOUND) return false;
 
   indexfr++;
@@ -591,12 +591,12 @@ bool DIOLINUXWIFIMANAGERMODE::WPA_GetListRemoteAP(XVECTOR<XSTRING*>& nameAPs)
   int indexstart = 0;
 
   do{
-      index =  output.Find(__L("\n"), true, indexfr);
+      index =  output.Find(_L("\n"), true, indexfr);
       if(index == XSTRING_NOTFOUND ) break;
 
       for(int c=index; c>0 ; c--)
         {
-          if(output.Get()[c] == __C(']'))  
+          if(output.Get()[c] == _C(']'))  
             {
               indexstart = c;
               break;
@@ -611,7 +611,7 @@ bool DIOLINUXWIFIMANAGERMODE::WPA_GetListRemoteAP(XVECTOR<XSTRING*>& nameAPs)
           if(newstr)
             {
               output.Copy(indexstart+1, index, (*newstr));
-              newstr->DeleteCharacter(__C('\t'), XSTRINGCONTEXT_FROM_FIRST);
+              newstr->DeleteCharacter(_C('\t'), XSTRINGCONTEXT_FROM_FIRST);
               
               nameAPs.Add(newstr);                 
             }
@@ -645,17 +645,17 @@ bool DIOLINUXWIFIMANAGERMODE::WPA_CLI_Command(XSTRING& command, XSTRING& output)
   int       returncode = 0;
   bool      status     = false;
 
-  GEN_XPROCESSMANAGER.Application_Execute(__L("/sbin/wpa_cli"), command.Get(), NULL, &outputbuffer, &returncode);
+  GEN_XPROCESSMANAGER.Application_Execute(_L("/sbin/wpa_cli"), command.Get(), NULL, &outputbuffer, &returncode);
 
   outputbuffer.Add((XBYTE)0x00);
   output = (char*)outputbuffer.Get();
 
-  if(output.Find(__L("OK"), true) != XSTRING_NOTFOUND) status = true;
+  if(output.Find(_L("OK"), true) != XSTRING_NOTFOUND) status = true;
  
-  output.DeleteCharacter(__C('\n'));
-  output.DeleteCharacter(__C('\r'));
+  output.DeleteCharacter(_C('\n'));
+  output.DeleteCharacter(_C('\r'));
 
-  XTRACE_PRINTCOLOR(XTRACE_COLOR_PURPLE, __L("[WIFI manager] WPA CLI command [%s]: %s"), command.Get(), output.Get()); 
+  XTRACE_PRINTCOLOR(XTRACE_COLOR_PURPLE, _L("[WIFI manager] WPA CLI command [%s]: %s"), command.Get(), output.Get()); 
     
   return status;
 }
@@ -683,17 +683,17 @@ bool DIOLINUXWIFIMANAGERMODE::NM_SetMode(int mode, XCHAR* SSID, XCHAR* password,
   bool      status = false;
 
   /*
-  command = __L("radio wifi on");
+  command = _L("radio wifi on");
   status = NM_CLI_Command(command, output);
   
   if(!output.IsEmpty()) return false;
  
   for(int c=0; c<5; c++)
     {
-      command = __L("device wifi rescan");
+      command = _L("device wifi rescan");
       status = NM_CLI_Command(command, output);
 
-      command = __L("device wifi list");
+      command = _L("device wifi list");
       status = NM_CLI_Command(command, output);
 
       if(status)
@@ -703,12 +703,12 @@ bool DIOLINUXWIFIMANAGERMODE::NM_SetMode(int mode, XCHAR* SSID, XCHAR* password,
     }
   */
 
-  command.Format(__L("device wifi connect %s"), SSID);  
-  if(password) command.AddFormat(__L(" password %s"), password);
+  command.Format(_L("device wifi connect %s"), SSID);  
+  if(password) command.AddFormat(_L(" password %s"), password);
   status = NM_CLI_Command(command, output);  
   if(status)
     {
-      if(output.Find(__L("successfully activated"), false) == XSTRING_NOTFOUND) status = false;
+      if(output.Find(_L("successfully activated"), false) == XSTRING_NOTFOUND) status = false;
     }
   
   lastSSID.Empty();
@@ -735,7 +735,7 @@ bool DIOLINUXWIFIMANAGERMODE::NM_IsDisconnected()
   
   if(lastSSID.IsEmpty()) return true;
 
-  command.Format(__L("con show --active"));  
+  command.Format(_L("con show --active"));  
   status = NM_CLI_Command(command, output); 
   if(status)
     {
@@ -763,20 +763,20 @@ bool DIOLINUXWIFIMANAGERMODE::NM_Disconnect()
 
   if(lastSSID.IsEmpty()) return false;
 
-  command.Format(__L("con down %s"), lastSSID.Get());  
+  command.Format(_L("con down %s"), lastSSID.Get());  
   status = NM_CLI_Command(command, output);  
   if(status)
     {
       status = false; 
-      if(output.Find(__L("successfully deactivated"), false) != XSTRING_NOTFOUND)  status = true;
+      if(output.Find(_L("successfully deactivated"), false) != XSTRING_NOTFOUND)  status = true;
     }
 
-  command.Format(__L("con del %s"), lastSSID.Get());  
+  command.Format(_L("con del %s"), lastSSID.Get());  
   status = NM_CLI_Command(command, output);  
   if(status)
     {
       status = false;
-      if(output.Find(__L("successfully deleted"), false) != XSTRING_NOTFOUND) status = true;
+      if(output.Find(_L("successfully deleted"), false) != XSTRING_NOTFOUND) status = true;
     }
   
   if(status) 
@@ -785,9 +785,9 @@ bool DIOLINUXWIFIMANAGERMODE::NM_Disconnect()
       /*
       for(int c=0; c<12; c++)
         {
-          command = __L("device wifi rescan");
+          command = _L("device wifi rescan");
           NM_CLI_Command(command, output);
-          command = __L("device wifi list");
+          command = _L("device wifi list");
           NM_CLI_Command(command, output);
 
 
@@ -823,7 +823,7 @@ bool DIOLINUXWIFIMANAGERMODE::NM_CLI_Command(XSTRING& command, XSTRING& output)
   int       returncode = 0;
   bool      status     = false;
 
-  GEN_XPROCESSMANAGER.Application_Execute(__L("/usr/bin/nmcli"), command.Get(), NULL, &outputbuffer, &returncode);
+  GEN_XPROCESSMANAGER.Application_Execute(_L("/usr/bin/nmcli"), command.Get(), NULL, &outputbuffer, &returncode);
   if(outputbuffer.GetSize()) status = true;
 
   if(status)
@@ -832,7 +832,7 @@ bool DIOLINUXWIFIMANAGERMODE::NM_CLI_Command(XSTRING& command, XSTRING& output)
       output = (char*)outputbuffer.Get();
     }
    
-  XTRACE_PRINTCOLOR(XTRACE_COLOR_PURPLE, __L("[WIFI manager] NM CLI command [%s]: %s"), command.Get(), output.Get()); 
+  XTRACE_PRINTCOLOR(XTRACE_COLOR_PURPLE, _L("[WIFI manager] NM CLI command [%s]: %s"), command.Get(), output.Get()); 
     
   return status;
 }

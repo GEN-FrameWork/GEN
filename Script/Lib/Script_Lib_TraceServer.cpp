@@ -111,18 +111,18 @@ bool SCRIPT_LIB_TRACESERVER::AddLibraryFunctions(SCRIPT* script)
 
   this->script = script;
 
-  script->AddLibraryFunction(this, __L("TraceServer_Ini")            , Call_TraceServer_Ini);
-  script->AddLibraryFunction(this, __L("TraceServer_IniUART")        , Call_TraceServer_IniUART);
-  script->AddLibraryFunction(this, __L("TraceServer_End")            , Call_TraceServer_End);
-  script->AddLibraryFunction(this, __L("TraceServer_IsOpen")         , Call_TraceServer_IsOpen);
-  script->AddLibraryFunction(this, __L("TraceServer_Clear")          , Call_TraceServer_Clear);
-  script->AddLibraryFunction(this, __L("TraceServer_GetCount")       , Call_TraceServer_GetCount);
-  script->AddLibraryFunction(this, __L("TraceServer_GetDroppedCount"), Call_TraceServer_GetDroppedCount);
-  script->AddLibraryFunction(this, __L("TraceServer_SetMaxMessages") , Call_TraceServer_SetMaxMessages);
-  script->AddLibraryFunction(this, __L("TraceServer_Pop")            , Call_TraceServer_Pop);
-  script->AddLibraryFunction(this, __L("TraceServer_WaitPop")        , Call_TraceServer_WaitPop);
-  script->AddLibraryFunction(this, __L("TraceServer_Peek")           , Call_TraceServer_Peek);
-  script->AddLibraryFunction(this, __L("TraceServer_Get")            , Call_TraceServer_Get);
+  script->AddLibraryFunction(this, _L("TraceServer_Ini")            , Call_TraceServer_Ini);
+  script->AddLibraryFunction(this, _L("TraceServer_IniUART")        , Call_TraceServer_IniUART);
+  script->AddLibraryFunction(this, _L("TraceServer_End")            , Call_TraceServer_End);
+  script->AddLibraryFunction(this, _L("TraceServer_IsOpen")         , Call_TraceServer_IsOpen);
+  script->AddLibraryFunction(this, _L("TraceServer_Clear")          , Call_TraceServer_Clear);
+  script->AddLibraryFunction(this, _L("TraceServer_GetCount")       , Call_TraceServer_GetCount);
+  script->AddLibraryFunction(this, _L("TraceServer_GetDroppedCount"), Call_TraceServer_GetDroppedCount);
+  script->AddLibraryFunction(this, _L("TraceServer_SetMaxMessages") , Call_TraceServer_SetMaxMessages);
+  script->AddLibraryFunction(this, _L("TraceServer_Pop")            , Call_TraceServer_Pop);
+  script->AddLibraryFunction(this, _L("TraceServer_WaitPop")        , Call_TraceServer_WaitPop);
+  script->AddLibraryFunction(this, _L("TraceServer_Peek")           , Call_TraceServer_Peek);
+  script->AddLibraryFunction(this, _L("TraceServer_Get")            , Call_TraceServer_Get);
 
   return true;
 }
@@ -171,7 +171,7 @@ bool SCRIPT_LIB_TRACESERVER::FormatMessage(XTRACESERVER_MSG& msg, XSTRING& out)
   text.DeleteCharacter(0x0D);
   text.DeleteCharacter(0x0A);
 
-  out.Format(__L("%d|%u|%s|%d.%d.%d.%d|%d.%d.%d.%d|%s")
+  out.Format(_L("%d|%u|%s|%d.%d.%d.%d|%d.%d.%d.%d|%s")
             , (int)msg.level
             , msg.sequence
             , timestr.Get()
@@ -772,7 +772,7 @@ void Call_TraceServer_Get(SCRIPT_LIB* library, SCRIPT* script, XVECTOR<XVARIANT*
 
           if(!result.IsEmpty())
             {
-              result.Add(__L("\n"));
+              result.Add(_L("\n"));
             }
 
           result.Add(line);

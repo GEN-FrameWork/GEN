@@ -144,12 +144,12 @@ bool DIOSTREAMI2CCONFIG::SetLocalDeviceNameByPort()
 
   switch(GEN_XSYSTEM.GetTypeHardware(&revision))
     {
-      case XSYSTEM_HARDWARETYPE_PC          : localdevicename.Format(__L("/dev/i2c-%d"), port);
+      case XSYSTEM_HARDWARETYPE_PC          : localdevicename.Format(_L("/dev/i2c-%d"), port);
                                               break;
 
       case XSYSTEM_HARDWARETYPE_RASPBERRYPI : if(revision == 1)
-                                                    localdevicename = __L("/dev/i2c-0");
-                                               else localdevicename = __L("/dev/i2c-1");
+                                                    localdevicename = _L("/dev/i2c-0");
+                                               else localdevicename = _L("/dev/i2c-1");
                                               break;
 
                                    default  : break;

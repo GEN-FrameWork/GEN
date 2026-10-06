@@ -250,7 +250,7 @@ bool INPLINUXFACTORY::GetDeviceHandlers(INPDEVICE_TYPE devicetype, XVECTOR<INPLI
               XSTRING* line = xfiletxtdevices->GetLine(c);
               if(line)
                 {
-                  int index = line->Find(__L("I:"), true);
+                  int index = line->Find(_L("I:"), true);
                   if(index == 0)
                     {
                       INPLINUXDEVICEID* deviceID = GEN_NEW INPLINUXDEVICEID();
@@ -268,7 +268,7 @@ bool INPLINUXFACTORY::GetDeviceHandlers(INPDEVICE_TYPE devicetype, XVECTOR<INPLI
                                   case  'N' : { XSTRING name;
 
                                                 name.AdjustSize(_MAXSTR);
-                                                line->UnFormat(__L("N: Name=\"%s\""), name.Get());
+                                                line->UnFormat(_L("N: Name=\"%s\""), name.Get());
                                                 name.AdjustSize();      
 
                                                 deviceID->GetName()->Set(name);
@@ -283,28 +283,28 @@ bool INPLINUXFACTORY::GetDeviceHandlers(INPDEVICE_TYPE devicetype, XVECTOR<INPLI
                                                 int     event_index = INPLINUXDEVICEID_INVALID;
 
                                                 handlers.AdjustSize(_MAXSTR);
-                                                line->UnFormat(__L("H: Handlers=%s"), handlers.Get());
+                                                line->UnFormat(_L("H: Handlers=%s"), handlers.Get());
                                                 handlers.AdjustSize();      
 
-                                                index = handlers.Find(__L("event"), true);
+                                                index = handlers.Find(_L("event"), true);
                                                 if(index != XSTRING_NOTFOUND)
                                                   {
                                                     XSTRING eventstr;
 
                                                     handlers.Copy(index, eventstr);
-                                                    eventstr.UnFormat(__L("event%d"), &event_index);
+                                                    eventstr.UnFormat(_L("event%d"), &event_index);
 
                                                     deviceID->SetEventIndex(event_index);
                                                   }                                                
                                               }
                                               break;        
                            
-                                  case  'B' : { XCHAR* prefix[] = { __L("PROP=")  , 
-                                                                    __L("EV=")    ,
-                                                                    __L("KEY=")   ,
-                                                                    __L("ABS=")   ,
-                                                                    __L("REL=")   ,
-                                                                    __L("MSC=")   
+                                  case  'B' : { XCHAR* prefix[] = { _L("PROP=")  , 
+                                                                    _L("EV=")    ,
+                                                                    _L("KEY=")   ,
+                                                                    _L("ABS=")   ,
+                                                                    _L("REL=")   ,
+                                                                    _L("MSC=")   
                                                                   };
 
                                                 for(int d=0; d< (sizeof(prefix) / sizeof(XCHAR*)); d++)   
@@ -322,9 +322,9 @@ bool INPLINUXFACTORY::GetDeviceHandlers(INPDEVICE_TYPE devicetype, XVECTOR<INPLI
                                                                         line->Copy(index+3, ev_str);
                                                                         ev_str.AdjustSize();
 
-                                                                        if(!ev_str.Compare(__L("120013"), true)) deviceID->SetType(INPDEVICE_TYPE_KEYBOARD);  
-                                                                        if(!ev_str.Compare(__L("17"), true))     deviceID->SetType(INPDEVICE_TYPE_MOUSE);                                                                                                                        
-                                                                        if(!ev_str.Compare(__L("b"), true))      deviceID->SetType(INPDEVICE_TYPE_TOUCHSCREEN);                                                                                                                        
+                                                                        if(!ev_str.Compare(_L("120013"), true)) deviceID->SetType(INPDEVICE_TYPE_KEYBOARD);  
+                                                                        if(!ev_str.Compare(_L("17"), true))     deviceID->SetType(INPDEVICE_TYPE_MOUSE);                                                                                                                        
+                                                                        if(!ev_str.Compare(_L("b"), true))      deviceID->SetType(INPDEVICE_TYPE_TOUCHSCREEN);                                                                                                                        
                                                                       }
                                                                       break;
 
@@ -357,15 +357,15 @@ bool INPLINUXFACTORY::GetDeviceHandlers(INPDEVICE_TYPE devicetype, XVECTOR<INPLI
                               switch(deviceID->GetType())
                                 { 
                                                       default       :   
-                                  case INPDEVICE_TYPE_NONE          : typestr = __L("Unkwown");       break;
-                                  case INPDEVICE_TYPE_KEYBOARD      : typestr = __L("Keyboard");      break;
-                                  case INPDEVICE_TYPE_MOUSE         : typestr = __L("Mouse");         break;
-                                  case INPDEVICE_TYPE_JOSTICK       : typestr = __L("Jostick");       break;
-                                  case INPDEVICE_TYPE_TOUCHSCREEN   : typestr = __L("TouchScreen");   break;
-                                  case INPDEVICE_TYPE_WIIMOTE       : typestr = __L("WII Mote");      break;
+                                  case INPDEVICE_TYPE_NONE          : typestr = _L("Unkwown");       break;
+                                  case INPDEVICE_TYPE_KEYBOARD      : typestr = _L("Keyboard");      break;
+                                  case INPDEVICE_TYPE_MOUSE         : typestr = _L("Mouse");         break;
+                                  case INPDEVICE_TYPE_JOSTICK       : typestr = _L("Jostick");       break;
+                                  case INPDEVICE_TYPE_TOUCHSCREEN   : typestr = _L("TouchScreen");   break;
+                                  case INPDEVICE_TYPE_WIIMOTE       : typestr = _L("WII Mote");      break;
                                 }
 
-                              XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, __L("[Input Device] Event [%d] Type: %15s Device [%s]"), deviceID->GetEventIndex(), typestr.Get(), deviceID->GetName()->Get());                         
+                              XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, _L("[Input Device] Event [%d] Type: %15s Device [%s]"), deviceID->GetEventIndex(), typestr.Get(), deviceID->GetName()->Get());                         
                               #endif                                               
                             } 
                            else GEN_DELETE deviceID;                                 

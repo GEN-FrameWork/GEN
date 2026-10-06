@@ -408,7 +408,7 @@ DIONODEITEMHANDLER_GPIODIGITAL::DIONODEITEMHANDLER_GPIODIGITAL(XLIST<DIONODEITEM
   Clean();
 
   type  = DIONODEITEMHANDLER_TYPE_GPIODIGITAL;
-  name  = __L("GPIO Digital");
+  name  = _L("GPIO Digital");
 
   for(XDWORD c=0; c<entrysGPIO->GetSize(); c++)
     {
@@ -540,7 +540,7 @@ bool DIONODEITEMHANDLER_GPIODIGITAL::Update()
                       PostEvent(&xevent);
                       */
                       
-                      XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, __L("[DIONODE item handler %s] %s %s [value %s]"), GetName()->Get(), entryGPIO->GetDescription()->Get(), description.Get(), _value?__L("true"):__L("false"));
+                      XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, _L("[DIONODE item handler %s] %s %s [value %s]"), GetName()->Get(), entryGPIO->GetDescription()->Get(), description.Get(), _value?_L("true"):_L("false"));
                     }          
                 }
                else
@@ -568,7 +568,7 @@ bool DIONODEITEMHANDLER_GPIODIGITAL::Update()
              
                       PostEvent(&xevent);
                       
-                      XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, __L("[DIONODE item handler %s] %s %s [value %s]"), GetName()->Get(), entryGPIO->GetDescription()->Get(), description.Get(), value_GPIO?__L("true"):__L("false"));    
+                      XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, _L("[DIONODE item handler %s] %s %s [value %s]"), GetName()->Get(), entryGPIO->GetDescription()->Get(), description.Get(), value_GPIO?_L("true"):_L("false"));    
                     }
                 }
             }

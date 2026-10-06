@@ -256,7 +256,7 @@ void UI_ELEMENT::SetClassNames(XCHAR* rawlist)
       while(i < size)
         {
           XCHAR ch = class_names_raw[(int)i];
-          if(ch != __C(' ') && ch != __C('\t') && ch != __C('\r') && ch != __C('\n')) break;
+          if(ch != _C(' ') && ch != _C('\t') && ch != _C('\r') && ch != _C('\n')) break;
           i++;
         }
 
@@ -267,7 +267,7 @@ void UI_ELEMENT::SetClassNames(XCHAR* rawlist)
       while(i < size)
         {
           XCHAR ch = class_names_raw[(int)i];
-          if(ch == __C(' ') || ch == __C('\t') || ch == __C('\r') || ch == __C('\n')) break;
+          if(ch == _C(' ') || ch == _C('\t') || ch == _C('\r') || ch == _C('\n')) break;
           i++;
         }
 
@@ -2249,28 +2249,28 @@ void UI_ELEMENT::GetActivePseudos(XVECTOR<XSTRING*>& out)
 {
   if(ispreselect)
     {
-      XSTRING* p1 = GEN_NEW XSTRING(); if(p1) { p1->Set(__L("preselect")); out.Add(p1); }
-      XSTRING* p2 = GEN_NEW XSTRING(); if(p2) { p2->Set(__L("hover"));     out.Add(p2); }
+      XSTRING* p1 = GEN_NEW XSTRING(); if(p1) { p1->Set(_L("preselect")); out.Add(p1); }
+      XSTRING* p2 = GEN_NEW XSTRING(); if(p2) { p2->Set(_L("hover"));     out.Add(p2); }
     }
 
   if(isselected)
     {
-      XSTRING* p = GEN_NEW XSTRING(); if(p) { p->Set(__L("selected"));  out.Add(p); }
+      XSTRING* p = GEN_NEW XSTRING(); if(p) { p->Set(_L("selected"));  out.Add(p); }
     }
 
   if(isactive)
     {
-      XSTRING* p = GEN_NEW XSTRING(); if(p) { p->Set(__L("active"));    out.Add(p); }
+      XSTRING* p = GEN_NEW XSTRING(); if(p) { p->Set(_L("active"));    out.Add(p); }
     }
    else
     {
-      XSTRING* p = GEN_NEW XSTRING(); if(p) { p->Set(__L("disabled"));  out.Add(p); }
+      XSTRING* p = GEN_NEW XSTRING(); if(p) { p->Set(_L("disabled"));  out.Add(p); }
     }
 
   // Phase 4: ":pressed" is the CSS-like pointer-down pseudo; ":active" stays GEN enabled (above).
   if(ispressed)
     {
-      XSTRING* p = GEN_NEW XSTRING(); if(p) { p->Set(__L("pressed"));   out.Add(p); }
+      XSTRING* p = GEN_NEW XSTRING(); if(p) { p->Set(_L("pressed"));   out.Add(p); }
     }
 }
 
@@ -2362,22 +2362,22 @@ void UI_ELEMENT::ReapplyStyleVisual()
   XSTRING v;
   double  d;
 
-  if(bag.Get(__L("color")      , v))  targetcolor          .SetFromString(v);
+  if(bag.Get(_L("color")      , v))  targetcolor          .SetFromString(v);
 
   // "bckgrdcolor" or "background-color": same shared first-hit alias lookup as GetLayoutElement_Base() at load
   // time (UI_Manager.cpp) -- both now go through UI_PROPERTYREGISTRY::GetAliased(), so a rule written with the
   // CSS-natural name (e.g. ":hover { background-color: ... }") is honored here too instead of freezing at the
   // stateless baseline, and the two call sites cannot silently drift onto different precedence.
   XSTRING bckgrdcolor;
-  UI_PROPERTYREGISTRY::GetAliased(bag, __L("bckgrdcolor"), __L("background-color"), bckgrdcolor);
+  UI_PROPERTYREGISTRY::GetAliased(bag, _L("bckgrdcolor"), _L("background-color"), bckgrdcolor);
   if(!bckgrdcolor.IsEmpty()) targetbackgroundcolor.SetFromString(bckgrdcolor);
 
-  if(bag.Get(__L("roundrect")  , d))  targetroundrect = (XDWORD)d;
+  if(bag.Get(_L("roundrect")  , d))  targetroundrect = (XDWORD)d;
 
-  if(bag.Get(__L("border-width"), d)) targetborderwidth = d;
+  if(bag.Get(_L("border-width"), d)) targetborderwidth = d;
 
   XSTRING bordercolorstr;
-  if(bag.Get(__L("border-color"), bordercolorstr) && !bordercolorstr.IsEmpty())
+  if(bag.Get(_L("border-color"), bordercolorstr) && !bordercolorstr.IsEmpty())
     {
       targetbordercolor.SetFromString(bordercolorstr);
       targetbordercolorset = true;
@@ -2386,7 +2386,7 @@ void UI_ELEMENT::ReapplyStyleVisual()
   // border-radius shorthand (1-4 values, same CSS positional rule as load time) then per-corner longhands,
   // which override the shorthand -- identical precedence to GetLayoutElement_Base().
   XSTRING borderradiusstr;
-  if(bag.Get(__L("border-radius"), borderradiusstr))
+  if(bag.Get(_L("border-radius"), borderradiusstr))
     {
       double out[4] = { 0.0, 0.0, 0.0, 0.0 };
       UI_PROPERTYREGISTRY::ExpandCSSShorthand4(borderradiusstr, out);            // out = TL, TR, BR, BL
@@ -2397,13 +2397,13 @@ void UI_ELEMENT::ReapplyStyleVisual()
       targetborderradius[UI_ELEMENT_BORDER_CORNER_BL] = out[3];
     }
 
-  if(bag.Get(__L("border-top-left-radius")     , d)) targetborderradius[UI_ELEMENT_BORDER_CORNER_TL] = d;
-  if(bag.Get(__L("border-top-right-radius")    , d)) targetborderradius[UI_ELEMENT_BORDER_CORNER_TR] = d;
-  if(bag.Get(__L("border-bottom-right-radius") , d)) targetborderradius[UI_ELEMENT_BORDER_CORNER_BR] = d;
-  if(bag.Get(__L("border-bottom-left-radius")  , d)) targetborderradius[UI_ELEMENT_BORDER_CORNER_BL] = d;
+  if(bag.Get(_L("border-top-left-radius")     , d)) targetborderradius[UI_ELEMENT_BORDER_CORNER_TL] = d;
+  if(bag.Get(_L("border-top-right-radius")    , d)) targetborderradius[UI_ELEMENT_BORDER_CORNER_TR] = d;
+  if(bag.Get(_L("border-bottom-right-radius") , d)) targetborderradius[UI_ELEMENT_BORDER_CORNER_BR] = d;
+  if(bag.Get(_L("border-bottom-left-radius")  , d)) targetborderradius[UI_ELEMENT_BORDER_CORNER_BL] = d;
 
   XSTRING boxshadowstr;
-  if(bag.Get(__L("box-shadow"), boxshadowstr) && !boxshadowstr.IsEmpty())
+  if(bag.Get(_L("box-shadow"), boxshadowstr) && !boxshadowstr.IsEmpty())
     {
       double  sh_x    = 0.0;
       double  sh_y    = 0.0;

@@ -120,7 +120,7 @@ bool DIOANDROIDPCAP::Capture_Start(DIOPCAPNETINTERFACE* netinterface, bool promi
   if(handle == NULL) return false;
 
 
-  threadcapture = CREATEXTHREAD(__L("DIOANDROIDPCAP::Capture_Start"), ThreadCapture, (void*)this);
+  threadcapture = CREATEXTHREAD(_L("DIOANDROIDPCAP::Capture_Start"), ThreadCapture, (void*)this);
   if(!threadcapture) return false;
 
   return threadcapture->Ini();

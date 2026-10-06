@@ -103,7 +103,7 @@ typedef struct
 
 } GRPVIDEOFILEAVI_INDEXENTRY;
 
-#define GRPVIDEOFILEAVI_TYPECHUNKFRAME        __L("00dc")  
+#define GRPVIDEOFILEAVI_TYPECHUNKFRAME        _L("00dc")  
 #define GRPVIDEOFILEAVI_INDEXENTRY_MAXSIZE    16
 
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/

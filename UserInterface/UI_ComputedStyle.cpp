@@ -197,10 +197,10 @@ bool UI_COMPUTEDSTYLE::GetBoxSizing(UI_BOXSIZING& value)
   value = UI_BOXSIZING_CONTENTBOX;
 
   XSTRING raw;
-  if(!Get(__L("box-sizing"), raw) || raw.IsEmpty()) return false;
+  if(!Get(_L("box-sizing"), raw) || raw.IsEmpty()) return false;
 
-  if(!raw.Compare(__L("border-box"), true))    { value = UI_BOXSIZING_BORDERBOX;  return true; }
-  if(!raw.Compare(__L("content-box"), true))   { value = UI_BOXSIZING_CONTENTBOX; return true; }
+  if(!raw.Compare(_L("border-box"), true))    { value = UI_BOXSIZING_BORDERBOX;  return true; }
+  if(!raw.Compare(_L("content-box"), true))   { value = UI_BOXSIZING_CONTENTBOX; return true; }
 
   return false;                                 // unrecognized keyword: left at the CSS initial default above
 }

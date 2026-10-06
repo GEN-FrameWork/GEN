@@ -243,11 +243,11 @@ bool DIOSTREAMDEVICE::DebugPrintInfo()
   #ifdef XTRACE_ACTIVE
   XSTRING line;
 
-  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLACK, __L(" ")                      , NULL);
-  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLACK, __L("Index            : %02d"), index);
-  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLACK, __L("Name : %s"), name.Get());
-  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLACK, __L("Description : %s"), description.Get());
-  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLACK, __L("Resource : %s"), resource.Get());
+  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLACK, _L(" ")                      , NULL);
+  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLACK, _L("Index            : %02d"), index);
+  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLACK, _L("Name : %s"), name.Get());
+  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLACK, _L("Description : %s"), description.Get());
+  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLACK, _L("Resource : %s"), resource.Get());
 
   return true;
   #else

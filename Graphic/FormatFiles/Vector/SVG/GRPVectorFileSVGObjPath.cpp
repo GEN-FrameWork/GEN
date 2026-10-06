@@ -100,7 +100,7 @@ bool GRPVECTORFILESVGOBJPATH::ApplyData(XFILEXMLELEMENT* element)
 
   GRPVECTORFILESVGOBJ::ApplyData(element);
 
-  XCHAR* valued = element->GetValueAttribute(__L("d"));
+  XCHAR* valued = element->GetValueAttribute(_L("d"));
   if(valued)  ParsePathData(valued);
 
   return true;
@@ -211,8 +211,8 @@ bool GRPVECTORFILESVGOBJPATH::ParsePathData(XCHAR* d)
 
       if(!command) break;
 
-      bool  relative = (command >= __C('a')) && (command <= __C('z'));
-      XCHAR upper    = relative ? (XCHAR)(command - __C('a') + __C('A')) : command;
+      bool  relative = (command >= _C('a')) && (command <= _C('z'));
+      XCHAR upper    = relative ? (XCHAR)(command - _C('a') + _C('A')) : command;
 
       double x   = 0.0;  double y   = 0.0;
       double c1x = 0.0;  double c1y = 0.0;
@@ -224,7 +224,7 @@ bool GRPVECTORFILESVGOBJPATH::ParsePathData(XCHAR* d)
         {
           /**-------------------------------------------------------------------------------------------------------------------
           * 
-          * @fn         case __C( ) : if(!ReadNumber(source, pos, x) || !ReadNumber(source, pos, y))
+          * @fn         case _C( ) : if(!ReadNumber(source, pos, x) || !ReadNumber(source, pos, y))
           * @brief      C
           * @ingroup    GRAPHIC
           * 
@@ -232,17 +232,17 @@ bool GRPVECTORFILESVGOBJPATH::ParsePathData(XCHAR* d)
           * @return     case : Requested value.
           * 
           * --------------------------------------------------------------------------------------------------------------------*/
-          case __C('M') :  if(!ReadNumber(source, pos, x) || !ReadNumber(source, pos, y)) { pos = len; break; }
+          case _C('M') :  if(!ReadNumber(source, pos, x) || !ReadNumber(source, pos, y)) { pos = len; break; }
                            if(relative) { x += cx;  y += cy; }
                            pathdata.MoveTo(x, y);
                            cx = x;  cy = y;  sx = x;  sy = y;
-                           command  = relative ? __C('l') : __C('L');           // subsequent pairs are implicit line to
-                           previous = __C('M');
+                           command  = relative ? _C('l') : _C('L');           // subsequent pairs are implicit line to
+                           previous = _C('M');
                            break;
 
           /**-------------------------------------------------------------------------------------------------------------------
           * 
-          * @fn         case __C( ) : if(!ReadNumber(source, pos, x) || !ReadNumber(source, pos, y))
+          * @fn         case _C( ) : if(!ReadNumber(source, pos, x) || !ReadNumber(source, pos, y))
           * @brief      C
           * @ingroup    GRAPHIC
           * 
@@ -250,16 +250,16 @@ bool GRPVECTORFILESVGOBJPATH::ParsePathData(XCHAR* d)
           * @return     case : Requested value.
           * 
           * --------------------------------------------------------------------------------------------------------------------*/
-          case __C('L') :  if(!ReadNumber(source, pos, x) || !ReadNumber(source, pos, y)) { pos = len; break; }
+          case _C('L') :  if(!ReadNumber(source, pos, x) || !ReadNumber(source, pos, y)) { pos = len; break; }
                            if(relative) { x += cx;  y += cy; }
                            pathdata.LineTo(x, y);
                            cx = x;  cy = y;
-                           previous = __C('L');
+                           previous = _C('L');
                            break;
 
           /**-------------------------------------------------------------------------------------------------------------------
           * 
-          * @fn         case __C( ) : if(!ReadNumber(source, pos, x))
+          * @fn         case _C( ) : if(!ReadNumber(source, pos, x))
           * @brief      C
           * @ingroup    GRAPHIC
           * 
@@ -267,16 +267,16 @@ bool GRPVECTORFILESVGOBJPATH::ParsePathData(XCHAR* d)
           * @return     case : Requested value.
           * 
           * --------------------------------------------------------------------------------------------------------------------*/
-          case __C('H') :  if(!ReadNumber(source, pos, x)) { pos = len; break; }
+          case _C('H') :  if(!ReadNumber(source, pos, x)) { pos = len; break; }
                            if(relative) x += cx;
                            pathdata.LineTo(x, cy);
                            cx = x;
-                           previous = __C('L');
+                           previous = _C('L');
                            break;
 
           /**-------------------------------------------------------------------------------------------------------------------
           * 
-          * @fn         case __C( ) : if(!ReadNumber(source, pos, y))
+          * @fn         case _C( ) : if(!ReadNumber(source, pos, y))
           * @brief      C
           * @ingroup    GRAPHIC
           * 
@@ -284,16 +284,16 @@ bool GRPVECTORFILESVGOBJPATH::ParsePathData(XCHAR* d)
           * @return     case : Requested value.
           * 
           * --------------------------------------------------------------------------------------------------------------------*/
-          case __C('V') :  if(!ReadNumber(source, pos, y)) { pos = len; break; }
+          case _C('V') :  if(!ReadNumber(source, pos, y)) { pos = len; break; }
                            if(relative) y += cy;
                            pathdata.LineTo(cx, y);
                            cy = y;
-                           previous = __C('L');
+                           previous = _C('L');
                            break;
 
           /**-------------------------------------------------------------------------------------------------------------------
           * 
-          * @fn         case __C( ) : if(!ReadNumber(source, pos, c1x) || !ReadNumber(source, pos, c1y) || !ReadNumber(source, pos, c2x) || !ReadNumber(source, pos, c2y) || !ReadNumber(source, pos, x) || !ReadNumber(source, pos, y))
+          * @fn         case _C( ) : if(!ReadNumber(source, pos, c1x) || !ReadNumber(source, pos, c1y) || !ReadNumber(source, pos, c2x) || !ReadNumber(source, pos, c2y) || !ReadNumber(source, pos, x) || !ReadNumber(source, pos, y))
           * @brief      C
           * @ingroup    GRAPHIC
           * 
@@ -301,19 +301,19 @@ bool GRPVECTORFILESVGOBJPATH::ParsePathData(XCHAR* d)
           * @return     case : Requested value.
           * 
           * --------------------------------------------------------------------------------------------------------------------*/
-          case __C('C') :  if(!ReadNumber(source, pos, c1x) || !ReadNumber(source, pos, c1y) ||
+          case _C('C') :  if(!ReadNumber(source, pos, c1x) || !ReadNumber(source, pos, c1y) ||
                               !ReadNumber(source, pos, c2x) || !ReadNumber(source, pos, c2y) ||
                               !ReadNumber(source, pos, x)   || !ReadNumber(source, pos, y))    { pos = len; break; }
                            if(relative) { c1x += cx; c1y += cy;  c2x += cx; c2y += cy;  x += cx; y += cy; }
                            pathdata.CurveTo(c1x, c1y, c2x, c2y, x, y);
                            lc2x = c2x;  lc2y = c2y;
                            cx = x;  cy = y;
-                           previous = __C('C');
+                           previous = _C('C');
                            break;
 
           /**-------------------------------------------------------------------------------------------------------------------
           * 
-          * @fn         case __C( ) : if(!ReadNumber(source, pos, c2x) || !ReadNumber(source, pos, c2y) || !ReadNumber(source, pos, x) || !ReadNumber(source, pos, y))
+          * @fn         case _C( ) : if(!ReadNumber(source, pos, c2x) || !ReadNumber(source, pos, c2y) || !ReadNumber(source, pos, x) || !ReadNumber(source, pos, y))
           * @brief      C
           * @ingroup    GRAPHIC
           * 
@@ -321,10 +321,10 @@ bool GRPVECTORFILESVGOBJPATH::ParsePathData(XCHAR* d)
           * @return     case : Requested value.
           * 
           * --------------------------------------------------------------------------------------------------------------------*/
-          case __C('S') :  if(!ReadNumber(source, pos, c2x) || !ReadNumber(source, pos, c2y) ||
+          case _C('S') :  if(!ReadNumber(source, pos, c2x) || !ReadNumber(source, pos, c2y) ||
                               !ReadNumber(source, pos, x)   || !ReadNumber(source, pos, y))    { pos = len; break; }
                            if(relative) { c2x += cx; c2y += cy;  x += cx; y += cy; }
-                           if((previous == __C('C')) || (previous == __C('S')))
+                           if((previous == _C('C')) || (previous == _C('S')))
                              {
                                c1x = (2.0 * cx) - lc2x;
                                c1y = (2.0 * cy) - lc2y;
@@ -336,12 +336,12 @@ bool GRPVECTORFILESVGOBJPATH::ParsePathData(XCHAR* d)
                            pathdata.CurveTo(c1x, c1y, c2x, c2y, x, y);
                            lc2x = c2x;  lc2y = c2y;
                            cx = x;  cy = y;
-                           previous = __C('S');
+                           previous = _C('S');
                            break;
 
           /**-------------------------------------------------------------------------------------------------------------------
           * 
-          * @fn         case __C( ) : if(!ReadNumber(source, pos, c1x) || !ReadNumber(source, pos, c1y) || !ReadNumber(source, pos, x) || !ReadNumber(source, pos, y))
+          * @fn         case _C( ) : if(!ReadNumber(source, pos, c1x) || !ReadNumber(source, pos, c1y) || !ReadNumber(source, pos, x) || !ReadNumber(source, pos, y))
           * @brief      C
           * @ingroup    GRAPHIC
           * 
@@ -349,18 +349,18 @@ bool GRPVECTORFILESVGOBJPATH::ParsePathData(XCHAR* d)
           * @return     case : Requested value.
           * 
           * --------------------------------------------------------------------------------------------------------------------*/
-          case __C('Q') :  if(!ReadNumber(source, pos, c1x) || !ReadNumber(source, pos, c1y) ||
+          case _C('Q') :  if(!ReadNumber(source, pos, c1x) || !ReadNumber(source, pos, c1y) ||
                               !ReadNumber(source, pos, x)   || !ReadNumber(source, pos, y))    { pos = len; break; }
                            if(relative) { c1x += cx; c1y += cy;  x += cx; y += cy; }
                            pathdata.QuadTo(c1x, c1y, x, y);
                            lqx = c1x;  lqy = c1y;
                            cx = x;  cy = y;
-                           previous = __C('Q');
+                           previous = _C('Q');
                            break;
 
           /**-------------------------------------------------------------------------------------------------------------------
           * 
-          * @fn         case __C( ) : if(!ReadNumber(source, pos, x) || !ReadNumber(source, pos, y))
+          * @fn         case _C( ) : if(!ReadNumber(source, pos, x) || !ReadNumber(source, pos, y))
           * @brief      C
           * @ingroup    GRAPHIC
           * 
@@ -368,9 +368,9 @@ bool GRPVECTORFILESVGOBJPATH::ParsePathData(XCHAR* d)
           * @return     case : Requested value.
           * 
           * --------------------------------------------------------------------------------------------------------------------*/
-          case __C('T') :  if(!ReadNumber(source, pos, x) || !ReadNumber(source, pos, y)) { pos = len; break; }
+          case _C('T') :  if(!ReadNumber(source, pos, x) || !ReadNumber(source, pos, y)) { pos = len; break; }
                            if(relative) { x += cx;  y += cy; }
-                           if((previous == __C('Q')) || (previous == __C('T')))
+                           if((previous == _C('Q')) || (previous == _C('T')))
                              {
                                c1x = (2.0 * cx) - lqx;
                                c1y = (2.0 * cy) - lqy;
@@ -382,12 +382,12 @@ bool GRPVECTORFILESVGOBJPATH::ParsePathData(XCHAR* d)
                            pathdata.QuadTo(c1x, c1y, x, y);
                            lqx = c1x;  lqy = c1y;
                            cx = x;  cy = y;
-                           previous = __C('T');
+                           previous = _C('T');
                            break;
 
           /**-------------------------------------------------------------------------------------------------------------------
           * 
-          * @fn         case __C( ) : if(!ReadNumber(source, pos, rx) || !ReadNumber(source, pos, ry) || !ReadNumber(source, pos, xrot) || !ReadFlag (source, pos, largearc) || !ReadFlag(source, pos, sweep) || !ReadNumber(source, pos, x) || !ReadNumber(source, pos, y))
+          * @fn         case _C( ) : if(!ReadNumber(source, pos, rx) || !ReadNumber(source, pos, ry) || !ReadNumber(source, pos, xrot) || !ReadFlag (source, pos, largearc) || !ReadFlag(source, pos, sweep) || !ReadNumber(source, pos, x) || !ReadNumber(source, pos, y))
           * @brief      C
           * @ingroup    GRAPHIC
           * 
@@ -395,18 +395,18 @@ bool GRPVECTORFILESVGOBJPATH::ParsePathData(XCHAR* d)
           * @return     case : Requested value.
           * 
           * --------------------------------------------------------------------------------------------------------------------*/
-          case __C('A') :  if(!ReadNumber(source, pos, rx)   || !ReadNumber(source, pos, ry) || !ReadNumber(source, pos, xrot) ||
+          case _C('A') :  if(!ReadNumber(source, pos, rx)   || !ReadNumber(source, pos, ry) || !ReadNumber(source, pos, xrot) ||
                               !ReadFlag  (source, pos, largearc) || !ReadFlag(source, pos, sweep) ||
                               !ReadNumber(source, pos, x)    || !ReadNumber(source, pos, y))   { pos = len; break; }
                            if(relative) { x += cx;  y += cy; }
                            pathdata.ArcTo(rx, ry, xrot, largearc, sweep, x, y);
                            cx = x;  cy = y;
-                           previous = __C('A');
+                           previous = _C('A');
                            break;
 
-          case __C('Z') :  pathdata.Close();
+          case _C('Z') :  pathdata.Close();
                            cx = sx;  cy = sy;
-                           previous = __C('Z');
+                           previous = _C('Z');
                            break;
 
                 default :  pos = len;                                           // unknown command : stop
@@ -442,23 +442,23 @@ bool GRPVECTORFILESVGOBJPATH::ReadNumber(XSTRING& source, int& pos, double& valu
   int  start = pos;
   bool dot   = false;
 
-  if((source[pos] == __C('+')) || (source[pos] == __C('-')))  pos++;
+  if((source[pos] == _C('+')) || (source[pos] == _C('-')))  pos++;
 
   while(pos < len)
     {
       XCHAR c = source[pos];
 
-      if((c >= __C('0')) && (c <= __C('9')))  { pos++; continue; }
-      if((c == __C('.')) && !dot)             { dot = true; pos++; continue; }
+      if((c >= _C('0')) && (c <= _C('9')))  { pos++; continue; }
+      if((c == _C('.')) && !dot)             { dot = true; pos++; continue; }
 
       break;
     }
 
-  if((pos < len) && ((source[pos] == __C('e')) || (source[pos] == __C('E'))))
+  if((pos < len) && ((source[pos] == _C('e')) || (source[pos] == _C('E'))))
     {
       pos++;
-      if((pos < len) && ((source[pos] == __C('+')) || (source[pos] == __C('-'))))  pos++;
-      while((pos < len) && (source[pos] >= __C('0')) && (source[pos] <= __C('9')))  pos++;
+      if((pos < len) && ((source[pos] == _C('+')) || (source[pos] == _C('-'))))  pos++;
+      while((pos < len) && (source[pos] >= _C('0')) && (source[pos] <= _C('9')))  pos++;
     }
 
   if(pos == start) return false;
@@ -495,8 +495,8 @@ bool GRPVECTORFILESVGOBJPATH::ReadFlag(XSTRING& source, int& pos, bool& flag)
 
   XCHAR c = source[pos];
 
-  if(c == __C('0'))       { flag = false;  pos++;  return true; }
-  if(c == __C('1'))       { flag = true;   pos++;  return true; }
+  if(c == _C('0'))       { flag = false;  pos++;  return true; }
+  if(c == _C('1'))       { flag = true;   pos++;  return true; }
 
   return false;
 }
@@ -516,8 +516,8 @@ bool GRPVECTORFILESVGOBJPATH::ReadFlag(XSTRING& source, int& pos, bool& flag)
 * --------------------------------------------------------------------------------------------------------------------*/
 bool GRPVECTORFILESVGOBJPATH::IsSeparator(XCHAR character)
 {
-  return ((character == __C(' '))  || (character == __C(',')) || (character == __C('\t')) ||
-          (character == __C('\n')) || (character == __C('\r')));
+  return ((character == _C(' '))  || (character == _C(',')) || (character == _C('\t')) ||
+          (character == _C('\n')) || (character == _C('\r')));
 }
 
 
@@ -535,8 +535,8 @@ bool GRPVECTORFILESVGOBJPATH::IsSeparator(XCHAR character)
 * --------------------------------------------------------------------------------------------------------------------*/
 bool GRPVECTORFILESVGOBJPATH::IsCommand(XCHAR character)
 {
-  return (((character >= __C('A')) && (character <= __C('Z'))) ||
-          ((character >= __C('a')) && (character <= __C('z'))));
+  return (((character >= _C('A')) && (character <= _C('Z'))) ||
+          ((character >= _C('a')) && (character <= _C('z'))));
 }
 
 

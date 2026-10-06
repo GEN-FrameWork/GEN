@@ -36,7 +36,7 @@
 
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
 
-#define SCRIPT_LIB_MATH_NAME  __L("Math")
+#define SCRIPT_LIB_MATH_NAME  _L("Math")
 
 
 

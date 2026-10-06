@@ -680,8 +680,8 @@ bool DIOSTREAMDEVICEBLUETOOTH::DebugPrintInfo()
 
   GetMAC()->GetXString(data);
   
-  line.Format(__L("MAC : %s"), data.Get());                          XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, line.Get());
-  line.Format(__L("Service Class : %08X"), GetServiceClass()->GetData1());      XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, line.Get());
+  line.Format(_L("MAC : %s"), data.Get());                          XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, line.Get());
+  line.Format(_L("Service Class : %08X"), GetServiceClass()->GetData1());      XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, line.Get());
 
   XSTRING ID;
   XSTRING channel;
@@ -692,34 +692,34 @@ bool DIOSTREAMDEVICEBLUETOOTH::DebugPrintInfo()
       DIOSTREAMDEVICEBLUETOOTHSDPSERVICE* service = (DIOSTREAMDEVICEBLUETOOTHSDPSERVICE*)services.Get(c);
       if(!service) continue;
 
-      ID.Format(__L("%08X"), service->GetID());
+      ID.Format(_L("%08X"), service->GetID());
 
       line  = ID;
-      line += __L(" - ");
+      line += _L(" - ");
 
-      line += __L(" \"");
+      line += _L(" \"");
       line += service->GetName()->Get();
-      line += __L("\" ");
+      line += _L("\" ");
 
-      line += __L(" \"");
+      line += _L(" \"");
       line += service->GetDescription()->Get();
-      line += __L("\" ");
+      line += _L("\" ");
 
-      line += __L(" \"");
+      line += _L(" \"");
       line += service->GetProvider()->Get();
-      line += __L("\" ");
+      line += _L("\" ");
 
       for(int d=0;d<service->GetNProtocols();d++)
         {
           DIOSTREAMDEVICEBLUETOOTHSDPSERVICEPROTOCOL* protocol = service->GetProtocol(d);
           if(protocol)
             {
-              ID.Format(__L("%08X"), protocol->GetType());
+              ID.Format(_L("%08X"), protocol->GetType());
 
               line += ID;
               line += " ";
 
-              channel.Format(__L("[%d]"), protocol->GetChannel());
+              channel.Format(_L("[%d]"), protocol->GetChannel());
 
               line += channel;
               line += " ";

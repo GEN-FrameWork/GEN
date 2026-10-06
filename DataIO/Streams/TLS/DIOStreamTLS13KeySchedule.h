@@ -48,19 +48,19 @@
 // It must never be left active in a delivered build: it writes the secrets of the connection in the clear.
 //#define DIOSTREAMTLS13KEYSCHEDULE_TRACE_SECRETS
 
-#define DIOSTREAMTLS13KEYSCHEDULE_LABEL_DERIVED                 __L("derived")
-#define DIOSTREAMTLS13KEYSCHEDULE_LABEL_CLIENTEARLY             __L("c e traffic")
-#define DIOSTREAMTLS13KEYSCHEDULE_LABEL_CLIENTHANDSHAKE         __L("c hs traffic")
-#define DIOSTREAMTLS13KEYSCHEDULE_LABEL_SERVERHANDSHAKE         __L("s hs traffic")
-#define DIOSTREAMTLS13KEYSCHEDULE_LABEL_CLIENTAPPLICATION       __L("c ap traffic")
-#define DIOSTREAMTLS13KEYSCHEDULE_LABEL_SERVERAPPLICATION       __L("s ap traffic")
-#define DIOSTREAMTLS13KEYSCHEDULE_LABEL_RESUMPTION              __L("res master")
-#define DIOSTREAMTLS13KEYSCHEDULE_LABEL_RESUMPTIONPSK           __L("resumption")
-#define DIOSTREAMTLS13KEYSCHEDULE_LABEL_RESUMPTIONBINDER        __L("res binder")
-#define DIOSTREAMTLS13KEYSCHEDULE_LABEL_KEY                     __L("key")
-#define DIOSTREAMTLS13KEYSCHEDULE_LABEL_IV                      __L("iv")
-#define DIOSTREAMTLS13KEYSCHEDULE_LABEL_FINISHED                __L("finished")
-#define DIOSTREAMTLS13KEYSCHEDULE_LABEL_TRAFFICUPDATE           __L("traffic upd")
+#define DIOSTREAMTLS13KEYSCHEDULE_LABEL_DERIVED                 _L("derived")
+#define DIOSTREAMTLS13KEYSCHEDULE_LABEL_CLIENTEARLY             _L("c e traffic")
+#define DIOSTREAMTLS13KEYSCHEDULE_LABEL_CLIENTHANDSHAKE         _L("c hs traffic")
+#define DIOSTREAMTLS13KEYSCHEDULE_LABEL_SERVERHANDSHAKE         _L("s hs traffic")
+#define DIOSTREAMTLS13KEYSCHEDULE_LABEL_CLIENTAPPLICATION       _L("c ap traffic")
+#define DIOSTREAMTLS13KEYSCHEDULE_LABEL_SERVERAPPLICATION       _L("s ap traffic")
+#define DIOSTREAMTLS13KEYSCHEDULE_LABEL_RESUMPTION              _L("res master")
+#define DIOSTREAMTLS13KEYSCHEDULE_LABEL_RESUMPTIONPSK           _L("resumption")
+#define DIOSTREAMTLS13KEYSCHEDULE_LABEL_RESUMPTIONBINDER        _L("res binder")
+#define DIOSTREAMTLS13KEYSCHEDULE_LABEL_KEY                     _L("key")
+#define DIOSTREAMTLS13KEYSCHEDULE_LABEL_IV                      _L("iv")
+#define DIOSTREAMTLS13KEYSCHEDULE_LABEL_FINISHED                _L("finished")
+#define DIOSTREAMTLS13KEYSCHEDULE_LABEL_TRAFFICUPDATE           _L("traffic upd")
 
 // DIOSTREAMTLSKEYSCHEDULE_ROLE and _DIRECTION/_MAXDIRECTIONS moved to DIOStreamTLSMessages.h: they are shared
 // vocabulary with the TLS 1.2 key schedule (DIOSTREAMTLS12KEYSCHEDULE), not exclusive to this TLS 1.3 one. Every

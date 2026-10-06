@@ -407,11 +407,11 @@ GRPBITMAPFILE_TYPE GRPBITMAPFILE::GetTypeFromExtenxion(XCHAR* xpath)
 
   _xpath.GetExt(ext);
   
-  if(!ext.Compare(__L(".jpg"), true))  type = GRPBITMAPFILE_TYPE_JPG; 
-  if(!ext.Compare(__L(".jpeg"), true))  type = GRPBITMAPFILE_TYPE_JPG;
-  if(!ext.Compare(__L(".png"), true))  type = GRPBITMAPFILE_TYPE_PNG;
-  if(!ext.Compare(__L(".bmp"), true))  type = GRPBITMAPFILE_TYPE_BMP;
-  if(!ext.Compare(__L(".tga"), true))  type = GRPBITMAPFILE_TYPE_TGA;
+  if(!ext.Compare(_L(".jpg"), true))  type = GRPBITMAPFILE_TYPE_JPG; 
+  if(!ext.Compare(_L(".jpeg"), true))  type = GRPBITMAPFILE_TYPE_JPG;
+  if(!ext.Compare(_L(".png"), true))  type = GRPBITMAPFILE_TYPE_PNG;
+  if(!ext.Compare(_L(".bmp"), true))  type = GRPBITMAPFILE_TYPE_BMP;
+  if(!ext.Compare(_L(".tga"), true))  type = GRPBITMAPFILE_TYPE_TGA;
 
   return type;
 }

@@ -38,8 +38,8 @@
 
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
 
-#define UI_ANIMATION_FRAME_INI          __L("#[")
-#define UI_ANIMATION_FRAME_END          __L("]")
+#define UI_ANIMATION_FRAME_INI          _L("#[")
+#define UI_ANIMATION_FRAME_END          _L("]")
 
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
 

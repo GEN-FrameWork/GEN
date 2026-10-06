@@ -121,7 +121,7 @@ bool DIOSNMP_XBER::SetIPADDRESS(XCHAR* IPstring)
   while(1)
     {
       XSTRING numberstring;
-      int     indexstring = string.Find(__L("."),true,start);
+      int     indexstring = string.Find(_L("."),true,start);
 
       if(indexstring != XSTRING_NOTFOUND)
         {

@@ -328,7 +328,7 @@ bool CIPHERKEYSFILEPEM::DecodeCertificates(XVECTOR<XSTRING*>* lines)
 
           if(!entrybuffer->data.ConvertFromBase64(datastr))
             {
-              XFEEDBACK_ADD(XFEEDBACK_CODE_ERRORINFUNCTION , 1, __L("CIPHERKEYSFILEPEM::DecodeCertificates invalid Convert From Base64"));
+              XFEEDBACK_ADD(XFEEDBACK_CODE_ERRORINFUNCTION , 1, _L("CIPHERKEYSFILEPEM::DecodeCertificates invalid Convert From Base64"));
               return false;
             }      
         }
@@ -344,7 +344,7 @@ bool CIPHERKEYSFILEPEM::DecodeCertificates(XVECTOR<XSTRING*>* lines)
         {
           decodeobj = NULL;
          
-          if(!entrybuffer->type.Compare(__L("CERTIFICATE")))
+          if(!entrybuffer->type.Compare(_L("CERTIFICATE")))
             {      
               decodeobjtype = CIPHERKEYSFILETYPE_CERTIFICATEX509;     
 
@@ -414,7 +414,7 @@ bool CIPHERKEYSFILEPEM::GetCertificatedPropertys(CIPHERCERTIFICATEX509* certific
         {
           lastOID = event->GetProperty()->OID; 
 
-          if(!levelsstr.Compare(__L("1.1.3.1")))
+          if(!levelsstr.Compare(_L("1.1.3.1")))
             {
               if(event->GetProperty())  
                 {
@@ -431,13 +431,13 @@ bool CIPHERKEYSFILEPEM::GetCertificatedPropertys(CIPHERCERTIFICATEX509* certific
 
           // ---------------------------------------------------------------------------------
 
-          if(!levelsstr.Compare(__L("1.1.1.1")))
+          if(!levelsstr.Compare(_L("1.1.1.1")))
             {
               certificate->SetVersion((XWORD)event->GetData()->Get()[0] + 1);                  
               ismanaged = true;
             }
 
-          if(!levelsstr.Compare(__L("1.1.2")))
+          if(!levelsstr.Compare(_L("1.1.2")))
             {
               certificate->GetSerial()->CopyFrom((*event->GetData()));
               ismanaged = true;  
@@ -445,7 +445,7 @@ bool CIPHERKEYSFILEPEM::GetCertificatedPropertys(CIPHERCERTIFICATEX509* certific
  
           // ---------------------------------------------------------------------------------
 
-          if(!lastOID.Compare(__L("2.5.4.6"), false))
+          if(!lastOID.Compare(_L("2.5.4.6"), false))
             {
               if(certificate->GetIssuerID()->GetCountryName()->IsEmpty())  
                 {
@@ -461,7 +461,7 @@ bool CIPHERKEYSFILEPEM::GetCertificatedPropertys(CIPHERCERTIFICATEX509* certific
               ismanaged = true;
             }
 
-          if(!lastOID.Compare(__L("2.5.4.10"), false))
+          if(!lastOID.Compare(_L("2.5.4.10"), false))
             {              
               if(certificate->GetIssuerID()->GetOrganizationName()->IsEmpty())  
                 {
@@ -477,7 +477,7 @@ bool CIPHERKEYSFILEPEM::GetCertificatedPropertys(CIPHERCERTIFICATEX509* certific
               ismanaged = true; 
             }
 
-          if(!lastOID.Compare(__L("2.5.4.11"), false))
+          if(!lastOID.Compare(_L("2.5.4.11"), false))
             {              
               if(certificate->GetIssuerID()->GetOrganizationalUnitName()->IsEmpty())  
                 {
@@ -493,7 +493,7 @@ bool CIPHERKEYSFILEPEM::GetCertificatedPropertys(CIPHERCERTIFICATEX509* certific
               ismanaged = true; 
             }
 
-          if(!lastOID.Compare(__L("2.5.4.11"), false))
+          if(!lastOID.Compare(_L("2.5.4.11"), false))
             {             
               if(certificate->GetIssuerID()->GetOrganizationalUnitNamePlus()->IsEmpty())  
                 {
@@ -509,7 +509,7 @@ bool CIPHERKEYSFILEPEM::GetCertificatedPropertys(CIPHERCERTIFICATEX509* certific
               ismanaged = true; 
             }
 
-          if(!lastOID.Compare(__L("2.5.4.3"), false))
+          if(!lastOID.Compare(_L("2.5.4.3"), false))
             {              
               if(certificate->GetIssuerID()->GetCommonName()->IsEmpty())  
                 {
@@ -527,7 +527,7 @@ bool CIPHERKEYSFILEPEM::GetCertificatedPropertys(CIPHERCERTIFICATEX509* certific
 
           // ---------------------------------------------------------------------------------  
 
-          if(!levelsstr.Compare(__L("1.1.5.1")))
+          if(!levelsstr.Compare(_L("1.1.5.1")))
             {           
               XSTRING   valuestr = (*value);;  
 
@@ -535,7 +535,7 @@ bool CIPHERKEYSFILEPEM::GetCertificatedPropertys(CIPHERCERTIFICATEX509* certific
               ismanaged = true;
             }
 
-          if(!levelsstr.Compare(__L("1.1.5.2")))
+          if(!levelsstr.Compare(_L("1.1.5.2")))
             {
               XSTRING   valuestr = (*value);  
               
@@ -549,7 +549,7 @@ bool CIPHERKEYSFILEPEM::GetCertificatedPropertys(CIPHERCERTIFICATEX509* certific
           static CIPHERKEYTYPE keytype = CIPHERKEYTYPE_UNKNOWN;
 
           // RSA
-          if(!lastOID.Compare(__L("1.2.840.113549.1.1.1"), false))
+          if(!lastOID.Compare(_L("1.2.840.113549.1.1.1"), false))
             {
               keytype = CIPHERKEYTYPE_RSA_PUBLIC;
             }
@@ -557,31 +557,31 @@ bool CIPHERKEYSFILEPEM::GetCertificatedPropertys(CIPHERCERTIFICATEX509* certific
           // NIST / SECG   
 
           // ECDSA secp192r1	        
-          if(!lastOID.Compare(__L("1.2.840.10045.3.1.1"), false))
+          if(!lastOID.Compare(_L("1.2.840.10045.3.1.1"), false))
             {
               keytype = CIPHERKEYTYPE_ECDSA_SECP192R1_PUBLIC;
             }
           
           // ECDSA secp224r1	        
-          if(!lastOID.Compare(__L("1.3.132.0.33"), false))	
+          if(!lastOID.Compare(_L("1.3.132.0.33"), false))	
             {
               keytype = CIPHERKEYTYPE_ECDSA_SECP224R1_PUBLIC;
             }
 
           // ECDSA secp256r1	        
-          if(!lastOID.Compare(__L("1.2.840.10045.3.1.7"), false))
+          if(!lastOID.Compare(_L("1.2.840.10045.3.1.7"), false))
             {
               keytype = CIPHERKEYTYPE_ECDSA_SECP256R1_PUBLIC;
             }
           
           // ECDSA secp384r1	        
-          if(!lastOID.Compare(__L("1.3.132.0.34"), false))
+          if(!lastOID.Compare(_L("1.3.132.0.34"), false))
             {
               keytype = CIPHERKEYTYPE_ECDSA_SECP384R1_PUBLIC;
             }
 
           // ECDSA secp521r1	        
-          if(!lastOID.Compare(__L("1.3.132.0.35"), false))	   
+          if(!lastOID.Compare(_L("1.3.132.0.35"), false))	   
             {
               keytype = CIPHERKEYTYPE_ECDSA_SECP521R1_PUBLIC;
             }
@@ -589,19 +589,19 @@ bool CIPHERKEYSFILEPEM::GetCertificatedPropertys(CIPHERCERTIFICATEX509* certific
           // SECG (special)
 
           // ECDSA secp256k1	        
-          if(!lastOID.Compare(__L("1.3.132.0.10"), false))
+          if(!lastOID.Compare(_L("1.3.132.0.10"), false))
             {
               keytype = CIPHERKEYTYPE_ECDSA_SECP256K1_PUBLIC;
             }
 
           // ECDSA sect163k1	        
-          if(!lastOID.Compare(__L("1.3.132.0.1"), false))
+          if(!lastOID.Compare(_L("1.3.132.0.1"), false))
             {
               keytype = CIPHERKEYTYPE_ECDSA_SECT163K1_PUBLIC;
             }  
 
           // ECDSA sect233k1	        
-          if(!lastOID.Compare(__L("1.3.132.0.26"), false))
+          if(!lastOID.Compare(_L("1.3.132.0.26"), false))
             {
               keytype = CIPHERKEYTYPE_ECDSA_SECT233K1_PUBLIC;
             }
@@ -609,19 +609,19 @@ bool CIPHERKEYSFILEPEM::GetCertificatedPropertys(CIPHERCERTIFICATEX509* certific
           // Brainpool 
 
           // ECDSA brainpoolP256r1	  
-          if(!lastOID.Compare(__L("1.3.36.3.3.2.8.1.1.7"), false))
+          if(!lastOID.Compare(_L("1.3.36.3.3.2.8.1.1.7"), false))
             {
               keytype = CIPHERKEYTYPE_ECDSA_BRAINPOOLP256R1_PUBLIC;
             }
 
           // ECDSA brainpoolP384r1	  
-          if(!lastOID.Compare(__L("1.3.36.3.3.2.8.1.1.11"), false))
+          if(!lastOID.Compare(_L("1.3.36.3.3.2.8.1.1.11"), false))
             {
               keytype = CIPHERKEYTYPE_ECDSA_BRAINPOOLP384R1_PUBLIC;
             }
 
           // ECDSA brainpoolP512r1	  
-          if(!lastOID.Compare(__L("1.3.36.3.3.2.8.1.1.13"), false))	
+          if(!lastOID.Compare(_L("1.3.36.3.3.2.8.1.1.13"), false))	
             {
               keytype = CIPHERKEYTYPE_ECDSA_BRAINPOOLP512R1_PUBLIC;
             }
@@ -704,43 +704,43 @@ bool CIPHERKEYSFILEPEM::GetCertificatedPropertys(CIPHERCERTIFICATEX509* certific
           static HASHTYPE hashtype = HASHTYPE_NONE;
       
           // RSA SHA1
-          if(!lastOID.Compare(__L("1.2.840.113549.1.1.5"), false))
+          if(!lastOID.Compare(_L("1.2.840.113549.1.1.5"), false))
             {
               hashtype = HASHTYPE_SHA1; 
             }
 
           // RSA SHA256
-          if(!lastOID.Compare(__L("1.2.840.113549.1.1.11"), false))
+          if(!lastOID.Compare(_L("1.2.840.113549.1.1.11"), false))
             {
               hashtype = HASHTYPE_SHA256; 
             }
 
           // RSA SHA384
-          if(!lastOID.Compare(__L("1.2.840.113549.1.1.12"), false))
+          if(!lastOID.Compare(_L("1.2.840.113549.1.1.12"), false))
             {
               hashtype = HASHTYPE_SHA384; 
             }
 
           // RSA SHA512
-          if(!lastOID.Compare(__L("1.2.840.113549.1.1.13"), false))
+          if(!lastOID.Compare(_L("1.2.840.113549.1.1.13"), false))
             {
               hashtype = HASHTYPE_SHA512; 
             }
 
           // ECDSA SHA256
-          if(!lastOID.Compare(__L("1.2.840.10045.4.3.2"), false))
+          if(!lastOID.Compare(_L("1.2.840.10045.4.3.2"), false))
             {
               hashtype = HASHTYPE_SHA256;                       
             }
 
           // ECDSA SHA384
-          if(!lastOID.Compare(__L("1.2.840.10045.4.3.3"), false))
+          if(!lastOID.Compare(_L("1.2.840.10045.4.3.3"), false))
             {
               hashtype = HASHTYPE_SHA384;              
             }
 
           // ECDSA SHA512
-          if(!lastOID.Compare(__L("1.2.840.10045.4.3.4"), false))
+          if(!lastOID.Compare(_L("1.2.840.10045.4.3.4"), false))
             {
               hashtype = HASHTYPE_SHA512;              
             }
@@ -771,7 +771,7 @@ bool CIPHERKEYSFILEPEM::GetCertificatedPropertys(CIPHERCERTIFICATEX509* certific
 
           // ---------------------------------------------------------------------------------  
           
-          if(!lastOID.Compare(__L("2.5.29.19"), false))
+          if(!lastOID.Compare(_L("2.5.29.19"), false))
             {        
               if(event->GetTagType() == XBER_TAGTYPE_BOOLEAN)
                 {                 
@@ -784,7 +784,7 @@ bool CIPHERKEYSFILEPEM::GetCertificatedPropertys(CIPHERCERTIFICATEX509* certific
 
           // ---------------------------------------------------------------------------------  
           
-          if(!lastOID.Compare(__L("2.5.29.14"), false))
+          if(!lastOID.Compare(_L("2.5.29.14"), false))
             {      
               static bool secondround = false;  
 
@@ -811,7 +811,7 @@ bool CIPHERKEYSFILEPEM::GetCertificatedPropertys(CIPHERCERTIFICATEX509* certific
  
           // ---------------------------------------------------------------------------------  
           
-          if(!lastOID.Compare(__L("2.5.29.15"), false))
+          if(!lastOID.Compare(_L("2.5.29.15"), false))
             {        
               if(event->GetTagType() == XBER_TAGTYPE_BOOLEAN)
                 {                 
@@ -856,7 +856,7 @@ void CIPHERKEYSFILEPEM::HandleEvent_XBER(XBER_XEVENT* event)
     
   switch(event->GetEventType())
     {
-      case XBERXEVENT_TYPE_DECODE_START   : //XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, __L("[Cipher Keys File PEM] Start"));                                            
+      case XBERXEVENT_TYPE_DECODE_START   : //XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, _L("[Cipher Keys File PEM] Start"));                                            
                                             break;
 
       case XBERXEVENT_TYPE_DECODE_DATA    : { bool  ismanaged = false;
@@ -874,13 +874,13 @@ void CIPHERKEYSFILEPEM::HandleEvent_XBER(XBER_XEVENT* event)
                                               XSTRING levelsstr;
 
                                               levelsstr = event->GetLevelsString()->Get();                                              
-                                              levelsstr.AddFormat(__L(" %s"), event->GetLine()->Get());  
+                                              levelsstr.AddFormat(_L(" %s"), event->GetLine()->Get());  
 
                                               //XTRACE_PRINTCOLOR((ismanaged?XTRACE_COLOR_BLUE:XTRACE_COLOR_BLACK), levelsstr.Get(), NULL);                                                                                                      
                                             }                                                                                       
                                             break;
 
-      case XBERXEVENT_TYPE_DECODE_END     : //XTRACE_PRINTCOLOR((event->GetStatus()?XTRACE_COLOR_BLUE:XTRACE_COLOR_RED), __L("[Cipher Keys File PEM] End"));   
+      case XBERXEVENT_TYPE_DECODE_END     : //XTRACE_PRINTCOLOR((event->GetStatus()?XTRACE_COLOR_BLUE:XTRACE_COLOR_RED), _L("[Cipher Keys File PEM] End"));   
                                             ndecodeobj++;
                                             break;
 

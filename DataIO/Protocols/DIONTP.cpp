@@ -180,7 +180,7 @@ bool DIONTP::GetTimeResponse(XCHAR* urlntpserver, int timeout, bool hardwareusel
             } 
            else
             {
-              //XTRACE_PRINTCOLOR(XTRACE_COLOR_PURPLE, __L("ntp [%d] %d"), sizeof(DIONTPBASICINFO),  size);
+              //XTRACE_PRINTCOLOR(XTRACE_COLOR_PURPLE, _L("ntp [%d] %d"), sizeof(DIONTPBASICINFO),  size);
             } 
           
           if((int)xtimer->GetMeasureSeconds()>= timeout)

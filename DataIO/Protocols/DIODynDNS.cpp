@@ -137,7 +137,7 @@ bool DIODYNDNS::GetPublicIP(DIOIP& publicIP, int timeout, XSTRING* IPlocal)
   XBUFFER   xbuffer;
   bool      status;
 
-  status = webclient->Get(__L("checkip.dyndns.com"), xbuffer, DIOWEBCLIENT_DEFAULTUSERAGENT, timeout, IPlocal);
+  status = webclient->Get(_L("checkip.dyndns.com"), xbuffer, DIOWEBCLIENT_DEFAULTUSERAGENT, timeout, IPlocal);
   if(status)
     {
       XSTRING startstring;
@@ -145,14 +145,14 @@ bool DIODYNDNS::GetPublicIP(DIOIP& publicIP, int timeout, XSTRING* IPlocal)
 
       result.Set(xbuffer.Get(), xbuffer.GetSize());
 
-      startstring = __L("Current IP Address: ");
+      startstring = _L("Current IP Address: ");
 
       int start = result.Find(startstring, true);
       if(start != XSTRING_NOTFOUND)
         {
           start += startstring.GetSize();
 
-          int end  = result.Find(__L("</body>"), true, start);
+          int end  = result.Find(_L("</body>"), true, start);
           if(end != XSTRING_NOTFOUND)
             {
               XSTRING IPstring;
@@ -254,7 +254,7 @@ DIODYNDNS_STATUSCODE DIODYNDNS::Update(DIOURL& url, DIOIP& newpublicip, int time
 
   newpublicip.GetXString(IPstring);
 
-  askurl.Format(__L("%s:%s@members.dyndns.org/nic/update?hostname=%s&myip=%s&wildcard=NOCHG&mx=NOCHG&backmx=NOCHG"), login.Get(), password.Get(), url.Get(), IPstring.Get());
+  askurl.Format(_L("%s:%s@members.dyndns.org/nic/update?hostname=%s&myip=%s&wildcard=NOCHG&mx=NOCHG&backmx=NOCHG"), login.Get(), password.Get(), url.Get(), IPstring.Get());
 
   status = webclient->Get(askurl.Get(), xbuffer, DIOWEBCLIENT_DEFAULTUSERAGENT, timeout, IPlocal);
   if(!status)  return DIODYNDNS_STATUSCODE_NOTCONNECT;
@@ -295,19 +295,19 @@ DIODYNDNS_STATUSCODE DIODYNDNS::GetError(XSTRING& result)
 
 
   DIODYNDNS_STATUSCODE code              =  DIODYNDNS_STATUSCODE_UNKNOWN;
-  XCHAR*               stringcodes[]     =  {  __L("good")      ,
-                                               __L("nochg")     ,
-                                               __L("badsys")    ,
-                                               __L("badagent")  ,
-                                               __L("badauth")   ,
-                                               __L("!donator")  ,
-                                               __L("notfqdn")   ,
-                                               __L("nohost")    ,
-                                               __L("!yours")    ,
-                                               __L("abuse")     ,
-                                               __L("numhost")   ,
-                                               __L("dnserr")    ,
-                                               __L("911")
+  XCHAR*               stringcodes[]     =  {  _L("good")      ,
+                                               _L("nochg")     ,
+                                               _L("badsys")    ,
+                                               _L("badagent")  ,
+                                               _L("badauth")   ,
+                                               _L("!donator")  ,
+                                               _L("notfqdn")   ,
+                                               _L("nohost")    ,
+                                               _L("!yours")    ,
+                                               _L("abuse")     ,
+                                               _L("numhost")   ,
+                                               _L("dnserr")    ,
+                                               _L("911")
                                             };
 
 

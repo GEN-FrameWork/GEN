@@ -239,7 +239,7 @@ bool GRPVECTORFILEDXFCONFIG::Load_File(XCHAR* pathfile)
   
               trash.AdjustSize(_MAXSTR);
   
-              key.UnFormat(__L("$%s_%d"), trash.Get(), &type, NULL);
+              key.UnFormat(_L("$%s_%d"), trash.Get(), &type, NULL);
   
               GRPVECTORFILEDXFTEXTSECTION::GetVariableFromLine(trash.Get(), type, &value, variant);
                           

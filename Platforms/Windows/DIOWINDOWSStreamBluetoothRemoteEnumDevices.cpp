@@ -99,7 +99,7 @@ DIOWINDOWSSTREAMBLUETOOTHREMOTEENUMDEVICES::DIOWINDOWSSTREAMBLUETOOTHREMOTEENUMD
             DIOWINDOWSBTENUMFSMEVENT_SEARCHMAC          , DIOWINDOWSBTENUMFSMSTATE_SEARCHMAC        ,
             XFSMACHINESTATE_EVENTDEFEND);
 
-  threadenumdevices = CREATEXTHREAD(XTHREADGROUPID_DIOSTREAMBLUETOOTH, __L("DIOWINDOWSSTREAMBLUETOOTHREMOTEENUMDEVICES::DIOWINDOWSSTREAMBLUETOOTHREMOTEENUMDEVICES"), ThreadEnumDevices, (void*)this);
+  threadenumdevices = CREATEXTHREAD(XTHREADGROUPID_DIOSTREAMBLUETOOTH, _L("DIOWINDOWSSTREAMBLUETOOTHREMOTEENUMDEVICES::DIOWINDOWSSTREAMBLUETOOTHREMOTEENUMDEVICES"), ThreadEnumDevices, (void*)this);
   if(threadenumdevices) threadenumdevices->Ini();
 }
 
@@ -262,7 +262,7 @@ void DIOWINDOWSSTREAMBLUETOOTHREMOTEENUMDEVICES::ThreadEnumDevices(void* data)
 
                                                             device->SetIndex(index++);
 
-                                                            MAC.Format(__L("%02X:%02X:%02X:%02X:%02X:%02X"), (XBYTE)pwsaresults->lpcsaBuffer->RemoteAddr.lpSockaddr->sa_data[5], (XBYTE)pwsaresults->lpcsaBuffer->RemoteAddr.lpSockaddr->sa_data[4], (XBYTE)pwsaresults->lpcsaBuffer->RemoteAddr.lpSockaddr->sa_data[3], (XBYTE)pwsaresults->lpcsaBuffer->RemoteAddr.lpSockaddr->sa_data[2], (XBYTE)pwsaresults->lpcsaBuffer->RemoteAddr.lpSockaddr->sa_data[1], (XBYTE)pwsaresults->lpcsaBuffer->RemoteAddr.lpSockaddr->sa_data[0]);
+                                                            MAC.Format(_L("%02X:%02X:%02X:%02X:%02X:%02X"), (XBYTE)pwsaresults->lpcsaBuffer->RemoteAddr.lpSockaddr->sa_data[5], (XBYTE)pwsaresults->lpcsaBuffer->RemoteAddr.lpSockaddr->sa_data[4], (XBYTE)pwsaresults->lpcsaBuffer->RemoteAddr.lpSockaddr->sa_data[3], (XBYTE)pwsaresults->lpcsaBuffer->RemoteAddr.lpSockaddr->sa_data[2], (XBYTE)pwsaresults->lpcsaBuffer->RemoteAddr.lpSockaddr->sa_data[1], (XBYTE)pwsaresults->lpcsaBuffer->RemoteAddr.lpSockaddr->sa_data[0]);
                                                             device->GetMAC()->Set(MAC);
 
                                                             device->GetName()->Set(pwsaresults->lpszServiceInstanceName);
@@ -374,7 +374,7 @@ void DIOWINDOWSSTREAMBLUETOOTHREMOTEENUMDEVICES::SearchServices()
       if(WSALookupServiceBegin( qs, flags, &hlookup) == SOCKET_ERROR)
         {
           //int error = WSAGetLastError();
-          //XTRACE_PRINT(__L("Search SDP Services Error %d"), error);
+          //XTRACE_PRINT(_L("Search SDP Services Error %d"), error);
 
           GEN_DELETE_ARRAY qs;
 
@@ -510,7 +510,7 @@ BOOL __stdcall SDP_ServiceCallback(ULONG attribID, LPBYTE valuestream, ULONG cbs
                                                                                             for(ULONG c=0; c<data.data.sequence.length; c++)
                                                                                               xbuffer.Add((XBYTE)data.data.sequence.value[c]);
 
-                                                                                             XTRACE_PRINTCOLOR(1, __L("Sequence: "));
+                                                                                             XTRACE_PRINTCOLOR(1, _L("Sequence: "));
                                                                                              XTRACE_PRINTDATABLOCKCOLOR(XTRACE_COLOR_BLUE, xbuffer);
                                                                                             */
                                                                                             //---------------------------------------------------
@@ -569,7 +569,7 @@ BOOL __stdcall SDP_ServiceCallback(ULONG attribID, LPBYTE valuestream, ULONG cbs
                                                                                       }
 
                                                                                     XSTRING name((char*)data.data.string.value);
-                                                                                    name.AdjustSize(data.data.string.length, false, __L(" "), false);
+                                                                                    name.AdjustSize(data.data.string.length, false, _L(" "), false);
 
                                                                                     switch(attribID)
                                                                                       {

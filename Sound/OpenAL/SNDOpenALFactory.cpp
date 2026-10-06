@@ -135,7 +135,7 @@ bool SNDOPENALFACTORY::Ini()
       return false;
     }
   
-  playthread = GEN_XFACTORY.CreateThread(XTHREADGROUPID_SOUND, __L("SNDOPENALFACTORY::SNDOPENALFACTORY"), SNDOPENALFACTORY::ThreadPlay, this);  
+  playthread = GEN_XFACTORY.CreateThread(XTHREADGROUPID_SOUND, _L("SNDOPENALFACTORY::SNDOPENALFACTORY"), SNDOPENALFACTORY::ThreadPlay, this);  
   if(!playthread)
     {
       return false;

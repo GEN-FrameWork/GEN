@@ -130,7 +130,7 @@ bool DIOSPITOUCHSCREENSTMPE610::IniDevice(int chipselect, int timeout)
       diostreamSPIcfg->SetSpeed(1*1000*1000);
       diostreamSPIcfg->SetDelay(0);
       diostreamSPIcfg->SetIsOnlyWrite(false);
-      diostreamSPIcfg->GetLocalDeviceName()->Format(__L("/dev/spidev0.%d"), chipselect);
+      diostreamSPIcfg->GetLocalDeviceName()->Format(_L("/dev/spidev0.%d"), chipselect);
 
       diostreamSPI = (DIOSTREAMSPI*)GEN_DIOFACTORY.CreateStreamIO(diostreamSPIcfg);
       if(!diostreamSPI) return false;

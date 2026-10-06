@@ -100,16 +100,16 @@ bool GRPVECTORFILESVGOBJTEXT::ApplyData(XFILEXMLELEMENT* element)
 
   GRPVECTORFILESVGOBJ::ApplyData(element);
 
-  hasx = (element->GetValueAttribute(__L("x")) != NULL);
-  hasy = (element->GetValueAttribute(__L("y")) != NULL);
+  hasx = (element->GetValueAttribute(_L("x")) != NULL);
+  hasy = (element->GetValueAttribute(_L("y")) != NULL);
 
-  x  = element->GetFloatValueAttribute(__L("x"));
-  y  = element->GetFloatValueAttribute(__L("y"));
-  dx = element->GetFloatValueAttribute(__L("dx"));
-  dy = element->GetFloatValueAttribute(__L("dy"));
+  x  = element->GetFloatValueAttribute(_L("x"));
+  y  = element->GetFloatValueAttribute(_L("y"));
+  dx = element->GetFloatValueAttribute(_L("dx"));
+  dy = element->GetFloatValueAttribute(_L("dy"));
 
   XSTRING valuefontsize;
-  if(GetProperty(element, __L("font-size"), valuefontsize))
+  if(GetProperty(element, _L("font-size"), valuefontsize))
     {
       double parsed = valuefontsize.ConvertToDouble(0, NULL, false);           // tolerates "16px" -> 16
       if(parsed > 0.0)
@@ -120,10 +120,10 @@ bool GRPVECTORFILESVGOBJTEXT::ApplyData(XFILEXMLELEMENT* element)
     }
 
   XSTRING valueanchor;
-  if(GetProperty(element, __L("text-anchor"), valueanchor))
+  if(GetProperty(element, _L("text-anchor"), valueanchor))
     {
-      if(!valueanchor.Compare(__L("middle"), true))     textanchor = GRPVECTORFILESVGTEXTANCHOR_MIDDLE;
-       else if(!valueanchor.Compare(__L("end"), true))  textanchor = GRPVECTORFILESVGTEXTANCHOR_END;
+      if(!valueanchor.Compare(_L("middle"), true))     textanchor = GRPVECTORFILESVGTEXTANCHOR_MIDDLE;
+       else if(!valueanchor.Compare(_L("end"), true))  textanchor = GRPVECTORFILESVGTEXTANCHOR_END;
        else                                             textanchor = GRPVECTORFILESVGTEXTANCHOR_START;
     }
 
@@ -134,8 +134,8 @@ bool GRPVECTORFILESVGOBJTEXT::ApplyData(XFILEXMLELEMENT* element)
   int ini = 0;
   int end = len;
 
-  while((ini < len) && ((rawtext[ini] == __C(' ')) || (rawtext[ini] == __C('\t')) || (rawtext[ini] == __C('\n')) || (rawtext[ini] == __C('\r'))))  ini++;
-  while((end > ini) && ((rawtext[end-1] == __C(' ')) || (rawtext[end-1] == __C('\t')) || (rawtext[end-1] == __C('\n')) || (rawtext[end-1] == __C('\r'))))  end--;
+  while((ini < len) && ((rawtext[ini] == _C(' ')) || (rawtext[ini] == _C('\t')) || (rawtext[ini] == _C('\n')) || (rawtext[ini] == _C('\r'))))  ini++;
+  while((end > ini) && ((rawtext[end-1] == _C(' ')) || (rawtext[end-1] == _C('\t')) || (rawtext[end-1] == _C('\n')) || (rawtext[end-1] == _C('\r'))))  end--;
 
   if(end > ini)  rawtext.Copy(ini, end, text);
    else          text.Empty();
@@ -287,23 +287,23 @@ bool GRPVECTORFILESVGOBJTEXT::GetProperty(XFILEXMLELEMENT* element, XCHAR* name,
       return true;
     }
 
-  XCHAR* style = element->GetValueAttribute(__L("style"));
+  XCHAR* style = element->GetValueAttribute(_L("style"));
   if(!style) return false;
 
   XSTRING stylestr(style);
 
   XSTRING key(name);
-  key += __L(":");
+  key += _L(":");
 
   int index = stylestr.Find(key.Get(), true, 0);
   if(index < 0) return false;
 
   int start = index + (int)key.GetSize();
-  int end   = stylestr.Find(__L(";"), false, start);
+  int end   = stylestr.Find(_L(";"), false, start);
   if(end < 0)  end = (int)stylestr.GetSize();
 
   stylestr.Copy(start, end, outvalue);
-  outvalue.DeleteCharacter(__C(' '));
+  outvalue.DeleteCharacter(_C(' '));
 
   return (!outvalue.IsEmpty());
 }

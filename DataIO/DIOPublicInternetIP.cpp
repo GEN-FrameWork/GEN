@@ -123,7 +123,7 @@ bool DIOPUBLICINTERNETIP::DelInstance()
 * --------------------------------------------------------------------------------------------------------------------*/
 bool DIOPUBLICINTERNETIP::FastIsThereInternetConnection()
 {
-  GEN_DIOPING.Set(__L("8.8.8.8"));
+  GEN_DIOPING.Set(_L("8.8.8.8"));
 
   bool connexionstatus = GEN_DIOPING.Do(DIOPUBLICINTERNETIP_DEFAULTNCHECKSFOREVERYCONNECTION, DIOPUBLICINTERNETIP_DEFAULTTIMERCONNECTIONCHECK, true);
   if(!connexionstatus)

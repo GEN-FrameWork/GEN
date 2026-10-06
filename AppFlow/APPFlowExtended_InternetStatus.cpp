@@ -41,6 +41,9 @@
 #include "APPFlowConsole.h"
 #include "APPFlowExtended.h"
 
+#include "XTranslation_GEN.h"
+#include "XTranslation.h"
+
 
 
 /*---- PRECOMPILATION INCLUDES ---------------------------------------------------------------------------------------*/
@@ -216,7 +219,7 @@ bool APPFLOWEXTENDED_INTERNETSTATUS::Update()
     }
    else
     {
-      publicIP = __L("");
+      publicIP = _L("");
     }
 
   latency = internetservices->GetInternetLatency();
@@ -246,25 +249,25 @@ bool APPFLOWEXTENDED_INTERNETSTATUS::Show(XCONSOLE* console)
       return false;
     }
 
-  string  = __L("Local IP");
-  string2.Format(__L("[%s]"), localIP.Get());
+  string  = XT_L(XTRANSLATION_GEN_ID_APPFLOWEXTENDED_INTERNETSTATUS_LOCALIP);
+  string2.Format(_L("[%s]"), localIP.Get());
   APPFLOW_EXTENDED.GetConsole()->Show_Line(string, string2);
 
-  string  = __L("Internet Connection");
+  string  = XT_L(XTRANSLATION_GEN_ID_APPFLOWEXTENDED_INTERNETSTATUS_CONNECTION);
   string2.ConvertFromBoolean(haveinternetconnection, XSTRINGBOOLEANMODE_HUMAN);   
   APPFLOW_EXTENDED.GetConsole()->Show_Line(string, string2);
 
   if(haveinternetconnection)
     {
-      string  = __L("Latency");
-      string2.Format(__L("%d ms"), latency);
+      string  = XT_L(XTRANSLATION_GEN_ID_APPFLOWEXTENDED_INTERNETSTATUS_LATENCY);
+      string2.Format(XT_L(XTRANSLATION_GEN_ID_APPFLOWEXTENDED_INTERNETSTATUS_LATENCYMS), latency);
       APPFLOW_EXTENDED.GetConsole()->Show_Line(string, string2);
     }
 
   if(haveinternetconnection && !publicIP.IsEmpty())
     {
-      string  = __L("Public IP");
-      string2.Format(__L("[%s]"), publicIP.Get());
+      string  = XT_L(XTRANSLATION_GEN_ID_APPFLOWEXTENDED_INTERNETSTATUS_PUBLICIP);
+      string2.Format(_L("[%s]"), publicIP.Get());
       APPFLOW_EXTENDED.GetConsole()->Show_Line(string, string2);
     }
  
@@ -283,11 +286,11 @@ bool APPFLOWEXTENDED_INTERNETSTATUS::Show(XCONSOLE* console)
 * --------------------------------------------------------------------------------------------------------------------*/
 bool APPFLOWEXTENDED_INTERNETSTATUS::Serialize()
 {
-  Primitive_Add<XSTRING*>(&localIP            , __L("localIP"));
+  Primitive_Add<XSTRING*>(&localIP            , _L("localIP"));
   
-  Primitive_Add<bool>(haveinternetconnection  , __L("internetconnection"));
-  Primitive_Add<XSTRING*>(&publicIP           , __L("publicIP")); 
-  Primitive_Add<int>(latency                  , __L("latencyms"));
+  Primitive_Add<bool>(haveinternetconnection  , _L("internetconnection"));
+  Primitive_Add<XSTRING*>(&publicIP           , _L("publicIP")); 
+  Primitive_Add<int>(latency                  , _L("latencyms"));
 
   return true;
 }
@@ -304,11 +307,11 @@ bool APPFLOWEXTENDED_INTERNETSTATUS::Serialize()
 * --------------------------------------------------------------------------------------------------------------------*/
 bool APPFLOWEXTENDED_INTERNETSTATUS::Deserialize()
 { 
-  Primitive_Extract<XSTRING>(localIP             , __L("localIP"));
+  Primitive_Extract<XSTRING>(localIP             , _L("localIP"));
   
-  Primitive_Extract<bool>(haveinternetconnection , __L("internetconnection"));
-  Primitive_Extract<XSTRING>(publicIP            , __L("publicIP"));
-  Primitive_Extract<XDWORD>(latency              , __L("latencyms"));
+  Primitive_Extract<bool>(haveinternetconnection , _L("internetconnection"));
+  Primitive_Extract<XSTRING>(publicIP            , _L("publicIP"));
+  Primitive_Extract<XDWORD>(latency              , _L("latencyms"));
  
   return true;
 }

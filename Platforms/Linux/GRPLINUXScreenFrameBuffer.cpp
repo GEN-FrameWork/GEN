@@ -95,7 +95,7 @@ GRPLINUXSCREENFRAMEBUFFER::GRPLINUXSCREENFRAMEBUFFER(): GRPSCREEN()
           SetSize(varinfo.xres, varinfo.yres);
           SetMaxSize(varinfo.xres, varinfo.yres);
 
-          // XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, __L("[Linux FrameBuffer] Screen [%d x %d]  %d bits"), varinfo.xres, varinfo.yres, varinfo.bits_per_pixel);
+          // XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, _L("[Linux FrameBuffer] Screen [%d x %d]  %d bits"), varinfo.xres, varinfo.yres, varinfo.bits_per_pixel);
 
           switch(varinfo.bits_per_pixel)
             {
@@ -153,7 +153,7 @@ bool GRPLINUXSCREENFRAMEBUFFER::Create(bool show)
         {
           if(!ScreenResolution(width, height))
             {
-              XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, __L("[LINUX FrameBuffer] Change screen mode: error [%d]"), errno);
+              XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, _L("[LINUX FrameBuffer] Change screen mode: error [%d]"), errno);
             }
          
           int zero = 0;
@@ -163,14 +163,14 @@ bool GRPLINUXSCREENFRAMEBUFFER::Create(bool show)
               
               errorstr = strerror(errno);
 
-              XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, __L("[LINUX FrameBuffer] Frame Buffer VSYNC: %s"), errorstr.Get());
+              XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, _L("[LINUX FrameBuffer] Frame Buffer VSYNC: %s"), errorstr.Get());
             }
 
           return GRPSCREEN::Create(show);
         }
     }
 
-  XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, __L("[LINUX FrameBuffer] Open device screen: error [%d]"), errno);
+  XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, _L("[LINUX FrameBuffer] Open device screen: error [%d]"), errno);
 
   return false;
 }
@@ -379,7 +379,7 @@ bool GRPLINUXSCREENFRAMEBUFFER::ScreenResolution(int width, int height)
 
   if(ioctl(handlefb, FBIOPAN_DISPLAY    , &variable_info) == -1)
     {
-      XTRACE_PRINTCOLOR(4, __L("ERROR! 4"));
+      XTRACE_PRINTCOLOR(4, _L("ERROR! 4"));
       return false;
     }
   */

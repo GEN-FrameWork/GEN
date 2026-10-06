@@ -73,28 +73,28 @@ enum DIOAPPLICATIONUPDATE_ERROR
 };
 
 
-#define DIOAPPLICATIONUPDATE_INIFILE                                __L("update.ini")
-#define DIOAPPLICATIONUPDATE_BACKUPPREFIX                           __L("GEN#BAK_")
+#define DIOAPPLICATIONUPDATE_INIFILE                                _L("update.ini")
+#define DIOAPPLICATIONUPDATE_BACKUPPREFIX                           _L("GEN#BAK_")
 
 #define DIOAPPLICATIONUPDATE_PORTDEFAULT                            80
 #define DIOAPPLICATIONUPDATE_TIMEOUT                                60
 
 #define DIOAPPLICATIONUPDATE_MAXINDEXFILES                          10000
 
-#define DIOAPPLICATIONUPDATE_GENERALSECTION                         __L("general")
-#define DIOAPPLICATIONUPDATE_GENERALSECTION_VERSION                 __L("version")
-#define DIOAPPLICATIONUPDATE_GENERALSECTION_SUBVERSION              __L("subversion")
-#define DIOAPPLICATIONUPDATE_GENERALSECTION_ERRORCONTROL            __L("errorcontrol")
-#define DIOAPPLICATIONUPDATE_GENERALSECTION_SYSTEMMUSTBEINIT        __L("systemmustbeinit")
+#define DIOAPPLICATIONUPDATE_GENERALSECTION                         _L("general")
+#define DIOAPPLICATIONUPDATE_GENERALSECTION_VERSION                 _L("version")
+#define DIOAPPLICATIONUPDATE_GENERALSECTION_SUBVERSION              _L("subversion")
+#define DIOAPPLICATIONUPDATE_GENERALSECTION_ERRORCONTROL            _L("errorcontrol")
+#define DIOAPPLICATIONUPDATE_GENERALSECTION_SYSTEMMUSTBEINIT        _L("systemmustbeinit")
 
-#define DIOAPPLICATIONUPDATE_DIRSECTION                             __L("directorys")
-#define DIOAPPLICATIONUPDATE_FILESSECTION                           __L("files")
-#define DIOAPPLICATIONUPDATE_FILESSECTION_FILES                     __L("file")
+#define DIOAPPLICATIONUPDATE_DIRSECTION                             _L("directorys")
+#define DIOAPPLICATIONUPDATE_FILESSECTION                           _L("files")
+#define DIOAPPLICATIONUPDATE_FILESSECTION_FILES                     _L("file")
 
-#define DIOAPPLICATIONUPDATE_RESTOREDIR_ID                          __L("update_")
-#define DIOAPPLICATIONUPDATE_RESTOREDIR_MASK                        __L("[%d.%d.%d]")
+#define DIOAPPLICATIONUPDATE_RESTOREDIR_ID                          _L("update_")
+#define DIOAPPLICATIONUPDATE_RESTOREDIR_MASK                        _L("[%d.%d.%d]")
 
-#define DIOAPPLICATIONUPDATE_LOG_SECTIONID_APPFLOWUPDATE            __L("AppUpdate")
+#define DIOAPPLICATIONUPDATE_LOG_SECTIONID_APPFLOWUPDATE            _L("AppUpdate")
 
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
 

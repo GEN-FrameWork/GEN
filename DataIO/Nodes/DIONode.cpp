@@ -315,7 +315,7 @@ bool DIONODE::CreateJSONSerialization()
 
   XPATH path;
   GEN_XPATHSMANAGER.GetPathOfSection(XPATHSMANAGERSECTIONTYPE_ROOT, path);
-  path += __L("test.json");
+  path += _L("test.json");
 
   if(xfileJSON.Create(path))
     {
@@ -348,9 +348,9 @@ bool DIONODE::Serialize()
  
   UUID.GetToString(ID); 
 
-  Primitive_Add<XSTRING*>(&ID, __L("ID"));
-  Primitive_Add<XSTRING*>(&group, __L("group"));
-  XVectorClass_Add<DIONODEITEM>(&items, __L("items"), __L("item"));
+  Primitive_Add<XSTRING*>(&ID, _L("ID"));
+  Primitive_Add<XSTRING*>(&group, _L("group"));
+  XVectorClass_Add<DIONODEITEM>(&items, _L("items"), _L("item"));
 
   return true;
 }
@@ -369,10 +369,10 @@ bool DIONODE::Deserialize()
 {
   XSTRING ID;
 
-  Primitive_Extract<XSTRING>(ID            , __L("ID"));
-  Primitive_Extract<XSTRING>(group         , __L("group"));
+  Primitive_Extract<XSTRING>(ID            , _L("ID"));
+  Primitive_Extract<XSTRING>(group         , _L("group"));
   
-  XVectorClass_Extract<DIONODEITEM>(&items , __L("items"), __L("item"));
+  XVectorClass_Extract<DIONODEITEM>(&items , _L("items"), _L("item"));
 
   UUID.SetFromString(ID);
 

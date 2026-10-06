@@ -138,7 +138,7 @@ bool APPFLOWCONSOLE::Show_Line(XSTRING& string, XSTRING& string2, int tab, bool 
       int _tab = tab;
 
       if(_tab<37) _tab = 37;
-      line1.AdjustSize(_tab, false, __L(" "));
+      line1.AdjustSize(_tab, false, _L(" "));
     }
 
   console->Format_Message(string2.Get(), 0 , false, linefeed, line2);
@@ -183,7 +183,7 @@ bool APPFLOWCONSOLE::Show_BlankLine()
 bool APPFLOWCONSOLE::Show_LineDirect(XSTRING& string, bool lf)
 {
   console->Print(string.Get());
-  if(lf) console->Print(__L("\n"));
+  if(lf) console->Print(_L("\n"));
 
   return true;
 }
@@ -206,9 +206,9 @@ bool APPFLOWCONSOLE::Show_Header(bool separator)
 
   header = GEN_VERSION.GetAppTitle()->Get();
   
-  console->Printf(__L(" %s"), header.Get());
-  console->Printf(__L("\n"));
-  if(separator) console->Printf(__L("\n"));
+  console->Printf(_L(" %s"), header.Get());
+  console->Printf(_L("\n"));
+  if(separator) console->Printf(_L("\n"));
 
   return true;
 }
@@ -306,7 +306,7 @@ bool APPFLOWCONSOLE::PrintExitMessage(XSTRING& exitmessage)
 
   console->PrintMessage(exitmessage.Get(), 1, true, true);
 
-  console->PrintMessage(__L(" "), 0, false, true);
+  console->PrintMessage(_L(" "), 0, false, true);
 
   return true;
 }

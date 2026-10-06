@@ -110,7 +110,7 @@ DIOLINUXSTREAMUART::DIOLINUXSTREAMUART() : DIOSTREAMUART() , XFSMACHINE(0)
             DIOLINUXUARTFSMEVENT_WAITINGTOREAD    , DIOLINUXUARTFSMSTATE_WAITINGTOREAD     ,
             XFSMACHINESTATE_EVENTDEFEND);
 
-  threadconnection = CREATEXTHREAD(XTHREADGROUPID_DIOSTREAMUART, __L("DIOLINUXSTREAMUART::DIOLINUXSTREAMUART"), ThreadConnection, (void*)this);
+  threadconnection = CREATEXTHREAD(XTHREADGROUPID_DIOSTREAMUART, _L("DIOLINUXSTREAMUART::DIOLINUXSTREAMUART"), ThreadConnection, (void*)this);
 
   //threadconnection->SetPriority(THREADPRIORITY_REALTIME);
 }
@@ -173,7 +173,7 @@ bool DIOLINUXSTREAMUART::Open()
     }
    else
     {
-      ttyS.Format(__L("/dev/ttyS%d"), config->GetPort());
+      ttyS.Format(_L("/dev/ttyS%d"), config->GetPort());
     }
 
   XBUFFER charstr;

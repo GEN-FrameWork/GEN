@@ -225,7 +225,7 @@ bool GRPBLITGLES::Create(GRPSCREEN* screen)
     {
       if(!eglctx->ChooseConfig(ndisp, usealpha, native_visid))
         {
-          XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, __L("[BlitGLES] EGL ChooseConfig failed"));
+          XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, _L("[BlitGLES] EGL ChooseConfig failed"));
           return false;
         }
     }
@@ -233,14 +233,14 @@ bool GRPBLITGLES::Create(GRPSCREEN* screen)
   // Platform hook BEFORE surface creation (Android sets the native window geometry here).
   if(!PostCreateHook(native_visid))
     {
-      XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, __L("[BlitGLES] PostCreateHook failed"));
+      XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, _L("[BlitGLES] PostCreateHook failed"));
       return false;
     }
 
   // Create surface + context. ChooseConfig was already done above, so Create() skips it.
   if(!eglctx->Create(ndisp, nwin, usealpha))
     {
-      XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, __L("[BlitGLES] EGL context creation failed"));
+      XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, _L("[BlitGLES] EGL context creation failed"));
       return false;
     }
 
@@ -255,7 +255,7 @@ bool GRPBLITGLES::Create(GRPSCREEN* screen)
 
   // Cache GL caps (informational only — we always RGBA-store + shader-swizzle for portability)
   DetectBGRAExtension();
-  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, __L("[BlitGLES] BGRA ext detected: %s; using RGBA storage + shader swizzle (portable)"), hasbgraext ? __L("YES") : __L("NO"));
+  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, _L("[BlitGLES] BGRA ext detected: %s; using RGBA storage + shader swizzle (portable)"), hasbgraext ? _L("YES") : _L("NO"));
 
   // Log the actual GL driver (hardware vs software). Crucial on WSLg to know
   // whether we're on the d3d12 GPU driver or the llvmpipe software rasterizer.
@@ -267,9 +267,9 @@ bool GRPBLITGLES::Create(GRPSCREEN* screen)
     xv   = gl_vendor   ? gl_vendor   : "(null)";
     xr   = gl_renderer ? gl_renderer : "(null)";
     xver = gl_version  ? gl_version  : "(null)";
-    XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, __L("[BlitGLES] GL_VENDOR   : %s"), xv.Get());
-    XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, __L("[BlitGLES] GL_RENDERER : %s"), xr.Get());
-    XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, __L("[BlitGLES] GL_VERSION  : %s"), xver.Get());
+    XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, _L("[BlitGLES] GL_VENDOR   : %s"), xv.Get());
+    XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, _L("[BlitGLES] GL_RENDERER : %s"), xr.Get());
+    XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, _L("[BlitGLES] GL_VERSION  : %s"), xver.Get());
   }
 
   // GL resources
@@ -311,7 +311,7 @@ bool GRPBLITGLES::Create(GRPSCREEN* screen)
 
   glClearColor(0.0f, 0.0f, 0.0f, usealpha ? 0.0f : 1.0f);
 
-  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, __L("[BlitGLES] Created (ES %d.0, PBO=%s, VSync=%s)"), (int)IsES3()?3:2, (usepbo && IsES3())?__L("ON"):__L("OFF"), usevsync?__L("ON"):__L("OFF"));
+  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, _L("[BlitGLES] Created (ES %d.0, PBO=%s, VSync=%s)"), (int)IsES3()?3:2, (usepbo && IsES3())?_L("ON"):_L("OFF"), usevsync?_L("ON"):_L("OFF"));
 
   return true;
 }
@@ -476,7 +476,7 @@ bool GRPBLITGLES::Update(GRP2DCANVAS* canvas)
         __android_log_print(ANDROID_LOG_INFO, "GEN_BLIT", "SIZES canvas=%dx%d screen=%dx%d surface=%dx%d texture=%dx%d", w, h, scrw, scrh, (int)sfw, (int)sfh, texw, texh);
         #endif
 
-        XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, __L("[BlitGLES] SIZES canvas=%dx%d screen=%dx%d surface=%dx%d texture=%dx%d"), w, h, scrw, scrh, (int)sfw, (int)sfh, texw, texh);
+        XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, _L("[BlitGLES] SIZES canvas=%dx%d screen=%dx%d surface=%dx%d texture=%dx%d"), w, h, scrw, scrh, (int)sfw, (int)sfh, texw, texh);
       }
   }
 
@@ -1065,7 +1065,7 @@ GLuint GRPBLITGLES::CompileShader(GLenum stage, const char* source)
       glGetShaderInfoLog(sh, sizeof(log), &n, log);
 
       XSTRING xlog; xlog = log;
-      XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, __L("[BlitGLES] Shader compile error: %s"), xlog.Get());
+      XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, _L("[BlitGLES] Shader compile error: %s"), xlog.Get());
 
       glDeleteShader(sh);
 
@@ -1127,7 +1127,7 @@ bool GRPBLITGLES::CompileShaders()
       char log[1024]; GLsizei n = 0;
       glGetProgramInfoLog(program, sizeof(log), &n, log);
       XSTRING xlog; xlog = log;
-      XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, __L("[BlitGLES] Program link error: %s"), xlog.Get());
+      XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, _L("[BlitGLES] Program link error: %s"), xlog.Get());
       glDeleteProgram(program); program = 0;
       return false;
     }
@@ -1236,7 +1236,7 @@ bool GRPBLITGLES::AllocTexture(int width, int height)
   texw = width;
   texh = height;
 
-  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, __L("[BlitGLES] AllocTexture %d x %d (RGBA8)"), width, height);
+  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, _L("[BlitGLES] AllocTexture %d x %d (RGBA8)"), width, height);
 
   return true;
 }

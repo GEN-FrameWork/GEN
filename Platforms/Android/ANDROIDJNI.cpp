@@ -134,7 +134,7 @@ JNIEnv* ANDROIDJNI::GetJNIEnv()
 
   if(!currentjavaVM)
     {
-      XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, __L("[ANDROID] No Current Java VM"));
+      XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, _L("[ANDROID] No Current Java VM"));
     }
 
   jint getenvresult = currentjavaVM->GetEnv((void**)&env, currentjavaversion);

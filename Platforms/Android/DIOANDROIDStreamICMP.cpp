@@ -134,7 +134,7 @@ DIOANDROIDSTREAMICMP::DIOANDROIDSTREAMICMP() : DIOSTREAMICMP() , XFSMACHINE(0)
             DIOANDROIDICMPFSMEVENT_SENDINGDATA          , DIOANDROIDICMPFSMSTATE_SENDINGDATA        ,
             XFSMACHINESTATE_EVENTDEFEND);
 
-  threadconnection = CREATEXTHREAD(XTHREADGROUPID_DIOSTREAMICMP, __L("DIOANDROIDSTREAMICMP::DIOANDROIDSTREAMICMP"), ThreadRunFunction, (void*)this);
+  threadconnection = CREATEXTHREAD(XTHREADGROUPID_DIOSTREAMICMP, _L("DIOANDROIDSTREAMICMP::DIOANDROIDSTREAMICMP"), ThreadRunFunction, (void*)this);
 }
 
 
@@ -381,9 +381,9 @@ void DIOANDROIDSTREAMICMP::ThreadRunFunction(void* thread)
 
                                                                           sscanf(inet_ntoa(origin_addr.sin_addr), "%d.%d.%d.%d", &_address[0], &_address[1], &_address[2], &_address[3]);
 
-                                                                          address.Format(__L("%d.%d.%d.%d"), _address[0], _address[1], _address[2], _address[3]);
+                                                                          address.Format(_L("%d.%d.%d.%d"), _address[0], _address[1], _address[2], _address[3]);
 
-                                                                          //XTRACE_PRINTCOLOR(1, __L("Read UDP from [%s] (%d)"), address.Get(), size);
+                                                                          //XTRACE_PRINTCOLOR(1, _L("Read UDP from [%s] (%d)"), address.Get(), size);
 
                                                                           diostream->AddDatagram(false, address.Get(), (XBYTE*)buffer, size);
                                                                           diostream->inbuffer->Add(buffer, size);
@@ -431,7 +431,7 @@ void DIOANDROIDSTREAMICMP::ThreadRunFunction(void* thread)
 
                                                                             if(size < 0)
                                                                               {
-                                                                                //XTRACE_PRINTCOLOR(4, __L("Write ICMP to [%s] (%d) ERROR!"), tmpremoteaddress.Get(), size);
+                                                                                //XTRACE_PRINTCOLOR(4, _L("Write ICMP to [%s] (%d) ERROR!"), tmpremoteaddress.Get(), size);
 
                                                                                 diostream->SetEvent(DIOANDROIDICMPFSMEVENT_DISCONNECTING);
                                                                                 break;
@@ -439,7 +439,7 @@ void DIOANDROIDSTREAMICMP::ThreadRunFunction(void* thread)
 
                                                                             if(size)
                                                                               {
-                                                                                //XTRACE_PRINTCOLOR(1, __L("Write ICMP to [%s] (%d)"), tmpremoteaddress.Get(), size);
+                                                                                //XTRACE_PRINTCOLOR(1, _L("Write ICMP to [%s] (%d)"), tmpremoteaddress.Get(), size);
 
                                                                                 diostream->outbuffer->Extract(NULL, 0 , datagram->GetData()->GetSize());
                                                                                 diostream->DeleteDatagram(indexdatagram);

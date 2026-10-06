@@ -101,10 +101,10 @@ bool GRPVECTORFILESVGOBJLINE::ApplyData(XFILEXMLELEMENT* element)
 
   GRPVECTORFILESVGOBJ::ApplyData(element);
 
-  x1 = element->GetFloatValueAttribute(__L("x1"));
-  y1 = element->GetFloatValueAttribute(__L("y1"));
-  x2 = element->GetFloatValueAttribute(__L("x2"));
-  y2 = element->GetFloatValueAttribute(__L("y2"));
+  x1 = element->GetFloatValueAttribute(_L("x1"));
+  y1 = element->GetFloatValueAttribute(_L("y1"));
+  x2 = element->GetFloatValueAttribute(_L("x2"));
+  y2 = element->GetFloatValueAttribute(_L("y2"));
 
   return true;
 }

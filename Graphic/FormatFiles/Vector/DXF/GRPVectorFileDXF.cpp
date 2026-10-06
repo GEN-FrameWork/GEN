@@ -198,13 +198,13 @@ GRPVECTORFILERESULT GRPVECTORFILEDXF::Load()
       XTIMER* xtimer = GEN_XFACTORY.CreateTimer();
       if(xtimer)
         {
-          //XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, __L("Reading TXT file ..."));
+          //XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, _L("Reading TXT file ..."));
 
           xtimer->Reset();
       
           file->ReadAllFile();      
 
-          //XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, __L("Read TXT file: %ld Milliseconds."), xtimer->GetMeasureMilliSeconds());   
+          //XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, _L("Read TXT file: %ld Milliseconds."), xtimer->GetMeasureMilliSeconds());   
 
           GEN_XFACTORY.DeleteTimer(xtimer);
         }
@@ -303,8 +303,8 @@ bool GRPVECTORFILEDXF::ParserTextFilePrepareLine(XSTRING* line)
       return false;
     }
 
-  line->DeleteCharacter(__C(' '), XSTRINGCONTEXT_FROM_FIRST);
-  line->DeleteCharacter(__C(' '), XSTRINGCONTEXT_TO_END);
+  line->DeleteCharacter(_C(' '), XSTRINGCONTEXT_FROM_FIRST);
+  line->DeleteCharacter(_C(' '), XSTRINGCONTEXT_TO_END);
 
   return true;
 }
@@ -336,16 +336,16 @@ GRPVECTORFILEDXFRESULT GRPVECTORFILEDXF::ParserTextSections(XFILETXT* fileTXT, X
       XSTRING* line = fileTXT->GetLine(c);
       ParserTextFilePrepareLine(line);
 
-      if(line && !line->Compare(__L("0"), true))
+      if(line && !line->Compare(_L("0"), true))
         {           
           line = fileTXT->GetLine(c+1);
           ParserTextFilePrepareLine(line);
 
-          if(line && !line->Compare(__L("SECTION"), false))
+          if(line && !line->Compare(_L("SECTION"), false))
             {             
               line = fileTXT->GetLine(c+2);
               ParserTextFilePrepareLine(line);
-              if(line && !line->Compare(__L("2"), true))
+              if(line && !line->Compare(_L("2"), true))
                 {
                   c += 3;
 
@@ -359,7 +359,7 @@ GRPVECTORFILEDXFRESULT GRPVECTORFILEDXF::ParserTextSections(XFILETXT* fileTXT, X
                 }
              }
 
-          if(line && !line->Compare(__L("ENDSEC"), false))
+          if(line && !line->Compare(_L("ENDSEC"), false))
             {
               section->endline  = c-1;                                       
               section->type     = GRPVECTORFILEDXFTEXTSECTION::GetTypeSection(section->name);  
@@ -369,7 +369,7 @@ GRPVECTORFILEDXFRESULT GRPVECTORFILEDXF::ParserTextSections(XFILETXT* fileTXT, X
                 {                 
                   XSTRING message;
 
-                  message.Format(__L("section %s Unknown"), section->name.Get());   
+                  message.Format(_L("section %s Unknown"), section->name.Get());   
                                                 
                   GRPVECTORFILE_XEVENT vfEvent(this, GRPVECTORFILE_XEVENTTYPE_PARTUNKNOWN);
 
@@ -398,7 +398,7 @@ GRPVECTORFILEDXFRESULT GRPVECTORFILEDXF::ParserTextSections(XFILETXT* fileTXT, X
               section = NULL;
             }
 
-          if(line && !line->Compare(__L("EOF"), false))
+          if(line && !line->Compare(_L("EOF"), false))
             {
               c++;
               break;
@@ -447,19 +447,19 @@ bool GRPVECTORFILEDXF::ParserHaveAnySection(XFILETXT* file, int nlinesmax)
   do{ XSTRING* line = file->GetLine(c);
       ParserTextFilePrepareLine(line);
 
-      if(line && !line->Compare(__L("0"), true))
+      if(line && !line->Compare(_L("0"), true))
         {
           c++;
           line = file->GetLine(c);
           ParserTextFilePrepareLine(line);
 
-          if(line && !line->Compare(__L("SECTION"), false))
+          if(line && !line->Compare(_L("SECTION"), false))
             {
               c++;
               line = file->GetLine(c);
               ParserTextFilePrepareLine(line);
 
-              if(line && !line->Compare(__L("2"), true))
+              if(line && !line->Compare(_L("2"), true))
                 {
                   c++;
                   line = file->GetLine(c);
@@ -560,10 +560,10 @@ bool GRPVECTORFILEDXF::GenerateSectionsEntities(GRPVECTORFILEDXFTEXTSECTIONENTIT
 
           if(name) 
             { 
-              line.AddFormat(__L(" %s (%d)"), name->Get(), nentities);
+              line.AddFormat(_L(" %s (%d)"), name->Get(), nentities);
               if(d < (entities->GetSize()-1)) 
                 {
-                  line.Add(__L(","));
+                  line.Add(_L(","));
                 }
             }
         }
@@ -591,7 +591,7 @@ bool GRPVECTORFILEDXF::ShowTraceAllSections()
         {
           XSTRING line;
 
-          line.Format(__L("[Vector file DXF load] Section [%d, %d]: %s"), section->iniline, section->endline, section->name.Get());
+          line.Format(_L("[Vector file DXF load] Section [%d, %d]: %s"), section->iniline, section->endline, section->name.Get());
 
           switch(section->type)
             {
@@ -601,7 +601,7 @@ bool GRPVECTORFILEDXF::ShowTraceAllSections()
               case GRPVECTORFILEDXFTEXTSECTION_TYPESECTION_HEADER         : { GRPVECTORFILEDXFTEXTSECTIONHEADER* sectionheader = (GRPVECTORFILEDXFTEXTSECTIONHEADER*)GetSection (section->type);
                                                                               if(sectionheader) 
                                                                                 {
-                                                                                  line.AddFormat(__L(" -> NVariables (%d)"), sectionheader->GetVariables()->GetSize());                                                                                                                                                       
+                                                                                  line.AddFormat(_L(" -> NVariables (%d)"), sectionheader->GetVariables()->GetSize());                                                                                                                                                       
                                                                                   XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, line.Get());
                                                                                 }
                                                                             }
@@ -613,7 +613,7 @@ bool GRPVECTORFILEDXF::ShowTraceAllSections()
               case GRPVECTORFILEDXFTEXTSECTION_TYPESECTION_BLOCKS         : { GRPVECTORFILEDXFTEXTSECTIONBLOCKS* sectionblocks = (GRPVECTORFILEDXFTEXTSECTIONBLOCKS*)GetSection(section->type);
                                                                               if(sectionblocks)
                                                                                 {
-                                                                                  line.AddFormat(__L(" -> (%d)"), sectionblocks->GetBlocks()->GetSize());
+                                                                                  line.AddFormat(_L(" -> (%d)"), sectionblocks->GetBlocks()->GetSize());
                                                                                   XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, line.Get());
 
                                                                                   for(XDWORD d=0; d<sectionblocks->GetBlocks()->GetSize(); d++)
@@ -626,7 +626,7 @@ bool GRPVECTORFILEDXF::ShowTraceAllSections()
                                                                                               GRPVECTORFILEDXFTEXTSECTIONENTITIES* sectionentities = block->GetSectionEntities();  
                                                                                               if(sectionentities)
                                                                                                 {                   
-                                                                                                  line.Format(__L("[Vector file DXF load] Block (%2d) [%s] ENTITIES "), d+1, block->GetName()->Get());                                                                                          
+                                                                                                  line.Format(_L("[Vector file DXF load] Block (%2d) [%s] ENTITIES "), d+1, block->GetName()->Get());                                                                                          
                                                                                                   GenerateSectionsEntities(sectionentities, line);
                                                                                                   XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, line.Get());
                                                                                                 }                                                                               

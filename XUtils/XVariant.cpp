@@ -1144,24 +1144,24 @@ bool XVARIANT::GetType(XSTRING& typestr)
 {
   switch(type)
     {
-      case XVARIANT_TYPE_NULL             : typestr = __L("null");            break;      
-      case XVARIANT_TYPE_BOOLEAN          : typestr = __L("boolean");         break;    
-      case XVARIANT_TYPE_SHORT            : typestr = __L("short");           break;
-      case XVARIANT_TYPE_WORD             : typestr = __L("word");            break;
-      case XVARIANT_TYPE_INTEGER          : typestr = __L("integer");         break;
-      case XVARIANT_TYPE_DWORD            : typestr = __L("double word");     break;
-      case XVARIANT_TYPE_DOUBLEINTEGER    : typestr = __L("double integer");  break;      
-      case XVARIANT_TYPE_QWORD            : typestr = __L("quad word");       break;      
-      case XVARIANT_TYPE_CHAR             : typestr = __L("char");            break;
-      case XVARIANT_TYPE_FLOAT            : typestr = __L("float");           break;
-      case XVARIANT_TYPE_DOUBLE           : typestr = __L("double");          break;
-      case XVARIANT_TYPE_STRING           : typestr = __L("string");          break;
-      case XVARIANT_TYPE_TIME             : typestr = __L("time");            break;
-      case XVARIANT_TYPE_DATE             : typestr = __L("date");            break;
-      case XVARIANT_TYPE_DATETIME         : typestr = __L("date/time");       break;
-      case XVARIANT_TYPE_BUFFER           : typestr = __L("buffer");          break;      
-      case XVARIANT_TYPE_POINTER          : typestr = __L("pointer");         break;
-      case XVARIANT_TYPE_MULTIPLE         : typestr = __L("multiple");        break;
+      case XVARIANT_TYPE_NULL             : typestr = _L("null");            break;      
+      case XVARIANT_TYPE_BOOLEAN          : typestr = _L("boolean");         break;    
+      case XVARIANT_TYPE_SHORT            : typestr = _L("short");           break;
+      case XVARIANT_TYPE_WORD             : typestr = _L("word");            break;
+      case XVARIANT_TYPE_INTEGER          : typestr = _L("integer");         break;
+      case XVARIANT_TYPE_DWORD            : typestr = _L("double word");     break;
+      case XVARIANT_TYPE_DOUBLEINTEGER    : typestr = _L("double integer");  break;      
+      case XVARIANT_TYPE_QWORD            : typestr = _L("quad word");       break;      
+      case XVARIANT_TYPE_CHAR             : typestr = _L("char");            break;
+      case XVARIANT_TYPE_FLOAT            : typestr = _L("float");           break;
+      case XVARIANT_TYPE_DOUBLE           : typestr = _L("double");          break;
+      case XVARIANT_TYPE_STRING           : typestr = _L("string");          break;
+      case XVARIANT_TYPE_TIME             : typestr = _L("time");            break;
+      case XVARIANT_TYPE_DATE             : typestr = _L("date");            break;
+      case XVARIANT_TYPE_DATETIME         : typestr = _L("date/time");       break;
+      case XVARIANT_TYPE_BUFFER           : typestr = _L("buffer");          break;      
+      case XVARIANT_TYPE_POINTER          : typestr = _L("pointer");         break;
+      case XVARIANT_TYPE_MULTIPLE         : typestr = _L("multiple");        break;
                         default           : return false;
     }
 
@@ -1414,7 +1414,7 @@ bool XVARIANT::ToString(XSTRING& to)
 {
   switch(type)
     {
-      case XVARIANT_TYPE_NULL             : to = __L("NULL");                                     break;      
+      case XVARIANT_TYPE_NULL             : to = _L("NULL");                                     break;      
       case XVARIANT_TYPE_BOOLEAN          : to.ConvertFromBoolean((*(bool*)this->data), (XSTRINGBOOLEANMODE_COMPUTER | XSTRINGBOOLEANMODE_LOWERCASE));          
                                             break;
 
@@ -1431,13 +1431,13 @@ bool XVARIANT::ToString(XSTRING& to)
       case XVARIANT_TYPE_CHAR             : { char value = *(char*)this->data; 
                                               XCHAR value2 = value;  
 
-                                              to.Format(__L("%c"), value2);               
+                                              to.Format(_L("%c"), value2);               
                                             }
                                             break;
 
       case XVARIANT_TYPE_XCHAR            : { XCHAR value = *(XCHAR*)this->data; 
 
-                                              to.Format(__L("%c"), value);               
+                                              to.Format(_L("%c"), value);               
                                             }
                                             break;
 
@@ -1488,21 +1488,21 @@ bool XVARIANT::ToString(XSTRING& to)
                                             }
                                             break;
                                                                 
-      case XVARIANT_TYPE_POINTER          : to.Format(__L("[%08X]"), *(XBYTE*)this->data);                                                                        
+      case XVARIANT_TYPE_POINTER          : to.Format(_L("[%08X]"), *(XBYTE*)this->data);                                                                        
                                             break;
 
-      case XVARIANT_TYPE_MULTIPLE         : { to = __L("[");
+      case XVARIANT_TYPE_MULTIPLE         : { to = _L("[");
                                               XDWORD n = Multiple_GetSize();
                                               for(XDWORD c=0; c<n; c++)
                                                 {
                                                   XVARIANT* item = Multiple_Get(c);
                                                   XSTRING   part;
 
-                                                  if(c) to.Add(__L(","));
+                                                  if(c) to.Add(_L(","));
                                                   if(item && item->ToString(part)) to.Add(part);
-                                                    else                            to.Add(__L("?"));
+                                                    else                            to.Add(_L("?"));
                                                 }
-                                              to.Add(__L("]"));
+                                              to.Add(_L("]"));
                                             }
                                             break;
 
@@ -1531,7 +1531,7 @@ bool XVARIANT::FromString(XSTRING& from, XVARIANT_TYPE from_type)
 
   if(_type == XVARIANT_TYPE_UNKNOWN)
     {
-      if(!from.Compare(__L("null"), true))
+      if(!from.Compare(_L("null"), true))
         {
           _type = XVARIANT_TYPE_NULL;
         }
@@ -1711,7 +1711,7 @@ bool XVARIANT::FromString(XSTRING& from, XVARIANT_TYPE from_type)
                                                 }                                                                                                                                                                     
                                                 break;
                                                                 
-          case XVARIANT_TYPE_POINTER          : from.UnFormat(__L("[%08X]"), this->data);                                                                                                                    
+          case XVARIANT_TYPE_POINTER          : from.UnFormat(_L("[%08X]"), this->data);                                                                                                                    
                                                 size = sizeof(void*);
                                                 break;      
 
@@ -1919,7 +1919,7 @@ void XVARIANT::PrintDebug()
   
   if(!string.IsEmpty())
     {
-      XTRACE_PRINTCOLOR(XTRACE_COLOR_INFO, __L("%s"), string.Get());  
+      XTRACE_PRINTCOLOR(XTRACE_COLOR_INFO, _L("%s"), string.Get());  
     }
 }
 

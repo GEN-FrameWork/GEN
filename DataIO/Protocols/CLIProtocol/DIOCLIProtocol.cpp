@@ -410,32 +410,32 @@ bool DIOCLIPROTOCOL::SendCommandArg(XCHAR* command, XSTRING* target, XSTRING* an
     } 
    else
     {
-      tosend.Format(__L("%c"), DIOCLIPROTOCOL_MARK_DONOTANSWER);
+      tosend.Format(_L("%c"), DIOCLIPROTOCOL_MARK_DONOTANSWER);
     }
 
   if(!ID.IsEmpty())
     {
-      tosend.AddFormat(__L("%s%s"), ID.Get(), DIOCLIPROTOCOL_MARK_ORIGIN);
+      tosend.AddFormat(_L("%s%s"), ID.Get(), DIOCLIPROTOCOL_MARK_ORIGIN);
     }
 
   if(target)
     {
       if(!target->IsEmpty())
         {
-          tosend.AddFormat(__L("%s%s"), target->Get(), DIOCLIPROTOCOL_MARK_TARGET);
+          tosend.AddFormat(_L("%s%s"), target->Get(), DIOCLIPROTOCOL_MARK_TARGET);
         }
     }
    else
     {
-      tosend.AddFormat(__L("%s%s"), DIOCLIPROTOCOL_MARK_BROADCAST, DIOCLIPROTOCOL_MARK_TARGET);
+      tosend.AddFormat(_L("%s%s"), DIOCLIPROTOCOL_MARK_BROADCAST, DIOCLIPROTOCOL_MARK_TARGET);
     }
 
-  tosend.AddFormat(__L("%s"), protocolcommand->GetCommand());
+  tosend.AddFormat(_L("%s"), protocolcommand->GetCommand());
   
   int nparams = protocolcommand->GetNParams();
   if(nparams)
     {
-      tosend.AddFormat(__L(" "));
+      tosend.AddFormat(_L(" "));
       
       for(int c=0;c<nparams;c++)
         {
@@ -443,7 +443,7 @@ bool DIOCLIPROTOCOL::SendCommandArg(XCHAR* command, XSTRING* target, XSTRING* an
           if(param)
             {
               tosend += param;   
-              if(c != nparams-1) tosend += __L(",");         
+              if(c != nparams-1) tosend += _L(",");         
             }
         }
     }
@@ -458,10 +458,10 @@ bool DIOCLIPROTOCOL::SendCommandArg(XCHAR* command, XSTRING* target, XSTRING* an
       CRC32.Do((XBYTE*)charstr.Get(), tosend.GetSize());
       
       XDWORD CRC32result = CRC32.GetResultCRC32();
-      tosend.AddFormat(__L("%s%08X"), DIOCLIPROTOCOL_MARK_CRC32, CRC32result);
+      tosend.AddFormat(_L("%s%08X"), DIOCLIPROTOCOL_MARK_CRC32, CRC32result);
     }
 
-  tosend += __L("\n\r");
+  tosend += _L("\n\r");
 
 
   XBUFFER charstr;
@@ -469,10 +469,10 @@ bool DIOCLIPROTOCOL::SendCommandArg(XCHAR* command, XSTRING* target, XSTRING* an
   tosend.ConvertToASCII(charstr); 
   diostream->Write((XBYTE*)charstr.Get(), tosend.GetSize());
 
-  tosend.DeleteCharacter(__C('\n'));
-  tosend.DeleteCharacter(__C('\r'));
+  tosend.DeleteCharacter(_C('\n'));
+  tosend.DeleteCharacter(_C('\r'));
 
-  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, __L("[Protocol CLI] %s Send Ask: %s -> %s %s"), tosend.Get(), ID.Get(), (target?target->Get():DIOCLIPROTOCOL_MARK_BROADCAST), command);
+  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, _L("[Protocol CLI] %s Send Ask: %s -> %s %s"), tosend.Get(), ID.Get(), (target?target->Get():DIOCLIPROTOCOL_MARK_BROADCAST), command);
 
   bool status = true;
 
@@ -620,7 +620,7 @@ void DIOCLIPROTOCOL::ReceivedCommandManager()
 
                       laststringreceived.Copy(indexCRC32 + mark_CRC32.GetSize(), indexCRC32 + mark_CRC32.GetSize() + sizeCRC32, strCRC32);
                       laststringreceived.DeleteCharacters(indexCRC32, mark_CRC32.GetSize() + sizeCRC32);
-                      strCRC32.UnFormat(__L("%08X"), &CRC32send);                    
+                      strCRC32.UnFormat(_L("%08X"), &CRC32send);                    
 
                       { HASHCRC32 CRC32;
                         XBUFFER   charstr;
@@ -693,13 +693,13 @@ void DIOCLIPROTOCOL::ReceivedCommandManager()
                                   if(answer.IsEmpty()) answer = DIOCLIPROTOCOL_OK;
                                 }
 
-                              XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, __L("[Protocol CLI] Received Command: %s -> %s %s"), originID.Get(), targetID.Get(), command.Get());
+                              XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, _L("[Protocol CLI] Received Command: %s -> %s %s"), originID.Get(), targetID.Get(), command.Get());
 
                               if(makeanswer)
                                 {
                                   XSTRING result;
 
-                                  result.Format(__L("%c%s%s%s%s%s%s%s"), DIOCLIPROTOCOL_MARK_ISANSWER, ID.Get(), DIOCLIPROTOCOL_MARK_ORIGIN, originID.Get(), DIOCLIPROTOCOL_MARK_TARGET, command.Get(), DIOCLIPROTOCOL_MARK_ANSWER, answer.Get());
+                                  result.Format(_L("%c%s%s%s%s%s%s%s"), DIOCLIPROTOCOL_MARK_ISANSWER, ID.Get(), DIOCLIPROTOCOL_MARK_ORIGIN, originID.Get(), DIOCLIPROTOCOL_MARK_TARGET, command.Get(), DIOCLIPROTOCOL_MARK_ANSWER, answer.Get());
 
                                   if(activeCRC)
                                     { 
@@ -710,12 +710,12 @@ void DIOCLIPROTOCOL::ReceivedCommandManager()
                                       CRC32.Do((XBYTE*)charstr.Get(), result.GetSize());
                                       
                                       XDWORD CRC32result = CRC32.GetResultCRC32();
-                                      result.AddFormat(__L("%s%08X"), DIOCLIPROTOCOL_MARK_CRC32, CRC32result);
+                                      result.AddFormat(_L("%s%08X"), DIOCLIPROTOCOL_MARK_CRC32, CRC32result);
                                     }                                  
 
-                                  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, __L("[Protocol CLI] %s Send Answer: %s -> %s %s : (%s)"), result.Get(), ID.Get(), originID.Get(), command.Get(), answer.Get());
+                                  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, _L("[Protocol CLI] %s Send Answer: %s -> %s %s : (%s)"), result.Get(), ID.Get(), originID.Get(), command.Get(), answer.Get());
 
-                                  result.Add(__L("\n\r"));
+                                  result.Add(_L("\n\r"));
 
                                   XBUFFER charstr;
                                   
@@ -737,7 +737,7 @@ void DIOCLIPROTOCOL::ReceivedCommandManager()
 
                               answer = laststringreceived.Get();
 
-                              XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, __L("[Protocol CLI] Received answer: %s -> %s %s : (%s)"), originID.Get(), targetID.Get(), command.Get(), answer.Get());
+                              XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, _L("[Protocol CLI] Received answer: %s -> %s %s : (%s)"), originID.Get(), targetID.Get(), command.Get(), answer.Get());
 
                               if(!ReceivedAnswer(originID, command, answer))
                                 {
@@ -1034,7 +1034,7 @@ bool DIOCLIPROTOCOL::ExtractParamsFromCommand(XSTRING& stringreceived, XSTRING& 
   params.DeleteContents();
   params.DeleteAll();
 
-  int firstspace = stringreceived.Find(__L(" "), true);
+  int firstspace = stringreceived.Find(_L(" "), true);
   if(firstspace == XSTRING_NOTFOUND)
     {
       command = stringreceived.Get();
@@ -1050,7 +1050,7 @@ bool DIOCLIPROTOCOL::ExtractParamsFromCommand(XSTRING& stringreceived, XSTRING& 
 
   while(index < (int)stringreceived.GetSize())
     {
-      int indexspace = stringreceived.Find(__L(","), true, index);
+      int indexspace = stringreceived.Find(_L(","), true, index);
       if(indexspace != XSTRING_NOTFOUND)
         {
           XSTRING* param = GEN_NEW XSTRING();

@@ -342,7 +342,7 @@ bool APPFLOWCHECKRESOURCESHARDWARE::CheckMemoryStatus()
       GEN_XSYSTEM.FreeCacheMemory();
 
       //bool status =  GEN_XSYSTEM.FreeCacheMemory();
-      //GEN_XLOG.AddEntry((status?XLOGLEVEL_INFO:XLOGLEVEL_WARNING), APPFLOW_CFG_LOG_SECTIONID_STATUSAPP, false, __L("Low free memory: %d Kb (%d%%). Cache memory released: %s"), free,  freepercent, (status?__L("Ok."):__L("Error!")));      
+      //GEN_XLOG.AddEntry((status?XLOGLEVEL_INFO:XLOGLEVEL_WARNING), APPFLOW_CFG_LOG_SECTIONID_STATUSAPP, false, _L("Low free memory: %d Kb (%d%%). Cache memory released: %s"), free,  freepercent, (status?_L("Ok."):_L("Error!")));      
      
       APPFLOWCHECKRESOURCESHARDWARE_XEVENT  xevent(this, APPFLOWCHECKRESOURCESHARDWARE_XEVENT_TYPE_MEMFREELIMIT);      
       xevent.SetActualMemFree(mem_free, GEN_XSYSTEM.GetFreeMemoryPercent());      

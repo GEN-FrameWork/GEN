@@ -155,7 +155,7 @@ bool DIOMAC::GetXString(XSTRING& MACstring, XCHAR separator)
 {
   MACstring.Empty();
 
-  MACstring.Format(__L("%02X%c%02X%c%02X%c%02X%c%02X%c%02X"), this->MAC[0], separator, this->MAC[1], separator, this->MAC[2], separator, this->MAC[3], separator, this->MAC[4], separator, this->MAC[5]);
+  MACstring.Format(_L("%02X%c%02X%c%02X%c%02X%c%02X%c%02X"), this->MAC[0], separator, this->MAC[1], separator, this->MAC[2], separator, this->MAC[3], separator, this->MAC[4], separator, this->MAC[5]);
   return true;
 }
 
@@ -227,7 +227,7 @@ bool DIOMAC::Set(XSTRING& MAC)
       number[c] = 0;
     }
 
-  MAC.UnFormat(__L("%02X:%02X:%02X:%02X:%02X:%02X"), &number[0], &number[1], &number[2], &number[3], &number[4], &number[5]);
+  MAC.UnFormat(_L("%02X:%02X:%02X:%02X:%02X:%02X"), &number[0], &number[1], &number[2], &number[3], &number[4], &number[5]);
   for(int c=0; c<DIOMAC_MAXSIZE; c++)
     {
       this->MAC[c] = number[c];

@@ -172,7 +172,7 @@ bool GRPSTATISTICSCHARTBARS3D::DrawPlot(GRPSTATISTICSCHARTBUILDER& builder, doub
           double lx = fx0 + ((value / nicemax) * fwidth);
 
           XSTRING label;
-          label.Format(__L("%g"), value);
+          label.Format(_L("%g"), value);
 
           builder.DrawText(lx, basey + (axisfontsize * 1.3), label.Get(), valuestyle);
         }
@@ -212,7 +212,7 @@ bool GRPSTATISTICSCHARTBARS3D::DrawPlot(GRPSTATISTICSCHARTBUILDER& builder, doub
           if(config.GetShowValues())
             {
               XSTRING vlabel;
-              vlabel.Format(__L("%g"), value);
+              vlabel.Format(_L("%g"), value);
 
               GRPSTATISTICSCHARTCOLOR valuecolor(255, 255, 255);
 

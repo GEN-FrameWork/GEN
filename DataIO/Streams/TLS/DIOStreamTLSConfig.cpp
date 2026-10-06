@@ -542,15 +542,15 @@ static bool DIOSTREAMTLSCONFIG_ServerNameMatch(XSTRING& pattern, XCHAR* serverna
 
   hostname = servername;
 
-  if(hostname.Character_GetLast() == __C('.')) hostname.DeleteLastCharacter();
-  if(pattern.Character_GetLast()  == __C('.')) pattern.DeleteLastCharacter();
+  if(hostname.Character_GetLast() == _C('.')) hostname.DeleteLastCharacter();
+  if(pattern.Character_GetLast()  == _C('.')) pattern.DeleteLastCharacter();
 
   if(!pattern.Compare(hostname, true)) return true;
 
-  if((pattern.GetSize() < 3) || (pattern[0] != __C('*')) || (pattern[1] != __C('.')) ||
-     (pattern.FindCharacter(__C('*'), 1) >= 0)) return false;
+  if((pattern.GetSize() < 3) || (pattern[0] != _C('*')) || (pattern[1] != _C('.')) ||
+     (pattern.FindCharacter(_C('*'), 1) >= 0)) return false;
 
-  dot = hostname.FindCharacter(__C('.'));
+  dot = hostname.FindCharacter(_C('.'));
   if(dot <= 0) return false;
 
   XSTRING hostnamesuffix(&hostname.Get()[dot]);
@@ -2602,7 +2602,7 @@ bool DIOSTREAMTLSCONFIG::LocalCredentials_Validate()
 
       if(certificateDER && certificate.Decode((*certificateDER)))
         {
-          if((servernametest.GetSize() >= 2) && (servernametest[0] == __C('*')) && (servernametest[1] == __C('.')))
+          if((servernametest.GetSize() >= 2) && (servernametest[0] == _C('*')) && (servernametest[1] == _C('.')))
             {
               for(XDWORD d=0; d<certificate.GetSubjectAlternativeNamesDNS()->GetSize(); d++)
                 {
@@ -2610,7 +2610,7 @@ bool DIOSTREAMTLSCONFIG::LocalCredentials_Validate()
                   if(!subjectname) continue;
 
                   XSTRING normalized((*subjectname));
-                  if(normalized.Character_GetLast() == __C('.')) normalized.DeleteLastCharacter();
+                  if(normalized.Character_GetLast() == _C('.')) normalized.DeleteLastCharacter();
 
                   if(!normalized.Compare(servernametest, true))
                     {
@@ -2910,13 +2910,13 @@ DIOSTREAMTLSSERVERCREDENTIALS* DIOSTREAMTLSCONFIG::ServerCredentials_Add(XCHAR* 
   if(!servername || !servername[0]) return NULL;
 
   pattern = servername;
-  if(pattern.Character_GetLast() == __C('.')) pattern.DeleteLastCharacter();
+  if(pattern.Character_GetLast() == _C('.')) pattern.DeleteLastCharacter();
   if(pattern.IsEmpty()) return NULL;
 
-  if(pattern.FindCharacter(__C('*')) >= 0)
+  if(pattern.FindCharacter(_C('*')) >= 0)
     {
-      if((pattern.GetSize() < 3) || (pattern[0] != __C('*')) || (pattern[1] != __C('.')) ||
-         (pattern.FindCharacter(__C('*'), 1) >= 0)) return NULL;
+      if((pattern.GetSize() < 3) || (pattern[0] != _C('*')) || (pattern[1] != _C('.')) ||
+         (pattern.FindCharacter(_C('*'), 1) >= 0)) return NULL;
     }
 
   // More than one credential set may intentionally use the same SNI pattern.  TLS 1.3 can then choose
@@ -3002,7 +3002,7 @@ bool DIOSTREAMTLSCONFIG::ServerCredentials_Select(XCHAR* servername, XVECTOR<XBU
           if(!credentials || !credentials->HasCredentials()) continue;
 
           XSTRING pattern((*credentials->GetServerName()));
-          if(pattern.FindCharacter(__C('*')) >= 0) continue;
+          if(pattern.FindCharacter(_C('*')) >= 0) continue;
 
           if(DIOSTREAMTLSCONFIG_ServerNameMatch(pattern, servername))
             {
@@ -3019,7 +3019,7 @@ bool DIOSTREAMTLSCONFIG::ServerCredentials_Select(XCHAR* servername, XVECTOR<XBU
           if(!credentials || !credentials->HasCredentials()) continue;
 
           XSTRING pattern((*credentials->GetServerName()));
-          if(pattern.FindCharacter(__C('*')) < 0) continue;
+          if(pattern.FindCharacter(_C('*')) < 0) continue;
 
           if(DIOSTREAMTLSCONFIG_ServerNameMatch(pattern, servername))
             {

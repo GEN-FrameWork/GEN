@@ -732,7 +732,7 @@ XTHREADCOLLECTED* XTHREADSCOLLECTED::Create(XTHREADGROUPID groupID, XCHAR* ID, X
       #ifdef XTRACE_ACTIVE
       XSTRING groupID;
       GetGroupThreadIDString(groupID);
-      XTRACE_PRINTCOLOR(XDEBUG_COLORINFO, __L("Create THREAD COLLECTED (%02d) grupo %s: %s"), xthreadsvector.GetSize(), groupID.Get(), ID);
+      XTRACE_PRINTCOLOR(XDEBUG_COLORINFO, _L("Create THREAD COLLECTED (%02d) grupo %s: %s"), xthreadsvector.GetSize(), groupID.Get(), ID);
       #endif
       */
 
@@ -782,7 +782,7 @@ bool XTHREADSCOLLECTED::Delete(XTHREADGROUPID groupID, XTHREADCOLLECTED* xthread
               #ifdef XTRACE_ACTIVE
               XSTRING groupID;
               GetGroupThreadIDString(groupID);
-              XTRACE_PRINTCOLOR(XDEBUG_COLORINFO, __L("Delete THREAD COLLECTED (%02d) grupo %s: %s"), xthreadsvector.GetSize(), groupID.Get(), xthreadcollected->GetID()->Get());
+              XTRACE_PRINTCOLOR(XDEBUG_COLORINFO, _L("Delete THREAD COLLECTED (%02d) grupo %s: %s"), xthreadsvector.GetSize(), groupID.Get(), xthreadcollected->GetID()->Get());
               #endif
               */
 
@@ -918,33 +918,33 @@ void XTHREADSCOLLECTED::ThreadRunFunction(void* param)
 * --------------------------------------------------------------------------------------------------------------------*/
 bool XTHREADSCOLLECTED::GetGroupThreadIDString(XSTRING& stringID)
 {
-  stringID = __L("TGRP_");
+  stringID = _L("TGRP_");
 
   switch(groupID)
     {
-      case XTHREADGROUPID_UNKNOWN                       : stringID.Add(__L("UNKNOWN"));                         break;
-      case XTHREADGROUPID_SCHEDULER                     : stringID.Add(__L("SCHEDULE"));                        break;
-      case XTHREADGROUPID_SCRIPT                        : stringID.Add(__L("SCRIPT"));                          break;
-      case XTHREADGROUPID_DIOSTREAM                     : stringID.Add(__L("DIOSTREAM"));                       break;
-      case XTHREADGROUPID_DIOSTREAMUART                 : stringID.Add(__L("DIOSTREAMUART"));                   break;
-      case XTHREADGROUPID_DIOSTREAMUDP                  : stringID.Add(__L("DIOSTREAMUDP"));                    break;
-      case XTHREADGROUPID_DIOSTREAMTCPIP                : stringID.Add(__L("DIOSTREAMTCPIP"));                  break;
-      case XTHREADGROUPID_DIOSTREAMWIFI                 : stringID.Add(__L("DIOSTREAMWIFI"));                   break;
-      case XTHREADGROUPID_DIOSTREAMBLUETOOTH            : stringID.Add(__L("DIOSTREAMBLUETOOTH"));              break;
-      case XTHREADGROUPID_DIOSTREAMUSB                  : stringID.Add(__L("DIOSTREAMUSB"));                    break;
-      case XTHREADGROUPID_DIOSTREAMICMP                 : stringID.Add(__L("DIOSTREAMICMP"));                   break;
-      case XTHREADGROUPID_DIOSTREAMSPI                  : stringID.Add(__L("DIOSTREAMSPI"));                    break;
-      case XTHREADGROUPID_DIOSTREAMCIPHER               : stringID.Add(__L("DIOSTREAMCIPHER"));                 break;
-      case XTHREADGROUPID_DIOPROTOCOL                   : stringID.Add(__L("DIOPROTOCOL"));                     break;
-      case XTHREADGROUPID_DIOPROTOCOL_CONNECTIONMANAGER : stringID.Add(__L("DIOPROTOCOL_CONNECTIONMANAGER"));   break;
-      case XTHREADGROUPID_DIOWEBSERVER                  : stringID.Add(__L("DIOWEBSERVER"));                    break;
-      case XTHREADGROUPID_DIOATCMS                      : stringID.Add(__L("DIOATCMS"));                        break;
-      case XTHREADGROUPID_DIOALERTS                     : stringID.Add(__L("DIOALERTS"));                       break;
-      case XTHREADGROUPID_DIOPCAP                       : stringID.Add(__L("DIOPCAP"));                         break;
-      case XTHREADGROUPID_VIDEO                         : stringID.Add(__L("VIDEO"));                           break;
+      case XTHREADGROUPID_UNKNOWN                       : stringID.Add(_L("UNKNOWN"));                         break;
+      case XTHREADGROUPID_SCHEDULER                     : stringID.Add(_L("SCHEDULE"));                        break;
+      case XTHREADGROUPID_SCRIPT                        : stringID.Add(_L("SCRIPT"));                          break;
+      case XTHREADGROUPID_DIOSTREAM                     : stringID.Add(_L("DIOSTREAM"));                       break;
+      case XTHREADGROUPID_DIOSTREAMUART                 : stringID.Add(_L("DIOSTREAMUART"));                   break;
+      case XTHREADGROUPID_DIOSTREAMUDP                  : stringID.Add(_L("DIOSTREAMUDP"));                    break;
+      case XTHREADGROUPID_DIOSTREAMTCPIP                : stringID.Add(_L("DIOSTREAMTCPIP"));                  break;
+      case XTHREADGROUPID_DIOSTREAMWIFI                 : stringID.Add(_L("DIOSTREAMWIFI"));                   break;
+      case XTHREADGROUPID_DIOSTREAMBLUETOOTH            : stringID.Add(_L("DIOSTREAMBLUETOOTH"));              break;
+      case XTHREADGROUPID_DIOSTREAMUSB                  : stringID.Add(_L("DIOSTREAMUSB"));                    break;
+      case XTHREADGROUPID_DIOSTREAMICMP                 : stringID.Add(_L("DIOSTREAMICMP"));                   break;
+      case XTHREADGROUPID_DIOSTREAMSPI                  : stringID.Add(_L("DIOSTREAMSPI"));                    break;
+      case XTHREADGROUPID_DIOSTREAMCIPHER               : stringID.Add(_L("DIOSTREAMCIPHER"));                 break;
+      case XTHREADGROUPID_DIOPROTOCOL                   : stringID.Add(_L("DIOPROTOCOL"));                     break;
+      case XTHREADGROUPID_DIOPROTOCOL_CONNECTIONMANAGER : stringID.Add(_L("DIOPROTOCOL_CONNECTIONMANAGER"));   break;
+      case XTHREADGROUPID_DIOWEBSERVER                  : stringID.Add(_L("DIOWEBSERVER"));                    break;
+      case XTHREADGROUPID_DIOATCMS                      : stringID.Add(_L("DIOATCMS"));                        break;
+      case XTHREADGROUPID_DIOALERTS                     : stringID.Add(_L("DIOALERTS"));                       break;
+      case XTHREADGROUPID_DIOPCAP                       : stringID.Add(_L("DIOPCAP"));                         break;
+      case XTHREADGROUPID_VIDEO                         : stringID.Add(_L("VIDEO"));                           break;
       case XTHREADGROUPID_APPOWNER                      :
                               default                   : { XSTRING IDlocal;
-                                                            IDlocal.Format(__L("APPOWNER[%d]"), groupID);
+                                                            IDlocal.Format(_L("APPOWNER[%d]"), groupID);
 
                                                             stringID.Add(IDlocal);
                                                           }

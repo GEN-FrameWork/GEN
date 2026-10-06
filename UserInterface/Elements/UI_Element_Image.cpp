@@ -66,7 +66,7 @@ UI_ELEMENT_IMAGE::UI_ELEMENT_IMAGE()
   Clean();   
 
   SetType(UI_ELEMENT_TYPE_IMAGE);
-  GetTypeString()->Set(__L("image"));  
+  GetTypeString()->Set(_L("image"));  
 }
 
 
@@ -146,7 +146,7 @@ XSTRING* UI_ELEMENT_IMAGE::GetResource()
 * --------------------------------------------------------------------------------------------------------------------*/
 void UI_ELEMENT_IMAGE::SetResource(XCHAR* resource)
 {
-  this->resource = resource ? resource : __L("");
+  this->resource = resource ? resource : _L("");
 }
 
 

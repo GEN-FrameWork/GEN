@@ -103,10 +103,10 @@ bool GRPVECTORFILESVGOBJELLIPSE::ApplyData(XFILEXMLELEMENT* element)
 
   GRPVECTORFILESVGOBJ::ApplyData(element);
 
-  cx = element->GetFloatValueAttribute(__L("cx"));
-  cy = element->GetFloatValueAttribute(__L("cy"));
-  rx = element->GetFloatValueAttribute(__L("rx"));
-  ry = element->GetFloatValueAttribute(__L("ry"));
+  cx = element->GetFloatValueAttribute(_L("cx"));
+  cy = element->GetFloatValueAttribute(_L("cy"));
+  rx = element->GetFloatValueAttribute(_L("rx"));
+  ry = element->GetFloatValueAttribute(_L("ry"));
 
   return true;
 }

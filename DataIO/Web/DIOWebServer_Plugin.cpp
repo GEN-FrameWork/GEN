@@ -287,7 +287,7 @@ bool DIOWEBSERVER_PLUGIN::SeparedResult(XSTRING& result, XSTRING& head, XSTRING&
 * --------------------------------------------------------------------------------------------------------------------*/
 void DIOWEBSERVER_PLUGIN::Clean()
 {
-  name    = __L("Undefined");
+  name    = _L("Undefined");
 }
 
 

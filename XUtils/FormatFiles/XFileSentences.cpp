@@ -166,7 +166,7 @@ bool XFILESENTENCES::ConvertFileFromDBF(XPATH& xpath)
           fsentence->FillChar();
           memcpy(fsentence->Get(), (char*)record->GetData(1), record->GetSizeField(1));
 
-          fsentence->DeleteCharacter(__C(' '), XSTRINGCONTEXT_TO_END);
+          fsentence->DeleteCharacter(_C(' '), XSTRINGCONTEXT_TO_END);
 
           GetPrimaryFile()->GetPosition(fpos);
 

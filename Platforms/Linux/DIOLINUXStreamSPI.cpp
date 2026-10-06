@@ -114,7 +114,7 @@ bool DIOLINUXSTREAMSPI::Open()
   
   (*config->GetLocalDeviceName()).ConvertToASCII(charstr);
   handle = open(charstr.GetPtrChar(), O_RDWR);  
-  //XTRACE_PRINTCOLOR(((handle<0)?4:1), __L("SPI Open %s : %s"), config->GetLocalDeviceName()->Get(), ((handle<0)?__L("Error"):__L("Ok")));
+  //XTRACE_PRINTCOLOR(((handle<0)?4:1), _L("SPI Open %s : %s"), config->GetLocalDeviceName()->Get(), ((handle<0)?_L("Error"):_L("Ok")));
   if(handle<0) return false;
 
   //  Set SPI parameters.
@@ -181,9 +181,9 @@ bool DIOLINUXSTREAMSPI::TransferBuffer(XBYTE* bufferread, XBYTE* bufferwrite, XD
 
   memset((XBYTE*)&transf, 0, sizeof(struct spi_ioc_transfer));
 
-  //XTRACE_PRINTCOLOR(1, __L("real SPI %d"), size);
+  //XTRACE_PRINTCOLOR(1, _L("real SPI %d"), size);
 
-  //wprintf((wchar_t *)__L("\n Write %4d bytes ->"),size);
+  //wprintf((wchar_t *)_L("\n Write %4d bytes ->"),size);
   //fflush(stdout);
 
   transf.tx_buf         = (unsigned long)bufferwrite;
@@ -196,7 +196,7 @@ bool DIOLINUXSTREAMSPI::TransferBuffer(XBYTE* bufferread, XBYTE* bufferwrite, XD
 
   int err = ioctl(handle, SPI_IOC_MESSAGE(1), &transf);
 
-  //wprintf((wchar_t *)__L("%4d %d\n"), transf.len, err);
+  //wprintf((wchar_t *)_L("%4d %d\n"), transf.len, err);
   //fflush(stdout);
 
   if(err<0) return false;

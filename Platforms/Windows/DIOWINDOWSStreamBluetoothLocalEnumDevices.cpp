@@ -139,7 +139,7 @@ bool DIOWINDOWSSTREAMBLUETOOTHLOCALENUMDEVICES::Search()
                   device->GetName()->Set((XCHAR*)radioinfo.szName);
 
                   XSTRING MAC;
-                  MAC.Format(__L("%02X:%02X:%02X:%02X:%02X:%02X"), (XBYTE)radioinfo.address.rgBytes[5], (XBYTE)radioinfo.address.rgBytes[4], (XBYTE)radioinfo.address.rgBytes[3], (XBYTE)radioinfo.address.rgBytes[2], (XBYTE)radioinfo.address.rgBytes[1], (XBYTE)radioinfo.address.rgBytes[0]);
+                  MAC.Format(_L("%02X:%02X:%02X:%02X:%02X:%02X"), (XBYTE)radioinfo.address.rgBytes[5], (XBYTE)radioinfo.address.rgBytes[4], (XBYTE)radioinfo.address.rgBytes[3], (XBYTE)radioinfo.address.rgBytes[2], (XBYTE)radioinfo.address.rgBytes[1], (XBYTE)radioinfo.address.rgBytes[0]);
                   device->GetMAC()->Set(MAC);
 
                   device->SetIsVisible(BluetoothIsDiscoverable(hradio)?true:false);

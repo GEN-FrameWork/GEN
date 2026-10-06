@@ -87,7 +87,7 @@ XTIMERCLOCK::XTIMERCLOCK()
   xmutexclock=GEN_XFACTORY.CreateMutex();
   if(xmutexclock)
     {
-      threadclock = CREATEXTHREAD(XTHREADGROUPID_XTIMERCLOCK, __L("XTIMERCLOCK::XTIMERCLOCK"), ThreadClockFunction, (void*)this);
+      threadclock = CREATEXTHREAD(XTHREADGROUPID_XTIMERCLOCK, _L("XTIMERCLOCK::XTIMERCLOCK"), ThreadClockFunction, (void*)this);
       if(threadclock) threadclock->Ini();
     }
 }
@@ -461,7 +461,7 @@ bool XTIMER::GetMeasureString(XSTRING& measure, bool large)
                     }
                    else
                     {
-                      string.Format(__L("%02d"), hours);
+                      string.Format(_L("%02d"), hours);
                     }
                   break;
 
@@ -474,7 +474,7 @@ bool XTIMER::GetMeasureString(XSTRING& measure, bool large)
                     }
                    else
                     {
-                      string.Format(__L("%02d"), minutes);
+                      string.Format(_L("%02d"), minutes);
                     }
                   break;
 
@@ -487,7 +487,7 @@ bool XTIMER::GetMeasureString(XSTRING& measure, bool large)
                     }
                    else
                     {
-                      string.Format(__L("%02d"), seconds);
+                      string.Format(_L("%02d"), seconds);
                     }
                   break;
 

@@ -126,7 +126,7 @@ bool DIOLINUXSTREAMIPLOCALENUMDEVICES::Search()
 
   ninterfaces = ifconf.ifc_len / sizeof(ifreq[0]);
 
-  //XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, __L("N NET Interfaces: %d"), ninterfaces);
+  //XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, _L("N NET Interfaces: %d"), ninterfaces);
 
   for(c=0; c<ninterfaces; c++)
     {
@@ -164,18 +164,18 @@ bool DIOLINUXSTREAMIPLOCALENUMDEVICES::Search()
             device->SetIndex(c);
 
             device->GetName()->Set(ifreq[c].ifr_name);
-            device->GetDescription()->Set(__L(""));
+            device->GetDescription()->Set(_L(""));
             device->GetMAC()->Set((XBYTE*)ifreq[c].ifr_hwaddr.sa_data);            
 
             device->SetIPType(DIOSTREAMIPDEVICE_TYPE_UNKNOWN);
           
-            if(device->GetName()->Find(__L("eth") , true) != XSTRING_NOTFOUND)  device->SetIPType(DIOSTREAMIPDEVICE_TYPE_ETHERNET);
-            if(device->GetName()->Find(__L("enx") , true) != XSTRING_NOTFOUND)  device->SetIPType(DIOSTREAMIPDEVICE_TYPE_ETHERNET);   // Debian Stretch form
-            if(device->GetName()->Find(__L("ens") , true) != XSTRING_NOTFOUND)  device->SetIPType(DIOSTREAMIPDEVICE_TYPE_ETHERNET);   // Cent OS 7
-            if(device->GetName()->Find(__L("ppp") , true) != XSTRING_NOTFOUND)  device->SetIPType(DIOSTREAMIPDEVICE_TYPE_PPP);        // Modem / ppp
-            if(device->GetName()->Find(__L("wlan"), true) != XSTRING_NOTFOUND)  device->SetIPType(DIOSTREAMIPDEVICE_TYPE_WIFI);
-            if(device->GetName()->Find(__L("wwan"), true) != XSTRING_NOTFOUND)  device->SetIPType(DIOSTREAMIPDEVICE_TYPE_WWAN);
-            if(device->GetName()->Find(__L("lo")  , true) != XSTRING_NOTFOUND)  device->SetIPType(DIOSTREAMIPDEVICE_TYPE_LOOPBACK);
+            if(device->GetName()->Find(_L("eth") , true) != XSTRING_NOTFOUND)  device->SetIPType(DIOSTREAMIPDEVICE_TYPE_ETHERNET);
+            if(device->GetName()->Find(_L("enx") , true) != XSTRING_NOTFOUND)  device->SetIPType(DIOSTREAMIPDEVICE_TYPE_ETHERNET);   // Debian Stretch form
+            if(device->GetName()->Find(_L("ens") , true) != XSTRING_NOTFOUND)  device->SetIPType(DIOSTREAMIPDEVICE_TYPE_ETHERNET);   // Cent OS 7
+            if(device->GetName()->Find(_L("ppp") , true) != XSTRING_NOTFOUND)  device->SetIPType(DIOSTREAMIPDEVICE_TYPE_PPP);        // Modem / ppp
+            if(device->GetName()->Find(_L("wlan"), true) != XSTRING_NOTFOUND)  device->SetIPType(DIOSTREAMIPDEVICE_TYPE_WIFI);
+            if(device->GetName()->Find(_L("wwan"), true) != XSTRING_NOTFOUND)  device->SetIPType(DIOSTREAMIPDEVICE_TYPE_WWAN);
+            if(device->GetName()->Find(_L("lo")  , true) != XSTRING_NOTFOUND)  device->SetIPType(DIOSTREAMIPDEVICE_TYPE_LOOPBACK);
 
             XSTRING IP;
             IP.Set(ip);

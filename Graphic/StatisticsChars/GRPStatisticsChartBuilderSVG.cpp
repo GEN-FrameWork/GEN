@@ -122,17 +122,17 @@ bool GRPSTATISTICSCHARTBUILDERSVG::BeginDocument(double width, double height)
 {
   content.Empty();
 
-  content.Add(__L("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"));
+  content.Add(_L("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"));
 
-  content.Add(__L("<svg xmlns=\"http://www.w3.org/2000/svg\" width=\""));
+  content.Add(_L("<svg xmlns=\"http://www.w3.org/2000/svg\" width=\""));
   AppendNumber(content, width);
-  content.Add(__L("\" height=\""));
+  content.Add(_L("\" height=\""));
   AppendNumber(content, height);
-  content.Add(__L("\" viewBox=\"0 0 "));
+  content.Add(_L("\" viewBox=\"0 0 "));
   AppendNumber(content, width);
-  content.Add(__C(' '));
+  content.Add(_C(' '));
   AppendNumber(content, height);
-  content.Add(__L("\">\n"));
+  content.Add(_L("\">\n"));
 
   return true;
 }
@@ -149,7 +149,7 @@ bool GRPSTATISTICSCHARTBUILDERSVG::BeginDocument(double width, double height)
 * --------------------------------------------------------------------------------------------------------------------*/
 bool GRPSTATISTICSCHARTBUILDERSVG::EndDocument()
 {
-  content.Add(__L("</svg>\n"));
+  content.Add(_L("</svg>\n"));
 
   return true;
 }
@@ -172,19 +172,19 @@ bool GRPSTATISTICSCHARTBUILDERSVG::EndDocument()
 * --------------------------------------------------------------------------------------------------------------------*/
 bool GRPSTATISTICSCHARTBUILDERSVG::DrawRect(double x, double y, double width, double height, GRPSTATISTICSCHARTSTYLE& style)
 {
-  content.Add(__L(" <rect x=\""));
+  content.Add(_L(" <rect x=\""));
   AppendNumber(content, x);
-  content.Add(__L("\" y=\""));
+  content.Add(_L("\" y=\""));
   AppendNumber(content, y);
-  content.Add(__L("\" width=\""));
+  content.Add(_L("\" width=\""));
   AppendNumber(content, width);
-  content.Add(__L("\" height=\""));
+  content.Add(_L("\" height=\""));
   AppendNumber(content, height);
-  content.Add(__C('"'));
+  content.Add(_C('"'));
 
   AppendFillAndStroke(content, style);
 
-  content.Add(__L("/>\n"));
+  content.Add(_L("/>\n"));
 
   return true;
 }
@@ -207,23 +207,23 @@ bool GRPSTATISTICSCHARTBUILDERSVG::DrawRect(double x, double y, double width, do
 * --------------------------------------------------------------------------------------------------------------------*/
 bool GRPSTATISTICSCHARTBUILDERSVG::DrawLine(double x1, double y1, double x2, double y2, GRPSTATISTICSCHARTSTYLE& style)
 {
-  content.Add(__L(" <line x1=\""));
+  content.Add(_L(" <line x1=\""));
   AppendNumber(content, x1);
-  content.Add(__L("\" y1=\""));
+  content.Add(_L("\" y1=\""));
   AppendNumber(content, y1);
-  content.Add(__L("\" x2=\""));
+  content.Add(_L("\" x2=\""));
   AppendNumber(content, x2);
-  content.Add(__L("\" y2=\""));
+  content.Add(_L("\" y2=\""));
   AppendNumber(content, y2);
-  content.Add(__L("\" stroke=\""));
+  content.Add(_L("\" stroke=\""));
   AppendColor(content, style.strokecolor);
-  content.Add(__L("\" stroke-width=\""));
+  content.Add(_L("\" stroke-width=\""));
   AppendNumber(content, style.strokewidth);
-  content.Add(__C('"'));
+  content.Add(_C('"'));
 
-  AppendOpacity(content, __L("stroke-opacity"), style.strokecolor);
+  AppendOpacity(content, _L("stroke-opacity"), style.strokecolor);
 
-  content.Add(__L("/>\n"));
+  content.Add(_L("/>\n"));
 
   return true;
 }
@@ -247,41 +247,41 @@ bool GRPSTATISTICSCHARTBUILDERSVG::DrawText(double x, double y, XCHAR* text, GRP
 {
   if(!text) return false;
 
-  content.Add(__L(" <text x=\""));
+  content.Add(_L(" <text x=\""));
   AppendNumber(content, x);
-  content.Add(__L("\" y=\""));
+  content.Add(_L("\" y=\""));
   AppendNumber(content, y);
-  content.Add(__L("\" font-size=\""));
+  content.Add(_L("\" font-size=\""));
   AppendNumber(content, style.size);
-  content.Add(__L("\" fill=\""));
+  content.Add(_L("\" fill=\""));
   AppendColor(content, style.color);
-  content.Add(__L("\" text-anchor=\""));
+  content.Add(_L("\" text-anchor=\""));
   content.Add(AnchorToString(style.anchor));
-  content.Add(__C('"'));
+  content.Add(_C('"'));
 
   if(style.bold)
     {
-      content.Add(__L(" font-weight=\"bold\""));
+      content.Add(_L(" font-weight=\"bold\""));
     }
 
   if(style.rotation != 0.0)
     {
-      content.Add(__L(" transform=\"rotate("));
+      content.Add(_L(" transform=\"rotate("));
       AppendNumber(content, style.rotation);
-      content.Add(__C(' '));
+      content.Add(_C(' '));
       AppendNumber(content, x);
-      content.Add(__C(' '));
+      content.Add(_C(' '));
       AppendNumber(content, y);
-      content.Add(__L(")\""));
+      content.Add(_L(")\""));
     }
 
-  content.Add(__C('>'));
+  content.Add(_C('>'));
 
   XSTRING escaped;
   EscapeXML(text, escaped);
   content.Add(escaped);
 
-  content.Add(__L("</text>\n"));
+  content.Add(_L("</text>\n"));
 
   return true;
 }
@@ -304,22 +304,22 @@ bool GRPSTATISTICSCHARTBUILDERSVG::DrawPolygon(const double* xy, XDWORD npoints,
 {
   if(!xy || (npoints < 2)) return false;
 
-  content.Add(__L(" <polygon points=\""));
+  content.Add(_L(" <polygon points=\""));
 
   for(XDWORD p=0; p<npoints; p++)
     {
-      if(p) content.Add(__C(' '));
+      if(p) content.Add(_C(' '));
 
       AppendNumber(content, xy[(p * 2) + 0]);
-      content.Add(__C(','));
+      content.Add(_C(','));
       AppendNumber(content, xy[(p * 2) + 1]);
     }
 
-  content.Add(__C('"'));
+  content.Add(_C('"'));
 
   AppendFillAndStroke(content, style);
 
-  content.Add(__L("/>\n"));
+  content.Add(_L("/>\n"));
 
   return true;
 }
@@ -371,8 +371,8 @@ void GRPSTATISTICSCHARTBUILDERSVG::AppendNumber(XSTRING& out, double value)
 {
   XSTRING number;
 
-  number.Format(__L("%g"), value);
-  number.Replace(__L(","), __L("."));
+  number.Format(_L("%g"), value);
+  number.Replace(_L(","), _L("."));
 
   out.Add(number);
 }
@@ -392,26 +392,26 @@ void GRPSTATISTICSCHARTBUILDERSVG::AppendFillAndStroke(XSTRING& out, GRPSTATISTI
 {
   if(style.hasfill)
     {
-      out.Add(__L(" fill=\""));
+      out.Add(_L(" fill=\""));
       AppendColor(out, style.fillcolor);
-      out.Add(__C('"'));
+      out.Add(_C('"'));
 
-      AppendOpacity(out, __L("fill-opacity"), style.fillcolor);
+      AppendOpacity(out, _L("fill-opacity"), style.fillcolor);
     }
    else
     {
-      out.Add(__L(" fill=\"none\""));
+      out.Add(_L(" fill=\"none\""));
     }
 
   if(style.hasstroke)
     {
-      out.Add(__L(" stroke=\""));
+      out.Add(_L(" stroke=\""));
       AppendColor(out, style.strokecolor);
-      out.Add(__L("\" stroke-width=\""));
+      out.Add(_L("\" stroke-width=\""));
       AppendNumber(out, style.strokewidth);
-      out.Add(__C('"'));
+      out.Add(_C('"'));
 
-      AppendOpacity(out, __L("stroke-opacity"), style.strokecolor);
+      AppendOpacity(out, _L("stroke-opacity"), style.strokecolor);
     }
 }
 
@@ -430,7 +430,7 @@ void GRPSTATISTICSCHARTBUILDERSVG::AppendColor(XSTRING& out, GRPSTATISTICSCHARTC
 {
   XSTRING rgb;
 
-  rgb.Format(__L("rgb(%d,%d,%d)"), (int)color.r, (int)color.g, (int)color.b);
+  rgb.Format(_L("rgb(%d,%d,%d)"), (int)color.r, (int)color.g, (int)color.b);
 
   out.Add(rgb);
 }
@@ -451,11 +451,11 @@ void GRPSTATISTICSCHARTBUILDERSVG::AppendOpacity(XSTRING& out, XCHAR* attribute,
 {
   if(color.a >= 255) return;
 
-  out.Add(__C(' '));
+  out.Add(_C(' '));
   out.Add(attribute);
-  out.Add(__L("=\""));
+  out.Add(_L("=\""));
   AppendNumber(out, (double)color.a / 255.0);
-  out.Add(__C('"'));
+  out.Add(_C('"'));
 }
 
 
@@ -474,10 +474,10 @@ XCHAR* GRPSTATISTICSCHARTBUILDERSVG::AnchorToString(GRPSTATISTICSCHARTTEXTANCHOR
 {
   switch(anchor)
     {
-      case GRPSTATISTICSCHARTTEXTANCHOR_MIDDLE  : return __L("middle");
-      case GRPSTATISTICSCHARTTEXTANCHOR_END     : return __L("end");
+      case GRPSTATISTICSCHARTTEXTANCHOR_MIDDLE  : return _L("middle");
+      case GRPSTATISTICSCHARTTEXTANCHOR_END     : return _L("end");
       case GRPSTATISTICSCHARTTEXTANCHOR_START   :
-                            default   : return __L("start");
+                            default   : return _L("start");
     }
 }
 
@@ -500,11 +500,11 @@ void GRPSTATISTICSCHARTBUILDERSVG::EscapeXML(XCHAR* text, XSTRING& out)
 
   out.Set(text);
 
-  out.Replace(__L("&"), __L("&amp;"));
-  out.Replace(__L("<"), __L("&lt;"));
-  out.Replace(__L(">"), __L("&gt;"));
-  out.Replace(__L("\""), __L("&quot;"));
-  out.Replace(__L("'"), __L("&apos;"));
+  out.Replace(_L("&"), _L("&amp;"));
+  out.Replace(_L("<"), _L("&lt;"));
+  out.Replace(_L(">"), _L("&gt;"));
+  out.Replace(_L("\""), _L("&quot;"));
+  out.Replace(_L("'"), _L("&apos;"));
 }
 
 

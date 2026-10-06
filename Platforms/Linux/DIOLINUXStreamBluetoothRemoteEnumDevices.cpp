@@ -126,7 +126,7 @@ DIOLINUXSTREAMBLUETOOTHREMOTEENUMDEVICES::DIOLINUXSTREAMBLUETOOTHREMOTEENUMDEVIC
             DIOLINUXBTENUMFSMEVENT_SEARCHMAC          , DIOLINUXBTENUMFSMSTATE_SEARCHMAC        ,
             XFSMACHINESTATE_EVENTDEFEND);
 
-  threadenumdevices = CREATEXTHREAD(XTHREADGROUPID_DIOSTREAMBLUETOOTH, __L("DIOLINUXSTREAMBLUETOOTHREMOTEENUMDEVICES::DIOLINUXSTREAMBLUETOOTHREMOTEENUMDEVICES"), ThreadEnumDevices, (void*)this);
+  threadenumdevices = CREATEXTHREAD(XTHREADGROUPID_DIOSTREAMBLUETOOTH, _L("DIOLINUXSTREAMBLUETOOTHREMOTEENUMDEVICES::DIOLINUXSTREAMBLUETOOTHREMOTEENUMDEVICES"), ThreadEnumDevices, (void*)this);
   if(threadenumdevices) threadenumdevices->Ini();
 }
 
@@ -683,7 +683,7 @@ extern "C"
   {
     if(!SDP_lastservice) return;
 
-    //XTRACE_PRINTCOLOR(4, __L("print_service_class"));
+    //XTRACE_PRINTCOLOR(4, _L("print_service_class"));
 
     uuid_t* uuid = (uuid_t*)value;
     sdp_uuid2strn(uuid, UUID_str, MAX_LEN_UUID_STR);
@@ -730,13 +730,13 @@ extern "C"
             case SDP_UINT8    : if(proto == RFCOMM_UUID) protocol->SetChannel(p->val.uint8);
                                 break;
 
-                      default : //XTRACE_PRINTCOLOR(1, __L("[type unknown]"));
+                      default : //XTRACE_PRINTCOLOR(1, _L("[type unknown]"));
                                 break;
 
           }
        }
 
-    //XTRACE_PRINTCOLOR(4, __L("Protocol: %08X %08X %d"), SDP_lastservice->GetID(), protocol->GetType(), protocol->GetChannel());
+    //XTRACE_PRINTCOLOR(4, _L("Protocol: %08X %08X %d"), SDP_lastservice->GetID(), protocol->GetType(), protocol->GetChannel());
 
     SDP_lastservice->SetNProtocols(SDP_lastservice->GetNProtocols()+1);
   }
@@ -754,7 +754,7 @@ extern "C"
 * --------------------------------------------------------------------------------------------------------------------*/
   void print_access_protos(void* value, void* userData)
   {
-    //XTRACE_PRINTCOLOR(4, __L("print_access_protos"));
+    //XTRACE_PRINTCOLOR(4, _L("print_access_protos"));
 
     sdp_list_t* protDescSeq = (sdp_list_t*)value;
     sdp_list_foreach(protDescSeq, print_service_desc, 0);

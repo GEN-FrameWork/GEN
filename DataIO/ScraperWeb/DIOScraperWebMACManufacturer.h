@@ -40,7 +40,7 @@
 
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
 
-#define DIOSCRAPERWEBMACMANUFACTURER_SCRIPTPATH    __L("macmanufacturer.g")
+#define DIOSCRAPERWEBMACMANUFACTURER_SCRIPTPATH    _L("macmanufacturer.g")
 #define DIOSCRAPERWEBMACMANUFACTURER_MAXTIMEOUT    DIOSCRAPERSCRIPT_DEFAULT_TIMEOUT
 
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/

@@ -406,7 +406,7 @@ XSYSTEM_HARDWARETYPE XWINDOWSSYSTEM::GetTypeHardware(int* revision)
 * --------------------------------------------------------------------------------------------------------------------*/
 XSYSTEM_PLATFORM XWINDOWSSYSTEM::GetPlatform(XSTRING* namestring)
 {
-  if(namestring)  namestring->Set(__L("Windows"));
+  if(namestring)  namestring->Set(_L("Windows"));
 
   return XSYSTEM_PLATFORM_WINDOWS;  
 }
@@ -436,12 +436,12 @@ bool XWINDOWSSYSTEM::GetOperativeSystemID(XSTRING& ID)
       return false;
     }
 
-  wmiinterface.DoQuery(__L("Win32_OperatingSystem"), __L("Caption"), wmianswer[0]);
-  wmiinterface.DoQuery(__L("Win32_OperatingSystem"), __L("BuildNumber"), wmianswer[1]);
-  wmiinterface.DoQuery(__L("Win32_OperatingSystem"), __L("CSDVersion"), wmianswer[2]);
-  wmiinterface.DoQuery(__L("Win32_OperatingSystem"), __L("OSArchitecture") , wmianswer[3]);
+  wmiinterface.DoQuery(_L("Win32_OperatingSystem"), _L("Caption"), wmianswer[0]);
+  wmiinterface.DoQuery(_L("Win32_OperatingSystem"), _L("BuildNumber"), wmianswer[1]);
+  wmiinterface.DoQuery(_L("Win32_OperatingSystem"), _L("CSDVersion"), wmianswer[2]);
+  wmiinterface.DoQuery(_L("Win32_OperatingSystem"), _L("OSArchitecture") , wmianswer[3]);
 
-  ID.Format(__L("%s Build(%s) %s %s"), wmianswer[0].Get(), wmianswer[1].Get(), wmianswer[2].Get(), wmianswer[3].Get());
+  ID.Format(_L("%s Build(%s) %s %s"), wmianswer[0].Get(), wmianswer[1].Get(), wmianswer[2].Get(), wmianswer[3].Get());
 
   wmiinterface.End();          
   #endif
@@ -491,7 +491,7 @@ XSTRING* XWINDOWSSYSTEM::GetBIOSSerialNumber()
 
   if(wmiinterface.Ini())
     {
-      wmiinterface.DoQuery(__L("Win32_BIOS"), __L("SerialNumber"), BIOSserialnumber);
+      wmiinterface.DoQuery(_L("Win32_BIOS"), _L("SerialNumber"), BIOSserialnumber);
 
       wmiinterface.End();
     }
@@ -516,7 +516,7 @@ XSTRING* XWINDOWSSYSTEM::GetCPUSerialNumber()
   XWINDOWSWMIINTERFACE wmiinterface;
   if(wmiinterface.Ini())
     { 
-      wmiinterface.DoQuery(__L("Win32_Processor"), __L("ProcessorId"), CPUserialnumber);
+      wmiinterface.DoQuery(_L("Win32_Processor"), _L("ProcessorId"), CPUserialnumber);
       wmiinterface.End();     
     }
   #endif
@@ -542,7 +542,7 @@ float XWINDOWSSYSTEM::GetCPUTemperature()
   XWINDOWSWMIINTERFACE wmiinterface;
   if(wmiinterface.Ini())
     { 
-      wmiinterface.DoQuery(__L("Win32_PerfFormattedData_Counters_ThermalZoneInformation"), __L("Temperature"), CPUtemperaturestr);
+      wmiinterface.DoQuery(_L("Win32_PerfFormattedData_Counters_ThermalZoneInformation"), _L("Temperature"), CPUtemperaturestr);
 
       wmiinterface.End();       
     }
@@ -592,12 +592,12 @@ bool XWINDOWSSYSTEM::GetMemoryInfo(XDWORD& total, XDWORD& free)
 
   if(wmiinterface.Ini())
     { 
-      if(wmiinterface.DoQuery(__L("Win32_OperatingSystem"), __L("TotalVisibleMemorySize"), wmianswer))
+      if(wmiinterface.DoQuery(_L("Win32_OperatingSystem"), _L("TotalVisibleMemorySize"), wmianswer))
         {
           total = wmianswer.ConvertToInt();      
         }
 
-      if(wmiinterface.DoQuery(__L("Win32_OperatingSystem"), __L("FreePhysicalMemory"), wmianswer))
+      if(wmiinterface.DoQuery(_L("Win32_OperatingSystem"), _L("FreePhysicalMemory"), wmianswer))
         {
           free = wmianswer.ConvertToInt();      
         }
@@ -743,7 +743,7 @@ int XWINDOWSSYSTEM::GetCPUUsageTotal()
   objectindex     = XWINDOWSSYSTEM_PROCESSOR_OBJECT_INDEX;
   cpuusageindex   = XWINDOWSSYSTEM_PROCESSOR_TIME_COUNTER_INDEX;
 
-  processstr     = __L("_Total");
+  processstr     = _L("_Total");
 
   cus = AddCPUUsageStatus(processstr.Get());
   if(!cus) return 0;
@@ -816,7 +816,7 @@ int XWINDOWSSYSTEM::GetCPUUsageForProcessName(XCHAR* processname)
   // Now walk the snapshot of processes
   do{ XSTRING  nametask(pe32.szExeFile);
 
-      //XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, __L("Process %s  : [%s]"), processname, nametask.Get());
+      //XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, _L("Process %s  : [%s]"), processname, nametask.Get());
 
       if(!nametask.Compare(processname, true))
         {
@@ -937,10 +937,10 @@ bool XWINDOWSSYSTEM::SetEnviromentVariable(XCHAR* name, XCHAR* value)
 
       switch(c)
         {
-          case 0: status = registrymanager.OpenKey(HKEY_CURRENT_USER, __L("Environment"), registrykeyenv);
+          case 0: status = registrymanager.OpenKey(HKEY_CURRENT_USER, _L("Environment"), registrykeyenv);
                   break;
 
-          case 1: status = registrymanager.OpenKey(HKEY_LOCAL_MACHINE, __L("SYSTEM\\CurrentControlSet\\Control\\Session Manager\\Environment"), registrykeyenv);
+          case 1: status = registrymanager.OpenKey(HKEY_LOCAL_MACHINE, _L("SYSTEM\\CurrentControlSet\\Control\\Session Manager\\Environment"), registrykeyenv);
                   break;
         }
 
@@ -956,7 +956,7 @@ bool XWINDOWSSYSTEM::SetEnviromentVariable(XCHAR* name, XCHAR* value)
         }
     }
 
-  all.Format(__L("%s=%s"), name, value);
+  all.Format(_L("%s=%s"), name, value);
 
   return _wputenv(all.Get())?false:true;
 }
@@ -985,10 +985,10 @@ bool XWINDOWSSYSTEM::DelEnviromentVariable(XCHAR* name)
 
       switch(c)
         {
-          case 0: status = registrymanager.OpenKey(HKEY_CURRENT_USER, __L("Environment"), registrykeyenv);
+          case 0: status = registrymanager.OpenKey(HKEY_CURRENT_USER, _L("Environment"), registrykeyenv);
                   break;
 
-          case 1: status = registrymanager.OpenKey(HKEY_LOCAL_MACHINE, __L("SYSTEM\\CurrentControlSet\\Control\\Session Manager\\Environment"), registrykeyenv);
+          case 1: status = registrymanager.OpenKey(HKEY_LOCAL_MACHINE, _L("SYSTEM\\CurrentControlSet\\Control\\Session Manager\\Environment"), registrykeyenv);
                   break;
         }
 
@@ -999,7 +999,7 @@ bool XWINDOWSSYSTEM::DelEnviromentVariable(XCHAR* name)
         }
     }
 
-  all.Format(__L("%s="), name);
+  all.Format(_L("%s="), name);
 
   return _wputenv(all.Get())?false:true;
 }
@@ -1454,11 +1454,11 @@ bool XWINDOWSSYSTEM::GetPathExecApplication(XCHAR* appname, XPATH& apppath)
   
   for(XDWORD c=0; c<2; c++)
     {
-      keyname.Format(__L("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\App Paths\\%s.exe"), appname);
+      keyname.Format(_L("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\App Paths\\%s.exe"), appname);
 
       if(registrymanager.OpenKey(handlekey[c], keyname, registrykey))
         {
-          if(registrykey.ReadValue(__L("Path"), pathvalue))
+          if(registrykey.ReadValue(_L("Path"), pathvalue))
             {
               XSTRING apppath_tempo;
 
@@ -1466,7 +1466,7 @@ bool XWINDOWSSYSTEM::GetPathExecApplication(XCHAR* appname, XPATH& apppath)
 
               apppath = apppath_tempo;
               apppath.Slash_Add();
-              apppath.AddFormat(__L("%s.exe"), appname);  
+              apppath.AddFormat(_L("%s.exe"), appname);  
 
               status = true; 
 

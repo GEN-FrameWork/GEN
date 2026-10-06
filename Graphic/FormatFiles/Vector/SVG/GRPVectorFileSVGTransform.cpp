@@ -300,18 +300,18 @@ bool GRPVECTORFILESVGTRANSFORM::ParseFromString(XCHAR* string)
 
   while(index < size)
     {
-      int open = source.Find(__L("("), false, index);
+      int open = source.Find(_L("("), false, index);
       if(open < 0) break;
 
       XSTRING name;
       source.Copy(index, open, name);
-      name.DeleteCharacter(__C(' '));
-      name.DeleteCharacter(__C(','));
-      name.DeleteCharacter(__C('\t'));
-      name.DeleteCharacter(__C('\n'));
-      name.DeleteCharacter(__C('\r'));
+      name.DeleteCharacter(_C(' '));
+      name.DeleteCharacter(_C(','));
+      name.DeleteCharacter(_C('\t'));
+      name.DeleteCharacter(_C('\n'));
+      name.DeleteCharacter(_C('\r'));
 
-      int close = source.Find(__L(")"), false, open);
+      int close = source.Find(_L(")"), false, open);
       if(close < 0) break;
 
       XSTRING args;
@@ -349,23 +349,23 @@ bool GRPVECTORFILESVGTRANSFORM::ParsePrimitive(XSTRING& name, XSTRING& args)
   GRPVECTORFILESVGTRANSFORM prim;
   prim.SetIdentity();
 
-  if(!name.Compare(__L("matrix"), true) && (nvalues >= 6))
+  if(!name.Compare(_L("matrix"), true) && (nvalues >= 6))
     {
       prim.Set(values[0], values[1], values[2], values[3], values[4], values[5]);
     }
-   else if(!name.Compare(__L("translate"), true) && (nvalues >= 1))
+   else if(!name.Compare(_L("translate"), true) && (nvalues >= 1))
     {
       double tx = values[0];
       double ty = (nvalues >= 2) ? values[1] : 0.0;
       prim.Set(1.0, 0.0, 0.0, 1.0, tx, ty);
     }
-   else if(!name.Compare(__L("scale"), true) && (nvalues >= 1))
+   else if(!name.Compare(_L("scale"), true) && (nvalues >= 1))
     {
       double sx = values[0];
       double sy = (nvalues >= 2) ? values[1] : sx;
       prim.Set(sx, 0.0, 0.0, sy, 0.0, 0.0);
     }
-   else if(!name.Compare(__L("rotate"), true) && (nvalues >= 1))
+   else if(!name.Compare(_L("rotate"), true) && (nvalues >= 1))
     {
       double rad = values[0] * GRPVECTORFILESVGTRANSFORM_DEG2RAD;
       double co  = cos(rad);
@@ -390,12 +390,12 @@ bool GRPVECTORFILESVGTRANSFORM::ParsePrimitive(XSTRING& name, XSTRING& args)
           prim.Set(co, si, -si, co, 0.0, 0.0);
         }
     }
-   else if(!name.Compare(__L("skewX"), true) && (nvalues >= 1))
+   else if(!name.Compare(_L("skewX"), true) && (nvalues >= 1))
     {
       double t = tan(values[0] * GRPVECTORFILESVGTRANSFORM_DEG2RAD);
       prim.Set(1.0, 0.0, t, 1.0, 0.0, 0.0);
     }
-   else if(!name.Compare(__L("skewY"), true) && (nvalues >= 1))
+   else if(!name.Compare(_L("skewY"), true) && (nvalues >= 1))
     {
       double t = tan(values[0] * GRPVECTORFILESVGTRANSFORM_DEG2RAD);
       prim.Set(1.0, t, 0.0, 1.0, 0.0, 0.0);
@@ -431,10 +431,10 @@ bool GRPVECTORFILESVGTRANSFORM::ExtractNumbers(XSTRING& args, double* values, in
   nvalues = 0;
 
   XSTRING source(args);
-  source.Replace(__L(","), __L(" "));
+  source.Replace(_L(","), _L(" "));
 
   XVECTOR<XSTRING*> tokens;
-  source.Split(__C(' '), tokens, false);
+  source.Split(_C(' '), tokens, false);
 
   for(XDWORD c=0; c<tokens.GetSize(); c++)
     {

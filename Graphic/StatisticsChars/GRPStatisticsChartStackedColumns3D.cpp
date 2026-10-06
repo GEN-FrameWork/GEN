@@ -186,7 +186,7 @@ bool GRPSTATISTICSCHARTSTACKEDCOLUMNS3D::DrawPlot(GRPSTATISTICSCHARTBUILDER& bui
       if(config.GetShowAxisLabels())
         {
           XSTRING label;
-          label.Format(__L("%g"), value);
+          label.Format(_L("%g"), value);
 
           builder.DrawText(fx0 + depthx - (axisfontsize * 0.5), wy + (axisfontsize * 0.35), label.Get(), valuestyle);
         }
@@ -233,7 +233,7 @@ bool GRPSTATISTICSCHARTSTACKEDCOLUMNS3D::DrawPlot(GRPSTATISTICSCHARTBUILDER& bui
           if(config.GetShowValues() && (segh > fontsize))
             {
               XSTRING vlabel;
-              vlabel.Format(__L("%g"), value);
+              vlabel.Format(_L("%g"), value);
 
               GRPSTATISTICSCHARTTEXTSTYLE vstyle;
               vstyle.color  = valuecolor;

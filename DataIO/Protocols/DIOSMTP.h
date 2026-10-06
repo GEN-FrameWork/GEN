@@ -69,7 +69,7 @@ enum DIOSMTPXPRIORITY
 #define DIOSMTP_DEFAULTTIMEOUT              3
 #define DIOSMTP_DEFAULSIZELIMITATTACHMENT   (3*1024*1024)
 #define DIOSMTP_ANYSIZELIMITATTACHMENT      -1
-#define DIOSMTP_BOUNDARYTEXT                __L("__MESSAGE__ID__54yg6f6h6y456345")
+#define DIOSMTP_BOUNDARYTEXT                _L("__MESSAGE__ID__54yg6f6h6y456345")
 
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
 

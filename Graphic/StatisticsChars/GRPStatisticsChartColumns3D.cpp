@@ -170,7 +170,7 @@ bool GRPSTATISTICSCHARTCOLUMNS3D::DrawPlot(GRPSTATISTICSCHARTBUILDER& builder, d
       if(config.GetShowAxisLabels())
         {
           XSTRING label;
-          label.Format(__L("%g"), value);
+          label.Format(_L("%g"), value);
 
           builder.DrawText(fx0 + depthx - (axisfontsize * 0.5), wy + (axisfontsize * 0.35), label.Get(), valuestyle);
         }
@@ -218,7 +218,7 @@ bool GRPSTATISTICSCHARTCOLUMNS3D::DrawPlot(GRPSTATISTICSCHARTBUILDER& builder, d
           if(config.GetShowValues())
             {
               XSTRING vlabel;
-              vlabel.Format(__L("%g"), value);
+              vlabel.Format(_L("%g"), value);
 
               GRPSTATISTICSCHARTTEXTSTYLE vstyle;
               vstyle.color  = valuecolor;                                        // white, over the front face

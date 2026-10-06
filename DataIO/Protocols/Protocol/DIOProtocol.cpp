@@ -876,23 +876,23 @@ DIOPROTOCOL::DIOPROTOCOL(DIOSTREAM* diostream)
   xdir=GEN_XFACTORY.Create_Dir();
   timerfileprogress=GEN_XFACTORY.CreateTimer();
 
-  AddCommand(DIOPROTOCOL_CMDTYPE_SENDISINITSERVERPROTOCOL, __L("O"), __L("O"), RCV_SendIsInitServerProtocol, __L("SendIsInitServerProtocol"));
-  AddCommand(DIOPROTOCOL_CMDTYPE_GETPROTOCOLVERSION, __L(""), __L("WWW"), RCV_GetProtocolVersion, __L("GetProtocolVersion"));
-  AddCommand(DIOPROTOCOL_CMDTYPE_GETAPPLICATIONVERSION, __L(""), __L("WWW"), RCV_Application_GetVersion, __L("Application_GetVersion"));
-  AddCommand(DIOPROTOCOL_CMDTYPE_GETAPPLICATIONNAME, __L(""), __L("S"), RCV_Application_GetName, __L("Application_GetName"));
-  AddCommand(DIOPROTOCOL_CMDTYPE_PING, __L(""), __L("O"), RCV_Ping, __L("Ping"));
-  AddCommand(DIOPROTOCOL_CMDTYPE_GETDATETIME, __L(""), __L("S"), RCV_GetDateTime, __L("GetDateTime"));
-  AddCommand(DIOPROTOCOL_CMDTYPE_SETDATETIME, __L("S"), __L("O"), RCV_SetDateTime, __L("SetDateTime"));
-  AddCommand(DIOPROTOCOL_CMDTYPE_INITFILEBLOCK, __L("SSBD"), __L("B"), RCV_InitFileBlock, __L("FileInit"));
-  AddCommand(DIOPROTOCOL_CMDTYPE_GETFILEBLOCK, __L(""), __L("BDDDBAX"), RCV_GetFileBlock, __L("GetFileBlock"));
-  AddCommand(DIOPROTOCOL_CMDTYPE_SENDFILEBLOCK, __L("BDDDBAX"), __L("B"), RCV_SendFileBlock, __L("SendFileBlock"));
-  AddCommand(DIOPROTOCOL_CMDTYPE_DELETEFILE, __L("SB"), __L("O"), RCV_DeleteFile, __L("DeleteFile"));
-  AddCommand(DIOPROTOCOL_CMDTYPE_MAKEDIR, __L("S"), __L("O"), RCV_MakeDir, __L("MakeDir"));
-  AddCommand(DIOPROTOCOL_CMDTYPE_DELETEDIR, __L("SB"), __L("O"), RCV_DeleteDir, __L("DeleteDir"));
-  AddCommand(DIOPROTOCOL_CMDTYPE_GETFIRSTDIRELEMENT, __L("SS"), __L("SBDD"), RCV_GetDirElement, __L("GetFirstDirElement"));
-  AddCommand(DIOPROTOCOL_CMDTYPE_GETNEXTDIRELEMENT, __L(""), __L("SBDD"), RCV_GetDirElement, __L("GetNextDirElement"));
+  AddCommand(DIOPROTOCOL_CMDTYPE_SENDISINITSERVERPROTOCOL, _L("O"), _L("O"), RCV_SendIsInitServerProtocol, _L("SendIsInitServerProtocol"));
+  AddCommand(DIOPROTOCOL_CMDTYPE_GETPROTOCOLVERSION, _L(""), _L("WWW"), RCV_GetProtocolVersion, _L("GetProtocolVersion"));
+  AddCommand(DIOPROTOCOL_CMDTYPE_GETAPPLICATIONVERSION, _L(""), _L("WWW"), RCV_Application_GetVersion, _L("Application_GetVersion"));
+  AddCommand(DIOPROTOCOL_CMDTYPE_GETAPPLICATIONNAME, _L(""), _L("S"), RCV_Application_GetName, _L("Application_GetName"));
+  AddCommand(DIOPROTOCOL_CMDTYPE_PING, _L(""), _L("O"), RCV_Ping, _L("Ping"));
+  AddCommand(DIOPROTOCOL_CMDTYPE_GETDATETIME, _L(""), _L("S"), RCV_GetDateTime, _L("GetDateTime"));
+  AddCommand(DIOPROTOCOL_CMDTYPE_SETDATETIME, _L("S"), _L("O"), RCV_SetDateTime, _L("SetDateTime"));
+  AddCommand(DIOPROTOCOL_CMDTYPE_INITFILEBLOCK, _L("SSBD"), _L("B"), RCV_InitFileBlock, _L("FileInit"));
+  AddCommand(DIOPROTOCOL_CMDTYPE_GETFILEBLOCK, _L(""), _L("BDDDBAX"), RCV_GetFileBlock, _L("GetFileBlock"));
+  AddCommand(DIOPROTOCOL_CMDTYPE_SENDFILEBLOCK, _L("BDDDBAX"), _L("B"), RCV_SendFileBlock, _L("SendFileBlock"));
+  AddCommand(DIOPROTOCOL_CMDTYPE_DELETEFILE, _L("SB"), _L("O"), RCV_DeleteFile, _L("DeleteFile"));
+  AddCommand(DIOPROTOCOL_CMDTYPE_MAKEDIR, _L("S"), _L("O"), RCV_MakeDir, _L("MakeDir"));
+  AddCommand(DIOPROTOCOL_CMDTYPE_DELETEDIR, _L("SB"), _L("O"), RCV_DeleteDir, _L("DeleteDir"));
+  AddCommand(DIOPROTOCOL_CMDTYPE_GETFIRSTDIRELEMENT, _L("SS"), _L("SBDD"), RCV_GetDirElement, _L("GetFirstDirElement"));
+  AddCommand(DIOPROTOCOL_CMDTYPE_GETNEXTDIRELEMENT, _L(""), _L("SBDD"), RCV_GetDirElement, _L("GetNextDirElement"));
   #ifdef DIO_ALERTS_ACTIVE
-  AddCommand(DIOPROTOCOL_CMDTYPE_SENDALERT, __L("SSDDDDBSSS"), __L("B"), RCV_SendAlert, __L("SendAlert"));
+  AddCommand(DIOPROTOCOL_CMDTYPE_SENDALERT, _L("SSDDDDBSSS"), _L("B"), RCV_SendAlert, _L("SendAlert"));
   #endif
 
   fileprogress = GEN_NEW DIOPROTOCOL_FILE();
@@ -916,13 +916,13 @@ DIOPROTOCOL::DIOPROTOCOL(DIOSTREAM* diostream)
   xmutexfilesprogress=GEN_XFACTORY.Create_Mutex();
   if(!xmutexfilesprogress) return;
 
-  xthreadreceived = CREATEXTHREAD(XTHREADGROUPID_DIOPROTOCOL, __L("DIOPROTOCOL::DIOPROTOCOL received"), ThreadReceived, (void*)this);
+  xthreadreceived = CREATEXTHREAD(XTHREADGROUPID_DIOPROTOCOL, _L("DIOPROTOCOL::DIOPROTOCOL received"), ThreadReceived, (void*)this);
   if(xthreadreceived)
     {
       if(!xthreadreceived->Ini()) return;
     }
 
-  xthreadasks = CREATEXTHREAD(XTHREADGROUPID_DIOPROTOCOL, __L("DIOPROTOCOL::DIOPROTOCOL ask"), ThreadAsks, (void*)this);
+  xthreadasks = CREATEXTHREAD(XTHREADGROUPID_DIOPROTOCOL, _L("DIOPROTOCOL::DIOPROTOCOL ask"), ThreadAsks, (void*)this);
   if(xthreadasks)
     {
       if(!xthreadasks->Ini()) return;
@@ -1759,8 +1759,8 @@ DIOPROTOCOL_RESULT DIOPROTOCOL::Received()
       DIOPROTOCOL_COMMAND* cmd  = GetCommand(rtype);
       if(cmd)
         {
-         XTRACE_PRINTCOLOR(((isanswer)?1:2), __L("DIOPROTOCOL %s %s : %08X %08X %02d %-35s (%8d)") , GetDIOStream()->GetConfig()->IsServer()?__L("Server  "):__L("Client  ")
-                                                                                                    , (isanswer)?__L("Answer  "):__L("Ask     ")
+         XTRACE_PRINTCOLOR(((isanswer)?1:2), _L("DIOPROTOCOL %s %s : %08X %08X %02d %-35s (%8d)") , GetDIOStream()->GetConfig()->IsServer()?_L("Server  "):_L("Client  ")
+                                                                                                    , (isanswer)?_L("Answer  "):_L("Ask     ")
                                                                                                     , this
                                                                                                     , ID
                                                                                                     , rtype
@@ -1949,7 +1949,7 @@ bool DIOPROTOCOL::Command(XDWORD type, XBUFFER& xbuffer, int timeout)
   if(cmd)
     {
       /*
-     XTRACE_PRINTCOLOR(1, __L("DIOPROTOCOL %s Command  : %08X %08X %02d %-35s (%8d)") , GetDIOStream()->GetConfig()->IsServer()?__L("Server  "):__L("Client  ")
+     XTRACE_PRINTCOLOR(1, _L("DIOPROTOCOL %s Command  : %08X %08X %02d %-35s (%8d)") , GetDIOStream()->GetConfig()->IsServer()?_L("Server  "):_L("Client  ")
                                                                                        , this
                                                                                        , ID
                                                                                        , type
@@ -1959,7 +1959,7 @@ bool DIOPROTOCOL::Command(XDWORD type, XBUFFER& xbuffer, int timeout)
       if(SendCommand(type, ID, xbuffer))
         {
           /*
-         XTRACE_PRINTCOLOR(1, __L("DIOPROTOCOL %s Send     : %08X %08X %02d %-35s (%8d)") , GetDIOStream()->GetConfig()->IsServer()?__L("Server  "):__L("Client  ")
+         XTRACE_PRINTCOLOR(1, _L("DIOPROTOCOL %s Send     : %08X %08X %02d %-35s (%8d)") , GetDIOStream()->GetConfig()->IsServer()?_L("Server  "):_L("Client  ")
                                                                                            , this
                                                                                            , ID
                                                                                            , type
@@ -2002,7 +2002,7 @@ bool DIOPROTOCOL::Command(XDWORD type, XBUFFER& xbuffer, int timeout)
 
           if(!status)
             {
-             XTRACE_PRINTCOLOR((status?1:4), __L("DIOPROTOCOL %s : %08X %08X %02d %-35s (%8d) %s"), GetDIOStream()->GetConfig()->IsServer()?__L("Server "):__L("Client "), this, ID, type, cmd->GetDescription(), xbuffer.GetSize(), status?__L("Ok"):__L("ERROR!"));
+             XTRACE_PRINTCOLOR((status?1:4), _L("DIOPROTOCOL %s : %08X %08X %02d %-35s (%8d) %s"), GetDIOStream()->GetConfig()->IsServer()?_L("Server "):_L("Client "), this, ID, type, cmd->GetDescription(), xbuffer.GetSize(), status?_L("Ok"):_L("ERROR!"));
             }
         }
 
@@ -3037,7 +3037,7 @@ bool DIOPROTOCOL::CMD_GetDirElement(XCHAR* pathsearch, XCHAR* mask, XPATH& namef
   DIOPROTOCOL_COMMAND* cmd = GetCommand((!_pathsearch.IsEmpty())?DIOPROTOCOL_CMDTYPE_GETFIRSTDIRELEMENT:DIOPROTOCOL_CMDTYPE_GETNEXTDIRELEMENT);
   if(!cmd) return false;
 
-  if(_mask.IsEmpty()) _mask = __L("*");
+  if(_mask.IsEmpty()) _mask = _L("*");
 
   xbuffer.AddWithMask(cmd->GetSINMask(), &_pathsearch, &_mask);
 

@@ -36,7 +36,7 @@
 
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
 
-#define SCRIPT_LIB_NAME_PROCESS   __L("Process")
+#define SCRIPT_LIB_NAME_PROCESS   _L("Process")
 
 
 

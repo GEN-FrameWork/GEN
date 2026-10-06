@@ -88,7 +88,7 @@ DIOANDROIDSTREAMI2C::DIOANDROIDSTREAMI2C() : DIOSTREAMI2C()
 {
   Clean();
 
-  threadconnection = CREATEXTHREAD(XTHREADGROUPID_DIOSTREAMI2C, __L("DIOANDROIDSTREAMI2C::DIOANDROIDSTREAMI2C"), ThreadConnection, (void*)this);
+  threadconnection = CREATEXTHREAD(XTHREADGROUPID_DIOSTREAMI2C, _L("DIOANDROIDSTREAMI2C::DIOANDROIDSTREAMI2C"), ThreadConnection, (void*)this);
 }
 
 
@@ -246,7 +246,7 @@ void DIOANDROIDSTREAMI2C::ThreadConnection(void* data)
                                                                               if(diostream->I2C_Read(diostream->config->GetRemoteAddress(), _data, diostream->sizeread))
                                                                                 {
                                                                                   diostream->inbuffer->Add(_data, diostream->sizeread);
-                                                                                  //XTRACE_PRINTCOLOR(3, __L("(Addr %04X, size:%d)"), diostream->config->GetRemoteAddress(), diostream->inbuffer->GetSize());
+                                                                                  //XTRACE_PRINTCOLOR(3, _L("(Addr %04X, size:%d)"), diostream->config->GetRemoteAddress(), diostream->inbuffer->GetSize());
                                                                                   //XTRACE_PRINTDATABLOCKCOLOR(XTRACE_COLOR_BLUE, (*diostream->inbuffer));
 
                                                                                   diostream->sizeread = 0;
@@ -321,7 +321,7 @@ bool DIOANDROIDSTREAMI2C::I2C_Read(XWORD address, XBYTE* buffer, XWORD size)
   /*
   int _size = read(handle, buffer, size);
 
-  XTRACE_PRINTCOLOR(3, __L("(Read size: %d)"), _size);
+  XTRACE_PRINTCOLOR(3, _L("(Read size: %d)"), _size);
 
   return false;
   */
@@ -337,7 +337,7 @@ bool DIOANDROIDSTREAMI2C::I2C_Read(XWORD address, XBYTE* buffer, XWORD size)
   msg_rdwr.msgs   = &msg;
   msg_rdwr.nmsgs  = 1;
 
-  //XTRACE_PRINTCOLOR(3, __L("[Addr %04X, size:%d]"), address, size);
+  //XTRACE_PRINTCOLOR(3, _L("[Addr %04X, size:%d]"), address, size);
 
   if(ioctl(handle, DIOANDROIDSTREAMI2C_RDWR, &msg_rdwr) < 0) return false;
 
@@ -379,7 +379,7 @@ bool DIOANDROIDSTREAMI2C::I2C_Write(XWORD address, XBYTE* buffer, XWORD size)
 
   if(ioctl(handle, DIOANDROIDSTREAMI2C_RDWR, &msg_rdwr) < 0)
     {
-      XTRACE_PRINTCOLOR(4, __L("IOCTL ERROR : %d"), errno);
+      XTRACE_PRINTCOLOR(4, _L("IOCTL ERROR : %d"), errno);
       return false;
     }
 

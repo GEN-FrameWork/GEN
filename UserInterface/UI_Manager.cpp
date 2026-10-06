@@ -205,7 +205,7 @@ bool UI_MANAGER::Load(XPATH& pathfile, GRPSCREEN* screen, int viewportindex)
 
   iszippedfile = false;
 
-  if(pathfile.Find(__L(".zip"), true) != XSTRING_NOTFOUND) 
+  if(pathfile.Find(_L(".zip"), true) != XSTRING_NOTFOUND) 
     {
       iszippedfile = true;
     }
@@ -216,7 +216,7 @@ bool UI_MANAGER::Load(XPATH& pathfile, GRPSCREEN* screen, int viewportindex)
 
       if(!status)
         {
-          XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, __L("[UI Load] ERROR: cannot open layout XML [%s] (file missing? name case mismatch on a case-sensitive filesystem?)"), pathfile.Get());
+          XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, _L("[UI Load] ERROR: cannot open layout XML [%s] (file missing? name case mismatch on a case-sensitive filesystem?)"), pathfile.Get());
         }
     }
    else
@@ -246,7 +246,7 @@ bool UI_MANAGER::Load(XPATH& pathfile, GRPSCREEN* screen, int viewportindex)
           XSTRING namefile;
 
           namefile    = origin_namefile;
-          namefile   += __L(".xml");
+          namefile   += _L(".xml");
 
 
           status = unzipfile->DecompressFile(namefile, unzippathfile, namefile.Get());
@@ -262,13 +262,13 @@ bool UI_MANAGER::Load(XPATH& pathfile, GRPSCREEN* screen, int viewportindex)
               // GetUnzipPathFile()) automatically follows to the writable location.
               XPATH tmppath;
 
-              tmppath = __L("/tmp/");
+              tmppath = _L("/tmp/");
 
               status = unzipfile->DecompressFile(namefile, tmppath, namefile.Get());
               if(status)
                 {
                   unzippathfile = tmppath;
-                  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, __L("[UI Load] bundle dir not writable; extracting [%s] to /tmp instead"), namefile.Get());
+                  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, _L("[UI Load] bundle dir not writable; extracting [%s] to /tmp instead"), namefile.Get());
                 }
             }
           #endif
@@ -286,12 +286,12 @@ bool UI_MANAGER::Load(XPATH& pathfile, GRPSCREEN* screen, int viewportindex)
             }
            else
             {
-              XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, __L("[UI Load] ERROR: cannot extract [%s] from bundle [%s] (entry missing in zip, or target dir not writable)"), namefile.Get(), pathfile.Get());
+              XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, _L("[UI Load] ERROR: cannot extract [%s] from bundle [%s] (entry missing in zip, or target dir not writable)"), namefile.Get(), pathfile.Get());
             }
         }
        else
         {
-          XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, __L("[UI Load] ERROR: cannot open layout bundle [%s] (file missing? name case mismatch on a case-sensitive filesystem?)"), pathfile.Get());
+          XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, _L("[UI Load] ERROR: cannot open layout bundle [%s] (file missing? name case mismatch on a case-sensitive filesystem?)"), pathfile.Get());
           CloseUnZipFile();
         }
     }
@@ -2839,7 +2839,7 @@ UI_ANIMATION* UI_MANAGER::GetOrAddAnimationCache(UI_SKIN_DRAWMODE drawmode, GRPP
     {
       XSTRING sizepart;
 
-      sizepart.Format(__L("@%dx%d"), (int)width, (int)height);
+      sizepart.Format(_L("@%dx%d"), (int)width, (int)height);
       cachekey.Add(sizepart);
     }
 
@@ -2923,8 +2923,8 @@ bool UI_MANAGER::IsVectorResource(XCHAR* resource)
 
   if(!pathresource.GetExt(ext)) return false;
 
-  if(!ext.Compare(__L(".svg"), true)) return true;
-  if(!ext.Compare(__L(".dxf"), true)) return true;
+  if(!ext.Compare(_L(".svg"), true)) return true;
+  if(!ext.Compare(_L(".dxf"), true)) return true;
 
   return false;
 }
@@ -3073,7 +3073,7 @@ bool UI_MANAGER::SendEvent(int event, ...)
 
                                                                 if(element->IsVisible()) 
                                                                   { 
-                                                                    //XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, __L("UI Element [%s]: Selected. "), element->GetName()->Get());
+                                                                    //XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, _L("UI Element [%s]: Selected. "), element->GetName()->Get());
 
                                                                     xevent.SetElement(element);          
                                                                     postevent = true;
@@ -3183,7 +3183,7 @@ bool UI_MANAGER::ChangeAutomaticTextElementValue(UI_ELEMENT* element, XSTRING* m
          father->GetType() == UI_ELEMENT_TYPE_PROGRESSRADIAL  ||
          father->GetType() == UI_ELEMENT_TYPE_PROGRESSIMAGE)
         {
-          if(!maskvalue->Compare(__L("PROGRESSBAR_PERCENT"), true))
+          if(!maskvalue->Compare(_L("PROGRESSBAR_PERCENT"), true))
             {
               float level = 0.0f;
 
@@ -3195,8 +3195,8 @@ bool UI_MANAGER::ChangeAutomaticTextElementValue(UI_ELEMENT* element, XSTRING* m
                   default                             : break;
                 }
 
-              maskresolved->Format(__L("%d"), (int)level);
-              maskresolved->Add(__L("\x25"));
+              maskresolved->Format(_L("%d"), (int)level);
+              maskresolved->Add(_L("\x25"));
 
               return true;
             }
@@ -3846,7 +3846,7 @@ bool UI_MANAGER::GetParentSizeFont(XFILEXMLELEMENT* node, double& sizefont)
 
   sizefont = 0;
 
-  if(!GetLayoutElementValue(node, __L("sizefont"), sizefont))
+  if(!GetLayoutElementValue(node, _L("sizefont"), sizefont))
     {
       return GetParentSizeFont(node->GetFather(), sizefont);
     }
@@ -3883,22 +3883,22 @@ bool UI_MANAGER::ResolvePercentValue(XSTRING& valuestr, double basis, double& ou
   if(valuestr.IsEmpty()) return false;
 
   // Phase 4: "Nem" resolves against `basis` as the font-size (em). Callers that want em must pass sizefont.
-  if(valuestr.Find(__L("em"), true) != XSTRING_NOTFOUND && valuestr.Find(__L("%"), true) == XSTRING_NOTFOUND)
+  if(valuestr.Find(_L("em"), true) != XSTRING_NOTFOUND && valuestr.Find(_L("%"), true) == XSTRING_NOTFOUND)
     {
       XSTRING number = valuestr;
-      number.DeleteCharacter(__C('e'));
-      number.DeleteCharacter(__C('E'));
-      number.DeleteCharacter(__C('m'));
-      number.DeleteCharacter(__C('M'));
-      number.DeleteNoCharacters(__L(" \t\r\n"));
+      number.DeleteCharacter(_C('e'));
+      number.DeleteCharacter(_C('E'));
+      number.DeleteCharacter(_C('m'));
+      number.DeleteCharacter(_C('M'));
+      number.DeleteNoCharacters(_L(" \t\r\n"));
       out = basis * number.ConvertToDouble();
       return true;
     }
 
-  if(valuestr.Find(__L("%"), true) == XSTRING_NOTFOUND) return false;
+  if(valuestr.Find(_L("%"), true) == XSTRING_NOTFOUND) return false;
 
   XSTRING number = valuestr;
-  number.DeleteNoCharacters(__L("% \t\r\n"));   // strip the '%' plus any stray whitespace, e.g. "50 %"
+  number.DeleteNoCharacters(_L("% \t\r\n"));   // strip the '%' plus any stray whitespace, e.g. "50 %"
 
   out = basis * (number.ConvertToDouble() / 100.0);
 
@@ -3929,7 +3929,7 @@ void UI_MANAGER::BuildLengthContext(UI_LAYOUT* layout, double basis, double font
   if(layout && layout->GetStyleSheet())
     {
       XSTRING rootfs;
-      if(layout->GetStyleSheet()->Variables_Get(__L("--root-font-size"), rootfs) && !rootfs.IsEmpty())
+      if(layout->GetStyleSheet()->Variables_Get(_L("--root-font-size"), rootfs) && !rootfs.IsEmpty())
         {
           double v = rootfs.ConvertToDouble();
           if(v > 0.0) out.rootfontsize = v;
@@ -3985,7 +3985,7 @@ bool UI_MANAGER::ApplyStyleLengthsFromBag(UI_ELEMENT* element, UI_LAYOUT* layout
       if(element->GetFather()->GetComputedStyle())
         {
           double sf = 0.0;
-          if(element->GetFather()->GetComputedStyle()->Get(__L("sizefont"), sf) && sf > 0.0) fatherem = sf;
+          if(element->GetFather()->GetComputedStyle()->Get(_L("sizefont"), sf) && sf > 0.0) fatherem = sf;
         }
     }
 
@@ -4003,11 +4003,11 @@ bool UI_MANAGER::ApplyStyleLengthsFromBag(UI_ELEMENT* element, UI_LAYOUT* layout
     }
 
   XSTRING position;
-  if(!father_is_flow && style.Get(__L("xpos"), position))
+  if(!father_is_flow && style.Get(_L("xpos"), position))
     {
-      if(!position.Compare(__L("left"), true))        xpos = UI_ELEMENT_TYPE_ALIGN_LEFT;
-      else if(!position.Compare(__L("right"), true))  xpos = UI_ELEMENT_TYPE_ALIGN_RIGHT;
-      else if(!position.Compare(__L("center"), true)) xpos = UI_ELEMENT_TYPE_ALIGN_CENTER;
+      if(!position.Compare(_L("left"), true))        xpos = UI_ELEMENT_TYPE_ALIGN_LEFT;
+      else if(!position.Compare(_L("right"), true))  xpos = UI_ELEMENT_TYPE_ALIGN_RIGHT;
+      else if(!position.Compare(_L("center"), true)) xpos = UI_ELEMENT_TYPE_ALIGN_CENTER;
       else
         {
           UI_LENGTH_CONTEXT ctx;
@@ -4016,11 +4016,11 @@ bool UI_MANAGER::ApplyStyleLengthsFromBag(UI_ELEMENT* element, UI_LAYOUT* layout
         }
     }
 
-  if(!father_is_flow && style.Get(__L("ypos"), position))
+  if(!father_is_flow && style.Get(_L("ypos"), position))
     {
-      if(!position.Compare(__L("up"), true))          ypos = UI_ELEMENT_TYPE_ALIGN_UP;
-      else if(!position.Compare(__L("down"), true))   ypos = UI_ELEMENT_TYPE_ALIGN_DOWN;
-      else if(!position.Compare(__L("center"), true)) ypos = UI_ELEMENT_TYPE_ALIGN_CENTER;
+      if(!position.Compare(_L("up"), true))          ypos = UI_ELEMENT_TYPE_ALIGN_UP;
+      else if(!position.Compare(_L("down"), true))   ypos = UI_ELEMENT_TYPE_ALIGN_DOWN;
+      else if(!position.Compare(_L("center"), true)) ypos = UI_ELEMENT_TYPE_ALIGN_CENTER;
       else
         {
           UI_LENGTH_CONTEXT ctx;
@@ -4030,10 +4030,10 @@ bool UI_MANAGER::ApplyStyleLengthsFromBag(UI_ELEMENT* element, UI_LAYOUT* layout
     }
 
   XSTRING size;
-  if(style.Get(__L("width"), size))
+  if(style.Get(_L("width"), size))
     {
-      if(!size.Compare(__L("max"), true))        width = UI_ELEMENT_TYPE_ALIGN_MAX;
-      else if(!size.Compare(__L("auto"), true))  width = UI_ELEMENT_TYPE_ALIGN_AUTO;
+      if(!size.Compare(_L("max"), true))        width = UI_ELEMENT_TYPE_ALIGN_MAX;
+      else if(!size.Compare(_L("auto"), true))  width = UI_ELEMENT_TYPE_ALIGN_AUTO;
       else
         {
           UI_LENGTH_CONTEXT ctx;
@@ -4042,10 +4042,10 @@ bool UI_MANAGER::ApplyStyleLengthsFromBag(UI_ELEMENT* element, UI_LAYOUT* layout
         }
     }
 
-  if(style.Get(__L("height"), size))
+  if(style.Get(_L("height"), size))
     {
-      if(!size.Compare(__L("max"), true))        height = UI_ELEMENT_TYPE_ALIGN_MAX;
-      else if(!size.Compare(__L("auto"), true))  height = UI_ELEMENT_TYPE_ALIGN_AUTO;
+      if(!size.Compare(_L("max"), true))        height = UI_ELEMENT_TYPE_ALIGN_MAX;
+      else if(!size.Compare(_L("auto"), true))  height = UI_ELEMENT_TYPE_ALIGN_AUTO;
       else
         {
           UI_LENGTH_CONTEXT ctx;
@@ -4074,16 +4074,16 @@ bool UI_MANAGER::ApplyStyleLengthsFromBag(UI_ELEMENT* element, UI_LAYOUT* layout
     double  gapvalue = 0.0;
     double  rowgap   = element->GetRowGap();
     double  colgap   = element->GetColumnGap();
-    if(style.Get(__L("gap")       , gapstr) && ResolveStyleLength(gapstr, ctx, gapvalue)) { rowgap = gapvalue; colgap = gapvalue; }
-    if(style.Get(__L("row-gap")   , gapstr) && ResolveStyleLength(gapstr, ctx, gapvalue)) rowgap = gapvalue;
-    if(style.Get(__L("column-gap"), gapstr) && ResolveStyleLength(gapstr, ctx, gapvalue)) colgap = gapvalue;
+    if(style.Get(_L("gap")       , gapstr) && ResolveStyleLength(gapstr, ctx, gapvalue)) { rowgap = gapvalue; colgap = gapvalue; }
+    if(style.Get(_L("row-gap")   , gapstr) && ResolveStyleLength(gapstr, ctx, gapvalue)) rowgap = gapvalue;
+    if(style.Get(_L("column-gap"), gapstr) && ResolveStyleLength(gapstr, ctx, gapvalue)) colgap = gapvalue;
     element->SetGap(rowgap, colgap);
   }
 
   XSTRING flexbasisstr;
-  if(style.Get(__L("flex-basis"), flexbasisstr))
+  if(style.Get(_L("flex-basis"), flexbasisstr))
     {
-      if(!flexbasisstr.Compare(__L("auto"), true)) element->SetFlexBasisAuto();
+      if(!flexbasisstr.Compare(_L("auto"), true)) element->SetFlexBasisAuto();
       else
         {
           UI_LENGTH_CONTEXT ctx;
@@ -4108,7 +4108,7 @@ bool UI_MANAGER::ApplyStyleLengthsFromBag(UI_ELEMENT* element, UI_LAYOUT* layout
   }
 
   XSTRING paddingstr;
-  if(style.Get(__L("padding"), paddingstr))
+  if(style.Get(_L("padding"), paddingstr))
     {
       double out[4] = { 0.0, 0.0, 0.0, 0.0 };
       UI_LENGTH_CONTEXT ctx;
@@ -4128,10 +4128,10 @@ bool UI_MANAGER::ApplyStyleLengthsFromBag(UI_ELEMENT* element, UI_LAYOUT* layout
     BuildLengthContext(layout, fatherwidth, fatherem, ctx);
     XSTRING pstr;
     double  pv = 0.0;
-    if(style.Get(__L("padding-left")  , pstr) && ResolveStyleLength(pstr, ctx, pv)) element->SetPadding(UI_ELEMENT_TYPE_ALIGN_LEFT , pv);
-    if(style.Get(__L("padding-right") , pstr) && ResolveStyleLength(pstr, ctx, pv)) element->SetPadding(UI_ELEMENT_TYPE_ALIGN_RIGHT, pv);
-    if(style.Get(__L("padding-top")   , pstr) && ResolveStyleLength(pstr, ctx, pv)) element->SetPadding(UI_ELEMENT_TYPE_ALIGN_UP, pv);
-    if(style.Get(__L("padding-bottom"), pstr) && ResolveStyleLength(pstr, ctx, pv)) element->SetPadding(UI_ELEMENT_TYPE_ALIGN_DOWN , pv);
+    if(style.Get(_L("padding-left")  , pstr) && ResolveStyleLength(pstr, ctx, pv)) element->SetPadding(UI_ELEMENT_TYPE_ALIGN_LEFT , pv);
+    if(style.Get(_L("padding-right") , pstr) && ResolveStyleLength(pstr, ctx, pv)) element->SetPadding(UI_ELEMENT_TYPE_ALIGN_RIGHT, pv);
+    if(style.Get(_L("padding-top")   , pstr) && ResolveStyleLength(pstr, ctx, pv)) element->SetPadding(UI_ELEMENT_TYPE_ALIGN_UP, pv);
+    if(style.Get(_L("padding-bottom"), pstr) && ResolveStyleLength(pstr, ctx, pv)) element->SetPadding(UI_ELEMENT_TYPE_ALIGN_DOWN , pv);
   }
 
   return true;
@@ -4276,8 +4276,8 @@ bool UI_MANAGER::GetLayoutElement_Base(XFILEXMLELEMENT* node, UI_LAYOUT* layout,
   // Set the element's identity BEFORE the CSS cascade runs, so #id and .class selectors can match. The XML
   // attributes we just harvested carry the authoritative identity; CSS may still overwrite visual keys later,
   // but never the identity itself.
-  XSTRING xml_name;   outstyle.Get(__L("name"), xml_name);
-  XSTRING xml_class;  outstyle.Get(__L("class"), xml_class);
+  XSTRING xml_name;   outstyle.Get(_L("name"), xml_name);
+  XSTRING xml_class;  outstyle.Get(_L("class"), xml_class);
 
   if(element)
     {
@@ -4302,7 +4302,7 @@ bool UI_MANAGER::GetLayoutElement_Base(XFILEXMLELEMENT* node, UI_LAYOUT* layout,
   // and, if present, layer its declarations on top. Absent/empty "style" (the overwhelming majority of
   // elements, and every layout authored before this existed) costs one bag lookup and nothing else.
   XSTRING inlinestyle;
-  if(outstyle.Get(__L("style"), inlinestyle) && !inlinestyle.IsEmpty())
+  if(outstyle.Get(_L("style"), inlinestyle) && !inlinestyle.IsEmpty())
     {
       UI_STYLESHEET* sheet = layout ? layout->GetStyleSheet() : NULL;
       outstyle.FillFromInlineStyle(inlinestyle, sheet);
@@ -4347,10 +4347,10 @@ bool UI_MANAGER::GetLayoutElement_Base(UI_STYLE& style, XSTRING& fathertagname, 
 
   element->SetIsDetached(false);
 
-  if(!fathertagname.Compare(__L("layout"), true)) element->SetIsDetached(true);
+  if(!fathertagname.Compare(_L("layout"), true)) element->SetIsDetached(true);
 
   XSTRING name;
-  style.Get(__L("name"), name);
+  style.Get(_L("name"), name);
   element->GetName()->Set(name);
 
   // Step 4 (relative units): "%" on xpos/ypos/width/height resolves against the father's own already-resolved
@@ -4370,7 +4370,7 @@ bool UI_MANAGER::GetLayoutElement_Base(UI_STYLE& style, XSTRING& fathertagname, 
       else if(element->GetFather()->GetComputedStyle())
         {
           double sf = 0.0;
-          if(element->GetFather()->GetComputedStyle()->Get(__L("sizefont"), sf) && sf > 0.0) fatherem = sf;
+          if(element->GetFather()->GetComputedStyle()->Get(_L("sizefont"), sf) && sf > 0.0) fatherem = sf;
         }
     }
 
@@ -4379,58 +4379,58 @@ bool UI_MANAGER::GetLayoutElement_Base(UI_STYLE& style, XSTRING& fathertagname, 
   const bool use_style_lengths = (layout && layout->GetStyleSheet());
 
   XSTRING position;
-  if(style.Get(__L("xpos"), position))
+  if(style.Get(_L("xpos"), position))
     {
-      if(!position.Compare(__L("left"), true))  xpos = UI_ELEMENT_TYPE_ALIGN_LEFT;
-        else if(!position.Compare(__L("right"), true))  xpos = UI_ELEMENT_TYPE_ALIGN_RIGHT;
-          else if(!position.Compare(__L("center"), true)) xpos = UI_ELEMENT_TYPE_ALIGN_CENTER;
+      if(!position.Compare(_L("left"), true))  xpos = UI_ELEMENT_TYPE_ALIGN_LEFT;
+        else if(!position.Compare(_L("right"), true))  xpos = UI_ELEMENT_TYPE_ALIGN_RIGHT;
+          else if(!position.Compare(_L("center"), true)) xpos = UI_ELEMENT_TYPE_ALIGN_CENTER;
             else if(use_style_lengths)
               {
                 UI_LENGTH_CONTEXT ctx;
                 BuildLengthContext(layout, fatherwidth, fatherem, ctx);
-                if(!ResolveStyleLength(position, ctx, xpos)) style.Get(__L("xpos"), xpos);
+                if(!ResolveStyleLength(position, ctx, xpos)) style.Get(_L("xpos"), xpos);
               }
             else
               {
-                double basis = (position.Find(__L("em"), true) != XSTRING_NOTFOUND) ? fatherem : fatherwidth;
-                if(!ResolvePercentValue(position, basis, xpos)) style.Get(__L("xpos"), xpos);
+                double basis = (position.Find(_L("em"), true) != XSTRING_NOTFOUND) ? fatherem : fatherwidth;
+                if(!ResolvePercentValue(position, basis, xpos)) style.Get(_L("xpos"), xpos);
               }
     }
 
-  if(style.Get(__L("ypos"), position))
+  if(style.Get(_L("ypos"), position))
     {
-      if(!position.Compare(__L("up"), true))  ypos = UI_ELEMENT_TYPE_ALIGN_UP;
-        else if(!position.Compare(__L("down"), true))  ypos = UI_ELEMENT_TYPE_ALIGN_DOWN;
-          else if(!position.Compare(__L("center"), true)) ypos = UI_ELEMENT_TYPE_ALIGN_CENTER;
+      if(!position.Compare(_L("up"), true))  ypos = UI_ELEMENT_TYPE_ALIGN_UP;
+        else if(!position.Compare(_L("down"), true))  ypos = UI_ELEMENT_TYPE_ALIGN_DOWN;
+          else if(!position.Compare(_L("center"), true)) ypos = UI_ELEMENT_TYPE_ALIGN_CENTER;
             else if(use_style_lengths)
               {
                 UI_LENGTH_CONTEXT ctx;
                 BuildLengthContext(layout, fatherheight, fatherem, ctx);
-                if(!ResolveStyleLength(position, ctx, ypos)) style.Get(__L("ypos"), ypos);
+                if(!ResolveStyleLength(position, ctx, ypos)) style.Get(_L("ypos"), ypos);
               }
             else
               {
-                double basis = (position.Find(__L("em"), true) != XSTRING_NOTFOUND) ? fatherem : fatherheight;
-                if(!ResolvePercentValue(position, basis, ypos)) style.Get(__L("ypos"), ypos);
+                double basis = (position.Find(_L("em"), true) != XSTRING_NOTFOUND) ? fatherem : fatherheight;
+                if(!ResolvePercentValue(position, basis, ypos)) style.Get(_L("ypos"), ypos);
               }
     }
 
 
   XSTRING size;
-  if(style.Get(__L("width"), size))
+  if(style.Get(_L("width"), size))
     {
-      if(!size.Compare(__L("max"), true))  width = UI_ELEMENT_TYPE_ALIGN_MAX;
-        else if(!size.Compare(__L("auto"), true))  width = UI_ELEMENT_TYPE_ALIGN_AUTO;
+      if(!size.Compare(_L("max"), true))  width = UI_ELEMENT_TYPE_ALIGN_MAX;
+        else if(!size.Compare(_L("auto"), true))  width = UI_ELEMENT_TYPE_ALIGN_AUTO;
           else if(use_style_lengths)
             {
               UI_LENGTH_CONTEXT ctx;
               BuildLengthContext(layout, fatherwidth, fatherem, ctx);
-              if(!ResolveStyleLength(size, ctx, width)) style.Get(__L("width"), width);
+              if(!ResolveStyleLength(size, ctx, width)) style.Get(_L("width"), width);
             }
           else
             {
-              double basis = (size.Find(__L("em"), true) != XSTRING_NOTFOUND) ? fatherem : fatherwidth;
-              if(!ResolvePercentValue(size, basis, width)) style.Get(__L("width"), width);
+              double basis = (size.Find(_L("em"), true) != XSTRING_NOTFOUND) ? fatherem : fatherwidth;
+              if(!ResolvePercentValue(size, basis, width)) style.Get(_L("width"), width);
             }
     }
    else
@@ -4441,20 +4441,20 @@ bool UI_MANAGER::GetLayoutElement_Base(UI_STYLE& style, XSTRING& fathertagname, 
         }
     }
 
-  if(style.Get(__L("height"), size))
+  if(style.Get(_L("height"), size))
     {
-      if(!size.Compare(__L("max"), true))  height = UI_ELEMENT_TYPE_ALIGN_MAX;
-        else if(!size.Compare(__L("auto"), true))  height = UI_ELEMENT_TYPE_ALIGN_AUTO;
+      if(!size.Compare(_L("max"), true))  height = UI_ELEMENT_TYPE_ALIGN_MAX;
+        else if(!size.Compare(_L("auto"), true))  height = UI_ELEMENT_TYPE_ALIGN_AUTO;
           else if(use_style_lengths)
             {
               UI_LENGTH_CONTEXT ctx;
               BuildLengthContext(layout, fatherheight, fatherem, ctx);
-              if(!ResolveStyleLength(size, ctx, height)) style.Get(__L("height"), height);
+              if(!ResolveStyleLength(size, ctx, height)) style.Get(_L("height"), height);
             }
           else
             {
-              double basis = (size.Find(__L("em"), true) != XSTRING_NOTFOUND) ? fatherem : fatherheight;
-              if(!ResolvePercentValue(size, basis, height)) style.Get(__L("height"), height);
+              double basis = (size.Find(_L("em"), true) != XSTRING_NOTFOUND) ? fatherem : fatherheight;
+              if(!ResolvePercentValue(size, basis, height)) style.Get(_L("height"), height);
             }
     }
    else
@@ -4471,40 +4471,40 @@ bool UI_MANAGER::GetLayoutElement_Base(UI_STYLE& style, XSTRING& fathertagname, 
   element->GetBoundaryLine()->height  = height;
 
   XSTRING directionstr;
-  if(style.Get(__L("direction"), directionstr))
+  if(style.Get(_L("direction"), directionstr))
     {
-      if(!directionstr.Compare(__L("horizontal"), true))  element->SetDirection(UI_ELEMENT_TYPE_DIRECTION_HORIZONTAL);
-        else if(!directionstr.Compare(__L("vertical"), true))  element->SetDirection(UI_ELEMENT_TYPE_DIRECTION_VERTICAL);
+      if(!directionstr.Compare(_L("horizontal"), true))  element->SetDirection(UI_ELEMENT_TYPE_DIRECTION_HORIZONTAL);
+        else if(!directionstr.Compare(_L("vertical"), true))  element->SetDirection(UI_ELEMENT_TYPE_DIRECTION_VERTICAL);
     }
 
   // Flexbox / Grid: CSS Lite wiring. "display: flex" | "display: grid". Absence leaves defaults (false).
   XSTRING displaystr;
-  if(style.Get(__L("display"), displaystr))
+  if(style.Get(_L("display"), displaystr))
     {
-      bool isflex = !displaystr.Compare(__L("flex"), true);
-      bool isgrid = !displaystr.Compare(__L("grid"), true);
+      bool isflex = !displaystr.Compare(_L("flex"), true);
+      bool isgrid = !displaystr.Compare(_L("grid"), true);
       element->SetFlexContainer(isflex);
       element->SetGridContainer(isgrid);
     }
 
   XSTRING flexdirectionstr;
-  if(style.Get(__L("flex-direction"), flexdirectionstr))
+  if(style.Get(_L("flex-direction"), flexdirectionstr))
     {
-      if(!flexdirectionstr.Compare(__L("row"), true))  element->SetFlexDirection(UI_FLEX_DIRECTION_ROW);
-        else if(!flexdirectionstr.Compare(__L("row-reverse"), true))  element->SetFlexDirection(UI_FLEX_DIRECTION_ROW_REVERSE);
-          else if(!flexdirectionstr.Compare(__L("column"), true))  element->SetFlexDirection(UI_FLEX_DIRECTION_COLUMN);
-            else if(!flexdirectionstr.Compare(__L("column-reverse"), true))  element->SetFlexDirection(UI_FLEX_DIRECTION_COLUMN_REVERSE);
+      if(!flexdirectionstr.Compare(_L("row"), true))  element->SetFlexDirection(UI_FLEX_DIRECTION_ROW);
+        else if(!flexdirectionstr.Compare(_L("row-reverse"), true))  element->SetFlexDirection(UI_FLEX_DIRECTION_ROW_REVERSE);
+          else if(!flexdirectionstr.Compare(_L("column"), true))  element->SetFlexDirection(UI_FLEX_DIRECTION_COLUMN);
+            else if(!flexdirectionstr.Compare(_L("column-reverse"), true))  element->SetFlexDirection(UI_FLEX_DIRECTION_COLUMN_REVERSE);
     }
 
   XSTRING justifycontentstr;
-  if(style.Get(__L("justify-content"), justifycontentstr))
+  if(style.Get(_L("justify-content"), justifycontentstr))
     {
-      if(!justifycontentstr.Compare(__L("flex-start"), true))  element->SetJustifyContent(UI_JUSTIFY_CONTENT_FLEX_START);
-        else if(!justifycontentstr.Compare(__L("flex-end"), true))  element->SetJustifyContent(UI_JUSTIFY_CONTENT_FLEX_END);
-          else if(!justifycontentstr.Compare(__L("center"), true))  element->SetJustifyContent(UI_JUSTIFY_CONTENT_CENTER);
-            else if(!justifycontentstr.Compare(__L("space-between"), true))  element->SetJustifyContent(UI_JUSTIFY_CONTENT_SPACE_BETWEEN);
-              else if(!justifycontentstr.Compare(__L("space-around"), true))  element->SetJustifyContent(UI_JUSTIFY_CONTENT_SPACE_AROUND);
-                else if(!justifycontentstr.Compare(__L("space-evenly"), true))  element->SetJustifyContent(UI_JUSTIFY_CONTENT_SPACE_EVENLY);
+      if(!justifycontentstr.Compare(_L("flex-start"), true))  element->SetJustifyContent(UI_JUSTIFY_CONTENT_FLEX_START);
+        else if(!justifycontentstr.Compare(_L("flex-end"), true))  element->SetJustifyContent(UI_JUSTIFY_CONTENT_FLEX_END);
+          else if(!justifycontentstr.Compare(_L("center"), true))  element->SetJustifyContent(UI_JUSTIFY_CONTENT_CENTER);
+            else if(!justifycontentstr.Compare(_L("space-between"), true))  element->SetJustifyContent(UI_JUSTIFY_CONTENT_SPACE_BETWEEN);
+              else if(!justifycontentstr.Compare(_L("space-around"), true))  element->SetJustifyContent(UI_JUSTIFY_CONTENT_SPACE_AROUND);
+                else if(!justifycontentstr.Compare(_L("space-evenly"), true))  element->SetJustifyContent(UI_JUSTIFY_CONTENT_SPACE_EVENLY);
     }
 
   // "gap" is the shorthand for both axes; "row-gap"/"column-gap" (read afterwards, so they win if present,
@@ -4518,57 +4518,57 @@ bool UI_MANAGER::GetLayoutElement_Base(UI_STYLE& style, XSTRING& fathertagname, 
       BuildLengthContext(layout, fatherwidth, fatherem, ctx);
       XSTRING gapstr;
       double  gapvalue = 0.0;
-      if(style.Get(__L("gap")       , gapstr) && ResolveStyleLength(gapstr, ctx, gapvalue)) { rowgap = gapvalue; columngap = gapvalue; }
-      if(style.Get(__L("row-gap")   , gapstr) && ResolveStyleLength(gapstr, ctx, gapvalue)) rowgap    = gapvalue;
-      if(style.Get(__L("column-gap"), gapstr) && ResolveStyleLength(gapstr, ctx, gapvalue)) columngap = gapvalue;
+      if(style.Get(_L("gap")       , gapstr) && ResolveStyleLength(gapstr, ctx, gapvalue)) { rowgap = gapvalue; columngap = gapvalue; }
+      if(style.Get(_L("row-gap")   , gapstr) && ResolveStyleLength(gapstr, ctx, gapvalue)) rowgap    = gapvalue;
+      if(style.Get(_L("column-gap"), gapstr) && ResolveStyleLength(gapstr, ctx, gapvalue)) columngap = gapvalue;
     }
    else
     {
       double gapvalue = 0.0;
-      if(style.Get(__L("gap"), gapvalue)) { rowgap = gapvalue; columngap = gapvalue; }
-      if(style.Get(__L("row-gap"), gapvalue))    rowgap    = gapvalue;
-      if(style.Get(__L("column-gap"), gapvalue)) columngap = gapvalue;
+      if(style.Get(_L("gap"), gapvalue)) { rowgap = gapvalue; columngap = gapvalue; }
+      if(style.Get(_L("row-gap"), gapvalue))    rowgap    = gapvalue;
+      if(style.Get(_L("column-gap"), gapvalue)) columngap = gapvalue;
     }
   element->SetGap(rowgap, columngap);
 
   XSTRING flexwrapstr;
-  if(style.Get(__L("flex-wrap"), flexwrapstr))
+  if(style.Get(_L("flex-wrap"), flexwrapstr))
     {
-      if(!flexwrapstr.Compare(__L("nowrap"), true))  element->SetFlexWrap(UI_FLEX_WRAP_NOWRAP);
-        else if(!flexwrapstr.Compare(__L("wrap"), true))  element->SetFlexWrap(UI_FLEX_WRAP_WRAP);
-          else if(!flexwrapstr.Compare(__L("wrap-reverse"), true))  element->SetFlexWrap(UI_FLEX_WRAP_WRAP_REVERSE);
+      if(!flexwrapstr.Compare(_L("nowrap"), true))  element->SetFlexWrap(UI_FLEX_WRAP_NOWRAP);
+        else if(!flexwrapstr.Compare(_L("wrap"), true))  element->SetFlexWrap(UI_FLEX_WRAP_WRAP);
+          else if(!flexwrapstr.Compare(_L("wrap-reverse"), true))  element->SetFlexWrap(UI_FLEX_WRAP_WRAP_REVERSE);
     }
 
   XSTRING aligncontentstr;
-  if(style.Get(__L("align-content"), aligncontentstr))
+  if(style.Get(_L("align-content"), aligncontentstr))
     {
-      if(!aligncontentstr.Compare(__L("flex-start"), true))  element->SetAlignContent(UI_ALIGN_CONTENT_FLEX_START);
-        else if(!aligncontentstr.Compare(__L("flex-end"), true))  element->SetAlignContent(UI_ALIGN_CONTENT_FLEX_END);
-          else if(!aligncontentstr.Compare(__L("center"), true))  element->SetAlignContent(UI_ALIGN_CONTENT_CENTER);
-            else if(!aligncontentstr.Compare(__L("space-between"), true))  element->SetAlignContent(UI_ALIGN_CONTENT_SPACE_BETWEEN);
-              else if(!aligncontentstr.Compare(__L("space-around"), true))  element->SetAlignContent(UI_ALIGN_CONTENT_SPACE_AROUND);
-                else if(!aligncontentstr.Compare(__L("space-evenly"), true))  element->SetAlignContent(UI_ALIGN_CONTENT_SPACE_EVENLY);
+      if(!aligncontentstr.Compare(_L("flex-start"), true))  element->SetAlignContent(UI_ALIGN_CONTENT_FLEX_START);
+        else if(!aligncontentstr.Compare(_L("flex-end"), true))  element->SetAlignContent(UI_ALIGN_CONTENT_FLEX_END);
+          else if(!aligncontentstr.Compare(_L("center"), true))  element->SetAlignContent(UI_ALIGN_CONTENT_CENTER);
+            else if(!aligncontentstr.Compare(_L("space-between"), true))  element->SetAlignContent(UI_ALIGN_CONTENT_SPACE_BETWEEN);
+              else if(!aligncontentstr.Compare(_L("space-around"), true))  element->SetAlignContent(UI_ALIGN_CONTENT_SPACE_AROUND);
+                else if(!aligncontentstr.Compare(_L("space-evenly"), true))  element->SetAlignContent(UI_ALIGN_CONTENT_SPACE_EVENLY);
     }
 
   XSTRING alignitemsstr;
-  if(style.Get(__L("align-items"), alignitemsstr))
+  if(style.Get(_L("align-items"), alignitemsstr))
     {
-      if(!alignitemsstr.Compare(__L("flex-start"), true))  element->SetAlignItems(UI_ALIGN_ITEMS_FLEX_START);
-        else if(!alignitemsstr.Compare(__L("flex-end"), true))  element->SetAlignItems(UI_ALIGN_ITEMS_FLEX_END);
-          else if(!alignitemsstr.Compare(__L("center"), true))  element->SetAlignItems(UI_ALIGN_ITEMS_CENTER);
-            else if(!alignitemsstr.Compare(__L("stretch"), true))  element->SetAlignItems(UI_ALIGN_ITEMS_STRETCH);
+      if(!alignitemsstr.Compare(_L("flex-start"), true))  element->SetAlignItems(UI_ALIGN_ITEMS_FLEX_START);
+        else if(!alignitemsstr.Compare(_L("flex-end"), true))  element->SetAlignItems(UI_ALIGN_ITEMS_FLEX_END);
+          else if(!alignitemsstr.Compare(_L("center"), true))  element->SetAlignItems(UI_ALIGN_ITEMS_CENTER);
+            else if(!alignitemsstr.Compare(_L("stretch"), true))  element->SetAlignItems(UI_ALIGN_ITEMS_STRETCH);
     }
 
   double flexgrowvalue = 0.0;
-  if(style.Get(__L("flex-grow"), flexgrowvalue)) element->SetFlexGrow(flexgrowvalue);
+  if(style.Get(_L("flex-grow"), flexgrowvalue)) element->SetFlexGrow(flexgrowvalue);
 
   double flexshrinkvalue = 0.0;
-  if(style.Get(__L("flex-shrink"), flexshrinkvalue)) element->SetFlexShrink(flexshrinkvalue);
+  if(style.Get(_L("flex-shrink"), flexshrinkvalue)) element->SetFlexShrink(flexshrinkvalue);
 
   XSTRING flexbasisstr;
-  if(style.Get(__L("flex-basis"), flexbasisstr))
+  if(style.Get(_L("flex-basis"), flexbasisstr))
     {
-      if(!flexbasisstr.Compare(__L("auto"), true))  element->SetFlexBasisAuto();
+      if(!flexbasisstr.Compare(_L("auto"), true))  element->SetFlexBasisAuto();
         else if(use_style_lengths)
           {
             UI_LENGTH_CONTEXT ctx;
@@ -4581,13 +4581,13 @@ bool UI_MANAGER::GetLayoutElement_Base(UI_STYLE& style, XSTRING& fathertagname, 
     }
 
   XSTRING alignselfstr;
-  if(style.Get(__L("align-self"), alignselfstr))
+  if(style.Get(_L("align-self"), alignselfstr))
     {
-      if(!alignselfstr.Compare(__L("auto"), true))  element->SetAlignSelf(UI_ALIGN_SELF_AUTO);
-        else if(!alignselfstr.Compare(__L("flex-start"), true))  element->SetAlignSelf(UI_ALIGN_SELF_FLEX_START);
-          else if(!alignselfstr.Compare(__L("flex-end"), true))  element->SetAlignSelf(UI_ALIGN_SELF_FLEX_END);
-            else if(!alignselfstr.Compare(__L("center"), true))  element->SetAlignSelf(UI_ALIGN_SELF_CENTER);
-              else if(!alignselfstr.Compare(__L("stretch"), true))  element->SetAlignSelf(UI_ALIGN_SELF_STRETCH);
+      if(!alignselfstr.Compare(_L("auto"), true))  element->SetAlignSelf(UI_ALIGN_SELF_AUTO);
+        else if(!alignselfstr.Compare(_L("flex-start"), true))  element->SetAlignSelf(UI_ALIGN_SELF_FLEX_START);
+          else if(!alignselfstr.Compare(_L("flex-end"), true))  element->SetAlignSelf(UI_ALIGN_SELF_FLEX_END);
+            else if(!alignselfstr.Compare(_L("center"), true))  element->SetAlignSelf(UI_ALIGN_SELF_CENTER);
+              else if(!alignselfstr.Compare(_L("stretch"), true))  element->SetAlignSelf(UI_ALIGN_SELF_STRETCH);
     }
 
   // "text-align" (Step 10): "textalignment" is the historical GEN attribute name (already used, XML-only, by
@@ -4597,26 +4597,26 @@ bool UI_MANAGER::GetLayoutElement_Base(UI_STYLE& style, XSTRING& fathertagname, 
   // leaves the element's constructor default (LEFT) untouched, so this is a no-op for every layout authored
   // before it existed.
   XSTRING textalignstr;
-  UI_PROPERTYREGISTRY::GetAliased(style, __L("textalignment"), __L("text-align"), textalignstr);
+  UI_PROPERTYREGISTRY::GetAliased(style, _L("textalignment"), _L("text-align"), textalignstr);
   if(!textalignstr.IsEmpty())
     {
-      if(!textalignstr.Compare(__L("left"), true))  element->SetTextAlign(UI_ELEMENT_TYPE_ALIGN_LEFT);
-        else if(!textalignstr.Compare(__L("right"), true))  element->SetTextAlign(UI_ELEMENT_TYPE_ALIGN_RIGHT);
-          else if(!textalignstr.Compare(__L("center"), true)) element->SetTextAlign(UI_ELEMENT_TYPE_ALIGN_CENTER);
+      if(!textalignstr.Compare(_L("left"), true))  element->SetTextAlign(UI_ELEMENT_TYPE_ALIGN_LEFT);
+        else if(!textalignstr.Compare(_L("right"), true))  element->SetTextAlign(UI_ELEMENT_TYPE_ALIGN_RIGHT);
+          else if(!textalignstr.Compare(_L("center"), true)) element->SetTextAlign(UI_ELEMENT_TYPE_ALIGN_CENTER);
     }
 
   // NOTE: "role" is reserved for GEN custom Chromes (window caption) layouts: it lets GRPSCREEN find "the close
   // button", "the title", etc. without depending on element names. Any element type (image, button, text, a plain
   // rectangle...) can carry it; unrecognized/absent values leave chromerole at UI_ELEMENT_CHROMEROLE_NONE.
   XSTRING rolestr;
-  if(style.Get(__L("role"), rolestr))
+  if(style.Get(_L("role"), rolestr))
     {
-      if(!rolestr.Compare(__L("caption")  , true))  element->SetChromeRole(UI_ELEMENT_CHROMEROLE_CAPTION);
-        else if(!rolestr.Compare(__L("icon")     , true))  element->SetChromeRole(UI_ELEMENT_CHROMEROLE_ICON);
-          else if(!rolestr.Compare(__L("title")    , true))  element->SetChromeRole(UI_ELEMENT_CHROMEROLE_TITLE);
-            else if(!rolestr.Compare(__L("minimize") , true))  element->SetChromeRole(UI_ELEMENT_CHROMEROLE_MINIMIZE);
-              else if(!rolestr.Compare(__L("maximize") , true))  element->SetChromeRole(UI_ELEMENT_CHROMEROLE_MAXIMIZE);
-                else if(!rolestr.Compare(__L("close")    , true))  element->SetChromeRole(UI_ELEMENT_CHROMEROLE_CLOSE);
+      if(!rolestr.Compare(_L("caption")  , true))  element->SetChromeRole(UI_ELEMENT_CHROMEROLE_CAPTION);
+        else if(!rolestr.Compare(_L("icon")     , true))  element->SetChromeRole(UI_ELEMENT_CHROMEROLE_ICON);
+          else if(!rolestr.Compare(_L("title")    , true))  element->SetChromeRole(UI_ELEMENT_CHROMEROLE_TITLE);
+            else if(!rolestr.Compare(_L("minimize") , true))  element->SetChromeRole(UI_ELEMENT_CHROMEROLE_MINIMIZE);
+              else if(!rolestr.Compare(_L("maximize") , true))  element->SetChromeRole(UI_ELEMENT_CHROMEROLE_MAXIMIZE);
+                else if(!rolestr.Compare(_L("close")    , true))  element->SetChromeRole(UI_ELEMENT_CHROMEROLE_CLOSE);
     }
 
   // Step 6: track authored-vs-default for "color" and "bckgrdcolor", and honour the CSS-natural aliases and
@@ -4628,10 +4628,10 @@ bool UI_MANAGER::GetLayoutElement_Base(UI_STYLE& style, XSTRING& fathertagname, 
   //   "bckgrdcolor" or   : first-hit lookup order accepts the CSS-natural "background-color" as an alias, so
   //   "background-color"   authors can write either. Any authored value marks background_color_set = true.
   XSTRING color;
-  style.Get(__L("color"), color);
+  style.Get(_L("color"), color);
   if(!color.IsEmpty())
     {
-      if(!color.Compare(__L("inherit"), true))
+      if(!color.Compare(_L("inherit"), true))
         {
           UI_ELEMENT* ancestor = element->GetFather();
           while(ancestor)
@@ -4653,7 +4653,7 @@ bool UI_MANAGER::GetLayoutElement_Base(UI_STYLE& style, XSTRING& fathertagname, 
     }
 
   XSTRING bckgrdcolor;
-  UI_PROPERTYREGISTRY::GetAliased(style, __L("bckgrdcolor"), __L("background-color"), bckgrdcolor);
+  UI_PROPERTYREGISTRY::GetAliased(style, _L("bckgrdcolor"), _L("background-color"), bckgrdcolor);
   if(!bckgrdcolor.IsEmpty())
     {
       element->GetBackgroundColor()->SetFromString(bckgrdcolor);
@@ -4661,23 +4661,23 @@ bool UI_MANAGER::GetLayoutElement_Base(UI_STYLE& style, XSTRING& fathertagname, 
     }
 
   XSTRING visible;
-  if(style.Get(__L("visible"), visible))
+  if(style.Get(_L("visible"), visible))
     {
       element->SetVisible(visible.ConvertToBoolean());
     }
 
   XSTRING hasscroll;
-  if(style.Get(__L("scroll"), hasscroll))
+  if(style.Get(_L("scroll"), hasscroll))
     {
       element->SetHasScroll(hasscroll.ConvertToBoolean());
     }
 
   double roundrect = 0.0f;
-  style.Get(__L("roundrect"), roundrect);
+  style.Get(_L("roundrect"), roundrect);
   element->SetRoundRect((XDWORD)roundrect);
 
   double blinktime;
-  if(style.Get(__L("blink"), blinktime)) element->SetBlink((XDWORD)blinktime);
+  if(style.Get(_L("blink"), blinktime)) element->SetBlink((XDWORD)blinktime);
 
   // Step 7 ("transiciones"): a plain "transition: <milliseconds>" duration -- GEN's minimal CSS subset stays
   // minimal here too (no property list, no easing keyword). Read once at load time exactly like "blink" above;
@@ -4686,10 +4686,10 @@ bool UI_MANAGER::GetLayoutElement_Base(UI_STYLE& style, XSTRING& fathertagname, 
   // instantly. 0 (the default -- every layout authored before this existed) preserves the original instant
   // jump exactly.
   double transitionms;
-  if(style.Get(__L("transition"), transitionms)) element->SetTransitionDuration((XDWORD)transitionms);
+  if(style.Get(_L("transition"), transitionms)) element->SetTransitionDuration((XDWORD)transitionms);
 
   XSTRING extra;
-  style.Get(__L("extra"), extra);
+  style.Get(_L("extra"), extra);
   element->GetExtra()->Set(extra);
 
   // "margin": resolved via UI_PROPERTYREGISTRY::ResolveMarginEdges so load-time and unit tests share one
@@ -4726,7 +4726,7 @@ bool UI_MANAGER::GetLayoutElement_Base(UI_STYLE& style, XSTRING& fathertagname, 
   // Longhand keys ("padding-left" / "-right" / "-top" / "-bottom") override the shorthand and are applied last.
   // Fase 8: with a stylesheet, each token may be rem/vw/vh/%/em/calc via ExpandCSSShorthand4Lengths.
   XSTRING paddingstr;
-  if(style.Get(__L("padding"), paddingstr))
+  if(style.Get(_L("padding"), paddingstr))
     {
       double out[4] = { 0.0, 0.0, 0.0, 0.0 };
       bool   ok     = false;
@@ -4752,29 +4752,29 @@ bool UI_MANAGER::GetLayoutElement_Base(UI_STYLE& style, XSTRING& fathertagname, 
       BuildLengthContext(layout, fatherwidth, fatherem, ctx);
       XSTRING pstr;
       double  pv = 0.0;
-      if(style.Get(__L("padding-left")  , pstr) && ResolveStyleLength(pstr, ctx, pv)) element->SetPadding(UI_ELEMENT_TYPE_ALIGN_LEFT , pv);
-      if(style.Get(__L("padding-right") , pstr) && ResolveStyleLength(pstr, ctx, pv)) element->SetPadding(UI_ELEMENT_TYPE_ALIGN_RIGHT, pv);
-      if(style.Get(__L("padding-top")   , pstr) && ResolveStyleLength(pstr, ctx, pv)) element->SetPadding(UI_ELEMENT_TYPE_ALIGN_UP, pv);
-      if(style.Get(__L("padding-bottom"), pstr) && ResolveStyleLength(pstr, ctx, pv)) element->SetPadding(UI_ELEMENT_TYPE_ALIGN_DOWN , pv);
+      if(style.Get(_L("padding-left")  , pstr) && ResolveStyleLength(pstr, ctx, pv)) element->SetPadding(UI_ELEMENT_TYPE_ALIGN_LEFT , pv);
+      if(style.Get(_L("padding-right") , pstr) && ResolveStyleLength(pstr, ctx, pv)) element->SetPadding(UI_ELEMENT_TYPE_ALIGN_RIGHT, pv);
+      if(style.Get(_L("padding-top")   , pstr) && ResolveStyleLength(pstr, ctx, pv)) element->SetPadding(UI_ELEMENT_TYPE_ALIGN_UP, pv);
+      if(style.Get(_L("padding-bottom"), pstr) && ResolveStyleLength(pstr, ctx, pv)) element->SetPadding(UI_ELEMENT_TYPE_ALIGN_DOWN , pv);
     }
    else
     {
       double pv;
-      if(style.Get(__L("padding-left")  , pv)) element->SetPadding(UI_ELEMENT_TYPE_ALIGN_LEFT , pv);
-      if(style.Get(__L("padding-right") , pv)) element->SetPadding(UI_ELEMENT_TYPE_ALIGN_RIGHT, pv);
-      if(style.Get(__L("padding-top")   , pv)) element->SetPadding(UI_ELEMENT_TYPE_ALIGN_UP, pv);
-      if(style.Get(__L("padding-bottom"), pv)) element->SetPadding(UI_ELEMENT_TYPE_ALIGN_DOWN , pv);
+      if(style.Get(_L("padding-left")  , pv)) element->SetPadding(UI_ELEMENT_TYPE_ALIGN_LEFT , pv);
+      if(style.Get(_L("padding-right") , pv)) element->SetPadding(UI_ELEMENT_TYPE_ALIGN_RIGHT, pv);
+      if(style.Get(_L("padding-top")   , pv)) element->SetPadding(UI_ELEMENT_TYPE_ALIGN_UP, pv);
+      if(style.Get(_L("padding-bottom"), pv)) element->SetPadding(UI_ELEMENT_TYPE_ALIGN_DOWN , pv);
     }
 
   // border-width in pixels. 0 = "no stroke at all" (honoured explicitly); a missing key leaves the element's
   // -1 default so the skin keeps drawing its historical 1-px border for containers.
   double bw;
-  if(style.Get(__L("border-width"), bw)) element->SetBorderWidth(bw);
+  if(style.Get(_L("border-width"), bw)) element->SetBorderWidth(bw);
 
   // Step 5: border-color at base level. Consumers (Draw_Form et al.) prefer this when set, otherwise fall back
   // to the per-type "linecolor" so pre-step-5 layouts render unchanged.
   XSTRING bcstr;
-  if(style.Get(__L("border-color"), bcstr) && !bcstr.IsEmpty()) element->SetBorderColorFromString(bcstr);
+  if(style.Get(_L("border-color"), bcstr) && !bcstr.IsEmpty()) element->SetBorderColorFromString(bcstr);
 
   // Step 5: border-radius shorthand + per-corner longhands.
   // Shorthand accepts 1..4 numbers (comma or whitespace separated), CSS ordering: TL, TR, BR, BL.
@@ -4783,7 +4783,7 @@ bool UI_MANAGER::GetLayoutElement_Base(UI_STYLE& style, XSTRING& fathertagname, 
   //     3 values: TL, TR-BL, BR
   //     4 values: TL, TR, BR, BL
   XSTRING brstr;
-  if(style.Get(__L("border-radius"), brstr))
+  if(style.Get(_L("border-radius"), brstr))
     {
       double out[4] = { 0.0, 0.0, 0.0, 0.0 };
       UI_PROPERTYREGISTRY::ExpandCSSShorthand4(brstr, out);              // out = TL, TR, BR, BL
@@ -4802,10 +4802,10 @@ bool UI_MANAGER::GetLayoutElement_Base(UI_STYLE& style, XSTRING& fathertagname, 
     }
 
   double rv;
-  if(style.Get(__L("border-top-left-radius")     , rv)) element->SetBorderRadius(UI_ELEMENT_BORDER_CORNER_TL, rv);
-  if(style.Get(__L("border-top-right-radius")    , rv)) element->SetBorderRadius(UI_ELEMENT_BORDER_CORNER_TR, rv);
-  if(style.Get(__L("border-bottom-right-radius") , rv)) element->SetBorderRadius(UI_ELEMENT_BORDER_CORNER_BR, rv);
-  if(style.Get(__L("border-bottom-left-radius")  , rv)) element->SetBorderRadius(UI_ELEMENT_BORDER_CORNER_BL, rv);
+  if(style.Get(_L("border-top-left-radius")     , rv)) element->SetBorderRadius(UI_ELEMENT_BORDER_CORNER_TL, rv);
+  if(style.Get(_L("border-top-right-radius")    , rv)) element->SetBorderRadius(UI_ELEMENT_BORDER_CORNER_TR, rv);
+  if(style.Get(_L("border-bottom-right-radius") , rv)) element->SetBorderRadius(UI_ELEMENT_BORDER_CORNER_BR, rv);
+  if(style.Get(_L("border-bottom-left-radius")  , rv)) element->SetBorderRadius(UI_ELEMENT_BORDER_CORNER_BL, rv);
 
   // Step 7: box-shadow. Accepted grammar (CSS subset):
   //     box-shadow: <offset-x> <offset-y> <color>
@@ -4815,7 +4815,7 @@ bool UI_MANAGER::GetLayoutElement_Base(UI_STYLE& style, XSTRING& fathertagname, 
   //   The tokenizer splits on whitespace; the last non-numeric token is the colour string. GEN colours never
   //   contain spaces (either a name, "#RRGGBBAA", or a "R,G,B[,A]" tuple without spaces) so this is unambiguous.
   XSTRING boxshadow;
-  if(style.Get(__L("box-shadow"), boxshadow) && !boxshadow.IsEmpty())
+  if(style.Get(_L("box-shadow"), boxshadow) && !boxshadow.IsEmpty())
     {
       double  sh_x    = 0.0;
       double  sh_y    = 0.0;
@@ -4835,35 +4835,35 @@ bool UI_MANAGER::GetLayoutElement_Base(UI_STYLE& style, XSTRING& fathertagname, 
   // CSS Grid templates (Phase 3): simple whitespace-separated track list (px / % / fr).
   {
     XSTRING gridcols;
-    if(style.Get(__L("grid-template-columns"), gridcols) && !gridcols.IsEmpty())
+    if(style.Get(_L("grid-template-columns"), gridcols) && !gridcols.IsEmpty())
       {
         element->ClearGridColumnTracks();
         XDWORD len = gridcols.GetSize();
         XDWORD p   = 0;
         while(p < len)
           {
-            while(p < len && (gridcols[(int)p] == __C(' ') || gridcols[(int)p] == __C('\t') || gridcols[(int)p] == __C(','))) p++;
+            while(p < len && (gridcols[(int)p] == _C(' ') || gridcols[(int)p] == _C('\t') || gridcols[(int)p] == _C(','))) p++;
             if(p >= len) break;
             XDWORD start = p;
-            while(p < len && gridcols[(int)p] != __C(' ') && gridcols[(int)p] != __C('\t') && gridcols[(int)p] != __C(',')) p++;
+            while(p < len && gridcols[(int)p] != _C(' ') && gridcols[(int)p] != _C('\t') && gridcols[(int)p] != _C(',')) p++;
             XSTRING tok;
             gridcols.Copy((int)start, (int)p, tok);
             if(tok.IsEmpty()) continue;
             UI_GRIDTRACK track;
             track.isminmax = false;
-            if(tok.Find(__L("fr"), true) != XSTRING_NOTFOUND)
+            if(tok.Find(_L("fr"), true) != XSTRING_NOTFOUND)
               {
                 track.unit = UI_GRID_TRACK_UNIT_FR;
-                tok.DeleteCharacter(__C('f'));
-                tok.DeleteCharacter(__C('r'));
-                tok.DeleteCharacter(__C('F'));
-                tok.DeleteCharacter(__C('R'));
+                tok.DeleteCharacter(_C('f'));
+                tok.DeleteCharacter(_C('r'));
+                tok.DeleteCharacter(_C('F'));
+                tok.DeleteCharacter(_C('R'));
                 track.value = tok.ConvertToDouble();
               }
-            else if(tok.Find(__L("%"), true) != XSTRING_NOTFOUND)
+            else if(tok.Find(_L("%"), true) != XSTRING_NOTFOUND)
               {
                 track.unit = UI_GRID_TRACK_UNIT_PERCENT;
-                tok.DeleteCharacter(__C('%'));
+                tok.DeleteCharacter(_C('%'));
                 track.value = tok.ConvertToDouble();
               }
              else
@@ -4876,35 +4876,35 @@ bool UI_MANAGER::GetLayoutElement_Base(UI_STYLE& style, XSTRING& fathertagname, 
       }
 
     XSTRING gridrows;
-    if(style.Get(__L("grid-template-rows"), gridrows) && !gridrows.IsEmpty())
+    if(style.Get(_L("grid-template-rows"), gridrows) && !gridrows.IsEmpty())
       {
         element->ClearGridRowTracks();
         XDWORD len = gridrows.GetSize();
         XDWORD p   = 0;
         while(p < len)
           {
-            while(p < len && (gridrows[(int)p] == __C(' ') || gridrows[(int)p] == __C('\t') || gridrows[(int)p] == __C(','))) p++;
+            while(p < len && (gridrows[(int)p] == _C(' ') || gridrows[(int)p] == _C('\t') || gridrows[(int)p] == _C(','))) p++;
             if(p >= len) break;
             XDWORD start = p;
-            while(p < len && gridrows[(int)p] != __C(' ') && gridrows[(int)p] != __C('\t') && gridrows[(int)p] != __C(',')) p++;
+            while(p < len && gridrows[(int)p] != _C(' ') && gridrows[(int)p] != _C('\t') && gridrows[(int)p] != _C(',')) p++;
             XSTRING tok;
             gridrows.Copy((int)start, (int)p, tok);
             if(tok.IsEmpty()) continue;
             UI_GRIDTRACK track;
             track.isminmax = false;
-            if(tok.Find(__L("fr"), true) != XSTRING_NOTFOUND)
+            if(tok.Find(_L("fr"), true) != XSTRING_NOTFOUND)
               {
                 track.unit = UI_GRID_TRACK_UNIT_FR;
-                tok.DeleteCharacter(__C('f'));
-                tok.DeleteCharacter(__C('r'));
-                tok.DeleteCharacter(__C('F'));
-                tok.DeleteCharacter(__C('R'));
+                tok.DeleteCharacter(_C('f'));
+                tok.DeleteCharacter(_C('r'));
+                tok.DeleteCharacter(_C('F'));
+                tok.DeleteCharacter(_C('R'));
                 track.value = tok.ConvertToDouble();
               }
-            else if(tok.Find(__L("%"), true) != XSTRING_NOTFOUND)
+            else if(tok.Find(_L("%"), true) != XSTRING_NOTFOUND)
               {
                 track.unit = UI_GRID_TRACK_UNIT_PERCENT;
-                tok.DeleteCharacter(__C('%'));
+                tok.DeleteCharacter(_C('%'));
                 track.value = tok.ConvertToDouble();
               }
              else
@@ -4917,8 +4917,8 @@ bool UI_MANAGER::GetLayoutElement_Base(UI_STYLE& style, XSTRING& fathertagname, 
       }
 
     double gspan = 0.0;
-    if(style.Get(__L("grid-column-span"), gspan) && gspan >= 1.0) element->SetGridColumnSpan((XDWORD)gspan);
-    if(style.Get(__L("grid-row-span"), gspan) && gspan >= 1.0)    element->SetGridRowSpan((XDWORD)gspan);
+    if(style.Get(_L("grid-column-span"), gspan) && gspan >= 1.0) element->SetGridColumnSpan((XDWORD)gspan);
+    if(style.Get(_L("grid-row-span"), gspan) && gspan >= 1.0)    element->SetGridRowSpan((XDWORD)gspan);
   }
 
   // Phase 1: persist cascaded bag for typed Reapply / re-layout.
@@ -4979,7 +4979,7 @@ UI_ELEMENT* UI_MANAGER::GetLayoutElement_Text(XFILEXMLELEMENT* node, UI_LAYOUT* 
   // Track D.2: sizefont (GEN) or font-size (CSS-natural alias), first-hit-wins via GetAliased.
   {
     XSTRING sizefontstr;
-    if(UI_PROPERTYREGISTRY::GetAliased(outstyle, __L("sizefont"), __L("font-size"), sizefontstr) && !sizefontstr.IsEmpty())
+    if(UI_PROPERTYREGISTRY::GetAliased(outstyle, _L("sizefont"), _L("font-size"), sizefontstr) && !sizefontstr.IsEmpty())
       {
         sizefont = sizefontstr.ConvertToDouble();
       }
@@ -5015,7 +5015,7 @@ UI_ELEMENT* UI_MANAGER::GetLayoutElement_Text(XFILEXMLELEMENT* node, UI_LAYOUT* 
     }
 
   double maxsizetext = 0.0f;
-  if(outstyle.Get(__L("maxsizetext"), maxsizetext))
+  if(outstyle.Get(_L("maxsizetext"), maxsizetext))
     {
       element_text->SetMaxSizeText((XDWORD)maxsizetext);
     }
@@ -5039,7 +5039,7 @@ UI_ELEMENT* UI_MANAGER::GetLayoutElement_Text(XFILEXMLELEMENT* node, UI_LAYOUT* 
                   int       ID             = 0;
 
                   maskID  = UI_MANAGER_LAYOUT_TEXT_TRANSLATE;
-                  maskID += __L("%d");
+                  maskID += _L("%d");
 
                   maskvalue.UnFormat(maskID.Get(), &ID);
 
@@ -5138,7 +5138,7 @@ UI_ELEMENT* UI_MANAGER::GetLayoutElement_TextBox(XFILEXMLELEMENT* node, UI_LAYOU
   double sizefont = 0;
   {
     XSTRING sizefontstr;
-    if(UI_PROPERTYREGISTRY::GetAliased(outstyle, __L("sizefont"), __L("font-size"), sizefontstr) && !sizefontstr.IsEmpty())
+    if(UI_PROPERTYREGISTRY::GetAliased(outstyle, _L("sizefont"), _L("font-size"), sizefontstr) && !sizefontstr.IsEmpty())
       {
         sizefont = sizefontstr.ConvertToDouble();
       }
@@ -5152,7 +5152,7 @@ UI_ELEMENT* UI_MANAGER::GetLayoutElement_TextBox(XFILEXMLELEMENT* node, UI_LAYOU
   element_textbox->SetSizeFont((XDWORD)sizefont);
 
   double linespacing = UI_ELEMENT_TEXTBOX_DEFAULTLINESPACING;
-  outstyle.Get(__L("linespacing"), linespacing);
+  outstyle.Get(_L("linespacing"), linespacing);
   element_textbox->SetLineSpacing((XDWORD)linespacing);
 
   // "textalignment"/"text-align": same alias pair GetLayoutElement_Base() already resolves for the base
@@ -5161,18 +5161,18 @@ UI_ELEMENT* UI_MANAGER::GetLayoutElement_TextBox(XFILEXMLELEMENT* node, UI_LAYOU
   // read goes through the same UI_PROPERTYREGISTRY lookup rather than a third hand-rolled copy of it.
   XSTRING                textalignmentstr;
   UI_ELEMENT_TYPE_ALIGN  textalignment;
-  if(outstyle.GetAliased(__L("textalignment"), __L("text-align"), textalignmentstr))
+  if(outstyle.GetAliased(_L("textalignment"), _L("text-align"), textalignmentstr))
     {
-      if(!textalignmentstr.Compare(__L("left"), true))  textalignment = UI_ELEMENT_TYPE_ALIGN_LEFT;
-        else if(!textalignmentstr.Compare(__L("right"), true))  textalignment = UI_ELEMENT_TYPE_ALIGN_RIGHT;
-          else if(!textalignmentstr.Compare(__L("center"), true)) textalignment = UI_ELEMENT_TYPE_ALIGN_CENTER;
+      if(!textalignmentstr.Compare(_L("left"), true))  textalignment = UI_ELEMENT_TYPE_ALIGN_LEFT;
+        else if(!textalignmentstr.Compare(_L("right"), true))  textalignment = UI_ELEMENT_TYPE_ALIGN_RIGHT;
+          else if(!textalignmentstr.Compare(_L("center"), true)) textalignment = UI_ELEMENT_TYPE_ALIGN_CENTER;
     }
   element_textbox->SetTextAlignment(textalignment);
 
 
   XSTRING wordclippingstr;
   element_textbox->SetIsWordClipping(false);
-  if(outstyle.Get(__L("wordclipping"), wordclippingstr))
+  if(outstyle.Get(_L("wordclipping"), wordclippingstr))
     {
       element_textbox->SetIsWordClipping(wordclippingstr.ConvertToBoolean());
     }
@@ -5184,10 +5184,10 @@ UI_ELEMENT* UI_MANAGER::GetLayoutElement_TextBox(XFILEXMLELEMENT* node, UI_LAYOU
       XFILEXMLELEMENT* subnode = node->GetElement(c);
       if(subnode)
         {
-          if(!subnode->GetName().Compare(__L("text"), true))
+          if(!subnode->GetName().Compare(_L("text"), true))
             {                                                                  
               text.Add(subnode->GetValue().Get());
-              text.Add(__L("\n"));
+              text.Add(_L("\n"));
             }    
         }
     }
@@ -5210,7 +5210,7 @@ UI_ELEMENT* UI_MANAGER::GetLayoutElement_TextBox(XFILEXMLELEMENT* node, UI_LAYOU
                   int       ID             = 0;
 
                   IDstr  = UI_MANAGER_LAYOUT_TEXT_TRANSLATE;
-                  IDstr += __L("%d");
+                  IDstr += _L("%d");
 
                   value.UnFormat(IDstr.Get(), &ID);
 
@@ -5279,7 +5279,7 @@ UI_ELEMENT* UI_MANAGER::GetLayoutElement_Image(XFILEXMLELEMENT* node, UI_LAYOUT*
   SetLevelAuto(element_image, father);
 
   double alpha = 0;
-  if(outstyle.Get(__L("alpha"), alpha))
+  if(outstyle.Get(_L("alpha"), alpha))
     {
       element_image->SetAlpha((XBYTE)alpha);
     }
@@ -5322,7 +5322,7 @@ UI_ELEMENT* UI_MANAGER::GetLayoutElement_Image(XFILEXMLELEMENT* node, UI_LAYOUT*
 
       element_image->SetResource(namefileimg.Get());
 
-      UI_ANIMATION* animation = GetOrAddAnimationCache(drawmode, grppropertymode, __L(""), namefileimg.Get(), referencecanvas, width, height);
+      UI_ANIMATION* animation = GetOrAddAnimationCache(drawmode, grppropertymode, _L(""), namefileimg.Get(), referencecanvas, width, height);
       if(animation) 
         { 
           GRPBITMAP* bitmap = NULL; 
@@ -5381,21 +5381,21 @@ UI_ELEMENT* UI_MANAGER::GetLayoutElement_Animation(XFILEXMLELEMENT* node, UI_LAY
   SetLevelAuto(element_animation, father);
 
   XSTRING statestring;
-  if(outstyle.Get(__L("state"), statestring))
+  if(outstyle.Get(_L("state"), statestring))
     {
-      if(!statestring.Compare(__L("play"), true))                                                                     
+      if(!statestring.Compare(_L("play"), true))                                                                     
         {
           element_animation->Play();
         }
         else
         {
-          if(!statestring.Compare(__L("stop"), true))                                                                     
+          if(!statestring.Compare(_L("stop"), true))                                                                     
             {
               element_animation->Stop();
             }   
             else
             {       
-              if(!statestring.Compare(__L("pause"), true))                                                                     
+              if(!statestring.Compare(_L("pause"), true))                                                                     
                 {
                   element_animation->Pause();    
                 }
@@ -5404,13 +5404,13 @@ UI_ELEMENT* UI_MANAGER::GetLayoutElement_Animation(XFILEXMLELEMENT* node, UI_LAY
     }
 
   double timedelay = 0;
-  if(outstyle.Get(__L("timedelay"), timedelay))
+  if(outstyle.Get(_L("timedelay"), timedelay))
     {
       element_animation->SetMilliSecondsDelay((XDWORD)timedelay);
     }
 
   double alpha = 0;
-  if(outstyle.Get(__L("alpha"), alpha))
+  if(outstyle.Get(_L("alpha"), alpha))
     {
       element_animation->SetAlpha((XBYTE)alpha);
     }
@@ -5420,7 +5420,7 @@ UI_ELEMENT* UI_MANAGER::GetLayoutElement_Animation(XFILEXMLELEMENT* node, UI_LAY
       XFILEXMLELEMENT* nodeelement =  node->GetElement(c);
       if(nodeelement)
         {  
-          if(!nodeelement->GetName().Compare(__L("image")))
+          if(!nodeelement->GetName().Compare(_L("image")))
             {              
               namefileimg = nodeelement->GetValue(); 
 
@@ -5455,10 +5455,10 @@ UI_ELEMENT* UI_MANAGER::GetLayoutElement_Animation(XFILEXMLELEMENT* node, UI_LAY
               double framewidth  = 0.0;
               double frameheight = 0.0;
 
-              GetLayoutElementValue(nodeelement, __L("width") , framewidth);
-              GetLayoutElementValue(nodeelement, __L("height"), frameheight);
+              GetLayoutElementValue(nodeelement, _L("width") , framewidth);
+              GetLayoutElementValue(nodeelement, _L("height"), frameheight);
 
-              UI_ANIMATION* animation = GetOrAddAnimationCache(drawmode, grppropertymode, __L(""), namefileimg.Get(), referencecanvas, framewidth, frameheight);
+              UI_ANIMATION* animation = GetOrAddAnimationCache(drawmode, grppropertymode, _L(""), namefileimg.Get(), referencecanvas, framewidth, frameheight);
               if(animation)
                 {
                   for(XDWORD d=0; d<animation->GetBitmaps()->GetSize(); d++)
@@ -5558,45 +5558,45 @@ UI_ELEMENT* UI_MANAGER::GetLayoutElement_Option(XFILEXMLELEMENT* node, UI_LAYOUT
 
   element_option->SetActive(true);
 
-  outstyle.Get(__L("sizefont"), sizefont);   // read but not applied -- pre-existing, unrelated to this migration
+  outstyle.Get(_L("sizefont"), sizefont);   // read but not applied -- pre-existing, unrelated to this migration
 
 
   XSTRING selectablestr;
-  outstyle.Get(__L("selectablestatus"), selectablestr);
+  outstyle.Get(_L("selectablestatus"), selectablestr);
   element_option->SetSelectableStateFromString(selectablestr);
 
   XSTRING allocationtextstr;
-  if(outstyle.Get(__L("allocationtext"), allocationtextstr))
+  if(outstyle.Get(_L("allocationtext"), allocationtextstr))
     {
-      if(!allocationtextstr.Compare(__L("none")     , true)) element_option->SetAllocationTextType(UI_ELEMENT_OPTION_ALLOCATION_TEXT_TYPE_NONE);  
-      if(!allocationtextstr.Compare(__L("up")       , true)) element_option->SetAllocationTextType(UI_ELEMENT_OPTION_ALLOCATION_TEXT_TYPE_UP);
-      if(!allocationtextstr.Compare(__L("down")     , true)) element_option->SetAllocationTextType(UI_ELEMENT_OPTION_ALLOCATION_TEXT_TYPE_DOWN);  
-      if(!allocationtextstr.Compare(__L("right")    , true)) element_option->SetAllocationTextType(UI_ELEMENT_OPTION_ALLOCATION_TEXT_TYPE_RIGHT);  
-	    if(!allocationtextstr.Compare(__L("left")     , true)) element_option->SetAllocationTextType(UI_ELEMENT_OPTION_ALLOCATION_TEXT_TYPE_LEFT); 
-      if(!allocationtextstr.Compare(__L("center")   , true)) element_option->SetAllocationTextType(UI_ELEMENT_OPTION_ALLOCATION_TEXT_TYPE_CENTER); 
+      if(!allocationtextstr.Compare(_L("none")     , true)) element_option->SetAllocationTextType(UI_ELEMENT_OPTION_ALLOCATION_TEXT_TYPE_NONE);  
+      if(!allocationtextstr.Compare(_L("up")       , true)) element_option->SetAllocationTextType(UI_ELEMENT_OPTION_ALLOCATION_TEXT_TYPE_UP);
+      if(!allocationtextstr.Compare(_L("down")     , true)) element_option->SetAllocationTextType(UI_ELEMENT_OPTION_ALLOCATION_TEXT_TYPE_DOWN);  
+      if(!allocationtextstr.Compare(_L("right")    , true)) element_option->SetAllocationTextType(UI_ELEMENT_OPTION_ALLOCATION_TEXT_TYPE_RIGHT);  
+	    if(!allocationtextstr.Compare(_L("left")     , true)) element_option->SetAllocationTextType(UI_ELEMENT_OPTION_ALLOCATION_TEXT_TYPE_LEFT); 
+      if(!allocationtextstr.Compare(_L("center")   , true)) element_option->SetAllocationTextType(UI_ELEMENT_OPTION_ALLOCATION_TEXT_TYPE_CENTER); 
     }
   
   element_option->SetVisibleLimitType(UI_ELEMENT_OPTION_VISIBLE_LIMIT_NONE);
 
   XSTRING visiblelimittypestr;
-  if(outstyle.Get(__L("visiblelimit"), visiblelimittypestr))
+  if(outstyle.Get(_L("visiblelimit"), visiblelimittypestr))
     {
-      if(visiblelimittypestr.Find(__L("active"), true) != XSTRING_NOTFOUND) 
+      if(visiblelimittypestr.Find(_L("active"), true) != XSTRING_NOTFOUND) 
         {
           element_option->SetVisibleLimitType(element_option->GetVisibleLimitType() | UI_ELEMENT_OPTION_VISIBLE_LIMIT_ACTIVE);
         }
 
-      if(visiblelimittypestr.Find(__L("deactive"), true) != XSTRING_NOTFOUND) 
+      if(visiblelimittypestr.Find(_L("deactive"), true) != XSTRING_NOTFOUND) 
         {
           element_option->SetVisibleLimitType(element_option->GetVisibleLimitType() | UI_ELEMENT_OPTION_VISIBLE_LIMIT_DEACTIVE);
         }
 
-      if(visiblelimittypestr.Find(__L("preselect"), true) != XSTRING_NOTFOUND) 
+      if(visiblelimittypestr.Find(_L("preselect"), true) != XSTRING_NOTFOUND) 
         {
           element_option->SetVisibleLimitType(element_option->GetVisibleLimitType() | UI_ELEMENT_OPTION_VISIBLE_LIMIT_PRESELECT);
         }
 
-      if(visiblelimittypestr.Find(__L("select"), true) != XSTRING_NOTFOUND) 
+      if(visiblelimittypestr.Find(_L("select"), true) != XSTRING_NOTFOUND) 
         {
           element_option->SetVisibleLimitType(element_option->GetVisibleLimitType() | UI_ELEMENT_OPTION_VISIBLE_LIMIT_SELECT);
         }
@@ -5609,7 +5609,7 @@ UI_ELEMENT* UI_MANAGER::GetLayoutElement_Option(XFILEXMLELEMENT* node, UI_LAYOUT
       if(nodeelement)
         {
           XSTRING type;
-          if(GetLayoutElementValue(nodeelement, __L("type"), type))
+          if(GetLayoutElementValue(nodeelement, _L("type"), type))
             {        
               UI_ELEMENT* element = CreatePartialLayout(nodeelement, layout, element_option);
               if(element) 
@@ -5811,7 +5811,7 @@ UI_ELEMENT* UI_MANAGER::GetLayoutElement_Form(XFILEXMLELEMENT* node, UI_LAYOUT* 
 
   SetLevelAuto(element_form, father);
 
-  outstyle.GetColor(__L("linecolor"), *element_form->GetLineColor());
+  outstyle.GetColor(_L("linecolor"), *element_form->GetLineColor());
 
   GetLayoutElement_CalculateBoundaryLine(layout, element_form);
 
@@ -5838,13 +5838,13 @@ UI_ELEMENT* UI_MANAGER::GetLayoutElement_Form(XFILEXMLELEMENT* node, UI_LAYOUT* 
     }
 
   XSTRING visibleformstr;
-  if(outstyle.Get(__L("visiblerect"), visibleformstr))
+  if(outstyle.Get(_L("visiblerect"), visibleformstr))
     {
       if(!visibleformstr.IsEmpty())
         {                     
           int value[4] = { 0, 0, 0, 0 }; 
 
-          visibleformstr.UnFormat(__L("%d,%d,%d,%d"), &value[0], &value[1], &value[2], &value[3]); 
+          visibleformstr.UnFormat(_L("%d,%d,%d,%d"), &value[0], &value[1], &value[2], &value[3]); 
 
           element_form->GetVisibleRect()->x = element_form->GetXPosition() + value[0];
           element_form->GetVisibleRect()->y = element_form->GetYPosition() + value[1];      
@@ -5961,7 +5961,7 @@ UI_ELEMENT* UI_MANAGER::GetLayoutElement_ListBox(XFILEXMLELEMENT* node, UI_LAYOU
 
   UI_ELEMENT* element_menu = NULL;
   XSTRING     menustr;
-  GetLayoutElementValue(node, __L("menu"), menustr);    
+  GetLayoutElementValue(node, _L("menu"), menustr);    
   if(!menustr.IsEmpty()) 
     {
       element_menu = Element_Get(menustr, UI_ELEMENT_TYPE_MENU);  
@@ -5969,7 +5969,7 @@ UI_ELEMENT* UI_MANAGER::GetLayoutElement_ListBox(XFILEXMLELEMENT* node, UI_LAYOU
     }
 
   double defaultoption = 0.0f;
-  GetLayoutElementValue(node, __L("defaultoption"), defaultoption);    
+  GetLayoutElementValue(node, _L("defaultoption"), defaultoption);    
   if(element_menu)
     {
       UI_ELEMENT_OPTION* element_option = (UI_ELEMENT_OPTION*)element_menu->GetComposeElements()->Get((XDWORD)defaultoption);
@@ -6036,33 +6036,33 @@ UI_ELEMENT* UI_MANAGER::GetLayoutElement_ProgressBar(XFILEXMLELEMENT* node, UI_L
 
   element_progressbar->SetActive(true);
 
-  outstyle.Get(__L("sizefont"), sizefont);   // read but not applied -- pre-existing, unrelated to this migration
+  outstyle.Get(_L("sizefont"), sizefont);   // read but not applied -- pre-existing, unrelated to this migration
 
 
   XSTRING allocationtextstr;
-  if(outstyle.Get(__L("allocationtext"), allocationtextstr))
+  if(outstyle.Get(_L("allocationtext"), allocationtextstr))
     {
-      if(!allocationtextstr.Compare(__L("none")     , true)) element_progressbar->SetAllocationTextType(UI_ELEMENT_OPTION_ALLOCATION_TEXT_TYPE_NONE);
-      if(!allocationtextstr.Compare(__L("up")       , true)) element_progressbar->SetAllocationTextType(UI_ELEMENT_OPTION_ALLOCATION_TEXT_TYPE_UP);
-      if(!allocationtextstr.Compare(__L("down")     , true)) element_progressbar->SetAllocationTextType(UI_ELEMENT_OPTION_ALLOCATION_TEXT_TYPE_DOWN);
-      if(!allocationtextstr.Compare(__L("right")    , true)) element_progressbar->SetAllocationTextType(UI_ELEMENT_OPTION_ALLOCATION_TEXT_TYPE_RIGHT);
-	    if(!allocationtextstr.Compare(__L("left")     , true)) element_progressbar->SetAllocationTextType(UI_ELEMENT_OPTION_ALLOCATION_TEXT_TYPE_LEFT);
-      if(!allocationtextstr.Compare(__L("center")   , true)) element_progressbar->SetAllocationTextType(UI_ELEMENT_OPTION_ALLOCATION_TEXT_TYPE_CENTER);
+      if(!allocationtextstr.Compare(_L("none")     , true)) element_progressbar->SetAllocationTextType(UI_ELEMENT_OPTION_ALLOCATION_TEXT_TYPE_NONE);
+      if(!allocationtextstr.Compare(_L("up")       , true)) element_progressbar->SetAllocationTextType(UI_ELEMENT_OPTION_ALLOCATION_TEXT_TYPE_UP);
+      if(!allocationtextstr.Compare(_L("down")     , true)) element_progressbar->SetAllocationTextType(UI_ELEMENT_OPTION_ALLOCATION_TEXT_TYPE_DOWN);
+      if(!allocationtextstr.Compare(_L("right")    , true)) element_progressbar->SetAllocationTextType(UI_ELEMENT_OPTION_ALLOCATION_TEXT_TYPE_RIGHT);
+	    if(!allocationtextstr.Compare(_L("left")     , true)) element_progressbar->SetAllocationTextType(UI_ELEMENT_OPTION_ALLOCATION_TEXT_TYPE_LEFT);
+      if(!allocationtextstr.Compare(_L("center")   , true)) element_progressbar->SetAllocationTextType(UI_ELEMENT_OPTION_ALLOCATION_TEXT_TYPE_CENTER);
     }
 
 
-  outstyle.GetColor(__L("linecolor"), *element_progressbar->GetLineColor());
-  outstyle.GetColor(__L("gradientcolor"), *element_progressbar->GetGradientColor());
+  outstyle.GetColor(_L("linecolor"), *element_progressbar->GetLineColor());
+  outstyle.GetColor(_L("gradientcolor"), *element_progressbar->GetGradientColor());
 
   XSTRING gradientmode;
-  if(outstyle.Get(__L("gradientmode"), gradientmode))
+  if(outstyle.Get(_L("gradientmode"), gradientmode))
     {
-      if(!gradientmode.Compare(__L("track"), true)) element_progressbar->SetGradientMode(UI_ELEMENT_PROGRESS_GRADIENTMODE_TRACK);
-      if(!gradientmode.Compare(__L("fill") , true)) element_progressbar->SetGradientMode(UI_ELEMENT_PROGRESS_GRADIENTMODE_FILL);
+      if(!gradientmode.Compare(_L("track"), true)) element_progressbar->SetGradientMode(UI_ELEMENT_PROGRESS_GRADIENTMODE_TRACK);
+      if(!gradientmode.Compare(_L("fill") , true)) element_progressbar->SetGradientMode(UI_ELEMENT_PROGRESS_GRADIENTMODE_FILL);
     }
 
   double levelvalue = 0.0f;
-  if(outstyle.Get(__L("level"), levelvalue)) element_progressbar->SetLevel((float)levelvalue);
+  if(outstyle.Get(_L("level"), levelvalue)) element_progressbar->SetLevel((float)levelvalue);
 
   for(int c=0; c<node->GetNElements(); c++)
     {
@@ -6070,7 +6070,7 @@ UI_ELEMENT* UI_MANAGER::GetLayoutElement_ProgressBar(XFILEXMLELEMENT* node, UI_L
       if(nodeelement)
         {
           XSTRING type;
-          if(GetLayoutElementValue(nodeelement, __L("type"), type))
+          if(GetLayoutElementValue(nodeelement, _L("type"), type))
             {        
               UI_ELEMENT* element = CreatePartialLayout(nodeelement, layout, element_progressbar);
               if(element) 
@@ -6095,21 +6095,21 @@ UI_ELEMENT* UI_MANAGER::GetLayoutElement_ProgressBar(XFILEXMLELEMENT* node, UI_L
     }
 
   XSTRING roundcapstr;
-  if(outstyle.Get(__L("roundcap"), roundcapstr))
+  if(outstyle.Get(_L("roundcap"), roundcapstr))
     {
-      if(!roundcapstr.Compare(__L("yes"), true) ||
-         !roundcapstr.Compare(__L("true"), true) ||
-         !roundcapstr.Compare(__L("1"), true))   element_progressbar->SetRoundCap(true);
+      if(!roundcapstr.Compare(_L("yes"), true) ||
+         !roundcapstr.Compare(_L("true"), true) ||
+         !roundcapstr.Compare(_L("1"), true))   element_progressbar->SetRoundCap(true);
     }
 
   XSTRING continuouscyclestr;
-  if(outstyle.Get(__L("continuouscycle"), continuouscyclestr))
+  if(outstyle.Get(_L("continuouscycle"), continuouscyclestr))
     {
       if(!continuouscyclestr.IsEmpty())
         {
           int value[3] = { 0, 0, 0 }; 
 
-          continuouscyclestr.UnFormat(__L("%d,%d,%d"), &value[0], &value[1], &value[2]); 
+          continuouscyclestr.UnFormat(_L("%d,%d,%d"), &value[0], &value[1], &value[2]); 
 
           if(!value[0]) value[0] = UI_ELEMENT_PROGRESSBAR_CCYCLE_DEFAULTSIZESEGMENT;
           if(!value[1]) value[1] = UI_ELEMENT_PROGRESSBAR_CCYCLE_DEFAULTSTEPSEGMENT;
@@ -6120,7 +6120,7 @@ UI_ELEMENT* UI_MANAGER::GetLayoutElement_ProgressBar(XFILEXMLELEMENT* node, UI_L
     }
 
   XSTRING progressrectstr;
-  if(outstyle.Get(__L("progressrect"), progressrectstr))
+  if(outstyle.Get(_L("progressrect"), progressrectstr))
     {
       if(!progressrectstr.IsEmpty())
         {
@@ -6131,7 +6131,7 @@ UI_ELEMENT* UI_MANAGER::GetLayoutElement_ProgressBar(XFILEXMLELEMENT* node, UI_L
             {
               int value[4] = { 0, 0, 0, 0 }; 
 
-              progressrectstr.UnFormat(__L("%d,%d,%d,%d"), &value[0], &value[1], &value[2], &value[3]); 
+              progressrectstr.UnFormat(_L("%d,%d,%d,%d"), &value[0], &value[1], &value[2], &value[3]); 
 
               element_progressrect->GetBoundaryLine()->x = element_progressbar->GetXPosition() + value[0];
               element_progressrect->GetBoundaryLine()->y = element_progressbar->GetYPosition() + value[1];      
@@ -6220,36 +6220,36 @@ UI_ELEMENT* UI_MANAGER::GetLayoutElement_ProgressRadial(XFILEXMLELEMENT* node, U
   element_progress->SetActive(true);
 
   // Value arc gradient END color (gradient START is the base "color"; track ring is "bckgrdcolor").
-  outstyle.GetColor(__L("linecolor"), *element_progress->GetLineColor());
-  outstyle.GetColor(__L("gradientcolor"), *element_progress->GetGradientColor());
+  outstyle.GetColor(_L("linecolor"), *element_progress->GetLineColor());
+  outstyle.GetColor(_L("gradientcolor"), *element_progress->GetGradientColor());
 
   XSTRING gradientmode;
-  if(outstyle.Get(__L("gradientmode"), gradientmode))
+  if(outstyle.Get(_L("gradientmode"), gradientmode))
     {
-      if(!gradientmode.Compare(__L("track"), true)) element_progress->SetGradientMode(UI_ELEMENT_PROGRESS_GRADIENTMODE_TRACK);
-      if(!gradientmode.Compare(__L("fill") , true)) element_progress->SetGradientMode(UI_ELEMENT_PROGRESS_GRADIENTMODE_FILL);
+      if(!gradientmode.Compare(_L("track"), true)) element_progress->SetGradientMode(UI_ELEMENT_PROGRESS_GRADIENTMODE_TRACK);
+      if(!gradientmode.Compare(_L("fill") , true)) element_progress->SetGradientMode(UI_ELEMENT_PROGRESS_GRADIENTMODE_FILL);
     }
 
   // Level [0..100].
   value = 0.0f;
-  if(outstyle.Get(__L("level"), value))      element_progress->SetLevel((float)value);
+  if(outstyle.Get(_L("level"), value))      element_progress->SetLevel((float)value);
 
   // Geometry.
   value = 0.0f;
-  if(outstyle.Get(__L("startangle"), value)) element_progress->SetStartAngle(value);
+  if(outstyle.Get(_L("startangle"), value)) element_progress->SetStartAngle(value);
 
   value = 0.0f;
-  if(outstyle.Get(__L("sweepangle"), value)) element_progress->SetSweepAngle(value);
+  if(outstyle.Get(_L("sweepangle"), value)) element_progress->SetSweepAngle(value);
 
   value = 0.0f;
-  if(outstyle.Get(__L("thickness"), value))  element_progress->SetThickness(value);
+  if(outstyle.Get(_L("thickness"), value))  element_progress->SetThickness(value);
 
   XSTRING roundcapstr;
-  if(outstyle.Get(__L("roundcap"), roundcapstr))
+  if(outstyle.Get(_L("roundcap"), roundcapstr))
     {
-      if(!roundcapstr.Compare(__L("yes"), true) ||
-         !roundcapstr.Compare(__L("true"), true) ||
-         !roundcapstr.Compare(__L("1"), true))   element_progress->SetRoundCap(true);
+      if(!roundcapstr.Compare(_L("yes"), true) ||
+         !roundcapstr.Compare(_L("true"), true) ||
+         !roundcapstr.Compare(_L("1"), true))   element_progress->SetRoundCap(true);
     }
 
   // Child <text> => centered caption.
@@ -6259,7 +6259,7 @@ UI_ELEMENT* UI_MANAGER::GetLayoutElement_ProgressRadial(XFILEXMLELEMENT* node, U
       if(nodeelement)
         {
           XSTRING type;
-          if(GetLayoutElementValue(nodeelement, __L("type"), type))
+          if(GetLayoutElementValue(nodeelement, _L("type"), type))
             {
               UI_ELEMENT* element = CreatePartialLayout(nodeelement, layout, element_progress);
               if(element)
@@ -6328,29 +6328,29 @@ UI_ELEMENT* UI_MANAGER::GetLayoutElement_ProgressImage(XFILEXMLELEMENT* node, UI
   element_progressimage->SetActive(true);
 
   XSTRING allocationtextstr;
-  if(outstyle.Get(__L("allocationtext"), allocationtextstr))
+  if(outstyle.Get(_L("allocationtext"), allocationtextstr))
     {
-      if(!allocationtextstr.Compare(__L("none")     , true)) element_progressimage->SetAllocationTextType(UI_ELEMENT_OPTION_ALLOCATION_TEXT_TYPE_NONE);
-      if(!allocationtextstr.Compare(__L("up")       , true)) element_progressimage->SetAllocationTextType(UI_ELEMENT_OPTION_ALLOCATION_TEXT_TYPE_UP);
-      if(!allocationtextstr.Compare(__L("down")     , true)) element_progressimage->SetAllocationTextType(UI_ELEMENT_OPTION_ALLOCATION_TEXT_TYPE_DOWN);
-      if(!allocationtextstr.Compare(__L("right")    , true)) element_progressimage->SetAllocationTextType(UI_ELEMENT_OPTION_ALLOCATION_TEXT_TYPE_RIGHT);
-      if(!allocationtextstr.Compare(__L("left")     , true)) element_progressimage->SetAllocationTextType(UI_ELEMENT_OPTION_ALLOCATION_TEXT_TYPE_LEFT);
-      if(!allocationtextstr.Compare(__L("center")   , true)) element_progressimage->SetAllocationTextType(UI_ELEMENT_OPTION_ALLOCATION_TEXT_TYPE_CENTER);
+      if(!allocationtextstr.Compare(_L("none")     , true)) element_progressimage->SetAllocationTextType(UI_ELEMENT_OPTION_ALLOCATION_TEXT_TYPE_NONE);
+      if(!allocationtextstr.Compare(_L("up")       , true)) element_progressimage->SetAllocationTextType(UI_ELEMENT_OPTION_ALLOCATION_TEXT_TYPE_UP);
+      if(!allocationtextstr.Compare(_L("down")     , true)) element_progressimage->SetAllocationTextType(UI_ELEMENT_OPTION_ALLOCATION_TEXT_TYPE_DOWN);
+      if(!allocationtextstr.Compare(_L("right")    , true)) element_progressimage->SetAllocationTextType(UI_ELEMENT_OPTION_ALLOCATION_TEXT_TYPE_RIGHT);
+      if(!allocationtextstr.Compare(_L("left")     , true)) element_progressimage->SetAllocationTextType(UI_ELEMENT_OPTION_ALLOCATION_TEXT_TYPE_LEFT);
+      if(!allocationtextstr.Compare(_L("center")   , true)) element_progressimage->SetAllocationTextType(UI_ELEMENT_OPTION_ALLOCATION_TEXT_TYPE_CENTER);
     }
 
   // alpha [0..100]
   value = 0.0f;
-  if(outstyle.Get(__L("alpha"), value)) element_progressimage->SetAlpha((XBYTE)value);
+  if(outstyle.Get(_L("alpha"), value)) element_progressimage->SetAlpha((XBYTE)value);
 
   // level [0..100]
   value = 0.0f;
-  if(outstyle.Get(__L("level"), value)) element_progressimage->SetLevel((float)value);
+  if(outstyle.Get(_L("level"), value)) element_progressimage->SetLevel((float)value);
 
   value = 0.0f;
-  if(outstyle.Get(__L("offsetstart"), value)) element_progressimage->SetOffsetStart(value);
+  if(outstyle.Get(_L("offsetstart"), value)) element_progressimage->SetOffsetStart(value);
 
   value = 0.0f;
-  if(outstyle.Get(__L("offsetend"), value)) element_progressimage->SetOffsetEnd(value);
+  if(outstyle.Get(_L("offsetend"), value)) element_progressimage->SetOffsetEnd(value);
 
   // resolve the draw mode once (same as GetLayoutElement_Image)
   GRPPROPERTYMODE   grppropertymode = GRPPROPERTYMODE_XX_UNKNOWN;
@@ -6375,19 +6375,19 @@ UI_ELEMENT* UI_MANAGER::GetLayoutElement_ProgressImage(XFILEXMLELEMENT* node, UI
 
   // empty (0%) graphic
   XSTRING fileempty;
-  outstyle.Get(__L("imageempty"), fileempty);
+  outstyle.Get(_L("imageempty"), fileempty);
   if(!fileempty.IsEmpty())
     {
-      UI_ANIMATION* animation = GetOrAddAnimationCache(drawmode, grppropertymode, __L(""), fileempty.Get());
+      UI_ANIMATION* animation = GetOrAddAnimationCache(drawmode, grppropertymode, _L(""), fileempty.Get());
       if(animation && animation->GetBitmap()) element_progressimage->SetImageEmpty(animation->GetBitmap());
     }
 
   // full (100%) graphic
   XSTRING filefull;
-  outstyle.Get(__L("imagefull"), filefull);
+  outstyle.Get(_L("imagefull"), filefull);
   if(!filefull.IsEmpty())
     {
-      UI_ANIMATION* animation = GetOrAddAnimationCache(drawmode, grppropertymode, __L(""), filefull.Get());
+      UI_ANIMATION* animation = GetOrAddAnimationCache(drawmode, grppropertymode, _L(""), filefull.Get());
       if(animation && animation->GetBitmap()) element_progressimage->SetImageFull(animation->GetBitmap());
     }
 
@@ -6398,7 +6398,7 @@ UI_ELEMENT* UI_MANAGER::GetLayoutElement_ProgressImage(XFILEXMLELEMENT* node, UI
       if(nodeelement)
         {
           XSTRING type;
-          if(GetLayoutElementValue(nodeelement, __L("type"), type))
+          if(GetLayoutElementValue(nodeelement, _L("type"), type))
             {
               UI_ELEMENT* element = CreatePartialLayout(nodeelement, layout, element_progressimage);
               if(element)
@@ -6465,23 +6465,23 @@ UI_ELEMENT* UI_MANAGER::GetLayoutElement_StatisticsChart(XFILEXMLELEMENT* node, 
   SetLevelAuto(element_chart, father);
 
   double alpha = 0;
-  if(outstyle.Get(__L("alpha"), alpha))
+  if(outstyle.Get(_L("alpha"), alpha))
     {
       element_chart->SetAlpha((XBYTE)alpha);
     }
 
   XSTRING charttypestr;
-  if(outstyle.Get(__L("chart"), charttypestr))
+  if(outstyle.Get(_L("chart"), charttypestr))
     {
-      if(!charttypestr.Compare(__L("lines")  , true)) element_chart->SetChartType(UI_ELEMENT_STATISTICSCHART_TYPE_LINES);
-      if(!charttypestr.Compare(__L("columns"), true)) element_chart->SetChartType(UI_ELEMENT_STATISTICSCHART_TYPE_COLUMNS);
-      if(!charttypestr.Compare(__L("area")   , true)) element_chart->SetChartType(UI_ELEMENT_STATISTICSCHART_TYPE_AREA);
-      if(!charttypestr.Compare(__L("bars")   , true)) element_chart->SetChartType(UI_ELEMENT_STATISTICSCHART_TYPE_BARS);
-      if(!charttypestr.Compare(__L("pie")    , true)) element_chart->SetChartType(UI_ELEMENT_STATISTICSCHART_TYPE_PIE);
+      if(!charttypestr.Compare(_L("lines")  , true)) element_chart->SetChartType(UI_ELEMENT_STATISTICSCHART_TYPE_LINES);
+      if(!charttypestr.Compare(_L("columns"), true)) element_chart->SetChartType(UI_ELEMENT_STATISTICSCHART_TYPE_COLUMNS);
+      if(!charttypestr.Compare(_L("area")   , true)) element_chart->SetChartType(UI_ELEMENT_STATISTICSCHART_TYPE_AREA);
+      if(!charttypestr.Compare(_L("bars")   , true)) element_chart->SetChartType(UI_ELEMENT_STATISTICSCHART_TYPE_BARS);
+      if(!charttypestr.Compare(_L("pie")    , true)) element_chart->SetChartType(UI_ELEMENT_STATISTICSCHART_TYPE_PIE);
     }
 
   XSTRING titlestr;
-  if(outstyle.Get(__L("title"), titlestr))
+  if(outstyle.Get(_L("title"), titlestr))
     {
       element_chart->SetTitle(titlestr.Get());
     }
@@ -6516,84 +6516,84 @@ UI_ELEMENT* UI_MANAGER::CreatePartialLayout(XFILEXMLELEMENT* nodeelement, UI_LAY
   XSTRING       value;
   UI_ELEMENT*   element  = NULL;
 
-  if(GetLayoutElementValue(nodeelement, __L("type"), value))
+  if(GetLayoutElementValue(nodeelement, _L("type"), value))
     {                              
-      if(!value.Compare(__L("text")           , true))  
+      if(!value.Compare(_L("text")           , true))  
         {
           element = GetLayoutElement_Text(nodeelement, layout, father);          
         }
 
-      if(!value.Compare(__L("textbox")        , true))  
+      if(!value.Compare(_L("textbox")        , true))  
         {
           element = GetLayoutElement_TextBox(nodeelement, layout, father);          
         }
 
-      if(!value.Compare(__L("image")          , true))  
+      if(!value.Compare(_L("image")          , true))  
         {
           element = GetLayoutElement_Image(nodeelement, layout, father);
         }
 
-      if(!value.Compare(__L("animation")      , true))  
+      if(!value.Compare(_L("animation")      , true))  
         {
           element = GetLayoutElement_Animation(nodeelement, layout, father);          
         }
 
-      if(!value.Compare(__L("option")         , true))  
+      if(!value.Compare(_L("option")         , true))  
         {
           element = GetLayoutElement_Option(nodeelement, layout, father);          
         }
 
-      if(!value.Compare(__L("multioption")    , true))  
+      if(!value.Compare(_L("multioption")    , true))  
         {
           element = GetLayoutElement_MultiOption(nodeelement, layout, father);          
         }
 
-      if(!value.Compare(__L("button")         , true))  
+      if(!value.Compare(_L("button")         , true))  
         { 
           element = GetLayoutElement_Button(nodeelement, layout, father); 
         }
 
-      if(!value.Compare(__L("checkbox")       , true))  
+      if(!value.Compare(_L("checkbox")       , true))  
         {
           element = GetLayoutElement_CheckBox(nodeelement, layout, father);          
         }
 
-      if(!value.Compare(__L("edittext")       , true))  
+      if(!value.Compare(_L("edittext")       , true))  
         {
           element = GetLayoutElement_EditText(nodeelement, layout, father);          
         }
 
-      if(!value.Compare(__L("form")           , true))  
+      if(!value.Compare(_L("form")           , true))  
         {
           element = GetLayoutElement_Form(nodeelement, layout, father);
         }
 
-      if(!value.Compare(__L("menu")           , true))  
+      if(!value.Compare(_L("menu")           , true))  
         {
           element = GetLayoutElement_Menu(nodeelement, layout, father);      
         }
 
-      if(!value.Compare(__L("listbox")        , true))  
+      if(!value.Compare(_L("listbox")        , true))  
         {
           element = GetLayoutElement_ListBox(nodeelement, layout, father);      
         }
 
-      if(!value.Compare(__L("progressbar")    , true))  
+      if(!value.Compare(_L("progressbar")    , true))  
         {
           element = GetLayoutElement_ProgressBar(nodeelement, layout, father);      
         }
         
-      if(!value.Compare(__L("progressradial") , true))
+      if(!value.Compare(_L("progressradial") , true))
         {
           element = GetLayoutElement_ProgressRadial(nodeelement, layout, father);
         }
   
-      if(!value.Compare(__L("progressimage")     , true))
+      if(!value.Compare(_L("progressimage")     , true))
         {
           element = GetLayoutElement_ProgressImage(nodeelement, layout, father);
         }
 
-      if(!value.Compare(__L("statisticschart")   , true))
+      if(!value.Compare(_L("statisticschart")   , true))
         {
           element = GetLayoutElement_StatisticsChart(nodeelement, layout, father);
         }
@@ -6660,10 +6660,10 @@ bool UI_MANAGER::CreateLayouts(XFILEXML& xml, XPATH& xmlpathfile, GRPSCREEN* scr
   for(int c=0; c<root->GetNElements(); c++)
     {
       XFILEXMLELEMENT* nodess = root->GetElement(c);
-      if(nodess && !nodess->GetName().Compare(__L("stylesheet"), true))
+      if(nodess && !nodess->GetName().Compare(_L("stylesheet"), true))
         {
           XSTRING cssname = nodess->GetValue();
-          cssname.DeleteNoCharacters(__L(" \t\r\n"));
+          cssname.DeleteNoCharacters(_L(" \t\r\n"));
 
           if(!cssname.IsEmpty())
             {
@@ -6689,37 +6689,37 @@ bool UI_MANAGER::CreateLayouts(XFILEXML& xml, XPATH& xmlpathfile, GRPSCREEN* scr
       XFILEXMLELEMENT* nodeskin = root->GetElement(c);
       if(nodeskin)
         {
-          if(!nodeskin->GetName().Compare(__L("skin"), true))
+          if(!nodeskin->GetName().Compare(_L("skin"), true))
             {                 
               XCHAR*    value;                             
               XSTRING   drawmodestr;
                  
-              value = nodeskin->GetValueAttribute(__L("name"));
+              value = nodeskin->GetValueAttribute(_L("name"));
               if(value) nametypeskin = value;
 
-              drawmodestr = nodeskin->GetValueAttribute(__L("drawmode"));  
-              if(!drawmodestr.Compare(__L("canvas"), true))   drawmode = UI_SKIN_DRAWMODE_CANVAS;
-              if(!drawmodestr.Compare(__L("context"), true))  drawmode = UI_SKIN_DRAWMODE_CONTEXT;                  
+              drawmodestr = nodeskin->GetValueAttribute(_L("drawmode"));  
+              if(!drawmodestr.Compare(_L("canvas"), true))   drawmode = UI_SKIN_DRAWMODE_CANVAS;
+              if(!drawmodestr.Compare(_L("context"), true))  drawmode = UI_SKIN_DRAWMODE_CONTEXT;                  
 
-              value = nodeskin->GetValueAttribute(__L("rasterfont"));                          
+              value = nodeskin->GetValueAttribute(_L("rasterfont"));                          
               if(value) raster_fontname = value;
                                           
-              value = nodeskin->GetValueAttribute(__L("vectorfont"));                          
+              value = nodeskin->GetValueAttribute(_L("vectorfont"));                          
               if(value) vector_fontname = value;    
 
-              value = nodeskin->GetValueAttribute(__L("backgroundcolor"));                          
+              value = nodeskin->GetValueAttribute(_L("backgroundcolor"));                          
               if(value) background_color[1] = value;                                       
 
-              value = nodeskin->GetValueAttribute(__L("backgroundimg"));                          
+              value = nodeskin->GetValueAttribute(_L("backgroundimg"));                          
               if(value) background_namefile[1] = value;                                       
 
-              value = nodeskin->GetValueAttribute(__L("backgroundseamlesspattern"));                          
+              value = nodeskin->GetValueAttribute(_L("backgroundseamlesspattern"));                          
               if(value) background_seamlesspattern[1] = value;                                       
 
-              value = nodeskin->GetValueAttribute(__L("backgroundpatternwidth"));                          
+              value = nodeskin->GetValueAttribute(_L("backgroundpatternwidth"));                          
               if(value) background_patternwidth[1] = value;                                       
 
-              value = nodeskin->GetValueAttribute(__L("backgroundpatternheight"));                          
+              value = nodeskin->GetValueAttribute(_L("backgroundpatternheight"));                          
               if(value) background_patternheight[1] = value;                                       
             }                  
         }
@@ -6799,28 +6799,28 @@ bool UI_MANAGER::CreateLayouts(XFILEXML& xml, XPATH& xmlpathfile, GRPSCREEN* scr
       XFILEXMLELEMENT* nodelayout = root->GetElement(c);
       if(nodelayout)
         {
-          if(!nodelayout->GetName().Compare(__L("layout"), true))
+          if(!nodelayout->GetName().Compare(_L("layout"), true))
             {
               XSTRING   namelayout;                
               XCHAR*    value;                             
 
-              value = nodelayout->GetValueAttribute(__L("name"));
+              value = nodelayout->GetValueAttribute(_L("name"));
               if(value) namelayout = value;         
               if(!namelayout.IsEmpty())
                 {                      
-                  value = nodelayout->GetValueAttribute(__L("backgroundcolor"));                          
+                  value = nodelayout->GetValueAttribute(_L("backgroundcolor"));                          
                   if(value) background_color[0] = value;                                       
 
-                  value = nodelayout->GetValueAttribute(__L("backgroundimg"));                          
+                  value = nodelayout->GetValueAttribute(_L("backgroundimg"));                          
                   if(value) background_namefile[0] = value;                  
 
-                  value = nodelayout->GetValueAttribute(__L("backgroundseamlesspattern"));                          
+                  value = nodelayout->GetValueAttribute(_L("backgroundseamlesspattern"));                          
                   if(value) background_seamlesspattern[0] = value;                  
 
-                  value = nodelayout->GetValueAttribute(__L("backgroundpatternwidth"));                          
+                  value = nodelayout->GetValueAttribute(_L("backgroundpatternwidth"));                          
                   if(value) background_patternwidth[0] = value;                  
 
-                  value = nodelayout->GetValueAttribute(__L("backgroundpatternheight"));                          
+                  value = nodelayout->GetValueAttribute(_L("backgroundpatternheight"));                          
                   if(value) background_patternheight[0] = value;                  
 
                   UI_LAYOUT* layout = GEN_NEW UI_LAYOUT(ui_skin);
@@ -6844,8 +6844,8 @@ bool UI_MANAGER::CreateLayouts(XFILEXML& xml, XPATH& xmlpathfile, GRPSCREEN* scr
                       XDWORD xml_design_w = 0;
                       XDWORD xml_design_h = 0;
                       {
-                        XCHAR* dw = nodelayout->GetValueAttribute(__L("designwidth"));
-                        XCHAR* dh = nodelayout->GetValueAttribute(__L("designheight"));
+                        XCHAR* dw = nodelayout->GetValueAttribute(_L("designwidth"));
+                        XCHAR* dh = nodelayout->GetValueAttribute(_L("designheight"));
                         if(dw) { XSTRING s(dw); xml_design_w = (XDWORD)s.ConvertToInt(); }
                         if(dh) { XSTRING s(dh); xml_design_h = (XDWORD)s.ConvertToInt(); }
                       }
@@ -6889,12 +6889,12 @@ bool UI_MANAGER::CreateLayouts(XFILEXML& xml, XPATH& xmlpathfile, GRPSCREEN* scr
                                   // Track B: gate @media against design viewport (load-time; see L.3).
                                   sheet->SetMediaViewport((int)layout->GetDesignWidth(), (int)layout->GetDesignHeight());
 
-                                  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, __L("[UI Load] stylesheet [%s] loaded (%d rules) for layout [%s] media=%dx%d"), stylesheet_csspath.Get(), sheet->Rules_Count(), layout->GetNameID()->Get(), layout->GetDesignWidth(), layout->GetDesignHeight());
+                                  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, _L("[UI Load] stylesheet [%s] loaded (%d rules) for layout [%s] media=%dx%d"), stylesheet_csspath.Get(), sheet->Rules_Count(), layout->GetNameID()->Get(), layout->GetDesignWidth(), layout->GetDesignHeight());
                                 }
                                else
                                 {
                                   GEN_DELETE sheet;
-                                  XTRACE_PRINTCOLOR(XTRACE_COLOR_WARNING, __L("[UI Load] stylesheet [%s] not applied (missing or empty)"), stylesheet_csspath.Get());
+                                  XTRACE_PRINTCOLOR(XTRACE_COLOR_WARNING, _L("[UI Load] stylesheet [%s] not applied (missing or empty)"), stylesheet_csspath.Get());
                                 }
                             }
                         }
@@ -6965,9 +6965,9 @@ bool UI_MANAGER::CreateLayouts(XFILEXML& xml, XPATH& xmlpathfile, GRPSCREEN* scr
 
                       bool isseamlesspattern = false;
 
-                      if(!bckseamlesspatternstr.Compare(__L("yes"), true) ||
-                         !bckseamlesspatternstr.Compare(__L("true"), true) ||
-                         !bckseamlesspatternstr.Compare(__L("1"), true))   isseamlesspattern = true;
+                      if(!bckseamlesspatternstr.Compare(_L("yes"), true) ||
+                         !bckseamlesspatternstr.Compare(_L("true"), true) ||
+                         !bckseamlesspatternstr.Compare(_L("1"), true))   isseamlesspattern = true;
 
                       // "backgroundimg" is always the same single resource, whether it ends up being drawn once,
                       // stretched to the layout (GetBitmap(), the default) or repeated as a tile (GetPatternBitmap(),
@@ -7252,9 +7252,9 @@ bool UI_MANAGER::CreateCacheElements(XFILEXMLELEMENT* nodeelement, UI_SKIN_DRAWM
   XCHAR*  value;  
   bool    status = false;
 
-  if(!nodeelement->GetName().Compare(__L("color"), true))
+  if(!nodeelement->GetName().Compare(_L("color"), true))
     {                                                                  
-      value = nodeelement->GetValueAttribute(__L("name"));
+      value = nodeelement->GetValueAttribute(_L("name"));
       if(value) 
         {
           name = value;
@@ -7267,9 +7267,9 @@ bool UI_MANAGER::CreateCacheElements(XFILEXMLELEMENT* nodeelement, UI_SKIN_DRAWM
         }
     }                  
     
-  if(!nodeelement->GetName().Compare(__L("text"), true))
+  if(!nodeelement->GetName().Compare(_L("text"), true))
     {                                      
-      value = nodeelement->GetValueAttribute(__L("name"));
+      value = nodeelement->GetValueAttribute(_L("name"));
       if(value) 
         {
           name = value;
@@ -7282,9 +7282,9 @@ bool UI_MANAGER::CreateCacheElements(XFILEXMLELEMENT* nodeelement, UI_SKIN_DRAWM
         }
     }                      
   
-  if(!nodeelement->GetName().Compare(__L("animation"), true))
+  if(!nodeelement->GetName().Compare(_L("animation"), true))
     {                     
-      value = nodeelement->GetValueAttribute(__L("name"));
+      value = nodeelement->GetValueAttribute(_L("name"));
       if(value)        
         { 
           name = value;
@@ -7574,7 +7574,7 @@ bool UI_MANAGER::SelectedElement(UI_ELEMENT* element)
   UI_PROPERTY_SELECTABLE* element_selectable = dynamic_cast<UI_PROPERTY_SELECTABLE*>(element);
   if(!element_selectable) return false;
 
-  // XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, __L("UI Element [%s]: Selected. "), element->GetName()->Get());
+  // XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, _L("UI Element [%s]: Selected. "), element->GetName()->Get());
 
   if(dynamic_cast<UI_PROPERTY_EDITABLE*>(element))        
     {
@@ -7595,13 +7595,13 @@ bool UI_MANAGER::SelectedElement(UI_ELEMENT* element)
         {
           bool status = element_checkbox->GetStatus();
 
-          // XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, __L("[Checkbox select] name %s status: %s"), element_checkbox->GetName()->Get(), (status?__L("true"):__L("false"))); 
+          // XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, _L("[Checkbox select] name %s status: %s"), element_checkbox->GetName()->Get(), (status?_L("true"):_L("false"))); 
           
           status=!status;
 
           element_checkbox->SetStatus(status);
           
-          // XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, __L("[Checkbox select] name %s status: %s"), element_checkbox->GetName()->Get(), (status?__L("true"):__L("false"))); 
+          // XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, _L("[Checkbox select] name %s status: %s"), element_checkbox->GetName()->Get(), (status?_L("true"):_L("false"))); 
 
           Elements_SetToRedraw(element);  
       }
@@ -8136,7 +8136,7 @@ void UI_MANAGER::UIScale_PresentSharpOverlay_Element(UI_LAYOUT* layout, UI_ELEME
                   double           rw              = design_w * density;
                   double           rh              = design_h * density;
 
-                  UI_ANIMATION* animation = GetOrAddAnimationCache(drawmode, grppropertymode, __L(""), image->GetResource()->Get(), live, rw, rh);
+                  UI_ANIMATION* animation = GetOrAddAnimationCache(drawmode, grppropertymode, _L(""), image->GetResource()->Get(), live, rw, rh);
                   GRPBITMAP*    sharp     = animation ? animation->GetBitmap() : NULL;
                   if(sharp)
                     {
@@ -8428,7 +8428,7 @@ bool UI_MANAGER::UseMotionInElement(UI_ELEMENT* element, INPCURSORMOTION* cursor
                                                       property_scrolleable->Scroll_SetStep(UI_PROPERTY_SCROLLEABLE_TYPE_VERTICAL, shift);   
                                                       GEN_USERINTERFACE.Elements_SetToRedraw(element);                                                                                                                 
                                                                                                                                                                                                                                                                                           
-                                                      //XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, __L("[Input Motion]  motion %s points: %d"), (motiondir == INPCURSORMOTION_DIR_UP)?__L("up"):__L("down"), cursormotion->GetNPoints());
+                                                      //XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, _L("[Input Motion]  motion %s points: %d"), (motiondir == INPCURSORMOTION_DIR_UP)?_L("up"):_L("down"), cursormotion->GetNPoints());
 
                                                       return true;  
                                                     }
@@ -8644,7 +8644,7 @@ void UI_MANAGER::HandleEvent_UI(UI_XEVENT* event)
                                                         int          screen_x           = event->GetXPos();
                                                         int          screen_y           = event->GetYPos();
 
-                                                        //XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, __L("x: %d, y: %d"), screen_x, screen_y);
+                                                        //XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, _L("x: %d, y: %d"), screen_x, screen_y);
 
                                                         // Remember where the pointer is right now (not only where it last
                                                         // landed ON an element). UnSelectedElement() re-issues a CURSOR_MOVE at

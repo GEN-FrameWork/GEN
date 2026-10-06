@@ -70,7 +70,7 @@ DIONODEITEMHANDLER_SENSORAM2315::DIONODEITEMHANDLER_SENSORAM2315(int port, int r
   this->timeout             = timeout;   
 
   type                      = DIONODEITEMHANDLER_TYPE_SENSOR_AM2315;  
-  name                      = __L("AOSONG AM2315");
+  name                      = _L("AOSONG AM2315");
 }
 
 
@@ -191,7 +191,7 @@ bool DIONODEITEMHANDLER_SENSORAM2315::Update()
               PostEvent(&xevent);
               
               
-              XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, __L("[DIONODE item handler %s] %s %s [value %f]"), GetName()->Get(), nodeitem->GetDescription()->Get(), description.Get(), value[c]);  
+              XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, _L("[DIONODE item handler %s] %s %s [value %f]"), GetName()->Get(), nodeitem->GetDescription()->Get(), description.Get(), value[c]);  
             }
         }
     }

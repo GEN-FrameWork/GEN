@@ -37,8 +37,8 @@
 
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
 
-#define DIOSTREAMUSBLOCALENUMDEVICES_PORTKEY  __L("Port_")
-#define DIOSTREAMUSBLOCALENUMDEVICES_PORTHUB  __L("Hub_")
+#define DIOSTREAMUSBLOCALENUMDEVICES_PORTKEY  _L("Port_")
+#define DIOSTREAMUSBLOCALENUMDEVICES_PORTHUB  _L("Hub_")
 
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
 

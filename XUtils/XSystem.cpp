@@ -459,7 +459,7 @@ bool XSYSTEM::HardwareUseLittleEndian()
 * --------------------------------------------------------------------------------------------------------------------*/
 XSYSTEM_PLATFORM XSYSTEM::GetPlatform(XSTRING* namestring)
 {
-  if(namestring)  namestring->Set(__L("Unknown"));
+  if(namestring)  namestring->Set(_L("Unknown"));
 
   return XSYSTEM_PLATFORM_UNKNOWN;  
 }
@@ -695,7 +695,7 @@ int XSYSTEM::GetCPUUsageForProcessID(XDWORD processID)
 * --------------------------------------------------------------------------------------------------------------------*/
 XCHAR* XSYSTEM::GetEnviromentVariable(XCHAR* name)
 {
-  return __L("");
+  return _L("");
 }
 
 
@@ -968,11 +968,11 @@ bool XSYSTEM::HostFile(bool add, XCHAR* domain, XCHAR* IP)
   bool      status = false;
   
   #ifdef WINDOWS
-  xpath = __L("C:\\Windows\\System32\\drivers\\etc\\hosts");
+  xpath = _L("C:\\Windows\\System32\\drivers\\etc\\hosts");
   #endif
 
   #if defined(LINUX) || defined(ANDROID)
-  xpath = __L("/etc/hosts");
+  xpath = _L("/etc/hosts");
   #endif
 
   if(xfileTXT.Open(xpath, false))
@@ -986,7 +986,7 @@ bool XSYSTEM::HostFile(bool add, XCHAR* domain, XCHAR* IP)
             {
               XSTRING line;
 
-              line.Format(__L("%s %s"), IP, domain);  
+              line.Format(_L("%s %s"), IP, domain);  
 
               xfileTXT.AddLine(line);    
               xfileTXT.WriteAllFile();
@@ -1060,9 +1060,9 @@ int XSYSTEM::IsLineInHostFile(XFILETXT& xfileTXT, XCHAR* domain, XCHAR* IP)
                 {
                   XCHAR character = line->Get()[d];
 
-                  if((character != __C('\t') && (character != __C(' '))))     
+                  if((character != _C('\t') && (character != _C(' '))))     
                     {
-                      if(character == __C('#'))     
+                      if(character == _C('#'))     
                         {
                           found = false;
                         }

@@ -109,7 +109,7 @@ XSYSTEM_HARDWARETYPE XANDROIDSYSTEM::GetTypeHardware(int* revision)
 * --------------------------------------------------------------------------------------------------------------------*/
 XSYSTEM_PLATFORM XANDROIDSYSTEM::GetPlatform(XSTRING* namestring)
 {
-  if(namestring)  namestring->Set(__L("Android"));
+  if(namestring)  namestring->Set(_L("Android"));
 
   return XSYSTEM_PLATFORM_ANDROID;  
 }

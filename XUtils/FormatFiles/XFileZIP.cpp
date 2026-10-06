@@ -1116,7 +1116,7 @@ bool XFILEUNZIP::DelFile(int index, XCHAR* password)
   xpathorigin.SetOnlyDriveAndPath();
 
   xpathtarget = xpathunzip;
-  xpathtarget.AddToNameFile(true, __L("#TEMPO#_"));
+  xpathtarget.AddToNameFile(true, _L("#TEMPO#_"));
 
   if(!filezip->Open(xpathtarget))
     {
@@ -1143,8 +1143,8 @@ bool XFILEUNZIP::DelFile(int index, XCHAR* password)
           filecmp = NULL;
 
           xpathuncmpfile = cmpfilename;
-          xpathuncmpfile.AddToNameFile(true, __L("#TEMPO#_"));
-          xpathuncmpfile.DeleteCharacter(__C('/'));
+          xpathuncmpfile.AddToNameFile(true, _L("#TEMPO#_"));
+          xpathuncmpfile.DeleteCharacter(_C('/'));
 
           if(DecompressFile(_index , xpathorigin, xpathuncmpfile.Get(), password))
             {

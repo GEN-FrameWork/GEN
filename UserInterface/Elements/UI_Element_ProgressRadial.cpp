@@ -68,7 +68,7 @@ UI_ELEMENT_PROGRESS_RADIAL::UI_ELEMENT_PROGRESS_RADIAL()
   Clean();
 
   SetType(UI_ELEMENT_TYPE_PROGRESSRADIAL);
-  GetTypeString()->Set(__L("progressradial"));
+  GetTypeString()->Set(_L("progressradial"));
 }
 
 
@@ -325,15 +325,15 @@ void UI_ELEMENT_PROGRESS_RADIAL::ReapplyStyleVisual()
   XSTRING v;
   double  d;
 
-  if(bag.Get(__L("linecolor")    , v)) GetLineColor()->SetFromString(v);
-  if(bag.Get(__L("gradientcolor"), v)) GetGradientColor()->SetFromString(v);
-  if(bag.Get(__L("thickness")    , d) && d > 0.0) SetThickness(d);
+  if(bag.Get(_L("linecolor")    , v)) GetLineColor()->SetFromString(v);
+  if(bag.Get(_L("gradientcolor"), v)) GetGradientColor()->SetFromString(v);
+  if(bag.Get(_L("thickness")    , d) && d > 0.0) SetThickness(d);
 
   XSTRING gradientmode;
-  if(bag.Get(__L("gradientmode"), gradientmode))
+  if(bag.Get(_L("gradientmode"), gradientmode))
     {
-      if(!gradientmode.Compare(__L("track"), true)) SetGradientMode(UI_ELEMENT_PROGRESS_GRADIENTMODE_TRACK);
-      if(!gradientmode.Compare(__L("fill") , true)) SetGradientMode(UI_ELEMENT_PROGRESS_GRADIENTMODE_FILL);
+      if(!gradientmode.Compare(_L("track"), true)) SetGradientMode(UI_ELEMENT_PROGRESS_GRADIENTMODE_TRACK);
+      if(!gradientmode.Compare(_L("fill") , true)) SetGradientMode(UI_ELEMENT_PROGRESS_GRADIENTMODE_FILL);
     }
 }
 

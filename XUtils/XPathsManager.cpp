@@ -406,11 +406,11 @@ bool XPATHSMANAGER::CreateAllPathSectionOnDisk()
                       status = false;
                     }
 
-                  //XTRACE_PRINTCOLOR((status?2:4), __L("Dir Create: %s "), xpath->Get());
+                  //XTRACE_PRINTCOLOR((status?2:4), _L("Dir Create: %s "), xpath->Get());
                 }
                else
                 {
-                  //XTRACE_PRINTCOLOR(2, __L("Dir Exist: %s "), xpath->Get());
+                  //XTRACE_PRINTCOLOR(2, _L("Dir Exist: %s "), xpath->Get());
                 }
             }
         }
@@ -461,8 +461,8 @@ bool XPATHSMANAGER::AdjustRootPathDefault(XCHAR* assetsdirname)
 
   xpathroot.Slash_Add();
 
-  do{ indexfound = xpathroot.Find(__L("/"), false, indexfound);
-      if(indexfound == XSTRING_NOTFOUND)   indexfound = xpathroot.Find(__L("\\"), false, indexfound);
+  do{ indexfound = xpathroot.Find(_L("/"), false, indexfound);
+      if(indexfound == XSTRING_NOTFOUND)   indexfound = xpathroot.Find(_L("\\"), false, indexfound);
 
       if(indexfound != XSTRING_NOTFOUND)
         {

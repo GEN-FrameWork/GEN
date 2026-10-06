@@ -138,7 +138,7 @@ DIOLINUXSTREAMTCPIP::DIOLINUXSTREAMTCPIP() : DIOSTREAMTCPIP() , XFSMACHINE(0)
             DIOLINUXTCPIPFSMEVENT_SENDINGDATA         , DIOLINUXTCPIPFSMSTATE_SENDINGDATA      ,
             XFSMACHINESTATE_EVENTDEFEND);
 
-  threadconnection = CREATEXTHREAD(XTHREADGROUPID_DIOSTREAMTCPIP, __L("DIOLINUXSTREAMTCPIP::DIOLINUXSTREAMTCPIP"), ThreadConnection, (void*)this);
+  threadconnection = CREATEXTHREAD(XTHREADGROUPID_DIOSTREAMTCPIP, _L("DIOLINUXSTREAMTCPIP::DIOLINUXSTREAMTCPIP"), ThreadConnection, (void*)this);
 }
 
 
@@ -265,7 +265,7 @@ bool DIOLINUXSTREAMTCPIP::Close()
                   config->SetHandleMultiServer(-1);
                   config->GetXMutexMultiServer()->UnLock();
 
-                  //XTRACE_PRINTCOLOR(2, __L("TCPIP: Delete Handle BASE %d Port %d"), handleserver, config->GetRemotePort());
+                  //XTRACE_PRINTCOLOR(2, _L("TCPIP: Delete Handle BASE %d Port %d"), handleserver, config->GetRemotePort());
                 }
             }
         }

@@ -48,192 +48,192 @@
 /*---- GENERAL VARIABLE ----------------------------------------------------------------------------------------------*/
 
 
-XLANGUAGE_ISO_639_3_ENTRY  iso_639_3_entry[] = {   {  XLANGUAGE_ISO_639_3_CODE_ENG,  __L("eng")   ,  __L("en")   ,  __L("English")               , __L("")                   , __L("")                       },
-                                                   {  XLANGUAGE_ISO_639_3_CODE_SPA,  __L("spa")   ,  __L("es")   ,  __L("Spanish")               , __L("Castilian")          , __L("")                       },   
+XLANGUAGE_ISO_639_3_ENTRY  iso_639_3_entry[] = {   {  XLANGUAGE_ISO_639_3_CODE_ENG,  _L("eng")   ,  _L("en")   ,  _L("English")               , _L("")                   , _L("")                       },
+                                                   {  XLANGUAGE_ISO_639_3_CODE_SPA,  _L("spa")   ,  _L("es")   ,  _L("Spanish")               , _L("Castilian")          , _L("")                       },   
 
                                                    //#ifndef MICROCONTROLLER
-                                                   {  XLANGUAGE_ISO_639_3_CODE_AAR,  __L("aar")   ,  __L("aa")   ,  __L("Afar")                  , __L("")                   , __L("")                       },
-                                                   {  XLANGUAGE_ISO_639_3_CODE_ABK,  __L("abk")   ,  __L("ab")   ,  __L("Abkhazian")             , __L("")                   , __L("")                       },
-                                                   {  XLANGUAGE_ISO_639_3_CODE_AFR,  __L("afr")   ,  __L("af")   ,  __L("Afrikaans")             , __L("")                   , __L("")                       },
-                                                   {  XLANGUAGE_ISO_639_3_CODE_AKA,  __L("aka")   ,  __L("ak")   ,  __L("Akan")                  , __L("")                   , __L("")                       },
-                                                   {  XLANGUAGE_ISO_639_3_CODE_ALB,  __L("alb")   ,  __L("sq")   ,  __L("Albanian")              , __L("")                   , __L("")                       },
-                                                   {  XLANGUAGE_ISO_639_3_CODE_AMH,  __L("amh")   ,  __L("am")   ,  __L("Amharic")               , __L("")                   , __L("")                       },
-                                                   {  XLANGUAGE_ISO_639_3_CODE_ARA,  __L("ara")   ,  __L("ar")   ,  __L("Arabic")                , __L("")                   , __L("")                       },
-                                                   {  XLANGUAGE_ISO_639_3_CODE_ARG,  __L("arg")   ,  __L("an")   ,  __L("Aragonese")             , __L("")                   , __L("")                       },
-                                                   {  XLANGUAGE_ISO_639_3_CODE_ARM,  __L("ARM")   ,  __L("hy")   ,  __L("Armenia")               , __L("")                   , __L("")                       },
-                                                   {  XLANGUAGE_ISO_639_3_CODE_ASM,  __L("asm")   ,  __L("as")   ,  __L("Assamese")              , __L("")                   , __L("")                       },
-                                                   {  XLANGUAGE_ISO_639_3_CODE_AVA,  __L("ava")   ,  __L("av")   ,  __L("Avaric")                , __L("")                   , __L("")                       },
-                                                   {  XLANGUAGE_ISO_639_3_CODE_AVE,  __L("ave")   ,  __L("ae")   ,  __L("Avestan")               , __L("")                   , __L("")                       },
-                                                   {  XLANGUAGE_ISO_639_3_CODE_AYM,  __L("aym")   ,  __L("ay")   ,  __L("Aymara")                , __L("")                   , __L("")                       },
-                                                   {  XLANGUAGE_ISO_639_3_CODE_AZE,  __L("aze")   ,  __L("az")   ,  __L("Azerbaijani")           , __L("")                   , __L("")                       },
-                                                   {  XLANGUAGE_ISO_639_3_CODE_BAK,  __L("bak")   ,  __L("ba")   ,  __L("Bashkir")               , __L("")                   , __L("")                       },
-                                                   {  XLANGUAGE_ISO_639_3_CODE_BAM,  __L("bam")   ,  __L("bm")   ,  __L("Bambara")               , __L("")                   , __L("")                       },
-                                                   {  XLANGUAGE_ISO_639_3_CODE_BAQ,  __L("baq")   ,  __L("eu")   ,  __L("Basque")                , __L("")                   , __L("")                       },
-                                                   {  XLANGUAGE_ISO_639_3_CODE_BEL,  __L("bel")   ,  __L("be")   ,  __L("Belarusian")            , __L("")                   , __L("")                       },
-                                                   {  XLANGUAGE_ISO_639_3_CODE_BEN,  __L("ben")   ,  __L("bn")   ,  __L("Bengali")               , __L("")                   , __L("")                       },
-                                                   {  XLANGUAGE_ISO_639_3_CODE_BIH,  __L("bih")   ,  __L("bh")   ,  __L("Bihari languages")      , __L("")                   , __L("")                       },
-                                                   {  XLANGUAGE_ISO_639_3_CODE_BIS,  __L("bis")   ,  __L("bi")   ,  __L("Bislama")               , __L("")                   , __L("")                       },
-                                                   {  XLANGUAGE_ISO_639_3_CODE_BOS,  __L("bos")   ,  __L("bs")   ,  __L("Bosnian")               , __L("")                   , __L("")                       },
-                                                   {  XLANGUAGE_ISO_639_3_CODE_BRE,  __L("bre")   ,  __L("br")   ,  __L("Breton")                , __L("")                   , __L("")                       },
-                                                   {  XLANGUAGE_ISO_639_3_CODE_BUL,  __L("bul")   ,  __L("bg")   ,  __L("Bulgarian")             , __L("")                   , __L("")                       },
-                                                   {  XLANGUAGE_ISO_639_3_CODE_BUR,  __L("bur")   ,  __L("my")   ,  __L("Burmese")               , __L("")                   , __L("")                       },
-                                                   {  XLANGUAGE_ISO_639_3_CODE_CAT,  __L("cat")   ,  __L("ca")   ,  __L("Catalan")               , __L("Valencian")          , __L("")                       },
-                                                   {  XLANGUAGE_ISO_639_3_CODE_CHA,  __L("cha")   ,  __L("ch")   ,  __L("Chamorro")              , __L("")                   , __L("")                       },
-                                                   {  XLANGUAGE_ISO_639_3_CODE_CHE,  __L("che")   ,  __L("ce")   ,  __L("Chechen")               , __L("")                   , __L("")                       },
-                                                   {  XLANGUAGE_ISO_639_3_CODE_CHI,  __L("chi")   ,  __L("zh")   ,  __L("Chinese")               , __L("")                   , __L("")                       },
-                                                   {  XLANGUAGE_ISO_639_3_CODE_CHU,  __L("chu")   ,  __L("cu")   ,  __L("Church Slavic")         , __L("Old Slavonic")       , __L("Church Slavonic")        },
-                                                   {  XLANGUAGE_ISO_639_3_CODE_CHV,  __L("chv")   ,  __L("cv")   ,  __L("Chuvash")               , __L("")                   , __L("")                       },
-                                                   {  XLANGUAGE_ISO_639_3_CODE_COR,  __L("cor")   ,  __L("kw")   ,  __L("Cornish")               , __L("")                   , __L("")                       },
-                                                   {  XLANGUAGE_ISO_639_3_CODE_COS,  __L("cos")   ,  __L("co")   ,  __L("Corsican")              , __L("")                   , __L("")                       },
-                                                   {  XLANGUAGE_ISO_639_3_CODE_CRE,  __L("cre")   ,  __L("cr")   ,  __L("Cree")                  , __L("")                   , __L("")                       },
-                                                   {  XLANGUAGE_ISO_639_3_CODE_CZE,  __L("cze")   ,  __L("cs")   ,  __L("Czech")                 , __L("")                   , __L("")                       },
-                                                   {  XLANGUAGE_ISO_639_3_CODE_DAN,  __L("dan")   ,  __L("da")   ,  __L("Danish")                , __L("")                   , __L("")                       },
-                                                   {  XLANGUAGE_ISO_639_3_CODE_DIV,  __L("div")   ,  __L("dv")   ,  __L("Divehi")                , __L("Dhivehi")            , __L("Maldivian")              },
-                                                   {  XLANGUAGE_ISO_639_3_CODE_DUT,  __L("dut")   ,  __L("nl")   ,  __L("Dutch")                 , __L("Flemish")            , __L("")                       },
-                                                   {  XLANGUAGE_ISO_639_3_CODE_DZO,  __L("dzo")   ,  __L("dz")   ,  __L("Dzongkha")              , __L("")                   , __L("")                       },                                                   
-                                                   {  XLANGUAGE_ISO_639_3_CODE_EPO,  __L("epo")   ,  __L("eo")   ,  __L("Esperanto")             , __L("")                   , __L("")                       },
-                                                   {  XLANGUAGE_ISO_639_3_CODE_EST,  __L("est")   ,  __L("et")   ,  __L("Estonian")              , __L("")                   , __L("")                       },
-                                                   {  XLANGUAGE_ISO_639_3_CODE_EWE,  __L("ewe")   ,  __L("ee")   ,  __L("Ewe")                   , __L("")                   , __L("")                       },
-                                                   {  XLANGUAGE_ISO_639_3_CODE_FAO,  __L("fao")   ,  __L("fo")   ,  __L("Faroese")               , __L("")                   , __L("")                       },
-                                                   {  XLANGUAGE_ISO_639_3_CODE_FIJ,  __L("fij")   ,  __L("fj")   ,  __L("Fijian")                , __L("")                   , __L("")                       },
-                                                   {  XLANGUAGE_ISO_639_3_CODE_FIN,  __L("fin")   ,  __L("fi")   ,  __L("Finnish")               , __L("")                   , __L("")                       },
-                                                   {  XLANGUAGE_ISO_639_3_CODE_FRE,  __L("fre")   ,  __L("fr")   ,  __L("French")                , __L("")                   , __L("")                       },
-                                                   {  XLANGUAGE_ISO_639_3_CODE_FRY,  __L("fry")   ,  __L("fy")   ,  __L("Western Frisian")       , __L("")                   , __L("")                       },
-                                                   {  XLANGUAGE_ISO_639_3_CODE_FUL,  __L("ful")   ,  __L("ff")   ,  __L("Fulah")                 , __L("")                   , __L("")                       },
-                                                   {  XLANGUAGE_ISO_639_3_CODE_GEO,  __L("geo")   ,  __L("ka")   ,  __L("Georgian")              , __L("")                   , __L("")                       },
-                                                   {  XLANGUAGE_ISO_639_3_CODE_GER,  __L("ger")   ,  __L("de")   ,  __L("German")                , __L("")                   , __L("")                       },
-                                                   {  XLANGUAGE_ISO_639_3_CODE_GLA,  __L("gla")   ,  __L("gd")   ,  __L("Gaelic")                ,  __L("Scottish Gaelic")   , __L("")                       },
-                                                   {  XLANGUAGE_ISO_639_3_CODE_GLE,  __L("gle")   ,  __L("ga")   ,  __L("Irish")                 , __L("")                   , __L("")                       },
-                                                   {  XLANGUAGE_ISO_639_3_CODE_GLG,  __L("glg")   ,  __L("gl")   ,  __L("Galician")              , __L("")                   , __L("")                       },
-                                                   {  XLANGUAGE_ISO_639_3_CODE_GLV,  __L("glv")   ,  __L("gv")   ,  __L("Manx")                  , __L("")                   , __L("")                       },
-                                                   {  XLANGUAGE_ISO_639_3_CODE_GRE,  __L("gre")   ,  __L("el")   ,  __L("Greek Modern (1453-)")  , __L("")                   , __L("")                       },
-                                                   {  XLANGUAGE_ISO_639_3_CODE_GRN,  __L("grn")   ,  __L("gn")   ,  __L("Guarani")               , __L("")                   , __L("")                       },
-                                                   {  XLANGUAGE_ISO_639_3_CODE_GUJ,  __L("guj")   ,  __L("gu")   ,  __L("Gujarati")              , __L("")                   , __L("")                       },
-                                                   {  XLANGUAGE_ISO_639_3_CODE_HAT,  __L("hat")   ,  __L("ht")   ,  __L("Haitian")               ,  __L("Haitian Creole")    , __L("")                       },
-                                                   {  XLANGUAGE_ISO_639_3_CODE_HAU,  __L("hau")   ,  __L("ha")   ,  __L("Hausa")                 , __L("")                   , __L("")                       },
-                                                   {  XLANGUAGE_ISO_639_3_CODE_HEB,  __L("heb")   ,  __L("he")   ,  __L("Hebrew")                , __L("")                   , __L("")                       },
-                                                   {  XLANGUAGE_ISO_639_3_CODE_HER,  __L("her")   ,  __L("hz")   ,  __L("Herero")                , __L("")                   , __L("")                       },
-                                                   {  XLANGUAGE_ISO_639_3_CODE_HIN,  __L("hin")   ,  __L("hi")   ,  __L("Hindi")                 , __L("")                   , __L("")                       },
-                                                   {  XLANGUAGE_ISO_639_3_CODE_HMO,  __L("hmo")   ,  __L("ho")   ,  __L("Hiri Motu")             , __L("")                   , __L("")                       },
-                                                   {  XLANGUAGE_ISO_639_3_CODE_HRV,  __L("hrv")   ,  __L("hr")   ,  __L("Croatian")              , __L("")                   , __L("")                       },
-                                                   {  XLANGUAGE_ISO_639_3_CODE_HUN,  __L("hun")   ,  __L("hu")   ,  __L("Hungarian")             , __L("")                   , __L("")                       },
-                                                   {  XLANGUAGE_ISO_639_3_CODE_IBO,  __L("ibo")   ,  __L("ig")   ,  __L("Igbo")                  , __L("")                   , __L("")                       },
-                                                   {  XLANGUAGE_ISO_639_3_CODE_ICE,  __L("ice")   ,  __L("is")   ,  __L("Icelandic")             , __L("")                   , __L("")                       },
-                                                   {  XLANGUAGE_ISO_639_3_CODE_IDO,  __L("ido")   ,  __L("io")   ,  __L("Ido")                   , __L("")                   , __L("")                       },
-                                                   {  XLANGUAGE_ISO_639_3_CODE_III,  __L("iii")   ,  __L("ii")   ,  __L("Sichuan Yi")            ,  __L("Nuosu")             , __L("")                       },
-                                                   {  XLANGUAGE_ISO_639_3_CODE_IKU,  __L("iku")   ,  __L("iu")   ,  __L("Inuktitut")             , __L("")                   , __L("")                       },
-                                                   {  XLANGUAGE_ISO_639_3_CODE_ILE,  __L("ile")   ,  __L("ie")   ,  __L("Interlingue")           ,  __L("Occidental")        , __L("")                       },
-                                                   {  XLANGUAGE_ISO_639_3_CODE_INA,  __L("ina")   ,  __L("ia")   ,  __L("Interlingua")           , __L("")                   , __L("")                       },
-                                                   {  XLANGUAGE_ISO_639_3_CODE_IND,  __L("ind")   ,  __L("id")   ,  __L("Indonesian")            , __L("")                   , __L("")                       },
-                                                   {  XLANGUAGE_ISO_639_3_CODE_IPK,  __L("ipk")   ,  __L("ik")   ,  __L("Inupiaq")               , __L("")                   , __L("")                       },
-                                                   {  XLANGUAGE_ISO_639_3_CODE_ITA,  __L("ita")   ,  __L("it")   ,  __L("Italian")               , __L("")                   , __L("")                       },
-                                                   {  XLANGUAGE_ISO_639_3_CODE_JAV,  __L("jav")   ,  __L("jv")   ,  __L("Javanese")              , __L("")                   , __L("")                       },
-                                                   {  XLANGUAGE_ISO_639_3_CODE_JPN,  __L("jpn")   ,  __L("ja")   ,  __L("Japanese")              , __L("")                   , __L("")                       },
-                                                   {  XLANGUAGE_ISO_639_3_CODE_KAL,  __L("kal")   ,  __L("kl")   ,  __L("Kalaallisut")           ,  __L("Greenlandic")       , __L("")                       },
-                                                   {  XLANGUAGE_ISO_639_3_CODE_KAN,  __L("kan")   ,  __L("kn")   ,  __L("Kannada")               , __L("")                   , __L("")                       },
-                                                   {  XLANGUAGE_ISO_639_3_CODE_KAS,  __L("kas")   ,  __L("ks")   ,  __L("Kashmiri")              , __L("")                   , __L("")                       },
-                                                   {  XLANGUAGE_ISO_639_3_CODE_KAU,  __L("kau")   ,  __L("kr")   ,  __L("Kanuri")                , __L("")                   , __L("")                       },
-                                                   {  XLANGUAGE_ISO_639_3_CODE_KAZ,  __L("kaz")   ,  __L("kk")   ,  __L("Kazakh")                , __L("")                   , __L("")                       },
-                                                   {  XLANGUAGE_ISO_639_3_CODE_KHM,  __L("khm")   ,  __L("km")   ,  __L("Central Khmer")         , __L("")                   , __L("")                       },
-                                                   {  XLANGUAGE_ISO_639_3_CODE_KIK,  __L("kik")   ,  __L("ki")   ,  __L("Kikuyu")                ,  __L("Gikuyu")            , __L("")                       },
-                                                   {  XLANGUAGE_ISO_639_3_CODE_KIN,  __L("kin")   ,  __L("rw")   ,  __L("Kinyarwanda")           , __L("")                   , __L("")                       },
-                                                   {  XLANGUAGE_ISO_639_3_CODE_KIR,  __L("kir")   ,  __L("ky")   ,  __L("Kirghiz")               ,  __L("Kyrgyz")            , __L("")                       },
-                                                   {  XLANGUAGE_ISO_639_3_CODE_KOM,  __L("kom")   ,  __L("kv")   ,  __L("Komi")                  , __L("")                   , __L("")                       },
-                                                   {  XLANGUAGE_ISO_639_3_CODE_KON,  __L("kon")   ,  __L("kg")   ,  __L("Kongo")                 , __L("")                   , __L("")                       },
-                                                   {  XLANGUAGE_ISO_639_3_CODE_KOR,  __L("kor")   ,  __L("ko")   ,  __L("Korean")                , __L("")                   , __L("")                       },
-                                                   {  XLANGUAGE_ISO_639_3_CODE_KUA,  __L("kua")   ,  __L("kj")   ,  __L("Kuanyama")              ,  __L("Kwanyama")          , __L("")                       },
-                                                   {  XLANGUAGE_ISO_639_3_CODE_KUR,  __L("kur")   ,  __L("ku")   ,  __L("Kurdish")               , __L("")                   , __L("")                       },
-                                                   {  XLANGUAGE_ISO_639_3_CODE_LAO,  __L("lao")   ,  __L("lo")   ,  __L("Lao")                   , __L("")                   , __L("")                       },
-                                                   {  XLANGUAGE_ISO_639_3_CODE_LAT,  __L("lat")   ,  __L("la")   ,  __L("Latin")                 , __L("")                   , __L("")                       },
-                                                   {  XLANGUAGE_ISO_639_3_CODE_LAV,  __L("lav")   ,  __L("lv")   ,  __L("Latvian")               , __L("")                   , __L("")                       },
-                                                   {  XLANGUAGE_ISO_639_3_CODE_LIM,  __L("lim")   ,  __L("li")   ,  __L("Limburgan")             ,  __L("Limburger")         , __L("Limburgish")             },
-                                                   {  XLANGUAGE_ISO_639_3_CODE_LIN,  __L("lin")   ,  __L("ln")   ,  __L("Lingala")               , __L("")                   , __L("")                       },
-                                                   {  XLANGUAGE_ISO_639_3_CODE_LIT,  __L("lit")   ,  __L("lt")   ,  __L("Lithuanian")            , __L("")                   , __L("")                       },
-                                                   {  XLANGUAGE_ISO_639_3_CODE_LTZ,  __L("ltz")   ,  __L("lb")   ,  __L("Luxembourgish")         ,  __L("Letzeburgesch")     , __L("")                       },
-                                                   {  XLANGUAGE_ISO_639_3_CODE_LUB,  __L("lub")   ,  __L("lu")   ,  __L("Luba-Katanga")          , __L("")                   , __L("")                       },
-                                                   {  XLANGUAGE_ISO_639_3_CODE_LUG,  __L("lug")   ,  __L("lg")   ,  __L("Ganda")                 , __L("")                   , __L("")                       },
-                                                   {  XLANGUAGE_ISO_639_3_CODE_MAC,  __L("mac")   ,  __L("mk")   ,  __L("Macedonian")            , __L("")                   , __L("")                       },
-                                                   {  XLANGUAGE_ISO_639_3_CODE_MAH,  __L("mah")   ,  __L("mh")   ,  __L("Marshallese")           , __L("")                   , __L("")                       },
-                                                   {  XLANGUAGE_ISO_639_3_CODE_MAL,  __L("mal")   ,  __L("ml")   ,  __L("Malayalam")             , __L("")                   , __L("")                       },
-                                                   {  XLANGUAGE_ISO_639_3_CODE_MAO,  __L("mao")   ,  __L("mi")   ,  __L("Maori")                 , __L("")                   , __L("")                       },
-                                                   {  XLANGUAGE_ISO_639_3_CODE_MAR,  __L("mar")   ,  __L("mr")   ,  __L("Marathi")               , __L("")                   , __L("")                       },
-                                                   {  XLANGUAGE_ISO_639_3_CODE_MAY,  __L("may")   ,  __L("ms")   ,  __L("Malay")                 , __L("")                   , __L("")                       },
-                                                   {  XLANGUAGE_ISO_639_3_CODE_MLG,  __L("mlg")   ,  __L("mg")   ,  __L("Malagasy")              , __L("")                   , __L("")                       },
-                                                   {  XLANGUAGE_ISO_639_3_CODE_MLT,  __L("mlt")   ,  __L("mt")   ,  __L("Maltese")               , __L("")                   , __L("")                       },
-                                                   {  XLANGUAGE_ISO_639_3_CODE_MON,  __L("mon")   ,  __L("mn")   ,  __L("Mongolian")             , __L("")                   , __L("")                       },
-                                                   {  XLANGUAGE_ISO_639_3_CODE_NAU,  __L("nau")   ,  __L("na")   ,  __L("Nauru")                 , __L("")                   , __L("")                       },
-                                                   {  XLANGUAGE_ISO_639_3_CODE_NAV,  __L("nav")   ,  __L("nv")   ,  __L("Navajo")                , __L("Navaho")             , __L("")                       },
-                                                   {  XLANGUAGE_ISO_639_3_CODE_NBL,  __L("nbl")   ,  __L("nr")   ,  __L("Ndebele South")         , __L("South Ndebele")      , __L("")                       },
-                                                   {  XLANGUAGE_ISO_639_3_CODE_NDE,  __L("nde")   ,  __L("nd")   ,  __L("Ndebele North")         , __L("North Ndebele")      , __L("")                       },
-                                                   {  XLANGUAGE_ISO_639_3_CODE_NDO,  __L("ndo")   ,  __L("ng")   ,  __L("Ndonga")                , __L("")                   , __L("")                       },
-                                                   {  XLANGUAGE_ISO_639_3_CODE_NEP,  __L("nep")   ,  __L("ne")   ,  __L("Nepali")                , __L("")                   , __L("")                       },
-                                                   {  XLANGUAGE_ISO_639_3_CODE_NNO,  __L("nno")   ,  __L("nn")   ,  __L("Norwegian Nynorsk")     , __L("Nynorsk Norwegian")  , __L("")                       },
-                                                   {  XLANGUAGE_ISO_639_3_CODE_NOB,  __L("nob")   ,  __L("nb")   ,  __L("Bokm_l Norwegian")     , __L("Norwegian Bokm_l")  , __L("")                       },
-                                                   {  XLANGUAGE_ISO_639_3_CODE_NOR,  __L("nor")   ,  __L("no")   ,  __L("Norwegian")             , __L("")                   , __L("")                       },
-                                                   {  XLANGUAGE_ISO_639_3_CODE_NYA,  __L("nya")   ,  __L("ny")   ,  __L("Chichewa")              , __L("Chewa")              ,  __L("Nyanja")                },
-                                                   {  XLANGUAGE_ISO_639_3_CODE_OCI,  __L("oci")   ,  __L("oc")   ,  __L("Occitan (post 1500)")   , __L("Proven_al")         , __L("")                       },
-                                                   {  XLANGUAGE_ISO_639_3_CODE_OJI,  __L("oji")   ,  __L("oj")   ,  __L("Ojibwa")                , __L("")                   , __L("")                       },
-                                                   {  XLANGUAGE_ISO_639_3_CODE_ORI,  __L("ori")   ,  __L("or")   ,  __L("Oriya")                 , __L("")                   , __L("")                       },
-                                                   {  XLANGUAGE_ISO_639_3_CODE_ORM,  __L("orm")   ,  __L("om")   ,  __L("Oromo")                 , __L("")                   , __L("")                       },
-                                                   {  XLANGUAGE_ISO_639_3_CODE_OSS,  __L("oss")   ,  __L("os")   ,  __L("Ossetian")              , __L("Ossetic")            , __L("")                       },
-                                                   {  XLANGUAGE_ISO_639_3_CODE_PAN,  __L("pan")   ,  __L("pa")   ,  __L("Panjabi")               , __L("Punjabi")            , __L("")                       },
-                                                   {  XLANGUAGE_ISO_639_3_CODE_PER,  __L("per")   ,  __L("fa")   ,  __L("Persian")               , __L("")                   , __L("")                       },
-                                                   {  XLANGUAGE_ISO_639_3_CODE_PLI,  __L("pli")   ,  __L("pi")   ,  __L("Pali")                  , __L("")                   , __L("")                       },
-                                                   {  XLANGUAGE_ISO_639_3_CODE_POL,  __L("pol")   ,  __L("pl")   ,  __L("Polish")                , __L("")                   , __L("")                       },
-                                                   {  XLANGUAGE_ISO_639_3_CODE_POR,  __L("por")   ,  __L("pt")   ,  __L("Portuguese")            , __L("")                   , __L("")                       },
-                                                   {  XLANGUAGE_ISO_639_3_CODE_PUS,  __L("pus")   ,  __L("ps")   ,  __L("Pushto")                , __L("Pashto")             , __L("")                       },
-                                                   {  XLANGUAGE_ISO_639_3_CODE_QUE,  __L("que")   ,  __L("qu")   ,  __L("Quechua")               , __L("")                   , __L("")                       },
-                                                   {  XLANGUAGE_ISO_639_3_CODE_ROH,  __L("roh")   ,  __L("rm")   ,  __L("Romansh")               , __L("")                   , __L("")                       },
-                                                   {  XLANGUAGE_ISO_639_3_CODE_RUM,  __L("rum")   ,  __L("ro")   ,  __L("Romanian")              , __L("Moldavian")          , __L("Moldovan")               },
-                                                   {  XLANGUAGE_ISO_639_3_CODE_RUN,  __L("run")   ,  __L("rn")   ,  __L("Rundi")                 , __L("")                   , __L("")                       },
-                                                   {  XLANGUAGE_ISO_639_3_CODE_RUS,  __L("rus")   ,  __L("ru")   ,  __L("Russian")               , __L("")                   , __L("")                       },
-                                                   {  XLANGUAGE_ISO_639_3_CODE_SAG,  __L("sag")   ,  __L("sg")   ,  __L("Sango")                 , __L("")                   , __L("")                       },
-                                                   {  XLANGUAGE_ISO_639_3_CODE_SAN,  __L("san")   ,  __L("sa")   ,  __L("Sanskrit")              , __L("")                   , __L("")                       },
-                                                   {  XLANGUAGE_ISO_639_3_CODE_SIN,  __L("sin")   ,  __L("si")   ,  __L("Sinhala")               , __L("Sinhalese")          , __L("")                       },
-                                                   {  XLANGUAGE_ISO_639_3_CODE_SLO,  __L("slo")   ,  __L("sk")   ,  __L("Slovak")                , __L("")                   , __L("")                       },
-                                                   {  XLANGUAGE_ISO_639_3_CODE_SLV,  __L("slv")   ,  __L("sl")   ,  __L("Slovenian")             , __L("")                   , __L("")                       },
-                                                   {  XLANGUAGE_ISO_639_3_CODE_SME,  __L("sme")   ,  __L("se")   ,  __L("Northern Sami")         , __L("")                   , __L("")                       },
-                                                   {  XLANGUAGE_ISO_639_3_CODE_SMO,  __L("smo")   ,  __L("sm")   ,  __L("Samoan")                , __L("")                   , __L("")                       },
-                                                   {  XLANGUAGE_ISO_639_3_CODE_SNA,  __L("sna")   ,  __L("sn")   ,  __L("Shona")                 , __L("")                   , __L("")                       },
-                                                   {  XLANGUAGE_ISO_639_3_CODE_SND,  __L("snd")   ,  __L("sd")   ,  __L("Sindhi")                , __L("")                   , __L("")                       },
-                                                   {  XLANGUAGE_ISO_639_3_CODE_SOM,  __L("som")   ,  __L("so")   ,  __L("Somali")                , __L("")                   , __L("")                       },
-                                                   {  XLANGUAGE_ISO_639_3_CODE_SOT,  __L("sot")   ,  __L("st")   ,  __L("Sotho Southern")        , __L("")                   , __L("")                       },                                                   
-                                                   {  XLANGUAGE_ISO_639_3_CODE_SRD,  __L("srd")   ,  __L("sc")   ,  __L("Sardinian")             , __L("")                   , __L("")                       },
-                                                   {  XLANGUAGE_ISO_639_3_CODE_SRP,  __L("srp")   ,  __L("sr")   ,  __L("Serbian")               , __L("")                   , __L("")                       },
-                                                   {  XLANGUAGE_ISO_639_3_CODE_SSW,  __L("ssw")   ,  __L("ss")   ,  __L("Swati")                 , __L("")                   , __L("")                       },
-                                                   {  XLANGUAGE_ISO_639_3_CODE_SUN,  __L("sun")   ,  __L("su")   ,  __L("Sundanese")             , __L("")                   , __L("")                       },
-                                                   {  XLANGUAGE_ISO_639_3_CODE_SWA,  __L("swa")   ,  __L("sw")   ,  __L("Swahili")               , __L("")                   , __L("")                       },
-                                                   {  XLANGUAGE_ISO_639_3_CODE_SWE,  __L("swe")   ,  __L("sv")   ,  __L("Swedish")               , __L("")                   , __L("")                       },
-                                                   {  XLANGUAGE_ISO_639_3_CODE_TAH,  __L("tah")   ,  __L("ty")   ,  __L("Tahitian")              , __L("")                   , __L("")                       },
-                                                   {  XLANGUAGE_ISO_639_3_CODE_TAM,  __L("tam")   ,  __L("ta")   ,  __L("Tamil")                 , __L("")                   , __L("")                       },
-                                                   {  XLANGUAGE_ISO_639_3_CODE_TAT,  __L("tat")   ,  __L("tt")   ,  __L("Tatar")                 , __L("")                   , __L("")                       },
-                                                   {  XLANGUAGE_ISO_639_3_CODE_TEL,  __L("tel")   ,  __L("te")   ,  __L("Telugu")                , __L("")                   , __L("")                       },
-                                                   {  XLANGUAGE_ISO_639_3_CODE_TGK,  __L("tgk")   ,  __L("tg")   ,  __L("Tajik")                 , __L("")                   , __L("")                       },
-                                                   {  XLANGUAGE_ISO_639_3_CODE_TGL,  __L("tgl")   ,  __L("tl")   ,  __L("Tagalog")               , __L("")                   , __L("")                       },
-                                                   {  XLANGUAGE_ISO_639_3_CODE_THA,  __L("tha")   ,  __L("th")   ,  __L("Thai")                  , __L("")                   , __L("")                       },
-                                                   {  XLANGUAGE_ISO_639_3_CODE_TIB,  __L("tib")   ,  __L("bo")   ,  __L("Tibetan")               , __L("")                   , __L("")                       },
-                                                   {  XLANGUAGE_ISO_639_3_CODE_TIR,  __L("tir")   ,  __L("ti")   ,  __L("Tigrinya")              , __L("")                   , __L("")                       },
-                                                   {  XLANGUAGE_ISO_639_3_CODE_TON,  __L("ton")   ,  __L("to")   ,  __L("Tonga (Tonga Islands)") , __L("")                   , __L("")                       },
-                                                   {  XLANGUAGE_ISO_639_3_CODE_TSN,  __L("tsn")   ,  __L("tn")   ,  __L("Tswana")                , __L("")                   , __L("")                       },
-                                                   {  XLANGUAGE_ISO_639_3_CODE_TSO,  __L("tso")   ,  __L("ts")   ,  __L("Tsonga")                , __L("")                   , __L("")                       },
-                                                   {  XLANGUAGE_ISO_639_3_CODE_TUK,  __L("tuk")   ,  __L("tk")   ,  __L("Turkmen")               , __L("")                   , __L("")                       },
-                                                   {  XLANGUAGE_ISO_639_3_CODE_TUR,  __L("tur")   ,  __L("tr")   ,  __L("Turkish")               , __L("")                   , __L("")                       },
-                                                   {  XLANGUAGE_ISO_639_3_CODE_TWI,  __L("twi")   ,  __L("tw")   ,  __L("Twi")                   , __L("")                   , __L("")                       },
-                                                   {  XLANGUAGE_ISO_639_3_CODE_UIG,  __L("uig")   ,  __L("ug")   ,  __L("Uighur")                , __L("Uyghur")             , __L("")                       },
-                                                   {  XLANGUAGE_ISO_639_3_CODE_UKR,  __L("ukr")   ,  __L("uk")   ,  __L("Ukrainian")             , __L("")                   , __L("")                       },
-                                                   {  XLANGUAGE_ISO_639_3_CODE_URD,  __L("urd")   ,  __L("ur")   ,  __L("Urdu")                  , __L("")                   , __L("")                       },
-                                                   {  XLANGUAGE_ISO_639_3_CODE_UZB,  __L("uzb")   ,  __L("uz")   ,  __L("Uzbek")                 , __L("")                   , __L("")                       },
-                                                   {  XLANGUAGE_ISO_639_3_CODE_VEN,  __L("ven")   ,  __L("ve")   ,  __L("Venda")                 , __L("")                   , __L("")                       },
-                                                   {  XLANGUAGE_ISO_639_3_CODE_VIE,  __L("vie")   ,  __L("vi")   ,  __L("Vietnamese")            , __L("")                   , __L("")                       },
-                                                   {  XLANGUAGE_ISO_639_3_CODE_VOL,  __L("vol")   ,  __L("vo")   ,  __L("Volap_k")              , __L("")                   , __L("")                       },
-                                                   {  XLANGUAGE_ISO_639_3_CODE_WEL,  __L("wel")   ,  __L("cy")   ,  __L("Welsh")                 , __L("")                   , __L("")                       },
-                                                   {  XLANGUAGE_ISO_639_3_CODE_WLN,  __L("wln")   ,  __L("wa")   ,  __L("Walloon")               , __L("")                   , __L("")                       },
-                                                   {  XLANGUAGE_ISO_639_3_CODE_WOL,  __L("wol")   ,  __L("wo")   ,  __L("Wolof")                 , __L("")                   , __L("")                       },
-                                                   {  XLANGUAGE_ISO_639_3_CODE_XHO,  __L("xho")   ,  __L("xh")   ,  __L("Xhosa")                 , __L("")                   , __L("")                       },
-                                                   {  XLANGUAGE_ISO_639_3_CODE_YID,  __L("yid")   ,  __L("yi")   ,  __L("Yiddish")               , __L("")                   , __L("")                       },
-                                                   {  XLANGUAGE_ISO_639_3_CODE_YOR,  __L("yor")   ,  __L("yo")   ,  __L("Yoruba")                , __L("")                   , __L("")                       },
-                                                   {  XLANGUAGE_ISO_639_3_CODE_ZHA,  __L("zha")   ,  __L("za")   ,  __L("Zhuang")                , __L("Chuang")             , __L("")                       },
-                                                   {  XLANGUAGE_ISO_639_3_CODE_ZUL,  __L("zul")   ,  __L("zu")   ,  __L("Zulu")                  , __L("")                   , __L("")                       }
+                                                   {  XLANGUAGE_ISO_639_3_CODE_AAR,  _L("aar")   ,  _L("aa")   ,  _L("Afar")                  , _L("")                   , _L("")                       },
+                                                   {  XLANGUAGE_ISO_639_3_CODE_ABK,  _L("abk")   ,  _L("ab")   ,  _L("Abkhazian")             , _L("")                   , _L("")                       },
+                                                   {  XLANGUAGE_ISO_639_3_CODE_AFR,  _L("afr")   ,  _L("af")   ,  _L("Afrikaans")             , _L("")                   , _L("")                       },
+                                                   {  XLANGUAGE_ISO_639_3_CODE_AKA,  _L("aka")   ,  _L("ak")   ,  _L("Akan")                  , _L("")                   , _L("")                       },
+                                                   {  XLANGUAGE_ISO_639_3_CODE_ALB,  _L("alb")   ,  _L("sq")   ,  _L("Albanian")              , _L("")                   , _L("")                       },
+                                                   {  XLANGUAGE_ISO_639_3_CODE_AMH,  _L("amh")   ,  _L("am")   ,  _L("Amharic")               , _L("")                   , _L("")                       },
+                                                   {  XLANGUAGE_ISO_639_3_CODE_ARA,  _L("ara")   ,  _L("ar")   ,  _L("Arabic")                , _L("")                   , _L("")                       },
+                                                   {  XLANGUAGE_ISO_639_3_CODE_ARG,  _L("arg")   ,  _L("an")   ,  _L("Aragonese")             , _L("")                   , _L("")                       },
+                                                   {  XLANGUAGE_ISO_639_3_CODE_ARM,  _L("ARM")   ,  _L("hy")   ,  _L("Armenia")               , _L("")                   , _L("")                       },
+                                                   {  XLANGUAGE_ISO_639_3_CODE_ASM,  _L("asm")   ,  _L("as")   ,  _L("Assamese")              , _L("")                   , _L("")                       },
+                                                   {  XLANGUAGE_ISO_639_3_CODE_AVA,  _L("ava")   ,  _L("av")   ,  _L("Avaric")                , _L("")                   , _L("")                       },
+                                                   {  XLANGUAGE_ISO_639_3_CODE_AVE,  _L("ave")   ,  _L("ae")   ,  _L("Avestan")               , _L("")                   , _L("")                       },
+                                                   {  XLANGUAGE_ISO_639_3_CODE_AYM,  _L("aym")   ,  _L("ay")   ,  _L("Aymara")                , _L("")                   , _L("")                       },
+                                                   {  XLANGUAGE_ISO_639_3_CODE_AZE,  _L("aze")   ,  _L("az")   ,  _L("Azerbaijani")           , _L("")                   , _L("")                       },
+                                                   {  XLANGUAGE_ISO_639_3_CODE_BAK,  _L("bak")   ,  _L("ba")   ,  _L("Bashkir")               , _L("")                   , _L("")                       },
+                                                   {  XLANGUAGE_ISO_639_3_CODE_BAM,  _L("bam")   ,  _L("bm")   ,  _L("Bambara")               , _L("")                   , _L("")                       },
+                                                   {  XLANGUAGE_ISO_639_3_CODE_BAQ,  _L("baq")   ,  _L("eu")   ,  _L("Basque")                , _L("")                   , _L("")                       },
+                                                   {  XLANGUAGE_ISO_639_3_CODE_BEL,  _L("bel")   ,  _L("be")   ,  _L("Belarusian")            , _L("")                   , _L("")                       },
+                                                   {  XLANGUAGE_ISO_639_3_CODE_BEN,  _L("ben")   ,  _L("bn")   ,  _L("Bengali")               , _L("")                   , _L("")                       },
+                                                   {  XLANGUAGE_ISO_639_3_CODE_BIH,  _L("bih")   ,  _L("bh")   ,  _L("Bihari languages")      , _L("")                   , _L("")                       },
+                                                   {  XLANGUAGE_ISO_639_3_CODE_BIS,  _L("bis")   ,  _L("bi")   ,  _L("Bislama")               , _L("")                   , _L("")                       },
+                                                   {  XLANGUAGE_ISO_639_3_CODE_BOS,  _L("bos")   ,  _L("bs")   ,  _L("Bosnian")               , _L("")                   , _L("")                       },
+                                                   {  XLANGUAGE_ISO_639_3_CODE_BRE,  _L("bre")   ,  _L("br")   ,  _L("Breton")                , _L("")                   , _L("")                       },
+                                                   {  XLANGUAGE_ISO_639_3_CODE_BUL,  _L("bul")   ,  _L("bg")   ,  _L("Bulgarian")             , _L("")                   , _L("")                       },
+                                                   {  XLANGUAGE_ISO_639_3_CODE_BUR,  _L("bur")   ,  _L("my")   ,  _L("Burmese")               , _L("")                   , _L("")                       },
+                                                   {  XLANGUAGE_ISO_639_3_CODE_CAT,  _L("cat")   ,  _L("ca")   ,  _L("Catalan")               , _L("Valencian")          , _L("")                       },
+                                                   {  XLANGUAGE_ISO_639_3_CODE_CHA,  _L("cha")   ,  _L("ch")   ,  _L("Chamorro")              , _L("")                   , _L("")                       },
+                                                   {  XLANGUAGE_ISO_639_3_CODE_CHE,  _L("che")   ,  _L("ce")   ,  _L("Chechen")               , _L("")                   , _L("")                       },
+                                                   {  XLANGUAGE_ISO_639_3_CODE_CHI,  _L("chi")   ,  _L("zh")   ,  _L("Chinese")               , _L("")                   , _L("")                       },
+                                                   {  XLANGUAGE_ISO_639_3_CODE_CHU,  _L("chu")   ,  _L("cu")   ,  _L("Church Slavic")         , _L("Old Slavonic")       , _L("Church Slavonic")        },
+                                                   {  XLANGUAGE_ISO_639_3_CODE_CHV,  _L("chv")   ,  _L("cv")   ,  _L("Chuvash")               , _L("")                   , _L("")                       },
+                                                   {  XLANGUAGE_ISO_639_3_CODE_COR,  _L("cor")   ,  _L("kw")   ,  _L("Cornish")               , _L("")                   , _L("")                       },
+                                                   {  XLANGUAGE_ISO_639_3_CODE_COS,  _L("cos")   ,  _L("co")   ,  _L("Corsican")              , _L("")                   , _L("")                       },
+                                                   {  XLANGUAGE_ISO_639_3_CODE_CRE,  _L("cre")   ,  _L("cr")   ,  _L("Cree")                  , _L("")                   , _L("")                       },
+                                                   {  XLANGUAGE_ISO_639_3_CODE_CZE,  _L("cze")   ,  _L("cs")   ,  _L("Czech")                 , _L("")                   , _L("")                       },
+                                                   {  XLANGUAGE_ISO_639_3_CODE_DAN,  _L("dan")   ,  _L("da")   ,  _L("Danish")                , _L("")                   , _L("")                       },
+                                                   {  XLANGUAGE_ISO_639_3_CODE_DIV,  _L("div")   ,  _L("dv")   ,  _L("Divehi")                , _L("Dhivehi")            , _L("Maldivian")              },
+                                                   {  XLANGUAGE_ISO_639_3_CODE_DUT,  _L("dut")   ,  _L("nl")   ,  _L("Dutch")                 , _L("Flemish")            , _L("")                       },
+                                                   {  XLANGUAGE_ISO_639_3_CODE_DZO,  _L("dzo")   ,  _L("dz")   ,  _L("Dzongkha")              , _L("")                   , _L("")                       },                                                   
+                                                   {  XLANGUAGE_ISO_639_3_CODE_EPO,  _L("epo")   ,  _L("eo")   ,  _L("Esperanto")             , _L("")                   , _L("")                       },
+                                                   {  XLANGUAGE_ISO_639_3_CODE_EST,  _L("est")   ,  _L("et")   ,  _L("Estonian")              , _L("")                   , _L("")                       },
+                                                   {  XLANGUAGE_ISO_639_3_CODE_EWE,  _L("ewe")   ,  _L("ee")   ,  _L("Ewe")                   , _L("")                   , _L("")                       },
+                                                   {  XLANGUAGE_ISO_639_3_CODE_FAO,  _L("fao")   ,  _L("fo")   ,  _L("Faroese")               , _L("")                   , _L("")                       },
+                                                   {  XLANGUAGE_ISO_639_3_CODE_FIJ,  _L("fij")   ,  _L("fj")   ,  _L("Fijian")                , _L("")                   , _L("")                       },
+                                                   {  XLANGUAGE_ISO_639_3_CODE_FIN,  _L("fin")   ,  _L("fi")   ,  _L("Finnish")               , _L("")                   , _L("")                       },
+                                                   {  XLANGUAGE_ISO_639_3_CODE_FRE,  _L("fre")   ,  _L("fr")   ,  _L("French")                , _L("")                   , _L("")                       },
+                                                   {  XLANGUAGE_ISO_639_3_CODE_FRY,  _L("fry")   ,  _L("fy")   ,  _L("Western Frisian")       , _L("")                   , _L("")                       },
+                                                   {  XLANGUAGE_ISO_639_3_CODE_FUL,  _L("ful")   ,  _L("ff")   ,  _L("Fulah")                 , _L("")                   , _L("")                       },
+                                                   {  XLANGUAGE_ISO_639_3_CODE_GEO,  _L("geo")   ,  _L("ka")   ,  _L("Georgian")              , _L("")                   , _L("")                       },
+                                                   {  XLANGUAGE_ISO_639_3_CODE_GER,  _L("ger")   ,  _L("de")   ,  _L("German")                , _L("")                   , _L("")                       },
+                                                   {  XLANGUAGE_ISO_639_3_CODE_GLA,  _L("gla")   ,  _L("gd")   ,  _L("Gaelic")                ,  _L("Scottish Gaelic")   , _L("")                       },
+                                                   {  XLANGUAGE_ISO_639_3_CODE_GLE,  _L("gle")   ,  _L("ga")   ,  _L("Irish")                 , _L("")                   , _L("")                       },
+                                                   {  XLANGUAGE_ISO_639_3_CODE_GLG,  _L("glg")   ,  _L("gl")   ,  _L("Galician")              , _L("")                   , _L("")                       },
+                                                   {  XLANGUAGE_ISO_639_3_CODE_GLV,  _L("glv")   ,  _L("gv")   ,  _L("Manx")                  , _L("")                   , _L("")                       },
+                                                   {  XLANGUAGE_ISO_639_3_CODE_GRE,  _L("gre")   ,  _L("el")   ,  _L("Greek Modern (1453-)")  , _L("")                   , _L("")                       },
+                                                   {  XLANGUAGE_ISO_639_3_CODE_GRN,  _L("grn")   ,  _L("gn")   ,  _L("Guarani")               , _L("")                   , _L("")                       },
+                                                   {  XLANGUAGE_ISO_639_3_CODE_GUJ,  _L("guj")   ,  _L("gu")   ,  _L("Gujarati")              , _L("")                   , _L("")                       },
+                                                   {  XLANGUAGE_ISO_639_3_CODE_HAT,  _L("hat")   ,  _L("ht")   ,  _L("Haitian")               ,  _L("Haitian Creole")    , _L("")                       },
+                                                   {  XLANGUAGE_ISO_639_3_CODE_HAU,  _L("hau")   ,  _L("ha")   ,  _L("Hausa")                 , _L("")                   , _L("")                       },
+                                                   {  XLANGUAGE_ISO_639_3_CODE_HEB,  _L("heb")   ,  _L("he")   ,  _L("Hebrew")                , _L("")                   , _L("")                       },
+                                                   {  XLANGUAGE_ISO_639_3_CODE_HER,  _L("her")   ,  _L("hz")   ,  _L("Herero")                , _L("")                   , _L("")                       },
+                                                   {  XLANGUAGE_ISO_639_3_CODE_HIN,  _L("hin")   ,  _L("hi")   ,  _L("Hindi")                 , _L("")                   , _L("")                       },
+                                                   {  XLANGUAGE_ISO_639_3_CODE_HMO,  _L("hmo")   ,  _L("ho")   ,  _L("Hiri Motu")             , _L("")                   , _L("")                       },
+                                                   {  XLANGUAGE_ISO_639_3_CODE_HRV,  _L("hrv")   ,  _L("hr")   ,  _L("Croatian")              , _L("")                   , _L("")                       },
+                                                   {  XLANGUAGE_ISO_639_3_CODE_HUN,  _L("hun")   ,  _L("hu")   ,  _L("Hungarian")             , _L("")                   , _L("")                       },
+                                                   {  XLANGUAGE_ISO_639_3_CODE_IBO,  _L("ibo")   ,  _L("ig")   ,  _L("Igbo")                  , _L("")                   , _L("")                       },
+                                                   {  XLANGUAGE_ISO_639_3_CODE_ICE,  _L("ice")   ,  _L("is")   ,  _L("Icelandic")             , _L("")                   , _L("")                       },
+                                                   {  XLANGUAGE_ISO_639_3_CODE_IDO,  _L("ido")   ,  _L("io")   ,  _L("Ido")                   , _L("")                   , _L("")                       },
+                                                   {  XLANGUAGE_ISO_639_3_CODE_III,  _L("iii")   ,  _L("ii")   ,  _L("Sichuan Yi")            ,  _L("Nuosu")             , _L("")                       },
+                                                   {  XLANGUAGE_ISO_639_3_CODE_IKU,  _L("iku")   ,  _L("iu")   ,  _L("Inuktitut")             , _L("")                   , _L("")                       },
+                                                   {  XLANGUAGE_ISO_639_3_CODE_ILE,  _L("ile")   ,  _L("ie")   ,  _L("Interlingue")           ,  _L("Occidental")        , _L("")                       },
+                                                   {  XLANGUAGE_ISO_639_3_CODE_INA,  _L("ina")   ,  _L("ia")   ,  _L("Interlingua")           , _L("")                   , _L("")                       },
+                                                   {  XLANGUAGE_ISO_639_3_CODE_IND,  _L("ind")   ,  _L("id")   ,  _L("Indonesian")            , _L("")                   , _L("")                       },
+                                                   {  XLANGUAGE_ISO_639_3_CODE_IPK,  _L("ipk")   ,  _L("ik")   ,  _L("Inupiaq")               , _L("")                   , _L("")                       },
+                                                   {  XLANGUAGE_ISO_639_3_CODE_ITA,  _L("ita")   ,  _L("it")   ,  _L("Italian")               , _L("")                   , _L("")                       },
+                                                   {  XLANGUAGE_ISO_639_3_CODE_JAV,  _L("jav")   ,  _L("jv")   ,  _L("Javanese")              , _L("")                   , _L("")                       },
+                                                   {  XLANGUAGE_ISO_639_3_CODE_JPN,  _L("jpn")   ,  _L("ja")   ,  _L("Japanese")              , _L("")                   , _L("")                       },
+                                                   {  XLANGUAGE_ISO_639_3_CODE_KAL,  _L("kal")   ,  _L("kl")   ,  _L("Kalaallisut")           ,  _L("Greenlandic")       , _L("")                       },
+                                                   {  XLANGUAGE_ISO_639_3_CODE_KAN,  _L("kan")   ,  _L("kn")   ,  _L("Kannada")               , _L("")                   , _L("")                       },
+                                                   {  XLANGUAGE_ISO_639_3_CODE_KAS,  _L("kas")   ,  _L("ks")   ,  _L("Kashmiri")              , _L("")                   , _L("")                       },
+                                                   {  XLANGUAGE_ISO_639_3_CODE_KAU,  _L("kau")   ,  _L("kr")   ,  _L("Kanuri")                , _L("")                   , _L("")                       },
+                                                   {  XLANGUAGE_ISO_639_3_CODE_KAZ,  _L("kaz")   ,  _L("kk")   ,  _L("Kazakh")                , _L("")                   , _L("")                       },
+                                                   {  XLANGUAGE_ISO_639_3_CODE_KHM,  _L("khm")   ,  _L("km")   ,  _L("Central Khmer")         , _L("")                   , _L("")                       },
+                                                   {  XLANGUAGE_ISO_639_3_CODE_KIK,  _L("kik")   ,  _L("ki")   ,  _L("Kikuyu")                ,  _L("Gikuyu")            , _L("")                       },
+                                                   {  XLANGUAGE_ISO_639_3_CODE_KIN,  _L("kin")   ,  _L("rw")   ,  _L("Kinyarwanda")           , _L("")                   , _L("")                       },
+                                                   {  XLANGUAGE_ISO_639_3_CODE_KIR,  _L("kir")   ,  _L("ky")   ,  _L("Kirghiz")               ,  _L("Kyrgyz")            , _L("")                       },
+                                                   {  XLANGUAGE_ISO_639_3_CODE_KOM,  _L("kom")   ,  _L("kv")   ,  _L("Komi")                  , _L("")                   , _L("")                       },
+                                                   {  XLANGUAGE_ISO_639_3_CODE_KON,  _L("kon")   ,  _L("kg")   ,  _L("Kongo")                 , _L("")                   , _L("")                       },
+                                                   {  XLANGUAGE_ISO_639_3_CODE_KOR,  _L("kor")   ,  _L("ko")   ,  _L("Korean")                , _L("")                   , _L("")                       },
+                                                   {  XLANGUAGE_ISO_639_3_CODE_KUA,  _L("kua")   ,  _L("kj")   ,  _L("Kuanyama")              ,  _L("Kwanyama")          , _L("")                       },
+                                                   {  XLANGUAGE_ISO_639_3_CODE_KUR,  _L("kur")   ,  _L("ku")   ,  _L("Kurdish")               , _L("")                   , _L("")                       },
+                                                   {  XLANGUAGE_ISO_639_3_CODE_LAO,  _L("lao")   ,  _L("lo")   ,  _L("Lao")                   , _L("")                   , _L("")                       },
+                                                   {  XLANGUAGE_ISO_639_3_CODE_LAT,  _L("lat")   ,  _L("la")   ,  _L("Latin")                 , _L("")                   , _L("")                       },
+                                                   {  XLANGUAGE_ISO_639_3_CODE_LAV,  _L("lav")   ,  _L("lv")   ,  _L("Latvian")               , _L("")                   , _L("")                       },
+                                                   {  XLANGUAGE_ISO_639_3_CODE_LIM,  _L("lim")   ,  _L("li")   ,  _L("Limburgan")             ,  _L("Limburger")         , _L("Limburgish")             },
+                                                   {  XLANGUAGE_ISO_639_3_CODE_LIN,  _L("lin")   ,  _L("ln")   ,  _L("Lingala")               , _L("")                   , _L("")                       },
+                                                   {  XLANGUAGE_ISO_639_3_CODE_LIT,  _L("lit")   ,  _L("lt")   ,  _L("Lithuanian")            , _L("")                   , _L("")                       },
+                                                   {  XLANGUAGE_ISO_639_3_CODE_LTZ,  _L("ltz")   ,  _L("lb")   ,  _L("Luxembourgish")         ,  _L("Letzeburgesch")     , _L("")                       },
+                                                   {  XLANGUAGE_ISO_639_3_CODE_LUB,  _L("lub")   ,  _L("lu")   ,  _L("Luba-Katanga")          , _L("")                   , _L("")                       },
+                                                   {  XLANGUAGE_ISO_639_3_CODE_LUG,  _L("lug")   ,  _L("lg")   ,  _L("Ganda")                 , _L("")                   , _L("")                       },
+                                                   {  XLANGUAGE_ISO_639_3_CODE_MAC,  _L("mac")   ,  _L("mk")   ,  _L("Macedonian")            , _L("")                   , _L("")                       },
+                                                   {  XLANGUAGE_ISO_639_3_CODE_MAH,  _L("mah")   ,  _L("mh")   ,  _L("Marshallese")           , _L("")                   , _L("")                       },
+                                                   {  XLANGUAGE_ISO_639_3_CODE_MAL,  _L("mal")   ,  _L("ml")   ,  _L("Malayalam")             , _L("")                   , _L("")                       },
+                                                   {  XLANGUAGE_ISO_639_3_CODE_MAO,  _L("mao")   ,  _L("mi")   ,  _L("Maori")                 , _L("")                   , _L("")                       },
+                                                   {  XLANGUAGE_ISO_639_3_CODE_MAR,  _L("mar")   ,  _L("mr")   ,  _L("Marathi")               , _L("")                   , _L("")                       },
+                                                   {  XLANGUAGE_ISO_639_3_CODE_MAY,  _L("may")   ,  _L("ms")   ,  _L("Malay")                 , _L("")                   , _L("")                       },
+                                                   {  XLANGUAGE_ISO_639_3_CODE_MLG,  _L("mlg")   ,  _L("mg")   ,  _L("Malagasy")              , _L("")                   , _L("")                       },
+                                                   {  XLANGUAGE_ISO_639_3_CODE_MLT,  _L("mlt")   ,  _L("mt")   ,  _L("Maltese")               , _L("")                   , _L("")                       },
+                                                   {  XLANGUAGE_ISO_639_3_CODE_MON,  _L("mon")   ,  _L("mn")   ,  _L("Mongolian")             , _L("")                   , _L("")                       },
+                                                   {  XLANGUAGE_ISO_639_3_CODE_NAU,  _L("nau")   ,  _L("na")   ,  _L("Nauru")                 , _L("")                   , _L("")                       },
+                                                   {  XLANGUAGE_ISO_639_3_CODE_NAV,  _L("nav")   ,  _L("nv")   ,  _L("Navajo")                , _L("Navaho")             , _L("")                       },
+                                                   {  XLANGUAGE_ISO_639_3_CODE_NBL,  _L("nbl")   ,  _L("nr")   ,  _L("Ndebele South")         , _L("South Ndebele")      , _L("")                       },
+                                                   {  XLANGUAGE_ISO_639_3_CODE_NDE,  _L("nde")   ,  _L("nd")   ,  _L("Ndebele North")         , _L("North Ndebele")      , _L("")                       },
+                                                   {  XLANGUAGE_ISO_639_3_CODE_NDO,  _L("ndo")   ,  _L("ng")   ,  _L("Ndonga")                , _L("")                   , _L("")                       },
+                                                   {  XLANGUAGE_ISO_639_3_CODE_NEP,  _L("nep")   ,  _L("ne")   ,  _L("Nepali")                , _L("")                   , _L("")                       },
+                                                   {  XLANGUAGE_ISO_639_3_CODE_NNO,  _L("nno")   ,  _L("nn")   ,  _L("Norwegian Nynorsk")     , _L("Nynorsk Norwegian")  , _L("")                       },
+                                                   {  XLANGUAGE_ISO_639_3_CODE_NOB,  _L("nob")   ,  _L("nb")   ,  _L("Bokm_l Norwegian")     , _L("Norwegian Bokm_l")  , _L("")                       },
+                                                   {  XLANGUAGE_ISO_639_3_CODE_NOR,  _L("nor")   ,  _L("no")   ,  _L("Norwegian")             , _L("")                   , _L("")                       },
+                                                   {  XLANGUAGE_ISO_639_3_CODE_NYA,  _L("nya")   ,  _L("ny")   ,  _L("Chichewa")              , _L("Chewa")              ,  _L("Nyanja")                },
+                                                   {  XLANGUAGE_ISO_639_3_CODE_OCI,  _L("oci")   ,  _L("oc")   ,  _L("Occitan (post 1500)")   , _L("Proven_al")         , _L("")                       },
+                                                   {  XLANGUAGE_ISO_639_3_CODE_OJI,  _L("oji")   ,  _L("oj")   ,  _L("Ojibwa")                , _L("")                   , _L("")                       },
+                                                   {  XLANGUAGE_ISO_639_3_CODE_ORI,  _L("ori")   ,  _L("or")   ,  _L("Oriya")                 , _L("")                   , _L("")                       },
+                                                   {  XLANGUAGE_ISO_639_3_CODE_ORM,  _L("orm")   ,  _L("om")   ,  _L("Oromo")                 , _L("")                   , _L("")                       },
+                                                   {  XLANGUAGE_ISO_639_3_CODE_OSS,  _L("oss")   ,  _L("os")   ,  _L("Ossetian")              , _L("Ossetic")            , _L("")                       },
+                                                   {  XLANGUAGE_ISO_639_3_CODE_PAN,  _L("pan")   ,  _L("pa")   ,  _L("Panjabi")               , _L("Punjabi")            , _L("")                       },
+                                                   {  XLANGUAGE_ISO_639_3_CODE_PER,  _L("per")   ,  _L("fa")   ,  _L("Persian")               , _L("")                   , _L("")                       },
+                                                   {  XLANGUAGE_ISO_639_3_CODE_PLI,  _L("pli")   ,  _L("pi")   ,  _L("Pali")                  , _L("")                   , _L("")                       },
+                                                   {  XLANGUAGE_ISO_639_3_CODE_POL,  _L("pol")   ,  _L("pl")   ,  _L("Polish")                , _L("")                   , _L("")                       },
+                                                   {  XLANGUAGE_ISO_639_3_CODE_POR,  _L("por")   ,  _L("pt")   ,  _L("Portuguese")            , _L("")                   , _L("")                       },
+                                                   {  XLANGUAGE_ISO_639_3_CODE_PUS,  _L("pus")   ,  _L("ps")   ,  _L("Pushto")                , _L("Pashto")             , _L("")                       },
+                                                   {  XLANGUAGE_ISO_639_3_CODE_QUE,  _L("que")   ,  _L("qu")   ,  _L("Quechua")               , _L("")                   , _L("")                       },
+                                                   {  XLANGUAGE_ISO_639_3_CODE_ROH,  _L("roh")   ,  _L("rm")   ,  _L("Romansh")               , _L("")                   , _L("")                       },
+                                                   {  XLANGUAGE_ISO_639_3_CODE_RUM,  _L("rum")   ,  _L("ro")   ,  _L("Romanian")              , _L("Moldavian")          , _L("Moldovan")               },
+                                                   {  XLANGUAGE_ISO_639_3_CODE_RUN,  _L("run")   ,  _L("rn")   ,  _L("Rundi")                 , _L("")                   , _L("")                       },
+                                                   {  XLANGUAGE_ISO_639_3_CODE_RUS,  _L("rus")   ,  _L("ru")   ,  _L("Russian")               , _L("")                   , _L("")                       },
+                                                   {  XLANGUAGE_ISO_639_3_CODE_SAG,  _L("sag")   ,  _L("sg")   ,  _L("Sango")                 , _L("")                   , _L("")                       },
+                                                   {  XLANGUAGE_ISO_639_3_CODE_SAN,  _L("san")   ,  _L("sa")   ,  _L("Sanskrit")              , _L("")                   , _L("")                       },
+                                                   {  XLANGUAGE_ISO_639_3_CODE_SIN,  _L("sin")   ,  _L("si")   ,  _L("Sinhala")               , _L("Sinhalese")          , _L("")                       },
+                                                   {  XLANGUAGE_ISO_639_3_CODE_SLO,  _L("slo")   ,  _L("sk")   ,  _L("Slovak")                , _L("")                   , _L("")                       },
+                                                   {  XLANGUAGE_ISO_639_3_CODE_SLV,  _L("slv")   ,  _L("sl")   ,  _L("Slovenian")             , _L("")                   , _L("")                       },
+                                                   {  XLANGUAGE_ISO_639_3_CODE_SME,  _L("sme")   ,  _L("se")   ,  _L("Northern Sami")         , _L("")                   , _L("")                       },
+                                                   {  XLANGUAGE_ISO_639_3_CODE_SMO,  _L("smo")   ,  _L("sm")   ,  _L("Samoan")                , _L("")                   , _L("")                       },
+                                                   {  XLANGUAGE_ISO_639_3_CODE_SNA,  _L("sna")   ,  _L("sn")   ,  _L("Shona")                 , _L("")                   , _L("")                       },
+                                                   {  XLANGUAGE_ISO_639_3_CODE_SND,  _L("snd")   ,  _L("sd")   ,  _L("Sindhi")                , _L("")                   , _L("")                       },
+                                                   {  XLANGUAGE_ISO_639_3_CODE_SOM,  _L("som")   ,  _L("so")   ,  _L("Somali")                , _L("")                   , _L("")                       },
+                                                   {  XLANGUAGE_ISO_639_3_CODE_SOT,  _L("sot")   ,  _L("st")   ,  _L("Sotho Southern")        , _L("")                   , _L("")                       },                                                   
+                                                   {  XLANGUAGE_ISO_639_3_CODE_SRD,  _L("srd")   ,  _L("sc")   ,  _L("Sardinian")             , _L("")                   , _L("")                       },
+                                                   {  XLANGUAGE_ISO_639_3_CODE_SRP,  _L("srp")   ,  _L("sr")   ,  _L("Serbian")               , _L("")                   , _L("")                       },
+                                                   {  XLANGUAGE_ISO_639_3_CODE_SSW,  _L("ssw")   ,  _L("ss")   ,  _L("Swati")                 , _L("")                   , _L("")                       },
+                                                   {  XLANGUAGE_ISO_639_3_CODE_SUN,  _L("sun")   ,  _L("su")   ,  _L("Sundanese")             , _L("")                   , _L("")                       },
+                                                   {  XLANGUAGE_ISO_639_3_CODE_SWA,  _L("swa")   ,  _L("sw")   ,  _L("Swahili")               , _L("")                   , _L("")                       },
+                                                   {  XLANGUAGE_ISO_639_3_CODE_SWE,  _L("swe")   ,  _L("sv")   ,  _L("Swedish")               , _L("")                   , _L("")                       },
+                                                   {  XLANGUAGE_ISO_639_3_CODE_TAH,  _L("tah")   ,  _L("ty")   ,  _L("Tahitian")              , _L("")                   , _L("")                       },
+                                                   {  XLANGUAGE_ISO_639_3_CODE_TAM,  _L("tam")   ,  _L("ta")   ,  _L("Tamil")                 , _L("")                   , _L("")                       },
+                                                   {  XLANGUAGE_ISO_639_3_CODE_TAT,  _L("tat")   ,  _L("tt")   ,  _L("Tatar")                 , _L("")                   , _L("")                       },
+                                                   {  XLANGUAGE_ISO_639_3_CODE_TEL,  _L("tel")   ,  _L("te")   ,  _L("Telugu")                , _L("")                   , _L("")                       },
+                                                   {  XLANGUAGE_ISO_639_3_CODE_TGK,  _L("tgk")   ,  _L("tg")   ,  _L("Tajik")                 , _L("")                   , _L("")                       },
+                                                   {  XLANGUAGE_ISO_639_3_CODE_TGL,  _L("tgl")   ,  _L("tl")   ,  _L("Tagalog")               , _L("")                   , _L("")                       },
+                                                   {  XLANGUAGE_ISO_639_3_CODE_THA,  _L("tha")   ,  _L("th")   ,  _L("Thai")                  , _L("")                   , _L("")                       },
+                                                   {  XLANGUAGE_ISO_639_3_CODE_TIB,  _L("tib")   ,  _L("bo")   ,  _L("Tibetan")               , _L("")                   , _L("")                       },
+                                                   {  XLANGUAGE_ISO_639_3_CODE_TIR,  _L("tir")   ,  _L("ti")   ,  _L("Tigrinya")              , _L("")                   , _L("")                       },
+                                                   {  XLANGUAGE_ISO_639_3_CODE_TON,  _L("ton")   ,  _L("to")   ,  _L("Tonga (Tonga Islands)") , _L("")                   , _L("")                       },
+                                                   {  XLANGUAGE_ISO_639_3_CODE_TSN,  _L("tsn")   ,  _L("tn")   ,  _L("Tswana")                , _L("")                   , _L("")                       },
+                                                   {  XLANGUAGE_ISO_639_3_CODE_TSO,  _L("tso")   ,  _L("ts")   ,  _L("Tsonga")                , _L("")                   , _L("")                       },
+                                                   {  XLANGUAGE_ISO_639_3_CODE_TUK,  _L("tuk")   ,  _L("tk")   ,  _L("Turkmen")               , _L("")                   , _L("")                       },
+                                                   {  XLANGUAGE_ISO_639_3_CODE_TUR,  _L("tur")   ,  _L("tr")   ,  _L("Turkish")               , _L("")                   , _L("")                       },
+                                                   {  XLANGUAGE_ISO_639_3_CODE_TWI,  _L("twi")   ,  _L("tw")   ,  _L("Twi")                   , _L("")                   , _L("")                       },
+                                                   {  XLANGUAGE_ISO_639_3_CODE_UIG,  _L("uig")   ,  _L("ug")   ,  _L("Uighur")                , _L("Uyghur")             , _L("")                       },
+                                                   {  XLANGUAGE_ISO_639_3_CODE_UKR,  _L("ukr")   ,  _L("uk")   ,  _L("Ukrainian")             , _L("")                   , _L("")                       },
+                                                   {  XLANGUAGE_ISO_639_3_CODE_URD,  _L("urd")   ,  _L("ur")   ,  _L("Urdu")                  , _L("")                   , _L("")                       },
+                                                   {  XLANGUAGE_ISO_639_3_CODE_UZB,  _L("uzb")   ,  _L("uz")   ,  _L("Uzbek")                 , _L("")                   , _L("")                       },
+                                                   {  XLANGUAGE_ISO_639_3_CODE_VEN,  _L("ven")   ,  _L("ve")   ,  _L("Venda")                 , _L("")                   , _L("")                       },
+                                                   {  XLANGUAGE_ISO_639_3_CODE_VIE,  _L("vie")   ,  _L("vi")   ,  _L("Vietnamese")            , _L("")                   , _L("")                       },
+                                                   {  XLANGUAGE_ISO_639_3_CODE_VOL,  _L("vol")   ,  _L("vo")   ,  _L("Volap_k")              , _L("")                   , _L("")                       },
+                                                   {  XLANGUAGE_ISO_639_3_CODE_WEL,  _L("wel")   ,  _L("cy")   ,  _L("Welsh")                 , _L("")                   , _L("")                       },
+                                                   {  XLANGUAGE_ISO_639_3_CODE_WLN,  _L("wln")   ,  _L("wa")   ,  _L("Walloon")               , _L("")                   , _L("")                       },
+                                                   {  XLANGUAGE_ISO_639_3_CODE_WOL,  _L("wol")   ,  _L("wo")   ,  _L("Wolof")                 , _L("")                   , _L("")                       },
+                                                   {  XLANGUAGE_ISO_639_3_CODE_XHO,  _L("xho")   ,  _L("xh")   ,  _L("Xhosa")                 , _L("")                   , _L("")                       },
+                                                   {  XLANGUAGE_ISO_639_3_CODE_YID,  _L("yid")   ,  _L("yi")   ,  _L("Yiddish")               , _L("")                   , _L("")                       },
+                                                   {  XLANGUAGE_ISO_639_3_CODE_YOR,  _L("yor")   ,  _L("yo")   ,  _L("Yoruba")                , _L("")                   , _L("")                       },
+                                                   {  XLANGUAGE_ISO_639_3_CODE_ZHA,  _L("zha")   ,  _L("za")   ,  _L("Zhuang")                , _L("Chuang")             , _L("")                       },
+                                                   {  XLANGUAGE_ISO_639_3_CODE_ZUL,  _L("zul")   ,  _L("zu")   ,  _L("Zulu")                  , _L("")                   , _L("")                       }
                                                    //#endif
                                                };
 
@@ -423,6 +423,105 @@ bool XLANGUAGE_ISO_639_3::CodeAlpha3_GetByCodeAlpha2(XCHAR* codealpha2, XSTRING&
           codealpha3 = iso_639_3_entry[c].codealpha3;
           return true;
         }
+    }
+
+  return false;
+}
+
+
+/**-------------------------------------------------------------------------------------------------------------------
+*
+* @fn         bool XLANGUAGE_ISO_639_3::CodeAlpha2_GetByCode(XDWORD code, XSTRING& codealpha2)
+* @brief      Code alpha2 get by code (ISO 639-1; used by web translate APIs)
+* @ingroup    XUTILS
+*
+* --------------------------------------------------------------------------------------------------------------------*/
+bool XLANGUAGE_ISO_639_3::CodeAlpha2_GetByCode(XDWORD code, XSTRING& codealpha2)
+{
+  codealpha2.Empty();
+
+  for(XDWORD c=0; c<XLANGUAGE_ISO_639_3_NENTRYS; c++)
+    {
+      if(iso_639_3_entry[c].code == code)
+        {
+          codealpha2 = iso_639_3_entry[c].codealpha2;
+          return (!codealpha2.IsEmpty());
+        }
+    }
+
+  return false;
+}
+
+
+/**-------------------------------------------------------------------------------------------------------------------
+*
+* @fn         bool XLANGUAGE_ISO_639_3::CodeAlpha2_GetByCodeAlpha3(XCHAR* codealpha3, XSTRING& codealpha2)
+* @brief      Code alpha2 get by code alpha3
+* @ingroup    XUTILS
+*
+* --------------------------------------------------------------------------------------------------------------------*/
+bool XLANGUAGE_ISO_639_3::CodeAlpha2_GetByCodeAlpha3(XCHAR* codealpha3, XSTRING& codealpha2)
+{
+  codealpha2.Empty();
+
+  for(XDWORD c=0; c<XLANGUAGE_ISO_639_3_NENTRYS; c++)
+    {
+      XSTRING _codealpha3 = iso_639_3_entry[c].codealpha3;
+
+      if(!_codealpha3.Compare(codealpha3, true))
+        {
+          codealpha2 = iso_639_3_entry[c].codealpha2;
+          return (!codealpha2.IsEmpty());
+        }
+    }
+
+  return false;
+}
+
+
+/**-------------------------------------------------------------------------------------------------------------------
+*
+* @fn         bool XLANGUAGE_ISO_639_3::CodeAlpha2_Resolve(XCHAR* languageid, XSTRING& codealpha2)
+* @brief      Resolve alpha2 / alpha3 (or legacy translate aliases) to ISO 639-1 alpha2
+* @ingroup    XUTILS
+*
+* @note       Output is the codealpha2 used by Google Translate / MyMemory (en, es, zh, he, ...).
+*             Accepts case-insensitive alpha2/alpha3. Maps legacy Google codes iw→he, jw→jv.
+*             Does not rewrite BCP-47 tags such as zh-CN (caller should pass those through).
+*
+* --------------------------------------------------------------------------------------------------------------------*/
+bool XLANGUAGE_ISO_639_3::CodeAlpha2_Resolve(XCHAR* languageid, XSTRING& codealpha2)
+{
+  codealpha2.Empty();
+
+  if((!languageid) || (!languageid[0])) return false;
+
+  // Already a known ISO 639-1 alpha2?
+  for(XDWORD c=0; c<XLANGUAGE_ISO_639_3_NENTRYS; c++)
+    {
+      XSTRING _codealpha2 = iso_639_3_entry[c].codealpha2;
+
+      if(!_codealpha2.IsEmpty() && !_codealpha2.Compare(languageid, true))
+        {
+          codealpha2 = _codealpha2;
+          return true;
+        }
+    }
+
+  // GEN / ISO 639-2/3 alpha3 → alpha2
+  if(CodeAlpha2_GetByCodeAlpha3(languageid, codealpha2)) return true;
+
+  // Legacy Google Translate codes still seen in some responses / docs
+  if(XSTRING::Compare(languageid, _L("iw"), true) == 0)
+    {
+      codealpha2 = _L("he");
+      return true;
+    }
+
+  if(XSTRING::Compare(languageid, _L("jw"), true) == 0)
+    {
+      codealpha2 = _L("jv");
+      return true;
     }
 
   return false;

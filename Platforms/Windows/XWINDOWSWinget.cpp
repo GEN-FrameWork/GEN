@@ -100,10 +100,10 @@ XWINDOWSWINGET_ELEMENTRESULT::~XWINDOWSWINGET_ELEMENTRESULT()
 * --------------------------------------------------------------------------------------------------------------------*/
 bool XWINDOWSWINGET_ELEMENTRESULT::Serialize()
 {
-  Primitive_Add<XSTRING*>(&name                 , __L("name"));
-  Primitive_Add<XSTRING*>(&ID                   , __L("ID"));
-  Primitive_Add<XSTRING*>(&actualversion        , __L("actualversion"));
-  Primitive_Add<XSTRING*>(&availableversion     , __L("availableversion"));
+  Primitive_Add<XSTRING*>(&name                 , _L("name"));
+  Primitive_Add<XSTRING*>(&ID                   , _L("ID"));
+  Primitive_Add<XSTRING*>(&actualversion        , _L("actualversion"));
+  Primitive_Add<XSTRING*>(&availableversion     , _L("availableversion"));
 
   return true;
 }
@@ -120,10 +120,10 @@ bool XWINDOWSWINGET_ELEMENTRESULT::Serialize()
 * --------------------------------------------------------------------------------------------------------------------*/
 bool XWINDOWSWINGET_ELEMENTRESULT::Deserialize()
 {
-  Primitive_Extract<XSTRING&>(name              , __L("name"));
-  Primitive_Extract<XSTRING&>(ID                , __L("ID"));
-  Primitive_Extract<XSTRING&>(actualversion     , __L("actualversion"));
-  Primitive_Extract<XSTRING&>(availableversion  , __L("availableversion"));
+  Primitive_Extract<XSTRING&>(name              , _L("name"));
+  Primitive_Extract<XSTRING&>(ID                , _L("ID"));
+  Primitive_Extract<XSTRING&>(actualversion     , _L("actualversion"));
+  Primitive_Extract<XSTRING&>(availableversion  , _L("availableversion"));
 
   return true;
 }
@@ -183,7 +183,7 @@ XWINDOWSWINGET_LISTRESULT::~XWINDOWSWINGET_LISTRESULT()
 * --------------------------------------------------------------------------------------------------------------------*/
 bool XWINDOWSWINGET_LISTRESULT::Serialize()
 {
-  XVectorClass_Add<XWINDOWSWINGET_ELEMENTRESULT>(&list, __L("list"), __L(""));
+  XVectorClass_Add<XWINDOWSWINGET_ELEMENTRESULT>(&list, _L("list"), _L(""));
  
   return true;
 }
@@ -200,7 +200,7 @@ bool XWINDOWSWINGET_LISTRESULT::Serialize()
 * --------------------------------------------------------------------------------------------------------------------*/
 bool XWINDOWSWINGET_LISTRESULT::Deserialize()
 {
-  XVectorClass_Extract<XWINDOWSWINGET_ELEMENTRESULT>(&list, __L("list"), __L(""));
+  XVectorClass_Extract<XWINDOWSWINGET_ELEMENTRESULT>(&list, _L("list"), _L(""));
   
   return true;
 }
@@ -290,13 +290,13 @@ bool XWINDOWSWINGET::InstallModule()
   bool       status = false;
  
   /*
-  status = Exec( __L("Import-Module PackageManagement -Force"), buffer_output);
-  status = Exec( __L("Import-Module PowerShellGet -Force"), buffer_output);
-  status = Exec( __L("Install-PackageProvider -Name NuGet -MinimumVersion 2.8.5.201 -Force -Confirm:$false | Out-Null"), buffer_output);
-  status = Exec( __L("Install-Module Microsoft.WinGet.Client -Force -Confirm:$false -AllowClobber"), buffer_output);
+  status = Exec( _L("Import-Module PackageManagement -Force"), buffer_output);
+  status = Exec( _L("Import-Module PowerShellGet -Force"), buffer_output);
+  status = Exec( _L("Install-PackageProvider -Name NuGet -MinimumVersion 2.8.5.201 -Force -Confirm:$false | Out-Null"), buffer_output);
+  status = Exec( _L("Install-Module Microsoft.WinGet.Client -Force -Confirm:$false -AllowClobber"), buffer_output);
   */
 
-  status = Exec( __L("Install-Module Microsoft.WinGet.Client -Force -Confirm:$false -AllowClobber"), buffer_output);
+  status = Exec( _L("Install-Module Microsoft.WinGet.Client -Force -Confirm:$false -AllowClobber"), buffer_output);
 
   return status;
 }
@@ -326,10 +326,10 @@ bool XWINDOWSWINGET::List(XWINDOWSWINGET_LISTRESULT* listresult)
       return false;    
     }
 
-  status = GenerateColumnList(__L("Get-WinGetPackage | Select-Object Name"), &list_name);
+  status = GenerateColumnList(_L("Get-WinGetPackage | Select-Object Name"), &list_name);
   if(status)
     {
-      status = GenerateColumnList(__L("Get-WinGetPackage | Select-Object ID"), &list_ID);
+      status = GenerateColumnList(_L("Get-WinGetPackage | Select-Object ID"), &list_ID);
       if(status)
         {             
           if(list_name.GetSize() == list_ID.GetSize())
@@ -342,8 +342,8 @@ bool XWINDOWSWINGET::List(XWINDOWSWINGET_LISTRESULT* listresult)
                       if(elementresult)  
                         {
 
-                          // list_name.Get(c)->DeleteCharacter(__C('\\'), XSTRINGCONTEXT_ALLSTRING);
-                          // list_ID.Get(c)->DeleteCharacter(__C('\\'), XSTRINGCONTEXT_ALLSTRING);
+                          // list_name.Get(c)->DeleteCharacter(_C('\\'), XSTRINGCONTEXT_ALLSTRING);
+                          // list_ID.Get(c)->DeleteCharacter(_C('\\'), XSTRINGCONTEXT_ALLSTRING);
 
                           elementresult->name = list_name.Get(c)->Get();
                           elementresult->ID   = list_ID.Get(c)->Get();
@@ -395,16 +395,16 @@ bool XWINDOWSWINGET::ListUpdateAvailable(XWINDOWSWINGET_LISTRESULT* listresult)
       return false;    
     }
 
-  status = GenerateColumnList(__L("Get-WinGetPackage | Where-Object IsUpdateAvailable | Select-Object Name"), &list_name);
+  status = GenerateColumnList(_L("Get-WinGetPackage | Where-Object IsUpdateAvailable | Select-Object Name"), &list_name);
   if(status)
     {
-      status = GenerateColumnList(__L("Get-WinGetPackage | Where-Object IsUpdateAvailable | Select-Object ID"), &list_ID);
+      status = GenerateColumnList(_L("Get-WinGetPackage | Where-Object IsUpdateAvailable | Select-Object ID"), &list_ID);
       if(status)
         {             
-          status = GenerateColumnList(__L("Get-WinGetPackage | Where-Object IsUpdateAvailable | Select-Object InstalledVersion"), &list_actualversion);
+          status = GenerateColumnList(_L("Get-WinGetPackage | Where-Object IsUpdateAvailable | Select-Object InstalledVersion"), &list_actualversion);
           if(status)
             {             
-              status = GenerateColumnList(__L("Get-WinGetPackage | Where-Object IsUpdateAvailable | Select-Object AvailableVersions"), &list_availableversion);
+              status = GenerateColumnList(_L("Get-WinGetPackage | Where-Object IsUpdateAvailable | Select-Object AvailableVersions"), &list_availableversion);
               if(status)
                 {               
 
@@ -481,17 +481,17 @@ bool XWINDOWSWINGET::Find(XCHAR* search, XWINDOWSWINGET_LISTRESULT* listresult)
       return false;    
     }
 
-  mask.Format(__L("Find-WinGetPackage -Name \"%s\" | Select-Object"), search);
+  mask.Format(_L("Find-WinGetPackage -Name \"%s\" | Select-Object"), search);
 
-  cmdstr.Format(__L("%s %s"), mask.Get(), __L("Name"));
+  cmdstr.Format(_L("%s %s"), mask.Get(), _L("Name"));
   status = GenerateColumnList(cmdstr.Get(), &list_name);
   if(status)
     {
-      cmdstr.Format(__L("%s %s"), mask.Get(), __L("ID"));
+      cmdstr.Format(_L("%s %s"), mask.Get(), _L("ID"));
       status = GenerateColumnList(cmdstr.Get(), &list_ID);
       if(status)
         {             
-          cmdstr.Format(__L("%s %s"), mask.Get(), __L("Version"));
+          cmdstr.Format(_L("%s %s"), mask.Get(), _L("Version"));
           status = GenerateColumnList(cmdstr.Get(), &list_actualversion);
           if(status)
             {                           
@@ -646,20 +646,20 @@ bool XWINDOWSWINGET::ApplicationOperation(XWINDOWSWINGET_APPLICATIONOPERATION ap
   switch(appoper)
     {
       case XWINDOWSWINGET_APPLICATIONOPERATION_UNKNOWN        : return status;
-      case XWINDOWSWINGET_APPLICATIONOPERATION_INSTALL        : cmdstr.Format(__L("Install-WinGetPackage"));    break;
-      case XWINDOWSWINGET_APPLICATIONOPERATION_UPDATEVERSION  : cmdstr.Format(__L("Update-WinGetPackage"));     break;
-      case XWINDOWSWINGET_APPLICATIONOPERATION_UNINSTALL      : cmdstr.Format(__L("Uninstall-WinGetPackage"));  break;      
+      case XWINDOWSWINGET_APPLICATIONOPERATION_INSTALL        : cmdstr.Format(_L("Install-WinGetPackage"));    break;
+      case XWINDOWSWINGET_APPLICATIONOPERATION_UPDATEVERSION  : cmdstr.Format(_L("Update-WinGetPackage"));     break;
+      case XWINDOWSWINGET_APPLICATIONOPERATION_UNINSTALL      : cmdstr.Format(_L("Uninstall-WinGetPackage"));  break;      
     }
 
-  cmdstr.AddFormat(__L(" -Id \"%s\""), ID);
+  cmdstr.AddFormat(_L(" -Id \"%s\""), ID);
 
   if(force)
     {
-      cmdstr.AddFormat(__L(" -force"));
+      cmdstr.AddFormat(_L(" -force"));
     }
 
 
-  cmdstr.AddFormat(__L(" | Select-Object Status"));
+  cmdstr.AddFormat(_L(" | Select-Object Status"));
 
   status = Exec(cmdstr.Get(), buffer_output);
   if(status)
@@ -685,12 +685,12 @@ bool XWINDOWSWINGET::ApplicationOperation(XWINDOWSWINGET_APPLICATIONOPERATION ap
         {
           status = false;
 
-          if(!statusstr->Compare(__L("NoApplicableUpgrade"), false))  
+          if(!statusstr->Compare(_L("NoApplicableUpgrade"), false))  
             {
               status = true;   
             }
 
-          if(!statusstr->Compare(__L("Ok"), false))  
+          if(!statusstr->Compare(_L("Ok"), false))  
             {
               status = true;   
             }
@@ -748,8 +748,8 @@ bool XWINDOWSWINGET::Exec(XCHAR* params, XBUFFER& output)
 
   // Construir comando PowerShell (igual que antes)
   XSTRING cmd_str;
-  //cmd_str.Format(__L("powershell.exe -NonInteractive -Command \"%s\" 2>&1"), params);
-  cmd_str.Format(__L("pwsh.exe -NonInteractive -Command \"%s\" 2>&1"), params);
+  //cmd_str.Format(_L("powershell.exe -NonInteractive -Command \"%s\" 2>&1"), params);
+  cmd_str.Format(_L("pwsh.exe -NonInteractive -Command \"%s\" 2>&1"), params);
 
   
   // Crear pipe para capturar salida
@@ -1037,8 +1037,8 @@ bool XWINDOWSWINGET::GenerateColumnList(XCHAR* ask, XVECTOR<XSTRING*>* list)
 * --------------------------------------------------------------------------------------------------------------------*/
 bool XWINDOWSWINGET::GenerateList(XSTRING& result, XVECTOR<XSTRING*>* list) 
 {  
-  XSTRING literal1  = __L("\r\n\x1b[32;1m--");
-  XSTRING literal2  = __L("\x1B[0m\r\n");
+  XSTRING literal1  = _L("\r\n\x1b[32;1m--");
+  XSTRING literal2  = _L("\x1B[0m\r\n");
   int     start     =  XSTRING_NOTFOUND;
   int     end       =  XSTRING_NOTFOUND;
   
@@ -1060,7 +1060,7 @@ bool XWINDOWSWINGET::GenerateList(XSTRING& result, XVECTOR<XSTRING*>* list)
   
   while(1)
     {
-      end = result.Find(__L("\r\n"), true, start);
+      end = result.Find(_L("\r\n"), true, start);
       if(end == XSTRING_NOTFOUND)
         {
           break;
@@ -1074,7 +1074,7 @@ bool XWINDOWSWINGET::GenerateList(XSTRING& result, XVECTOR<XSTRING*>* list)
 
       result.Copy(start, end, (*element));
 
-      element->DeleteCharacter(__C(' '), XSTRINGCONTEXT_TO_END);
+      element->DeleteCharacter(_C(' '), XSTRINGCONTEXT_TO_END);
 
       list->Add(element);
 

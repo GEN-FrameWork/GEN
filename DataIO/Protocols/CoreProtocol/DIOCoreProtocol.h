@@ -42,16 +42,16 @@
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
 
 
-#define DIOCOREPROTOCOL_KEYEXCHANGE_SERVER_OPERATION_PARAM                __L("key server")
-#define DIOCOREPROTOCOL_KEYEXCHANGE_CLIENT_OPERATION_PARAM                __L("key client")
-#define DIOCOREPROTOCOL_AUTHENTICATION_CHALLENGE_OPERATION_PARAM          __L("challenge")
-#define DIOCOREPROTOCOL_AUTHENTICATION_RESPONSE_OPERATION_PARAM           __L("response")
-#define DIOCOREPROTOCOL_REGISTRATIONDATA_SEND_OPERATION_PARAM             __L("registerdata send")
-#define DIOCOREPROTOCOL_REGISTRATIONDATA_RESPONSE_OPERATION_PARAM         __L("registerdata response")
-#define DIOCOREPROTOCOL_REGISTRATIONDATA_CONFIRM_PARAM                    __L("registerdata ok")
-#define DIOCOREPROTOCOL_WAITREADY_READY_OPERATION_PARAM                   __L("ready!")  
+#define DIOCOREPROTOCOL_KEYEXCHANGE_SERVER_OPERATION_PARAM                _L("key server")
+#define DIOCOREPROTOCOL_KEYEXCHANGE_CLIENT_OPERATION_PARAM                _L("key client")
+#define DIOCOREPROTOCOL_AUTHENTICATION_CHALLENGE_OPERATION_PARAM          _L("challenge")
+#define DIOCOREPROTOCOL_AUTHENTICATION_RESPONSE_OPERATION_PARAM           _L("response")
+#define DIOCOREPROTOCOL_REGISTRATIONDATA_SEND_OPERATION_PARAM             _L("registerdata send")
+#define DIOCOREPROTOCOL_REGISTRATIONDATA_RESPONSE_OPERATION_PARAM         _L("registerdata response")
+#define DIOCOREPROTOCOL_REGISTRATIONDATA_CONFIRM_PARAM                    _L("registerdata ok")
+#define DIOCOREPROTOCOL_WAITREADY_READY_OPERATION_PARAM                   _L("ready!")  
 
-#define DIOCOREPROTOCOL_UPDATECLASS_CONFIRM_PARAM                         __L("status")
+#define DIOCOREPROTOCOL_UPDATECLASS_CONFIRM_PARAM                         _L("status")
 #define DIOCOREPROTOCOL_UPDATECLASS_FLAG_FORCHANGE                        0x00000001
 
 
@@ -73,10 +73,10 @@ enum DIOCOREPROTOCOL_COMMAND_TYPE
   DIOCOREPROTOCOL_COMMAND_TYPE_LASTINTERNAL                   
 };
 
-#define DIOCOREPROTOCOL_COMMAND_TYPE_STRING_HEARTBEAT                     __L("hearbeat")
-#define DIOCOREPROTOCOL_COMMAND_TYPE_STRING_DISCONNECT                    __L("disconnect")
+#define DIOCOREPROTOCOL_COMMAND_TYPE_STRING_HEARTBEAT                     _L("hearbeat")
+#define DIOCOREPROTOCOL_COMMAND_TYPE_STRING_DISCONNECT                    _L("disconnect")
 
-//#define DIOCOREPROTOCOL_COMMAND_TYPE_STRING_DISCONNECTED_RESULT         __L("disconnected")
+//#define DIOCOREPROTOCOL_COMMAND_TYPE_STRING_DISCONNECTED_RESULT         _L("disconnected")
 
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
 

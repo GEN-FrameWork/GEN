@@ -129,7 +129,7 @@ void XWINDOWSTRACE::PrintSpecial(XTRACE_TARGET* target, XBYTE level, XCHAR* stri
       #ifdef _MSC_VER
 
       OutputDebugString(string);
-      OutputDebugString(__L("\n"));
+      OutputDebugString(_L("\n"));
       #endif
     }
    else
@@ -181,14 +181,14 @@ void XWINDOWSTRACE::PrintFile(XTRACE_TARGET* target, XBYTE level, XCHAR* string)
   int error = 0;
 
   #ifdef BUILDER
-  file = _wfopen(target->GetAim(), __L("at"));
+  file = _wfopen(target->GetAim(), _L("at"));
   if(!file)
     {
       UnLock();
       return;
     }
   #else
-  error = _wfopen_s(&file, target->GetAim(), __L("at"));
+  error = _wfopen_s(&file, target->GetAim(), _L("at"));
   #endif
 
   if(error)
@@ -215,14 +215,14 @@ void XWINDOWSTRACE::PrintFile(XTRACE_TARGET* target, XBYTE level, XCHAR* string)
       DeleteFile(target->GetAim());
 
       #ifdef BUILDER
-      file = _wfopen(target->GetAim(), __L("at"));
+      file = _wfopen(target->GetAim(), _L("at"));
       if(!file)
         {
           UnLock();
           return;
         }
       #else
-      error = _wfopen_s(&file, target->GetAim(), __L("at"));
+      error = _wfopen_s(&file, target->GetAim(), _L("at"));
       #endif
 
       if(error)
@@ -243,7 +243,7 @@ void XWINDOWSTRACE::PrintFile(XTRACE_TARGET* target, XBYTE level, XCHAR* string)
       
       line.ConvertToASCII(charstr); 
       fwrite(charstr.Get(), 1, line.GetSize(), file);      
-      fwrite(__L("\n\r"), 1, 1, file);
+      fwrite(_L("\n\r"), 1, 1, file);
 
       fclose(file);
     }

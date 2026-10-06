@@ -160,17 +160,17 @@ bool DIOCOREPROTOCOL_CONNECTIONSMANAGER::Ini()
   connections_delete_xmutex=GEN_XFACTORY.Create_Mutex();
   if(connections_delete_xmutex) 
     {
-      connections_xthread = CREATEXTHREAD(XTHREADGROUPID_DIOPROTOCOL_CONNECTIONMANAGER, __L("DIOPROTOCOL_CONNECTIONSMANAGER::Ini"), ThreadConnections, (void*)this);
+      connections_xthread = CREATEXTHREAD(XTHREADGROUPID_DIOPROTOCOL_CONNECTIONMANAGER, _L("DIOPROTOCOL_CONNECTIONSMANAGER::Ini"), ThreadConnections, (void*)this);
       if(connections_xthread)
         {
           if(connections_xthread->Ini()) 
             {   
-              connection_update_xthread = CREATEXTHREAD(XTHREADGROUPID_DIOPROTOCOL_CONNECTIONMANAGER, __L("DIOPROTOCOL_CONNECTIONSMANAGER::Ini"), ThreadUpdateConnection, (void*)this);
+              connection_update_xthread = CREATEXTHREAD(XTHREADGROUPID_DIOPROTOCOL_CONNECTIONMANAGER, _L("DIOPROTOCOL_CONNECTIONSMANAGER::Ini"), ThreadUpdateConnection, (void*)this);
               if(connection_update_xthread)
                 {
                   if(connection_update_xthread->Ini())
                     {
-                      automaticoperations_xthread = CREATEXTHREAD(XTHREADGROUPID_DIOPROTOCOL_CONNECTIONMANAGER, __L("DIOPROTOCOL_CONNECTIONSMANAGER::Ini"), ThreadAutomaticOperations, (void*)this);
+                      automaticoperations_xthread = CREATEXTHREAD(XTHREADGROUPID_DIOPROTOCOL_CONNECTIONMANAGER, _L("DIOPROTOCOL_CONNECTIONSMANAGER::Ini"), ThreadAutomaticOperations, (void*)this);
                       if(automaticoperations_xthread)
                         { 
                           automaticoperations_xthread->Ini();
@@ -821,8 +821,8 @@ bool DIOCOREPROTOCOL_CONNECTIONSMANAGER::CreateIDMachine(XUUID& ID)
 
   GEN_XSYSTEM.GetOperativeSystemID(origin);
   
-  origin.AddFormat(__L(" %s"), GEN_XSYSTEM.GetBIOSSerialNumber()->Get());
-  origin.AddFormat(__L(" %s"), GEN_XSYSTEM.GetCPUSerialNumber()->Get());
+  origin.AddFormat(_L(" %s"), GEN_XSYSTEM.GetBIOSSerialNumber()->Get());
+  origin.AddFormat(_L(" %s"), GEN_XSYSTEM.GetCPUSerialNumber()->Get());
 
   origin.ConvertToUTF8(originbuffer);
     

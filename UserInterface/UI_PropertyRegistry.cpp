@@ -98,7 +98,7 @@ XDWORD UI_PROPERTYREGISTRY::TokenizeNumbers(XSTRING& raw, double* outvalues, XDW
       while(p < len)
         {
           XCHAR ch = raw[(int)p];
-          if((ch != __C(' ')) && (ch != __C('\t')) && (ch != __C(','))) break;
+          if((ch != _C(' ')) && (ch != _C('\t')) && (ch != _C(','))) break;
           p++;
         }
       if(p >= len) break;
@@ -107,7 +107,7 @@ XDWORD UI_PROPERTYREGISTRY::TokenizeNumbers(XSTRING& raw, double* outvalues, XDW
       while(p < len)
         {
           XCHAR ch = raw[(int)p];
-          if((ch == __C(' ')) || (ch == __C('\t')) || (ch == __C(','))) break;
+          if((ch == _C(' ')) || (ch == _C('\t')) || (ch == _C(','))) break;
           p++;
         }
 
@@ -146,7 +146,7 @@ XDWORD UI_PROPERTYREGISTRY::TokenizeTokens(XSTRING& raw, XSTRING* outtokens, XDW
       while(p < len)
         {
           XCHAR ch = raw[(int)p];
-          if((ch != __C(' ')) && (ch != __C('\t')) && (ch != __C(','))) break;
+          if((ch != _C(' ')) && (ch != _C('\t')) && (ch != _C(','))) break;
           p++;
         }
       if(p >= len) break;
@@ -155,7 +155,7 @@ XDWORD UI_PROPERTYREGISTRY::TokenizeTokens(XSTRING& raw, XSTRING* outtokens, XDW
       while(p < len)
         {
           XCHAR ch = raw[(int)p];
-          if((ch == __C(' ')) || (ch == __C('\t')) || (ch == __C(','))) break;
+          if((ch == _C(' ')) || (ch == _C('\t')) || (ch == _C(','))) break;
           p++;
         }
 
@@ -285,7 +285,7 @@ bool UI_PROPERTYREGISTRY::ParseBoxShadow(XSTRING& raw, double& outoffsetx, doubl
       while(p < len)
         {
           XCHAR ch = raw[(int)p];
-          if(ch != __C(' ') && ch != __C('\t')) break;
+          if(ch != _C(' ') && ch != _C('\t')) break;
           p++;
         }
       if(p >= len) break;
@@ -294,7 +294,7 @@ bool UI_PROPERTYREGISTRY::ParseBoxShadow(XSTRING& raw, double& outoffsetx, doubl
       while(p < len)
         {
           XCHAR ch = raw[(int)p];
-          if(ch == __C(' ') || ch == __C('\t')) break;
+          if(ch == _C(' ') || ch == _C('\t')) break;
           p++;
         }
 
@@ -321,9 +321,9 @@ bool UI_PROPERTYREGISTRY::ParseBoxShadow(XSTRING& raw, double& outoffsetx, doubl
       if(!tok || tok->IsEmpty()) continue;
 
       XCHAR first          = (*tok)[0];
-      bool  starts_numeric = (first == __C('-')) || (first == __C('+')) || (first == __C('.')) ||
-                              (first >= __C('0') && first <= __C('9'));
-      bool  has_comma      = tok->FindCharacter(__C(',')) >= 0;
+      bool  starts_numeric = (first == _C('-')) || (first == _C('+')) || (first == _C('.')) ||
+                              (first >= _C('0') && first <= _C('9'));
+      bool  has_comma      = tok->FindCharacter(_C(',')) >= 0;
       bool  isnum          = starts_numeric && !has_comma;
 
       if(isnum && nnum < 3)
@@ -386,7 +386,7 @@ bool UI_PROPERTYREGISTRY::ResolveMarginEdges(UI_STYLE& style, bool use_css_trbl,
   bool   use_lengths = (lengthctx != NULL) && use_css_trbl;
 
   XSTRING marginstr;
-  if(style.Get(__L("margin"), marginstr))
+  if(style.Get(_L("margin"), marginstr))
     {
       any = true;
 
@@ -450,18 +450,18 @@ bool UI_PROPERTYREGISTRY::ResolveMarginEdges(UI_STYLE& style, bool use_css_trbl,
         {
           XSTRING mvstr;
           double  mv = 0.0;
-          if(style.Get(__L("margin-left")  , mvstr) && ResolveLengthToken(mvstr, *lengthctx, mv)) { left  = mv; any = true; }
-          if(style.Get(__L("margin-right") , mvstr) && ResolveLengthToken(mvstr, *lengthctx, mv)) { right = mv; any = true; }
-          if(style.Get(__L("margin-top")   , mvstr) && ResolveLengthToken(mvstr, *lengthctx, mv)) { up    = mv; any = true; }
-          if(style.Get(__L("margin-bottom"), mvstr) && ResolveLengthToken(mvstr, *lengthctx, mv)) { down  = mv; any = true; }
+          if(style.Get(_L("margin-left")  , mvstr) && ResolveLengthToken(mvstr, *lengthctx, mv)) { left  = mv; any = true; }
+          if(style.Get(_L("margin-right") , mvstr) && ResolveLengthToken(mvstr, *lengthctx, mv)) { right = mv; any = true; }
+          if(style.Get(_L("margin-top")   , mvstr) && ResolveLengthToken(mvstr, *lengthctx, mv)) { up    = mv; any = true; }
+          if(style.Get(_L("margin-bottom"), mvstr) && ResolveLengthToken(mvstr, *lengthctx, mv)) { down  = mv; any = true; }
         }
        else
         {
           double mv = 0.0;
-          if(style.Get(__L("margin-left")  , mv)) { left  = mv; any = true; }
-          if(style.Get(__L("margin-right") , mv)) { right = mv; any = true; }
-          if(style.Get(__L("margin-top")   , mv)) { up    = mv; any = true; }
-          if(style.Get(__L("margin-bottom"), mv)) { down  = mv; any = true; }
+          if(style.Get(_L("margin-left")  , mv)) { left  = mv; any = true; }
+          if(style.Get(_L("margin-right") , mv)) { right = mv; any = true; }
+          if(style.Get(_L("margin-top")   , mv)) { up    = mv; any = true; }
+          if(style.Get(_L("margin-bottom"), mv)) { down  = mv; any = true; }
         }
     }
 

@@ -546,7 +546,7 @@ bool DIOCHECKTCPIPCONNECTIONS::Ini(int timeconnectionchecks, bool validsomeiscon
   xmutexconnections=GEN_XFACTORY.Create_Mutex();
   if(!xmutexconnections) return false;
 
-  threadcheckconnections = CREATEXTHREAD(XTHREADGROUPID_DIOCHECKTCPIPCONNECTIONS, __L("DIOCHECKTCPIPCONNECTIONS::Ini"), ThreadCheckConnections, (void*)this);
+  threadcheckconnections = CREATEXTHREAD(XTHREADGROUPID_DIOCHECKTCPIPCONNECTIONS, _L("DIOCHECKTCPIPCONNECTIONS::Ini"), ThreadCheckConnections, (void*)this);
   if(!threadcheckconnections)  return false;
 
   SetIsCheckTimeConnections(true);

@@ -439,7 +439,7 @@ XCHAR XFILECSV::GetSeparator()
 * --------------------------------------------------------------------------------------------------------------------*/
 bool XFILECSV::SetSeparator(XCHAR separator)
 {
-  if((separator!=__C(','))&&(separator!=__C(';'))) return false;
+  if((separator!=_C(','))&&(separator!=_C(';'))) return false;
 
   this->separator = separator;
 
@@ -745,13 +745,13 @@ bool XFILECSV::CreateRecordOfLine(XSTRING& line, XFILECSV_RECORD* record)
   int start = 0;
   int end   = 0;
 
-  do{ end = line.Find(__L(";"), true, start);
+  do{ end = line.Find(_L(";"), true, start);
       if(end == XSTRING_NOTFOUND)
         {
-          end = line.Find(__L(","), true, start);
-          if(end != XSTRING_NOTFOUND) SetSeparator(__C(','));
+          end = line.Find(_L(","), true, start);
+          if(end != XSTRING_NOTFOUND) SetSeparator(_C(','));
 
-        } else SetSeparator(__C(';'));
+        } else SetSeparator(_C(';'));
 
       XSTRING element;
 
@@ -819,7 +819,7 @@ bool XFILECSV::CreateLineOfRecord(XFILECSV_RECORD* record, XSTRING& line)
 * --------------------------------------------------------------------------------------------------------------------*/
 void XFILECSV::Clean()
 {
-  separator = __C(';');
+  separator = _C(';');
 }
 
 

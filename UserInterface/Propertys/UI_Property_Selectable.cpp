@@ -193,10 +193,10 @@ UI_PROPERTY_SELECTABLE_STATE UI_PROPERTY_SELECTABLE::SetSelectableStateFromStrin
   
   _selectablestr = selectablestr;
 
-  if(!_selectablestr.Compare(__L("active"), true))  selectable_state = UI_PROPERTY_SELECTABLE_STATE_ACTIVE;
-    else if(!_selectablestr.Compare(__L("deactive"), true))  selectable_state = UI_PROPERTY_SELECTABLE_STATE_DEACTIVE;
-      else if(!_selectablestr.Compare(__L("preselect"), true)) selectable_state = UI_PROPERTY_SELECTABLE_STATE_PRESELECT;
-         else if(!_selectablestr.Compare(__L("selected"), true)) selectable_state = UI_PROPERTY_SELECTABLE_STATE_SELECTED;
+  if(!_selectablestr.Compare(_L("active"), true))  selectable_state = UI_PROPERTY_SELECTABLE_STATE_ACTIVE;
+    else if(!_selectablestr.Compare(_L("deactive"), true))  selectable_state = UI_PROPERTY_SELECTABLE_STATE_DEACTIVE;
+      else if(!_selectablestr.Compare(_L("preselect"), true)) selectable_state = UI_PROPERTY_SELECTABLE_STATE_PRESELECT;
+         else if(!_selectablestr.Compare(_L("selected"), true)) selectable_state = UI_PROPERTY_SELECTABLE_STATE_SELECTED;
   
   return selectable_state;
 }

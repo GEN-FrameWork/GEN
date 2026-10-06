@@ -147,7 +147,7 @@ bool APPFLOWLOG::Ini(APPFLOWCFG* cfg, XCHAR* applicationname)
   this->cfg = cfg;
 
   GEN_XPATHSMANAGER.GetPathOfSection(XPATHSMANAGERSECTIONTYPE_ROOT, xpathsection);
-  xpath.Create(3 , xpathsection.Get(), applicationname, __L(".log"));
+  xpath.Create(3 , xpathsection.Get(), applicationname, _L(".log"));
 
   status = GEN_XLOG.Ini(xpath, applicationname, true);
   if(status)

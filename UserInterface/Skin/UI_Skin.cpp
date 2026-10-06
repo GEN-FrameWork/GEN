@@ -399,7 +399,7 @@ UI_SKIN_TYPE UI_SKIN::GetType(XCHAR* name)
 
   if(_name.IsEmpty()) return UI_SKIN_TYPE_UNKNOWN;
 
-  if(!_name.Compare(__L("flat"), true))       return UI_SKIN_TYPE_FLAT;
+  if(!_name.Compare(_L("flat"), true))       return UI_SKIN_TYPE_FLAT;
 
   return UI_SKIN_TYPE_UNKNOWN;
 }

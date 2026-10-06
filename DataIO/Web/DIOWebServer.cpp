@@ -197,28 +197,28 @@ bool DIOWEBSERVER_HEADER::CreateContentType(XSTRING* resource, XSTRING& contentt
 {
   contenttype.Empty();
 
-       if(resource->Find(__L(".htm")  , true) != XSTRING_NOTFOUND)  contenttype = __L("text/html");
-  else if(resource->Find(__L(".xml")  , true) != XSTRING_NOTFOUND)  contenttype = __L("text/xml");
-  else if(resource->Find(__L(".exe")  , true) != XSTRING_NOTFOUND)  contenttype = __L("application/octet-stream");
-  else if(resource->Find(__L(".gif")  , true) != XSTRING_NOTFOUND)  contenttype = __L("image/gif");
-  else if(resource->Find(__L(".jpg")  , true) != XSTRING_NOTFOUND)  contenttype = __L("image/jpeg");
-  else if(resource->Find(__L(".jpeg") , true) != XSTRING_NOTFOUND)  contenttype = __L("image/jpeg");
-  else if(resource->Find(__L(".png")  , true) != XSTRING_NOTFOUND)  contenttype = __L("image/png");
-  else if(resource->Find(__L(".wav")  , true) != XSTRING_NOTFOUND)  contenttype = __L("audio/x-wav");
-  else if(resource->Find(__L(".mp3")  , true) != XSTRING_NOTFOUND)  contenttype = __L("audio/mp3");
-  else if(resource->Find(__L(".gz")   , true) != XSTRING_NOTFOUND)  contenttype = __L("application/x-gzip");
-  else if(resource->Find(__L(".mpg")  , true) != XSTRING_NOTFOUND)  contenttype = __L("video/mpeg");
-  else if(resource->Find(__L(".pdf")  , true) != XSTRING_NOTFOUND)  contenttype = __L("application/pdf");
-  else if(resource->Find(__L(".avi")  , true) != XSTRING_NOTFOUND)  contenttype = __L("video/x-msvideof");
-  else if(resource->Find(__L(".ogv")  , true) != XSTRING_NOTFOUND)  contenttype = __L("video/ogg");
-  else if(resource->Find(__L(".ogg")  , true) != XSTRING_NOTFOUND)  contenttype = __L("video/ogg");
-  else if(resource->Find(__L(".css")  , true) != XSTRING_NOTFOUND)  contenttype = __L("text/css");
-  else if(resource->Find(__L(".js")   , true) != XSTRING_NOTFOUND)  contenttype = __L("application/javascript");
-  else if(resource->Find(__L(".json") , true) != XSTRING_NOTFOUND)  contenttype = __L("application/json");
-  else if(resource->Find(__L(".zip")  , true) != XSTRING_NOTFOUND)  contenttype = __L("application/zip");
-  else if(resource->Find(__L(".otf")  , true) != XSTRING_NOTFOUND)  contenttype = __L("application/x-font-otf");
+       if(resource->Find(_L(".htm")  , true) != XSTRING_NOTFOUND)  contenttype = _L("text/html");
+  else if(resource->Find(_L(".xml")  , true) != XSTRING_NOTFOUND)  contenttype = _L("text/xml");
+  else if(resource->Find(_L(".exe")  , true) != XSTRING_NOTFOUND)  contenttype = _L("application/octet-stream");
+  else if(resource->Find(_L(".gif")  , true) != XSTRING_NOTFOUND)  contenttype = _L("image/gif");
+  else if(resource->Find(_L(".jpg")  , true) != XSTRING_NOTFOUND)  contenttype = _L("image/jpeg");
+  else if(resource->Find(_L(".jpeg") , true) != XSTRING_NOTFOUND)  contenttype = _L("image/jpeg");
+  else if(resource->Find(_L(".png")  , true) != XSTRING_NOTFOUND)  contenttype = _L("image/png");
+  else if(resource->Find(_L(".wav")  , true) != XSTRING_NOTFOUND)  contenttype = _L("audio/x-wav");
+  else if(resource->Find(_L(".mp3")  , true) != XSTRING_NOTFOUND)  contenttype = _L("audio/mp3");
+  else if(resource->Find(_L(".gz")   , true) != XSTRING_NOTFOUND)  contenttype = _L("application/x-gzip");
+  else if(resource->Find(_L(".mpg")  , true) != XSTRING_NOTFOUND)  contenttype = _L("video/mpeg");
+  else if(resource->Find(_L(".pdf")  , true) != XSTRING_NOTFOUND)  contenttype = _L("application/pdf");
+  else if(resource->Find(_L(".avi")  , true) != XSTRING_NOTFOUND)  contenttype = _L("video/x-msvideof");
+  else if(resource->Find(_L(".ogv")  , true) != XSTRING_NOTFOUND)  contenttype = _L("video/ogg");
+  else if(resource->Find(_L(".ogg")  , true) != XSTRING_NOTFOUND)  contenttype = _L("video/ogg");
+  else if(resource->Find(_L(".css")  , true) != XSTRING_NOTFOUND)  contenttype = _L("text/css");
+  else if(resource->Find(_L(".js")   , true) != XSTRING_NOTFOUND)  contenttype = _L("application/javascript");
+  else if(resource->Find(_L(".json") , true) != XSTRING_NOTFOUND)  contenttype = _L("application/json");
+  else if(resource->Find(_L(".zip")  , true) != XSTRING_NOTFOUND)  contenttype = _L("application/zip");
+  else if(resource->Find(_L(".otf")  , true) != XSTRING_NOTFOUND)  contenttype = _L("application/x-font-otf");
 
-  if(!resource->Compare(__L("/"), true))  contenttype = __L("text/html");
+  if(!resource->Compare(_L("/"), true))  contenttype = _L("text/html");
 
   return true;
 }
@@ -257,7 +257,7 @@ bool DIOWEBSERVER_HEADER::Create(XSTRING* resource, int version, int subversion,
   */
 
   XSTRING line;
-  line.Format(__L("HTTP/%d.%d %d "), version, subversion, result);
+  line.Format(_L("HTTP/%d.%d %d "), version, subversion, result);
 
   if(password)
     {
@@ -270,7 +270,7 @@ bool DIOWEBSERVER_HEADER::Create(XSTRING* resource, int version, int subversion,
       AddLine(line);
 
       // Without the realm the browsers do not show the login/password dialog.
-      authenticateline.Format(__L("%s: Basic realm=\"%s\", charset=\"UTF-8\""), DIOWEBHEADER_WWW_AUTHENTICATE, DIOWEBSERVER_AUTHENTICATION_DEFAULTREALM);
+      authenticateline.Format(_L("%s: Basic realm=\"%s\", charset=\"UTF-8\""), DIOWEBHEADER_WWW_AUTHENTICATE, DIOWEBSERVER_AUTHENTICATION_DEFAULTREALM);
       AddLine(authenticateline);
     }
    else
@@ -284,14 +284,14 @@ bool DIOWEBSERVER_HEADER::Create(XSTRING* resource, int version, int subversion,
     }
 
 
-  AddLine(__L("Accept-Ranges: bytes"));
+  AddLine(_L("Accept-Ranges: bytes"));
 
   line.Empty();
   CreateContentType(resource, line);
 
   if(!line.IsEmpty())
     {
-      line.Insert(__L("Content-Type: "), 0);
+      line.Insert(_L("Content-Type: "), 0);
       AddLine(line.Get());
     }
 
@@ -309,37 +309,37 @@ bool DIOWEBSERVER_HEADER::Create(XSTRING* resource, int version, int subversion,
 
       switch((int)datetime->GetDayOfWeek())
         {
-          case  1:  day.Set(__L("Mon")); break;
-          case  2:  day.Set(__L("Tue")); break;
-          case  3:  day.Set(__L("Wed")); break;
-          case  4:  day.Set(__L("Thu")); break;
-          case  5:  day.Set(__L("Fri")); break;
-          case  6:  day.Set(__L("Sat")); break;
+          case  1:  day.Set(_L("Mon")); break;
+          case  2:  day.Set(_L("Tue")); break;
+          case  3:  day.Set(_L("Wed")); break;
+          case  4:  day.Set(_L("Thu")); break;
+          case  5:  day.Set(_L("Fri")); break;
+          case  6:  day.Set(_L("Sat")); break;
           case  0:
-          case  7:  day.Set(__L("Sun")); break;
+          case  7:  day.Set(_L("Sun")); break;
           default:  break;
         }
 
       switch(datetime->GetMonth())
         {
-          case  1:  month.Set(__L("Jan")); break;
-          case  2:  month.Set(__L("Feb")); break;
-          case  3:  month.Set(__L("Mar")); break;
-          case  4:  month.Set(__L("Apr")); break;
-          case  5:  month.Set(__L("May")); break;
-          case  6:  month.Set(__L("Jun")); break;
-          case  7:  month.Set(__L("Jul")); break;
-          case  8:  month.Set(__L("Aug")); break;
-          case  9:  month.Set(__L("Sep")); break;
-          case 10:  month.Set(__L("Oct")); break;
-          case 11:  month.Set(__L("Nov")); break;
-          case 12:  month.Set(__L("Dec")); break;
+          case  1:  month.Set(_L("Jan")); break;
+          case  2:  month.Set(_L("Feb")); break;
+          case  3:  month.Set(_L("Mar")); break;
+          case  4:  month.Set(_L("Apr")); break;
+          case  5:  month.Set(_L("May")); break;
+          case  6:  month.Set(_L("Jun")); break;
+          case  7:  month.Set(_L("Jul")); break;
+          case  8:  month.Set(_L("Aug")); break;
+          case  9:  month.Set(_L("Sep")); break;
+          case 10:  month.Set(_L("Oct")); break;
+          case 11:  month.Set(_L("Nov")); break;
+          case 12:  month.Set(_L("Dec")); break;
           default:  break;
         }
 
       //Date: Wed, 21 Oct 2015 07:28:00 GMT
-      date.Format(__L("%s, %d %s %d %s GMT"), day.Get(), datetime->GetDay(), month.Get(), datetime->GetYear(), hour.Get());
-      line.Format(__L("Date:%s"), date.Get());  AddLine(line);
+      date.Format(_L("%s, %d %s %d %s GMT"), day.Get(), datetime->GetDay(), month.Get(), datetime->GetYear(), hour.Get());
+      line.Format(_L("Date:%s"), date.Get());  AddLine(line);
       delete(datetime);
    }
 
@@ -347,32 +347,32 @@ bool DIOWEBSERVER_HEADER::Create(XSTRING* resource, int version, int subversion,
     {
       if(!entitytag->IsEmpty())
         {
-          line.Format(__L("ETag: \"%s\""), entitytag->Get());
+          line.Format(_L("ETag: \"%s\""), entitytag->Get());
           AddLine(line.Get());
         }
     }
 
   //---------------------------------------------------------------
 
-  AddLine(__L("Connection: Keep-Alive"));
-  line.Format(__L("Keep-Alive: timeout=%d,max=%d"), DIOWEBSERVER_KEEPALIVE, DIOWEBSERVER_KEEPALIVE_MAXRESOURCES);
+  AddLine(_L("Connection: Keep-Alive"));
+  line.Format(_L("Keep-Alive: timeout=%d,max=%d"), DIOWEBSERVER_KEEPALIVE, DIOWEBSERVER_KEEPALIVE_MAXRESOURCES);
   AddLine(line);
 
   //---------------------------------------------------------------
 
-  line.Format(__L("Last-Modified: %s"), date.Get());                  AddLine(line);
-  line.Format(__L("Server: %s "), DIOWEBSERVER_IDSERVER);   AddLine(line);
+  line.Format(_L("Last-Modified: %s"), date.Get());                  AddLine(line);
+  line.Format(_L("Server: %s "), DIOWEBSERVER_IDSERVER);   AddLine(line);
 
   if(size != -1)
     {
-      line.Format(__L("Content-Length: %d"), size);
+      line.Format(_L("Content-Length: %d"), size);
       AddLine(line);
 
     }
 
   /*
-  AddLine(__L("Access-Control-Allow-Headers: DNT,X-CustomHeader,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Content-Encoding,Vary"));
-  AddLine(__L("Vary : Accept-Encoding"));
+  AddLine(_L("Access-Control-Allow-Headers: DNT,X-CustomHeader,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Content-Encoding,Vary"));
+  AddLine(_L("Vary : Accept-Encoding"));
 
   connection->SetActualEncodingFlag(DIOWEBSERVER_ENCODINGFLAGS_NONE);
 
@@ -388,7 +388,7 @@ bool DIOWEBSERVER_HEADER::Create(XSTRING* resource, int version, int subversion,
           if((validsize) && (isplayable))
             {
               connection->SetActualEncodingFlag(DIOWEBSERVER_ENCODINGFLAGS_GZIP);
-              AddLine(__L("Content-Encoding: gzip"));
+              AddLine(_L("Content-Encoding: gzip"));
 
             }
         }
@@ -415,16 +415,16 @@ bool DIOWEBSERVER_HEADER::AddWebSocketKey(XSTRING& websocketaccept, XSTRING& web
 {
   XSTRING line;
 
-  AddLine(__L("Access-Control-Allow-Headers: x-websocket-version"));
-  AddLine(__L("Connection: Upgrade"));
-  AddLine(__L("Upgrade: websocket"));
+  AddLine(_L("Access-Control-Allow-Headers: x-websocket-version"));
+  AddLine(_L("Connection: Upgrade"));
+  AddLine(_L("Upgrade: websocket"));
 
-  line.Format(__L("Sec-WebSocket-Accept: %s"), websocketaccept.Get());
+  line.Format(_L("Sec-WebSocket-Accept: %s"), websocketaccept.Get());
   AddLine(line.Get());
 
   if(websocketprotocol.GetSize())
     {
-      line.Format(__L("Sec-WebSocket-Protocol: %s"), websocketprotocol.Get());
+      line.Format(_L("Sec-WebSocket-Protocol: %s"), websocketprotocol.Get());
       AddLine(line.Get());
     }
 
@@ -453,51 +453,51 @@ bool DIOWEBSERVER_HEADER::GetDescriptionResult(DIOWEBHEADER_RESULT result, XSTRI
 
   } DESCRIPTION;
 
-  DESCRIPTION  descriptions[] = { { DIOWEBHEADER_RESULT_CONTINUE                     ,  __L("Continue")                         } ,
-                                  { DIOWEBHEADER_RESULT_SWITCHINGPROTOCOLS           ,  __L("Switching Protocols")              } ,
+  DESCRIPTION  descriptions[] = { { DIOWEBHEADER_RESULT_CONTINUE                     ,  _L("Continue")                         } ,
+                                  { DIOWEBHEADER_RESULT_SWITCHINGPROTOCOLS           ,  _L("Switching Protocols")              } ,
 
-                                  { DIOWEBHEADER_RESULT_OK                           ,  __L("OK")                               } ,
-                                  { DIOWEBHEADER_RESULT_CREATED                      ,  __L("Created")                          } ,
-                                  { DIOWEBHEADER_RESULT_ACCEPTED                     ,  __L("Accepted")                         } ,
-                                  { DIOWEBHEADER_RESULT_NONAUTHORITATIVEINFORMATION  ,  __L("Non-Authoritative Information")    } ,
-                                  { DIOWEBHEADER_RESULT_NOCONTENT                    ,  __L("No Content")                       } ,
-                                  { DIOWEBHEADER_RESULT_RESETCONTENT                 ,  __L("Reset Content")                    } ,
-                                  { DIOWEBHEADER_RESULT_PARTIALCONTENT               ,  __L("Partial Content")                  } ,
+                                  { DIOWEBHEADER_RESULT_OK                           ,  _L("OK")                               } ,
+                                  { DIOWEBHEADER_RESULT_CREATED                      ,  _L("Created")                          } ,
+                                  { DIOWEBHEADER_RESULT_ACCEPTED                     ,  _L("Accepted")                         } ,
+                                  { DIOWEBHEADER_RESULT_NONAUTHORITATIVEINFORMATION  ,  _L("Non-Authoritative Information")    } ,
+                                  { DIOWEBHEADER_RESULT_NOCONTENT                    ,  _L("No Content")                       } ,
+                                  { DIOWEBHEADER_RESULT_RESETCONTENT                 ,  _L("Reset Content")                    } ,
+                                  { DIOWEBHEADER_RESULT_PARTIALCONTENT               ,  _L("Partial Content")                  } ,
 
-                                  { DIOWEBHEADER_RESULT_MULTIPLECHOICES              ,  __L("Multiple Choices")                 } ,
-                                  { DIOWEBHEADER_RESULT_MOVEDPERMANENTLY             ,  __L("Moved Permanently")                } ,
-                                  { DIOWEBHEADER_RESULT_FOUND                        ,  __L("Found")                            } ,
-                                  { DIOWEBHEADER_RESULT_SEEOTHER                     ,  __L("See Other")                        } ,
-                                  { DIOWEBHEADER_RESULT_NOTMODIFIED                  ,  __L("Not Modified")                     } ,
-                                  { DIOWEBHEADER_RESULT_USEPROXY                     ,  __L("Use Proxy")                        } ,
-                                  { DIOWEBHEADER_RESULT_UNUSED                       ,  __L("(Unused)")                         } ,
-                                  { DIOWEBHEADER_RESULT_TEMPORARYREDIRECT            ,  __L("Temporary Redirect")               } ,
+                                  { DIOWEBHEADER_RESULT_MULTIPLECHOICES              ,  _L("Multiple Choices")                 } ,
+                                  { DIOWEBHEADER_RESULT_MOVEDPERMANENTLY             ,  _L("Moved Permanently")                } ,
+                                  { DIOWEBHEADER_RESULT_FOUND                        ,  _L("Found")                            } ,
+                                  { DIOWEBHEADER_RESULT_SEEOTHER                     ,  _L("See Other")                        } ,
+                                  { DIOWEBHEADER_RESULT_NOTMODIFIED                  ,  _L("Not Modified")                     } ,
+                                  { DIOWEBHEADER_RESULT_USEPROXY                     ,  _L("Use Proxy")                        } ,
+                                  { DIOWEBHEADER_RESULT_UNUSED                       ,  _L("(Unused)")                         } ,
+                                  { DIOWEBHEADER_RESULT_TEMPORARYREDIRECT            ,  _L("Temporary Redirect")               } ,
 
-                                  { DIOWEBHEADER_RESULT_BADREQUEST                   ,  __L("Bad Request")                      } ,
-                                  { DIOWEBHEADER_RESULT_UNAUTHORIZED                 ,  __L("Unauthorized")                     } ,
-                                  { DIOWEBHEADER_RESULT_PAYMENTREQUIRED              ,  __L("Payment Required")                 } ,
-                                  { DIOWEBHEADER_RESULT_FORBIDDEN                    ,  __L("Forbidden")                        } ,
-                                  { DIOWEBHEADER_RESULT_NOTFOUND                     ,  __L("Not Found")                        } ,
-                                  { DIOWEBHEADER_RESULT_METHODNOTALLOWED             ,  __L("Method Not Allowed")               } ,
-                                  { DIOWEBHEADER_RESULT_NOTACCEPTABLE                ,  __L("Not Acceptable")                   } ,
-                                  { DIOWEBHEADER_RESULT_PROXYAUTHENTICATIONREQUIRED  ,  __L("Proxy Authentication Required")    } ,
-                                  { DIOWEBHEADER_RESULT_REQUESTTIMEOUT               ,  __L("Request Timeout")                  } ,
-                                  { DIOWEBHEADER_RESULT_CONFLICT                     ,  __L("Conflict")                         } ,
-                                  { DIOWEBHEADER_RESULT_GONE                         ,  __L("Gone")                             } ,
-                                  { DIOWEBHEADER_RESULT_LENGTHREQUIRED               ,  __L("Length Required")                  } ,
-                                  { DIOWEBHEADER_RESULT_PRECONDITIONFAILED           ,  __L("Precondition Failed")              } ,
-                                  { DIOWEBHEADER_RESULT_REQUESTENTITYTOOLARGE        ,  __L("Request Entity Too Large")         } ,
-                                  { DIOWEBHEADER_RESULT_REQUESTURITOOLONG            ,  __L("Request-URI Too Long")             } ,
-                                  { DIOWEBHEADER_RESULT_UNSUPPORTEDMEDIATYPE         ,  __L("Unsupported Media Type")           } ,
-                                  { DIOWEBHEADER_RESULT_REQUESTEDRANGENOTSATISFIABLE ,  __L("Requested Range Not Satisfiable")  } ,
-                                  { DIOWEBHEADER_RESULT_EXPECTATIONFAILED            ,  __L("Expectation Failed")               } ,
+                                  { DIOWEBHEADER_RESULT_BADREQUEST                   ,  _L("Bad Request")                      } ,
+                                  { DIOWEBHEADER_RESULT_UNAUTHORIZED                 ,  _L("Unauthorized")                     } ,
+                                  { DIOWEBHEADER_RESULT_PAYMENTREQUIRED              ,  _L("Payment Required")                 } ,
+                                  { DIOWEBHEADER_RESULT_FORBIDDEN                    ,  _L("Forbidden")                        } ,
+                                  { DIOWEBHEADER_RESULT_NOTFOUND                     ,  _L("Not Found")                        } ,
+                                  { DIOWEBHEADER_RESULT_METHODNOTALLOWED             ,  _L("Method Not Allowed")               } ,
+                                  { DIOWEBHEADER_RESULT_NOTACCEPTABLE                ,  _L("Not Acceptable")                   } ,
+                                  { DIOWEBHEADER_RESULT_PROXYAUTHENTICATIONREQUIRED  ,  _L("Proxy Authentication Required")    } ,
+                                  { DIOWEBHEADER_RESULT_REQUESTTIMEOUT               ,  _L("Request Timeout")                  } ,
+                                  { DIOWEBHEADER_RESULT_CONFLICT                     ,  _L("Conflict")                         } ,
+                                  { DIOWEBHEADER_RESULT_GONE                         ,  _L("Gone")                             } ,
+                                  { DIOWEBHEADER_RESULT_LENGTHREQUIRED               ,  _L("Length Required")                  } ,
+                                  { DIOWEBHEADER_RESULT_PRECONDITIONFAILED           ,  _L("Precondition Failed")              } ,
+                                  { DIOWEBHEADER_RESULT_REQUESTENTITYTOOLARGE        ,  _L("Request Entity Too Large")         } ,
+                                  { DIOWEBHEADER_RESULT_REQUESTURITOOLONG            ,  _L("Request-URI Too Long")             } ,
+                                  { DIOWEBHEADER_RESULT_UNSUPPORTEDMEDIATYPE         ,  _L("Unsupported Media Type")           } ,
+                                  { DIOWEBHEADER_RESULT_REQUESTEDRANGENOTSATISFIABLE ,  _L("Requested Range Not Satisfiable")  } ,
+                                  { DIOWEBHEADER_RESULT_EXPECTATIONFAILED            ,  _L("Expectation Failed")               } ,
 
-                                  { DIOWEBHEADER_RESULT_INTERNALSERVERERROR          ,  __L("Internal Server Error")            } ,
-                                  { DIOWEBHEADER_RESULT_NOTIMPLEMENTED               ,  __L("Not Implemented")                  } ,
-                                  { DIOWEBHEADER_RESULT_BADGATEWAY                   ,  __L("Bad Gateway")                      } ,
-                                  { DIOWEBHEADER_RESULT_SERVICEUNAVAILABLE           ,  __L("Service Unavailable")              } ,
-                                  { DIOWEBHEADER_RESULT_GATEWAYTIMEOUT               ,  __L("Gateway Timeout")                  } ,
-                                  { DIOWEBHEADER_RESULT_HTTPVERSIONNOTSUPPORTED      ,  __L("HTTP Version Not Supported")       }
+                                  { DIOWEBHEADER_RESULT_INTERNALSERVERERROR          ,  _L("Internal Server Error")            } ,
+                                  { DIOWEBHEADER_RESULT_NOTIMPLEMENTED               ,  _L("Not Implemented")                  } ,
+                                  { DIOWEBHEADER_RESULT_BADGATEWAY                   ,  _L("Bad Gateway")                      } ,
+                                  { DIOWEBHEADER_RESULT_SERVICEUNAVAILABLE           ,  _L("Service Unavailable")              } ,
+                                  { DIOWEBHEADER_RESULT_GATEWAYTIMEOUT               ,  _L("Gateway Timeout")                  } ,
+                                  { DIOWEBHEADER_RESULT_HTTPVERSIONNOTSUPPORTED      ,  _L("HTTP Version Not Supported")       }
                                 };
 
   description.Empty();
@@ -898,8 +898,8 @@ void DIOWEBSERVER_REQUEST::SetIfNoneMatch(XSTRING& ifnonematch)
 
   special.DeleteCharacter(0x20, XSTRINGCONTEXT_FROM_FIRST);
   special.DeleteCharacter(0x20, XSTRINGCONTEXT_TO_END);
-  special.DeleteCharacter(__C('"'), XSTRINGCONTEXT_FROM_FIRST);
-  special.DeleteCharacter(__C('"'), XSTRINGCONTEXT_TO_END);
+  special.DeleteCharacter(_C('"'), XSTRINGCONTEXT_FROM_FIRST);
+  special.DeleteCharacter(_C('"'), XSTRINGCONTEXT_TO_END);
 
   this->ifnonematch = special;
 }
@@ -980,10 +980,10 @@ void DIOWEBSERVER_REQUEST::ProcessAcceptedEncodingFlags(XSTRING& string)
 
   //DIEGO: Achtung! you have to calculate the Q = 0 of the headers just in case it is a browser Obsolete
 
-  if(string.Find(__L("gzip"), false) != NOTFOUND)   acceptedencodingflags |= DIOWEBSERVER_ENCODINGFLAGS_GZIP;
-  if(string.Find(__L("deflate"), false) != NOTFOUND)   acceptedencodingflags |= DIOWEBSERVER_ENCODINGFLAGS_DEFLATE;
-  if(string.Find(__L("compress"), false) != NOTFOUND)   acceptedencodingflags |= DIOWEBSERVER_ENCODINGFLAGS_COMPRESS;
-  if(string.Find(__L("sdhc"), false) != NOTFOUND)   acceptedencodingflags |= DIOWEBSERVER_ENCODINGFLAGS_SHAREDDICTIONARY;
+  if(string.Find(_L("gzip"), false) != NOTFOUND)   acceptedencodingflags |= DIOWEBSERVER_ENCODINGFLAGS_GZIP;
+  if(string.Find(_L("deflate"), false) != NOTFOUND)   acceptedencodingflags |= DIOWEBSERVER_ENCODINGFLAGS_DEFLATE;
+  if(string.Find(_L("compress"), false) != NOTFOUND)   acceptedencodingflags |= DIOWEBSERVER_ENCODINGFLAGS_COMPRESS;
+  if(string.Find(_L("sdhc"), false) != NOTFOUND)   acceptedencodingflags |= DIOWEBSERVER_ENCODINGFLAGS_SHAREDDICTIONARY;
 }
 
 
@@ -1134,7 +1134,7 @@ bool DIOWEBSERVER_REQUEST::GetLoginPassword(XSTRING& login, XSTRING& password)
   // so it has to be DECODED (before it was encoded, destroying the received value).
 
   base64 = loginpassword;
-  base64.DeleteNoCharacters(__L(" \t\r\n"), 0, XSTRINGCONTEXT_ALLSTRING);
+  base64.DeleteNoCharacters(_L(" \t\r\n"), 0, XSTRINGCONTEXT_ALLSTRING);
 
   if(base64.IsEmpty())                        return false;
   if(!base64.ConvertBase64ToBinary(decoded))  return false;
@@ -1142,7 +1142,7 @@ bool DIOWEBSERVER_REQUEST::GetLoginPassword(XSTRING& login, XSTRING& password)
 
   if(!lp.Set(decoded.Get(), decoded.GetSize())) return false;
 
-  int index = lp.Find(__L(":"), true);
+  int index = lp.Find(_L(":"), true);
   if(index ==  XSTRING_NOTFOUND) return false;
 
   lp.Copy(0, index, login);
@@ -1186,11 +1186,11 @@ bool DIOWEBSERVER_REQUEST::ConvertFromWeb(XSTRING& string)
 
   while(str[c])
     {
-      if(str[c]==__C('%'))
+      if(str[c]==_C('%'))
         {
           XSTRING string2;
 
-          string2.Format(__L("%c%c"), str[c+2], str[c+1]);
+          string2.Format(_L("%c%c"), str[c+2], str[c+1]);
 
           int code = string2.ConvertToInt();
           if(code)
@@ -1397,7 +1397,7 @@ bool DIOWEBSERVER_CONNECTION::Ini(DIOWEBSERVER* webserver, DIOSTREAMTCPIPCONFIG*
   diostream = (DIOSTREAMTCPIP*)GEN_DIOFACTORY.CreateStreamIO(diostreamcfg);
   if(!diostream)          return false;
 
-  threadconnection   = CREATEXTHREAD(XTHREADGROUPID_DIOWEBSERVER, __L("DIOWEBSERVER_CONNECTION::Ini"), ThreadRunFunction, (void*)this);
+  threadconnection   = CREATEXTHREAD(XTHREADGROUPID_DIOWEBSERVER, _L("DIOWEBSERVER_CONNECTION::Ini"), ThreadRunFunction, (void*)this);
   if(!threadconnection)   return false;
 
   return true;
@@ -2068,8 +2068,8 @@ static bool DIOWEBSERVER_HeaderNameIs(XSTRING& line, XDWORD colon, const XCHAR* 
     {
       XCHAR left = line[c];
       XCHAR right = name[c];
-      if(left >= __C('A') && left <= __C('Z')) left += __C('a') - __C('A');
-      if(right >= __C('A') && right <= __C('Z')) right += __C('a') - __C('A');
+      if(left >= _C('A') && left <= _C('Z')) left += _C('a') - _C('A');
+      if(right >= _C('A') && right <= _C('Z')) right += _C('a') - _C('A');
       if(left != right) return false;
     }
   return true;
@@ -2089,15 +2089,15 @@ static bool DIOWEBSERVER_HeaderNameIs(XSTRING& line, XDWORD colon, const XCHAR* 
 * --------------------------------------------------------------------------------------------------------------------*/
 static bool DIOWEBSERVER_HeaderNameCharacterIsValid(XCHAR character)
 {
-  if((character >= __C('a') && character <= __C('z')) ||
-     (character >= __C('A') && character <= __C('Z')) ||
-     (character >= __C('0') && character <= __C('9'))) return true;
+  if((character >= _C('a') && character <= _C('z')) ||
+     (character >= _C('A') && character <= _C('Z')) ||
+     (character >= _C('0') && character <= _C('9'))) return true;
 
   switch(character)
     {
-      case __C('!'): case __C('#'): case __C('$'): case __C('%'): case __C('&'): case __C('\''):
-      case __C('*'): case __C('+'): case __C('-'): case __C('.'): case __C('^'): case __C('_'):
-      case __C('`'): case __C('|'): case __C('~'): return true;
+      case _C('!'): case _C('#'): case _C('$'): case _C('%'): case _C('&'): case _C('\''):
+      case _C('*'): case _C('+'): case _C('-'): case _C('.'): case _C('^'): case _C('_'):
+      case _C('`'): case _C('|'): case _C('~'): return true;
       default: return false;
     }
 }
@@ -2128,40 +2128,40 @@ static bool DIOWEBSERVER_RequestFraming_Get(DIOWEBHEADER& header, XDWORD maximum
   for(XDWORD c=1; c<lines->GetSize(); c++)
     {
       XSTRING* line = lines->Get(c);
-      if(!line || line->IsEmpty() || (*line)[0] == __C(' ') || (*line)[0] == __C('\t')) return false;
+      if(!line || line->IsEmpty() || (*line)[0] == _C(' ') || (*line)[0] == _C('\t')) return false;
 
       XDWORD colon = 0;
-      while(colon < line->GetSize() && (*line)[colon] != __C(':'))
+      while(colon < line->GetSize() && (*line)[colon] != _C(':'))
         {
           if(!DIOWEBSERVER_HeaderNameCharacterIsValid((*line)[colon])) return false;
           colon++;
         }
       if(!colon || colon >= line->GetSize()) return false;
 
-      if(DIOWEBSERVER_HeaderNameIs((*line), colon, __L("Transfer-Encoding"))) return false;
+      if(DIOWEBSERVER_HeaderNameIs((*line), colon, _L("Transfer-Encoding"))) return false;
 
-      if(DIOWEBSERVER_HeaderNameIs((*line), colon, __L("Host")))
+      if(DIOWEBSERVER_HeaderNameIs((*line), colon, _L("Host")))
         {
           if(havehost) return false;
           havehost = true;
         }
 
-      if(DIOWEBSERVER_HeaderNameIs((*line), colon, __L("Content-Length")))
+      if(DIOWEBSERVER_HeaderNameIs((*line), colon, _L("Content-Length")))
         {
           if(havecontentlength) return false;
           havecontentlength = true;
 
           XDWORD start = colon + 1;
           XDWORD end = line->GetSize();
-          while(start < end && ((*line)[start] == __C(' ') || (*line)[start] == __C('\t'))) start++;
-          while(end > start && ((*line)[end-1] == __C(' ') || (*line)[end-1] == __C('\t'))) end--;
+          while(start < end && ((*line)[start] == _C(' ') || (*line)[start] == _C('\t'))) start++;
+          while(end > start && ((*line)[end-1] == _C(' ') || (*line)[end-1] == _C('\t'))) end--;
           if(start == end) return false;
 
           XQWORD value = 0;
           for(XDWORD d=start; d<end; d++)
             {
-              if((*line)[d] < __C('0') || (*line)[d] > __C('9')) return false;
-              XDWORD digit = (XDWORD)((*line)[d] - __C('0'));
+              if((*line)[d] < _C('0') || (*line)[d] > _C('9')) return false;
+              XDWORD digit = (XDWORD)((*line)[d] - _C('0'));
               if((value > ((XQWORD)maximumbodysize / 10)) ||
                  ((value == ((XQWORD)maximumbodysize / 10)) && (digit > (maximumbodysize % 10)))) return false;
               value = (value * 10) + digit;
@@ -2206,7 +2206,7 @@ bool DIOWEBSERVER_CONNECTION::ReadRequest()
 
   string = (*(XSTRING*)(header.GetLines()->Get(0)));
 
-  if(string.Find(__L("HTTP/"), true, 4)!=XSTRING_NOTFOUND)
+  if(string.Find(_L("HTTP/"), true, 4)!=XSTRING_NOTFOUND)
     {
       request.SetType(DIOWEBSERVER_TYPE_FULL);
 
@@ -2214,70 +2214,70 @@ bool DIOWEBSERVER_CONNECTION::ReadRequest()
 
   header.GetMethod(string);
 
-  //XTRACE_PRINTCOLOR(1, __L("method: %s"), string.Get());
+  //XTRACE_PRINTCOLOR(1, _L("method: %s"), string.Get());
 
   request.SetMethod(DIOWEBHEADER_METHOD_UNKNOWN);
 
-  if(!string.Compare(__L("GET")     , true))  request.SetMethod(DIOWEBHEADER_METHOD_GET);
-  if(!string.Compare(__L("HEAD")    , true))  request.SetMethod(DIOWEBHEADER_METHOD_HEAD);
-  if(!string.Compare(__L("POST")    , true))  request.SetMethod(DIOWEBHEADER_METHOD_POST);
-  if(!string.Compare(__L("PUT")     , true))  request.SetMethod(DIOWEBHEADER_METHOD_PUT);
-  if(!string.Compare(__L("DELETE")  , true))  request.SetMethod(DIOWEBHEADER_METHOD_DELETE);
-  if(!string.Compare(__L("CONNECT") , true))  request.SetMethod(DIOWEBHEADER_METHOD_CONNECT);
-  if(!string.Compare(__L("OPTIONS") , true))  request.SetMethod(DIOWEBHEADER_METHOD_OPTIONS);
-  if(!string.Compare(__L("TRACE")   , true))  request.SetMethod(DIOWEBHEADER_METHOD_TRACE);
+  if(!string.Compare(_L("GET")     , true))  request.SetMethod(DIOWEBHEADER_METHOD_GET);
+  if(!string.Compare(_L("HEAD")    , true))  request.SetMethod(DIOWEBHEADER_METHOD_HEAD);
+  if(!string.Compare(_L("POST")    , true))  request.SetMethod(DIOWEBHEADER_METHOD_POST);
+  if(!string.Compare(_L("PUT")     , true))  request.SetMethod(DIOWEBHEADER_METHOD_PUT);
+  if(!string.Compare(_L("DELETE")  , true))  request.SetMethod(DIOWEBHEADER_METHOD_DELETE);
+  if(!string.Compare(_L("CONNECT") , true))  request.SetMethod(DIOWEBHEADER_METHOD_CONNECT);
+  if(!string.Compare(_L("OPTIONS") , true))  request.SetMethod(DIOWEBHEADER_METHOD_OPTIONS);
+  if(!string.Compare(_L("TRACE")   , true))  request.SetMethod(DIOWEBHEADER_METHOD_TRACE);
 
   header.GetResource(string);
   if(string.GetSize()) request.GetResource()->Set(string);
 
-  string = header.GetFieldValue(__L("Host:"));
+  string = header.GetFieldValue(_L("Host:"));
   request.GetGuest()->Set(string);
 
-  string = header.GetFieldValue(__L("User-Agent:"));
+  string = header.GetFieldValue(_L("User-Agent:"));
   request.GetUserAgent()->Set(string);
 
   request.SetSize(contentlength);
 
-  string = header.GetFieldValue(__L("If-None-Match:"));
+  string = header.GetFieldValue(_L("If-None-Match:"));
   request.SetIfNoneMatch(string);
 
-  string = header.GetFieldValue(__L("Authorization: basic"));
+  string = header.GetFieldValue(_L("Authorization: basic"));
   request.SetLoginPassword(string);
 
-  string = header.GetFieldValue(__L("Accept-Encoding:"));
+  string = header.GetFieldValue(_L("Accept-Encoding:"));
   request.ProcessAcceptedEncodingFlags(string);
 
-  string = header.GetFieldValue(__L("Accept-Language:"));
+  string = header.GetFieldValue(_L("Accept-Language:"));
   request.GetAcceptedLanguage()->Set(string);
 
-  string = header.GetFieldValue(__L("Accept-Charset:"));
+  string = header.GetFieldValue(_L("Accept-Charset:"));
   request.GetAcceptedCharset()->Set(string);
 
-  string = header.GetFieldValue(__L("Access-Control-Allow-Origin:"));
+  string = header.GetFieldValue(_L("Access-Control-Allow-Origin:"));
   request.GetAccessControlAllowOrigin()->Set(string);
 
-  string = header.GetFieldValue(__L("Access-Control-Allow-Methods:"));
+  string = header.GetFieldValue(_L("Access-Control-Allow-Methods:"));
   request.GetAcceptedControlRequestMethod()->Set(string);
 
-  string = header.GetFieldValue(__L("Access-Control-Allow-Headers:"));
+  string = header.GetFieldValue(_L("Access-Control-Allow-Headers:"));
   request.GetAccessControlAllowHeaders()->Set(string);
 
-  string = header.GetFieldValue(__L("origin:"));
+  string = header.GetFieldValue(_L("origin:"));
   request.GetOrigin()->Set(string);
 
-  string = header.GetFieldValue(__L("Connection:"));
+  string = header.GetFieldValue(_L("Connection:"));
   request.GetConnection()->Set(string);
 
-  string = header.GetFieldValue(__L("Upgrade:"));
+  string = header.GetFieldValue(_L("Upgrade:"));
   request.GetUpgrade()->Set(string);
 
-  string = header.GetFieldValue(__L("Sec-WebSocket-Key:"));
+  string = header.GetFieldValue(_L("Sec-WebSocket-Key:"));
   request.WebSocket_GetKey()->Set(string);
 
-  string = header.GetFieldValue(__L("Sec-WebSocket-Protocol:"));
+  string = header.GetFieldValue(_L("Sec-WebSocket-Protocol:"));
   request.WebSocket_GetProtocol()->Set(string);
 
-  string = header.GetFieldValue(__L("Sec-WebSocket-Version:"));
+  string = header.GetFieldValue(_L("Sec-WebSocket-Version:"));
   request.WebSocket_SetVersion(string.ConvertToInt());
 
   if(request.GetSize()>0)
@@ -2330,13 +2330,13 @@ bool DIOWEBSERVER_CONNECTION::ReadRequest()
 
   SetMode(DIOWEBSERVER_CONNECTION_MODE_NORMAL);
 
-  if(!request.GetConnection()->Compare(__L("Keep-Alive"), true))
+  if(!request.GetConnection()->Compare(_L("Keep-Alive"), true))
     {
       SetMode(DIOWEBSERVER_CONNECTION_MODE_KEEPALIVE);
     }
 
-  if(!request.GetConnection()->Compare(__L("Upgrade"), true) &&
-     !request.GetUpgrade()->Compare(__L("websocket")))
+  if(!request.GetConnection()->Compare(_L("Upgrade"), true) &&
+     !request.GetUpgrade()->Compare(_L("websocket")))
     {
       SetMode(DIOWEBSERVER_CONNECTION_MODE_WEBSOCKET);
     }
@@ -2364,7 +2364,7 @@ bool DIOWEBSERVER_CONNECTION::SendRequest()
       return false;
     }
 
-  GEN_XLOG.AddEntry(XLOGLEVEL_INFO, DIOWEBSERVER_LOGSECTIONID_VERBOSE, false, __L("[%08X] Server Page INI [%d] %s"), this, nresourcesprocessed, request.GetResource()->Get());
+  GEN_XLOG.AddEntry(XLOGLEVEL_INFO, DIOWEBSERVER_LOGSECTIONID_VERBOSE, false, _L("[%08X] Server Page INI [%d] %s"), this, nresourcesprocessed, request.GetResource()->Get());
 
   DIOWEBSERVER_XEVENT xevent(webserver, DIOWEBSERVER_XEVENT_TYPE_REQUEST);
   xevent.SetServer(webserver);
@@ -2373,7 +2373,7 @@ bool DIOWEBSERVER_CONNECTION::SendRequest()
 
   webserver->PostEvent(&xevent);
 
-  GEN_XLOG.AddEntry(XLOGLEVEL_INFO, DIOWEBSERVER_LOGSECTIONID_VERBOSE, false, __L("[%08X] Server Page END [%d] %s"), this, nresourcesprocessed, request.GetResource()->Get());
+  GEN_XLOG.AddEntry(XLOGLEVEL_INFO, DIOWEBSERVER_LOGSECTIONID_VERBOSE, false, _L("[%08X] Server Page END [%d] %s"), this, nresourcesprocessed, request.GetResource()->Get());
 
   nresourcesprocessed++;
 
@@ -2397,7 +2397,7 @@ bool DIOWEBSERVER_CONNECTION::WebSocket_CreateAcceptKey(XSTRING& key, XSTRING& r
 {
   if(key.IsEmpty()) return false;
 
-  #define DIOWEBSERVER_WEBSOCKET_GUID  __L("258EAFA5-E914-47DA-95CA-C5AB0DC85B11")
+  #define DIOWEBSERVER_WEBSOCKET_GUID  _L("258EAFA5-E914-47DA-95CA-C5AB0DC85B11")
 
   XSTRING resultbrute;
   bool    status;
@@ -2648,7 +2648,7 @@ bool DIOWEBSERVER_CONNECTION::WebSocket_SendEvent_Connected()
 
   if(xevent.GetStatus()) status = Websocket_ResolveConnection(&request);
 
-  GEN_XLOG.AddEntry((status?XLOGLEVEL_INFO:XLOGLEVEL_WARNING), DIOWEBSERVER_LOGSECTIONID_VERBOSE, false, __L("[%08X] Websocket %s %d %s %s"), this, (status?__L("Connected"):__L("No connected")), request.WebSocket_GetVersion(), request.WebSocket_GetProtocol()->Get(), request.GetResource()->Get());
+  GEN_XLOG.AddEntry((status?XLOGLEVEL_INFO:XLOGLEVEL_WARNING), DIOWEBSERVER_LOGSECTIONID_VERBOSE, false, _L("[%08X] Websocket %s %d %s %s"), this, (status?_L("Connected"):_L("No connected")), request.WebSocket_GetVersion(), request.WebSocket_GetProtocol()->Get(), request.GetResource()->Get());
 
   isrequestinprogress = false;
 
@@ -2681,7 +2681,7 @@ bool DIOWEBSERVER_CONNECTION::WebSocket_SendEvent_ReadData(XBUFFER& data)
 
   webserver->PostEvent(&xevent);
 
-  GEN_XLOG.AddEntry(XLOGLEVEL_INFO, DIOWEBSERVER_LOGSECTIONID_VERBOSE, false, __L("[%08X] Websocket read data %d %s %s"), this, request.WebSocket_GetVersion(), request.WebSocket_GetProtocol()->Get(), request.GetResource()->Get());
+  GEN_XLOG.AddEntry(XLOGLEVEL_INFO, DIOWEBSERVER_LOGSECTIONID_VERBOSE, false, _L("[%08X] Websocket read data %d %s %s"), this, request.WebSocket_GetVersion(), request.WebSocket_GetProtocol()->Get(), request.GetResource()->Get());
   return true;
 }
 
@@ -2711,7 +2711,7 @@ bool DIOWEBSERVER_CONNECTION::WebSocket_SendEvent_Pong(XBUFFER& data)
 
   webserver->PostEvent(&xevent);
 
-  GEN_XLOG.AddEntry(XLOGLEVEL_INFO, DIOWEBSERVER_LOGSECTIONID_VERBOSE, false, __L("[%08X] Websocket Ping Received %d %s %s"), this, request.WebSocket_GetVersion(), request.WebSocket_GetProtocol()->Get(), request.GetResource()->Get());
+  GEN_XLOG.AddEntry(XLOGLEVEL_INFO, DIOWEBSERVER_LOGSECTIONID_VERBOSE, false, _L("[%08X] Websocket Ping Received %d %s %s"), this, request.WebSocket_GetVersion(), request.WebSocket_GetProtocol()->Get(), request.GetResource()->Get());
   return true;
 }
 
@@ -2738,7 +2738,7 @@ bool DIOWEBSERVER_CONNECTION::WebSocket_SendEvent_Disconnected()
 
   webserver->PostEvent(&xevent);
 
-  GEN_XLOG.AddEntry(XLOGLEVEL_INFO, DIOWEBSERVER_LOGSECTIONID_VERBOSE, false, __L("[%08X] Websocket disconnected %d %s %s"), this, request.WebSocket_GetVersion(), request.WebSocket_GetProtocol()->Get(), request.GetResource()->Get());
+  GEN_XLOG.AddEntry(XLOGLEVEL_INFO, DIOWEBSERVER_LOGSECTIONID_VERBOSE, false, _L("[%08X] Websocket disconnected %d %s %s"), this, request.WebSocket_GetVersion(), request.WebSocket_GetProtocol()->Get(), request.GetResource()->Get());
   return true;
 }
 
@@ -2778,7 +2778,7 @@ void DIOWEBSERVER_CONNECTION::ThreadRunFunction(void* param)
             {
               XSTRING IPstring;
               wsconn->diostream->GetClientIP()->GetXString(IPstring);
-              GEN_XLOG.AddEntry(XLOGLEVEL_WARNING, DIOWEBSERVER_LOGSECTIONID_VERBOSE, false, __L("[%08X] Connection handshake failed [%s] error=%d"), wsconn, IPstring.Get(), (int)wsconn->diostream->PeekLastDIOError());
+              GEN_XLOG.AddEntry(XLOGLEVEL_WARNING, DIOWEBSERVER_LOGSECTIONID_VERBOSE, false, _L("[%08X] Connection handshake failed [%s] error=%d"), wsconn, IPstring.Get(), (int)wsconn->diostream->PeekLastDIOError());
             }
 
           wsconn->isactive = false;
@@ -2793,7 +2793,7 @@ void DIOWEBSERVER_CONNECTION::ThreadRunFunction(void* param)
         {
           XSTRING IPstring;
           wsconn->diostream->GetClientIP()->GetXString(IPstring);
-          GEN_XLOG.AddEntry(XLOGLEVEL_INFO, DIOWEBSERVER_LOGSECTIONID_VERBOSE, false, __L("[%08X] Connection Active [%s]"), wsconn, IPstring.Get());
+          GEN_XLOG.AddEntry(XLOGLEVEL_INFO, DIOWEBSERVER_LOGSECTIONID_VERBOSE, false, _L("[%08X] Connection Active [%s]"), wsconn, IPstring.Get());
         }
     }
 
@@ -3057,8 +3057,8 @@ bool DIOWEBSERVER::Ini_Internal(DIOSTREAMTCPIPCONFIG* newcfg, int port, bool doi
   this->timeoutserverpage         = timeoutserverpage;
   if(addrlocal) this->addrlocal   = (*addrlocal);
 
-  AddPlayablePageExtension(__L(".HTML"));
-  AddPlayablePageExtension(__L(".HTM"));
+  AddPlayablePageExtension(_L(".HTML"));
+  AddPlayablePageExtension(_L(".HTM"));
 
   RegisterEvent(DIOWEBSERVER_XEVENT_TYPE_REQUEST);
   RegisterEvent(DIOWEBSERVER_XEVENT_TYPE_WEBSOCKET_CONNECTED);
@@ -3118,12 +3118,12 @@ bool DIOWEBSERVER::Ini_Internal(DIOSTREAMTCPIPCONFIG* newcfg, int port, bool doi
 
   xtimercontrol->Reset();
 
-  threadserver = CREATEXTHREAD(XTHREADGROUPID_DIOWEBSERVER, __L("DIOWEBSERVER::Ini"), ThreadRunFunction, (void*)this);
+  threadserver = CREATEXTHREAD(XTHREADGROUPID_DIOWEBSERVER, _L("DIOWEBSERVER::Ini"), ThreadRunFunction, (void*)this);
   if(!threadserver) return false;
 
   if(!threadserver->Ini()) return false;
 
-  if(addrlocal) GEN_XLOG.AddEntry(XLOGLEVEL_INFO, DIOWEBSERVER_LOGSECTIONID_VERBOSE, false, __L("Web Server [%08X]: %s in %s:%d "), this, status?__L("Active"):__L("Disable"), addrlocal->IsEmpty()?__L("Default"):addrlocal->Get(), port);
+  if(addrlocal) GEN_XLOG.AddEntry(XLOGLEVEL_INFO, DIOWEBSERVER_LOGSECTIONID_VERBOSE, false, _L("Web Server [%08X]: %s in %s:%d "), this, status?_L("Active"):_L("Disable"), addrlocal->IsEmpty()?_L("Default"):addrlocal->Get(), port);
 
   return status;
 }
@@ -3470,7 +3470,7 @@ bool DIOWEBSERVER::CheckAuthentication(XSTRING& guest, XSTRING& login, XSTRING& 
   if(!authentication)
     {
       // The Host header can come as "host:port", try only with the host part.
-      int index = guest.FindCharacter(__C(':'));
+      int index = guest.FindCharacter(_C(':'));
       if(index != XSTRING_NOTFOUND)
         {
           XSTRING onlyguest;
@@ -4142,11 +4142,11 @@ bool DIOWEBSERVER::End()
 {
   doexit = true;
 
-  GEN_XLOG.AddEntry(XLOGLEVEL_INFO, DIOWEBSERVER_LOGSECTIONID_VERBOSE, false, __L("Disable web server [%08X]."), this);
+  GEN_XLOG.AddEntry(XLOGLEVEL_INFO, DIOWEBSERVER_LOGSECTIONID_VERBOSE, false, _L("Disable web server [%08X]."), this);
 
   UnSubscribeAllPages();
 
-  GEN_XLOG.AddEntry(XLOGLEVEL_INFO, DIOWEBSERVER_LOGSECTIONID_VERBOSE, false , __L("Delete main thread ... "));
+  GEN_XLOG.AddEntry(XLOGLEVEL_INFO, DIOWEBSERVER_LOGSECTIONID_VERBOSE, false , _L("Delete main thread ... "));
 
   if(threadserver)
     {
@@ -4155,16 +4155,16 @@ bool DIOWEBSERVER::End()
       threadserver = NULL;
     }
 
-  GEN_XLOG.AddEntry(XLOGLEVEL_INFO, DIOWEBSERVER_LOGSECTIONID_VERBOSE, false, __L("Wait to send all pages ..."));
+  GEN_XLOG.AddEntry(XLOGLEVEL_INFO, DIOWEBSERVER_LOGSECTIONID_VERBOSE, false, _L("Wait to send all pages ..."));
   WaitToSentAllPages();
 
-  GEN_XLOG.AddEntry(XLOGLEVEL_INFO, DIOWEBSERVER_LOGSECTIONID_VERBOSE, false, __L("Delete connections not use ..."));
+  GEN_XLOG.AddEntry(XLOGLEVEL_INFO, DIOWEBSERVER_LOGSECTIONID_VERBOSE, false, _L("Delete connections not use ..."));
   Connections_DeleteUsed();
 
-  GEN_XLOG.AddEntry(XLOGLEVEL_INFO, DIOWEBSERVER_LOGSECTIONID_VERBOSE, false, __L("Delete connections waiting ..."));
+  GEN_XLOG.AddEntry(XLOGLEVEL_INFO, DIOWEBSERVER_LOGSECTIONID_VERBOSE, false, _L("Delete connections waiting ..."));
   Connections_DeleteWaiting();
 
-  GEN_XLOG.AddEntry(XLOGLEVEL_INFO, DIOWEBSERVER_LOGSECTIONID_VERBOSE, false, __L("Delete all connections ... "));
+  GEN_XLOG.AddEntry(XLOGLEVEL_INFO, DIOWEBSERVER_LOGSECTIONID_VERBOSE, false, _L("Delete all connections ... "));
   Connections_DeleteAll();
 
   if(xmutexconnections)
@@ -4173,7 +4173,7 @@ bool DIOWEBSERVER::End()
       xmutexconnections = NULL;
     }
 
-  GEN_XLOG.AddEntry(XLOGLEVEL_INFO, DIOWEBSERVER_LOGSECTIONID_VERBOSE, false, __L("Delete resources ... "));
+  GEN_XLOG.AddEntry(XLOGLEVEL_INFO, DIOWEBSERVER_LOGSECTIONID_VERBOSE, false, _L("Delete resources ... "));
 
   if(xtimercontrol)
     {
@@ -4185,7 +4185,7 @@ bool DIOWEBSERVER::End()
 
   DelAllAuthentication();
 
-  GEN_XLOG.AddEntry(XLOGLEVEL_INFO, DIOWEBSERVER_LOGSECTIONID_VERBOSE, false, __L("Delete events ... "));
+  GEN_XLOG.AddEntry(XLOGLEVEL_INFO, DIOWEBSERVER_LOGSECTIONID_VERBOSE, false, _L("Delete events ... "));
 
   DeRegisterEvent(DIOWEBSERVER_XEVENT_TYPE_REQUEST);
   DeRegisterEvent(DIOWEBSERVER_XEVENT_TYPE_WEBSOCKET_CONNECTED);
@@ -4193,7 +4193,7 @@ bool DIOWEBSERVER::End()
   DeRegisterEvent(DIOWEBSERVER_XEVENT_TYPE_WEBSOCKET_PONG);
   DeRegisterEvent(DIOWEBSERVER_XEVENT_TYPE_WEBSOCKET_DISCONNECTED);
 
-  GEN_XLOG.AddEntry(XLOGLEVEL_INFO, DIOWEBSERVER_LOGSECTIONID_VERBOSE, false, __L("Delete stream config ... "));
+  GEN_XLOG.AddEntry(XLOGLEVEL_INFO, DIOWEBSERVER_LOGSECTIONID_VERBOSE, false, _L("Delete stream config ... "));
 
   if(diostreamcfg)
     {
@@ -4201,7 +4201,7 @@ bool DIOWEBSERVER::End()
       diostreamcfg = NULL;
     }
 
-  GEN_XLOG.AddEntry(XLOGLEVEL_INFO, DIOWEBSERVER_LOGSECTIONID_VERBOSE, false, __L("End web server [%08X]."), this);
+  GEN_XLOG.AddEntry(XLOGLEVEL_INFO, DIOWEBSERVER_LOGSECTIONID_VERBOSE, false, _L("End web server [%08X]."), this);
 
   return true;
 }
@@ -4400,7 +4400,7 @@ bool DIOWEBSERVER::Connections_DeleteUsed()
                   UnSubscribeEvent(DIOSTREAM_XEVENT_TYPE_CONNECTED, connection->GetDIOStream());
                   UnSubscribeEvent(DIOSTREAM_XEVENT_TYPE_DISCONNECTED , connection->GetDIOStream());
 
-                  // XTRACE_PRINTCOLOR(1, __L("Delete Connexion: [%08X]"), connection);
+                  // XTRACE_PRINTCOLOR(1, _L("Delete Connexion: [%08X]"), connection);
 
                   connections.Delete(connection);
                   GEN_DELETE connection;
@@ -4512,7 +4512,7 @@ void DIOWEBSERVER::HandleEvent_DIOStream(DIOSTREAM_XEVENT* event)
 
                                                                 XSTRING IPstring;
                                                                 connection->GetDIOStream()->GetClientIP()->GetXString(IPstring);
-                                                                GEN_XLOG.AddEntry(XLOGLEVEL_INFO, DIOWEBSERVER_LOGSECTIONID_VERBOSE, false, __L("[%08X] Connection Active [%s]"), connection, IPstring.Get());
+                                                                GEN_XLOG.AddEntry(XLOGLEVEL_INFO, DIOWEBSERVER_LOGSECTIONID_VERBOSE, false, _L("[%08X] Connection Active [%s]"), connection, IPstring.Get());
                                                               }
 
                                                             break;
@@ -4531,7 +4531,7 @@ void DIOWEBSERVER::HandleEvent_DIOStream(DIOSTREAM_XEVENT* event)
                                                           {
                                                             XSTRING IPstring;
                                                             connection->GetDIOStream()->GetClientIP()->GetXString(IPstring);
-                                                            GEN_XLOG.AddEntry(XLOGLEVEL_INFO, DIOWEBSERVER_LOGSECTIONID_VERBOSE, false, __L("[%08X] Connection Deactive [%s]"), connection, IPstring.Get());
+                                                            GEN_XLOG.AddEntry(XLOGLEVEL_INFO, DIOWEBSERVER_LOGSECTIONID_VERBOSE, false, _L("[%08X] Connection Deactive [%s]"), connection, IPstring.Get());
 
                                                             break;
                                                           }

@@ -44,12 +44,12 @@ enum UI_VIRTUALKEYBOARD_SET
   UI_VIRTUALKEYBOARD_SET_SYMBOLS                  , 
 };
 
-#define UI_VIRTUALKEYBOARD_ELEMENTID   __L("@[VK_KEY]_")
+#define UI_VIRTUALKEYBOARD_ELEMENTID   _L("@[VK_KEY]_")
 
 // Top band inside the keyboard form that hosts the live input edit (above the key rows).
 #define UI_VIRTUALKEYBOARD_INPUTBAND_HEIGHT   56
 #define UI_VIRTUALKEYBOARD_INPUT_HEIGHT       40
-#define UI_VIRTUALKEYBOARD_INPUT_NAME         __L("@[VK_INPUT]")
+#define UI_VIRTUALKEYBOARD_INPUT_NAME         _L("@[VK_INPUT]")
 
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
 

@@ -63,7 +63,7 @@ XSTM32DIR::XSTM32DIR(): XDIR()
   
   XSTRING root;
   
-  root = __L("/");
+  root = _L("/");
   
   XBUFFER xbufferexchange;
   root.ConvertToBufferExchange(xbufferexchange);
@@ -163,7 +163,7 @@ bool XSTM32DIR::Make(XCHAR* path, bool recursive)
 
               if(!Exist(xpathsequence.Get()) && (!xpathsequence.IsEmpty()))
                 {
-                  //XTRACE_PRINTCOLOR(2, __L("---> Make: %s"), xpathsequence.Get());
+                  //XTRACE_PRINTCOLOR(2, _L("---> Make: %s"), xpathsequence.Get());
                       
                   xpathsequence.Slash_Delete(); 
                   
@@ -249,7 +249,7 @@ bool XSTM32DIR::Delete(XCHAR* path, bool all)
   if(all)
     {
       xpathname     = path;
-      patternsearch = __L("*");
+      patternsearch = _L("*");
 
       if(FirstSearch(xpathname.Get(), patternsearch.Get(), &search))
         {
@@ -377,8 +377,8 @@ bool XSTM32DIR::FirstSearch(XCHAR* xpath, XCHAR* patternsearch, XDIRELEMENT* sea
 
   XSTRING searchfilename(searchinfo->fileinfo.fname);
 
-  if((!searchfilename.Compare(__L(".")))||
-     (!searchfilename.Compare(__L(".."))))
+  if((!searchfilename.Compare(_L(".")))||
+     (!searchfilename.Compare(_L(".."))))
     {
       return NextSearch(searchelement);
     }
@@ -421,8 +421,8 @@ bool XSTM32DIR::NextSearch(XDIRELEMENT* searchelement)
 
    XSTRING searchfilename(searchinfo->fileinfo.fname);
 
-   if((!searchfilename.Compare(__L(".")))||
-      (!searchfilename.Compare(__L(".."))))
+   if((!searchfilename.Compare(_L(".")))||
+      (!searchfilename.Compare(_L(".."))))
      {
        return NextSearch(searchelement);
      }

@@ -141,7 +141,7 @@ XSTRING* VERSIONFRAMEWORK::GetName()
 * --------------------------------------------------------------------------------------------------------------------*/
 XSTRING* VERSIONFRAMEWORK::GetVersion()
 {
-  version.Format(__L("%d.%d.%d"), VERSIONFRAMEWORK_VERSION, VERSIONFRAMEWORK_SUBVERSION, VERSIONFRAMEWORK_SUBERROR);
+  version.Format(_L("%d.%d.%d"), VERSIONFRAMEWORK_VERSION, VERSIONFRAMEWORK_SUBVERSION, VERSIONFRAMEWORK_SUBERROR);
 
   return &version;
 }
@@ -319,11 +319,11 @@ bool VERSIONFRAMEWORK::GetAppVersionStatus(XDWORD app_version, XDWORD app_subver
 {
   statusstr.Empty();
 
-  if((app_version < 1) && (app_subversion <  1)) statusstr += __L(" (Alpha)");
-  if((app_version < 1) && (app_subversion >= 1)) statusstr += __L(" (Beta)");
+  if((app_version < 1) && (app_subversion <  1)) statusstr += _L(" (Alpha)");
+  if((app_version < 1) && (app_subversion >= 1)) statusstr += _L(" (Beta)");
       
   #ifdef DEBUG_ACTIVE
-  statusstr += __L(" [Debug]");
+  statusstr += _L(" [Debug]");
   #endif
 
   return true;
@@ -348,13 +348,13 @@ bool VERSIONFRAMEWORK::GetAppVersion(XDWORD app_version, XDWORD app_subversion, 
 {
   XSTRING statusstr;
 
-  versionstr.Format(__L("%d.%d.%d"), app_version, app_subversion, app_versionerror);
+  versionstr.Format(_L("%d.%d.%d"), app_version, app_subversion, app_versionerror);
  
-  if((app_version < 1) && (app_subversion <  1)) statusstr += __L(" (Alpha)");
-  if((app_version < 1) && (app_subversion >= 1)) statusstr += __L(" (Beta)");
+  if((app_version < 1) && (app_subversion <  1)) statusstr += _L(" (Alpha)");
+  if((app_version < 1) && (app_subversion >= 1)) statusstr += _L(" (Beta)");
       
   #ifdef DEBUG_ACTIVE
-  statusstr += __L(" [Debug]");
+  statusstr += _L(" [Debug]");
   #endif
 
   versionstr += statusstr;
@@ -393,7 +393,7 @@ bool VERSIONFRAMEWORK::SetAppVersion(XCHAR* app_name, XCHAR* app_execname, XDWOR
   this->app_owner         = app_owner;
   this->app_creationyear  = app_creationyear;
 
-  app_versionstr.Format(__L("%s %d.%d.%d"), app_name?app_name:__L(""), app_version, app_subversion, app_versionerror);
+  app_versionstr.Format(_L("%s %d.%d.%d"), app_name?app_name:_L(""), app_version, app_subversion, app_versionerror);
  
   XSTRING statusstr;
 
@@ -401,7 +401,7 @@ bool VERSIONFRAMEWORK::SetAppVersion(XCHAR* app_name, XCHAR* app_execname, XDWOR
   app_versionstr += statusstr;
  
   app_titlestr = app_versionstr;
-  app_titlestr += __L(" Copyright (c) ");
+  app_titlestr += _L(" Copyright (c) ");
 
   XSTRING string2; 
 
@@ -409,7 +409,7 @@ bool VERSIONFRAMEWORK::SetAppVersion(XCHAR* app_name, XCHAR* app_execname, XDWOR
   if(!xdatetime) return false;
 
   xdatetime->Read();
-  string2.Format(((XDWORD)xdatetime->GetYear()>app_creationyear)?__L("%d-%d "):__L("%d "), app_creationyear, xdatetime->GetYear());
+  string2.Format(((XDWORD)xdatetime->GetYear()>app_creationyear)?_L("%d-%d "):_L("%d "), app_creationyear, xdatetime->GetYear());
 
   GEN_XFACTORY.DeleteDateTime(xdatetime);
 
@@ -434,7 +434,7 @@ bool VERSIONFRAMEWORK::UpdateYearAppVersion()
   app_titlestr.Empty();
   app_versionstr.Empty();
 
-  app_versionstr.Format(__L("%s %d.%d.%d"), !app_name.IsEmpty()?app_name.Get():__L(""), app_version, app_subversion, app_versionerror);
+  app_versionstr.Format(_L("%s %d.%d.%d"), !app_name.IsEmpty()?app_name.Get():_L(""), app_version, app_subversion, app_versionerror);
  
   XSTRING statusstr;
 
@@ -442,7 +442,7 @@ bool VERSIONFRAMEWORK::UpdateYearAppVersion()
   app_versionstr += statusstr;
  
   app_titlestr = app_versionstr;
-  app_titlestr += __L(" Copyright (c) ");
+  app_titlestr += _L(" Copyright (c) ");
 
   XSTRING string2; 
 
@@ -450,7 +450,7 @@ bool VERSIONFRAMEWORK::UpdateYearAppVersion()
   if(!xdatetime) return false;
 
   xdatetime->Read();
-  string2.Format(((XDWORD)xdatetime->GetYear()>app_creationyear)?__L("%d-%d "):__L("%d "), app_creationyear, xdatetime->GetYear());
+  string2.Format(((XDWORD)xdatetime->GetYear()>app_creationyear)?_L("%d-%d "):_L("%d "), app_creationyear, xdatetime->GetYear());
 
   GEN_XFACTORY.DeleteDateTime(xdatetime);
 
@@ -479,7 +479,7 @@ VERSIONFRAMEWORK::VERSIONFRAMEWORK()
 
   name      = VERSIONFRAMEWORK_NAME; 
   codename  = VERSIONFRAMEWORK_CODENAME; 
-  version.Format(__L("%d.%d.%d"), VERSIONFRAMEWORK_VERSION, VERSIONFRAMEWORK_SUBVERSION, VERSIONFRAMEWORK_SUBERROR);
+  version.Format(_L("%d.%d.%d"), VERSIONFRAMEWORK_VERSION, VERSIONFRAMEWORK_SUBVERSION, VERSIONFRAMEWORK_SUBERROR);
 
   #endif
 }

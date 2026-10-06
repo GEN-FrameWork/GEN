@@ -112,7 +112,7 @@ bool DIOSPIGPIOMCP23S17::IniDevice()
       
       
       int chipselect = 0;
-      diostreamcfg->GetLocalDeviceName()->Format(__L("/dev/spidev0.%d"), chipselect);
+      diostreamcfg->GetLocalDeviceName()->Format(_L("/dev/spidev0.%d"), chipselect);
 
       diostream = (DIOSTREAMSPI*)GEN_DIOFACTORY.CreateStreamIO(diostreamcfg);
       if(!diostream) return false;

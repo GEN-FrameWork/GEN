@@ -35,7 +35,7 @@
 
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
 
-#define XFILE_ID                    __L("GEN")  // Indexed database file.
+#define XFILE_ID                    _L("GEN")  // Indexed database file.
 
 #define XFILE_XDB_ID                0xFF01      // Indexed database file.
 #define XFILE_SEN_ID                0xFF02      // Indexed Sentences database file.

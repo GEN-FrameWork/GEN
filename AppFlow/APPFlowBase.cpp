@@ -468,19 +468,19 @@ void APPFLOWBASE::SetSystemChangeStatus(XSYSTEM_CHANGESTATUSTYPE systemchangesta
   switch(systemchangestatustype)
     {
       case XSYSTEM_CHANGESTATUSTYPE_NONE                :
-                                  default               : statusstr = __L("normal");                break;
-      case XSYSTEM_CHANGESTATUSTYPE_REBOOT              : statusstr = __L("reboot");                break;
-      case XSYSTEM_CHANGESTATUSTYPE_CONSOLE_CONNECT     : statusstr = __L("console connect");       break;
-      case XSYSTEM_CHANGESTATUSTYPE_CONSOLE_DISCONNECT  : statusstr = __L("console disconnect");    break;
-      case XSYSTEM_CHANGESTATUSTYPE_SESSION_LOGON       : statusstr = __L("session logon");         break;
-      case XSYSTEM_CHANGESTATUSTYPE_SESSION_LOGOFF      : statusstr = __L("session logooff");       break;
-      case XSYSTEM_CHANGESTATUSTYPE_SESSION_LOCK        : statusstr = __L("session lock");          break;
-      case XSYSTEM_CHANGESTATUSTYPE_SESSION_UNLOCK      : statusstr = __L("session unlock");        break;
-      case XSYSTEM_CHANGESTATUSTYPE_POWEROFF            : statusstr = __L("power off");             break;
-      case XSYSTEM_CHANGESTATUSTYPE_SUSPEND             : statusstr = __L("suspend");               break;
+                                  default               : statusstr = _L("normal");                break;
+      case XSYSTEM_CHANGESTATUSTYPE_REBOOT              : statusstr = _L("reboot");                break;
+      case XSYSTEM_CHANGESTATUSTYPE_CONSOLE_CONNECT     : statusstr = _L("console connect");       break;
+      case XSYSTEM_CHANGESTATUSTYPE_CONSOLE_DISCONNECT  : statusstr = _L("console disconnect");    break;
+      case XSYSTEM_CHANGESTATUSTYPE_SESSION_LOGON       : statusstr = _L("session logon");         break;
+      case XSYSTEM_CHANGESTATUSTYPE_SESSION_LOGOFF      : statusstr = _L("session logooff");       break;
+      case XSYSTEM_CHANGESTATUSTYPE_SESSION_LOCK        : statusstr = _L("session lock");          break;
+      case XSYSTEM_CHANGESTATUSTYPE_SESSION_UNLOCK      : statusstr = _L("session unlock");        break;
+      case XSYSTEM_CHANGESTATUSTYPE_POWEROFF            : statusstr = _L("power off");             break;
+      case XSYSTEM_CHANGESTATUSTYPE_SUSPEND             : statusstr = _L("suspend");               break;
     }
 
-  //XTRACE_PRINTCOLOR(XTRACE_COLOR_GREEN, __L("[APP Base System] Mode change to [%s]"), statusstr.Get());
+  //XTRACE_PRINTCOLOR(XTRACE_COLOR_GREEN, _L("[APP Base System] Mode change to [%s]"), statusstr.Get());
 
   APPFLOW_XEVENT  xevent(this, APPFLOW_XEVENT_TYPE_CHANGESTATUSTYPE);      
   xevent.SetChangeStatusType(systemchangestatustype);

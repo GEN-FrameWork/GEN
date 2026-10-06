@@ -435,7 +435,7 @@ bool DIOLINUXGPIORPI::RPI_GPIOMode(XQWORD GPIO, bool isinput)
     }
    else
     {
-      // XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, __L("RPI 5 Data Port Mode: GPIO %lld -> %s "), GPIO, isinput?__L("input"):__L("output"));
+      // XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, _L("RPI 5 Data Port Mode: GPIO %lld -> %s "), GPIO, isinput?_L("input"):_L("output"));
     }
   
   return true;
@@ -478,7 +478,7 @@ bool DIOLINUXGPIORPI::RPI_GPIORead(XQWORD GPIO)
     }
    else
     {
-      // XTRACE_PRINTCOLOR(1, __L("RPI 5 Data Port Read: GPIO %lld"), GPIO);
+      // XTRACE_PRINTCOLOR(1, _L("RPI 5 Data Port Read: GPIO %lld"), GPIO);
     }
 
   return false;
@@ -545,7 +545,7 @@ bool DIOLINUXGPIORPI::RPI_GPIOWrite(XQWORD GPIO, bool isactive)
 
       RPI5_RIOXOR->out     = 0x04;
 
-      XTRACE_PRINTCOLOR(1, __L("RPI 5 Data Port Write: GPIO %lld ->%s"), GPIO, isactive?__L("on"):__L("off"));
+      XTRACE_PRINTCOLOR(1, _L("RPI 5 Data Port Write: GPIO %lld ->%s"), GPIO, isactive?_L("on"):_L("off"));
     }
 
   return true;

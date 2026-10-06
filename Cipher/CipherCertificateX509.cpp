@@ -270,7 +270,7 @@ static bool CIPHERCERTIFICATEX509_DER_OIDToString(CIPHERCERTIFICATEX509_DERITEM&
       second = value - 80;
     }
 
-  OID.Format(__L("%d.%llu"), first, second);
+  OID.Format(_L("%d.%llu"), first, second);
 
   while(index < item.size)
     {
@@ -292,7 +292,7 @@ static bool CIPHERCERTIFICATEX509_DER_OIDToString(CIPHERCERTIFICATEX509_DERITEM&
         }
       while(item.data[index++] & 0x80);
 
-      OID.AddFormat(__L(".%llu"), value);
+      OID.AddFormat(_L(".%llu"), value);
     }
 
   return true;
@@ -417,19 +417,19 @@ static bool CIPHERCERTIFICATEX509_DER_RSASSAPSSHash(CIPHERCERTIFICATEX509_DERITE
 
   if(!CIPHERCERTIFICATEX509_DER_Algorithm(item, OID)) return false;
 
-  if(!OID.Compare(__L("2.16.840.1.101.3.4.2.1"), false))
+  if(!OID.Compare(_L("2.16.840.1.101.3.4.2.1"), false))
     {
       hashtype = CIPHERCERTIFICATEX509_RSASSAPSS_HASH_TYPE_SHA256;
       return true;
     }
 
-  if(!OID.Compare(__L("2.16.840.1.101.3.4.2.2"), false))
+  if(!OID.Compare(_L("2.16.840.1.101.3.4.2.2"), false))
     {
       hashtype = CIPHERCERTIFICATEX509_RSASSAPSS_HASH_TYPE_SHA384;
       return true;
     }
 
-  if(!OID.Compare(__L("2.16.840.1.101.3.4.2.3"), false))
+  if(!OID.Compare(_L("2.16.840.1.101.3.4.2.3"), false))
     {
       hashtype = CIPHERCERTIFICATEX509_RSASSAPSS_HASH_TYPE_SHA512;
       return true;
@@ -496,7 +496,7 @@ static bool CIPHERCERTIFICATEX509_DER_RSASSAPSSParameters(CIPHERCERTIFICATEX509_
                         XSTRING                        MGFOID;
 
                         if(MGFpresent || !CIPHERCERTIFICATEX509_DER_Algorithm(value, MGFOID, &MGFparameters) ||
-                           MGFOID.Compare(__L("1.2.840.113549.1.1.8"), false) ||
+                           MGFOID.Compare(_L("1.2.840.113549.1.1.8"), false) ||
                            !CIPHERCERTIFICATEX509_DER_RSASSAPSSHash(MGFparameters, MGFhashtype)) return false;
 
                         MGFpresent = true;
@@ -764,9 +764,9 @@ static bool CIPHERCERTIFICATEX509_DER_Time(CIPHERCERTIFICATEX509_DERITEM& item, 
 * --------------------------------------------------------------------------------------------------------------------*/
 static int CIPHERCERTIFICATEX509_HexValue(XCHAR character)
 {
-  if((character >= __C('0')) && (character <= __C('9'))) return character - __C('0');
-  if((character >= __C('a')) && (character <= __C('f'))) return character - __C('a') + 10;
-  if((character >= __C('A')) && (character <= __C('F'))) return character - __C('A') + 10;
+  if((character >= _C('0')) && (character <= _C('9'))) return character - _C('0');
+  if((character >= _C('a')) && (character <= _C('f'))) return character - _C('a') + 10;
+  if((character >= _C('A')) && (character <= _C('F'))) return character - _C('A') + 10;
 
   return -1;
 }
@@ -801,7 +801,7 @@ static bool CIPHERCERTIFICATEX509_IPAddress(XCHAR* address, XBUFFER& binary)
   string = address;
   size   = string.GetSize();
 
-  if(string.FindCharacter(__C(':')) < 0)
+  if(string.FindCharacter(_C(':')) < 0)
     {
       XDWORD value = 0;
       XDWORD count = 0;
@@ -809,11 +809,11 @@ static bool CIPHERCERTIFICATEX509_IPAddress(XCHAR* address, XBUFFER& binary)
 
       for(XDWORD c=0; c<=size; c++)
         {
-          XCHAR character = (c<size)?string[c]:__C('.');
+          XCHAR character = (c<size)?string[c]:_C('.');
 
-          if((character >= __C('0')) && (character <= __C('9')))
+          if((character >= _C('0')) && (character <= _C('9')))
             {
-              value = (value * 10) + character - __C('0');
+              value = (value * 10) + character - _C('0');
               digits++;
 
               if((digits > 3) || (value > 255))
@@ -821,7 +821,7 @@ static bool CIPHERCERTIFICATEX509_IPAddress(XCHAR* address, XBUFFER& binary)
                   return false;
                 }
             }
-          else if(character == __C('.'))
+          else if(character == _C('.'))
             {
               if(!digits || (count >= 4))
                 {
@@ -847,7 +847,7 @@ static bool CIPHERCERTIFICATEX509_IPAddress(XCHAR* address, XBUFFER& binary)
   int   compressed = -1;
   XDWORD position = 0;
 
-  if((size >= 2) && (string[0] == __C(':')) && (string[1] == __C(':')))
+  if((size >= 2) && (string[0] == _C(':')) && (string[1] == _C(':')))
     {
       compressed = 0;
       position   = 2;
@@ -863,7 +863,7 @@ static bool CIPHERCERTIFICATEX509_IPAddress(XCHAR* address, XBUFFER& binary)
           return false;
         }
 
-      while((position < size) && (string[position] != __C(':')))
+      while((position < size) && (string[position] != _C(':')))
         {
           int hexadecimal = CIPHERCERTIFICATEX509_HexValue(string[position]);
           if((hexadecimal < 0) || (digits >= 4))
@@ -885,7 +885,7 @@ static bool CIPHERCERTIFICATEX509_IPAddress(XCHAR* address, XBUFFER& binary)
 
       if(position < size)
         {
-          if((position + 1 < size) && (string[position+1] == __C(':')))
+          if((position + 1 < size) && (string[position+1] == _C(':')))
             {
               if(compressed >= 0)
                 {
@@ -965,21 +965,21 @@ static bool CIPHERCERTIFICATEX509_DNSName(XSTRING& pattern, XCHAR* servername)
 
   hostname = servername;
 
-  if(hostname.Character_GetLast() == __C('.')) hostname.DeleteLastCharacter();
-  if(pattern.Character_GetLast()  == __C('.')) pattern.DeleteLastCharacter();
+  if(hostname.Character_GetLast() == _C('.')) hostname.DeleteLastCharacter();
+  if(pattern.Character_GetLast()  == _C('.')) pattern.DeleteLastCharacter();
 
   if(!pattern.Compare(hostname, true))
     {
       return true;
     }
 
-  if((pattern.GetSize() < 3) || (pattern[0] != __C('*')) || (pattern[1] != __C('.')) ||
-     (pattern.FindCharacter(__C('*'), 1) >= 0))
+  if((pattern.GetSize() < 3) || (pattern[0] != _C('*')) || (pattern[1] != _C('.')) ||
+     (pattern.FindCharacter(_C('*'), 1) >= 0))
     {
       return false;
     }
 
-  dot = hostname.FindCharacter(__C('.'));
+  dot = hostname.FindCharacter(_C('.'));
   if(dot <= 0)
     {
       return false;
@@ -1423,82 +1423,82 @@ bool CIPHERCERTIFICATEX509::SetAlgorithmType(XCHAR* OID)
   algorithmtype = CIPHERCERTIFICATEX509_ALGORITHM_TYPE_UNKNOWN;
   algorithmtypestr.Empty();
 
-  if(!_OID.Compare(__L("1.2.840.113549.1.1.5"), false))
+  if(!_OID.Compare(_L("1.2.840.113549.1.1.5"), false))
     {
       algorithmtype     = CIPHERCERTIFICATEX509_ALGORITHM_TYPE_SHA1WITHRSAENCRYPTION;
-      algorithmtypestr  = __L("RSA signature with SHA-1");
+      algorithmtypestr  = _L("RSA signature with SHA-1");
     }
 
-  if(!_OID.Compare(__L("1.2.840.113549.1.1.11"), false))
+  if(!_OID.Compare(_L("1.2.840.113549.1.1.11"), false))
     {
       algorithmtype     = CIPHERCERTIFICATEX509_ALGORITHM_TYPE_SHA256WITHRSAENCRYPTION;
-      algorithmtypestr  = __L("RSA signature using SHA-256");
+      algorithmtypestr  = _L("RSA signature using SHA-256");
     }
 
-  if(!_OID.Compare(__L("1.2.840.113549.1.1.12"), false))
+  if(!_OID.Compare(_L("1.2.840.113549.1.1.12"), false))
     {    
       algorithmtype     = CIPHERCERTIFICATEX509_ALGORITHM_TYPE_SHA384WITHRSAENCRYPTION;
-      algorithmtypestr  = __L("RSA signature with SHA-384");
+      algorithmtypestr  = _L("RSA signature with SHA-384");
     }
 
-  if(!_OID.Compare(__L("1.2.840.113549.1.1.13"), false))
+  if(!_OID.Compare(_L("1.2.840.113549.1.1.13"), false))
     {   
       algorithmtype     = CIPHERCERTIFICATEX509_ALGORITHM_TYPE_SHA512WITHRSAENCRYPTION;
-      algorithmtypestr  = __L("RSA signature using SHA-512");
+      algorithmtypestr  = _L("RSA signature using SHA-512");
     }
 
-  if(!_OID.Compare(__L("1.2.840.113549.1.1.4"), false))
+  if(!_OID.Compare(_L("1.2.840.113549.1.1.4"), false))
     {
       algorithmtype     = CIPHERCERTIFICATEX509_ALGORITHM_TYPE_MD5WITHRSAENCRYPTION;
-      algorithmtypestr  = __L("RSA signature with MD5");
+      algorithmtypestr  = _L("RSA signature with MD5");
     }
  
-  if(!_OID.Compare(__L("1.2.840.10045.4.1"), false))
+  if(!_OID.Compare(_L("1.2.840.10045.4.1"), false))
     {
       algorithmtype     = CIPHERCERTIFICATEX509_ALGORITHM_TYPE_ECDSAWITHSHA1;
-      algorithmtypestr  = __L("ECDSA signature with SHA-1");
+      algorithmtypestr  = _L("ECDSA signature with SHA-1");
     }
 
-  if(!_OID.Compare(__L("1.2.840.10045.4.3.2"), false))
+  if(!_OID.Compare(_L("1.2.840.10045.4.3.2"), false))
     {
       algorithmtype     = CIPHERCERTIFICATEX509_ALGORITHM_TYPE_ECDSAWITHSHA256;
-      algorithmtypestr  = __L("ECDSA signature using SHA-256");
+      algorithmtypestr  = _L("ECDSA signature using SHA-256");
     }
 
-  if(!_OID.Compare(__L("1.2.840.10045.4.3.3"), false))
+  if(!_OID.Compare(_L("1.2.840.10045.4.3.3"), false))
     {           
       algorithmtype     = CIPHERCERTIFICATEX509_ALGORITHM_TYPE_ECDSAWITHSHA384;
-      algorithmtypestr  = __L("ECDSA signature with SHA-384");
+      algorithmtypestr  = _L("ECDSA signature with SHA-384");
     }	            
 
-  if(!_OID.Compare(__L("1.2.840.10045.4.3.4"), false))
+  if(!_OID.Compare(_L("1.2.840.10045.4.3.4"), false))
     {
       algorithmtype     = CIPHERCERTIFICATEX509_ALGORITHM_TYPE_ECDSAWITHSHA512;
-      algorithmtypestr  = __L("ECDSA signature using SHA-512");
+      algorithmtypestr  = _L("ECDSA signature using SHA-512");
     }	      
       
-  if(!_OID.Compare(__L("1.2.840.10040.4.3"), false))
+  if(!_OID.Compare(_L("1.2.840.10040.4.3"), false))
     {
       algorithmtype     = CIPHERCERTIFICATEX509_ALGORITHM_TYPE_DSAWITHSHA1;
-      algorithmtypestr  = __L("DSA signature with SHA-1");
+      algorithmtypestr  = _L("DSA signature with SHA-1");
     }	     
            
-  if(!_OID.Compare(__L("2.16.840.1.101.3.4.3.2"), false))
+  if(!_OID.Compare(_L("2.16.840.1.101.3.4.3.2"), false))
     {
       algorithmtype     = CIPHERCERTIFICATEX509_ALGORITHM_TYPE_DSAWITHSHA256;
-      algorithmtypestr  = __L("DSA signature using SHA-256");
+      algorithmtypestr  = _L("DSA signature using SHA-256");
     }	   
                
-  if(!_OID.Compare(__L("1.2.840.113549.1.1.10"), false))
+  if(!_OID.Compare(_L("1.2.840.113549.1.1.10"), false))
     {
       algorithmtype     = CIPHERCERTIFICATEX509_ALGORITHM_TYPE_RSASSAPSS;    	                  
-      algorithmtypestr  = __L("Probabilistic RSA signature scheme");  
+      algorithmtypestr  = _L("Probabilistic RSA signature scheme");  
     }
 
-  if(!_OID.Compare(__L("1.3.101.112"), false))
+  if(!_OID.Compare(_L("1.3.101.112"), false))
     {
       algorithmtype     = CIPHERCERTIFICATEX509_ALGORITHM_TYPE_ED25519;
-      algorithmtypestr  = __L("Ed25519 signature");
+      algorithmtypestr  = _L("Ed25519 signature");
     }
  
   return (algorithmtype != CIPHERCERTIFICATEX509_ALGORITHM_TYPE_UNKNOWN)?true:false;
@@ -1944,13 +1944,13 @@ bool CIPHERCERTIFICATEX509::Decode(XBUFFER& certificate)
 
       switch(RSASSAPSShashtype)
         {
-          case CIPHERCERTIFICATEX509_RSASSAPSS_HASH_TYPE_SHA256 : algorithmtypestr = __L("RSA-PSS signature using SHA-256");
+          case CIPHERCERTIFICATEX509_RSASSAPSS_HASH_TYPE_SHA256 : algorithmtypestr = _L("RSA-PSS signature using SHA-256");
                                                                   break;
 
-          case CIPHERCERTIFICATEX509_RSASSAPSS_HASH_TYPE_SHA384 : algorithmtypestr = __L("RSA-PSS signature using SHA-384");
+          case CIPHERCERTIFICATEX509_RSASSAPSS_HASH_TYPE_SHA384 : algorithmtypestr = _L("RSA-PSS signature using SHA-384");
                                                                   break;
 
-          case CIPHERCERTIFICATEX509_RSASSAPSS_HASH_TYPE_SHA512 : algorithmtypestr = __L("RSA-PSS signature using SHA-512");
+          case CIPHERCERTIFICATEX509_RSASSAPSS_HASH_TYPE_SHA512 : algorithmtypestr = _L("RSA-PSS signature using SHA-512");
                                                                   break;
 
                                                           default : return false;
@@ -2081,10 +2081,10 @@ bool CIPHERCERTIFICATEX509::Decode(XBUFFER& certificate)
     }
 
   #ifdef CIPHER_ASYMMETRIC_RSA_ACTIVE
-  if(!publickeyalgorithmOID.Compare(__L("1.2.840.113549.1.1.1"), false) ||
-     !publickeyalgorithmOID.Compare(__L("1.2.840.113549.1.1.10"), false))
+  if(!publickeyalgorithmOID.Compare(_L("1.2.840.113549.1.1.1"), false) ||
+     !publickeyalgorithmOID.Compare(_L("1.2.840.113549.1.1.10"), false))
     {
-      bool RSAE = !publickeyalgorithmOID.Compare(__L("1.2.840.113549.1.1.1"), false);
+      bool RSAE = !publickeyalgorithmOID.Compare(_L("1.2.840.113549.1.1.1"), false);
 
       if(RSAE)
         {
@@ -2146,7 +2146,7 @@ bool CIPHERCERTIFICATEX509::Decode(XBUFFER& certificate)
     }
   else
   #endif
-  if(!publickeyalgorithmOID.Compare(__L("1.2.840.10045.2.1"), false))
+  if(!publickeyalgorithmOID.Compare(_L("1.2.840.10045.2.1"), false))
     {
       // id-ecPublicKey: the actual curve comes from the ASN.1 parameters (a namedCurve OID). Only the three
       // NIST curves CIPHERECDSA can verify are accepted here; any other named curve is rejected up front
@@ -2162,19 +2162,19 @@ bool CIPHERCERTIFICATEX509::Decode(XBUFFER& certificate)
           return false;
         }
 
-      if(!publickeycurveOID.Compare(__L("1.2.840.10045.3.1.7"), false))            // secp256r1 / prime256v1
+      if(!publickeycurveOID.Compare(_L("1.2.840.10045.3.1.7"), false))            // secp256r1 / prime256v1
         {
           curvetype          = CIPHERTYPE_ECDSA_SECP256R1;
           curvekeytype       = CIPHERKEYTYPE_ECDSA_SECP256R1_PUBLIC;
           curvepublickeysize = CIPHERECDSA_P256_PUBLICKEY_SIZE;
         }
-       else if(!publickeycurveOID.Compare(__L("1.3.132.0.34"), false))             // secp384r1
+       else if(!publickeycurveOID.Compare(_L("1.3.132.0.34"), false))             // secp384r1
         {
           curvetype          = CIPHERTYPE_ECDSA_SECP384R1;
           curvekeytype       = CIPHERKEYTYPE_ECDSA_SECP384R1_PUBLIC;
           curvepublickeysize = CIPHERECDSA_P384_PUBLICKEY_SIZE;
         }
-       else if(!publickeycurveOID.Compare(__L("1.3.132.0.35"), false))             // secp521r1
+       else if(!publickeycurveOID.Compare(_L("1.3.132.0.35"), false))             // secp521r1
         {
           curvetype          = CIPHERTYPE_ECDSA_SECP521R1;
           curvekeytype       = CIPHERKEYTYPE_ECDSA_SECP521R1_PUBLIC;
@@ -2206,7 +2206,7 @@ bool CIPHERCERTIFICATEX509::Decode(XBUFFER& certificate)
           return false;
         }
     }
-   else if(!publickeyalgorithmOID.Compare(__L("1.3.101.112"), false))
+   else if(!publickeyalgorithmOID.Compare(_L("1.3.101.112"), false))
     {
       // RFC 8410 id-Ed25519: parameters are absent and the BIT STRING contains the raw 32-byte key.
       if(publickeyalgorithmparameters.tag || publickeybits.size!=33)
@@ -3430,13 +3430,13 @@ bool CIPHERCERTIFICATEX509::ConvertDateTime(XCHAR* datestr, XDATETIME* datetime)
 
   XSTRING datestring;
 
-  if(datestr[0] == __C('9'))
+  if(datestr[0] == _C('9'))
     {
-      year = __L("19");    
+      year = _L("19");    
     }
    else
     {
-      year = __L("20");    
+      year = _L("20");    
     }  
 
   year    += datestr[0];
@@ -3457,7 +3457,7 @@ bool CIPHERCERTIFICATEX509::ConvertDateTime(XCHAR* datestr, XDATETIME* datetime)
   seconds += datestr[10];  
   seconds += datestr[11];  
 
-  datestring.Format(__L("%s/%s/%s %s:%s:%s"), year.Get(), month.Get(), day.Get(), hour.Get(), minutes.Get(), seconds.Get());
+  datestring.Format(_L("%s/%s/%s %s:%s:%s"), year.Get(), month.Get(), day.Get(), hour.Get(), minutes.Get(), seconds.Get());
 
   datetime->GetDateTimeFromString(datestring, XDATETIME_FORMAT_POSTGRESQL); 
 
@@ -3482,77 +3482,77 @@ bool CIPHERCERTIFICATEX509::XTraceCertificatedPropertys()
 
   ////------------------------------------------------------------------
 
-  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, __L("[Cipher Key Certificate] -----------------------------------------------------------------------"));  
-  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, __L(""));    
-  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, __L("Version                      : %d "), GetVersion()); 
+  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, _L("[Cipher Key Certificate] -----------------------------------------------------------------------"));  
+  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, _L(""));    
+  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, _L("Version                      : %d "), GetVersion()); 
 
   for(XDWORD c=0; c<GetSerial()->GetSize(); c++)
     {
-      string.AddFormat(__L("%02X "), GetSerial()->Get()[c]); 
+      string.AddFormat(_L("%02X "), GetSerial()->Get()[c]); 
     }
 
-  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, __L("Serial                       : %s"), string.Get());
+  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, _L("Serial                       : %s"), string.Get());
   
-  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, __L("Algorithm Identifier         : %s"), GetAlgorithmTypeStr()->Get());
+  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, _L("Algorithm Identifier         : %s"), GetAlgorithmTypeStr()->Get());
 
   //------------------------------------------------------------------
   
-  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, __L(""));   
-  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, __L("Issuer ID"));   
-  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, __L("Contry name                  : %s"), GetIssuerID()->GetCountryName()->Get()); 
-  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, __L("Organization name            : %s"), GetIssuerID()->GetOrganizationName()->Get()); 
-  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, __L("Organization unit name       : %s"), GetIssuerID()->GetOrganizationalUnitName()->Get()); 
-  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, __L("Organization unit name plus  : %s"), GetIssuerID()->GetOrganizationalUnitNamePlus()->Get()); 
-  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, __L("Common name                  : %s"), GetIssuerID()->GetCommonName()->Get()); 
+  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, _L(""));   
+  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, _L("Issuer ID"));   
+  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, _L("Contry name                  : %s"), GetIssuerID()->GetCountryName()->Get()); 
+  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, _L("Organization name            : %s"), GetIssuerID()->GetOrganizationName()->Get()); 
+  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, _L("Organization unit name       : %s"), GetIssuerID()->GetOrganizationalUnitName()->Get()); 
+  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, _L("Organization unit name plus  : %s"), GetIssuerID()->GetOrganizationalUnitNamePlus()->Get()); 
+  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, _L("Common name                  : %s"), GetIssuerID()->GetCommonName()->Get()); 
 
   //-----------------------------------------------------------------
 
-  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, __L(""));   
+  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, _L(""));   
 
   if(IsValidDates())
     {
-      validdatestr = __L("Valid certificate");
+      validdatestr = _L("Valid certificate");
     }
    else
     {
-      validdatestr = __L("Expired certificate");
+      validdatestr = _L("Expired certificate");
     }  
  
-  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, __L("Validity dates               : %s"), validdatestr.Get());
+  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, _L("Validity dates               : %s"), validdatestr.Get());
 
   xdatetime = GetDateNotBefore();
   if(xdatetime)
     {
       xdatetime->GetDateTimeToString(XDATETIME_FORMAT_STANDARD, string);
     }    
-  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, __L("UTC Time Not Before          : %s"), string.Get());
+  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, _L("UTC Time Not Before          : %s"), string.Get());
   
   xdatetime = GetDateNotAfter();
   if(xdatetime)
     {
       xdatetime->GetDateTimeToString(XDATETIME_FORMAT_STANDARD, string);
     }  
-  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, __L("UTC Time Not After           : %s"), string.Get() );
+  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, _L("UTC Time Not After           : %s"), string.Get() );
 
   //------------------------------------------------------------------
 
-  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, __L(""));   
+  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, _L(""));   
 
   if(IsSelfSigned())
     {
-      selfsignedstr = __L("[This certificate is self-signed, Subject equal Issuer] ");
+      selfsignedstr = _L("[This certificate is self-signed, Subject equal Issuer] ");
     }
 
-  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, __L("Subject ID                     %s"), selfsignedstr.Get());   
-  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, __L("Contry name                  : %s"), GetSubjectID()->GetCountryName()->Get()); 
-  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, __L("Organization name            : %s"), GetSubjectID()->GetOrganizationName()->Get()); 
-  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, __L("Organization unit name       : %s"), GetSubjectID()->GetOrganizationalUnitName()->Get()); 
-  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, __L("Organization unit name plus  : %s"), GetSubjectID()->GetOrganizationalUnitNamePlus()->Get()); 
-  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, __L("Common name                  : %s"), GetSubjectID()->GetCommonName()->Get()); 
+  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, _L("Subject ID                     %s"), selfsignedstr.Get());   
+  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, _L("Contry name                  : %s"), GetSubjectID()->GetCountryName()->Get()); 
+  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, _L("Organization name            : %s"), GetSubjectID()->GetOrganizationName()->Get()); 
+  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, _L("Organization unit name       : %s"), GetSubjectID()->GetOrganizationalUnitName()->Get()); 
+  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, _L("Organization unit name plus  : %s"), GetSubjectID()->GetOrganizationalUnitNamePlus()->Get()); 
+  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, _L("Common name                  : %s"), GetSubjectID()->GetCommonName()->Get()); 
 
   //------------------------------------------------------------------
 
-  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, __L("")); 
+  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, _L("")); 
 
   bool havepubliccipherkey = false;
   if(GetPublicCipherKey())
@@ -3564,10 +3564,10 @@ bool CIPHERCERTIFICATEX509::XTraceCertificatedPropertys()
         }
     }  
 
-  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, __L("Cipher key usage : %s"), IsPublicCipherKeyUsage()?__L("true"):__L("false"));   
-  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, __L("Cipher key basic constraints : %s"), IsPublicCipherKeyBasicConstraints()?__L("true"):__L("false"));   
-  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, __L("Cipher key ID : %s"), GetPublicCipherKeyID()->Get());   
-  XTRACE_PRINTCOLOR((havepubliccipherkey?XTRACE_COLOR_BLUE:XTRACE_COLOR_RED), __L("Cipher key                   : %s [%s]"), (havepubliccipherkey?__L("Obtained and valid"):__L("Not valid")), (havepubliccipherkey?GetPublicCipherKey()->GetTypeStr():__L("")));   
+  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, _L("Cipher key usage : %s"), IsPublicCipherKeyUsage()?_L("true"):_L("false"));   
+  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, _L("Cipher key basic constraints : %s"), IsPublicCipherKeyBasicConstraints()?_L("true"):_L("false"));   
+  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, _L("Cipher key ID : %s"), GetPublicCipherKeyID()->Get());   
+  XTRACE_PRINTCOLOR((havepubliccipherkey?XTRACE_COLOR_BLUE:XTRACE_COLOR_RED), _L("Cipher key                   : %s [%s]"), (havepubliccipherkey?_L("Obtained and valid"):_L("Not valid")), (havepubliccipherkey?GetPublicCipherKey()->GetTypeStr():_L("")));   
 
   bool havehash = false;
   if(GetHash())
@@ -3575,11 +3575,11 @@ bool CIPHERCERTIFICATEX509::XTraceCertificatedPropertys()
       havehash = (GetHash()->GetType() != HASHTYPE_NONE)?true:false;
     }
  
-  XTRACE_PRINTCOLOR((havehash?XTRACE_COLOR_BLUE:XTRACE_COLOR_RED), __L("Hash                         : %s [%s]"), (havehash?__L("Obtained and valid"):__L("Not valid")), havehash?GetHash()->GetTypeStr():__L(""));  
+  XTRACE_PRINTCOLOR((havehash?XTRACE_COLOR_BLUE:XTRACE_COLOR_RED), _L("Hash                         : %s [%s]"), (havehash?_L("Obtained and valid"):_L("Not valid")), havehash?GetHash()->GetTypeStr():_L(""));  
 
   //------------------------------------------------------------------
   
-  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, __L(""));  
+  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, _L(""));  
 
   return true;
 }

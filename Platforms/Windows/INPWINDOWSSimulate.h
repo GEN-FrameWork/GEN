@@ -54,9 +54,10 @@ class INPWINDOWSSIMULATE : public INPSIMULATE
 
   protected:
 
+    bool            IsCapsLockActive        ();
+
   private:
 
-    bool            IsCapsLockActive        ();
     bool            IsNumLockActive         ();
     bool            IsScrollLockActive      ();
 

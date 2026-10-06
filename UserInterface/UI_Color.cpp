@@ -319,7 +319,7 @@ bool UI_COLOR::SetFromString(XCHAR* string)
     }
 
   // "#RRGGBB" / "#RRGGBBAA" (CSS-style hex notation)
-  if(colorstr.Get()[0] == __C('#'))
+  if(colorstr.Get()[0] == _C('#'))
     {
       XDWORD length = colorstr.GetSize() - 1;
 
@@ -341,7 +341,7 @@ bool UI_COLOR::SetFromString(XCHAR* string)
   for(XDWORD c=0; c<colorstr.GetSize(); c++)
     {
       XCHAR character = colorstr.Get()[c];
-      if(character == __C(',')) 
+      if(character == _C(',')) 
         {
           ncommas++;
         }
@@ -363,7 +363,7 @@ bool UI_COLOR::SetFromString(XCHAR* string)
                   XSTRING* resolved_colorstr = NULL;
 
                   _colorstr.AdjustSize(_MAXSTR);
-                  colorstr.UnFormat(__L("%s,%d"), _colorstr.Get(), &_alpha);
+                  colorstr.UnFormat(_L("%s,%d"), _colorstr.Get(), &_alpha);
                   _colorstr.AdjustSize();
 
                   resolved_colorstr = GEN_UI_COLORS.Get(_colorstr);
@@ -377,12 +377,12 @@ bool UI_COLOR::SetFromString(XCHAR* string)
                 break;
 
       case  2 : // int colors
-                status = colorstr.UnFormat(__L("%d,%d,%d"), &red, &green, &blue);
+                status = colorstr.UnFormat(_L("%d,%d,%d"), &red, &green, &blue);
                 alpha = 255;  
                 break;
 
       case  3 : // int colors + int alpha
-                status = colorstr.UnFormat(__L("%d,%d,%d,%d"), &red, &green, &blue, &_alpha);
+                status = colorstr.UnFormat(_L("%d,%d,%d,%d"), &red, &green, &blue, &_alpha);
                 alpha = GetAlphaForPercent(_alpha);
                 break;
 
@@ -509,9 +509,9 @@ int UI_COLOR::GetAlphaForPercent(int percent)
 * --------------------------------------------------------------------------------------------------------------------*/
 int UI_COLOR::HexValue(XCHAR character)
 {
-  if((character >= __C('0')) && (character <= __C('9')))  return (int)(character - __C('0'));
-  if((character >= __C('a')) && (character <= __C('f')))  return (int)(character - __C('a')) + 10;
-  if((character >= __C('A')) && (character <= __C('F')))  return (int)(character - __C('A')) + 10;
+  if((character >= _C('0')) && (character <= _C('9')))  return (int)(character - _C('0'));
+  if((character >= _C('a')) && (character <= _C('f')))  return (int)(character - _C('a')) + 10;
+  if((character >= _C('A')) && (character <= _C('F')))  return (int)(character - _C('A')) + 10;
 
   return 0;
 }

@@ -146,11 +146,11 @@ bool XSTM32DIR_NOTUNICODE::Make(XCHAR* path, bool recursive)
           if(xpath.GetPathInSequence(index, pathpart))
             {
               xpathsequence += pathpart;
-              xpathsequence += __L("\\");
+              xpathsequence += _L("\\");
 
               if(!Exist(xpathsequence.Get()))
                 {
-                  //XTRACE_PRINTCOLOR(2, __L("---> Make: %s"), xpathsequence.Get());
+                  //XTRACE_PRINTCOLOR(2, _L("---> Make: %s"), xpathsequence.Get());
                       
                   xpathsequence.Slash_Delete();
                       
@@ -236,7 +236,7 @@ bool XSTM32DIR_NOTUNICODE::Delete(XCHAR* path, bool all)
   if(all)
     {
       xpathname     = path;
-      patternsearch = __L("*");
+      patternsearch = _L("*");
 
       if(FirstSearch(xpathname.Get(), patternsearch.Get(), &search))
         {
@@ -361,8 +361,8 @@ bool XSTM32DIR_NOTUNICODE::FirstSearch(XCHAR* xpath, XCHAR* patternsearch, XDIRE
 
   XSTRING searchfilename(searchinfo->fileinfo.fname);
 
-  if((!searchfilename.Compare(__L(".")))||
-     (!searchfilename.Compare(__L(".."))))
+  if((!searchfilename.Compare(_L(".")))||
+     (!searchfilename.Compare(_L(".."))))
     {
       return NextSearch(searchelement);
     }
@@ -403,8 +403,8 @@ bool XSTM32DIR_NOTUNICODE::NextSearch(XDIRELEMENT* searchelement)
 
    XSTRING searchfilename(searchinfo->fileinfo.fname);
 
-   if((!searchfilename.Compare(__L(".")))||
-      (!searchfilename.Compare(__L(".."))))
+   if((!searchfilename.Compare(_L(".")))||
+      (!searchfilename.Compare(_L(".."))))
      {
        return NextSearch(searchelement);
      }

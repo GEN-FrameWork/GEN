@@ -133,8 +133,8 @@ bool UI_ANIMATION::LoadFromFile(XSTRING& resourcename, GRPPROPERTYMODE mode)
 
           namefile.DeleteCharacters(indexmask-masksize, masksize);  
                                                                                                                                         
-          mask.Insert(__L("%"), 0);
-          mask.Add(__L("d"));
+          mask.Insert(_L("%"), 0);
+          mask.Add(_L("d"));
                                                                 
           result.Format(mask.Get(), indeximg);
           indeximg++;

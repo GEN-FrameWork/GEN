@@ -178,7 +178,7 @@ bool INPLINUXDEVICEKEYBOARDDIRECT::Update()
                           button->SetState(INPBUTTON_STATE_RELEASED);
                         }
 
-                      //XTRACE_PRINTCOLOR(1,__L("Keypres : code (%d) on : %s "), (buffer[c] & 0x7f), (button->IsPressed()?__L("Press"):__L("Release")));
+                      //XTRACE_PRINTCOLOR(1,_L("Keypres : code (%d) on : %s "), (buffer[c] & 0x7f), (button->IsPressed()?_L("Press"):_L("Release")));
                     }
                 }
             }
@@ -208,7 +208,7 @@ bool INPLINUXDEVICEKEYBOARDDIRECT::Update()
                       if(button)
                         {
                           button->SetPressed(event.value!=0);
-                          //XTRACE_PRINTCOLOR(1,__L("Keypres : code (%d) on : %s "), event.code, (button->IsPressed()?__L("Press"):__L("Release")));
+                          //XTRACE_PRINTCOLOR(1,_L("Keypres : code (%d) on : %s "), event.code, (button->IsPressed()?_L("Press"):_L("Release")));
 
                         } else continue;
 
@@ -267,102 +267,102 @@ void INPLINUXDEVICEKEYBOARDDIRECT::Clean()
 * --------------------------------------------------------------------------------------------------------------------*/
 bool INPLINUXDEVICEKEYBOARDDIRECT::CreateAllButtons()
 {
-  INPBUTTON::CreateButton(&buttons, KEY_BACKSPACE, INPBUTTON_ID_BACK_SPACE, __C('\x0'));
-  INPBUTTON::CreateButton(&buttons, KEY_TAB, INPBUTTON_ID_TAB, __C('\x0'));
-  INPBUTTON::CreateButton(&buttons, KEY_ENTER, INPBUTTON_ID_RETURN, __C('\x0'));
-  INPBUTTON::CreateButton(&buttons, KEY_ESC, INPBUTTON_ID_ESCAPE, __C('\x0'));
-  INPBUTTON::CreateButton(&buttons, KEY_CAPSLOCK, INPBUTTON_ID_CAPS_LOCK, __C('\x0'));
+  INPBUTTON::CreateButton(&buttons, KEY_BACKSPACE, INPBUTTON_ID_BACK_SPACE, _C('\x0'));
+  INPBUTTON::CreateButton(&buttons, KEY_TAB, INPBUTTON_ID_TAB, _C('\x0'));
+  INPBUTTON::CreateButton(&buttons, KEY_ENTER, INPBUTTON_ID_RETURN, _C('\x0'));
+  INPBUTTON::CreateButton(&buttons, KEY_ESC, INPBUTTON_ID_ESCAPE, _C('\x0'));
+  INPBUTTON::CreateButton(&buttons, KEY_CAPSLOCK, INPBUTTON_ID_CAPS_LOCK, _C('\x0'));
 
-  INPBUTTON::CreateButton(&buttons, KEY_RIGHTSHIFT, INPBUTTON_ID_SHIFT_RIGHT, __C('\x0'));
-  INPBUTTON::CreateButton(&buttons, KEY_LEFTSHIFT, INPBUTTON_ID_SHIFT_LEFT, __C('\x0'));
-  INPBUTTON::CreateButton(&buttons, KEY_RIGHTCTRL, INPBUTTON_ID_CONTROL_RIGHT, __C('\x0'));
-  INPBUTTON::CreateButton(&buttons, KEY_LEFTCTRL, INPBUTTON_ID_CONTROL_LEFT, __C('\x0'));
-  INPBUTTON::CreateButton(&buttons, KEY_RIGHTALT, INPBUTTON_ID_ALT_RIGHT, __C('\x0'));
-  INPBUTTON::CreateButton(&buttons, KEY_LEFTALT, INPBUTTON_ID_ALT_LEFT, __C('\x0'));
+  INPBUTTON::CreateButton(&buttons, KEY_RIGHTSHIFT, INPBUTTON_ID_SHIFT_RIGHT, _C('\x0'));
+  INPBUTTON::CreateButton(&buttons, KEY_LEFTSHIFT, INPBUTTON_ID_SHIFT_LEFT, _C('\x0'));
+  INPBUTTON::CreateButton(&buttons, KEY_RIGHTCTRL, INPBUTTON_ID_CONTROL_RIGHT, _C('\x0'));
+  INPBUTTON::CreateButton(&buttons, KEY_LEFTCTRL, INPBUTTON_ID_CONTROL_LEFT, _C('\x0'));
+  INPBUTTON::CreateButton(&buttons, KEY_RIGHTALT, INPBUTTON_ID_ALT_RIGHT, _C('\x0'));
+  INPBUTTON::CreateButton(&buttons, KEY_LEFTALT, INPBUTTON_ID_ALT_LEFT, _C('\x0'));
 
-  INPBUTTON::CreateButton(&buttons, KEY_KPLEFTPAREN, INPBUTTON_ID_OPEN_BRANCH, __C('(' ));
-  INPBUTTON::CreateButton(&buttons, KEY_KPRIGHTPAREN, INPBUTTON_ID_CLOSE_BRANCH, __C(')' ));
-  INPBUTTON::CreateButton(&buttons, KEY_COMMA, INPBUTTON_ID_COMMA, __C(',' ));
-  INPBUTTON::CreateButton(&buttons, KEY_MINUS, INPBUTTON_ID_MINUS, __C('-' ));
-  INPBUTTON::CreateButton(&buttons, KEY_DOT, INPBUTTON_ID_POINT, __C('.' ));
-  INPBUTTON::CreateButton(&buttons, KEY_SLASH, INPBUTTON_ID_SLASH, __C('/' ));
+  INPBUTTON::CreateButton(&buttons, KEY_KPLEFTPAREN, INPBUTTON_ID_OPEN_BRANCH, _C('(' ));
+  INPBUTTON::CreateButton(&buttons, KEY_KPRIGHTPAREN, INPBUTTON_ID_CLOSE_BRANCH, _C(')' ));
+  INPBUTTON::CreateButton(&buttons, KEY_COMMA, INPBUTTON_ID_COMMA, _C(',' ));
+  INPBUTTON::CreateButton(&buttons, KEY_MINUS, INPBUTTON_ID_MINUS, _C('-' ));
+  INPBUTTON::CreateButton(&buttons, KEY_DOT, INPBUTTON_ID_POINT, _C('.' ));
+  INPBUTTON::CreateButton(&buttons, KEY_SLASH, INPBUTTON_ID_SLASH, _C('/' ));
 
-  INPBUTTON::CreateButton(&buttons, KEY_LEFTBRACE, INPBUTTON_ID_OPEN_BRACKET, __C('[' ));
-  INPBUTTON::CreateButton(&buttons, KEY_RIGHTBRACE, INPBUTTON_ID_CLOSE_BRACKET, __C(']' ));
+  INPBUTTON::CreateButton(&buttons, KEY_LEFTBRACE, INPBUTTON_ID_OPEN_BRACKET, _C('[' ));
+  INPBUTTON::CreateButton(&buttons, KEY_RIGHTBRACE, INPBUTTON_ID_CLOSE_BRACKET, _C(']' ));
 
-  INPBUTTON::CreateButton(&buttons, KEY_SPACE, INPBUTTON_ID_SPACE, __C(' ' ));
-  INPBUTTON::CreateButton(&buttons, KEY_PAGEUP, INPBUTTON_ID_PAGE_UP, __C('\x0'));
-  INPBUTTON::CreateButton(&buttons, KEY_PAGEDOWN, INPBUTTON_ID_PAGE_DOWN, __C('\x0'));
+  INPBUTTON::CreateButton(&buttons, KEY_SPACE, INPBUTTON_ID_SPACE, _C(' ' ));
+  INPBUTTON::CreateButton(&buttons, KEY_PAGEUP, INPBUTTON_ID_PAGE_UP, _C('\x0'));
+  INPBUTTON::CreateButton(&buttons, KEY_PAGEDOWN, INPBUTTON_ID_PAGE_DOWN, _C('\x0'));
 
-  INPBUTTON::CreateButton(&buttons, KEY_END, INPBUTTON_ID_END, __C('\x0'));
-  INPBUTTON::CreateButton(&buttons, KEY_HOME, INPBUTTON_ID_HOME, __C('\x0'));
-  INPBUTTON::CreateButton(&buttons, KEY_LEFT, INPBUTTON_ID_LEFT, __C('\x0'));
-  INPBUTTON::CreateButton(&buttons, KEY_UP, INPBUTTON_ID_UP, __C('\x0'));
-  INPBUTTON::CreateButton(&buttons, KEY_RIGHT, INPBUTTON_ID_RIGHT, __C('\x0'));
-  INPBUTTON::CreateButton(&buttons, KEY_DOWN, INPBUTTON_ID_DOWN, __C('\x0'));
+  INPBUTTON::CreateButton(&buttons, KEY_END, INPBUTTON_ID_END, _C('\x0'));
+  INPBUTTON::CreateButton(&buttons, KEY_HOME, INPBUTTON_ID_HOME, _C('\x0'));
+  INPBUTTON::CreateButton(&buttons, KEY_LEFT, INPBUTTON_ID_LEFT, _C('\x0'));
+  INPBUTTON::CreateButton(&buttons, KEY_UP, INPBUTTON_ID_UP, _C('\x0'));
+  INPBUTTON::CreateButton(&buttons, KEY_RIGHT, INPBUTTON_ID_RIGHT, _C('\x0'));
+  INPBUTTON::CreateButton(&buttons, KEY_DOWN, INPBUTTON_ID_DOWN, _C('\x0'));
 
-  INPBUTTON::CreateButton(&buttons, KEY_INSERT, INPBUTTON_ID_INSERT, __C('\x0'));
-  INPBUTTON::CreateButton(&buttons, KEY_DELETE, INPBUTTON_ID_DELETE, __C('\x0'));
+  INPBUTTON::CreateButton(&buttons, KEY_INSERT, INPBUTTON_ID_INSERT, _C('\x0'));
+  INPBUTTON::CreateButton(&buttons, KEY_DELETE, INPBUTTON_ID_DELETE, _C('\x0'));
 
-  INPBUTTON::CreateButton(&buttons, KEY_A, INPBUTTON_ID_A, __C('A' ));
-  INPBUTTON::CreateButton(&buttons, KEY_B, INPBUTTON_ID_B, __C('B' ));
-  INPBUTTON::CreateButton(&buttons, KEY_C, INPBUTTON_ID_C, __C('C' ));
-  INPBUTTON::CreateButton(&buttons, KEY_D, INPBUTTON_ID_D, __C('D' ));
-  INPBUTTON::CreateButton(&buttons, KEY_E, INPBUTTON_ID_E, __C('E' ));
-  INPBUTTON::CreateButton(&buttons, KEY_F, INPBUTTON_ID_F, __C('F' ));
-  INPBUTTON::CreateButton(&buttons, KEY_G, INPBUTTON_ID_G, __C('G' ));
-  INPBUTTON::CreateButton(&buttons, KEY_H, INPBUTTON_ID_H, __C('H' ));
-  INPBUTTON::CreateButton(&buttons, KEY_I, INPBUTTON_ID_I, __C('I' ));
-  INPBUTTON::CreateButton(&buttons, KEY_J, INPBUTTON_ID_J, __C('J' ));
-  INPBUTTON::CreateButton(&buttons, KEY_K, INPBUTTON_ID_K, __C('K' ));
-  INPBUTTON::CreateButton(&buttons, KEY_L, INPBUTTON_ID_L, __C('L' ));
-  INPBUTTON::CreateButton(&buttons, KEY_M, INPBUTTON_ID_M, __C('M' ));
-  INPBUTTON::CreateButton(&buttons, KEY_N, INPBUTTON_ID_N, __C('N' ));
-  INPBUTTON::CreateButton(&buttons, KEY_O, INPBUTTON_ID_O, __C('O' ));
-  INPBUTTON::CreateButton(&buttons, KEY_P, INPBUTTON_ID_P, __C('P' ));
-  INPBUTTON::CreateButton(&buttons, KEY_Q, INPBUTTON_ID_Q, __C('Q' ));
-  INPBUTTON::CreateButton(&buttons, KEY_R, INPBUTTON_ID_R, __C('R' ));
-  INPBUTTON::CreateButton(&buttons, KEY_S, INPBUTTON_ID_S, __C('S' ));
-  INPBUTTON::CreateButton(&buttons, KEY_T, INPBUTTON_ID_T, __C('T' ));
-  INPBUTTON::CreateButton(&buttons, KEY_U, INPBUTTON_ID_U, __C('U' ));
-  INPBUTTON::CreateButton(&buttons, KEY_V, INPBUTTON_ID_V, __C('V' ));
-  INPBUTTON::CreateButton(&buttons, KEY_W, INPBUTTON_ID_W, __C('W' ));
-  INPBUTTON::CreateButton(&buttons, KEY_X, INPBUTTON_ID_X, __C('X' ));
-  INPBUTTON::CreateButton(&buttons, KEY_Y, INPBUTTON_ID_Y, __C('Y' ));
-  INPBUTTON::CreateButton(&buttons, KEY_Z, INPBUTTON_ID_Z, __C('Z' ));
+  INPBUTTON::CreateButton(&buttons, KEY_A, INPBUTTON_ID_A, _C('A' ));
+  INPBUTTON::CreateButton(&buttons, KEY_B, INPBUTTON_ID_B, _C('B' ));
+  INPBUTTON::CreateButton(&buttons, KEY_C, INPBUTTON_ID_C, _C('C' ));
+  INPBUTTON::CreateButton(&buttons, KEY_D, INPBUTTON_ID_D, _C('D' ));
+  INPBUTTON::CreateButton(&buttons, KEY_E, INPBUTTON_ID_E, _C('E' ));
+  INPBUTTON::CreateButton(&buttons, KEY_F, INPBUTTON_ID_F, _C('F' ));
+  INPBUTTON::CreateButton(&buttons, KEY_G, INPBUTTON_ID_G, _C('G' ));
+  INPBUTTON::CreateButton(&buttons, KEY_H, INPBUTTON_ID_H, _C('H' ));
+  INPBUTTON::CreateButton(&buttons, KEY_I, INPBUTTON_ID_I, _C('I' ));
+  INPBUTTON::CreateButton(&buttons, KEY_J, INPBUTTON_ID_J, _C('J' ));
+  INPBUTTON::CreateButton(&buttons, KEY_K, INPBUTTON_ID_K, _C('K' ));
+  INPBUTTON::CreateButton(&buttons, KEY_L, INPBUTTON_ID_L, _C('L' ));
+  INPBUTTON::CreateButton(&buttons, KEY_M, INPBUTTON_ID_M, _C('M' ));
+  INPBUTTON::CreateButton(&buttons, KEY_N, INPBUTTON_ID_N, _C('N' ));
+  INPBUTTON::CreateButton(&buttons, KEY_O, INPBUTTON_ID_O, _C('O' ));
+  INPBUTTON::CreateButton(&buttons, KEY_P, INPBUTTON_ID_P, _C('P' ));
+  INPBUTTON::CreateButton(&buttons, KEY_Q, INPBUTTON_ID_Q, _C('Q' ));
+  INPBUTTON::CreateButton(&buttons, KEY_R, INPBUTTON_ID_R, _C('R' ));
+  INPBUTTON::CreateButton(&buttons, KEY_S, INPBUTTON_ID_S, _C('S' ));
+  INPBUTTON::CreateButton(&buttons, KEY_T, INPBUTTON_ID_T, _C('T' ));
+  INPBUTTON::CreateButton(&buttons, KEY_U, INPBUTTON_ID_U, _C('U' ));
+  INPBUTTON::CreateButton(&buttons, KEY_V, INPBUTTON_ID_V, _C('V' ));
+  INPBUTTON::CreateButton(&buttons, KEY_W, INPBUTTON_ID_W, _C('W' ));
+  INPBUTTON::CreateButton(&buttons, KEY_X, INPBUTTON_ID_X, _C('X' ));
+  INPBUTTON::CreateButton(&buttons, KEY_Y, INPBUTTON_ID_Y, _C('Y' ));
+  INPBUTTON::CreateButton(&buttons, KEY_Z, INPBUTTON_ID_Z, _C('Z' ));
 
-  INPBUTTON::CreateButton(&buttons, KEY_1, INPBUTTON_ID_1, __C('1' ));
-  INPBUTTON::CreateButton(&buttons, KEY_2, INPBUTTON_ID_2, __C('2' ));
-  INPBUTTON::CreateButton(&buttons, KEY_3, INPBUTTON_ID_3, __C('3' ));
-  INPBUTTON::CreateButton(&buttons, KEY_4, INPBUTTON_ID_4, __C('4' ));
-  INPBUTTON::CreateButton(&buttons, KEY_5, INPBUTTON_ID_5, __C('5' ));
-  INPBUTTON::CreateButton(&buttons, KEY_6, INPBUTTON_ID_6, __C('6' ));
-  INPBUTTON::CreateButton(&buttons, KEY_7, INPBUTTON_ID_7, __C('7' ));
-  INPBUTTON::CreateButton(&buttons, KEY_8, INPBUTTON_ID_8, __C('8' ));
-  INPBUTTON::CreateButton(&buttons, KEY_9, INPBUTTON_ID_9, __C('9' ));
-  INPBUTTON::CreateButton(&buttons, KEY_0, INPBUTTON_ID_0, __C('0' ));
+  INPBUTTON::CreateButton(&buttons, KEY_1, INPBUTTON_ID_1, _C('1' ));
+  INPBUTTON::CreateButton(&buttons, KEY_2, INPBUTTON_ID_2, _C('2' ));
+  INPBUTTON::CreateButton(&buttons, KEY_3, INPBUTTON_ID_3, _C('3' ));
+  INPBUTTON::CreateButton(&buttons, KEY_4, INPBUTTON_ID_4, _C('4' ));
+  INPBUTTON::CreateButton(&buttons, KEY_5, INPBUTTON_ID_5, _C('5' ));
+  INPBUTTON::CreateButton(&buttons, KEY_6, INPBUTTON_ID_6, _C('6' ));
+  INPBUTTON::CreateButton(&buttons, KEY_7, INPBUTTON_ID_7, _C('7' ));
+  INPBUTTON::CreateButton(&buttons, KEY_8, INPBUTTON_ID_8, _C('8' ));
+  INPBUTTON::CreateButton(&buttons, KEY_9, INPBUTTON_ID_9, _C('9' ));
+  INPBUTTON::CreateButton(&buttons, KEY_0, INPBUTTON_ID_0, _C('0' ));
 
-  INPBUTTON::CreateButton(&buttons, KEY_NUMLOCK, INPBUTTON_ID_NUMLOCK, __C('\x0'));
+  INPBUTTON::CreateButton(&buttons, KEY_NUMLOCK, INPBUTTON_ID_NUMLOCK, _C('\x0'));
 
-  INPBUTTON::CreateButton(&buttons, KEY_F1, INPBUTTON_ID_F1, __C('\x0'));
-  INPBUTTON::CreateButton(&buttons, KEY_F2, INPBUTTON_ID_F2, __C('\x0'));
-  INPBUTTON::CreateButton(&buttons, KEY_F3, INPBUTTON_ID_F3, __C('\x0'));
-  INPBUTTON::CreateButton(&buttons, KEY_F4, INPBUTTON_ID_F4, __C('\x0'));
-  INPBUTTON::CreateButton(&buttons, KEY_F5, INPBUTTON_ID_F5, __C('\x0'));
-  INPBUTTON::CreateButton(&buttons, KEY_F6, INPBUTTON_ID_F6, __C('\x0'));
-  INPBUTTON::CreateButton(&buttons, KEY_F7, INPBUTTON_ID_F7, __C('\x0'));
-  INPBUTTON::CreateButton(&buttons, KEY_F8, INPBUTTON_ID_F8, __C('\x0'));
-  INPBUTTON::CreateButton(&buttons, KEY_F9, INPBUTTON_ID_F9, __C('\x0'));
-  INPBUTTON::CreateButton(&buttons, KEY_F10, INPBUTTON_ID_F10, __C('\x0'));
-  INPBUTTON::CreateButton(&buttons, KEY_F11, INPBUTTON_ID_F11, __C('\x0'));
-  INPBUTTON::CreateButton(&buttons, KEY_F12, INPBUTTON_ID_F12, __C('\x0'));
+  INPBUTTON::CreateButton(&buttons, KEY_F1, INPBUTTON_ID_F1, _C('\x0'));
+  INPBUTTON::CreateButton(&buttons, KEY_F2, INPBUTTON_ID_F2, _C('\x0'));
+  INPBUTTON::CreateButton(&buttons, KEY_F3, INPBUTTON_ID_F3, _C('\x0'));
+  INPBUTTON::CreateButton(&buttons, KEY_F4, INPBUTTON_ID_F4, _C('\x0'));
+  INPBUTTON::CreateButton(&buttons, KEY_F5, INPBUTTON_ID_F5, _C('\x0'));
+  INPBUTTON::CreateButton(&buttons, KEY_F6, INPBUTTON_ID_F6, _C('\x0'));
+  INPBUTTON::CreateButton(&buttons, KEY_F7, INPBUTTON_ID_F7, _C('\x0'));
+  INPBUTTON::CreateButton(&buttons, KEY_F8, INPBUTTON_ID_F8, _C('\x0'));
+  INPBUTTON::CreateButton(&buttons, KEY_F9, INPBUTTON_ID_F9, _C('\x0'));
+  INPBUTTON::CreateButton(&buttons, KEY_F10, INPBUTTON_ID_F10, _C('\x0'));
+  INPBUTTON::CreateButton(&buttons, KEY_F11, INPBUTTON_ID_F11, _C('\x0'));
+  INPBUTTON::CreateButton(&buttons, KEY_F12, INPBUTTON_ID_F12, _C('\x0'));
 
   #ifdef KEY_SCREEN
-  INPBUTTON::CreateButton(&buttons, KEY_SCREEN, INPBUTTON_ID_PRINTSCREEN, __C('\x0'));
+  INPBUTTON::CreateButton(&buttons, KEY_SCREEN, INPBUTTON_ID_PRINTSCREEN, _C('\x0'));
   #endif
 
-  INPBUTTON::CreateButton(&buttons, KEY_SCROLLLOCK, INPBUTTON_ID_SCROLL_LOCK, __C('\x0'));
-  INPBUTTON::CreateButton(&buttons, KEY_PAUSE, INPBUTTON_ID_PAUSE, __C('\x0'));
+  INPBUTTON::CreateButton(&buttons, KEY_SCROLLLOCK, INPBUTTON_ID_SCROLL_LOCK, _C('\x0'));
+  INPBUTTON::CreateButton(&buttons, KEY_PAUSE, INPBUTTON_ID_PAUSE, _C('\x0'));
 
   return true;
 }
@@ -393,7 +393,7 @@ bool INPLINUXDEVICEKEYBOARDDIRECT::CreateDevices()
           XSTRING event;
           int     filedescriptor = INPLINUXDEVICEID_INVALID;
      
-          event.Format(__L("/dev/input/event%d"), deviceID->GetEventIndex());
+          event.Format(_L("/dev/input/event%d"), deviceID->GetEventIndex());
 
           XBUFFER charstr;
           
@@ -464,7 +464,7 @@ bool INPLINUXDEVICEKEYBOARDDIRECT::Old_CreateDevices()
       deviceID->SetFileDescriptor(old_fd);
       keyboards.Add(deviceID);
 
-      //XTRACE_PRINTCOLOR((deviceID?1:4),__L("Keyboard handle %d"), old_fd);
+      //XTRACE_PRINTCOLOR((deviceID?1:4),_L("Keyboard handle %d"), old_fd);
     }
 
   return true;

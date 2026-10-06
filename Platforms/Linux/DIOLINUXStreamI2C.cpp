@@ -84,7 +84,7 @@ DIOLINUXSTREAMI2C::DIOLINUXSTREAMI2C() : DIOSTREAMI2C()
 {
   Clean();
 
-  threadconnection = CREATEXTHREAD(XTHREADGROUPID_DIOSTREAMI2C, __L("DIOLINUXSTREAMI2C::DIOLINUXSTREAMI2C"), ThreadConnection, (void*)this);
+  threadconnection = CREATEXTHREAD(XTHREADGROUPID_DIOSTREAMI2C, _L("DIOLINUXSTREAMI2C::DIOLINUXSTREAMI2C"), ThreadConnection, (void*)this);
 }
 
 
@@ -204,7 +204,7 @@ XDWORD DIOLINUXSTREAMI2C::ReadDirect(XBYTE* buffer, XDWORD size)
   bool status = (ioctl(handle, DIOLINUXSTREAMI2C_RDWR, &msg_rdwr) < 0) ? false:true;
   if(status) br = size;
 
-  //XTRACE_PRINTCOLOR(1, __L("Write [Addr %04X, size:%d]  status: %s"), address, size, status?__L("true"):__L("false"));
+  //XTRACE_PRINTCOLOR(1, _L("Write [Addr %04X, size:%d]  status: %s"), address, size, status?_L("true"):_L("false"));
 
   return br;
 }
@@ -243,7 +243,7 @@ XDWORD DIOLINUXSTREAMI2C::WriteDirect(XBYTE* buffer, XDWORD size)
 
   if(status) bw = size;
 
-  //XTRACE_PRINTCOLOR(1, __L("Write [Addr %04X, size:%d]  status: %s"), address, size, status?__L("true"):__L("false"));
+  //XTRACE_PRINTCOLOR(1, _L("Write [Addr %04X, size:%d]  status: %s"), address, size, status?_L("true"):_L("false"));
 
   return bw;
 }

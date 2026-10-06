@@ -362,7 +362,7 @@ bool GRPLINUXDESKTOPMONITORS::MonitorEnum()
               continue;
             }
 
-          // XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, __L("%d) screen: X:%d,Y:%d  %dx%d"), c, crtc_info->x, crtc_info->y, crtc_info->width, crtc_info->height);
+          // XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, _L("%d) screen: X:%d,Y:%d  %dx%d"), c, crtc_info->x, crtc_info->y, crtc_info->width, crtc_info->height);
 
           GRPRECTINT* newmonitor = GEN_NEW GRPRECTINT();
           if(newmonitor)
@@ -389,7 +389,7 @@ bool GRPLINUXDESKTOPMONITORS::MonitorEnum()
           XRRFreeOutputInfo(output_info);     
         }
 
-      // XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, __L("Full Screen: X1:%d,Y1:%d  X2:%d,Y2:%d"), allmonitor->x1, allmonitor->y1, allmonitor->x2, allmonitor->y2);
+      // XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, _L("Full Screen: X1:%d,Y1:%d  X2:%d,Y2:%d"), allmonitor->x1, allmonitor->y1, allmonitor->x2, allmonitor->y2);
 
       XRRFreeScreenResources(screen_resources);
       XCloseDisplay(display);

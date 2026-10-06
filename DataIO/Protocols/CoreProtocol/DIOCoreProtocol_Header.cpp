@@ -876,7 +876,7 @@ bool DIOCOREPROTOCOL_HEADER::Serialize()
 
   Primitive_Add<XDWORD>(content_compresssize, DIOCOREPROTOCOL_HEADER_VAR_CONTENT_COMPRESSSIZE);
    
-  string.Format(__L("%08X"), content_CRC32);
+  string.Format(_L("%08X"), content_CRC32);
   Primitive_Add<XSTRING*>(&string, DIOCOREPROTOCOL_HEADER_VAR_CONTENT_CRC32);
 
   return true;
@@ -937,7 +937,7 @@ bool DIOCOREPROTOCOL_HEADER::Deserialize()
   
   string.Empty();
   Primitive_Extract<XSTRING>(string, DIOCOREPROTOCOL_HEADER_VAR_CONTENT_CRC32);
-  string.UnFormat(__L("%08X"), &content_CRC32);
+  string.UnFormat(_L("%08X"), &content_CRC32);
    
   return true;
 }

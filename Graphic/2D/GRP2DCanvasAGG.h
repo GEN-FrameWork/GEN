@@ -1163,40 +1163,40 @@ class GRP2DCANVASAGG: public GRP2DCANVAS
 
                                                                                   } FONT_TYPE;
 
-                                                                                  FONT_TYPE fonts[] =  {  { agg::gse4x6                 ,  __L("gse4x6")               },
-                                                                                                          { agg::gse4x8                 ,  __L("gse4x8")               },
-                                                                                                          { agg::gse5x7                 ,  __L("gse5x7")               },
-                                                                                                          { agg::gse5x9                 ,  __L("gse5x9")               },
-                                                                                                          { agg::gse6x9                 ,  __L("gse6x9")               },
-                                                                                                          { agg::gse6x12                ,  __L("gse6x12")              },
-                                                                                                          { agg::gse7x11                ,  __L("gse7x11")              },
-                                                                                                          { agg::gse7x11_bold           ,  __L("gse7x11_bold")         },
-                                                                                                          { agg::gse7x15                ,  __L("gse7x15")              },
-                                                                                                          { agg::gse7x15_bold           ,  __L("gse7x15_bold")         },
-                                                                                                          { agg::gse8x16                ,  __L("gse8x16")              },
-                                                                                                          { agg::gse8x16_bold           ,  __L("gse8x16_bold")         },
-                                                                                                          { agg::mcs11_prop             ,  __L("mcs11_prop")           },
-                                                                                                          { agg::mcs11_prop_condensed   ,  __L("mcs11_prop_condensed") },
-                                                                                                          { agg::mcs12_prop             ,  __L("mcs12_prop")           },
-                                                                                                          { agg::mcs13_prop             ,  __L("mcs13_prop")           },
-                                                                                                          { agg::mcs5x10_mono           ,  __L("mcs5x10_mono")         },
-                                                                                                          { agg::mcs5x11_mono           ,  __L("mcs5x11_mono")         },
-                                                                                                          { agg::mcs6x10_mono           ,  __L("mcs6x10_mono")         },
-                                                                                                          { agg::mcs6x11_mono           ,  __L("mcs6x11_mono")         },
-                                                                                                          { agg::mcs7x12_mono_high      ,  __L("mcs7x12_mono_high")    },
-                                                                                                          { agg::mcs7x12_mono_low       ,  __L("mcs7x12_mono_low")     },
-                                                                                                          { agg::verdana12              ,  __L("verdana12")            },
-                                                                                                          { agg::verdana12_bold         ,  __L("verdana12_bold")       },
-                                                                                                          { agg::verdana13              ,  __L("verdana13")            },
-                                                                                                          { agg::verdana13_bold         ,  __L("verdana13_bold")       },
-                                                                                                          { agg::verdana14              ,  __L("verdana14")            },
-                                                                                                          { agg::verdana14_bold         ,  __L("verdana14_bold")       },
-                                                                                                          { agg::verdana16              ,  __L("verdana16")            },
-                                                                                                          { agg::verdana16_bold         ,  __L("verdana16_bold")       },
-                                                                                                          { agg::verdana17              ,  __L("verdana17")            },
-                                                                                                          { agg::verdana17_bold         ,  __L("verdana17_bold")       },
-                                                                                                          { agg::verdana18              ,  __L("verdana18")            },
-                                                                                                          { agg::verdana18_bold         ,  __L("verdana18_bold")       }
+                                                                                  FONT_TYPE fonts[] =  {  { agg::gse4x6                 ,  _L("gse4x6")               },
+                                                                                                          { agg::gse4x8                 ,  _L("gse4x8")               },
+                                                                                                          { agg::gse5x7                 ,  _L("gse5x7")               },
+                                                                                                          { agg::gse5x9                 ,  _L("gse5x9")               },
+                                                                                                          { agg::gse6x9                 ,  _L("gse6x9")               },
+                                                                                                          { agg::gse6x12                ,  _L("gse6x12")              },
+                                                                                                          { agg::gse7x11                ,  _L("gse7x11")              },
+                                                                                                          { agg::gse7x11_bold           ,  _L("gse7x11_bold")         },
+                                                                                                          { agg::gse7x15                ,  _L("gse7x15")              },
+                                                                                                          { agg::gse7x15_bold           ,  _L("gse7x15_bold")         },
+                                                                                                          { agg::gse8x16                ,  _L("gse8x16")              },
+                                                                                                          { agg::gse8x16_bold           ,  _L("gse8x16_bold")         },
+                                                                                                          { agg::mcs11_prop             ,  _L("mcs11_prop")           },
+                                                                                                          { agg::mcs11_prop_condensed   ,  _L("mcs11_prop_condensed") },
+                                                                                                          { agg::mcs12_prop             ,  _L("mcs12_prop")           },
+                                                                                                          { agg::mcs13_prop             ,  _L("mcs13_prop")           },
+                                                                                                          { agg::mcs5x10_mono           ,  _L("mcs5x10_mono")         },
+                                                                                                          { agg::mcs5x11_mono           ,  _L("mcs5x11_mono")         },
+                                                                                                          { agg::mcs6x10_mono           ,  _L("mcs6x10_mono")         },
+                                                                                                          { agg::mcs6x11_mono           ,  _L("mcs6x11_mono")         },
+                                                                                                          { agg::mcs7x12_mono_high      ,  _L("mcs7x12_mono_high")    },
+                                                                                                          { agg::mcs7x12_mono_low       ,  _L("mcs7x12_mono_low")     },
+                                                                                                          { agg::verdana12              ,  _L("verdana12")            },
+                                                                                                          { agg::verdana12_bold         ,  _L("verdana12_bold")       },
+                                                                                                          { agg::verdana13              ,  _L("verdana13")            },
+                                                                                                          { agg::verdana13_bold         ,  _L("verdana13_bold")       },
+                                                                                                          { agg::verdana14              ,  _L("verdana14")            },
+                                                                                                          { agg::verdana14_bold         ,  _L("verdana14_bold")       },
+                                                                                                          { agg::verdana16              ,  _L("verdana16")            },
+                                                                                                          { agg::verdana16_bold         ,  _L("verdana16_bold")       },
+                                                                                                          { agg::verdana17              ,  _L("verdana17")            },
+                                                                                                          { agg::verdana17_bold         ,  _L("verdana17_bold")       },
+                                                                                                          { agg::verdana18              ,  _L("verdana18")            },
+                                                                                                          { agg::verdana18_bold         ,  _L("verdana18_bold")       }
                                                                                                        };
 
                                                                                   XSTRING strfontname;
@@ -1609,7 +1609,7 @@ class GRP2DCANVASAGG: public GRP2DCANVAS
                                                                                   GRP2DCOLOR_RGBA8  colorback(255, 255, 255);
                                                                                   GRP2DCOLOR_RGBA8  color(0, 0, 0, 150);
 
-                                                                                  text.Format(__L("%3.2f fps"), screen->GetFrameRate()->Get()); 
+                                                                                  text.Format(_L("%3.2f fps"), screen->GetFrameRate()->Get()); 
 
                                                                                   int width  = (int)RasterFont_GetWidth(text.Get()) + 8;
                                                                                   int height = (int)RasterFont_GetHeight();

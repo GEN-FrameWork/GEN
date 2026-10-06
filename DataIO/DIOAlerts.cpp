@@ -423,19 +423,19 @@ XDWORD DIOALERT::CalculateID(bool withdatetime)
 
   if(withdatetime) xdatetime->GetDateTimeToString(XDATETIME_FORMAT_STANDARD, IDstring);
 
-  levelstring.Format(__L("%s %d"), applicationID.Get(), level);
+  levelstring.Format(_L("%s %d"), applicationID.Get(), level);
   IDstring += levelstring;
 
   XRAND* xrand=GEN_XFACTORY.CreateRand();
   if(xrand)
     {
-      levelstring.Format(__L(" %d "), xrand->Between(1000, 10000000) * xrand->Between(1000, 10000000));
+      levelstring.Format(_L(" %d "), xrand->Between(1000, 10000000) * xrand->Between(1000, 10000000));
       GEN_XFACTORY.DeleteRand(xrand);
     }
 
-  IDstring += __L(" ");   IDstring += origin;
-  IDstring += __L(" ");   IDstring += title;
-  IDstring += __L(" ");   IDstring += message;
+  IDstring += _L(" ");   IDstring += origin;
+  IDstring += _L(" ");   IDstring += title;
+  IDstring += _L(" ");   IDstring += message;
   IDstring += levelstring;
 
   XBUFFER charstr;
@@ -932,7 +932,7 @@ bool DIOALERTS::Sender_SMTPConfig(XCHAR* URL, int port, XCHAR* login, XCHAR* pas
       name.AdjustSize(_MAXSTR);
       email.AdjustSize(_MAXSTR);
 
-      recipientstring.UnFormat(__L("%d,%s,%s,%d"), &type, name.Get(), email.Get(), &test);
+      recipientstring.UnFormat(_L("%d,%s,%s,%d"), &type, name.Get(), email.Get(), &test);
 
       name.AdjustSize();
       email.AdjustSize();
@@ -1067,7 +1067,7 @@ bool DIOALERTS::Sender_WEBConfig(XCHAR* command, bool isuseget, int nrecipients,
           XSTRING url;
 
           url = WEBrecipients.Get(c)->Get();
-          url.AddFormat(__L("?%s") , WEBcommand.Get());
+          url.AddFormat(_L("?%s") , WEBcommand.Get());
 
           status = WEBdiowebclient->Get(url.Get(), webpage);
           if(!status)
@@ -1463,12 +1463,12 @@ bool DIOALERTS::Sender_SMTPSend(DIOALERT* alert)
 
   SMTP->GetSenderName()->Set(alert->Application_GetID()->Get());
 
-  if(applicationversion || applicationsubversion  || applicationsubversionerr) appverstring.Format(__L(" %d.%d.%d"), applicationversion, applicationsubversion, applicationsubversionerr);
+  if(applicationversion || applicationsubversion  || applicationsubversionerr) appverstring.Format(_L(" %d.%d.%d"), applicationversion, applicationsubversion, applicationsubversionerr);
 
   appIDstring = alert->Application_GetID()->Get();
   if(!appverstring.IsEmpty()) appIDstring += appverstring.Get();
 
-  appIDstring += __L(": ");
+  appIDstring += _L(": ");
   appIDstring += alert->GetTitle()->Get();
 
   SMTP->GetSubject()->Set(appIDstring);
@@ -1476,7 +1476,7 @@ bool DIOALERTS::Sender_SMTPSend(DIOALERT* alert)
   XSTRING body;
 
   body += alert->GetOrigin()->Get();
-  body += __L("\r\n\r\n");
+  body += _L("\r\n\r\n");
   body += alert->Get_Message()->Get();
 
   SMTP->GetMessage()->AddLine(body);
@@ -1515,34 +1515,34 @@ bool DIOALERTS::Sender_SMSSend(DIOALERT* alert)
             {
               XSTRING appverstring;
 
-              if(applicationversion || applicationsubversion  || applicationsubversionerr) appverstring.Format(__L(" %d.%d.%d"), applicationversion, applicationsubversion, applicationsubversionerr);
+              if(applicationversion || applicationsubversion  || applicationsubversionerr) appverstring.Format(_L(" %d.%d.%d"), applicationversion, applicationsubversion, applicationsubversionerr);
 
-              smstext += __L("<");
+              smstext += _L("<");
               smstext += alert->Application_GetID()->Get();
 
               if(!appverstring.IsEmpty()) smstext += appverstring.Get();
 
-              smstext += __L("> ");
+              smstext += _L("> ");
             }
 
 
           if(alert->GetTitle()->GetSize())
             {
               smstext += alert->GetTitle()->Get();
-              smstext += __L(" ");
+              smstext += _L(" ");
             }
 
 
           if(alert->GetOrigin()->GetSize())
             {
-              smstext += __L("(");
+              smstext += _L("(");
               smstext += alert->GetOrigin()->Get();
-              smstext += __L(")");
+              smstext += _L(")");
             }
 
           if(alert->Get_Message()->GetSize())
             {
-              smstext += __L(":");
+              smstext += _L(":");
               smstext += alert->Get_Message()->Get();
             }
 
@@ -1586,7 +1586,7 @@ bool DIOALERTS::Sender_WEBSend(DIOALERT* alert)
   XBUFFER   webpage;
   bool      status  = true;
 
-  if(applicationversion || applicationsubversion  || applicationsubversionerr) applicationverstring.Format(__L(" %d.%d.%d"), applicationversion, applicationsubversion, applicationsubversionerr);
+  if(applicationversion || applicationsubversion  || applicationsubversionerr) applicationverstring.Format(_L(" %d.%d.%d"), applicationversion, applicationsubversion, applicationsubversionerr);
 
   applicationIDstring = alert->Application_GetID()->Get();
   if(!applicationverstring.IsEmpty()) applicationIDstring += applicationverstring.Get();
@@ -1600,41 +1600,41 @@ bool DIOALERTS::Sender_WEBSend(DIOALERT* alert)
       if(WEBisuseget)
         {
           url.Slash_Delete();
-          url.AddFormat(__L("?%s") , WEBcommand.Get());
+          url.AddFormat(_L("?%s") , WEBcommand.Get());
 
           if(!applicationIDstring.IsEmpty()) 
             {
               part = applicationIDstring.Get();            
               part.EncodeUnsafeChars();                  
-              url.AddFormat(__L("&%s=%s"), DIOALERTS_QSPARAM_APPLICATIONID, part.Get());       
+              url.AddFormat(_L("&%s=%s"), DIOALERTS_QSPARAM_APPLICATIONID, part.Get());       
             }      
 
           if(alert->GetLevel())
             {
-              part.Format(__L("%d"), alert->GetLevel());   
+              part.Format(_L("%d"), alert->GetLevel());   
               part.EncodeUnsafeChars();                  
-              url.AddFormat(__L("&%s=%s"), DIOALERTS_QSPARAM_LEVEL, part.Get());               
+              url.AddFormat(_L("&%s=%s"), DIOALERTS_QSPARAM_LEVEL, part.Get());               
             }
 
           if(!alert->GetTitle()->IsEmpty())
             {
               part = alert->GetTitle()->Get();             
               part.EncodeUnsafeChars();    
-              url.AddFormat(__L("&%s=%s"), DIOALERTS_QSPARAM_TITLE, part.Get());              
+              url.AddFormat(_L("&%s=%s"), DIOALERTS_QSPARAM_TITLE, part.Get());              
             }
               
           if(!alert->GetOrigin()->IsEmpty())             
             {
               part = alert->GetOrigin()->Get();            
               part.EncodeUnsafeChars();                  
-              url.AddFormat(__L("&%s=%s"), DIOALERTS_QSPARAM_ORIGIN, part.Get());              
+              url.AddFormat(_L("&%s=%s"), DIOALERTS_QSPARAM_ORIGIN, part.Get());              
             }
 
           if(!alert->Get_Message()->IsEmpty())
             {
               part = alert->Get_Message()->Get();          
               part.EncodeUnsafeChars();                  
-              url.AddFormat(__L("&%s=%s"), DIOALERTS_QSPARAM_MESSAGE, part.Get());             
+              url.AddFormat(_L("&%s=%s"), DIOALERTS_QSPARAM_MESSAGE, part.Get());             
             }
              
           status = WEBdiowebclient->Get(url.Get(), webpage);          

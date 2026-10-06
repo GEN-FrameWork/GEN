@@ -177,7 +177,7 @@ void XLINUXTRACE::PrintSpecial(XTRACE_TARGET* target, XBYTE level, XCHAR* string
   line.ConvertToASCII(charstr);
 
   write(filehdl, charstr.Get(), line.GetSize());  
-  write(filehdl, __L("\n\r"), 2);
+  write(filehdl, _L("\n\r"), 2);
   
   fsync(filehdl);
 
@@ -216,7 +216,7 @@ void XLINUXTRACE::PrintFile(XTRACE_TARGET* target, XBYTE level, XCHAR* string)
   _aim.Set(target->GetAim());
   _aim.ConvertToUTF8(aim, size);
 
-  _mode.Set(__L("at"));
+  _mode.Set(_L("at"));
   _mode.ConvertToUTF8(mode, size);
 
   file=fopen((char*)aim, (char*)mode);
@@ -261,7 +261,7 @@ void XLINUXTRACE::PrintFile(XTRACE_TARGET* target, XBYTE level, XCHAR* string)
   
   line.ConvertToASCII(charstr);
   fwrite(charstr.Get(), 1, line.GetSize(), file);  
-  fwrite(__L("\n\r"), 1, 1, file);
+  fwrite(_L("\n\r"), 1, 1, file);
 
   fclose(file);
 

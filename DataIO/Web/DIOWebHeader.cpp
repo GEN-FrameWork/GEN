@@ -135,7 +135,7 @@ bool DIOWEBHEADER::Read(DIOSTREAMTCPIP* diostream, int timeout, XDWORD maximumsi
                 }
 
               totalsize += linesize;
-              //XTRACE_PRINTCOLOR(3, __L("WEB CLIENT HEADER LINE: %s"), line.Get());
+              //XTRACE_PRINTCOLOR(3, _L("WEB CLIENT HEADER LINE: %s"), line.Get());
               if(!AddLine(line)) break;
             }
         }
@@ -183,14 +183,14 @@ bool DIOWEBHEADER::Write(DIOSTREAMTCPIP* diostream, int timeout)
       XSTRING* line = (XSTRING*)lines.Get(c);
       if(line)
         {
-          //XTRACE_PRINTCOLOR(2, __L("%s"), line.Get());
+          //XTRACE_PRINTCOLOR(2, _L("%s"), line.Get());
 
           diostream->WriteStr((*line));
-          diostream->WriteStr(__L("\r\n"));
+          diostream->WriteStr(_L("\r\n"));
         }
     }
 
-  diostream->WriteStr(__L("\r\n"));
+  diostream->WriteStr(_L("\r\n"));
   diostream->WaitToFlushOutXBuffer(timeout);
 
   if(diostream->GetStatus() != DIOSTREAMSTATUS_CONNECTED) return false;
@@ -280,7 +280,7 @@ bool DIOWEBHEADER::GetLines(XSTRING& result)
       if(line)
         {
           result += line->Get();
-          result += __L("\r\n");
+          result += _L("\r\n");
         }
     }
 
@@ -304,7 +304,7 @@ XCHAR* DIOWEBHEADER::GetFieldValue(XCHAR* field)
   if(!field || !field[0]) return NULL;
   XDWORD fieldsize = XSTRING::GetSize(field);
   bool fieldhascolon = false;
-  for(XDWORD c=0; c<fieldsize; c++) if(field[c] == __C(':')) { fieldhascolon = true; break; }
+  for(XDWORD c=0; c<fieldsize; c++) if(field[c] == _C(':')) { fieldhascolon = true; break; }
 
   for(int c=0;c<(int)lines.GetSize();c++)
     {
@@ -316,15 +316,15 @@ XCHAR* DIOWEBHEADER::GetFieldValue(XCHAR* field)
              {
                XCHAR left = (*line)[d];
                XCHAR right = field[d];
-               if(left >= __C('A') && left <= __C('Z')) left += __C('a') - __C('A');
-               if(right >= __C('A') && right <= __C('Z')) right += __C('a') - __C('A');
+               if(left >= _C('A') && left <= _C('Z')) left += _C('a') - _C('A');
+               if(right >= _C('A') && right <= _C('Z')) right += _C('a') - _C('A');
                if(left != right) { equal = false; break; }
              }
 
-           if(!equal || (!fieldhascolon && (line->GetSize() == fieldsize || (*line)[fieldsize] != __C(':')))) continue;
+           if(!equal || (!fieldhascolon && (line->GetSize() == fieldsize || (*line)[fieldsize] != _C(':')))) continue;
 
            XDWORD position = fieldsize + (fieldhascolon?0:1);
-           while(position < line->GetSize() && ((*line)[position] == __C(' ') || (*line)[position] == __C('\t'))) position++;
+           while(position < line->GetSize() && ((*line)[position] == _C(' ') || (*line)[position] == _C('\t'))) position++;
            return line->Get() + position;
          }
     }
@@ -401,7 +401,7 @@ bool DIOWEBHEADER::GetFormat(bool isserver, int type, void* data)
       int     code;
       XSTRING codestring(DIOWEBHEADER_MAXLINE);
 
-      line.UnFormat(__L("HTTP/%d.%d %d %s"), &version, &subversion, &code, codestring.Get());
+      line.UnFormat(_L("HTTP/%d.%d %d %s"), &version, &subversion, &code, codestring.Get());
       codestring.AdjustSize();
 
       switch(type)
@@ -419,9 +419,9 @@ bool DIOWEBHEADER::GetFormat(bool isserver, int type, void* data)
 
       if(line.GetSize())
         {
-          int foundindex = line.Find(__L("HTTP/"), true);
+          int foundindex = line.Find(_L("HTTP/"), true);
 
-          if(foundindex != XSTRING_NOTFOUND) line.UnFormat(__L("%s %s HTTP/%d.%d"), method.Get(), resource.Get(), &version, &subversion);
+          if(foundindex != XSTRING_NOTFOUND) line.UnFormat(_L("%s %s HTTP/%d.%d"), method.Get(), resource.Get(), &version, &subversion);
         }
 
       method.AdjustSize();

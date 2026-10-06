@@ -258,6 +258,10 @@ class XLANGUAGE_ISO_639_3
     bool              CodeAlpha3_GetByEnglishName     (XCHAR* englishname, XSTRING& codealpha3);
     bool              CodeAlpha3_GetByAlias           (XCHAR* alias, XSTRING& codealpha3);
 
+    bool              CodeAlpha2_GetByCode            (XDWORD code, XSTRING& codealpha2);
+    bool              CodeAlpha2_GetByCodeAlpha3      (XCHAR* codealpha3, XSTRING& codealpha2);
+    bool              CodeAlpha2_Resolve              (XCHAR* languageid, XSTRING& codealpha2);
+
     bool              EnglishName_GetByCode           (XDWORD code, XSTRING& englishname);
     bool              EnglishName_GetByCodeAlpha3     (XCHAR* codealpha2, XSTRING& englishname);
     bool              EnglishName_GetByCodeAlpha2     (XCHAR* codealpha2, XSTRING& englishname);

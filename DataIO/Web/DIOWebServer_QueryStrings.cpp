@@ -416,8 +416,8 @@ bool DIOWEBSERVER_QUERYSTRINGS::GetAllParam(XSTRING& allparam)
       XSTRING* nameparam = params.GetKey(c);
       XSTRING* param     = params.GetElement(c);
 
-      if(nameparam && param) allparam.AddFormat(__L("%s=%s"), nameparam->Get(), param->Get());
-      if(c < params.GetSize()-1)  allparam += __L("&");
+      if(nameparam && param) allparam.AddFormat(_L("%s=%s"), nameparam->Get(), param->Get());
+      if(c < params.GetSize()-1)  allparam += _L("&");
     }
 
   return true;
@@ -481,7 +481,7 @@ int DIOWEBSERVER_QUERYSTRINGS::GetParamsFromURL(XCHAR* url)
 
   _url = url;
 
-  start = _url.Find(__L("?"), true);
+  start = _url.Find(_L("?"), true);
   if(start != XSTRING_NOTFOUND)
     {
       XSTRING ID;
@@ -491,12 +491,12 @@ int DIOWEBSERVER_QUERYSTRINGS::GetParamsFromURL(XCHAR* url)
 
       do{
           value.Empty();
-          end = _url.Find(__L("&"), true, start);
+          end = _url.Find(_L("&"), true, start);
           if(end == XSTRING_NOTFOUND)
                 _url.Copy(start, param);
            else _url.Copy(start, end, param);
 
-          separator = param.Find(__L("="), true);
+          separator = param.Find(_L("="), true);
           if(separator == XSTRING_NOTFOUND)
             {
               ID = param;
@@ -536,7 +536,7 @@ bool DIOWEBSERVER_QUERYSTRINGS::DeleteParamsFromURL(XSTRING& url)
 
   for(XDWORD c=url.GetSize(); c>0; c--)
     {
-      if(url.Get()[c] == __C('?'))
+      if(url.Get()[c] == _C('?'))
         {
           url.DeleteCharacters(c, url.GetSize());
 
@@ -575,11 +575,11 @@ bool DIOWEBSERVER_QUERYSTRINGS::CreateURLFromParams(XSTRING& urlpart)
           if(_value)
             {
               if(urlpart.IsEmpty())
-                    urlpart += __L("?");
-               else urlpart += __L("&");
+                    urlpart += _L("?");
+               else urlpart += _L("&");
 
               urlpart += _ID->Get();
-              urlpart += __L("=");
+              urlpart += _L("=");
               urlpart += _value->Get();
             }
         }

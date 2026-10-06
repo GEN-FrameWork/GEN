@@ -366,7 +366,7 @@ bool XCONSOLE::PrintDataBlock(XBYTE* data, XDWORD size, XDWORD marginsize, XDWOR
 
   for(XDWORD c=0;c<marginsize;c++)
     {
-      margin += __L(" ");
+      margin += _L(" ");
     }
 
   while(_size<size)
@@ -378,14 +378,14 @@ bool XCONSOLE::PrintDataBlock(XBYTE* data, XDWORD size, XDWORD marginsize, XDWOR
 
       if(showoffset)
         {
-          strdata.Format(__L("%04X"), index);
+          strdata.Format(_L("%04X"), index);
           string += strdata;
-          string += __L(" ");
+          string += _L(" ");
         }
 
       for(XDWORD c=0; c<_sizeline; c++)
         {
-          strdata.Format(__L("%02X "), data[index]);
+          strdata.Format(_L("%02X "), data[index]);
           string += strdata;
           _size++;
           index++;
@@ -395,7 +395,7 @@ bool XCONSOLE::PrintDataBlock(XBYTE* data, XDWORD size, XDWORD marginsize, XDWOR
         {
           for(XDWORD c=0; c<(sizeline-_sizeline); c++)
             {
-              strdata.Format(__L(" "));
+              strdata.Format(_L(" "));
               string += strdata;
             }
         }
@@ -403,22 +403,22 @@ bool XCONSOLE::PrintDataBlock(XBYTE* data, XDWORD size, XDWORD marginsize, XDWOR
       if(showtext)
         {
           index -= _sizeline;
-          string += __L(" ");
+          string += _L(" ");
 
           for(XDWORD c=0; c<_sizeline; c++)
             {
               XCHAR character = (XCHAR)data[index];
 
-              if((character<0x20) || (character>0x80) || (character==__C('%')) || (character==__C('\\'))) character = __C('.');
+              if((character<0x20) || (character>0x80) || (character==_C('%')) || (character==_C('\\'))) character = _C('.');
 
-              strdata.Format(__L("%c"), character);
+              strdata.Format(_L("%c"), character);
               string += strdata;
               index++;
             }
         }
 
       Print(string.Get());
-      Print(__L("\n"));
+      Print(_L("\n"));
 
       if(_size > XCONSOLE_MAXSIZEDATABLOCK) break;
     }
@@ -469,14 +469,14 @@ bool XCONSOLE::Format_Message(XCHAR* message, XDWORD margin, bool prelude, bool 
 
   for(XDWORD c=0; c<margin; c++)
     {
-      string += __L(" ");
+      string += _L(" ");
     }
 
-  if(prelude) string += __L("> ");
+  if(prelude) string += _L("> ");
 
   string += message;
 
-  if(returnline) string+=__L("\n");
+  if(returnline) string+=_L("\n");
 
   return true;
 }
@@ -540,7 +540,7 @@ bool XCONSOLE::WaitKey(XCHAR* text, XDWORD margin, bool prelude, XDWORD timeout)
   while(!KBHit())
     {
       string  = text;
-      string += __L(" \r");
+      string += _L(" \r");
 
       string2.Format(string.Get(), (timeout - xtimer->GetMeasureSeconds()));
 
@@ -567,10 +567,10 @@ bool XCONSOLE::WaitKey(XCHAR* text, XDWORD margin, bool prelude, XDWORD timeout)
 
   for(int c=0; c<78; c++)
     {
-      string += __L(" ");
+      string += _L(" ");
     }
 
-  string += __L("\r");
+  string += _L("\r");
   PrintMessage(string.Get(), 0, false, false);
 
   GEN_XFACTORY.DeleteTimer(xtimer);
@@ -597,7 +597,7 @@ void XCONSOLE::EraseToEndLine(int actualpos)
 
   for(int c=actualpos; c<(ncolumns-4); c++ )
     {
-      PrintMessage(__L(" "), 0, false, false);
+      PrintMessage(_L(" "), 0, false, false);
     }
 }
 

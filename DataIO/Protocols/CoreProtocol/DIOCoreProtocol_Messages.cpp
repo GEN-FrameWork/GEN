@@ -354,7 +354,7 @@ bool DIOCOREPROTOCOL_MESSAGES::Delete(XUUID* IDmessage)
       XSTRING UUID;
       IDmessage->GetToString(UUID);
 
-      XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, __L("[DIO Core Protocol Messages] Delete message %s"), UUID.Get());
+      XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, _L("[DIO Core Protocol Messages] Delete message %s"), UUID.Get());
     }
 
   // ----------------------------------------------------------------------------------------------------------------       
@@ -681,8 +681,8 @@ bool DIOCOREPROTOCOL_MESSAGES::ShowDebug(bool isserver)
       color = XTRACE_COLOR_BLUE;  
     }
 
-  XTRACE_PRINTCOLOR(color, __L("-------------------------------------------------------------------------------"));
-  XTRACE_PRINTCOLOR(color, __L("Actual Messages: [%d]"), allmessages.GetSize());
+  XTRACE_PRINTCOLOR(color, _L("-------------------------------------------------------------------------------"));
+  XTRACE_PRINTCOLOR(color, _L("Actual Messages: [%d]"), allmessages.GetSize());
   
   for(XDWORD c=0; c<allmessages.GetSize(); c++)
     {
@@ -690,11 +690,11 @@ bool DIOCOREPROTOCOL_MESSAGES::ShowDebug(bool isserver)
       DIOCOREPROTOCOL_MESSAGE*  message_response = allmessages.GetElement(c);
       XSTRING                   line;
 
-      line.AddFormat(__L(" [%d] "), c);
-      XTRACE_PRINTCOLOR(color, __L("%s"), line.Get());
+      line.AddFormat(_L(" [%d] "), c);
+      XTRACE_PRINTCOLOR(color, _L("%s"), line.Get());
 
       line.Empty();
-      line.AddFormat(__L("%-24s"), __L("request : "));
+      line.AddFormat(_L("%-24s"), _L("request : "));
       if(message_request)
         {
           XSTRING UUID;
@@ -702,27 +702,27 @@ bool DIOCOREPROTOCOL_MESSAGES::ShowDebug(bool isserver)
 
           switch(message_request->GetAcquisitionType())
             {
-              case DIOCOREPROTOCOL_MESSAGE_TYPE_ACQUISITION_UNKNOWN  : operation = __L("unknown");    break;
-              case DIOCOREPROTOCOL_MESSAGE_TYPE_ACQUISITION_READ     : operation = __L("Read");       break;
-              case DIOCOREPROTOCOL_MESSAGE_TYPE_ACQUISITION_WRITE    : operation = __L("Write");      break;
+              case DIOCOREPROTOCOL_MESSAGE_TYPE_ACQUISITION_UNKNOWN  : operation = _L("unknown");    break;
+              case DIOCOREPROTOCOL_MESSAGE_TYPE_ACQUISITION_READ     : operation = _L("Read");       break;
+              case DIOCOREPROTOCOL_MESSAGE_TYPE_ACQUISITION_WRITE    : operation = _L("Write");      break;
             }
 
           message_request->GetHeader()->GetIDMessage()->GetToString(UUID);  
-          line.AddFormat(__L("%-12s %08X %-42s consumed: %-10s"), operation.Get(), message_request, UUID.Get(), message_request->IsConsumed()?__L("Ok"):__L("none"));
+          line.AddFormat(_L("%-12s %08X %-42s consumed: %-10s"), operation.Get(), message_request, UUID.Get(), message_request->IsConsumed()?_L("Ok"):_L("none"));
         }    
        else
         {
-          line.AddFormat(__L("%-12s %08X %-42s consumed: %-10s"), __L("unknown"), 0, __L("NULL"), __L("none"));
+          line.AddFormat(_L("%-12s %08X %-42s consumed: %-10s"), _L("unknown"), 0, _L("NULL"), _L("none"));
         } 
 
-      XTRACE_PRINTCOLOR(color, __L("%s"), line.Get());
+      XTRACE_PRINTCOLOR(color, _L("%s"), line.Get());
       if(message_request)
         {
           XTRACE_PRINTDATABLOCKCOLOR(color, (*message_request->GetContent()));
         }
 
       line.Empty();
-      line.AddFormat(__L("%-24s"), __L("response : "));
+      line.AddFormat(_L("%-24s"), _L("response : "));
       if(message_response)
         {
           XSTRING UUID;
@@ -730,20 +730,20 @@ bool DIOCOREPROTOCOL_MESSAGES::ShowDebug(bool isserver)
 
           switch(message_response->GetAcquisitionType())
             {
-              case DIOCOREPROTOCOL_MESSAGE_TYPE_ACQUISITION_UNKNOWN  : operation = __L("unknown");    break;
-              case DIOCOREPROTOCOL_MESSAGE_TYPE_ACQUISITION_READ     : operation = __L("Read");       break;
-              case DIOCOREPROTOCOL_MESSAGE_TYPE_ACQUISITION_WRITE    : operation = __L("Write");      break;
+              case DIOCOREPROTOCOL_MESSAGE_TYPE_ACQUISITION_UNKNOWN  : operation = _L("unknown");    break;
+              case DIOCOREPROTOCOL_MESSAGE_TYPE_ACQUISITION_READ     : operation = _L("Read");       break;
+              case DIOCOREPROTOCOL_MESSAGE_TYPE_ACQUISITION_WRITE    : operation = _L("Write");      break;
             }
 
           message_response->GetHeader()->GetIDMessage()->GetToString(UUID); 
-          line.AddFormat(__L("%-12s %08X %-42s consumed: %-10s"), operation.Get(), message_response, UUID.Get(), message_response->IsConsumed()?__L("Ok"):__L("none"));          
+          line.AddFormat(_L("%-12s %08X %-42s consumed: %-10s"), operation.Get(), message_response, UUID.Get(), message_response->IsConsumed()?_L("Ok"):_L("none"));          
         }    
        else
         {
-          line.AddFormat(__L("%-12s %08X %-42s consumed: %-10s"), __L("unknown"), 0, __L("NULL"), __L("none"));
+          line.AddFormat(_L("%-12s %08X %-42s consumed: %-10s"), _L("unknown"), 0, _L("NULL"), _L("none"));
         } 
       
-      XTRACE_PRINTCOLOR(color, __L("%s"), line.Get());
+      XTRACE_PRINTCOLOR(color, _L("%s"), line.Get());
       if(message_response)
         {      
           XTRACE_PRINTDATABLOCKCOLOR(color, (*message_response->GetContent()));

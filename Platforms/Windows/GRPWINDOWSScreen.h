@@ -43,7 +43,7 @@ class GRPWINDOWSBLITGLES;
 
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
 
-#define GRPWINDOWSSCREEN_NAMECLASS  __L("GEN_Windows_Screen")
+#define GRPWINDOWSSCREEN_NAMECLASS  _L("GEN_Windows_Screen")
 
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
 

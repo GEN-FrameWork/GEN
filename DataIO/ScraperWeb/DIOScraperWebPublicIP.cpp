@@ -187,10 +187,10 @@ bool DIOSCRAPERWEBPUBLICIP::Get(DIOIP& IP, int timeoutforurl, XSTRING* localIP, 
 
   DIOSCRAPERSCRIPT runner;
 
-  runner.SetArgInt(__L("timeout"), timeoutforurl);
+  runner.SetArgInt(_L("timeout"), timeoutforurl);
   if(localIP && (!localIP->IsEmpty()))
     {
-      runner.SetArg(__L("localIP"), (*localIP));
+      runner.SetArg(_L("localIP"), (*localIP));
     }
 
   if(runner.Run(scriptpath.Get()))
@@ -198,10 +198,10 @@ bool DIOSCRAPERWEBPUBLICIP::Get(DIOIP& IP, int timeoutforurl, XSTRING* localIP, 
       XSTRING ok;
       XSTRING stringIP;
 
-      runner.GetResult(__L("ok"), ok);
-      runner.GetResult(__L("ip"), stringIP);
+      runner.GetResult(_L("ok"), ok);
+      runner.GetResult(_L("ip"), stringIP);
 
-      if((ok.Compare(__L("1")) == 0) && (!stringIP.IsEmpty()))
+      if((ok.Compare(_L("1")) == 0) && (!stringIP.IsEmpty()))
         {
           stringIP.DeleteCharacter(0x20);
           if(!stringIP.IsEmpty())

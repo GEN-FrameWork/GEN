@@ -141,7 +141,7 @@ DB_SQL_DATABASE_TYPE DB_SQL_DATABASE::GetType()
 * --------------------------------------------------------------------------------------------------------------------*/
 XCHAR* DB_SQL_DATABASE::GetTypeName()
 {
-  return __L("unknown");
+  return _L("unknown");
 }
 
 
@@ -363,7 +363,7 @@ bool DB_SQL_DATABASE::Close()
 * --------------------------------------------------------------------------------------------------------------------*/
 XCHAR* DB_SQL_DATABASE::GetLastError()
 {
-  return (this->errorstack.GetSize()>0 ? this->errorstack.GetLast()->description.Get() : __L(""));
+  return (this->errorstack.GetSize()>0 ? this->errorstack.GetLast()->description.Get() : _L(""));
 }
 
 
@@ -382,7 +382,7 @@ bool DB_SQL_DATABASE::Execute(DB_SQL_QUERY* constructedquery)
 {
   if(!constructedquery->IsWellConstructedQuery())
     {
-      Error(__L("Query is NOT well constructed"));
+      Error(_L("Query is NOT well constructed"));
       return false;
     }
 
@@ -471,7 +471,7 @@ bool DB_SQL_DATABASE::Table_IsThere(XCHAR* nametable, XCHAR* constfield, bool& i
   query = CreateQuery();
   if(!query) return false;
 
-  querystring.Format(__L("SELECT %s FROM %s;"), constfield, nametable);
+  querystring.Format(_L("SELECT %s FROM %s;"), constfield, nametable);
   query->Set(querystring.Get());
 
   status = Execute(query);
@@ -543,17 +543,17 @@ bool DB_SQL_DATABASE::Table_Create(XCHAR* nametable, XCHAR* fields[], int nfield
   query = CreateQuery();
   if(!query) return false;
 
-  querystring.Format(__L("CREATE TABLE %s "), nametable);
+  querystring.Format(_L("CREATE TABLE %s "), nametable);
 
-  querystring.Add(__L("("));
+  querystring.Add(_L("("));
 
   for(int c=0; c<nfields; c++)
     {
       querystring.Add(fields[c]);
-      if(c != nfields-1) querystring.Add(__L(","));
+      if(c != nfields-1) querystring.Add(_L(","));
     }
 
-  querystring.Add(__L(");"));
+  querystring.Add(_L(");"));
   
   query->Set(querystring.Get());
 
@@ -588,7 +588,7 @@ bool DB_SQL_DATABASE::Table_Delete(XCHAR* nametable)
   query = CreateQuery();
   if(!query) return false;
 
-  querystring.Format(__L("DROP TABLE IF EXISTS %s;"), nametable);
+  querystring.Format(_L("DROP TABLE IF EXISTS %s;"), nametable);
   query->Set(querystring.Get());
 
   status = Execute(query);
@@ -630,7 +630,7 @@ bool DB_SQL_DATABASE::Table_GetNRecords(XCHAR* nametable, XQWORD& nrecords)
   query = CreateQuery();
   if(!query) return false;
 
-  querystring.Format(__L("SELECT COUNT(*) FROM %s;"), nametable);
+  querystring.Format(_L("SELECT COUNT(*) FROM %s;"), nametable);
   query->Set(querystring.Get());
 
   status = Execute(query);
@@ -717,7 +717,7 @@ bool DB_SQL_DATABASE::ExecuteQuery(DB_SQL_QUERY* wellconstructedquery)
   if(!connection)
     {
       DB_SQL_ERROR* error=GEN_NEW DB_SQL_ERROR(DB_SQL_ERROR_TYPE_CONNECTION_ERROR);
-      error->description.Set(__L("DATABASE not connected"));
+      error->description.Set(_L("DATABASE not connected"));
 
       GetErrorList()->Add(error);
 

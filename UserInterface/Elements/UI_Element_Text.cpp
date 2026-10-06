@@ -69,7 +69,7 @@ UI_ELEMENT_TEXT::UI_ELEMENT_TEXT()
   Clean();   
 
   SetType(UI_ELEMENT_TYPE_TEXT);
-  GetTypeString()->Set(__L("text"));  
+  GetTypeString()->Set(_L("text"));  
 }
 
 
@@ -201,7 +201,7 @@ void UI_ELEMENT_TEXT::ReapplyStyleVisual()
 
   double sf = 0.0;
   XSTRING sfstr;
-  if(UI_PROPERTYREGISTRY::GetAliased(bag, __L("sizefont"), __L("font-size"), sfstr) && !sfstr.IsEmpty())
+  if(UI_PROPERTYREGISTRY::GetAliased(bag, _L("sizefont"), _L("font-size"), sfstr) && !sfstr.IsEmpty())
     {
       sf = sfstr.ConvertToDouble();
       if(sf > 0.0) SetSizeFont((XDWORD)sf);

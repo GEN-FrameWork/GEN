@@ -144,7 +144,7 @@ bool XWINDOWSPROCESSMANAGER::MakeCommand(XCHAR* command, XBUFFER* out, int* retu
   XBYTE  buffer[_MAXBUFFER];
   FILE*  pipe;
 
-  if((pipe = _wpopen(command, __L("rt") )) == NULL) return false;
+  if((pipe = _wpopen(command, _L("rt") )) == NULL) return false;
 
   if(out)
     {
@@ -242,11 +242,11 @@ bool XWINDOWSPROCESSMANAGER::Application_Execute(XCHAR* applicationpath, XCHAR* 
   bool                status              = false;
   bool                capturermode        = (out != NULL) || ((in != NULL) && in->GetSize());
 
-  command.Format(__L("\"%s\""), applicationpath);
+  command.Format(_L("\"%s\""), applicationpath);
       
   if(params)
     {
-      command.AddFormat(__L(" %s"), params);          
+      command.AddFormat(_L(" %s"), params);          
     }        
 
   ZeroMemory(&processinfo, sizeof(PROCESS_INFORMATION));
@@ -721,7 +721,7 @@ bool XWINDOWSPROCESSMANAGER::Application_GetRunningList(XVECTOR<XPROCESS*>& appl
       XPROCESS* process = applist.Get(c);
       if(process)
         {
-          XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, __L("ID: %08X, %s, %s, %08X, %s, [%d,%d,%d,%d]") , process->GetID()
+          XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, _L("ID: %08X, %s, %s, %08X, %s, [%d,%d,%d,%d]") , process->GetID()
                                                                                                 , process->GetName()->Get()
                                                                                                 , process->GetPath()->Get()                                                                                                
                                                                                                 , process->GetWindowHandle()

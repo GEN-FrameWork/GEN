@@ -179,9 +179,9 @@ bool DIOANDROIDSTREAMSPI::TransferBuffer(XBYTE* bufferread, XBYTE* bufferwrite, 
 
   memset((XBYTE*)&transf, 0, sizeof(struct spi_ioc_transfer));
 
-  //XTRACE_PRINTCOLOR(1, __L("SPI %d"), size);
+  //XTRACE_PRINTCOLOR(1, _L("SPI %d"), size);
 
-  //wprintf((wchar_t *)__L("\n Write %4d bytes ->"),size);
+  //wprintf((wchar_t *)_L("\n Write %4d bytes ->"),size);
   //fflush(stdout);
 
   transf.tx_buf         = (unsigned long)bufferwrite;
@@ -194,7 +194,7 @@ bool DIOANDROIDSTREAMSPI::TransferBuffer(XBYTE* bufferread, XBYTE* bufferwrite, 
 
   int err = ioctl(handle, SPI_IOC_MESSAGE(1), &transf);
 
-  //wprintf((wchar_t *)__L("%4d %d\n"), transf.len, err);
+  //wprintf((wchar_t *)_L("%4d %d\n"), transf.len, err);
   //fflush(stdout);
 
   if(err<0) return false;

@@ -1901,19 +1901,19 @@ bool XFILEJSON::DecodeObject(int& position, bool isobject, XFILEJSONOBJECT* obje
                                                       
                                                       value->Set();
 
-                                                      if(!valuestring.Compare(__L("true") , true))  
+                                                      if(!valuestring.Compare(_L("true") , true))  
                                                         {
                                                           value->Set(true);
                                                         }
                                                        else
                                                         {   
-                                                          if(!valuestring.Compare(__L("false"), true)) 
+                                                          if(!valuestring.Compare(_L("false"), true)) 
                                                             {
                                                               value->Set(false);                                                      
                                                             }
                                                            else
                                                             {     
-                                                              if(!valuestring.Compare(__L("null") , false)) 
+                                                              if(!valuestring.Compare(_L("null") , false)) 
                                                                 {
                                                                   value->Set();
                                                                 }                                                                  
@@ -2032,7 +2032,7 @@ bool XFILEJSON::DecodeObject(int& position, bool isobject, XFILEJSONOBJECT* obje
         }
     }
 
-  //XTRACE_PRINTCOLOR(2, __L("%d"), position);
+  //XTRACE_PRINTCOLOR(2, _L("%d"), position);
 
   return true;
 }
@@ -2055,36 +2055,36 @@ XFILEJSONCONTROLCHAR XFILEJSON::CheckControlCharacter(XCHAR character)
 
   switch(character)
     {
-      case __C('{')  : ctrlchar = XFILEJSONCONTROLCHAR_OPENBRACE;     break;
-      case __C('}')  : ctrlchar = XFILEJSONCONTROLCHAR_CLOSEBRACE;    break;
-      case __C('[')  : ctrlchar = XFILEJSONCONTROLCHAR_OPENBRACKET;   break;
-      case __C(']')  : ctrlchar = XFILEJSONCONTROLCHAR_CLOSEBRACKET;  break;
-      case __C('\"') : ctrlchar = XFILEJSONCONTROLCHAR_QUOTE;         break;
-      case __C(',')  : ctrlchar = XFILEJSONCONTROLCHAR_COMMA;         break;
-      case __C(':')  : ctrlchar = XFILEJSONCONTROLCHAR_COLON;         break;
-      case __C('\\') : ctrlchar = XFILEJSONCONTROLCHAR_BLACKSLASH;    break;
+      case _C('{')  : ctrlchar = XFILEJSONCONTROLCHAR_OPENBRACE;     break;
+      case _C('}')  : ctrlchar = XFILEJSONCONTROLCHAR_CLOSEBRACE;    break;
+      case _C('[')  : ctrlchar = XFILEJSONCONTROLCHAR_OPENBRACKET;   break;
+      case _C(']')  : ctrlchar = XFILEJSONCONTROLCHAR_CLOSEBRACKET;  break;
+      case _C('\"') : ctrlchar = XFILEJSONCONTROLCHAR_QUOTE;         break;
+      case _C(',')  : ctrlchar = XFILEJSONCONTROLCHAR_COMMA;         break;
+      case _C(':')  : ctrlchar = XFILEJSONCONTROLCHAR_COLON;         break;
+      case _C('\\') : ctrlchar = XFILEJSONCONTROLCHAR_BLACKSLASH;    break;
 
-      case __C('0')  :
-      case __C('1')  :
-      case __C('2')  :
-      case __C('3')  :
-      case __C('4')  :
-      case __C('5')  :
-      case __C('6')  :
-      case __C('7')  :
-      case __C('8')  :
-      case __C('9')  :
-      case __C('-')  : ctrlchar = XFILEJSONCONTROLCHAR_NUMBER;        break;
+      case _C('0')  :
+      case _C('1')  :
+      case _C('2')  :
+      case _C('3')  :
+      case _C('4')  :
+      case _C('5')  :
+      case _C('6')  :
+      case _C('7')  :
+      case _C('8')  :
+      case _C('9')  :
+      case _C('-')  : ctrlchar = XFILEJSONCONTROLCHAR_NUMBER;        break;
 
-      case __C('.')  :
-      case __C('+')  :
-      case __C('e')  :
-      case __C('E')  : ctrlchar = XFILEJSONCONTROLCHAR_NUMBERSPECIAL; break;
+      case _C('.')  :
+      case _C('+')  :
+      case _C('e')  :
+      case _C('E')  : ctrlchar = XFILEJSONCONTROLCHAR_NUMBERSPECIAL; break;
 
-      case __C('\t') :
-      case __C('\r') :
-      case __C('\n') :
-      case __C(' ')  : ctrlchar = XFILEJSONCONTROLCHAR_NOTCONTROL;    break;
+      case _C('\t') :
+      case _C('\r') :
+      case _C('\n') :
+      case _C(' ')  : ctrlchar = XFILEJSONCONTROLCHAR_NOTCONTROL;    break;
 
            default   : ctrlchar = XFILEJSONCONTROLCHAR_TEXT;          break;
     }
@@ -2108,14 +2108,14 @@ XCHAR XFILEJSON::GetControlCharacter(XFILEJSONCONTROLCHAR ctrlchar)
 {
   switch(ctrlchar)
     {
-      case XFILEJSONCONTROLCHAR_OPENBRACE     : return __C('{');
-      case XFILEJSONCONTROLCHAR_CLOSEBRACE    : return __C('}');
-      case XFILEJSONCONTROLCHAR_OPENBRACKET   : return __C('[');
-      case XFILEJSONCONTROLCHAR_CLOSEBRACKET  : return __C(']');
-      case XFILEJSONCONTROLCHAR_QUOTE         : return __C('\"');
-      case XFILEJSONCONTROLCHAR_COMMA         : return __C(',');
-      case XFILEJSONCONTROLCHAR_COLON         : return __C(':');
-      case XFILEJSONCONTROLCHAR_BLACKSLASH    : return __C('\\');
+      case XFILEJSONCONTROLCHAR_OPENBRACE     : return _C('{');
+      case XFILEJSONCONTROLCHAR_CLOSEBRACE    : return _C('}');
+      case XFILEJSONCONTROLCHAR_OPENBRACKET   : return _C('[');
+      case XFILEJSONCONTROLCHAR_CLOSEBRACKET  : return _C(']');
+      case XFILEJSONCONTROLCHAR_QUOTE         : return _C('\"');
+      case XFILEJSONCONTROLCHAR_COMMA         : return _C(',');
+      case XFILEJSONCONTROLCHAR_COLON         : return _C(':');
+      case XFILEJSONCONTROLCHAR_BLACKSLASH    : return _C('\\');
                                      default  : break;
     }
 
@@ -2230,22 +2230,22 @@ long long XFILEJSON::ConvertStringToLongLong(XSTRING& string)
   bool      negative = false;
   int       c        = 0;
 
-  if(text[c] == __C('-'))
+  if(text[c] == _C('-'))
     {
       negative = true;
       c++;
     }
    else
     {
-      if(text[c] == __C('+')) c++;
+      if(text[c] == _C('+')) c++;
     }
 
   for(; text[c]; c++)
     {
-      if((text[c] < __C('0')) || (text[c] > __C('9'))) break;
+      if((text[c] < _C('0')) || (text[c] > _C('9'))) break;
 
       value *= 10;
-      value += (long long)(text[c] - __C('0'));
+      value += (long long)(text[c] - _C('0'));
     }
 
   return negative? -value : value;
@@ -2408,7 +2408,7 @@ bool XFILEJSON::AddTabs(int level, int spacetabs, XSTRING& string)
     {
       for(int d=0;d<spacetabs;d++)
         {
-          string += __L(" ");
+          string += _L(" ");
         }
     }
 
@@ -2458,13 +2458,13 @@ bool XFILEJSON::EncodeObject(bool isobject, XFILEJSONOBJECT* object, bool istabu
             {
               XSTRING line2;
 
-              line2.Format(__L("%c%s%c : "), GetControlCharacter(XFILEJSONCONTROLCHAR_QUOTE), name->Get() , GetControlCharacter(XFILEJSONCONTROLCHAR_QUOTE));
+              line2.Format(_L("%c%s%c : "), GetControlCharacter(XFILEJSONCONTROLCHAR_QUOTE), name->Get() , GetControlCharacter(XFILEJSONCONTROLCHAR_QUOTE));
               line += line2;
             }
     
           switch(value->GetType())
             {              
-              case XFILEJSONVALUETYPE_NULL            : line += __L("null");
+              case XFILEJSONVALUETYPE_NULL            : line += _L("null");
                                                         break;
 
 
@@ -2472,7 +2472,7 @@ bool XFILEJSON::EncodeObject(bool isobject, XFILEJSONOBJECT* object, bool istabu
               case XFILEJSONVALUETYPE_STRING          : { XSTRING  ptrvaluestring = value->GetValueString();
                                                           XSTRING  valuestring;
                                                          
-                                                          valuestring.Format(__L("%c%s%c"), GetControlCharacter(XFILEJSONCONTROLCHAR_QUOTE), ptrvaluestring.Get(), GetControlCharacter(XFILEJSONCONTROLCHAR_QUOTE));
+                                                          valuestring.Format(_L("%c%s%c"), GetControlCharacter(XFILEJSONCONTROLCHAR_QUOTE), ptrvaluestring.Get(), GetControlCharacter(XFILEJSONCONTROLCHAR_QUOTE));
                                                           line += valuestring.Get();
                                                         }
                                                         break;              

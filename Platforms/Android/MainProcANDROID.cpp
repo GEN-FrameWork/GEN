@@ -358,7 +358,7 @@ INPDEVICE* MAINPROCANDROID::GetTouchscreen()
 * --------------------------------------------------------------------------------------------------------------------*/
 bool MAINPROCANDROID::OnTouchEvent(AInputEvent* event)
 {
-  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE , __L("[ANDROID Event] INI OnTouchEvent"));
+  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE , _L("[ANDROID Event] INI OnTouchEvent"));
 
   int32_t action        = AMotionEvent_getAction(event);
   size_t  pointercount  = AMotionEvent_getPointerCount(event);
@@ -410,13 +410,13 @@ bool MAINPROCANDROID::OnTouchEvent(AInputEvent* event)
                                                               if(mouse->GetButton(pointerIndex)->GetState() != INPBUTTON_STATE_UP)
                                                                 {
                                                                   mouse->GetButton(pointerIndex)->SetState(INPBUTTON_STATE_RELEASED);
-                                                                  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, __L("> ANDROID Motion %d x %f y %f p %f a %d RELEASED"), pointerID, x, y, pressure, action);
+                                                                  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, _L("> ANDROID Motion %d x %f y %f p %f a %d RELEASED"), pointerID, x, y, pressure, action);
 
                                                                 }
                                                                 else
                                                                 {
                                                                   mouse->GetButton(pointerIndex)->SetState(INPBUTTON_STATE_UP);
-                                                                  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, __L("> ANDROID Motion %d x %f y %f p %f a %d UP"), pointerID, x, y, pressure, action);
+                                                                  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, _L("> ANDROID Motion %d x %f y %f p %f a %d UP"), pointerID, x, y, pressure, action);
                                                                 }
                                                             }
                                                         }
@@ -432,12 +432,12 @@ bool MAINPROCANDROID::OnTouchEvent(AInputEvent* event)
                                                               if(mouse->GetButton(pointerIndex)->GetState() == INPBUTTON_STATE_UP)
                                                                 {
                                                                   mouse->GetButton(pointerIndex)->SetState(INPBUTTON_STATE_PRESSED);
-                                                                  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, __L("> ANDROID Motion %d x %f y %f p %f a %d PRESSED"), pointerID, x, y, pressure, action);
+                                                                  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, _L("> ANDROID Motion %d x %f y %f p %f a %d PRESSED"), pointerID, x, y, pressure, action);
                                                                 }
                                                                 else
                                                                 {
                                                                   mouse->GetButton(pointerIndex)->SetState(INPBUTTON_STATE_HOLD);
-                                                                  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, __L("> ANDROID Motion %d x %f y %f p %f a %d HOLD"), pointerID, x, y, pressure, action);
+                                                                  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, _L("> ANDROID Motion %d x %f y %f p %f a %d HOLD"), pointerID, x, y, pressure, action);
                                                                 }
                                                             }
                                                         }
@@ -454,7 +454,7 @@ bool MAINPROCANDROID::OnTouchEvent(AInputEvent* event)
     }
 
 
-  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE , __L("[ANDROID Event] END OnTouchEvent"));
+  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE , _L("[ANDROID Event] END OnTouchEvent"));
 
   return true;
 }
@@ -473,7 +473,7 @@ bool MAINPROCANDROID::OnTouchEvent(AInputEvent* event)
 * --------------------------------------------------------------------------------------------------------------------*/
 bool MAINPROCANDROID::OnKeyboardEvent(AInputEvent* event)
 {
-  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, __L("[ANDROID Event] INI OnKeyboardEvent Android code [%04x]"), AKeyEvent_getKeyCode(event));
+  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, _L("[ANDROID Event] INI OnKeyboardEvent Android code [%04x]"), AKeyEvent_getKeyCode(event));
 
   INPDEVICE* keyboard = androidmain.GetKeyboard();
   if(!keyboard) return false;
@@ -485,15 +485,15 @@ bool MAINPROCANDROID::OnKeyboardEvent(AInputEvent* event)
   switch(keyEvent)
     {
       case AKEY_EVENT_ACTION_UP     : button->SetPressed(false);
-                                      XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, __L("> ANDROID Keyboard %d ID %d RELEASED"), keyEvent, button->GetID());
+                                      XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, _L("> ANDROID Keyboard %d ID %d RELEASED"), keyEvent, button->GetID());
                                       break;
 
       case AKEY_EVENT_ACTION_DOWN   : button->SetPressed(true);
-                                      XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, __L("> ANDROID Keyboard %d ID %d PRESSED"), keyEvent, button->GetID());
+                                      XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, _L("> ANDROID Keyboard %d ID %d PRESSED"), keyEvent, button->GetID());
                                       break;
     }
 
-  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE , __L("[ANDROID Event] END OnKeyboardEvent"));
+  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE , _L("[ANDROID Event] END OnKeyboardEvent"));
 
   return false;
 }
@@ -512,7 +512,7 @@ bool MAINPROCANDROID::OnKeyboardEvent(AInputEvent* event)
 * --------------------------------------------------------------------------------------------------------------------*/
 bool MAINPROCANDROID::OnTrackballEvent(AInputEvent* event)
 {
-  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE , __L("[ANDROID Event] OnTrackballEvent"));
+  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE , _L("[ANDROID Event] OnTrackballEvent"));
   
   return true;
 }
@@ -529,7 +529,7 @@ bool MAINPROCANDROID::OnTrackballEvent(AInputEvent* event)
 * --------------------------------------------------------------------------------------------------------------------*/
 STATUS MAINPROCANDROID::OnActivate()
 {
-  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE , __L("[ANDROID Event] OnActivate"));
+  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE , _L("[ANDROID Event] OnActivate"));
   
   return STATUS_OK;
 }
@@ -544,7 +544,7 @@ STATUS MAINPROCANDROID::OnActivate()
 * --------------------------------------------------------------------------------------------------------------------*/
 void MAINPROCANDROID::OnDeactivate()
 {
-  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE , __L("[ANDROID Event] OnDeactivate"));  
+  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE , _L("[ANDROID Event] OnDeactivate"));  
 }
 
 
@@ -559,7 +559,7 @@ void MAINPROCANDROID::OnDeactivate()
 * --------------------------------------------------------------------------------------------------------------------*/
 STATUS MAINPROCANDROID::OnStep()
 {
-  //XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE , __L("[ANDROID Event] INI OnStep"));
+  //XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE , _L("[ANDROID Event] INI OnStep"));
 
   // Do NOT treat !screenactived as a fatal error. On real devices APP_CMD_GAINED_FOCUS
   // (Activate → enabled OnStep loop) can race ahead of a failed/partial OnCreateWindow, or
@@ -573,7 +573,7 @@ STATUS MAINPROCANDROID::OnStep()
 
   if(!androidmain.Update()) return STATUS_KO;
 
-  //XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE , __L("[ANDROID Event] END OnStep"));
+  //XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE , _L("[ANDROID Event] END OnStep"));
 
   return STATUS_OK;
 }
@@ -588,7 +588,7 @@ STATUS MAINPROCANDROID::OnStep()
 * --------------------------------------------------------------------------------------------------------------------*/
 void MAINPROCANDROID::OnStart()
 {
-  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE , __L("[ANDROID Event] OnStart"));
+  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE , _L("[ANDROID Event] OnStart"));
 
   if(initialized)
     {
@@ -632,7 +632,7 @@ void MAINPROCANDROID::OnStart()
 * --------------------------------------------------------------------------------------------------------------------*/
 void MAINPROCANDROID::OnResume()
 {
-  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE , __L("[ANDROID Event] OnResume"));
+  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE , _L("[ANDROID Event] OnResume"));
  
 }
 
@@ -646,7 +646,7 @@ void MAINPROCANDROID::OnResume()
 * --------------------------------------------------------------------------------------------------------------------*/
 void MAINPROCANDROID::OnPause()
 {
-  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE , __L("[ANDROID Event] OnPause"));  
+  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE , _L("[ANDROID Event] OnPause"));  
 }
 
 
@@ -659,7 +659,7 @@ void MAINPROCANDROID::OnPause()
 * --------------------------------------------------------------------------------------------------------------------*/
 void MAINPROCANDROID::OnStop()
 {
-  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE , __L("[ANDROID Event] OnStop"));  
+  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE , _L("[ANDROID Event] OnStop"));  
 }
 
 
@@ -672,7 +672,7 @@ void MAINPROCANDROID::OnStop()
 * --------------------------------------------------------------------------------------------------------------------*/
 void MAINPROCANDROID::OnDestroy()
 {
-  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE , __L("[ANDROID Event] OnDestroy"));  
+  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE , _L("[ANDROID Event] OnDestroy"));  
 
   if(initialized) 
     {
@@ -694,7 +694,7 @@ void MAINPROCANDROID::OnDestroy()
 * --------------------------------------------------------------------------------------------------------------------*/
 void MAINPROCANDROID::OnSaveState(void** data, size_t* size)
 {
-  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE , __L("[ANDROID Event] OnSaveState"));  
+  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE , _L("[ANDROID Event] OnSaveState"));  
 }
 
 
@@ -707,7 +707,7 @@ void MAINPROCANDROID::OnSaveState(void** data, size_t* size)
 * --------------------------------------------------------------------------------------------------------------------*/
 void MAINPROCANDROID::OnConfigurationChanged()
 {
-  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE , __L("[ANDROID Event] OnConfigurationChanged"));
+  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE , _L("[ANDROID Event] OnConfigurationChanged"));
 
   if(!androidapplication)         return;
   if(!androidapplication->window) return;
@@ -734,7 +734,7 @@ void MAINPROCANDROID::OnConfigurationChanged()
           // Still fire CHANGESIZE so observers can refresh (UI_System keeps design size + UIScale=1).
           #ifdef GRP_OPENGL_ACTIVE
           {
-            XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, __L("[ANDROID] OnConfigurationChanged: keep design %dx%d; native surface %dx%d"), mainscreen->GetWidth(), mainscreen->GetHeight(), maxwidth, maxheight);
+            XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, _L("[ANDROID] OnConfigurationChanged: keep design %dx%d; native surface %dx%d"), mainscreen->GetWidth(), mainscreen->GetHeight(), maxwidth, maxheight);
             GRPXEVENT grpevent(this, GRPXEVENT_TYPE_SCREEN_CHANGESIZE);
             grpevent.SetScreen(mainscreen);
             applicationgrp->PostEvent(&grpevent);
@@ -756,7 +756,7 @@ void MAINPROCANDROID::OnConfigurationChanged()
 * --------------------------------------------------------------------------------------------------------------------*/
 void MAINPROCANDROID::OnLowMemory()
 {
-  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE , __L("[ANDROID Event] OnLowMemory"));  
+  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE , _L("[ANDROID Event] OnLowMemory"));  
 }
 
 
@@ -769,7 +769,7 @@ void MAINPROCANDROID::OnLowMemory()
 * --------------------------------------------------------------------------------------------------------------------*/
 void MAINPROCANDROID::OnCreateWindow()
 {
-  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE , __L("[ANDROID Event] OnCreateWindow"));
+  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE , _L("[ANDROID Event] OnCreateWindow"));
   
   if(!androidapplication)         return;
   if(!androidapplication->window) return;
@@ -820,7 +820,7 @@ void MAINPROCANDROID::OnCreateWindow()
 
   if(!app)
     {
-      XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, __L("[ANDROID Event] OnCreateWindow: application not ready (Ini failed?)"));
+      XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, _L("[ANDROID Event] OnCreateWindow: application not ready (Ini failed?)"));
       return;
     }
 
@@ -875,7 +875,7 @@ void MAINPROCANDROID::OnCreateWindow()
           // SCREEN_CANVASCREATING so that CreateViewport() has a fully-initialised screen.
           if(!mainscreen->Create(true))
             {
-              XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, __L("[ANDROID Event] OnCreateWindow: mainscreen->Create failed"));
+              XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, _L("[ANDROID Event] OnCreateWindow: mainscreen->Create failed"));
               return;
             }
 
@@ -927,7 +927,7 @@ void MAINPROCANDROID::OnCreateWindow()
 * --------------------------------------------------------------------------------------------------------------------*/
 void MAINPROCANDROID::OnDestroyWindow()
 {
-  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE , __L("[ANDROID Event] OnDestroyWindow"));
+  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE , _L("[ANDROID Event] OnDestroyWindow"));
   
   #ifdef INP_ACTIVE
   DeleteInputDevices();  
@@ -963,7 +963,7 @@ void MAINPROCANDROID::OnDestroyWindow()
 * --------------------------------------------------------------------------------------------------------------------*/
 void MAINPROCANDROID::OnGainFocus()
 {
-  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE , __L("[ANDROID Event] OnGainFocus"));
+  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE , _L("[ANDROID Event] OnGainFocus"));
 
   //APPFLOWGRAPHICS* gap = dynamic_cast<APPFLOWGRAPHICS*>(application);
   //if(gap) gap->OnFocus();  
@@ -979,7 +979,7 @@ void MAINPROCANDROID::OnGainFocus()
 * --------------------------------------------------------------------------------------------------------------------*/
 void MAINPROCANDROID::OnLostFocus()
 {
-  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE , __L("[ANDROID Event] OnLostFocus"));
+  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE , _L("[ANDROID Event] OnLostFocus"));
 
   //APPFLOWGRAPHICS* gap = dynamic_cast<APPFLOWGRAPHICS*>(application);
   //if(gap) gap->OnLostFocus();  
@@ -1095,7 +1095,7 @@ bool MAINPROCANDROID::GetDPI(struct android_app* app)
 
   //androidapplication->activity->vm->DetachCurrentThread();
 
-  //XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, __L("jni %lld"), timer->GetMeasureMilliSeconds());
+  //XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, _L("jni %lld"), timer->GetMeasureMilliSeconds());
   //
   //// assign it
 
@@ -1334,14 +1334,14 @@ bool MAINPROCANDROID::OverturnAssetsToExternalLocation(XPATH& origin, XPATH& dat
   XSTRING  assetsstring;
   bool     status  = false;
 
-  assetsstring = __L("assets");
+  assetsstring = _L("assets");
 
   XDIR* xdir=GEN_XFACTORY.Create_Dir();
   if(xdir)
     {
       status = unzip->Open(origin);
 
-      //XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, __L("[Android Resources] ZIP File: %s"), origin.Get());
+      //XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, _L("[Android Resources] ZIP File: %s"), origin.Get());
 
       if(status)
         {
@@ -1379,7 +1379,7 @@ bool MAINPROCANDROID::OverturnAssetsToExternalLocation(XPATH& origin, XPATH& dat
                       XFILE* xfile=GEN_XFACTORY.Create_File();
                       if(xfile)
                         {
-                          //XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, __L("[Android Resources] ZIP descompress File: %s"), targetfile.Get());
+                          //XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, _L("[Android Resources] ZIP descompress File: %s"), targetfile.Get());
 
                           if(!xfile->Exist(targetfile.Get()))
                             {
@@ -1434,7 +1434,7 @@ bool MAINPROCANDROID::AssetsDir_CreateAll(XPATH& origin)
 
   if(!unzip) return false;
 
-  assetsstring = __L("assets");
+  assetsstring = _L("assets");
 
   status = unzip->Open(origin);
   if(status)
@@ -1474,7 +1474,7 @@ bool MAINPROCANDROID::AssetsDir_CreateAll(XPATH& origin)
 
                   if(!found)
                     {
-                      XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, __L("Assets XPATH: %s"), targetpath.Get());
+                      XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, _L("Assets XPATH: %s"), targetpath.Get());
                       
                       AssetsDir_Add(&targetpath);                                                                                                  
                     }

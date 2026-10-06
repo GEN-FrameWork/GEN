@@ -168,7 +168,7 @@ bool GRPSTATISTICSCHARTLINES3D::DrawPlot(GRPSTATISTICSCHARTBUILDER& builder, dou
       if(config.GetShowAxisLabels())
         {
           XSTRING label;
-          label.Format(__L("%g"), value);
+          label.Format(_L("%g"), value);
 
           builder.DrawText(fx0 + depth - (axisfontsize * 0.5), wy + (axisfontsize * 0.35), label.Get(), valuestyle);
         }
@@ -238,7 +238,7 @@ bool GRPSTATISTICSCHARTLINES3D::DrawPlot(GRPSTATISTICSCHARTBUILDER& builder, dou
               double fy    = y0 - zfront;
 
               XSTRING vlabel;
-              vlabel.Format(__L("%g"), value);
+              vlabel.Format(_L("%g"), value);
 
               builder.DrawText(fx, fy - ribbonthick - 2.0, vlabel.Get(), vstyle);
             }

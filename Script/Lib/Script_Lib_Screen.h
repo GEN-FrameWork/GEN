@@ -39,7 +39,7 @@
 
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
 
-#define SCRIPT_LIB_NAME_SCREEN    __L("Screen")
+#define SCRIPT_LIB_NAME_SCREEN    _L("Screen")
 
 enum SCRIPT_LIB_SCREEN_POSSTATUS
 {

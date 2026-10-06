@@ -36,7 +36,7 @@
 
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
 
-#define SCRIPT_LIB_NAME_SCRAPER   __L("Scraper")
+#define SCRIPT_LIB_NAME_SCRAPER   _L("Scraper")
 
 
 

@@ -122,13 +122,13 @@ bool DIOLINUXPCAP::Capture_Start(DIOPCAPNETINTERFACE* netinterface, bool promisc
   handle = pcap_create(ni.GetPtrChar(), errbuf);
   if(handle == NULL)
     {    
-      XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, __L("[PCAP] error to create..."));  
+      XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, _L("[PCAP] error to create..."));  
       return false;
     }
 
   if(pcap_set_rfmon(handle,1) == 0)
     {
-      XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, __L("[PCAP] error to rfmonitor..."));    
+      XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, _L("[PCAP] error to rfmonitor..."));    
     }
   
   pcap_set_snaplen(handle, 2048);       // Set the snapshot length to 2048
@@ -138,10 +138,10 @@ bool DIOLINUXPCAP::Capture_Start(DIOPCAPNETINTERFACE* netinterface, bool promisc
   int status = pcap_activate(handle);
   
   
-  XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, __L("[PCAP] activate: %d"), status);
+  XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, _L("[PCAP] activate: %d"), status);
   */  
 
-  threadcapture = CREATEXTHREAD(XTHREADGROUPID_DIOPCAP, __L("DIOLINUXPCAP::Capture_Start"), ThreadCapture, (void*)this);
+  threadcapture = CREATEXTHREAD(XTHREADGROUPID_DIOPCAP, _L("DIOLINUXPCAP::Capture_Start"), ThreadCapture, (void*)this);
   if(!threadcapture) return false;
 
   return threadcapture->Ini();

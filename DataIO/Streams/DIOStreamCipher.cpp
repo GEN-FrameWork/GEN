@@ -89,7 +89,7 @@ DIOSTREAMCIPHER::DIOSTREAMCIPHER(DIOSTREAMCONFIG* config, CIPHER* cipher): DIOST
 
       if(diostream && mutexread && mutexwrite)
         {
-          xthreadconnection  = CREATEXTHREAD(XTHREADGROUPID_DIOSTREAMCIPHER, __L("DIOSTREAMCIPHER::DIOSTREAMCIPHER"), ThreadRunFunction, (void*)this);
+          xthreadconnection  = CREATEXTHREAD(XTHREADGROUPID_DIOSTREAMCIPHER, _L("DIOSTREAMCIPHER::DIOSTREAMCIPHER"), ThreadRunFunction, (void*)this);
           if(xthreadconnection)
             {
               xthreadconnection->Ini();

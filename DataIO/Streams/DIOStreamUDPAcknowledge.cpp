@@ -210,7 +210,7 @@ bool DIOSTREAMUDPACKNOWLEDGE::Open()
 
   if(config->IsServer())
     {
-      xthreadconnection  = CREATEXTHREAD(XTHREADGROUPID_DIOSTREAMUDP, __L("DIOSTREAMUDPACKNOWLEDGE::Open"), ThreadRunFunction, (void*)this);
+      xthreadconnection  = CREATEXTHREAD(XTHREADGROUPID_DIOSTREAMUDP, _L("DIOSTREAMUDPACKNOWLEDGE::Open"), ThreadRunFunction, (void*)this);
       if(xthreadconnection) xthreadconnection->Ini();
     }
 
@@ -244,7 +244,7 @@ XDWORD DIOSTREAMUDPACKNOWLEDGE::Write(XBYTE* buffer, XDWORD size)
 
   if(diostreamudp->WaitToWriteDatagramsEmpty(timeout))
     {
-      //XTRACE_PRINTCOLOR(1, __L("Write UDP %s:%d : %s"), addressremote.Get(), portremote, bw==size??__L("[Ok.]"):__L("[Error!]"));
+      //XTRACE_PRINTCOLOR(1, _L("Write UDP %s:%d : %s"), addressremote.Get(), portremote, bw==size??_L("[Ok.]"):_L("[Error!]"));
 
       if(diostreamudp->WaitToGetFirstDatagram(false, timeout) != DIOSTREAMUDP_NOTFOUND)
         {
@@ -266,19 +266,19 @@ XDWORD DIOSTREAMUDPACKNOWLEDGE::Write(XBYTE* buffer, XDWORD size)
 
           if(hashresult[0] != hashresult[1])
             {
-              //XTRACE_PRINTCOLOR(1, __L("Write received bad CRC!! %08X <> %08X"), hashresult, hashcrc32.GetResultCRC32());
+              //XTRACE_PRINTCOLOR(1, _L("Write received bad CRC!! %08X <> %08X"), hashresult, hashcrc32.GetResultCRC32());
               bw = 0;
             }
         }
        else
         {
-          //XTRACE_PRINTCOLOR(1, __L("Write received NOT read"));
+          //XTRACE_PRINTCOLOR(1, _L("Write received NOT read"));
           bw = 0;
         }
     }
    else
     {
-      //XTRACE_PRINTCOLOR(1, __L("Do not write"));
+      //XTRACE_PRINTCOLOR(1, _L("Do not write"));
       bw = 0;
     }
 

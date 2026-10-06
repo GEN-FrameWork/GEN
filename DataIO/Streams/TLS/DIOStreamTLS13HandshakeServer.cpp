@@ -93,15 +93,15 @@ static bool DIOSTREAMTLS13_HANDSHAKESERVER_ServerNameMatch(XSTRING& pattern, XCH
   if(!servername || !servername[0] || pattern.IsEmpty()) return false;
 
   hostname = servername;
-  if(hostname.Character_GetLast() == __C('.')) hostname.DeleteLastCharacter();
-  if(pattern.Character_GetLast()  == __C('.')) pattern.DeleteLastCharacter();
+  if(hostname.Character_GetLast() == _C('.')) hostname.DeleteLastCharacter();
+  if(pattern.Character_GetLast()  == _C('.')) pattern.DeleteLastCharacter();
 
   if(!pattern.Compare(hostname, true)) return true;
 
-  if((pattern.GetSize() < 3) || (pattern[0] != __C('*')) || (pattern[1] != __C('.')) ||
-     (pattern.FindCharacter(__C('*'), 1) >= 0)) return false;
+  if((pattern.GetSize() < 3) || (pattern[0] != _C('*')) || (pattern[1] != _C('.')) ||
+     (pattern.FindCharacter(_C('*'), 1) >= 0)) return false;
 
-  dot = hostname.FindCharacter(__C('.'));
+  dot = hostname.FindCharacter(_C('.'));
   if(dot <= 0) return false;
 
   XSTRING hostnamesuffix(&hostname.Get()[dot]);
@@ -871,7 +871,7 @@ bool DIOSTREAMTLS13HANDSHAKESERVER::ServerCredentials_Select(XCHAR* servername, 
                   if(!credentials || !credentials->HasCredentials()) continue;
 
                   XSTRING pattern((*credentials->GetServerName()));
-                  bool wildcard = (pattern.FindCharacter(__C('*')) >= 0);
+                  bool wildcard = (pattern.FindCharacter(_C('*')) >= 0);
                   if((pass == 0 && wildcard) || (pass == 1 && !wildcard)) continue;
                   if(!DIOSTREAMTLS13_HANDSHAKESERVER_ServerNameMatch(pattern, servername)) continue;
 

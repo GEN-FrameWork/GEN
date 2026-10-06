@@ -38,7 +38,7 @@
 
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
 
-#define SCRIPT_LIB_NAME_TRACESERVER   __L("TraceServer")
+#define SCRIPT_LIB_NAME_TRACESERVER   _L("TraceServer")
 
 
 

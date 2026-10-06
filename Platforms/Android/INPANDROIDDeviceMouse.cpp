@@ -253,11 +253,11 @@ void INPANDROIDDEVICEMOUSE::Clean()
 * --------------------------------------------------------------------------------------------------------------------*/
 bool INPANDROIDDEVICEMOUSE::CreateAllButtons()
 {
-  INPBUTTON::CreateButton(&buttons, 0, INPBUTTON_ID_MOUSE_LEFT, __C('\x0'));
-  INPBUTTON::CreateButton(&buttons, 1, INPBUTTON_ID_MOUSE_RIGHT, __C('\x0'));
-  INPBUTTON::CreateButton(&buttons, 2, INPBUTTON_ID_MOUSE_MIDDLE, __C('\x0'));
-  INPBUTTON::CreateButton(&buttons, 3, INPBUTTON_ID_MOUSE_MIDDLE, __C('\x0'));
-  INPBUTTON::CreateButton(&buttons, 4, INPBUTTON_ID_MOUSE_MIDDLE, __C('\x0'));
+  INPBUTTON::CreateButton(&buttons, 0, INPBUTTON_ID_MOUSE_LEFT, _C('\x0'));
+  INPBUTTON::CreateButton(&buttons, 1, INPBUTTON_ID_MOUSE_RIGHT, _C('\x0'));
+  INPBUTTON::CreateButton(&buttons, 2, INPBUTTON_ID_MOUSE_MIDDLE, _C('\x0'));
+  INPBUTTON::CreateButton(&buttons, 3, INPBUTTON_ID_MOUSE_MIDDLE, _C('\x0'));
+  INPBUTTON::CreateButton(&buttons, 4, INPBUTTON_ID_MOUSE_MIDDLE, _C('\x0'));
 
   return true;
 }

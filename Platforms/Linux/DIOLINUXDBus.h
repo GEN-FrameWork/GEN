@@ -38,7 +38,7 @@
 
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
                                                    
-#define DIOLINUXDBUS_IFACE_PROPERTIES         __L("org.freedesktop.DBus.Properties")
+#define DIOLINUXDBUS_IFACE_PROPERTIES         _L("org.freedesktop.DBus.Properties")
 
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
 

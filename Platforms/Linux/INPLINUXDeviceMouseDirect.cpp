@@ -296,10 +296,10 @@ bool INPLINUXDEVICEMOUSEDIRECT::Update()
 * --------------------------------------------------------------------------------------------------------------------*/
 bool INPLINUXDEVICEMOUSEDIRECT::CreateAllButtons()
 {
-  INPBUTTON::CreateButton(&buttons, BTN_RIGHT, INPBUTTON_ID_MOUSE_RIGHT, __C('\x0'));
-  INPBUTTON::CreateButton(&buttons, BTN_LEFT, INPBUTTON_ID_MOUSE_LEFT, __C('\x0'));
-  INPBUTTON::CreateButton(&buttons, BTN_MIDDLE, INPBUTTON_ID_MOUSE_MIDDLE, __C('\x0'));
-  INPBUTTON::CreateButton(&buttons, BTN_TOUCH, INPBUTTON_ID_TOUCHSCREEN, __C('\x0'));
+  INPBUTTON::CreateButton(&buttons, BTN_RIGHT, INPBUTTON_ID_MOUSE_RIGHT, _C('\x0'));
+  INPBUTTON::CreateButton(&buttons, BTN_LEFT, INPBUTTON_ID_MOUSE_LEFT, _C('\x0'));
+  INPBUTTON::CreateButton(&buttons, BTN_MIDDLE, INPBUTTON_ID_MOUSE_MIDDLE, _C('\x0'));
+  INPBUTTON::CreateButton(&buttons, BTN_TOUCH, INPBUTTON_ID_TOUCHSCREEN, _C('\x0'));
 
   return true;
 }
@@ -353,7 +353,7 @@ bool INPLINUXDEVICEMOUSEDIRECT::OpenAllDevicesID()
           XSTRING event;
           int     filedescriptor = INPLINUXDEVICEID_INVALID;
      
-          event.Format(__L("/dev/input/event%d"), deviceID->GetEventIndex());
+          event.Format(_L("/dev/input/event%d"), deviceID->GetEventIndex());
                      
           XBUFFER charstr;
           

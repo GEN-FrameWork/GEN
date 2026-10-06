@@ -264,7 +264,7 @@ bool MAINPROC::CreateParams(XCHAR* commandline)
   int    start  = 0;
   XDWORD c      = 0;
 
-  do{ if((_commandline.Get()[c] == __C(' ')) || (_commandline.GetSize() == c))
+  do{ if((_commandline.Get()[c] == _C(' ')) || (_commandline.GetSize() == c))
         {
           XSTRING* param = GEN_NEW XSTRING();
           if(param)

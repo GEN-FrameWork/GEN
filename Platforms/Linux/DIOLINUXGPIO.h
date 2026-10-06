@@ -34,7 +34,7 @@
 
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
 
-#define DIOLINUXGPIO_PATH                     __L("/sys/class/gpio")
+#define DIOLINUXGPIO_PATH                     _L("/sys/class/gpio")
 
 #define DIOLINUXGPIO_BANK_BIT(BANK, BIT)      ((BANK - 1) * 32 + BIT)
 

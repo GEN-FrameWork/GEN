@@ -36,7 +36,7 @@
 
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
 
-#define XWINDOWSSERVICEBASE_LOG_SECTIONID_SERVICE  __L("Service")
+#define XWINDOWSSERVICEBASE_LOG_SECTIONID_SERVICE  _L("Service")
 
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
 

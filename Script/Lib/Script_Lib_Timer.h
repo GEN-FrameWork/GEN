@@ -36,7 +36,7 @@
 
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
 
-#define SCRIPT_LIB_NAME_TIMER  __L("Timer")
+#define SCRIPT_LIB_NAME_TIMER  _L("Timer")
 
 
 

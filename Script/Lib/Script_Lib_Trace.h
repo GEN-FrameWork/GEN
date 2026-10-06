@@ -36,7 +36,7 @@
 
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
 
-#define SCRIPT_LIB_NAME_TRACE  __L("Trace")
+#define SCRIPT_LIB_NAME_TRACE  _L("Trace")
 
 
 

@@ -207,14 +207,14 @@ DIOATCMDS::DIOATCMDS(DIOSTREAM* diostream) : XFSMACHINE(0)
   xtimer=GEN_XFACTORY.CreateTimer();  
   mutexreadwriteprocess=GEN_XFACTORY.Create_Mutex();
   
-  threadconnection = CREATEXTHREAD(XTHREADGROUPID_DIOATCMS, __L("DIOATCMDS::DIOATCMDS"), ThreadConnection, (void*)this);
+  threadconnection = CREATEXTHREAD(XTHREADGROUPID_DIOATCMS, _L("DIOATCMDS::DIOATCMDS"), ThreadConnection, (void*)this);
 
-  AddCommand(DIOATCMD_TYPE_BASIC      , __L(""));
-  AddCommand(DIOATCMD_TYPE_CHARACTER, __L("S"));
-  AddCommand(DIOATCMD_TYPE_RESET, __L("Z"));
-  AddCommand(DIOATCMD_TYPE_ECHO, __L("E"));
-  AddCommand(DIOATCMD_TYPE_VERBOSE, __L("V"));
-  AddCommand(DIOATCMD_TYPE_BAUDRATE, __L("+IPR"));
+  AddCommand(DIOATCMD_TYPE_BASIC      , _L(""));
+  AddCommand(DIOATCMD_TYPE_CHARACTER, _L("S"));
+  AddCommand(DIOATCMD_TYPE_RESET, _L("Z"));
+  AddCommand(DIOATCMD_TYPE_ECHO, _L("E"));
+  AddCommand(DIOATCMD_TYPE_VERBOSE, _L("V"));
+  AddCommand(DIOATCMD_TYPE_BAUDRATE, _L("+IPR"));
 }
 
 
@@ -395,7 +395,7 @@ DIOATCMD_ERROR DIOATCMDS::GetCharacter(DIOATCMD_CODECHARACTER code, XBYTE& chara
 {
   XSTRING param;
 
-  param.Format(__L("%d?"), code);
+  param.Format(_L("%d?"), code);
 
   DIOATCMD_ERROR error = SendCommand(DIOATCMD_TYPE_CHARACTER, param.Get());
   if(error!=DIOATCMD_ERROR_NONE) return error;
@@ -449,7 +449,7 @@ DIOATCMD_ERROR DIOATCMDS::Reset(int timeout)
 * --------------------------------------------------------------------------------------------------------------------*/
 DIOATCMD_ERROR DIOATCMDS::SetEchoMode(bool echomode, int timeout)
 {
-  DIOATCMD_ERROR error = SendCommand(DIOATCMD_TYPE_ECHO, echomode?__L("1"):__L("0"));
+  DIOATCMD_ERROR error = SendCommand(DIOATCMD_TYPE_ECHO, echomode?_L("1"):_L("0"));
   if(error!=DIOATCMD_ERROR_NONE) return error;
 
   this->echomode = echomode;
@@ -472,7 +472,7 @@ DIOATCMD_ERROR DIOATCMDS::SetEchoMode(bool echomode, int timeout)
 * --------------------------------------------------------------------------------------------------------------------*/
 DIOATCMD_ERROR DIOATCMDS::SetVerboseMode(bool verbosemode, int timeout)
 {
-  DIOATCMD_ERROR error = SendCommand(DIOATCMD_TYPE_VERBOSE, verbosemode?__L("1"):__L("0"));
+  DIOATCMD_ERROR error = SendCommand(DIOATCMD_TYPE_VERBOSE, verbosemode?_L("1"):_L("0"));
   if(error!=DIOATCMD_ERROR_NONE) return error;
 
   this->verbosemode = verbosemode;
@@ -495,7 +495,7 @@ DIOATCMD_ERROR DIOATCMDS::SetVerboseMode(bool verbosemode, int timeout)
 * --------------------------------------------------------------------------------------------------------------------*/
 DIOATCMD_ERROR DIOATCMDS::GetBaudRate(int& baudrate, int timeout)
 {
-  DIOATCMD_ERROR error = MakeSimpleCommand(DIOATCMD_TYPE_BAUDRATE, __L("?"), timeout);
+  DIOATCMD_ERROR error = MakeSimpleCommand(DIOATCMD_TYPE_BAUDRATE, _L("?"), timeout);
   if(error!=DIOATCMD_ERROR_NONE) return error;
 
   int index = SearchInAnswers(DIOATCMD_TYPE_BAUDRATE, timeout);
@@ -507,7 +507,7 @@ DIOATCMD_ERROR DIOATCMDS::GetBaudRate(int& baudrate, int timeout)
           XSTRING  mask;
 
           mask = GetCommandString(DIOATCMD_TYPE_BAUDRATE);
-          mask += __L(":%d");
+          mask += _L(":%d");
           answer->UnFormat(mask.Get(), &baudrate);
         }
 
@@ -537,7 +537,7 @@ DIOATCMD_ERROR DIOATCMDS::SetBaudRate(int baudrate, int timeout)
 
   if(diostream->GetConfig()->GetType()!=DIOSTREAMTYPE_UART) return DIOATCMD_ERROR_INVALIDCMD;
 
-  param.Format(__L("=%d"), baudrate);
+  param.Format(_L("=%d"), baudrate);
 
   error = SendCommand(DIOATCMD_TYPE_BAUDRATE, param.Get());
   if(error!=DIOATCMD_ERROR_NONE) return error;
@@ -655,7 +655,7 @@ int DIOATCMDS::CalculeBaudRateStreamUART(int timeout)
     {
       diostreamcfg->SetBaudRate(baudrates[c]);
 
-      //XTRACE_PRINT(__L("Open connection: %d bauds"),baudrates[c]);
+      //XTRACE_PRINT(_L("Open connection: %d bauds"),baudrates[c]);
 
       diostream->ResetXBuffers();
 
@@ -800,7 +800,7 @@ DIOATCMD_ERROR DIOATCMDS::SendCommand(XDWORD type, XCHAR* param)
   DIOATCMD* ATcommand = GetCommand(type);
   if(!ATcommand) return DIOATCMD_ERROR_UNKNOWNCMD;
 
-  XSTRING command( __L("AT"));
+  XSTRING command( _L("AT"));
   command += ATcommand->GetCommand();
 
   if(param) command += param;
@@ -821,7 +821,7 @@ DIOATCMD_ERROR DIOATCMDS::SendCommand(XDWORD type, XCHAR* param)
 
   if(!status) return DIOATCMD_ERROR_WRITECMD;
 
-  //XTRACE_PRINT(__L("> %s"),command.Get());
+  //XTRACE_PRINT(_L("> %s"),command.Get());
 
   return DIOATCMD_ERROR_NONE;
 }
@@ -877,7 +877,7 @@ DIOATCMD_ERROR DIOATCMDS::SendParam(XCHAR* param)
 
   if(!status) return DIOATCMD_ERROR_WRITECMD;
 
-  //XTRACE_PRINT(__L("> %s"),_param.Get());
+  //XTRACE_PRINT(_L("> %s"),_param.Get());
 
   return DIOATCMD_ERROR_NONE;
 }
@@ -917,7 +917,7 @@ DIOATCMD_ERROR DIOATCMDS::SendParam(XBUFFER& xbuffer)
       string.Add((XBYTE)xbuffer.GetByte(c));
     }
 
-  XTRACE_PRINT(__L("1< %s"),string.Get());
+  XTRACE_PRINT(_L("1< %s"),string.Get());
   #endif
   */
 
@@ -1161,7 +1161,7 @@ bool DIOATCMDS::ReadAnswer(XSTRING& answer, int timeout)
 
       /*
       #ifdef XTRACE_ACTIVE
-      if(!answer.IsEmpty()) XTRACE_PRINT(__L("2< %s"),answer.Get());
+      if(!answer.IsEmpty()) XTRACE_PRINT(_L("2< %s"),answer.Get());
       #endif
       */
 
@@ -1239,7 +1239,7 @@ bool DIOATCMDS::ReadAnswerWithOutEndChar(XSTRING& answer, int timeout)
 
   /*
   #ifdef XTRACE_ACTIVE
-  if(!answer.IsEmpty()) XTRACE_PRINT(__L("3< %s"),answer.Get());
+  if(!answer.IsEmpty()) XTRACE_PRINT(_L("3< %s"),answer.Get());
   #endif
   */
 
@@ -1454,7 +1454,7 @@ int DIOATCMDS::SearchInAnswers(XDWORD typecommand, int timeout)
   XSTRING string;
 
   string = command->GetCommand();
-  string += __L(":");
+  string += _L(":");
 
   return SearchInAnswers(string.Get(), timeout);
 }
@@ -1483,14 +1483,14 @@ DIOATCMD_ERROR DIOATCMDS::WaitToProcessAnswer(int timeout, int* index)
           XSTRING* answer = (XSTRING*)answers.Get(c);
           if(answer)
             {
-              if((!answer->Compare(__L("OK")))  || (!answer->Compare(__L("0"))))
+              if((!answer->Compare(_L("OK")))  || (!answer->Compare(_L("0"))))
                 {
                   if(index) (*index) = c;
                   DeleteAnswer(c);
                   return DIOATCMD_ERROR_NONE;
                 }
 
-              if((!answer->Compare(__L("ERROR")))  || (!answer->Compare(__L("1"))))
+              if((!answer->Compare(_L("ERROR")))  || (!answer->Compare(_L("1"))))
                 {
                   if(index) (*index) = c;
                   DeleteAnswer(c);

@@ -295,9 +295,9 @@ bool INPWINDOWSDEVICEMOUSE::GetWindowPosition(int& screenx, int& screeny, int& s
 * --------------------------------------------------------------------------------------------------------------------*/
 bool INPWINDOWSDEVICEMOUSE::CreateAllButtons()
 { 
-  INPBUTTON::CreateButton(&buttons, VK_LBUTTON, INPBUTTON_ID_MOUSE_LEFT, __C('\x0'));
-  INPBUTTON::CreateButton(&buttons, VK_RBUTTON, INPBUTTON_ID_MOUSE_RIGHT, __C('\x0')); 
-  INPBUTTON::CreateButton(&buttons, VK_MBUTTON, INPBUTTON_ID_MOUSE_MIDDLE, __C('\x0'));
+  INPBUTTON::CreateButton(&buttons, VK_LBUTTON, INPBUTTON_ID_MOUSE_LEFT, _C('\x0'));
+  INPBUTTON::CreateButton(&buttons, VK_RBUTTON, INPBUTTON_ID_MOUSE_RIGHT, _C('\x0')); 
+  INPBUTTON::CreateButton(&buttons, VK_MBUTTON, INPBUTTON_ID_MOUSE_MIDDLE, _C('\x0'));
 
   return true;
 }

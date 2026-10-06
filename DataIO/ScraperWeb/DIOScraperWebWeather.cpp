@@ -298,8 +298,8 @@ bool DIOSCRAPERWEBWEATHER::Get(XCHAR* location, bool iscelsius, DIOWEATHER_RESUL
   if(xmutexdo) xmutexdo->Lock();
 
   cacheask = location;
-  cacheask += __L("|");
-  cacheask += iscelsius ? __L("C") : __L("F");
+  cacheask += _L("|");
+  cacheask += iscelsius ? _L("C") : _L("F");
 
   if(usecache && cache)
     {
@@ -315,12 +315,12 @@ bool DIOSCRAPERWEBWEATHER::Get(XCHAR* location, bool iscelsius, DIOWEATHER_RESUL
 
   DIOSCRAPERSCRIPT runner;
 
-  runner.SetArg(__L("location"), location);
-  runner.SetArgInt(__L("celsius"), iscelsius ? 1 : 0);
-  runner.SetArgInt(__L("timeout"), timeoutforurl);
+  runner.SetArg(_L("location"), location);
+  runner.SetArgInt(_L("celsius"), iscelsius ? 1 : 0);
+  runner.SetArgInt(_L("timeout"), timeoutforurl);
   if(localIP && (!localIP->IsEmpty()))
     {
-      runner.SetArg(__L("localIP"), (*localIP));
+      runner.SetArg(_L("localIP"), (*localIP));
     }
 
   if(runner.Run(scriptpath.Get()))
@@ -332,15 +332,15 @@ bool DIOSCRAPERWEBWEATHER::Get(XCHAR* location, bool iscelsius, DIOWEATHER_RESUL
       float   temp = 0.0f;
       float   hum  = 0.0f;
 
-      runner.GetResult(__L("ok"), ok);
-      runner.GetResult(__L("condition"), condition);
-      runner.GetResult(__L("temperature"), temperature);
-      runner.GetResult(__L("humidity"), humidity);
+      runner.GetResult(_L("ok"), ok);
+      runner.GetResult(_L("condition"), condition);
+      runner.GetResult(_L("temperature"), temperature);
+      runner.GetResult(_L("humidity"), humidity);
 
-      if(!temperature.IsEmpty()) temperature.UnFormat(__L("%f"), &temp);
-      if(!humidity.IsEmpty())    humidity.UnFormat(__L("%f"), &hum);
+      if(!temperature.IsEmpty()) temperature.UnFormat(_L("%f"), &temp);
+      if(!humidity.IsEmpty())    humidity.UnFormat(_L("%f"), &hum);
 
-      if((ok.Compare(__L("1")) == 0) && (!temperature.IsEmpty()) && (!humidity.IsEmpty()))
+      if((ok.Compare(_L("1")) == 0) && (!temperature.IsEmpty()) && (!humidity.IsEmpty()))
         {
           weather.Set(condition, temp, hum);
 

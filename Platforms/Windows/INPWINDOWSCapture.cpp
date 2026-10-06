@@ -119,7 +119,7 @@ bool INPWINDOWSCAPTURE::Activate()
   keyhook = SetWindowsHookEx(WH_KEYBOARD_LL, LowLevelKeyboardProc, hinst, 0);
   if(keyhook == NULL)
     {
-      XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, __L("[Windows Hook Keyboard] Error: Could not hook keyboard. Another program might be interfering."));
+      XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, _L("[Windows Hook Keyboard] Error: Could not hook keyboard. Another program might be interfering."));
       return false;
     }
 
@@ -146,7 +146,7 @@ bool INPWINDOWSCAPTURE::Deactivate()
   //Remove keyboard hook
   if(UnhookWindowsHookEx(keyhook) == 0)
     {
-      XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, __L("[Windows Hook Keyboard] Error: Could not unhook keyboard."));
+      XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, _L("[Windows Hook Keyboard] Error: Could not unhook keyboard."));
       return false;
     }
 
@@ -182,7 +182,7 @@ LRESULT CALLBACK INPWINDOWSCAPTURE::LowLevelKeyboardProc(int ncode, WPARAM wpara
 
   KBDLLHOOKSTRUCT* keydata = (KBDLLHOOKSTRUCT*)lparam;
 
-  //XTRACE_PRINTCOLOR(XTRACE_COLOR_PURPLE, __L("[Windows Hook keyboard] vkCode %04X, scanCode %08X, flags %08X [%c]"), keydata->vkCode, keydata->scanCode, keydata->flags, keydata->vkCode);
+  //XTRACE_PRINTCOLOR(XTRACE_COLOR_PURPLE, _L("[Windows Hook keyboard] vkCode %04X, scanCode %08X, flags %08X [%c]"), keydata->vkCode, keydata->scanCode, keydata->flags, keydata->vkCode);
 
   if(capture)
     { 

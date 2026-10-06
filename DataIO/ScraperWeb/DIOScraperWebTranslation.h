@@ -39,7 +39,7 @@
 
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
 
-#define DIOSCRAPERWEBTRANSLATION_SCRIPTPATH    __L("translation.g")
+#define DIOSCRAPERWEBTRANSLATION_SCRIPTPATH    _L("translation.g")
 #define DIOSCRAPERWEBTRANSLATION_MAXTIMEOUT    DIOSCRAPERSCRIPT_DEFAULT_TIMEOUT
 
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
@@ -91,6 +91,7 @@ class DIOSCRAPERWEBTRANSLATION
 
   private:
 
+    bool                    DecodeTranslationText             (XSTRING& text);
     void                    Clean                             ();
 
     DIOSCRAPERWEBCACHE*     cache;

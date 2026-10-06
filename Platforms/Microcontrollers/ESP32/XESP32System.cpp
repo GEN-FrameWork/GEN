@@ -113,11 +113,11 @@ XSYSTEM_HARDWARETYPE XESP32SYSTEM::GetTypeHardware(int* revision)
 * --------------------------------------------------------------------------------------------------------------------*/
 XSYSTEM_PLATFORM XESP32SYSTEM::GetPlatform(XSTRING* namestring)
 {
-  if(namestring)  namestring->Set(__L("ESP32"));
+  if(namestring)  namestring->Set(_L("ESP32"));
     
   /*
   #if defined(ESP32F072xB)
-  if(namestring)  namestring->Set(__L("ESP32F072xB"));
+  if(namestring)  namestring->Set(_L("ESP32F072xB"));
   #endif
   */
 

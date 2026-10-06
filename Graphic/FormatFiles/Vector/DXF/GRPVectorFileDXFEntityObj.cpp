@@ -116,17 +116,17 @@ GRPVECTORFILEDXFENTITYOBJ* GRPVECTORFILEDXFENTITYOBJ::CreateInstance(GRPVECTORFI
    
   } ENTITY2CLASS;
 
-  ENTITY2CLASS                entity2class[] = {  { __L("3DFACE")           , GRPVECTORFILEDXFENTITYOBJTYPE_3DFACE         },
-                                                  { __L("ARC")              , GRPVECTORFILEDXFENTITYOBJTYPE_ARC            },
-                                                  { __L("CIRCLE")           , GRPVECTORFILEDXFENTITYOBJTYPE_CIRCLE         },           
-                                                  { __L("ACAD_CIRCLE")      , GRPVECTORFILEDXFENTITYOBJTYPE_CIRCLE         },
-                                                  { __L("ELLIPSE")          , GRPVECTORFILEDXFENTITYOBJTYPE_ELLIPSE        },
-                                                  { __L("LINE")             , GRPVECTORFILEDXFENTITYOBJTYPE_LINE           },
-                                                  { __L("LWPOLYLINE")       , GRPVECTORFILEDXFENTITYOBJTYPE_LWPOLYLINE     },
-                                                  { __L("MTEXT")            , GRPVECTORFILEDXFENTITYOBJTYPE_MTEXT          },
-                                                  { __L("POINT")            , GRPVECTORFILEDXFENTITYOBJTYPE_POINT          },
-                                                  { __L("POLYLINE")         , GRPVECTORFILEDXFENTITYOBJTYPE_POLYLINE       },
-                                                  { __L("TEXT")             , GRPVECTORFILEDXFENTITYOBJTYPE_TEXT           }
+  ENTITY2CLASS                entity2class[] = {  { _L("3DFACE")           , GRPVECTORFILEDXFENTITYOBJTYPE_3DFACE         },
+                                                  { _L("ARC")              , GRPVECTORFILEDXFENTITYOBJTYPE_ARC            },
+                                                  { _L("CIRCLE")           , GRPVECTORFILEDXFENTITYOBJTYPE_CIRCLE         },           
+                                                  { _L("ACAD_CIRCLE")      , GRPVECTORFILEDXFENTITYOBJTYPE_CIRCLE         },
+                                                  { _L("ELLIPSE")          , GRPVECTORFILEDXFENTITYOBJTYPE_ELLIPSE        },
+                                                  { _L("LINE")             , GRPVECTORFILEDXFENTITYOBJTYPE_LINE           },
+                                                  { _L("LWPOLYLINE")       , GRPVECTORFILEDXFENTITYOBJTYPE_LWPOLYLINE     },
+                                                  { _L("MTEXT")            , GRPVECTORFILEDXFENTITYOBJTYPE_MTEXT          },
+                                                  { _L("POINT")            , GRPVECTORFILEDXFENTITYOBJTYPE_POINT          },
+                                                  { _L("POLYLINE")         , GRPVECTORFILEDXFENTITYOBJTYPE_POLYLINE       },
+                                                  { _L("TEXT")             , GRPVECTORFILEDXFENTITYOBJTYPE_TEXT           }
                                                };
 
   GRPVECTORFILEDXFENTITYOBJ*  entityobj     = NULL; 
@@ -332,31 +332,31 @@ bool GRPVECTORFILEDXFENTITYOBJ::ApplyData(GRPVECTORFILEDXFENTITY* entity)
 {
   GRPVECTORFILEDXFVALUE* value;
    
-  value = GetDataValue(__L("G_LAYER_NAME"), entity);   
+  value = GetDataValue(_L("G_LAYER_NAME"), entity);   
   if(value) 
     {
       layername.Set((XCHAR*)(*value->GetData()));
     }
 
-  value = GetDataValue(__L("G_COLOR_NUMBER"), entity);   
+  value = GetDataValue(_L("G_COLOR_NUMBER"), entity);   
   if(value) 
     {
       linecolor = (int)(*value->GetData());
     }
 
-  value = GetDataValue(__L("G_LINETYPE_NAME"), entity);      
+  value = GetDataValue(_L("G_LINETYPE_NAME"), entity);      
   if(value) 
     {
       linetypename.Set((XCHAR*)(*value->GetData()));
     }
 
-  value = GetDataValue(__L("G_TYPE_SPACE"), entity);      
+  value = GetDataValue(_L("G_TYPE_SPACE"), entity);      
   if(value) 
     {
       typespace = (int)(*value->GetData());
     }
 
-  value = GetDataValue(__L("G_ENTITY_VISIBILITY"), entity);      
+  value = GetDataValue(_L("G_ENTITY_VISIBILITY"), entity);      
   if(value) 
     {
       visibility = ((int)(*value->GetData()))?false:true;

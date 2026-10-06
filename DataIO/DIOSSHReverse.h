@@ -43,12 +43,12 @@
 
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
 
-#define DIOSSHREVERSE_DEFAULTAPPLICATION      __L("sshpass")
-#define DIOSSHREVERSE_DEFAULTAPPLICATION2     __L("autossh")
-#define DIOSSHREVERSE_CFGREMOTENAMEFILE       __L("sshrem.ini")
+#define DIOSSHREVERSE_DEFAULTAPPLICATION      _L("sshpass")
+#define DIOSSHREVERSE_DEFAULTAPPLICATION2     _L("autossh")
+#define DIOSSHREVERSE_CFGREMOTENAMEFILE       _L("sshrem.ini")
 #define DIOSSHREVERSE_DEFAULTPORTSSH          22
 
-#define DIOSSHREVERSE_LOGSECTIONID            __L("SSHreverse")
+#define DIOSSHREVERSE_LOGSECTIONID            _L("SSHreverse")
 
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
 

@@ -223,7 +223,7 @@ bool APPFLOWGRAPHICS::CreateMainScreenProcess(bool show)
   mainscreen = GEN_GRPFACTORY.CreateScreen();
   if(!mainscreen)
     {
-      // XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, __L("[APP Graphics] Could not initialize the main screen ..."));
+      // XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, _L("[APP Graphics] Could not initialize the main screen ..."));
       return false;
     }
 
@@ -231,7 +231,7 @@ bool APPFLOWGRAPHICS::CreateMainScreenProcess(bool show)
   maincontext = GRPFACTORY::GetInstance().CreateContext();
   if(!maincontext)
     {
-      // XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, __L("[APP Graphics] Could not initialize the Graphics Context ..."));
+      // XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, _L("[APP Graphics] Could not initialize the Graphics Context ..."));
       return false;
     }
   #endif
@@ -272,7 +272,7 @@ bool APPFLOWGRAPHICS::CreateMainScreenProcess(bool show)
 
   if(status)
     {
-      //XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, __L("[App Graphics] Screen created"));
+      //XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, _L("[App Graphics] Screen created"));
 
       GRPXEVENT grpeventend(this, GRPXEVENT_TYPE_SCREEN_CREATED);
       grpeventend.SetScreen(mainscreen);
@@ -281,7 +281,7 @@ bool APPFLOWGRAPHICS::CreateMainScreenProcess(bool show)
     }
     else
     {
-      //XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, __L("[App Graphics] Error to creating screen..."));
+      //XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, _L("[App Graphics] Error to creating screen..."));
     }
 
   if(!status) return false;

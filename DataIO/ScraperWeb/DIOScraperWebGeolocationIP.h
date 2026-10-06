@@ -42,7 +42,7 @@
 
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
 
-#define DIOSCRAPERWEBGEOLOCATIONIP_SCRIPTPATH    __L("geolocationip.g")
+#define DIOSCRAPERWEBGEOLOCATIONIP_SCRIPTPATH    _L("geolocationip.g")
 #define DIOSCRAPERWEBGEOLOCATIONIP_MAXTIMEOUT    DIOSCRAPERSCRIPT_DEFAULT_TIMEOUT
 
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/

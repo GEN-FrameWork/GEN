@@ -75,22 +75,22 @@ DIOCHECKINTERNETCONNECTION::DIOCHECKINTERNETCONNECTION(int timeconnectionchecks,
                  } MAINDNS;
 
 
-  MAINDNS  maindns[] = {  { __L("8.8.8.8")          , __L("Google DNS 1")                                 },
-                          { __L("8.8.4.4")          , __L("Google DNS 2")                                 },
-                          { __L("198.41.0.4")       , __L("VeriSign, Inc.")                               },
+  MAINDNS  maindns[] = {  { _L("8.8.8.8")          , _L("Google DNS 1")                                 },
+                          { _L("8.8.4.4")          , _L("Google DNS 2")                                 },
+                          { _L("198.41.0.4")       , _L("VeriSign, Inc.")                               },
                           
                           /*               
-                          { __L("192.228.79.201")   , __L("University of Southern California (ISI)")      },
-                          { __L("192.33.4.12")      , __L("Cogent Communications")                        },
-                          { __L("199.7.91.13")      , __L("University of Maryland")                       },
-                          { __L("192.203.230.10")   , __L("NASA (Ames Research Center)")                  },
-                          { __L("192.5.5.241")      , __L("Internet Systems Consortium, Inc.")            },
-                          { __L("198.97.190.53")    , __L("US Army (Research Lab)")                       },
-                          { __L("192.36.148.17")    , __L("Netnod")                                       },
-                          { __L("192.58.128.30")    , __L("VeriSign, Inc.")                               },
-                          { __L("193.0.14.129")     , __L("RIPE NCC")                                     },
-                          { __L("199.7.83.42")      , __L("ICANN")                                        },
-                          { __L("202.12.27.33")     , __L("WIDE Project")                                 }
+                          { _L("192.228.79.201")   , _L("University of Southern California (ISI)")      },
+                          { _L("192.33.4.12")      , _L("Cogent Communications")                        },
+                          { _L("199.7.91.13")      , _L("University of Maryland")                       },
+                          { _L("192.203.230.10")   , _L("NASA (Ames Research Center)")                  },
+                          { _L("192.5.5.241")      , _L("Internet Systems Consortium, Inc.")            },
+                          { _L("198.97.190.53")    , _L("US Army (Research Lab)")                       },
+                          { _L("192.36.148.17")    , _L("Netnod")                                       },
+                          { _L("192.58.128.30")    , _L("VeriSign, Inc.")                               },
+                          { _L("193.0.14.129")     , _L("RIPE NCC")                                     },
+                          { _L("199.7.83.42")      , _L("ICANN")                                        },
+                          { _L("202.12.27.33")     , _L("WIDE Project")                                 }
                           */
                        };
   Clean();

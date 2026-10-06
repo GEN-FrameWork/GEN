@@ -129,7 +129,7 @@ bool GRPSTATISTICSCHARTLINES::DrawPlot(GRPSTATISTICSCHARTBUILDER& builder, doubl
       if(config.GetShowAxisLabels())
         {
           XSTRING label;
-          label.Format(__L("%g"), value);
+          label.Format(_L("%g"), value);
 
           builder.DrawText(x - (axisfontsize * 0.5), yy + (axisfontsize * 0.35), label.Get(), valuestyle);
         }
@@ -180,7 +180,7 @@ bool GRPSTATISTICSCHARTLINES::DrawPlot(GRPSTATISTICSCHARTBUILDER& builder, doubl
           if(config.GetShowValues())
             {
               XSTRING vlabel;
-              vlabel.Format(__L("%g"), value);
+              vlabel.Format(_L("%g"), value);
 
               GRPSTATISTICSCHARTTEXTSTYLE vstyle;
               vstyle.color  = config.GetTextColor();

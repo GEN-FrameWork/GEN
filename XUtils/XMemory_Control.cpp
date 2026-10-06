@@ -191,7 +191,7 @@ void* XMEMORY_CONTROL::Assign(XDWORD size, const char* pathfile, int line)
 
   if(!RegisterAssign(ptr, size, pathfile, line))
     {
-      // XTRACE_PRINTCOLOR(4, __L("[XMemory Control] ALERT: Make Malloc -> The memory allocation could not be registered!"));
+      // XTRACE_PRINTCOLOR(4, _L("[XMemory Control] ALERT: Make Malloc -> The memory allocation could not be registered!"));
     }
 
   nassigns++;
@@ -227,7 +227,7 @@ void XMEMORY_CONTROL::Free(void* ptr)
 
   if(!DeRegisterAssign(ptr, size))
     {
-      // XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, __L("[XMemory Control] ALERT: Make Free -> The memory allocation has not been registered!"));
+      // XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, _L("[XMemory Control] ALERT: Make Free -> The memory allocation has not been registered!"));
     }
    else
     {
@@ -319,18 +319,18 @@ bool XMEMORY_CONTROL::DisplayAll(bool displaydata)
 
   XBYTE level = ((!nassigned)?XTRACE_COLOR_BLUE:XTRACE_COLOR_RED);
 
-  XTRACE_PRINTCOLOR(level, __L(" "));
-  XTRACE_PRINTHEADER((level | XTRACE_LEVEL_WITHCOLOR), (!nassigned)?__L("ALL FREE MEMORY RESOURCES"):__L("NOT FREE MEMORY RESOURCES"));
-  XTRACE_PRINTCOLOR(level, __L(" "));
-  XTRACE_PRINTCOLOR(level, __L("Maximum allocated blocks at a time : %d") , maxnassigns);
-  XTRACE_PRINTCOLOR(level, __L("Maximum memory used at a time      : %dk"), maxused/1024); 
-  XTRACE_PRINTCOLOR(level, __L(" "));
+  XTRACE_PRINTCOLOR(level, _L(" "));
+  XTRACE_PRINTHEADER((level | XTRACE_LEVEL_WITHCOLOR), (!nassigned)?_L("ALL FREE MEMORY RESOURCES"):_L("NOT FREE MEMORY RESOURCES"));
+  XTRACE_PRINTCOLOR(level, _L(" "));
+  XTRACE_PRINTCOLOR(level, _L("Maximum allocated blocks at a time : %d") , maxnassigns);
+  XTRACE_PRINTCOLOR(level, _L("Maximum memory used at a time      : %dk"), maxused/1024); 
+  XTRACE_PRINTCOLOR(level, _L(" "));
 
   if(nassigned)
     {
-      XTRACE_PRINTCOLOR(level, __L("Number memory blocks not free      : %d"), nassigned);
-      XTRACE_PRINTCOLOR(level, __L(" "));
-      XTRACE_PRINTCOLOR(level, __L("         Address  Size    Line  Module"));
+      XTRACE_PRINTCOLOR(level, _L("Number memory blocks not free      : %d"), nassigned);
+      XTRACE_PRINTCOLOR(level, _L(" "));
+      XTRACE_PRINTCOLOR(level, _L("         Address  Size    Line  Module"));
 
       XDWORD count = 0;
 
@@ -345,7 +345,7 @@ bool XMEMORY_CONTROL::DisplayAll(bool displaydata)
               size_t ptr = (size_t)assignlist[c].ptr;
               XDWORD address = (XDWORD)ptr;
 
-              XTRACE_PRINTCOLOR(level, __L("%08d %08X %07d %05d %s"), c, address, assignlist[c].size, assignlist[c].linemodule, namemodule.Get());
+              XTRACE_PRINTCOLOR(level, _L("%08d %08X %07d %05d %s"), c, address, assignlist[c].size, assignlist[c].linemodule, namemodule.Get());
 
               //-----------------------------------------------------------------
 
@@ -363,7 +363,7 @@ bool XMEMORY_CONTROL::DisplayAll(bool displaydata)
               count++;              
               if(count > XMEMORY_CONTROL_MAXIMUNLEAKSTODISPLAY)
                 {
-                  XTRACE_PRINTCOLOR(level, __L("Too many leaks: > %d and have %d. "), XMEMORY_CONTROL_MAXIMUNLEAKSTODISPLAY, nassigned);
+                  XTRACE_PRINTCOLOR(level, _L("Too many leaks: > %d and have %d. "), XMEMORY_CONTROL_MAXIMUNLEAKSTODISPLAY, nassigned);
                   break;
                 }              
             }

@@ -371,9 +371,9 @@ void DIOPCAPFRAME::GetProtocolTypeString(XSTRING& protocoltypestr)
   switch(protocoltype)
     {
       case DIOPCAPPROTOCOL_TYPE_UNKNOWN  : break;
-      case DIOPCAPPROTOCOL_TYPE_ICMP     : protocoltypestr = __L("ICMP");   break;      
-      case DIOPCAPPROTOCOL_TYPE_UDP      : protocoltypestr = __L("UDP");    break;                                            
-      case DIOPCAPPROTOCOL_TYPE_TCP      : protocoltypestr = __L("TCP");    break;
+      case DIOPCAPPROTOCOL_TYPE_ICMP     : protocoltypestr = _L("ICMP");   break;      
+      case DIOPCAPPROTOCOL_TYPE_UDP      : protocoltypestr = _L("UDP");    break;                                            
+      case DIOPCAPPROTOCOL_TYPE_TCP      : protocoltypestr = _L("TCP");    break;
     }
 }
 

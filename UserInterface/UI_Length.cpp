@@ -133,17 +133,17 @@ bool UI_LENGTH::Parse(XSTRING& raw)
   int start   = 0;
   int end     = rawsize;
 
-  while(start < end && (raw[start]==__C(' ')||raw[start]==__C('\t')||raw[start]==__C('\r')||raw[start]==__C('\n'))) start++;
-  while(end > start && (raw[end-1]==__C(' ')||raw[end-1]==__C('\t')||raw[end-1]==__C('\r')||raw[end-1]==__C('\n'))) end--;
+  while(start < end && (raw[start]==_C(' ')||raw[start]==_C('\t')||raw[start]==_C('\r')||raw[start]==_C('\n'))) start++;
+  while(end > start && (raw[end-1]==_C(' ')||raw[end-1]==_C('\t')||raw[end-1]==_C('\r')||raw[end-1]==_C('\n'))) end--;
 
   if(start >= end) return false;                 // whitespace-only string: treat like empty
 
   // calc(...) : the WHOLE trimmed value must be one calc() wrapper (real CSS syntax; a unit suffix after the
   // closing paren, e.g. "calc(1px + 1px)px", is not calc() at all and falls through to the KEYWORD branch below).
-  if((end - start) > 5 && raw[end-1]==__C(')') &&
-     (raw[start+0]==__C('c')||raw[start+0]==__C('C')) && (raw[start+1]==__C('a')||raw[start+1]==__C('A')) &&
-     (raw[start+2]==__C('l')||raw[start+2]==__C('L')) && (raw[start+3]==__C('c')||raw[start+3]==__C('C')) &&
-     raw[start+4]==__C('('))
+  if((end - start) > 5 && raw[end-1]==_C(')') &&
+     (raw[start+0]==_C('c')||raw[start+0]==_C('C')) && (raw[start+1]==_C('a')||raw[start+1]==_C('A')) &&
+     (raw[start+2]==_C('l')||raw[start+2]==_C('L')) && (raw[start+3]==_C('c')||raw[start+3]==_C('C')) &&
+     raw[start+4]==_C('('))
     {
       int pos = start + 5;
       int innerend = end - 1;
@@ -166,8 +166,8 @@ bool UI_LENGTH::Parse(XSTRING& raw)
 
   XCHAR first = raw[start];
 
-  bool starts_numeric = (first == __C('-')) || (first == __C('+')) || (first == __C('.')) ||
-                         ((first >= __C('0')) && (first <= __C('9')));
+  bool starts_numeric = (first == _C('-')) || (first == _C('+')) || (first == _C('.')) ||
+                         ((first >= _C('0')) && (first <= _C('9')));
 
   if(!starts_numeric)
     {
@@ -180,11 +180,11 @@ bool UI_LENGTH::Parse(XSTRING& raw)
   UI_LENGTH_TYPE unittype  = UI_LENGTH_TYPE_NUMBER;
   int             numericend = end;
 
-  if(MatchesUnitSuffix(raw, end-3, end, __L("rem")))      { unittype = UI_LENGTH_TYPE_REM;     numericend = end-3; }
-   else if(MatchesUnitSuffix(raw, end-2, end, __L("em"))) { unittype = UI_LENGTH_TYPE_EM;      numericend = end-2; }
-   else if(MatchesUnitSuffix(raw, end-2, end, __L("vw"))) { unittype = UI_LENGTH_TYPE_VW;      numericend = end-2; }
-   else if(MatchesUnitSuffix(raw, end-2, end, __L("vh"))) { unittype = UI_LENGTH_TYPE_VH;      numericend = end-2; }
-   else if(raw[end-1] == __C('%'))                        { unittype = UI_LENGTH_TYPE_PERCENT; numericend = end-1; }
+  if(MatchesUnitSuffix(raw, end-3, end, _L("rem")))      { unittype = UI_LENGTH_TYPE_REM;     numericend = end-3; }
+   else if(MatchesUnitSuffix(raw, end-2, end, _L("em"))) { unittype = UI_LENGTH_TYPE_EM;      numericend = end-2; }
+   else if(MatchesUnitSuffix(raw, end-2, end, _L("vw"))) { unittype = UI_LENGTH_TYPE_VW;      numericend = end-2; }
+   else if(MatchesUnitSuffix(raw, end-2, end, _L("vh"))) { unittype = UI_LENGTH_TYPE_VH;      numericend = end-2; }
+   else if(raw[end-1] == _C('%'))                        { unittype = UI_LENGTH_TYPE_PERCENT; numericend = end-1; }
 
   XSTRING numeric;
   raw.Copy(start, numericend, numeric);
@@ -226,8 +226,8 @@ bool UI_LENGTH::MatchesUnitSuffix(XSTRING& text, int pos, int end, XCHAR* unit)
       XCHAR a = text[pos+c];
       XCHAR b = unit[c];
 
-      if(a>=__C('A') && a<=__C('Z')) a = (XCHAR)(a - __C('A') + __C('a'));
-      if(b>=__C('A') && b<=__C('Z')) b = (XCHAR)(b - __C('A') + __C('a'));
+      if(a>=_C('A') && a<=_C('Z')) a = (XCHAR)(a - _C('A') + _C('a'));
+      if(b>=_C('A') && b<=_C('Z')) b = (XCHAR)(b - _C('A') + _C('a'));
 
       if(a != b) return false;
     }
@@ -236,7 +236,7 @@ bool UI_LENGTH::MatchesUnitSuffix(XSTRING& text, int pos, int end, XCHAR* unit)
   if(after < end)
     {
       XCHAR next = text[after];
-      bool  isalpha = (next>=__C('a') && next<=__C('z')) || (next>=__C('A') && next<=__C('Z'));
+      bool  isalpha = (next>=_C('a') && next<=_C('z')) || (next>=_C('A') && next<=_C('Z'));
 
       if(isalpha) return false;
     }
@@ -259,7 +259,7 @@ bool UI_LENGTH::MatchesUnitSuffix(XSTRING& text, int pos, int end, XCHAR* unit)
 * --------------------------------------------------------------------------------------------------------------------*/
 void UI_LENGTH::SkipCalcWhitespace(XSTRING& text, int& pos, int end)
 {
-  while(pos < end && (text[pos]==__C(' ')||text[pos]==__C('\t')||text[pos]==__C('\r')||text[pos]==__C('\n'))) pos++;
+  while(pos < end && (text[pos]==_C(' ')||text[pos]==_C('\t')||text[pos]==_C('\r')||text[pos]==_C('\n'))) pos++;
 }
 
 
@@ -290,7 +290,7 @@ UI_LENGTHCALCNODE* UI_LENGTH::ParseCalcExpression(XSTRING& text, int& pos, int e
       if(pos >= end) break;
 
       XCHAR op = text[pos];
-      if(op != __C('+') && op != __C('-')) break;
+      if(op != _C('+') && op != _C('-')) break;
 
       pos++;
 
@@ -335,7 +335,7 @@ UI_LENGTHCALCNODE* UI_LENGTH::ParseCalcTerm(XSTRING& text, int& pos, int end)
       if(pos >= end) break;
 
       XCHAR op = text[pos];
-      if(op != __C('*') && op != __C('/')) break;
+      if(op != _C('*') && op != _C('/')) break;
 
       pos++;
 
@@ -374,7 +374,7 @@ UI_LENGTHCALCNODE* UI_LENGTH::ParseCalcFactor(XSTRING& text, int& pos, int end)
   SkipCalcWhitespace(text, pos, end);
   if(pos >= end) return NULL;
 
-  if(text[pos] == __C('('))
+  if(text[pos] == _C('('))
     {
       pos++;
 
@@ -382,7 +382,7 @@ UI_LENGTHCALCNODE* UI_LENGTH::ParseCalcFactor(XSTRING& text, int& pos, int end)
 
       SkipCalcWhitespace(text, pos, end);
 
-      if(!inner || pos >= end || text[pos] != __C(')')) { DeleteCalcNode(inner); return NULL; }
+      if(!inner || pos >= end || text[pos] != _C(')')) { DeleteCalcNode(inner); return NULL; }
 
       pos++;
 
@@ -391,10 +391,10 @@ UI_LENGTHCALCNODE* UI_LENGTH::ParseCalcFactor(XSTRING& text, int& pos, int end)
 
   int leafstart = pos;
 
-  if(pos < end && (text[pos]==__C('-') || text[pos]==__C('+'))) pos++;
+  if(pos < end && (text[pos]==_C('-') || text[pos]==_C('+'))) pos++;
 
   bool hasdigits = false;
-  while(pos < end && ((text[pos]>=__C('0') && text[pos]<=__C('9')) || text[pos]==__C('.')))
+  while(pos < end && ((text[pos]>=_C('0') && text[pos]<=_C('9')) || text[pos]==_C('.')))
     {
       hasdigits = true;
       pos++;
@@ -406,11 +406,11 @@ UI_LENGTHCALCNODE* UI_LENGTH::ParseCalcFactor(XSTRING& text, int& pos, int end)
 
   UI_LENGTH_TYPE leaftype = UI_LENGTH_TYPE_NUMBER;
 
-  if(MatchesUnitSuffix(text, pos, end, __L("rem")))      { leaftype = UI_LENGTH_TYPE_REM;     pos += 3; }
-   else if(MatchesUnitSuffix(text, pos, end, __L("em"))) { leaftype = UI_LENGTH_TYPE_EM;      pos += 2; }
-   else if(MatchesUnitSuffix(text, pos, end, __L("vw"))) { leaftype = UI_LENGTH_TYPE_VW;      pos += 2; }
-   else if(MatchesUnitSuffix(text, pos, end, __L("vh"))) { leaftype = UI_LENGTH_TYPE_VH;      pos += 2; }
-   else if(pos < end && text[pos]==__C('%'))             { leaftype = UI_LENGTH_TYPE_PERCENT; pos += 1; }
+  if(MatchesUnitSuffix(text, pos, end, _L("rem")))      { leaftype = UI_LENGTH_TYPE_REM;     pos += 3; }
+   else if(MatchesUnitSuffix(text, pos, end, _L("em"))) { leaftype = UI_LENGTH_TYPE_EM;      pos += 2; }
+   else if(MatchesUnitSuffix(text, pos, end, _L("vw"))) { leaftype = UI_LENGTH_TYPE_VW;      pos += 2; }
+   else if(MatchesUnitSuffix(text, pos, end, _L("vh"))) { leaftype = UI_LENGTH_TYPE_VH;      pos += 2; }
+   else if(pos < end && text[pos]==_C('%'))             { leaftype = UI_LENGTH_TYPE_PERCENT; pos += 1; }
 
   XSTRING numeric;
   text.Copy(leafstart, numericend, numeric);
@@ -488,10 +488,10 @@ bool UI_LENGTH::EvaluateCalcNode(UI_LENGTHCALCNODE* node, UI_LENGTH_CONTEXT& con
 
   switch(node->op)
     {
-      case __C('+') : out = leftvalue + rightvalue;                                 return true;
-      case __C('-') : out = leftvalue - rightvalue;                                 return true;
-      case __C('*') : out = leftvalue * rightvalue;                                 return true;
-      case __C('/') : if(rightvalue == 0.0) return false; out = leftvalue / rightvalue; return true;
+      case _C('+') : out = leftvalue + rightvalue;                                 return true;
+      case _C('-') : out = leftvalue - rightvalue;                                 return true;
+      case _C('*') : out = leftvalue * rightvalue;                                 return true;
+      case _C('/') : if(rightvalue == 0.0) return false; out = leftvalue / rightvalue; return true;
       default       :                                                               return false;
     }
 }

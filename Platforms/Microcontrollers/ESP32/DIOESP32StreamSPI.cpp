@@ -199,7 +199,7 @@ DIOESP32STREAMSPI::DIOESP32STREAMSPI() : DIOSTREAMSPI()
             DIOSTREAMSPI_FSMEVENT_WAITINGTOREAD   , DIOSTREAMSPI_FSMSTATE_WAITINGTOREAD    ,
             XFSMACHINESTATE_EVENTDEFEND);
 
-  threadconnection = CREATEXTHREAD(XTHREADGROUPID_DIOSTREAMSPI, __L("DIOESP32STREAMSPI::DIOESP32STREAMSPI"), ThreadConnection, (void*)this);
+  threadconnection = CREATEXTHREAD(XTHREADGROUPID_DIOSTREAMSPI, _L("DIOESP32STREAMSPI::DIOESP32STREAMSPI"), ThreadConnection, (void*)this);
 }
 
 
@@ -592,7 +592,7 @@ void HAL_SPI_SlaveRxCpltCallback(SPI_HandleTypeDef* hspi)
 * --------------------------------------------------------------------------------------------------------------------*/
 void HAL_SPI_ErrorCallback(SPI_HandleTypeDef *hspi)
 {
-  XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, __L("SPI comunication error [%d]"), hspi->ErrorCode);
+  XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, _L("SPI comunication error [%d]"), hspi->ErrorCode);
 }
 
 

@@ -684,7 +684,7 @@ bool SCRIPT_LNG_G_VAR::ConvertToXVariant(XVARIANT& variant)
     {
       case SCRIPT_LNG_G_TOKENIREPS_CHAR     : { XSTRING str;
 
-                                                str.Format(__L("%c"), GetValueCharacter());
+                                                str.Format(_L("%c"), GetValueCharacter());
                                                 variant = (XCHAR)str.Get()[0];
                                               }
                                               break;
@@ -1026,20 +1026,20 @@ SCRIPT_LNG_G::SCRIPT_LNG_G()
 
   DeleteVarsExec();
 
-  AddCommand(__L("if"), SCRIPT_LNG_G_TOKENIREPS_IF);
-  AddCommand(__L("else"), SCRIPT_LNG_G_TOKENIREPS_ELSE);
-  AddCommand(__L("for"), SCRIPT_LNG_G_TOKENIREPS_FOR);
-  AddCommand(__L("do"), SCRIPT_LNG_G_TOKENIREPS_DO);
-  AddCommand(__L("while"), SCRIPT_LNG_G_TOKENIREPS_WHILE);
-  AddCommand(__L("char"), SCRIPT_LNG_G_TOKENIREPS_CHAR);
-  AddCommand(__L("int"), SCRIPT_LNG_G_TOKENIREPS_INT);
-  AddCommand(__L("float"), SCRIPT_LNG_G_TOKENIREPS_FLOAT);
-  AddCommand(__L("string"), SCRIPT_LNG_G_TOKENIREPS_STRING);
-  AddCommand(__L("return"), SCRIPT_LNG_G_TOKENIREPS_RETURN);
-  AddCommand(__L("switch"), SCRIPT_LNG_G_TOKENIREPS_SWITCH);
-  AddCommand(__L("break"), SCRIPT_LNG_G_TOKENIREPS_BREAK);
-  AddCommand(__L("case"), SCRIPT_LNG_G_TOKENIREPS_CASE);
-  AddCommand(__L("")        , SCRIPT_LNG_G_TOKENIREPS_END);
+  AddCommand(_L("if"), SCRIPT_LNG_G_TOKENIREPS_IF);
+  AddCommand(_L("else"), SCRIPT_LNG_G_TOKENIREPS_ELSE);
+  AddCommand(_L("for"), SCRIPT_LNG_G_TOKENIREPS_FOR);
+  AddCommand(_L("do"), SCRIPT_LNG_G_TOKENIREPS_DO);
+  AddCommand(_L("while"), SCRIPT_LNG_G_TOKENIREPS_WHILE);
+  AddCommand(_L("char"), SCRIPT_LNG_G_TOKENIREPS_CHAR);
+  AddCommand(_L("int"), SCRIPT_LNG_G_TOKENIREPS_INT);
+  AddCommand(_L("float"), SCRIPT_LNG_G_TOKENIREPS_FLOAT);
+  AddCommand(_L("string"), SCRIPT_LNG_G_TOKENIREPS_STRING);
+  AddCommand(_L("return"), SCRIPT_LNG_G_TOKENIREPS_RETURN);
+  AddCommand(_L("switch"), SCRIPT_LNG_G_TOKENIREPS_SWITCH);
+  AddCommand(_L("break"), SCRIPT_LNG_G_TOKENIREPS_BREAK);
+  AddCommand(_L("case"), SCRIPT_LNG_G_TOKENIREPS_CASE);
+  AddCommand(_L("")        , SCRIPT_LNG_G_TOKENIREPS_END);
 
   AddInternalLibraries();
 }
@@ -1096,10 +1096,10 @@ int SCRIPT_LNG_G::Run(int* returnval)
       XSTRING* version = GEN_NEW XSTRING();
       if(version)
         {
-          version->Format(__L("%d.%d.%d"), SCRIPT_LNG_G_VERSION, SCRIPT_LNG_G_SUBVERSION, SCRIPT_LNG_G_SUBVERSIONERR);
+          version->Format(_L("%d.%d.%d"), SCRIPT_LNG_G_VERSION, SCRIPT_LNG_G_SUBVERSION, SCRIPT_LNG_G_SUBVERSIONERR);
        
           versionvar->SetType(SCRIPT_LNG_G_TOKENIREPS_STRING);
-          versionvar->SetName(__L("VERSION"));    
+          versionvar->SetName(_L("VERSION"));    
           versionvar->SetValueString(version);    
           versionvar->SetHaveReservedSize(true);
           versionvar->SetIsArg(false);
@@ -1116,11 +1116,11 @@ int SCRIPT_LNG_G::Run(int* returnval)
 
   if(errorcode == SCRIPT_ERRORCODE_NONE)
     {
-      ipprg = FindFunction(__L("main"));
+      ipprg = FindFunction(_L("main"));
       if(ipprg)
         {
           ipprg--;
-          XSTRING::Set(currenttoken, __L("main"));
+          XSTRING::Set(currenttoken, _L("main"));
 
           Call();
         }
@@ -1236,7 +1236,7 @@ int SCRIPT_LNG_G::GetFuncParams(SCRIPT_LNG_G_VAR* params, XSTRING* outnames)
 
   GetToken();
 
-  if(currenttoken[0] != __C('('))
+  if(currenttoken[0] != _C('('))
     {
       HaveError(SCRIPT_LNG_G_ERRORCODE_PAREN_EXPECTED);
       return count;
@@ -1245,7 +1245,7 @@ int SCRIPT_LNG_G::GetFuncParams(SCRIPT_LNG_G_VAR* params, XSTRING* outnames)
   XCHAR* paramslocation = ipprg;
 
   GetToken();
-  if(currenttoken[0] == __C(')'))
+  if(currenttoken[0] == _C(')'))
     {
       return count;
     }
@@ -1267,7 +1267,7 @@ int SCRIPT_LNG_G::GetFuncParams(SCRIPT_LNG_G_VAR* params, XSTRING* outnames)
           XSTRING name = currenttoken;
 
           GetToken();
-          if((currenttoken[0] == __C(',')) || (currenttoken[0] == __C(')')))
+          if((currenttoken[0] == _C(',')) || (currenttoken[0] == _C(')')))
             {
               SCRIPT_LNG_G_VAR* var = FindVariable(name.Get());
               if(var)
@@ -1314,9 +1314,9 @@ int SCRIPT_LNG_G::GetFuncParams(SCRIPT_LNG_G_VAR* params, XSTRING* outnames)
             }
         }
 
-    } while(currenttoken[0] == __C(','));
+    } while(currenttoken[0] == _C(','));
 
-  if(currenttoken[0] != __C(')'))
+  if(currenttoken[0] != _C(')'))
     {
       HaveError(SCRIPT_LNG_G_ERRORCODE_PAREN_EXPECTED);
     }
@@ -1335,14 +1335,14 @@ int SCRIPT_LNG_G::GetFuncParams(SCRIPT_LNG_G_VAR* params, XSTRING* outnames)
 void SCRIPT_LNG_G::NotFuncParams()
 {
   GetToken();
-  if(currenttoken[0] != __C('('))
+  if(currenttoken[0] != _C('('))
     {
       HaveError(SCRIPT_LNG_G_ERRORCODE_PAREN_EXPECTED);
       return;
     }
 
   GetToken();
-  if(currenttoken[0] != __C(')'))
+  if(currenttoken[0] != _C(')'))
     {
       HaveError(SCRIPT_LNG_G_ERRORCODE_PAREN_EXPECTED);
       return;
@@ -1401,31 +1401,31 @@ bool SCRIPT_LNG_G::HaveError(int errorcode)
   if(errorcode != SCRIPT_ERRORCODE_NONE)
     {
       // Must follow SCRIPT_ERRORCODE then SCRIPT_LNG_G_ERRORCODE (SYNTAX = SCRIPT_ERRORCODE_OWN).
-      static XCHAR* errorstr[]= { __L("None")                       ,
-                                  __L("Internal error")             ,
-                                  __L("Insufficient parameters")    ,
-                                  __L("Syntax error")               ,
-                                  __L("No expression present")      ,
-                                  __L("Not a variable")             ,
-                                  __L("Duplicate variable name")    ,
-                                  __L("Duplicate function name")    ,
-                                  __L("Semicolon expected")         ,
-                                  __L("Unbalanced braces")          ,
-                                  __L("Function undefined")         ,
-                                  __L("Type specifier expected")    ,
-                                  __L("Return without call")        ,
-                                  __L("Parentheses expected")       ,
-                                  __L("While expected")             ,
-                                  __L("Closing quote expected")     ,
-                                  __L("Division by zero")           ,
-                                  __L("{ expected (control statements must use blocks)"),
-                                  __L("Colon expected")             ,
-                                  __L("Break by user")              ,
-                                  __L("Too many parameters")        ,
-                                  __L("Token too long")             ,
-                                  __L("Type mismatch")
+      static XCHAR* errorstr[]= { _L("None")                       ,
+                                  _L("Internal error")             ,
+                                  _L("Insufficient parameters")    ,
+                                  _L("Syntax error")               ,
+                                  _L("No expression present")      ,
+                                  _L("Not a variable")             ,
+                                  _L("Duplicate variable name")    ,
+                                  _L("Duplicate function name")    ,
+                                  _L("Semicolon expected")         ,
+                                  _L("Unbalanced braces")          ,
+                                  _L("Function undefined")         ,
+                                  _L("Type specifier expected")    ,
+                                  _L("Return without call")        ,
+                                  _L("Parentheses expected")       ,
+                                  _L("While expected")             ,
+                                  _L("Closing quote expected")     ,
+                                  _L("Division by zero")           ,
+                                  _L("{ expected (control statements must use blocks)"),
+                                  _L("Colon expected")             ,
+                                  _L("Break by user")              ,
+                                  _L("Too many parameters")        ,
+                                  _L("Token too long")             ,
+                                  _L("Type mismatch")
                                 };
-      XCHAR* errormsg = __L("Unknown error");
+      XCHAR* errormsg = _L("Unknown error");
 
       if((errorcode >= 0) && (errorcode < (int)(sizeof(errorstr)/sizeof(errorstr[0]))))
         {
@@ -1466,7 +1466,7 @@ bool SCRIPT_LNG_G::HaveError(int errorcode)
       xevent.GetCurrentToken()->Set(currenttoken);
       xevent.SetNLine(nline);
 
-      XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, __L("Script [%s] ERROR %d: %s, line %d \"%s\"") , namescript.Get(), errorcode, errormsg, nline, currenttoken);
+      XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, _L("Script [%s] ERROR %d: %s, line %d \"%s\"") , namescript.Get(), errorcode, errormsg, nline, currenttoken);
 
       PostEvent(&xevent);      
       iscancelexec = true;
@@ -1534,8 +1534,8 @@ bool SCRIPT_LNG_G::DeleteVarsExec()
 * --------------------------------------------------------------------------------------------------------------------*/
 bool SCRIPT_LNG_G::IsSpace(XCHAR character)
 {
-  if(character == __C(' '))   return true;
-  if(character == __C('\x09')) return true;
+  if(character == _C(' '))   return true;
+  if(character == _C('\x09')) return true;
 
   return false;
 }
@@ -1554,7 +1554,7 @@ bool SCRIPT_LNG_G::IsSpace(XCHAR character)
 * --------------------------------------------------------------------------------------------------------------------*/
 bool SCRIPT_LNG_G::IsDigit(XCHAR character)
 {
-  if((character>=__C('0'))&&(character <= __C('9'))) return true;
+  if((character>=_C('0'))&&(character <= _C('9'))) return true;
 
   return false;
 }
@@ -1595,7 +1595,7 @@ bool SCRIPT_LNG_G::IsDelimiter(XCHAR c)
 {
   if(c==0) return true;
 
-  XSTRING delimiter(__L("\x09\r\n {}!:;,+-<>'/*%^=()&|"));
+  XSTRING delimiter(_L("\x09\r\n {}!:;,+-<>'/*%^=()&|"));
 
   if(delimiter.FindCharacter(c)!=XSTRING_NOTFOUND) return true;
 
@@ -1687,7 +1687,7 @@ void SCRIPT_LNG_G::EvalExp(SCRIPT_LNG_G_VAR& value)
         }
     }
 
-  if(currenttoken[0] == __C(';'))
+  if(currenttoken[0] == _C(';'))
     {
       value.Clear();
       return;
@@ -1724,7 +1724,7 @@ void SCRIPT_LNG_G::EvalExp0(SCRIPT_LNG_G_VAR& value)
            GetToken();
 
            // Multi-assign: a, b, c = f()  (uses lastreturnmultiple when RHS is MULTIPLE)
-           if(currenttoken[0] == __C(','))
+           if(currenttoken[0] == _C(','))
              {
                XVECTOR<XSTRING*> lhsnames;
                XSTRING*          firstname = GEN_NEW XSTRING();
@@ -1738,7 +1738,7 @@ void SCRIPT_LNG_G::EvalExp0(SCRIPT_LNG_G_VAR& value)
                (*firstname) = tempttoken;
                lhsnames.Add(firstname);
 
-               while(currenttoken[0] == __C(','))
+               while(currenttoken[0] == _C(','))
                  {
                    GetToken();
 
@@ -1772,7 +1772,7 @@ void SCRIPT_LNG_G::EvalExp0(SCRIPT_LNG_G_VAR& value)
                    GetToken();
                  }
 
-               if(currenttoken[0] != __C('='))
+               if(currenttoken[0] != _C('='))
                  {
                    lhsnames.DeleteContents();
                    lhsnames.DeleteAll();
@@ -1819,7 +1819,7 @@ void SCRIPT_LNG_G::EvalExp0(SCRIPT_LNG_G_VAR& value)
                return;
              }
 
-           if(currenttoken[0] == __C('='))
+           if(currenttoken[0] == _C('='))
              {
                GetToken();
 
@@ -1949,7 +1949,7 @@ void SCRIPT_LNG_G::EvalExp1(SCRIPT_LNG_G_VAR& value)
   XCHAR   operation;
   XSTRING relops;
 
-  relops.Format(__L("%c%c%c%c%c%c"), SCRIPT_LNG_G_DOUBLEOPERATOR_LT, SCRIPT_LNG_G_DOUBLEOPERATOR_LE, SCRIPT_LNG_G_DOUBLEOPERATOR_GT, SCRIPT_LNG_G_DOUBLEOPERATOR_GE, SCRIPT_LNG_G_DOUBLEOPERATOR_EQ, SCRIPT_LNG_G_DOUBLEOPERATOR_NE);
+  relops.Format(_L("%c%c%c%c%c%c"), SCRIPT_LNG_G_DOUBLEOPERATOR_LT, SCRIPT_LNG_G_DOUBLEOPERATOR_LE, SCRIPT_LNG_G_DOUBLEOPERATOR_GT, SCRIPT_LNG_G_DOUBLEOPERATOR_GE, SCRIPT_LNG_G_DOUBLEOPERATOR_EQ, SCRIPT_LNG_G_DOUBLEOPERATOR_NE);
   EvalExp2(value);
 
   operation = currenttoken[0];
@@ -2034,11 +2034,11 @@ void SCRIPT_LNG_G::EvalExp2(SCRIPT_LNG_G_VAR& value)
   XCHAR   operation;
   XSTRING okops;
 
-  okops.Format(__L("(%c%c-+"), SCRIPT_LNG_G_DOUBLEOPERATOR_INC, SCRIPT_LNG_G_DOUBLEOPERATOR_DEC);
+  okops.Format(_L("(%c%c-+"), SCRIPT_LNG_G_DOUBLEOPERATOR_INC, SCRIPT_LNG_G_DOUBLEOPERATOR_DEC);
 
   EvalExp3(value);
 
-  while(((operation = currenttoken[0]) == __C('+')) || (operation == __C('-')))
+  while(((operation = currenttoken[0]) == _C('+')) || (operation == _C('-')))
     {
       GetToken();
 
@@ -2081,7 +2081,7 @@ void SCRIPT_LNG_G::EvalExp2(SCRIPT_LNG_G_VAR& value)
 
       switch(operation)
         {
-          case __C('-'):  if(usefloat)
+          case _C('-'):  if(usefloat)
                             {
                               double result = value.GetValueDouble() - partialvalue.GetValueDouble();
                               value.SetType(SCRIPT_LNG_G_TOKENIREPS_FLOAT);
@@ -2090,7 +2090,7 @@ void SCRIPT_LNG_G::EvalExp2(SCRIPT_LNG_G_VAR& value)
                            else value.SetValueInteger(value.GetValueInteger() - partialvalue.GetValueInteger());
                            break;
 
-          case __C('+'):  if(usefloat)
+          case _C('+'):  if(usefloat)
                             {
                               double result = value.GetValueDouble() + partialvalue.GetValueDouble();
                               value.SetType(SCRIPT_LNG_G_TOKENIREPS_FLOAT);
@@ -2118,11 +2118,11 @@ void SCRIPT_LNG_G::EvalExp3(SCRIPT_LNG_G_VAR& value)
   XSTRING   okops;
   SCRIPT_LNG_G_VAR  partialvalue;
 
-  okops.Format(__L("(%c%c-+"), SCRIPT_LNG_G_DOUBLEOPERATOR_INC, SCRIPT_LNG_G_DOUBLEOPERATOR_DEC);
+  okops.Format(_L("(%c%c-+"), SCRIPT_LNG_G_DOUBLEOPERATOR_INC, SCRIPT_LNG_G_DOUBLEOPERATOR_DEC);
 
   EvalExp4(value);
 
-  while( ((operation = currenttoken[0]) == __C('*')) || (operation == __C('/')) || (operation == __C('%')))
+  while( ((operation = currenttoken[0]) == _C('*')) || (operation == _C('/')) || (operation == _C('%')))
     {
       GetToken();
 
@@ -2145,7 +2145,7 @@ void SCRIPT_LNG_G::EvalExp3(SCRIPT_LNG_G_VAR& value)
       switch(operation)
         {
           // mul, div, or modulus
-          case __C('*'): if(usefloat)
+          case _C('*'): if(usefloat)
                            {
                              double result = value.GetValueDouble() * partialvalue.GetValueDouble();
                              value.SetType(SCRIPT_LNG_G_TOKENIREPS_FLOAT);
@@ -2154,7 +2154,7 @@ void SCRIPT_LNG_G::EvalExp3(SCRIPT_LNG_G_VAR& value)
                           else value.SetValueInteger(value.GetValueInteger() * partialvalue.GetValueInteger());
                           break;
 
-          case __C('/'): if(usefloat)
+          case _C('/'): if(usefloat)
                            {
                              double divisor = partialvalue.GetValueDouble();
                              if(divisor == 0.0)
@@ -2180,7 +2180,7 @@ void SCRIPT_LNG_G::EvalExp3(SCRIPT_LNG_G_VAR& value)
                            }
                           break;
 
-          case __C('%'): if(usefloat)
+          case _C('%'): if(usefloat)
                            {
                              double divisor = partialvalue.GetValueDouble();
                              if(divisor == 0.0)
@@ -2224,10 +2224,10 @@ void SCRIPT_LNG_G::EvalExp4(SCRIPT_LNG_G_VAR& value)
   XCHAR operation;
   XCHAR temptoken;
 
-  operation = __C('\0');
+  operation = _C('\0');
 
   // Unary logical NOT: right-associative (!!x)
-  if((tokentype != SCRIPT_LNG_G_TOKENTYPES_STRING) && (currenttoken[0] == __C('!')))
+  if((tokentype != SCRIPT_LNG_G_TOKENTYPES_STRING) && (currenttoken[0] == _C('!')))
     {
       GetToken();
       EvalExp4(value);
@@ -2242,8 +2242,8 @@ void SCRIPT_LNG_G::EvalExp4(SCRIPT_LNG_G_VAR& value)
 
   if(tokentype != SCRIPT_LNG_G_TOKENTYPES_STRING)
     {
-      if((currenttoken[0] == __C('+'))  ||
-         (currenttoken[0] == __C('-'))  ||
+      if((currenttoken[0] == _C('+'))  ||
+         (currenttoken[0] == _C('-'))  ||
          (currenttoken[0] == SCRIPT_LNG_G_DOUBLEOPERATOR_INC) ||
          (currenttoken[0] == SCRIPT_LNG_G_DOUBLEOPERATOR_DEC))
         {
@@ -2281,7 +2281,7 @@ void SCRIPT_LNG_G::EvalExp4(SCRIPT_LNG_G_VAR& value)
 
   EvalExp5(value);
 
-  if(operation != __C('\0'))
+  if(operation != _C('\0'))
     {
       if(!value.IsNumeric())
         {
@@ -2289,7 +2289,7 @@ void SCRIPT_LNG_G::EvalExp4(SCRIPT_LNG_G_VAR& value)
           return;
         }
 
-      if(operation == __C('-'))
+      if(operation == _C('-'))
         {
           if(value.GetType() == SCRIPT_LNG_G_TOKENIREPS_FLOAT)
                  value.SetValueFloat(-value.GetValueDouble());
@@ -2310,13 +2310,13 @@ void SCRIPT_LNG_G::EvalExp4(SCRIPT_LNG_G_VAR& value)
 * --------------------------------------------------------------------------------------------------------------------*/
 void SCRIPT_LNG_G::EvalExp5(SCRIPT_LNG_G_VAR& value)
 {
-  if(currenttoken[0] == __C('('))
+  if(currenttoken[0] == _C('('))
     {
       GetToken();
 
       EvalExp0(value);
 
-      if(currenttoken[0] != __C(')'))
+      if(currenttoken[0] != _C(')'))
         {
           HaveError(SCRIPT_LNG_G_ERRORCODE_PAREN_EXPECTED);
           return;
@@ -2487,9 +2487,9 @@ void SCRIPT_LNG_G::Atom(SCRIPT_LNG_G_VAR& value)
 
       case SCRIPT_LNG_G_TOKENTYPES_NUMBER     : { XSTRING string(currenttoken);
 
-                                                  if((string.FindCharacter(__C('.')) != XSTRING_NOTFOUND) ||
-                                                     (string.FindCharacter(__C('e')) != XSTRING_NOTFOUND) ||
-                                                     (string.FindCharacter(__C('E')) != XSTRING_NOTFOUND))
+                                                  if((string.FindCharacter(_C('.')) != XSTRING_NOTFOUND) ||
+                                                     (string.FindCharacter(_C('e')) != XSTRING_NOTFOUND) ||
+                                                     (string.FindCharacter(_C('E')) != XSTRING_NOTFOUND))
                                                     {
                                                       value.SetType(SCRIPT_LNG_G_TOKENIREPS_FLOAT);
                                                       value.SetValueFloat(string.ConvertToDouble());
@@ -2542,13 +2542,13 @@ void SCRIPT_LNG_G::Atom(SCRIPT_LNG_G_VAR& value)
                                                 }
                                                 return;
 
-      case SCRIPT_LNG_G_TOKENTYPES_DELIMITER  : if(currenttoken[0] == __C('\''))
+      case SCRIPT_LNG_G_TOKENTYPES_DELIMITER  : if(currenttoken[0] == _C('\''))
                                                   {
                                                     value.SetType(SCRIPT_LNG_G_TOKENIREPS_CHAR);
                                                     value.SetValueCharacter((XCHAR)(*ipprg));
                                                     ipprg++;
 
-                                                    if((*ipprg)!=__C('\''))
+                                                    if((*ipprg)!=_C('\''))
                                                       {
                                                         HaveError(SCRIPT_LNG_G_ERRORCODE_QUOTE_EXPECTED);
                                                         return;
@@ -2561,7 +2561,7 @@ void SCRIPT_LNG_G::Atom(SCRIPT_LNG_G_VAR& value)
                                                     return;
                                                   }
 
-                                                if(currenttoken[0] == __C(')'))
+                                                if(currenttoken[0] == _C(')'))
                                                   {
                                                   }
                                                  else HaveError(SCRIPT_LNG_G_ERRORCODE_SYNTAX);
@@ -2900,7 +2900,7 @@ void SCRIPT_LNG_G::FindEndofBlock()
 
   GetToken();
 
-  if(currenttoken[0] != __C('{'))
+  if(currenttoken[0] != _C('{'))
     {
       HaveError(SCRIPT_LNG_G_ERRORCODE_BRACE_EXPECTED);
       return;
@@ -2910,13 +2910,13 @@ void SCRIPT_LNG_G::FindEndofBlock()
 
   do{ GetToken();
 
-      if(currenttoken[0] == __C('{'))
+      if(currenttoken[0] == _C('{'))
         {
           brace++;
         }
        else
         {
-          if(currenttoken[0] == __C('}')) brace--;
+          if(currenttoken[0] == _C('}')) brace--;
         }
 
     } while(brace && tokenireps != SCRIPT_LNG_G_TOKENIREPS_END);
@@ -2942,7 +2942,7 @@ void SCRIPT_LNG_G::SkipStatement()
 
   GetToken();
 
-  if(currenttoken[0] == __C('{'))
+  if(currenttoken[0] == _C('{'))
     {
       PutBackToken();
       FindEndofBlock();
@@ -2988,7 +2988,7 @@ void SCRIPT_LNG_G::SkipStatement()
   if(tokenireps == SCRIPT_LNG_G_TOKENIREPS_FOR)
     {
       GetToken();
-      if(currenttoken[0] != __C('('))
+      if(currenttoken[0] != _C('('))
         {
           HaveError(SCRIPT_LNG_G_ERRORCODE_PAREN_EXPECTED);
           return;
@@ -2998,8 +2998,8 @@ void SCRIPT_LNG_G::SkipStatement()
       while(paren && tokenireps != SCRIPT_LNG_G_TOKENIREPS_END)
         {
           GetToken();
-          if(currenttoken[0] == __C('(')) paren++;
-          if(currenttoken[0] == __C(')')) paren--;
+          if(currenttoken[0] == _C('(')) paren++;
+          if(currenttoken[0] == _C(')')) paren--;
         }
 
       SkipStatement();
@@ -3009,7 +3009,7 @@ void SCRIPT_LNG_G::SkipStatement()
   if(tokenireps == SCRIPT_LNG_G_TOKENIREPS_SWITCH)
     {
       EvalExp(dummy);
-      if(currenttoken[0] != __C('{'))
+      if(currenttoken[0] != _C('{'))
         {
           HaveError(SCRIPT_LNG_G_ERRORCODE_BRACE_EXPECTED);
           return;
@@ -3028,10 +3028,10 @@ void SCRIPT_LNG_G::SkipStatement()
           return;
         }
 
-      if(currenttoken[0] == __C('(')) paren++;
-      if(currenttoken[0] == __C(')')) paren--;
+      if(currenttoken[0] == _C('(')) paren++;
+      if(currenttoken[0] == _C(')')) paren--;
 
-      if((currenttoken[0] == __C(';')) && !paren)
+      if((currenttoken[0] == _C(';')) && !paren)
         {
           return;
         }
@@ -3091,9 +3091,9 @@ void SCRIPT_LNG_G::DeclareGlobalVariable()
 
       GetToken();
 
-    } while(currenttoken[0] == __C(','));
+    } while(currenttoken[0] == _C(','));
 
-  if(currenttoken[0] != __C(';'))  
+  if(currenttoken[0] != _C(';'))  
     {
       HaveError(SCRIPT_LNG_G_ERRORCODE_SEMI_EXPECTED);
     }
@@ -3159,9 +3159,9 @@ void SCRIPT_LNG_G::DeclareLocalVariable()
 
       GetToken();
 
-    } while(currenttoken[0] == __C(','));
+    } while(currenttoken[0] == _C(','));
 
-  if(currenttoken[0] != __C(';'))
+  if(currenttoken[0] != _C(';'))
     {
       HaveError(SCRIPT_LNG_G_ERRORCODE_SEMI_EXPECTED);      
     }
@@ -3184,15 +3184,15 @@ SCRIPT_LNG_G_TOKENTYPES SCRIPT_LNG_G::GetToken()
   XSTRING   delimiters;  
   XSTRING   otherdelimiters;
 
-  dobleops        = __L("!<>=+-&|");
-  delimiters      = __L("{}");  
-  otherdelimiters = __L("+-*^/%=;:(),'");
+  dobleops        = _L("!<>=+-&|");
+  delimiters      = _L("{}");  
+  otherdelimiters = _L("+-*^/%=;:(),'");
 
   tokentype       = SCRIPT_LNG_G_TOKENTYPES_UNDEFTT;
   tokenireps      = SCRIPT_LNG_G_TOKENIREPS_UNDEFTOK;
 
   temptoken       = currenttoken;
-  (*temptoken)    = __C('\0');
+  (*temptoken)    = _C('\0');
 
   if(!ipprg)
     {
@@ -3201,7 +3201,7 @@ SCRIPT_LNG_G_TOKENTYPES SCRIPT_LNG_G::GetToken()
     }
 
   // Skip over white space and any supported newline convention.
-  while((*ipprg) != __C('\0'))
+  while((*ipprg) != _C('\0'))
     {
       if(IsSpace(*ipprg))
         {
@@ -3209,14 +3209,14 @@ SCRIPT_LNG_G_TOKENTYPES SCRIPT_LNG_G::GetToken()
           continue;
         }
 
-      if((*ipprg) == __C('\r'))
+      if((*ipprg) == _C('\r'))
         {
           ++ipprg;
-          if((*ipprg) == __C('\n')) ++ipprg;
+          if((*ipprg) == _C('\n')) ++ipprg;
           continue;
         }
 
-      if((*ipprg) == __C('\n'))
+      if((*ipprg) == _C('\n'))
         {
           ++ipprg;
           continue;
@@ -3226,9 +3226,9 @@ SCRIPT_LNG_G_TOKENTYPES SCRIPT_LNG_G::GetToken()
     }
 
   // Check for end of ipprgram.
-  if((*ipprg) == __C('\0'))
+  if((*ipprg) == _C('\0'))
     {
-      currenttoken[0]   = __C('\0');
+      currenttoken[0]   = _C('\0');
       tokenireps        = SCRIPT_LNG_G_TOKENIREPS_END;
 
       return (tokentype = SCRIPT_LNG_G_TOKENTYPES_DELIMITER);
@@ -3240,22 +3240,22 @@ SCRIPT_LNG_G_TOKENTYPES SCRIPT_LNG_G::GetToken()
       (*temptoken) = (*ipprg);
       temptoken++;
 
-      (*temptoken) = __C('\0');
+      (*temptoken) = _C('\0');
       ipprg++;
 
       return (tokentype = SCRIPT_LNG_G_TOKENTYPES_BLOCK);
     }
 
   // Look for comments.
-  if((*ipprg) == __C('/'))
+  if((*ipprg) == _C('/'))
     {
-      if(*(ipprg + 1) == __C('*'))
+      if(*(ipprg + 1) == _C('*'))
         { // is a /* comment
           ipprg += 2;
 
-          while((*ipprg) != __C('\0'))
+          while((*ipprg) != _C('\0'))
             {
-              if(((*ipprg) == __C('*')) && (*(ipprg+1) == __C('/')))
+              if(((*ipprg) == _C('*')) && (*(ipprg+1) == _C('/')))
                 {
                   ipprg += 2;
                   return (tokentype = SCRIPT_LNG_G_TOKENTYPES_DELIMITER);
@@ -3274,17 +3274,17 @@ SCRIPT_LNG_G_TOKENTYPES SCRIPT_LNG_G::GetToken()
               // is a // comment
               ipprg += 2;
               // Find end of comment.
-              while(((*ipprg) != __C('\r')) && ((*ipprg) != __C('\n')) && ((*ipprg) != __C('\0')))
+              while(((*ipprg) != _C('\r')) && ((*ipprg) != _C('\n')) && ((*ipprg) != _C('\0')))
                 {
                   ipprg++;
                 }
 
-              if((*ipprg) == __C('\r'))
+              if((*ipprg) == _C('\r'))
                 {
                   ipprg++;
-                  if((*ipprg) == __C('\n')) ipprg++;
+                  if((*ipprg) == _C('\n')) ipprg++;
                 }
-               else if((*ipprg) == __C('\n')) ipprg++;
+               else if((*ipprg) == _C('\n')) ipprg++;
 
               return (tokentype = SCRIPT_LNG_G_TOKENTYPES_DELIMITER);
             }
@@ -3296,7 +3296,7 @@ SCRIPT_LNG_G_TOKENTYPES SCRIPT_LNG_G::GetToken()
     {
       switch((*ipprg))
         {
-          case '=': if(*(ipprg+1) == __C('='))
+          case '=': if(*(ipprg+1) == _C('='))
                       {
                         ipprg++; 
                         ipprg++;
@@ -3307,11 +3307,11 @@ SCRIPT_LNG_G_TOKENTYPES SCRIPT_LNG_G::GetToken()
                         (*temptoken) = SCRIPT_LNG_G_DOUBLEOPERATOR_EQ;
                         temptoken++;
 
-                        (*temptoken) = __C('\0');
+                        (*temptoken) = _C('\0');
                       }
                     break;
 
-          case '!': if(*(ipprg+1) == __C('='))
+          case '!': if(*(ipprg+1) == _C('='))
                       {
                         ipprg++; 
                         ipprg++;
@@ -3322,19 +3322,19 @@ SCRIPT_LNG_G_TOKENTYPES SCRIPT_LNG_G::GetToken()
                         (*temptoken) = SCRIPT_LNG_G_DOUBLEOPERATOR_NE;
                         temptoken++;
 
-                        (*temptoken) = __C('\0');
+                        (*temptoken) = _C('\0');
                       }
                      else
                       {
                         // Unary / logical NOT token
                         ipprg++;
-                        (*temptoken) = __C('!');
+                        (*temptoken) = _C('!');
                         temptoken++;
-                        (*temptoken) = __C('\0');
+                        (*temptoken) = _C('\0');
                       }
                     break;
 
-          case '&': if(*(ipprg+1) == __C('&'))
+          case '&': if(*(ipprg+1) == _C('&'))
                       {
                         ipprg++;
                         ipprg++;
@@ -3345,11 +3345,11 @@ SCRIPT_LNG_G_TOKENTYPES SCRIPT_LNG_G::GetToken()
                         (*temptoken) = SCRIPT_LNG_G_DOUBLEOPERATOR_AND;
                         temptoken++;
 
-                        (*temptoken) = __C('\0');
+                        (*temptoken) = _C('\0');
                       }
                     break;
 
-          case '|': if(*(ipprg+1) == __C('|'))
+          case '|': if(*(ipprg+1) == _C('|'))
                       {
                         ipprg++;
                         ipprg++;
@@ -3360,11 +3360,11 @@ SCRIPT_LNG_G_TOKENTYPES SCRIPT_LNG_G::GetToken()
                         (*temptoken) = SCRIPT_LNG_G_DOUBLEOPERATOR_OR;
                         temptoken++;
 
-                        (*temptoken) = __C('\0');
+                        (*temptoken) = _C('\0');
                       }
                     break;
 
-          case '<': if(*(ipprg+1) == __C('='))
+          case '<': if(*(ipprg+1) == _C('='))
                       {
                         ipprg++; 
                         ipprg++;
@@ -3376,7 +3376,7 @@ SCRIPT_LNG_G_TOKENTYPES SCRIPT_LNG_G::GetToken()
                       }
                      else
                       {
-                        if(*(ipprg+1) == __C('<'))
+                        if(*(ipprg+1) == _C('<'))
                           {
                             ipprg++; 
                             ipprg++;
@@ -3394,10 +3394,10 @@ SCRIPT_LNG_G_TOKENTYPES SCRIPT_LNG_G::GetToken()
                       }
 
                     temptoken++;
-                    *temptoken = __C('\0');
+                    *temptoken = _C('\0');
                     break;
 
-          case '>': if(*(ipprg+1) == __C('='))
+          case '>': if(*(ipprg+1) == _C('='))
                       {
                         ipprg++; 
                         ipprg++;
@@ -3409,7 +3409,7 @@ SCRIPT_LNG_G_TOKENTYPES SCRIPT_LNG_G::GetToken()
                       }
                      else
                       {
-                        if(*(ipprg+1) == __C('>'))
+                        if(*(ipprg+1) == _C('>'))
                           {
                             ipprg++; 
                             ipprg++;
@@ -3426,10 +3426,10 @@ SCRIPT_LNG_G_TOKENTYPES SCRIPT_LNG_G::GetToken()
                           }
                       }
                      temptoken++;
-                     (*temptoken) = __C('\0');
+                     (*temptoken) = _C('\0');
                     break;
 
-          case '+': if(*(ipprg+1) == __C('+'))
+          case '+': if(*(ipprg+1) == _C('+'))
                       {
                         ipprg++;
                         ipprg++;
@@ -3440,11 +3440,11 @@ SCRIPT_LNG_G_TOKENTYPES SCRIPT_LNG_G::GetToken()
                         (*temptoken) = SCRIPT_LNG_G_DOUBLEOPERATOR_INC;
                         temptoken++;
 
-                        (*temptoken) = __C('\0');
+                        (*temptoken) = _C('\0');
                       }
                     break;
 
-          case '-': if(*(ipprg+1) == __C('-'))
+          case '-': if(*(ipprg+1) == _C('-'))
                       {
                         ipprg++;
                         ipprg++;
@@ -3475,69 +3475,69 @@ SCRIPT_LNG_G_TOKENTYPES SCRIPT_LNG_G::GetToken()
     }
 
   // Read a quoted string.
-  if((*ipprg) == __C('"'))
+  if((*ipprg) == _C('"'))
     {
       ipprg++;
 
-      while(((*ipprg) != __C('"')) && ((*ipprg) != __C('\r')) && ((*ipprg) != __C('\n')) && (*ipprg))
+      while(((*ipprg) != _C('"')) && ((*ipprg) != _C('\r')) && ((*ipprg) != _C('\n')) && (*ipprg))
         {
           // Check for escape sequences: \n \r \\ \"
-          if((*ipprg) == __C('\\'))
+          if((*ipprg) == _C('\\'))
             {
-              if(*(ipprg+1) == __C('n'))
+              if(*(ipprg+1) == _C('n'))
                 {
                   if((temptoken - currenttoken) >= SCRIPT_LNG_G_MAXTOKENLEN)
                     {
-                      (*temptoken) = __C('\0');
+                      (*temptoken) = _C('\0');
                       HaveError(SCRIPT_LNG_G_ERRORCODE_TOKEN_TOO_LONG);
                       return tokentype;
                     }
 
                   ipprg++;
-                  (*temptoken++) = __C('\n');
+                  (*temptoken++) = _C('\n');
                 }
-               else if(*(ipprg+1) == __C('r'))
+               else if(*(ipprg+1) == _C('r'))
                 {
                   if((temptoken - currenttoken) >= SCRIPT_LNG_G_MAXTOKENLEN)
                     {
-                      (*temptoken) = __C('\0');
+                      (*temptoken) = _C('\0');
                       HaveError(SCRIPT_LNG_G_ERRORCODE_TOKEN_TOO_LONG);
                       return tokentype;
                     }
 
                   ipprg++;
-                  (*temptoken++) = __C('\r');
+                  (*temptoken++) = _C('\r');
                 }
-               else if(*(ipprg+1) == __C('\\'))
+               else if(*(ipprg+1) == _C('\\'))
                 {
                   if((temptoken - currenttoken) >= SCRIPT_LNG_G_MAXTOKENLEN)
                     {
-                      (*temptoken) = __C('\0');
+                      (*temptoken) = _C('\0');
                       HaveError(SCRIPT_LNG_G_ERRORCODE_TOKEN_TOO_LONG);
                       return tokentype;
                     }
 
                   ipprg++;
-                  (*temptoken++) = __C('\\');
+                  (*temptoken++) = _C('\\');
                 }
-               else if(*(ipprg+1) == __C('"'))
+               else if(*(ipprg+1) == _C('"'))
                 {
                   if((temptoken - currenttoken) >= SCRIPT_LNG_G_MAXTOKENLEN)
                     {
-                      (*temptoken) = __C('\0');
+                      (*temptoken) = _C('\0');
                       HaveError(SCRIPT_LNG_G_ERRORCODE_TOKEN_TOO_LONG);
                       return tokentype;
                     }
 
                   ipprg++;
-                  (*temptoken++) = __C('"');
+                  (*temptoken++) = _C('"');
                 }
                else
                 {
                   // Unknown escape: keep the next character literally.
                   if((temptoken - currenttoken) >= SCRIPT_LNG_G_MAXTOKENLEN)
                     {
-                      (*temptoken) = __C('\0');
+                      (*temptoken) = _C('\0');
                       HaveError(SCRIPT_LNG_G_ERRORCODE_TOKEN_TOO_LONG);
                       return tokentype;
                     }
@@ -3550,7 +3550,7 @@ SCRIPT_LNG_G_TOKENTYPES SCRIPT_LNG_G::GetToken()
             {
               if((temptoken - currenttoken) >= SCRIPT_LNG_G_MAXTOKENLEN)
                 {
-                  (*temptoken) = __C('\0');
+                  (*temptoken) = _C('\0');
                   HaveError(SCRIPT_LNG_G_ERRORCODE_TOKEN_TOO_LONG);
                   return tokentype;
                 }
@@ -3561,7 +3561,7 @@ SCRIPT_LNG_G_TOKENTYPES SCRIPT_LNG_G::GetToken()
           ipprg++;
         }
 
-        if((*ipprg) == __C('\r') || (*ipprg) == __C('\n') || (*ipprg) == 0)
+        if((*ipprg) == _C('\r') || (*ipprg) == _C('\n') || (*ipprg) == 0)
           {
             HaveError(SCRIPT_LNG_G_ERRORCODE_SYNTAX);
             return tokentype;
@@ -3574,25 +3574,25 @@ SCRIPT_LNG_G_TOKENTYPES SCRIPT_LNG_G::GetToken()
     }
 
   // Read an integer or floating-point number.
-  if(IsDigit((*ipprg)) || (((*ipprg) == __C('.')) && IsDigit(*(ipprg+1))))
+  if(IsDigit((*ipprg)) || (((*ipprg) == _C('.')) && IsDigit(*(ipprg+1))))
     {
       bool havepoint       = false;
       bool haveexponent    = false;
       bool havedigit       = false;
       bool haveexponentdigit = false;
 
-      while((*ipprg) != __C('\0'))
+      while((*ipprg) != _C('\0'))
         {
           if(IsDigit((*ipprg)))
             {
               havedigit = true;
               if(haveexponent) haveexponentdigit = true;
             }
-           else if(((*ipprg) == __C('.')) && !havepoint && !haveexponent)
+           else if(((*ipprg) == _C('.')) && !havepoint && !haveexponent)
             {
               havepoint = true;
             }
-           else if((((*ipprg) == __C('e')) || ((*ipprg) == __C('E'))) && !haveexponent && havedigit)
+           else if((((*ipprg) == _C('e')) || ((*ipprg) == _C('E'))) && !haveexponent && havedigit)
             {
               haveexponent      = true;
               haveexponentdigit = false;
@@ -3604,7 +3604,7 @@ SCRIPT_LNG_G_TOKENTYPES SCRIPT_LNG_G::GetToken()
 
           if((temptoken - currenttoken) >= SCRIPT_LNG_G_MAXTOKENLEN)
             {
-              (*temptoken) = __C('\0');
+              (*temptoken) = _C('\0');
               HaveError(SCRIPT_LNG_G_ERRORCODE_TOKEN_TOO_LONG);
               return tokentype;
             }
@@ -3612,11 +3612,11 @@ SCRIPT_LNG_G_TOKENTYPES SCRIPT_LNG_G::GetToken()
           (*temptoken++) = (*ipprg);
           ipprg++;
 
-          if(haveexponent && !haveexponentdigit && (((*ipprg) == __C('+')) || ((*ipprg) == __C('-'))))
+          if(haveexponent && !haveexponentdigit && (((*ipprg) == _C('+')) || ((*ipprg) == _C('-'))))
             {
               if((temptoken - currenttoken) >= SCRIPT_LNG_G_MAXTOKENLEN)
                 {
-                  (*temptoken) = __C('\0');
+                  (*temptoken) = _C('\0');
                   HaveError(SCRIPT_LNG_G_ERRORCODE_TOKEN_TOO_LONG);
                   return tokentype;
                 }
@@ -3626,7 +3626,7 @@ SCRIPT_LNG_G_TOKENTYPES SCRIPT_LNG_G::GetToken()
             }
         }
 
-      (*temptoken) = __C('\0');
+      (*temptoken) = _C('\0');
 
       if((haveexponent && !haveexponentdigit) || !havedigit || !IsDelimiter((*ipprg)))
         {
@@ -3640,11 +3640,11 @@ SCRIPT_LNG_G_TOKENTYPES SCRIPT_LNG_G::GetToken()
   // Read identifier or keyword.
   if(IsAlpha((*ipprg)))
     {
-      while(!IsDelimiter((*ipprg)) && ((*ipprg)!=__C('{')) && ((*ipprg)!=__C('}')))
+      while(!IsDelimiter((*ipprg)) && ((*ipprg)!=_C('{')) && ((*ipprg)!=_C('}')))
         {
           if((temptoken - currenttoken) >= SCRIPT_LNG_G_MAXIDLEN)
             {
-              (*temptoken) = __C('\0');
+              (*temptoken) = _C('\0');
               HaveError(SCRIPT_LNG_G_ERRORCODE_TOKEN_TOO_LONG);
               return tokentype;
             }
@@ -3656,7 +3656,7 @@ SCRIPT_LNG_G_TOKENTYPES SCRIPT_LNG_G::GetToken()
       tokentype = SCRIPT_LNG_G_TOKENTYPES_TEMP;
     }
 
-  (*temptoken) = __C('\0');
+  (*temptoken) = _C('\0');
 
   // Determine if token is a keyword or identifier.
   if(tokentype == SCRIPT_LNG_G_TOKENTYPES_TEMP)
@@ -3711,8 +3711,8 @@ void SCRIPT_LNG_G::PreScan()
               return;
             }
 
-          if(currenttoken[0] == __C('{')) brace++;
-          if(currenttoken[0] == __C('}')) brace--;
+          if(currenttoken[0] == _C('{')) brace++;
+          if(currenttoken[0] == _C('}')) brace--;
         }
 
       if((iscancelexec) || (errorcode != SCRIPT_ERRORCODE_NONE))
@@ -3749,14 +3749,14 @@ void SCRIPT_LNG_G::PreScan()
                   break;
                 }
 
-              if(currenttoken[0] != __C('('))
+              if(currenttoken[0] != _C('('))
                 {
                   ipprg = tempposition;
                   DeclareGlobalVariable();
                 }
                else
                 {
-                  if(currenttoken[0] == __C('('))
+                  if(currenttoken[0] == _C('('))
                     {
                       functiontype = GEN_NEW SCRIPT_LNG_G_FUNCTIONTYPE();
                       if(!functiontype) return;
@@ -3785,7 +3785,7 @@ void SCRIPT_LNG_G::PreScan()
                               break;
                             }
 
-                        } while(currenttoken[0] != __C(')'));
+                        } while(currenttoken[0] != _C(')'));
 
                     } else PutBackToken();
                 }
@@ -3793,8 +3793,8 @@ void SCRIPT_LNG_G::PreScan()
         }
        else
         {
-          if(currenttoken[0] == __C('{')) brace++;
-          if(currenttoken[0] == __C('}')) brace--;
+          if(currenttoken[0] == _C('{')) brace++;
+          if(currenttoken[0] == _C('}')) brace--;
         }
 
       if(iscancelexec) break;
@@ -3844,7 +3844,7 @@ void SCRIPT_LNG_G::GetArgs()
   argslocation = ipprg;
 
   GetToken();
-  if(*currenttoken == __C(')'))
+  if(*currenttoken == _C(')'))
     {
       return;
     }
@@ -3885,7 +3885,7 @@ void SCRIPT_LNG_G::GetArgs()
 
     } while(*currenttoken == ',');
 
-  if(*currenttoken != __C(')'))
+  if(*currenttoken != _C(')'))
     {
       for(int c=0; c<count; c++) GEN_DELETE values[c];
 
@@ -3927,7 +3927,7 @@ void SCRIPT_LNG_G::GetParams()
   do{
       GetToken();
 
-      if(currenttoken[0] != __C(')') )
+      if(currenttoken[0] != _C(')') )
         {
           if(indexstack < stackbase)
             {
@@ -3994,9 +3994,9 @@ void SCRIPT_LNG_G::GetParams()
         }
        else break;
 
-    } while(currenttoken[0] == __C(','));
+    } while(currenttoken[0] == _C(','));
 
-  if(currenttoken[0] != __C(')'))
+  if(currenttoken[0] != _C(')'))
     {
       HaveError(SCRIPT_LNG_G_ERRORCODE_PAREN_EXPECTED);
       return;
@@ -4127,7 +4127,7 @@ void SCRIPT_LNG_G::Exec_SWITCH()
 
   EvalExp(sval);
 
-  if(currenttoken[0] != __C('{'))
+  if(currenttoken[0] != _C('{'))
     {
       HaveError(SCRIPT_LNG_G_ERRORCODE_BRACE_EXPECTED);
       return;
@@ -4159,7 +4159,7 @@ void SCRIPT_LNG_G::Exec_SWITCH()
 
       GetToken();
 
-      if(currenttoken[0] != __C(':'))
+      if(currenttoken[0] != _C(':'))
         {
           HaveError(SCRIPT_LNG_G_ERRORCODE_COLON_EXPECTED);
           return;
@@ -4177,9 +4177,9 @@ void SCRIPT_LNG_G::Exec_SWITCH()
 
           do{ Interpret();
 
-              if(currenttoken[0] == __C('{'))
+              if(currenttoken[0] == _C('{'))
                     brace++;
-               else if(currenttoken[0] == __C('}')) brace--;
+               else if(currenttoken[0] == _C('}')) brace--;
 
             } while(!breakfound && tokenireps != SCRIPT_LNG_G_TOKENIREPS_END && brace);
 
@@ -4187,9 +4187,9 @@ void SCRIPT_LNG_G::Exec_SWITCH()
             {
               GetToken();
 
-              if(currenttoken[0] == __C('{'))
+              if(currenttoken[0] == _C('{'))
                      brace++;
-                else if(currenttoken[0] == __C('}')) brace--;
+                else if(currenttoken[0] == _C('}')) brace--;
             }
 
           breakfound = false;
@@ -4278,7 +4278,7 @@ void SCRIPT_LNG_G::Exec_DO()
 
       do{ GetToken();
 
-        } while((currenttoken[0] != __C(';')) && (tokenireps != SCRIPT_LNG_G_TOKENIREPS_END));
+        } while((currenttoken[0] != _C(';')) && (tokenireps != SCRIPT_LNG_G_TOKENIREPS_END));
 
       if(tokenireps == SCRIPT_LNG_G_TOKENIREPS_END)
         {
@@ -4322,7 +4322,7 @@ void SCRIPT_LNG_G::Exec_FOR()
 
   EvalExp(cond);
 
-  if(currenttoken[0] != __C(';'))
+  if(currenttoken[0] != _C(';'))
     {
       HaveError(SCRIPT_LNG_G_ERRORCODE_SEMI_EXPECTED);
       return;
@@ -4336,7 +4336,7 @@ void SCRIPT_LNG_G::Exec_FOR()
     {
 
       EvalExp(cond);
-      if(currenttoken[0] != __C(';'))
+      if(currenttoken[0] != _C(';'))
         {
           HaveError(SCRIPT_LNG_G_ERRORCODE_SEMI_EXPECTED);
           return;
@@ -4350,8 +4350,8 @@ void SCRIPT_LNG_G::Exec_FOR()
         {
           GetToken();
 
-          if(currenttoken[0] == __C('(')) parent++;
-          if(currenttoken[0] == __C(')')) parent--;
+          if(currenttoken[0] == _C('(')) parent++;
+          if(currenttoken[0] == _C(')')) parent--;
         }
 
       GetToken();

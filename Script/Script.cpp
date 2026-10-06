@@ -126,7 +126,7 @@ SCRIPT::SCRIPT()
   RegisterEvent(SCRIPT_XEVENT_TYPE_ERROR);
   RegisterEvent(SCRIPT_XEVENT_TYPE_BREAK);
 
-  thread = CREATEXTHREAD(XTHREADGROUPID_SCRIPT, __L("SCRIPT::SCRIPT"), ThreadFunction, (void*)this);
+  thread = CREATEXTHREAD(XTHREADGROUPID_SCRIPT, _L("SCRIPT::SCRIPT"), ThreadFunction, (void*)this);
 }
 
 
@@ -203,21 +203,21 @@ SCRIPT_TYPE SCRIPT::GetTypeByExtension(XCHAR* namefilescript)
       _namefilescript.GetExt(ext);
 
       #ifdef SCRIPT_G_ACTIVE
-      if(!ext.Compare(__L(".g")   , true))  
+      if(!ext.Compare(_L(".g")   , true))  
         {
           type = SCRIPT_TYPE_G;
         }
       #endif
 
       #ifdef SCRIPT_LUA_ACTIVE
-      if(!ext.Compare(__L(".lua") , true))
+      if(!ext.Compare(_L(".lua") , true))
         {
           type = SCRIPT_TYPE_LUA;
         }
       #endif
 
       #ifdef SCRIPT_JAVASCRIPT_ACTIVE
-      if(!ext.Compare(__L(".js")  , true)) 
+      if(!ext.Compare(_L(".js")  , true)) 
         {
           type = SCRIPT_TYPE_JAVASCRIPT;
         }
@@ -313,7 +313,7 @@ bool SCRIPT::Load(XPATH& xpath)
       script.Empty();
       script += _script->Get();  
 
-      GetNameScript()->Format(__L("ID%08X"), ID);
+      GetNameScript()->Format(_L("ID%08X"), ID);
 
       return true;
     }
@@ -457,7 +457,7 @@ bool SCRIPT::LoadScriptAndRun(XVECTOR<XSTRING*>* listscripts, SCRFUNCADJUSTLIBRA
             {
               XVECTOR<XSTRING*> namescripts;
 
-              linescripts->Split(__C(','), namescripts);
+              linescripts->Split(_C(','), namescripts);
 
               for(XDWORD d=0; d<namescripts.GetSize(); d++)
                 {
@@ -467,7 +467,7 @@ bool SCRIPT::LoadScriptAndRun(XVECTOR<XSTRING*>* listscripts, SCRFUNCADJUSTLIBRA
               // One CFG line is concatenated into a single in-memory script: all entries must share a language.
               if(!SCRIPT::HaveSameLanguage(&namescripts))
                 {
-                  XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, __L("Script CFG line rejected: mixed or unknown languages in \"%s\""), linescripts->Get());
+                  XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, _L("Script CFG line rejected: mixed or unknown languages in \"%s\""), linescripts->Get());
                   namescripts.DeleteContents();
                   namescripts.DeleteAll();
                   continue;
@@ -495,7 +495,7 @@ bool SCRIPT::LoadScriptAndRun(XVECTOR<XSTRING*>* listscripts, SCRFUNCADJUSTLIBRA
                           XSTRING* nameentry = namescripts.Get(d);
                           if(!nameentry) continue;
 
-                          allpath += __C(',');  
+                          allpath += _C(',');  
                           allpath += nameentry->Get();  
                         }
                                        
@@ -511,7 +511,7 @@ bool SCRIPT::LoadScriptAndRun(XVECTOR<XSTRING*>* listscripts, SCRFUNCADJUSTLIBRA
                           incache = true;
                           status  = !_script->IsEmpty();
 
-                          script->GetNameScript()->Format(__L("ID%08X"), ID);
+                          script->GetNameScript()->Format(_L("ID%08X"), ID);
                         }
 
                       #endif
@@ -614,10 +614,10 @@ bool SCRIPT::AddReturnByType()
   switch(type)
     {
       case SCRIPT_TYPE_UNKNOWN       : 
-                           default   : script += __L("\r\n"); break;
-      case SCRIPT_TYPE_G             : script += __L("\r\n"); break;
-      case SCRIPT_TYPE_LUA           : script += __L("\r");   break;
-      case SCRIPT_TYPE_JAVASCRIPT    : script += __L("\r");   break;
+                           default   : script += _L("\r\n"); break;
+      case SCRIPT_TYPE_G             : script += _L("\r\n"); break;
+      case SCRIPT_TYPE_LUA           : script += _L("\r");   break;
+      case SCRIPT_TYPE_JAVASCRIPT    : script += _L("\r");   break;
     }
 
   return true;
@@ -1181,11 +1181,11 @@ bool SCRIPT::EliminateExtraChars(XSTRING* namescript)
       return false;
     }
 
-  namescript->DeleteCharacter(__C(' '), XSTRINGCONTEXT_FROM_FIRST);
-  namescript->DeleteCharacter(__C(' '), XSTRINGCONTEXT_TO_END);
+  namescript->DeleteCharacter(_C(' '), XSTRINGCONTEXT_FROM_FIRST);
+  namescript->DeleteCharacter(_C(' '), XSTRINGCONTEXT_TO_END);
 
-  namescript->DeleteCharacter(__C('\t'), XSTRINGCONTEXT_FROM_FIRST);
-  namescript->DeleteCharacter(__C('\t'), XSTRINGCONTEXT_TO_END);
+  namescript->DeleteCharacter(_C('\t'), XSTRINGCONTEXT_FROM_FIRST);
+  namescript->DeleteCharacter(_C('\t'), XSTRINGCONTEXT_TO_END);
   
   return true;
 }
@@ -1216,7 +1216,7 @@ bool SCRIPT::ResolvePathInScriptsRoot(XCHAR* namescript, XPATH& resolvedpath)
   relativepath.Slash_Normalize(false);
 
   if(relativepath.IsEmpty()) return false;
-  if(relativepath.Get()[0] == __C('/')) return false;
+  if(relativepath.Get()[0] == _C('/')) return false;
 
   int segmentstart = 0;
 
@@ -1224,19 +1224,19 @@ bool SCRIPT::ResolvePathInScriptsRoot(XCHAR* namescript, XPATH& resolvedpath)
     {
       XCHAR character = relativepath.Get()[index];
 
-      if((character < __C(' ')) && character) return false;
-      if(character == __C(':') || character == __C('*') || character == __C('?') ||
-         character == __C('"') || character == __C('<') || character == __C('>') ||
-         character == __C('|')) return false;
+      if((character < _C(' ')) && character) return false;
+      if(character == _C(':') || character == _C('*') || character == _C('?') ||
+         character == _C('"') || character == _C('<') || character == _C('>') ||
+         character == _C('|')) return false;
 
-      if((character == __C('/')) || !character)
+      if((character == _C('/')) || !character)
         {
           int segmentsize = index - segmentstart;
 
           if(segmentsize <= 0) return false;
-          if((segmentsize == 1) && (relativepath.Get()[segmentstart] == __C('.'))) return false;
-          if((segmentsize == 2) && (relativepath.Get()[segmentstart]     == __C('.')) &&
-                                    (relativepath.Get()[segmentstart + 1] == __C('.'))) return false;
+          if((segmentsize == 1) && (relativepath.Get()[segmentstart] == _C('.'))) return false;
+          if((segmentsize == 2) && (relativepath.Get()[segmentstart]     == _C('.')) &&
+                                    (relativepath.Get()[segmentstart + 1] == _C('.'))) return false;
 
           segmentstart = index + 1;
         }
@@ -1308,7 +1308,7 @@ void SCRIPT::Clean()
   xpath.Empty();
 
   xfiletxt            = NULL;
-  namescript          = __L("");
+  namescript          = _L("");
   script.Empty();
 
   xtimer              = NULL;

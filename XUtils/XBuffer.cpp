@@ -3266,7 +3266,7 @@ bool XBUFFER::AddXBufferWithMask(XBUFFER& xbuffer, XCHAR* mask, va_list& arg)
                       int    size;
                       c++;
 
-                      if(mask[c]==__C('X'))
+                      if(mask[c]==_C('X'))
                         {
                           size = va_arg(arg, XDWORD);
                         }
@@ -3274,7 +3274,7 @@ bool XBUFFER::AddXBufferWithMask(XBUFFER& xbuffer, XCHAR* mask, va_list& arg)
                         {
                           XSTRING sizestr;
 
-                          while((mask[c]>=__C('0')) && (mask[c]<=__C('9')))
+                          while((mask[c]>=_C('0')) && (mask[c]<=_C('9')))
                             {
                               sizestr.Add(mask[c]);
                               c++;
@@ -3405,7 +3405,7 @@ XDWORD XBUFFER::CalculeExtractSizeArgWithMask(XBUFFER& xbuffer, int frompos, XCH
                       XDWORD sizearray = 0;
                       c++;
 
-                      if(mask[c]==__C('X'))
+                      if(mask[c]==_C('X'))
                         {
                           XDWORD dvar = va_arg(arg, XDWORD);
                           if(dvar) sizearray = dvar;
@@ -3414,7 +3414,7 @@ XDWORD XBUFFER::CalculeExtractSizeArgWithMask(XBUFFER& xbuffer, int frompos, XCH
                         {
                           XSTRING sizestr;
 
-                          while((mask[c]>=__C('0')) && (mask[c]<=__C('9')))
+                          while((mask[c]>=_C('0')) && (mask[c]<=_C('9')))
                             {
                               sizestr.Add(mask[c]);
                               c++;
@@ -3527,7 +3527,7 @@ bool XBUFFER::ExtractXBufferWithMask(XBUFFER& xbuffer, XCHAR* mask, va_list& arg
                       XDWORD size = 0;
                       c++;
 
-                      if(mask[c]==__C('X'))
+                      if(mask[c]==_C('X'))
                         {
                           XDWORD dvar = va_arg(arg, XDWORD);
                           if(dvar) size = dvar;
@@ -3536,7 +3536,7 @@ bool XBUFFER::ExtractXBufferWithMask(XBUFFER& xbuffer, XCHAR* mask, va_list& arg
                         {
                           XSTRING sizestr;
 
-                          while((mask[c]>=__C('0')) && (mask[c]<=__C('9')))
+                          while((mask[c]>=_C('0')) && (mask[c]<=_C('9')))
                             {
                               sizestr.Add(mask[c]);
                               c++;
