@@ -103,9 +103,9 @@ bool GRPVECTORFILESVGOBJCIRCLE::ApplyData(XFILEXMLELEMENT* element)
 
   GRPVECTORFILESVGOBJ::ApplyData(element);
 
-  cx = element->GetFloatValueAttribute(_L("cx"));
-  cy = element->GetFloatValueAttribute(_L("cy"));
-  r  = element->GetFloatValueAttribute(_L("r"));
+  cx = element->GetFloatValueAttribute(NL("cx"));
+  cy = element->GetFloatValueAttribute(NL("cy"));
+  r  = element->GetFloatValueAttribute(NL("r"));
 
   return true;
 }

@@ -37,7 +37,7 @@
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
 
 #define DIOSTREAMUDPLOCALENUMSERVERSDEFAULTSEARCHTIMEOUT      30                                        // seconds
-#define DIOSTREAMUDPLOCALENUMSERVERSID                        _L("GEN Broadcast message ID [%08X]")
+#define DIOSTREAMUDPLOCALENUMSERVERSID                        NL("GEN Broadcast message ID [%08X]")
 
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
 

@@ -41,10 +41,10 @@
 #include <string.h>
 
 #include "XBase.h"
+#include "XTranslation_GEN.h"
 #ifdef XFILE_ACTIVE
 #include "XFileJSON.h"
 #endif
-#include "XTranslation_GEN.h"
 
 
 
@@ -166,34 +166,38 @@ bool XTRANSLATION::Ini()
 * --------------------------------------------------------------------------------------------------------------------*/
 XDWORD XTRANSLATION::GetActual()
 {
-  return code;
+  return codelanguage;
 }
 
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         bool XTRANSLATION::SetActual(XDWORD code)
+* @fn         bool XTRANSLATION::SetActual(XDWORD codelanguage)
 * @brief      Set actual
 * @ingroup    XUTILS
 * 
-* @param[in]  code : Code value.
+* @param[in]  codelanguage : Code language value.
 * 
 * @return     bool : true if the operation is successful; otherwise false.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-bool XTRANSLATION::SetActual(XDWORD code)
+bool XTRANSLATION::SetActual(XDWORD codelanguage)
 {
-  if(this->code == code) return false;
+  if(this->codelanguage == codelanguage) return false;
 
-  if((!IsLanguageAvailable(code)) && (!XTRANSLATION_GEN::GetInstance().IsLanguageAvailable(code))) return false;
+  if(!IsLanguageAvailable(codelanguage)) return false;
 
-  this->code = code;
+  if(!XTRANSLATION_GEN::GetInstance().IsLanguageAvailable(codelanguage)) return false;
+
+  this->codelanguage = codelanguage;
 
   Translate_Delete();
 
-  XTRANSLATION_GEN::GetInstance().Sentences_AddToTranslation(code);
+  if(!Translate_Load()) return false;
 
-  return Translate_Load();
+  XTRANSLATION_GEN::GetInstance().SetActual(codelanguage);
+
+  return true;
 }
 
 
@@ -330,7 +334,7 @@ bool XTRANSLATION::LoadLanguageAvailable()
   if(!xfilejson.ReadAllFile())     return false;
   if(!xfilejson.DecodeAllLines())  return false;
 
-  XFILEJSONARRAY* languages  = (XFILEJSONARRAY*)xfilejson.GetObj(_L("languages"));
+  XFILEJSONARRAY* languages  = (XFILEJSONARRAY*)xfilejson.GetObj(NL("languages"));
   if(languages)
     {
       for(XDWORD c=0; c<languages->GetValues()->GetSize(); c++)
@@ -465,10 +469,10 @@ bool XTRANSLATION::Translate_Load()
   if(!xfilejson.ReadAllFile())     return false;
   if(!xfilejson.DecodeAllLines())  return false;
 
-  int languageindex = GetIndexLanguageByCode(code);
+  int languageindex = GetIndexLanguageByCode(codelanguage);
   if(languageindex == -1) return false;
 
-  XFILEJSONARRAY* translations  = (XFILEJSONARRAY*)xfilejson.GetObj(_L("translations"));
+  XFILEJSONARRAY* translations  = (XFILEJSONARRAY*)xfilejson.GetObj(NL("translations"));
   if(translations)
     {
       for(XDWORD c=0; c<translations->GetValues()->GetSize(); c++)
@@ -542,9 +546,9 @@ bool XTRANSLATION::Translate_Delete()
 * --------------------------------------------------------------------------------------------------------------------*/
 void XTRANSLATION::Clean()
 {
-  code  = XLANGUAGE_ISO_639_3_CODE_INVALID;
+  codelanguage  = XLANGUAGE_ISO_639_3_CODE_INVALID;
 
-  emptysentence = _L("--");
+  emptysentence = NL("--");
 
   for(XDWORD c=0; c<XTRANSLATION_MAXSENTENCES; c++)
     {

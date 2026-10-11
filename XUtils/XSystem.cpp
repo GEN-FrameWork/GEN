@@ -459,7 +459,7 @@ bool XSYSTEM::HardwareUseLittleEndian()
 * --------------------------------------------------------------------------------------------------------------------*/
 XSYSTEM_PLATFORM XSYSTEM::GetPlatform(XSTRING* namestring)
 {
-  if(namestring)  namestring->Set(_L("Unknown"));
+  if(namestring)  namestring->Set(NL("Unknown"));
 
   return XSYSTEM_PLATFORM_UNKNOWN;  
 }
@@ -695,7 +695,7 @@ int XSYSTEM::GetCPUUsageForProcessID(XDWORD processID)
 * --------------------------------------------------------------------------------------------------------------------*/
 XCHAR* XSYSTEM::GetEnviromentVariable(XCHAR* name)
 {
-  return _L("");
+  return NL("");
 }
 
 
@@ -968,11 +968,11 @@ bool XSYSTEM::HostFile(bool add, XCHAR* domain, XCHAR* IP)
   bool      status = false;
   
   #ifdef WINDOWS
-  xpath = _L("C:\\Windows\\System32\\drivers\\etc\\hosts");
+  xpath = NL("C:\\Windows\\System32\\drivers\\etc\\hosts");
   #endif
 
   #if defined(LINUX) || defined(ANDROID)
-  xpath = _L("/etc/hosts");
+  xpath = NL("/etc/hosts");
   #endif
 
   if(xfileTXT.Open(xpath, false))
@@ -986,7 +986,7 @@ bool XSYSTEM::HostFile(bool add, XCHAR* domain, XCHAR* IP)
             {
               XSTRING line;
 
-              line.Format(_L("%s %s"), IP, domain);  
+              line.Format(NL("%s %s"), IP, domain);  
 
               xfileTXT.AddLine(line);    
               xfileTXT.WriteAllFile();

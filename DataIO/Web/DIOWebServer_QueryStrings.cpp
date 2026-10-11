@@ -416,8 +416,8 @@ bool DIOWEBSERVER_QUERYSTRINGS::GetAllParam(XSTRING& allparam)
       XSTRING* nameparam = params.GetKey(c);
       XSTRING* param     = params.GetElement(c);
 
-      if(nameparam && param) allparam.AddFormat(_L("%s=%s"), nameparam->Get(), param->Get());
-      if(c < params.GetSize()-1)  allparam += _L("&");
+      if(nameparam && param) allparam.AddFormat(NL("%s=%s"), nameparam->Get(), param->Get());
+      if(c < params.GetSize()-1)  allparam += NL("&");
     }
 
   return true;
@@ -481,7 +481,7 @@ int DIOWEBSERVER_QUERYSTRINGS::GetParamsFromURL(XCHAR* url)
 
   _url = url;
 
-  start = _url.Find(_L("?"), true);
+  start = _url.Find(NL("?"), true);
   if(start != XSTRING_NOTFOUND)
     {
       XSTRING ID;
@@ -491,12 +491,12 @@ int DIOWEBSERVER_QUERYSTRINGS::GetParamsFromURL(XCHAR* url)
 
       do{
           value.Empty();
-          end = _url.Find(_L("&"), true, start);
+          end = _url.Find(NL("&"), true, start);
           if(end == XSTRING_NOTFOUND)
                 _url.Copy(start, param);
            else _url.Copy(start, end, param);
 
-          separator = param.Find(_L("="), true);
+          separator = param.Find(NL("="), true);
           if(separator == XSTRING_NOTFOUND)
             {
               ID = param;
@@ -575,11 +575,11 @@ bool DIOWEBSERVER_QUERYSTRINGS::CreateURLFromParams(XSTRING& urlpart)
           if(_value)
             {
               if(urlpart.IsEmpty())
-                    urlpart += _L("?");
-               else urlpart += _L("&");
+                    urlpart += NL("?");
+               else urlpart += NL("&");
 
               urlpart += _ID->Get();
-              urlpart += _L("=");
+              urlpart += NL("=");
               urlpart += _value->Get();
             }
         }

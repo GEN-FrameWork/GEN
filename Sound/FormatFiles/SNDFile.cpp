@@ -120,12 +120,12 @@ SNDFILE* SNDFILE::Create(XCHAR* path)
 
   xpath.GetExt(ext);
   
-  if(!ext.Compare(_L(".ogg"), true))
+  if(!ext.Compare(NL(".ogg"), true))
     {
       sndfile = GEN_NEW SNDFILEOGG();  
     }
 
-  if(!ext.Compare(_L(".wav"), true))
+  if(!ext.Compare(NL(".wav"), true))
     {
       sndfile = GEN_NEW SNDFILEWAV();  
     }

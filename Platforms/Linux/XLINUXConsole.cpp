@@ -288,14 +288,13 @@ bool XLINUXCONSOLE::Print(XCHAR* string)
   if(!string[0])  return false;
 
   XSTRING _string;
+  XBUFFER charstr;
 
   _string = string;
 
-  XBUFFER charstr;
-  
-  _string.ConvertToASCII(charstr);  
+  if(!_string.ConvertToUTF8(charstr)) return false;
+
   printf("%s", charstr.GetPtrChar());
-  
   fflush(stdout);
 
   #endif

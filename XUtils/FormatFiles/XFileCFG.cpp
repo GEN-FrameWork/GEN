@@ -631,7 +631,7 @@ bool XFILECFG::Load(XPATH& xpath)
                       case XFILECFG_VALUETYPE_MASK    : { XWORD* value = (XWORD*)cfgvalue->GetValue();
                                                           if(!value) return false;
 
-                                                          strvalue.UnFormat(_L("%04X"), value);
+                                                          strvalue.UnFormat(NL("%04X"), value);
                                                         }
                                                         break;
 
@@ -746,21 +746,21 @@ bool XFILECFG::Save(XPATH& xpath, XFILETXTFORMATCHAR formatchar)
                   case XFILECFG_VALUETYPE_INT     : { int* value = (int*)cfgvalue->GetValue();
                                                       if(!value) return false;
 
-                                                      strvalue.Format(_L("%d"), (*value));
+                                                      strvalue.Format(NL("%d"), (*value));
                                                     }
                                                     break;
 
                   case XFILECFG_VALUETYPE_MASK    : { XWORD* value = (XWORD*)cfgvalue->GetValue();
                                                       if(!value) return false;
 
-                                                      strvalue.Format(_L("%04X"), (*value));
+                                                      strvalue.Format(NL("%04X"), (*value));
                                                     }
                                                     break;
 
                   case XFILECFG_VALUETYPE_FLOAT   : { float* value = (float*)cfgvalue->GetValue();
                                                       if(!value) return false;
 
-                                                      strvalue.Format(_L("%f"), (*value));
+                                                      strvalue.Format(NL("%f"), (*value));
                                                     }
                                                     break;
 
@@ -1403,10 +1403,10 @@ bool XFILECFG::GenerateKeySecuence(XCHAR* IDbase, XCHAR* mask, int index, XSTRIN
     
   if(mask)  
     {
-      keymask.Format(_L("%s%s"), IDbase, mask);
+      keymask.Format(NL("%s%s"), IDbase, mask);
       key.Format(keymask.Get(), index);
 
-    } else key.Format(_L("%s%d"), IDbase, index);
+    } else key.Format(NL("%s%d"), IDbase, index);
   
   return true;
 }

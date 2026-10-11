@@ -271,7 +271,7 @@ bool DIOSTREAMTLSAIAFETCHER::Exchange(DIOSTREAMTCPIP* diostream, XSTRING& server
   if(status)
     {
       XSTRING request;
-      request.Format(_L("GET %s HTTP/1.1\r\nHost: %s\r\nConnection: close\r\nUser-Agent: Mozilla 5.0\r\nAccept: */*\r\n\r\n"), resource.Get(), server.Get());
+      request.Format(NL("GET %s HTTP/1.1\r\nHost: %s\r\nConnection: close\r\nUser-Agent: Mozilla 5.0\r\nAccept: */*\r\n\r\n"), resource.Get(), server.Get());
 
       if(!diostream->WriteStr(request)) status = false;
 
@@ -395,17 +395,17 @@ bool DIOSTREAMTLSAIAFETCHER::ResponseBody_Extract(XBUFFER& raw, XBUFFER& tobuffe
   // Only a plain 200 OK is accepted -- redirects are not followed here: an AIA fetch is a best-effort convenience,
   // not a general purpose HTTP client, and following a redirect would reopen the same "which server do we now
   // trust" question this fetch exists to sidestep.
-  if((headertext.Find(_L("HTTP/1.0 200"), true) != 0) && (headertext.Find(_L("HTTP/1.1 200"), true) != 0)) return false;
+  if((headertext.Find(NL("HTTP/1.0 200"), true) != 0) && (headertext.Find(NL("HTTP/1.1 200"), true) != 0)) return false;
 
-  bool   ischunked        = (headertext.Find(_L("Transfer-Encoding:"), true) != XSTRING_NOTFOUND) &&
-                             (headertext.Find(_L("chunked"), true) != XSTRING_NOTFOUND);
+  bool   ischunked        = (headertext.Find(NL("Transfer-Encoding:"), true) != XSTRING_NOTFOUND) &&
+                             (headertext.Find(NL("chunked"), true) != XSTRING_NOTFOUND);
   bool   hascontentlength = false;
   XQWORD contentlength    = 0;
 
-  int lengthindex = headertext.Find(_L("Content-Length:"), true);
+  int lengthindex = headertext.Find(NL("Content-Length:"), true);
   if(lengthindex != XSTRING_NOTFOUND)
     {
-      XDWORD position = lengthindex + XSTRING(_L("Content-Length:")).GetSize();
+      XDWORD position = lengthindex + XSTRING(NL("Content-Length:")).GetSize();
       bool   hasdigit  = false;
 
       while((position < headertext.GetSize()) &&

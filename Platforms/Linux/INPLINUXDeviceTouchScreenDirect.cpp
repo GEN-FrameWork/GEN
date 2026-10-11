@@ -192,13 +192,13 @@ bool INPLINUXDEVICETOUCHSCREENDIRECT::Update()
                   case EV_ABS : switch(event.code)
                                   {
                                     case ABS_X      : { touchscr_x = event.value;                                                                                                              
-                                                        //XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, _L("[Touch] x: %d"), touchscr_x);
+                                                        //XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, NL("[Touch] x: %d"), touchscr_x);
 
                                                       }
                                                       break;
 
                                     case ABS_Y      : { touchscr_y = grpscreen->GetHeight() - event.value; 
-                                                        //XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, _L("[Touch] y: %d"), touchscr_y);                                                                                                             
+                                                        //XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, NL("[Touch] y: %d"), touchscr_y);                                                                                                             
 
                                                         INPBUTTON* button = GetButton(INPBUTTON_ID_TOUCHSCREEN);
                                                         if(button) button->SetPressed(true);                                                        
@@ -285,7 +285,7 @@ bool INPLINUXDEVICETOUCHSCREENDIRECT::OpenAllDevicesID()
           XSTRING event;
           int     filedescriptor = INPLINUXDEVICEID_INVALID;
      
-          event.Format(_L("/dev/input/event%d"), deviceID->GetEventIndex());
+          event.Format(NL("/dev/input/event%d"), deviceID->GetEventIndex());
 
           XBUFFER charstr;
           

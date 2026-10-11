@@ -363,15 +363,15 @@ bool XFILEHEX::DecodeLine(XSTRING* line, XFILEHEX_ENTRY& entry)
   line->ToUpperCase();
 
   line->Copy( 1, 3, string);
-  string.UnFormat(_L("%02X"), &sizedata);
+  string.UnFormat(NL("%02X"), &sizedata);
   entry.SetSizeData((XBYTE)sizedata);
 
   line->Copy( 3, 7, string);
-  string.UnFormat(_L("%04X"), &address);
+  string.UnFormat(NL("%04X"), &address);
   entry.SetAddress((XWORD)address);
 
   line->Copy( 7, 9, string);
-  string.UnFormat(_L("%02X"), &entrytype);
+  string.UnFormat(NL("%02X"), &entrytype);
   entry.SetEntryType((XFILEHEX_ENTRYTYPE)entrytype);
 
   if(sizedata)
@@ -381,7 +381,7 @@ bool XFILEHEX::DecodeLine(XSTRING* line, XFILEHEX_ENTRY& entry)
     }
 
   line->Copy(line->GetSize()-2, string);
-  string.UnFormat(_L("%02X"), &CRC);
+  string.UnFormat(NL("%02X"), &CRC);
 
   line->Copy(1, line->GetSize()-2, string);
   string.ConvertHexStringToBuffer(dataCRC);
@@ -412,9 +412,9 @@ bool XFILEHEX::EncodeLine(XFILEHEX_ENTRY* entry, XSTRING& line)
 
   XSTRING string;
 
-  string.Format(_L("%02X"), entry->GetSizeData());                    line.Add(string);
-  string.Format(_L("%04X"), entry->GetAddress());                     line.Add(string);
-  string.Format(_L("%02X"), (XWORD)entry->GetEntryType());            line.Add(string);
+  string.Format(NL("%02X"), entry->GetSizeData());                    line.Add(string);
+  string.Format(NL("%04X"), entry->GetAddress());                     line.Add(string);
+  string.Format(NL("%02X"), (XWORD)entry->GetEntryType());            line.Add(string);
 
   if(entry->GetSizeData())
     {
@@ -425,9 +425,9 @@ bool XFILEHEX::EncodeLine(XFILEHEX_ENTRY* entry, XSTRING& line)
   XBUFFER dataCRC;
 
   line.ConvertHexStringToBuffer(dataCRC);
-  string.Format(_L("%02X"), entry->CalculeCRC(dataCRC));  line.Add(string);
+  string.Format(NL("%02X"), entry->CalculeCRC(dataCRC));  line.Add(string);
 
-  line.Insert(_L(":"), 0);
+  line.Insert(NL(":"), 0);
   line.ToUpperCase();
 
   return true;

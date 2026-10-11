@@ -394,16 +394,16 @@ void DIOGPIO_ENTRY::SetIntPriority(XDWORD int_priority)
 * --------------------------------------------------------------------------------------------------------------------*/
 void DIOGPIO_ENTRY::DebugTrace()
 {
-  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, _L("-- GPIO Entry ---------------------------------"));
-  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, _L("ID : [%d]"), ID);
-  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, _L("GPIO : [%lld]"), GPIO);
-  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, _L("Pin : [%d]"), pin);
-  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, _L("Group : [%d]"), group);    
-  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, _L("Mode : [%08X]"), mode);
-  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, _L("Pull Mode : [%d]"), pullmode); 
-  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, _L("Int Func : [%X08]"), int_funcptr);                                                          
-  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, _L("Int IRQ : [%X08]"), int_IRQ);                                                          
-  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, _L("Int Priority : [%X08]"), int_priority);                                                          
+  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, NL("-- GPIO Entry ---------------------------------"));
+  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, NL("ID : [%d]"), ID);
+  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, NL("GPIO : [%lld]"), GPIO);
+  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, NL("Pin : [%d]"), pin);
+  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, NL("Group : [%d]"), group);    
+  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, NL("Mode : [%08X]"), mode);
+  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, NL("Pull Mode : [%d]"), pullmode); 
+  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, NL("Int Func : [%X08]"), int_funcptr);                                                          
+  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, NL("Int IRQ : [%X08]"), int_IRQ);                                                          
+  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, NL("Int Priority : [%X08]"), int_priority);                                                          
 }
 
 

@@ -164,23 +164,23 @@ GRPVECTORFILESVGOBJ* GRPVECTORFILESVGOBJ::CreateInstance(XFILEXMLELEMENT* elemen
 * --------------------------------------------------------------------------------------------------------------------*/
 GRPVECTORFILESVGOBJTYPE GRPVECTORFILESVGOBJ::GetObjType(XSTRING& name)
 {
-  if(!name.Compare(_L("svg")     , true))  return GRPVECTORFILESVGOBJTYPE_SVG;
-  if(!name.Compare(_L("g")       , true))  return GRPVECTORFILESVGOBJTYPE_GROUP;
-  if(!name.Compare(_L("a")       , true))  return GRPVECTORFILESVGOBJTYPE_GROUP;
-  if(!name.Compare(_L("defs")    , true))  return GRPVECTORFILESVGOBJTYPE_DEFS;
-  if(!name.Compare(_L("rect")    , true))  return GRPVECTORFILESVGOBJTYPE_RECT;
-  if(!name.Compare(_L("circle")  , true))  return GRPVECTORFILESVGOBJTYPE_CIRCLE;
-  if(!name.Compare(_L("ellipse") , true))  return GRPVECTORFILESVGOBJTYPE_ELLIPSE;
-  if(!name.Compare(_L("line")    , true))  return GRPVECTORFILESVGOBJTYPE_LINE;
-  if(!name.Compare(_L("polyline"), true))  return GRPVECTORFILESVGOBJTYPE_POLYLINE;
-  if(!name.Compare(_L("polygon") , true))  return GRPVECTORFILESVGOBJTYPE_POLYGON;
-  if(!name.Compare(_L("path")    , true))  return GRPVECTORFILESVGOBJTYPE_PATH;
-  if(!name.Compare(_L("text")    , true))  return GRPVECTORFILESVGOBJTYPE_TEXT;
-  if(!name.Compare(_L("tspan")   , true))  return GRPVECTORFILESVGOBJTYPE_TEXT;
-  if(!name.Compare(_L("image")   , true))  return GRPVECTORFILESVGOBJTYPE_IMAGE;
-  if(!name.Compare(_L("use")     , true))  return GRPVECTORFILESVGOBJTYPE_USE;
-  if(!name.Compare(_L("linearGradient"), true))  return GRPVECTORFILESVGOBJTYPE_LINEARGRADIENT;
-  if(!name.Compare(_L("radialGradient"), true))  return GRPVECTORFILESVGOBJTYPE_RADIALGRADIENT;
+  if(!name.Compare(NL("svg")     , true))  return GRPVECTORFILESVGOBJTYPE_SVG;
+  if(!name.Compare(NL("g")       , true))  return GRPVECTORFILESVGOBJTYPE_GROUP;
+  if(!name.Compare(NL("a")       , true))  return GRPVECTORFILESVGOBJTYPE_GROUP;
+  if(!name.Compare(NL("defs")    , true))  return GRPVECTORFILESVGOBJTYPE_DEFS;
+  if(!name.Compare(NL("rect")    , true))  return GRPVECTORFILESVGOBJTYPE_RECT;
+  if(!name.Compare(NL("circle")  , true))  return GRPVECTORFILESVGOBJTYPE_CIRCLE;
+  if(!name.Compare(NL("ellipse") , true))  return GRPVECTORFILESVGOBJTYPE_ELLIPSE;
+  if(!name.Compare(NL("line")    , true))  return GRPVECTORFILESVGOBJTYPE_LINE;
+  if(!name.Compare(NL("polyline"), true))  return GRPVECTORFILESVGOBJTYPE_POLYLINE;
+  if(!name.Compare(NL("polygon") , true))  return GRPVECTORFILESVGOBJTYPE_POLYGON;
+  if(!name.Compare(NL("path")    , true))  return GRPVECTORFILESVGOBJTYPE_PATH;
+  if(!name.Compare(NL("text")    , true))  return GRPVECTORFILESVGOBJTYPE_TEXT;
+  if(!name.Compare(NL("tspan")   , true))  return GRPVECTORFILESVGOBJTYPE_TEXT;
+  if(!name.Compare(NL("image")   , true))  return GRPVECTORFILESVGOBJTYPE_IMAGE;
+  if(!name.Compare(NL("use")     , true))  return GRPVECTORFILESVGOBJTYPE_USE;
+  if(!name.Compare(NL("linearGradient"), true))  return GRPVECTORFILESVGOBJTYPE_LINEARGRADIENT;
+  if(!name.Compare(NL("radialGradient"), true))  return GRPVECTORFILESVGOBJTYPE_RADIALGRADIENT;
 
   return GRPVECTORFILESVGOBJTYPE_UNKNOWN;
 }
@@ -201,22 +201,22 @@ XCHAR* GRPVECTORFILESVGOBJ::GetObjTypeName(GRPVECTORFILESVGOBJTYPE type)
 {
   switch(type)
     {
-      case GRPVECTORFILESVGOBJTYPE_SVG       :  return _L("svg");
-      case GRPVECTORFILESVGOBJTYPE_GROUP     :  return _L("group");
-      case GRPVECTORFILESVGOBJTYPE_DEFS      :  return _L("defs");
-      case GRPVECTORFILESVGOBJTYPE_RECT      :  return _L("rect");
-      case GRPVECTORFILESVGOBJTYPE_CIRCLE    :  return _L("circle");
-      case GRPVECTORFILESVGOBJTYPE_ELLIPSE   :  return _L("ellipse");
-      case GRPVECTORFILESVGOBJTYPE_LINE      :  return _L("line");
-      case GRPVECTORFILESVGOBJTYPE_POLYLINE  :  return _L("polyline");
-      case GRPVECTORFILESVGOBJTYPE_POLYGON   :  return _L("polygon");
-      case GRPVECTORFILESVGOBJTYPE_PATH      :  return _L("path");
-      case GRPVECTORFILESVGOBJTYPE_TEXT      :  return _L("text");
-      case GRPVECTORFILESVGOBJTYPE_IMAGE     :  return _L("image");
-      case GRPVECTORFILESVGOBJTYPE_USE       :  return _L("use");
+      case GRPVECTORFILESVGOBJTYPE_SVG       :  return NL("svg");
+      case GRPVECTORFILESVGOBJTYPE_GROUP     :  return NL("group");
+      case GRPVECTORFILESVGOBJTYPE_DEFS      :  return NL("defs");
+      case GRPVECTORFILESVGOBJTYPE_RECT      :  return NL("rect");
+      case GRPVECTORFILESVGOBJTYPE_CIRCLE    :  return NL("circle");
+      case GRPVECTORFILESVGOBJTYPE_ELLIPSE   :  return NL("ellipse");
+      case GRPVECTORFILESVGOBJTYPE_LINE      :  return NL("line");
+      case GRPVECTORFILESVGOBJTYPE_POLYLINE  :  return NL("polyline");
+      case GRPVECTORFILESVGOBJTYPE_POLYGON   :  return NL("polygon");
+      case GRPVECTORFILESVGOBJTYPE_PATH      :  return NL("path");
+      case GRPVECTORFILESVGOBJTYPE_TEXT      :  return NL("text");
+      case GRPVECTORFILESVGOBJTYPE_IMAGE     :  return NL("image");
+      case GRPVECTORFILESVGOBJTYPE_USE       :  return NL("use");
 
       case GRPVECTORFILESVGOBJTYPE_UNKNOWN   :
-                                  default    :  return _L("unknown");
+                                  default    :  return NL("unknown");
     }
 }
 
@@ -237,23 +237,23 @@ bool GRPVECTORFILESVGOBJ::ApplyData(XFILEXMLELEMENT* element)
 {
   if(!element) return false;
 
-  XCHAR* valueid = element->GetValueAttribute(_L("id"));
+  XCHAR* valueid = element->GetValueAttribute(NL("id"));
   if(valueid)  id = valueid;
 
-  XCHAR* valuetransform = element->GetValueAttribute(_L("transform"));
+  XCHAR* valuetransform = element->GetValueAttribute(NL("transform"));
   if(valuetransform)  transform.ParseFromString(valuetransform);
 
   //  clip-path="url(#id)" : keep the referenced id (without '#').
-  XCHAR* valueclippath = element->GetValueAttribute(_L("clip-path"));
+  XCHAR* valueclippath = element->GetValueAttribute(NL("clip-path"));
   if(valueclippath)
     {
       XSTRING clipstr(valueclippath);
 
-      int start = clipstr.Find(_L("url(#"), true, 0);
+      int start = clipstr.Find(NL("url(#"), true, 0);
       if(start >= 0)
         {
           start += 5;                                                           // skip "url(#"
-          int end = clipstr.Find(_L(")"), false, start);
+          int end = clipstr.Find(NL(")"), false, start);
           if(end < 0)  end = (int)clipstr.GetSize();
 
           clipstr.Copy(start, end, clippathid);
@@ -545,9 +545,9 @@ GRPVECTORFILESVGOBJ* GRPVECTORFILESVGOBJ::FindByID(XCHAR* id)
 void GRPVECTORFILESVGOBJ::Trace(int level)
 {
   XSTRING indent;
-  for(int c=0; c<level; c++)  indent += _L(" ");
+  for(int c=0; c<level; c++)  indent += NL(" ");
 
-  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, _L("%s<%s> id=[%s] childs=%d fill=%d stroke=%d"), indent.Get(), GetObjTypeName(type), id.Get(), (int)GetNChilds(), style.HasFill() ?1:0, style.HasStroke()?1:0);
+  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, NL("%s<%s> id=[%s] childs=%d fill=%d stroke=%d"), indent.Get(), GetObjTypeName(type), id.Get(), (int)GetNChilds(), style.HasFill() ?1:0, style.HasStroke()?1:0);
 
   for(XDWORD c=0; c<GetNChilds(); c++)
     {

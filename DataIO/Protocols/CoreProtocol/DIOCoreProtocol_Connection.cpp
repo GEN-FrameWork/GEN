@@ -393,15 +393,15 @@ bool DIOCOREPROTOCOL_CONNECTION::Status_GetString(DIOCOREPROTOCOL_CONNECTION_STA
 
   switch(status)
     {
-      case DIOCOREPROTOCOL_CONNECTION_STATUS_NONE               : statusstring = _L("None");                 break;
-      case DIOCOREPROTOCOL_CONNECTION_STATUS_CONNECTED          : statusstring = _L("Connected");            break;     
-      case DIOCOREPROTOCOL_CONNECTION_STATUS_KEYEXCHANGE        : statusstring = _L("Key exchange");         break;
-      case DIOCOREPROTOCOL_CONNECTION_STATUS_AUTHENTICATED      : statusstring = _L("Authenticated");        break;
-      case DIOCOREPROTOCOL_CONNECTION_STATUS_REGISTERED         : statusstring = _L("Registered");           break;  
-      case DIOCOREPROTOCOL_CONNECTION_STATUS_WAITREADY          : statusstring = _L("WaitReady");            break;    
-      case DIOCOREPROTOCOL_CONNECTION_STATUS_READY              : statusstring = _L("Ready");                break;
-      case DIOCOREPROTOCOL_CONNECTION_STATUS_INSTABILITY        : statusstring = _L("Instability");          break;
-      case DIOCOREPROTOCOL_CONNECTION_STATUS_DISCONNECTED       : statusstring = _L("Disconnected");         break;
+      case DIOCOREPROTOCOL_CONNECTION_STATUS_NONE               : statusstring = NL("None");                 break;
+      case DIOCOREPROTOCOL_CONNECTION_STATUS_CONNECTED          : statusstring = NL("Connected");            break;     
+      case DIOCOREPROTOCOL_CONNECTION_STATUS_KEYEXCHANGE        : statusstring = NL("Key exchange");         break;
+      case DIOCOREPROTOCOL_CONNECTION_STATUS_AUTHENTICATED      : statusstring = NL("Authenticated");        break;
+      case DIOCOREPROTOCOL_CONNECTION_STATUS_REGISTERED         : statusstring = NL("Registered");           break;  
+      case DIOCOREPROTOCOL_CONNECTION_STATUS_WAITREADY          : statusstring = NL("WaitReady");            break;    
+      case DIOCOREPROTOCOL_CONNECTION_STATUS_READY              : statusstring = NL("Ready");                break;
+      case DIOCOREPROTOCOL_CONNECTION_STATUS_INSTABILITY        : statusstring = NL("Instability");          break;
+      case DIOCOREPROTOCOL_CONNECTION_STATUS_DISCONNECTED       : statusstring = NL("Disconnected");         break;
     }
 
   if(statusstring.IsEmpty())
@@ -1922,8 +1922,8 @@ bool DIOCOREPROTOCOL_CONNECTION::CreateIDConnection(XUUID& ID)
   
   ID.Empty();
   
-  origin.AddFormat(_L(" %s"), this);
-  origin.AddFormat(_L(" %s"), timestr.Get());
+  origin.AddFormat(NL(" %s"), this);
+  origin.AddFormat(NL(" %s"), timestr.Get());
 
   origin.ConvertToUTF8(originbuffer);
     

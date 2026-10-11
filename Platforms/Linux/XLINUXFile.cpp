@@ -133,7 +133,7 @@ bool XLINUXFILE::Open(XCHAR* xpath, bool isreadonly)
 {
   this->isreadonly = isreadonly;
 
-  return ExtendedOpen(xpath, (isreadonly)? _L("rb") : _L("r+b"));
+  return ExtendedOpen(xpath, (isreadonly)? NL("rb") : NL("r+b"));
 }
 
 
@@ -150,7 +150,7 @@ bool XLINUXFILE::Open(XCHAR* xpath, bool isreadonly)
 * --------------------------------------------------------------------------------------------------------------------*/
 bool XLINUXFILE::Create(XCHAR* xpath)
 {
-  return ExtendedOpen(xpath, _L("w+b"));
+  return ExtendedOpen(xpath, NL("w+b"));
 }
 
 
@@ -449,7 +449,7 @@ bool XLINUXFILE::Rename(XCHAR* xpathold, XCHAR* xpathnew)
     {
       XSTRING err;
       err.Set(strerror(errno));
-     XTRACE_PRINTCOLOR(4, _L("Error renaming file %s -> %s : %s"), xpathold, xpathnew, err.Get());
+     XTRACE_PRINTCOLOR(4, NL("Error renaming file %s -> %s : %s"), xpathold, xpathnew, err.Get());
     }
 
   return (!status)?true:false;

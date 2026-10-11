@@ -53,6 +53,23 @@
 #include "XConsole.h"
 
 
+#ifndef XTRANSLATION_ACTIVE
+/**-------------------------------------------------------------------------------------------------------------------
+* Fallback for TL() when XTRANSLATION.cpp is not linked into the binary.
+* Read the GEN catalogue in its active language; otherwise return empty.
+* --------------------------------------------------------------------------------------------------------------------*/
+XCHAR* XTRANSLATION_TL_Fallback(XDWORD ID)
+{
+  #ifdef XTRANSLATION_GEN_ACTIVE
+  return XTRANSLATION_GEN::GetInstance().GetSentence(ID);
+  #else
+  (void)ID;
+  return (XCHAR*)NL("");
+  #endif
+}
+#endif
+
+
 
 /*---- PRECOMPILATION INCLUDES ---------------------------------------------------------------------------------------*/
 
@@ -729,7 +746,7 @@ XSTRING::~XSTRING()
 * --------------------------------------------------------------------------------------------------------------------*/
 XCHAR* XSTRING::Get() const
 {
-  if(!text) return _L("");
+  if(!text) return NL("");
 
   return text;
 }
@@ -3247,7 +3264,7 @@ bool XSTRING::Insert(XSTRING& str, XDWORD position)
 * --------------------------------------------------------------------------------------------------------------------*/
 bool XSTRING::ConvertFromNULL(bool uppercase)
 {
-  Set(uppercase? _L("NULL") : _L("null"));
+  Set(uppercase? NL("NULL") : NL("null"));
 
   return true;
 }
@@ -3271,12 +3288,12 @@ bool XSTRING::ConvertFromBoolean(bool boolean, XBYTE mode)
 
   if((mode & XSTRINGBOOLEANMODE_COMPUTER) == XSTRINGBOOLEANMODE_COMPUTER)
     {
-      Set(boolean?XT_L(XTRANSLATION_GEN_ID_TRUE):XT_L(XTRANSLATION_GEN_ID_FALSE));
+      Set(boolean?GEN_TL(XTRANSLATION_GEN_ID_TRUE):GEN_TL(XTRANSLATION_GEN_ID_FALSE));
     }
     
   if((mode & XSTRINGBOOLEANMODE_HUMAN) == XSTRINGBOOLEANMODE_HUMAN)
     {
-      Set(boolean?XT_L(XTRANSLATION_GEN_ID_YES):XT_L(XTRANSLATION_GEN_ID_NO));
+      Set(boolean?GEN_TL(XTRANSLATION_GEN_ID_YES):GEN_TL(XTRANSLATION_GEN_ID_NO));
     }
 
   if((mode & XSTRINGBOOLEANMODE_UPPERCASE) == XSTRINGBOOLEANMODE_UPPERCASE)
@@ -3315,7 +3332,7 @@ bool XSTRING::ConvertFromShort(short value, const XCHAR* mask)
 
   memset(str, 0, XSTRING_MAXTEMPOSTR);
 
-  if(mask) _mask = mask; else _mask = _L("%hd");
+  if(mask) _mask = mask; else _mask = NL("%hd");
 
   XBUFFER charstr;
   
@@ -3352,7 +3369,7 @@ bool XSTRING::ConvertFromWord(XWORD value, const XCHAR* mask)
 
   memset(str, 0, XSTRING_MAXTEMPOSTR);
 
-  if(mask) _mask = mask; else _mask = _L("%hu");
+  if(mask) _mask = mask; else _mask = NL("%hu");
 
   XBUFFER charstr;
   
@@ -3389,7 +3406,7 @@ bool XSTRING::ConvertFromInt(int value, const XCHAR* mask)
 
   memset(str, 0, XSTRING_MAXTEMPOSTR);
 
-  if(mask) _mask = mask; else _mask = _L("%d");
+  if(mask) _mask = mask; else _mask = NL("%d");
 
 
   XBUFFER charstr;
@@ -3427,7 +3444,7 @@ bool XSTRING::ConvertFromDWord(XDWORD value, const XCHAR* mask)
 
   memset(str, 0, XSTRING_MAXTEMPOSTR);
 
-  if(mask) _mask = mask; else _mask = _L("%d");
+  if(mask) _mask = mask; else _mask = NL("%d");
 
   XBUFFER charstr;
   
@@ -3464,7 +3481,7 @@ bool XSTRING::ConvertFromLongLong(long long value, const XCHAR* mask)
 
   memset(str, 0, XSTRING_MAXTEMPOSTR);
 
-  if(mask) _mask = mask; else _mask = _L("%lld");
+  if(mask) _mask = mask; else _mask = NL("%lld");
 
   XBUFFER charstr;
   
@@ -3501,7 +3518,7 @@ bool XSTRING::ConvertFromQWord(XQWORD value, const XCHAR* mask)
 
   memset(str, 0, XSTRING_MAXTEMPOSTR);
 
-  if(mask) _mask = mask; else _mask = _L("%llu");
+  if(mask) _mask = mask; else _mask = NL("%llu");
 
   XBUFFER charstr;
   
@@ -3538,7 +3555,7 @@ bool XSTRING::ConvertFromFloat(float value, const XCHAR* mask)
 
   memset(str, 0, XSTRING_MAXTEMPOSTR);
 
-  if(mask) _mask = mask; else _mask = _L("%f");
+  if(mask) _mask = mask; else _mask = NL("%f");
 
   XBUFFER charstr;
   
@@ -3580,7 +3597,7 @@ bool XSTRING::ConvertFromDouble(double value, const XCHAR* mask)
 
   memset(str, 0, XSTRING_MAXTEMPOSTR);
 
-  if(mask) _mask = mask; else _mask = _L("%lf");
+  if(mask) _mask = mask; else _mask = NL("%lf");
   
   XBUFFER charstr;
   
@@ -3637,7 +3654,7 @@ bool XSTRING::ConvertHexFormatChars()
               numberhex.Add(part);
             }
 
-          numberhex.UnFormat(_L("%02X"), &part[0]);
+          numberhex.UnFormat(NL("%02X"), &part[0]);
 
           part[0]&=0x00FF;
           string.Add(part);
@@ -3675,7 +3692,7 @@ bool XSTRING::ConvertToHexString(XSTRING& string, bool uppercase)
 
   for(int c=0;c<(int)GetSize(); c++)
     {
-      datastr.Format(uppercase?_L("%02X"):_L("%02x"), Get()[c]);
+      datastr.Format(uppercase?NL("%02X"):NL("%02x"), Get()[c]);
       string.Add(datastr);
     }
 
@@ -3709,7 +3726,7 @@ bool XSTRING::ConvertHexStringToBuffer(XBUFFER& xbuffer)
 
       hexbytestr = hexbytechar;
 
-      hexbytestr.UnFormat(_L("%02X"), &data);
+      hexbytestr.UnFormat(NL("%02X"), &data);
       xbuffer.Add((XBYTE)data);
     }
 
@@ -3737,7 +3754,7 @@ bool XSTRING::ConvertHexStringFromBuffer(XBUFFER& xbuffer, bool uppercase)
     {
       XSTRING  hexbytestr;
 
-      hexbytestr.Format(uppercase?_L("%02X"):_L("%02x"), xbuffer.Get()[c]);
+      hexbytestr.Format(uppercase?NL("%02X"):NL("%02x"), xbuffer.Get()[c]);
       Add(hexbytestr);
     }
 
@@ -3758,16 +3775,16 @@ bool XSTRING::ConvertToBoolean()
 {
   bool result = false;
 
-  if(!Compare(XT_L(XTRANSLATION_GEN_ID_YES)    , true)  || 
-     !Compare(XT_L(XTRANSLATION_GEN_ID_TRUE)   , true))
+  if(!Compare(GEN_TL(XTRANSLATION_GEN_ID_YES)    , true)  || 
+     !Compare(GEN_TL(XTRANSLATION_GEN_ID_TRUE)   , true))
     {
       result = true;
     }
    else
     {
-      if(!Compare(XT_L(XTRANSLATION_GEN_ID_NO)    , true) || 
-         !Compare(XT_L(XTRANSLATION_GEN_ID_FALSE) , true) || 
-         !Compare(_L("0")     , true))                   
+      if(!Compare(GEN_TL(XTRANSLATION_GEN_ID_NO)    , true) || 
+         !Compare(GEN_TL(XTRANSLATION_GEN_ID_FALSE) , true) || 
+         !Compare(NL("0")     , true))                   
         {
           result = false;
         }
@@ -3813,7 +3830,7 @@ int XSTRING::ConvertToInt(int index, const XCHAR* mask, bool checkvalidchars)
 
   if(mask)
          _mask = mask;
-    else _mask = _L("%d");
+    else _mask = NL("%d");
     
     
   XBUFFER charstr;
@@ -3855,7 +3872,7 @@ XDWORD XSTRING::ConvertToDWord(int index, const XCHAR* mask, bool checkvalidchar
   XSTRING  _mask;
   XDWORD   data = 0;
 
-  if(mask) _mask = mask; else _mask = _L("%d");
+  if(mask) _mask = mask; else _mask = NL("%d");
   
   XBUFFER charstr;
   XBUFFER charstr2;
@@ -3896,7 +3913,7 @@ long long XSTRING::ConvertToLongLong(int index, const XCHAR* mask, bool checkval
   XSTRING  _mask;
   long long  data = 0;
 
-  if(mask) _mask = mask; else _mask = _L("%lld");
+  if(mask) _mask = mask; else _mask = NL("%lld");
 
   XBUFFER charstr;
   XBUFFER charstr2;
@@ -3937,7 +3954,7 @@ XQWORD XSTRING::ConvertToQWord(int index, const XCHAR* mask, bool checkvalidchar
   XSTRING  _mask;
   XQWORD   data = 0;
 
-  if(mask) _mask = mask; else _mask = _L("%lld");
+  if(mask) _mask = mask; else _mask = NL("%lld");
 
   XBUFFER charstr;
   XBUFFER charstr2;
@@ -3978,7 +3995,7 @@ float XSTRING::ConvertToFloat(int index, const XCHAR* mask, bool checkvalidchars
   XSTRING  _mask;
   float  data = 0;
 
-  if(mask) _mask = mask; else _mask = _L("%f");
+  if(mask) _mask = mask; else _mask = NL("%f");
 
   XBUFFER charstr;
   XBUFFER charstr2;
@@ -4019,7 +4036,7 @@ double XSTRING::ConvertToDouble(int index, const XCHAR* mask, bool checkvalidcha
   XSTRING  _mask;
   double     data = 0;
 
-  if(mask) _mask = mask; else _mask = _L("%lf");
+  if(mask) _mask = mask; else _mask = NL("%lf");
 
   XBUFFER charstr;
   XBUFFER charstr2;
@@ -5228,82 +5245,82 @@ bool XSTRING::ConvertFromDoubleToSpanishText(double value, bool withintegerpart,
       double _integerpart;
       double _decimalpart;
 
-      if(integerpart == 0) Set(_L("cero"));
-        else if(integerpart ==  1) Set(_L("uno"));
-        else if(integerpart ==  2) Set(_L("dos"));
-        else if(integerpart ==  3) Set(_L("tres"));
-        else if(integerpart ==  4) Set(_L("cuatro"));
-        else if(integerpart ==  5) Set(_L("cinco"));
-        else if(integerpart ==  6) Set(_L("seis"));
-        else if(integerpart ==  7) Set(_L("siete"));
-        else if(integerpart ==  8) Set(_L("ocho"));
-        else if(integerpart ==  9) Set(_L("nueve"));
-        else if(integerpart == 10) Set(_L("diez"));
-        else if(integerpart == 11) Set(_L("once"));
-        else if(integerpart == 12) Set(_L("doce"));
-        else if(integerpart == 13) Set(_L("trece"));
-        else if(integerpart == 14) Set(_L("catorce"));
-        else if(integerpart == 15) Set(_L("quince"));
+      if(integerpart == 0) Set(NL("cero"));
+        else if(integerpart ==  1) Set(NL("uno"));
+        else if(integerpart ==  2) Set(NL("dos"));
+        else if(integerpart ==  3) Set(NL("tres"));
+        else if(integerpart ==  4) Set(NL("cuatro"));
+        else if(integerpart ==  5) Set(NL("cinco"));
+        else if(integerpart ==  6) Set(NL("seis"));
+        else if(integerpart ==  7) Set(NL("siete"));
+        else if(integerpart ==  8) Set(NL("ocho"));
+        else if(integerpart ==  9) Set(NL("nueve"));
+        else if(integerpart == 10) Set(NL("diez"));
+        else if(integerpart == 11) Set(NL("once"));
+        else if(integerpart == 12) Set(NL("doce"));
+        else if(integerpart == 13) Set(NL("trece"));
+        else if(integerpart == 14) Set(NL("catorce"));
+        else if(integerpart == 15) Set(NL("quince"));
         else if(integerpart < 20)
                {
-                  Set(_L("dieci"));
+                  Set(NL("dieci"));
                   tmp.ConvertFromDoubleToSpanishText(integerpart - 10, true, false, _integerpart, _decimalpart);
                   Add(tmp);
                 }
-               else if(integerpart == 20) Set(_L("veinte"));
+               else if(integerpart == 20) Set(NL("veinte"));
                       else if(integerpart < 30)
                             {
-                              Set(_L("veinti"));
+                              Set(NL("veinti"));
                               tmp.ConvertFromDoubleToSpanishText(integerpart - 20, true, false, _integerpart, _decimalpart);
                               Add(tmp);
                              }
-                            else if(integerpart == 30) Set(_L("treinta"));
-                            else if(integerpart == 40) Set(_L("cuarenta"));
-                            else if(integerpart == 50) Set(_L("cincuenta"));
-                            else if(integerpart == 60) Set(_L("sesenta"));
-                            else if(integerpart == 70) Set(_L("setenta"));
-                            else if(integerpart == 80) Set(_L("ochenta"));
-                            else if(integerpart == 90) Set(_L("noventa"));
+                            else if(integerpart == 30) Set(NL("treinta"));
+                            else if(integerpart == 40) Set(NL("cuarenta"));
+                            else if(integerpart == 50) Set(NL("cincuenta"));
+                            else if(integerpart == 60) Set(NL("sesenta"));
+                            else if(integerpart == 70) Set(NL("setenta"));
+                            else if(integerpart == 80) Set(NL("ochenta"));
+                            else if(integerpart == 90) Set(NL("noventa"));
                             else if(integerpart < 100)
                                    {
                                      ConvertFromDoubleToSpanishText(Truncate(integerpart/10) * 10, true, false, _integerpart, _decimalpart);
-                                     Add(_L(" y "));
+                                     Add(NL(" y "));
                                      tmp.ConvertFromDoubleToSpanishText(fmod(integerpart, (double)10), true, false, _integerpart, _decimalpart);
                                      Add(tmp);
                                    }
-                                  else if(integerpart == 100) Set(_L("cien"));
+                                  else if(integerpart == 100) Set(NL("cien"));
                                   else if(integerpart < 200)
                                          {
-                                           Set(_L("ciento "));
+                                           Set(NL("ciento "));
                                            tmp.ConvertFromDoubleToSpanishText(integerpart - 100, true, false, _integerpart, _decimalpart);
                                            Add(tmp);
                                          }
                                         else if((integerpart == 200) || (integerpart == 300) || (integerpart == 400) || (integerpart == 600) || (integerpart == 800))
                                                {
                                                  ConvertFromDoubleToSpanishText(Truncate(integerpart / 100), true, false, _integerpart, _decimalpart);
-                                                 Add(_L("cientos"));
+                                                 Add(NL("cientos"));
                                                }
-                                              else if(integerpart == 500) Set(_L("quinientos"));
-                                              else if(integerpart == 700) Set(_L("setecientos"));
-                                              else if(integerpart == 900) Set(_L("novecientos"));
+                                              else if(integerpart == 500) Set(NL("quinientos"));
+                                              else if(integerpart == 700) Set(NL("setecientos"));
+                                              else if(integerpart == 900) Set(NL("novecientos"));
                                               else if(integerpart < 1000)
                                                    {
                                                      ConvertFromDoubleToSpanishText(Truncate(integerpart / 100) * 100, true, false, _integerpart, _decimalpart);
-                                                     Add(_L(" "));
+                                                     Add(NL(" "));
                                                      tmp.ConvertFromDoubleToSpanishText(fmod(integerpart, (double)100), true, false, _integerpart, _decimalpart);
                                                      Add(tmp);
                                                    }
-                                                  else if(integerpart == 1000) Set(_L("mil"));
+                                                  else if(integerpart == 1000) Set(NL("mil"));
                                                   else if(integerpart < 2000)
                                                         {
-                                                          Set(_L("mil "));
+                                                          Set(NL("mil "));
                                                           tmp.ConvertFromDoubleToSpanishText(fmod(integerpart, (double)1000), true, false, _integerpart, _decimalpart);
                                                           Add(tmp);
                                                         }
                                                       else if(integerpart < 1000000)
                                                               {
                                                                 ConvertFromDoubleToSpanishText(Truncate(integerpart / 1000), true, false, _integerpart, _decimalpart);
-                                                                Add(_L(" mil"));
+                                                                Add(NL(" mil"));
                                                                 if((fmod(integerpart, (double)1000)) > 0)
                                                                   {
                                                                     Add(" ");
@@ -5311,41 +5328,41 @@ bool XSTRING::ConvertFromDoubleToSpanishText(double value, bool withintegerpart,
                                                                     Add(tmp);
                                                                   }
                                                               }
-                                                            else if(integerpart == 1000000) Set(_L("un millon"));
+                                                            else if(integerpart == 1000000) Set(NL("un millon"));
                                                             else if(integerpart < 2000000)
                                                                     {
-                                                                      Set(_L("un millon"));
+                                                                      Set(NL("un millon"));
                                                                       tmp.ConvertFromDoubleToSpanishText(fmod(integerpart, (double)1000000), true, false, _integerpart, _decimalpart);
                                                                       Add(tmp);
                                                                     }
                                                                    else if(integerpart < 1000000000000LL)
                                                                           {
                                                                              ConvertFromDoubleToSpanishText((integerpart / 1000000), true, false, _integerpart, _decimalpart);
-                                                                             Add(_L(" millones"));
+                                                                             Add(NL(" millones"));
                                                                              if((integerpart - Truncate(integerpart / 1000000) * 1000000) > 0)
                                                                                {
-                                                                                 Add(_L(" "));
+                                                                                 Add(NL(" "));
                                                                                  tmp.ConvertFromDoubleToSpanishText(integerpart - Truncate(integerpart / 1000000) * 1000000, true, false, _integerpart, _decimalpart);
                                                                                  Add(tmp);
                                                                                }
                                                                           }
                                                                          else
                                                                           {
-                                                                            if(integerpart == 1000000000000LL) Set(_L("un billon"));
+                                                                            if(integerpart == 1000000000000LL) Set(NL("un billon"));
                                                                               else if(integerpart < 2000000000000LL)
                                                                                 {
-                                                                                  Set(_L("un billon"));
+                                                                                  Set(NL("un billon"));
                                                                                   tmp.ConvertFromDoubleToSpanishText(Truncate(integerpart / 1000000000000LL) * 1000000000000LL, true, false, _integerpart, _decimalpart);
                                                                                   Add(tmp);
                                                                                 }
                                                                                else
                                                                                 {
                                                                                    ConvertFromDoubleToSpanishText(Truncate(integerpart / 1000000000000LL), true, false, _integerpart, _decimalpart);
-                                                                                   Add(_L(" billones"));
+                                                                                   Add(NL(" billones"));
 
                                                                                    if((integerpart - Truncate(integerpart / 1000000000000LL) * 1000000000000LL) > 0)
                                                                                      {
-                                                                                       Add(_L(" "));
+                                                                                       Add(NL(" "));
                                                                                        tmp.ConvertFromDoubleToSpanishText(integerpart - Truncate(integerpart / 1000000000000LL) * 1000000000000LL, true, false, _integerpart, _decimalpart);
                                                                                        Add(tmp);
                                                                                      }
@@ -5366,7 +5383,7 @@ bool XSTRING::ConvertFromDoubleToSpanishText(double value, bool withintegerpart,
 
       if(ipart)
         {
-          if(withintegerpart) Add(_L(" con "));
+          if(withintegerpart) Add(NL(" con "));
           tmp.ConvertFromDoubleToSpanishText(ipart, true, false, _integerpart, _decimalpart);
           Add(tmp);
 
@@ -5675,7 +5692,7 @@ bool XSTRING::FormatArg(const XCHAR* mask, va_list* arg, bool isspecialweb)
                                                                       int sizeadjust = sizestr.ConvertToInt();
                                                                       if(abs((int)sizeadjust) > (int)str.GetSize())
                                                                         {
-                                                                          str.AdjustSize(abs((int)sizeadjust), (sizeadjust>0)?true:false, isspecialweb?_L("&nbsp"):_L(" "), isspecialweb);
+                                                                          str.AdjustSize(abs((int)sizeadjust), (sizeadjust>0)?true:false, isspecialweb?NL("&nbsp"):NL(" "), isspecialweb);
                                                                         }
                                                                     }
                                                                 }
@@ -5684,7 +5701,7 @@ bool XSTRING::FormatArg(const XCHAR* mask, va_list* arg, bool isspecialweb)
                                                             }
                                                             break;
 
-                                          case _C('%')   : str = _L("%");
+                                          case _C('%')   : str = NL("%");
                                                             end = true;
                                                             break;
 
@@ -5716,7 +5733,7 @@ bool XSTRING::FormatArg(const XCHAR* mask, va_list* arg, bool isspecialweb)
 
               case 0x0A       : if(isspecialweb && (!openlabel))
                                   {
-                                    str = _L("<br />");
+                                    str = NL("<br />");
                                   }
                                  else
                                   {
@@ -5728,7 +5745,7 @@ bool XSTRING::FormatArg(const XCHAR* mask, va_list* arg, bool isspecialweb)
 
               case 0x20       : if(isspecialweb && (!openlabel))
                                   {
-                                    str = _L("&nbsp");
+                                    str = NL("&nbsp");
                                   }
                                  else
                                   {
@@ -5742,7 +5759,7 @@ bool XSTRING::FormatArg(const XCHAR* mask, va_list* arg, bool isspecialweb)
                                   XDWORD  value       = (XDWORD)mask[c];
 
                                   if(isspecialweb && (!openlabel) && (value > 128))
-                                        str.Format(_L("&#%d"), value);
+                                        str.Format(NL("&#%d"), value);
                                    else str.Set(character);
 
                                   c++;
@@ -6234,7 +6251,7 @@ bool XSTRING::AdjustSize()
       return FreeBuffer();
     }
 
-  return AdjustSize(c, false, _L(" "), false);
+  return AdjustSize(c, false, NL(" "), false);
 }
 
 
@@ -6351,25 +6368,25 @@ bool XSTRING::GetTypeOfLineEnd(XSTRING& lineend)
 
   if((combinations[0] >= combinations[1]) && (combinations[0] >= combinations[2]) && (combinations[0] >= combinations[3]))
     {
-      lineend = _L("\n");
+      lineend = NL("\n");
     }
    else
     {
       if((combinations[1] >= combinations[0]) && (combinations[1] >= combinations[2]) && (combinations[1] >= combinations[3]))
         {
-          lineend = _L("\r");
+          lineend = NL("\r");
         }
        else
         {
           if((combinations[2] >= combinations[0]) && (combinations[2] >= combinations[1]) && (combinations[2] >= combinations[3]))
             {
-              lineend = _L("\n\r");
+              lineend = NL("\n\r");
             }
            else
             {
               if((combinations[3] >= combinations[0]) && (combinations[3] >= combinations[1]) && (combinations[3] >= combinations[2]))
                 {
-                  lineend = _L("\r\n");
+                  lineend = NL("\r\n");
                 }
             }
         }

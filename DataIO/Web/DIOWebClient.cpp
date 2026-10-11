@@ -162,23 +162,23 @@ const XCHAR* DIOWEBCLIENT_OPERATIONERROR::GetDescription()
 {
   switch(error)
     {
-      case DIOWEBCLIENT_ERROR_INVALIDARGUMENT       : return _L("invalid operation argument");
-      case DIOWEBCLIENT_ERROR_INVALIDURL            : return _L("invalid or unsupported URL");
-      case DIOWEBCLIENT_ERROR_TRANSPORTUNAVAILABLE  : return _L("requested transport is not available");
-      case DIOWEBCLIENT_ERROR_DNSRESOLUTION         : return _L("DNS resolution failed");
-      case DIOWEBCLIENT_ERROR_TCPCONNECTION         : return _L("TCP connection failed");
-      case DIOWEBCLIENT_ERROR_TCPTIMEOUT            : return _L("TCP connection timed out");
-      case DIOWEBCLIENT_ERROR_PROXY                 : return _L("proxy connection or negotiation failed");
-      case DIOWEBCLIENT_ERROR_TLSCONFIGURATION      : return _L("TLS configuration is invalid or unavailable");
-      case DIOWEBCLIENT_ERROR_TLSPROTOCOL           : return _L("TLS protocol negotiation or record processing failed");
-      case DIOWEBCLIENT_ERROR_TLSAUTHENTICATION     : return _L("TLS peer authentication failed");
-      case DIOWEBCLIENT_ERROR_HTTPWRITE             : return _L("HTTP request could not be sent");
-      case DIOWEBCLIENT_ERROR_HTTPRESPONSE          : return _L("HTTP response is missing or malformed");
-      case DIOWEBCLIENT_ERROR_HTTPSTATUS            : return _L("HTTP server returned an error status");
-      case DIOWEBCLIENT_ERROR_HTTPREDIRECT          : return _L("HTTP redirect was rejected");
-      case DIOWEBCLIENT_ERROR_HTTPBODY              : return _L("HTTP response body could not be read");
-      case DIOWEBCLIENT_ERROR_HTTPCONTENTENCODING   : return _L("HTTP response content encoding could not be decoded");
-                                             default : return _L("no error");
+      case DIOWEBCLIENT_ERROR_INVALIDARGUMENT       : return NL("invalid operation argument");
+      case DIOWEBCLIENT_ERROR_INVALIDURL            : return NL("invalid or unsupported URL");
+      case DIOWEBCLIENT_ERROR_TRANSPORTUNAVAILABLE  : return NL("requested transport is not available");
+      case DIOWEBCLIENT_ERROR_DNSRESOLUTION         : return NL("DNS resolution failed");
+      case DIOWEBCLIENT_ERROR_TCPCONNECTION         : return NL("TCP connection failed");
+      case DIOWEBCLIENT_ERROR_TCPTIMEOUT            : return NL("TCP connection timed out");
+      case DIOWEBCLIENT_ERROR_PROXY                 : return NL("proxy connection or negotiation failed");
+      case DIOWEBCLIENT_ERROR_TLSCONFIGURATION      : return NL("TLS configuration is invalid or unavailable");
+      case DIOWEBCLIENT_ERROR_TLSPROTOCOL           : return NL("TLS protocol negotiation or record processing failed");
+      case DIOWEBCLIENT_ERROR_TLSAUTHENTICATION     : return NL("TLS peer authentication failed");
+      case DIOWEBCLIENT_ERROR_HTTPWRITE             : return NL("HTTP request could not be sent");
+      case DIOWEBCLIENT_ERROR_HTTPRESPONSE          : return NL("HTTP response is missing or malformed");
+      case DIOWEBCLIENT_ERROR_HTTPSTATUS            : return NL("HTTP server returned an error status");
+      case DIOWEBCLIENT_ERROR_HTTPREDIRECT          : return NL("HTTP redirect was rejected");
+      case DIOWEBCLIENT_ERROR_HTTPBODY              : return NL("HTTP response body could not be read");
+      case DIOWEBCLIENT_ERROR_HTTPCONTENTENCODING   : return NL("HTTP response content encoding could not be decoded");
+                                             default : return NL("no error");
     }
 }
 
@@ -394,7 +394,7 @@ bool DIOWEBCLIENT_HEADER::HasContentLength()
       XSTRING* line = lines.Get(c);
       if(line)
         {
-          int index = line->Find(_L(":"), true);
+          int index = line->Find(NL(":"), true);
           if(index != XSTRING_NOTFOUND)
             {
               XSTRING field;
@@ -431,7 +431,7 @@ bool DIOWEBCLIENT_HEADER::GetContentLength(XQWORD& contentlength)
       XSTRING* line = lines.Get(c);
       if(line)
         {
-          int index = line->Find(_L(":"), true);
+          int index = line->Find(NL(":"), true);
           if(index != XSTRING_NOTFOUND)
             {
               XSTRING field;
@@ -513,7 +513,7 @@ bool DIOWEBCLIENT_HEADER::GetTransferEncoding(XSTRING& transferencoding)
       XSTRING* line = lines.Get(c);
       if(line)
         {
-          int index = line->Find(_L(":"), true);
+          int index = line->Find(NL(":"), true);
           if(index != XSTRING_NOTFOUND)
             {
               XSTRING field;
@@ -535,7 +535,7 @@ bool DIOWEBCLIENT_HEADER::GetTransferEncoding(XSTRING& transferencoding)
                   value.DeleteCharacters(value.GetSize()-1, 1);
                 }
 
-              if(found) transferencoding += _L(",");
+              if(found) transferencoding += NL(",");
 
               transferencoding += value;
               found              = true;
@@ -603,7 +603,7 @@ bool DIOWEBCLIENT_HEADER::GetETag(XSTRING& etag)
         {
           if(line.Find(DIOWEBHEADER_ETAG, true) != XSTRING_NOTFOUND)
             {
-              int index = line.Find(_L(":"), true);
+              int index = line.Find(NL(":"), true);
               if(index != XSTRING_NOTFOUND)  line.Copy(index+1, etag);
             }
         }
@@ -2035,11 +2035,11 @@ bool DIOWEBCLIENT::Body_Decompress(bool istobuffer, void* to)
 
   COMPRESSBASE_TYPE type;
 
-  if(!contentencoding.Compare(_L("gzip"), true) || !contentencoding.Compare(_L("x-gzip"), true))
+  if(!contentencoding.Compare(NL("gzip"), true) || !contentencoding.Compare(NL("x-gzip"), true))
     {
       type = COMPRESSBASE_TYPE_GZ;
     }
-   else if(!contentencoding.Compare(_L("deflate"), true))
+   else if(!contentencoding.Compare(NL("deflate"), true))
     {
       type = COMPRESSBASE_TYPE_DEFLATE;
     }
@@ -2162,7 +2162,7 @@ bool DIOWEBCLIENT::MakeOperation(DIOWEBHEADER_METHOD method, DIOURL& url, XBUFFE
     {
       DIOURL targeturl;
 
-      if(url.Find(_L("://"), true) != XSTRING_NOTFOUND)
+      if(url.Find(NL("://"), true) != XSTRING_NOTFOUND)
         {
           OperationError_Set(DIOWEBCLIENT_ERROR_INVALIDURL);
           return false;
@@ -2328,9 +2328,9 @@ bool DIOWEBCLIENT::MakeOperation(DIOWEBHEADER_METHOD method, DIOURL& url, XBUFFE
 
   switch(method)
     {
-      case DIOWEBHEADER_METHOD_GET  : methodstring = _L("GET");     break;
-      case DIOWEBHEADER_METHOD_PUT  : methodstring = _L("PUT");     break;
-      case DIOWEBHEADER_METHOD_POST : methodstring = _L("POST");    break;
+      case DIOWEBHEADER_METHOD_GET  : methodstring = NL("GET");     break;
+      case DIOWEBHEADER_METHOD_PUT  : methodstring = NL("PUT");     break;
+      case DIOWEBHEADER_METHOD_POST : methodstring = NL("POST");    break;
 
                             default : { xevent.SetEventType(DIOWEBCLIENT_XEVENT_TYPE_HEADERERROR);
                                         PostEvent(&xevent);
@@ -2346,12 +2346,12 @@ bool DIOWEBCLIENT::MakeOperation(DIOWEBHEADER_METHOD method, DIOURL& url, XBUFFE
 
   if(proxycfg && proxycfg->IsActive() && (proxycfg->GetMode() == DIOSTREAMTCPIPPROXYMODE_FORWARD))
     {
-      requestresource = _L("http://");
+      requestresource = NL("http://");
       requestresource += server;
 
-      if(operationport != DIOWEBCLIENT_DEFAULTPORT) requestresource.AddFormat(_L(":%d"), operationport);
+      if(operationport != DIOWEBCLIENT_DEFAULTPORT) requestresource.AddFormat(NL(":%d"), operationport);
 
-      if(resource.IsEmpty() || (resource.Get()[0] != _C('/'))) requestresource += _L("/");
+      if(resource.IsEmpty() || (resource.Get()[0] != _C('/'))) requestresource += NL("/");
       requestresource += resource;
     }
    else
@@ -2359,9 +2359,9 @@ bool DIOWEBCLIENT::MakeOperation(DIOWEBHEADER_METHOD method, DIOURL& url, XBUFFE
       requestresource = resource;
     }
 
-  sendheader.AddFormat(_L("%s %s HTTP/1.1\r\n"), methodstring.Get(), requestresource.Get());
+  sendheader.AddFormat(NL("%s %s HTTP/1.1\r\n"), methodstring.Get(), requestresource.Get());
 
-  sendheader += _L("Host: ");
+  sendheader += NL("Host: ");
   sendheader += server.Get();
 
   if(operationport!=defaultport)
@@ -2370,10 +2370,10 @@ bool DIOWEBCLIENT::MakeOperation(DIOWEBHEADER_METHOD method, DIOURL& url, XBUFFE
 
       stringport.ConvertFromInt(operationport);
 
-      sendheader += _L(":");
+      sendheader += NL(":");
       sendheader += stringport.Get();
     }
-  sendheader += _L("\r\n");
+  sendheader += NL("\r\n");
 
   if(proxycfg && proxycfg->IsActive() && (proxycfg->GetMode() == DIOSTREAMTCPIPPROXYMODE_FORWARD) &&
      (!proxycfg->GetLogin()->IsEmpty() || !proxycfg->GetPassword()->IsEmpty()))
@@ -2381,12 +2381,12 @@ bool DIOWEBCLIENT::MakeOperation(DIOWEBHEADER_METHOD method, DIOURL& url, XBUFFE
       XSTRING proxycredentials;
       XSTRING proxycredentialsbase64;
 
-      proxycredentials.Format(_L("%s:%s"), proxycfg->GetLogin()->Get(), proxycfg->GetPassword()->Get());
+      proxycredentials.Format(NL("%s:%s"), proxycfg->GetLogin()->Get(), proxycfg->GetPassword()->Get());
       proxycredentials.ConvertToBase64(proxycredentialsbase64);
 
-      sendheader += _L("Proxy-Authorization: Basic ");
+      sendheader += NL("Proxy-Authorization: Basic ");
       sendheader += proxycredentialsbase64;
-      sendheader += _L("\r\n");
+      sendheader += NL("\r\n");
     }
 
   if(addhead) sendheader += addhead;
@@ -2394,7 +2394,7 @@ bool DIOWEBCLIENT::MakeOperation(DIOWEBHEADER_METHOD method, DIOURL& url, XBUFFE
   // Some servers/CDNs/WAFs treat a request with no User-Agent at all as non-browser/bot traffic and respond
   // differently (a canonical-redirect loop has been observed against at least one real site) -- send the
   // default identification unless the caller already supplied their own via addhead.
-  if(sendheader.Find(_L("User-Agent:"), true) == XSTRING_NOTFOUND) sendheader += DIOWEBCLIENT_DEFAULTUSERAGENT;
+  if(sendheader.Find(NL("User-Agent:"), true) == XSTRING_NOTFOUND) sendheader += DIOWEBCLIENT_DEFAULTUSERAGENT;
 
   #ifdef COMPRESS_ACTIVE
 
@@ -2410,7 +2410,7 @@ bool DIOWEBCLIENT::MakeOperation(DIOWEBHEADER_METHOD method, DIOURL& url, XBUFFE
           hasacceptencoding = (addheadstring.Find(DIOWEBHEADER_ACCEPT_ENCODING, true) != XSTRING_NOTFOUND);
         }
 
-      if(!hasacceptencoding) sendheader += _L("Accept-Encoding: gzip, deflate\r\n");
+      if(!hasacceptencoding) sendheader += NL("Accept-Encoding: gzip, deflate\r\n");
     }
 
   #endif
@@ -2424,12 +2424,12 @@ bool DIOWEBCLIENT::MakeOperation(DIOWEBHEADER_METHOD method, DIOURL& url, XBUFFE
       case DIOWEBCLIENT_AUTHENTICATION_METHOD_BASIC   : { XSTRING loginpassword;
                                                           XSTRING loginpasswordbase64;
 
-                                                          loginpassword.Format(_L("%s:%s"), login.Get(), password.Get());
+                                                          loginpassword.Format(NL("%s:%s"), login.Get(), password.Get());
                                                           loginpassword.ConvertToBase64(loginpasswordbase64);
 
-                                                          sendheader += _L("Authorization: Basic ");
+                                                          sendheader += NL("Authorization: Basic ");
                                                           sendheader += loginpasswordbase64;
-                                                          sendheader += _L("\r\n");
+                                                          sendheader += NL("\r\n");
                                                         }
                                                         break;
 
@@ -2467,15 +2467,15 @@ bool DIOWEBCLIENT::MakeOperation(DIOWEBHEADER_METHOD method, DIOURL& url, XBUFFE
   if(effectivepostdata)
     {
       XSTRING stringlenght;
-      stringlenght.Format(_L("%s: %d\r\n"), DIOWEBHEADER_CONTENT_LENGTH, effectivepostdata->GetSize());
+      stringlenght.Format(NL("%s: %d\r\n"), DIOWEBHEADER_CONTENT_LENGTH, effectivepostdata->GetSize());
 
       sendheader += stringlenght;
 
-      if(effectivepostdata == &compressedpostdata) sendheader += _L("Content-Encoding: gzip\r\n");
+      if(effectivepostdata == &compressedpostdata) sendheader += NL("Content-Encoding: gzip\r\n");
     }
 
-  sendheader += _L("Connection: close\r\n");
-  sendheader += _L("\r\n");
+  sendheader += NL("Connection: close\r\n");
+  sendheader += NL("\r\n");
 
   if(!diostream->WriteStr(sendheader))
     {
@@ -2484,7 +2484,7 @@ bool DIOWEBCLIENT::MakeOperation(DIOWEBHEADER_METHOD method, DIOURL& url, XBUFFE
       return false;
     }
 
-  //XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, _L("%s"), sendheader.Get());
+  //XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, NL("%s"), sendheader.Get());
 
   xevent.SetEventType(DIOWEBCLIENT_XEVENT_TYPE_WRITEHEADER);
   PostEvent(&xevent);
@@ -2542,7 +2542,7 @@ bool DIOWEBCLIENT::MakeOperation(DIOWEBHEADER_METHOD method, DIOURL& url, XBUFFE
         {
           DIOURL redirecturl;
 
-          if(location.Find(_L("://"), true) != XSTRING_NOTFOUND)
+          if(location.Find(NL("://"), true) != XSTRING_NOTFOUND)
             {
               redirecturl = location.Get();                                   // Absolute Location: use it as-is
             }
@@ -2550,7 +2550,7 @@ bool DIOWEBCLIENT::MakeOperation(DIOWEBHEADER_METHOD method, DIOURL& url, XBUFFE
             {
               XSTRING scheme;
 
-              scheme = isTLS?_L("https://"):_L("http://");
+              scheme = isTLS?NL("https://"):NL("http://");
 
               redirecturl  = scheme;
               redirecturl += server;
@@ -2561,11 +2561,11 @@ bool DIOWEBCLIENT::MakeOperation(DIOWEBHEADER_METHOD method, DIOURL& url, XBUFFE
 
                   stringport.ConvertFromInt(operationport);
 
-                  redirecturl += _L(":");
+                  redirecturl += NL(":");
                   redirecturl += stringport;
                 }
 
-              if(!location.IsEmpty() && (location.Get()[0] != _C('/'))) redirecturl += _L("/");
+              if(!location.IsEmpty() && (location.Get()[0] != _C('/'))) redirecturl += NL("/");
 
               redirecturl += location;
             }
@@ -2674,32 +2674,32 @@ bool DIOWEBCLIENT::MakeOperation(DIOWEBHEADER_METHOD method, DIOURL& url, XBUFFE
       PostEvent(&xevent);
 
 
-      auth_str    = _L("auth");
+      auth_str    = NL("auth");
       nc          = 0x0000001;
       cnonce      = 0x0AF113B;
 
-      nc_str.Format(_L("%08x"), nc);
-      cnonce_str.Format(_L("%08x"), cnonce);
+      nc_str.Format(NL("%08x"), nc);
+      cnonce_str.Format(NL("%08x"), cnonce);
       
        
       header.GetWWWAuthenticate(www_authenticate);
       
-      //XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, _L("%s"), www_authenticate.Get());
+      //XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, NL("%s"), www_authenticate.Get());
 
-      GetSubStringWWWWAuthenticate(www_authenticate, _L("realm"), realm_str);
-      GetSubStringWWWWAuthenticate(www_authenticate, _L("nonce"), nonce_str);
-      GetSubStringWWWWAuthenticate(www_authenticate, _L("opaque"), opaque_str);
-      GetSubStringWWWWAuthenticate(www_authenticate, _L("algorithm") , algorithm_str, false);
+      GetSubStringWWWWAuthenticate(www_authenticate, NL("realm"), realm_str);
+      GetSubStringWWWWAuthenticate(www_authenticate, NL("nonce"), nonce_str);
+      GetSubStringWWWWAuthenticate(www_authenticate, NL("opaque"), opaque_str);
+      GetSubStringWWWWAuthenticate(www_authenticate, NL("algorithm") , algorithm_str, false);
 
       /*
-      if(algorithm_str.Compare(_L("MD5"), true))
+      if(algorithm_str.Compare(NL("MD5"), true))
         {
           diostream->Close();
           return false;
         }    
       */
      
-      { calculatehash.Format(_L("%s:%s:%s"), login.Get(), realm_str.Get(), password.Get());
+      { calculatehash.Format(NL("%s:%s:%s"), login.Get(), realm_str.Get(), password.Get());
        
         XBUFFER charhash;
         
@@ -2711,7 +2711,7 @@ bool DIOWEBCLIENT::MakeOperation(DIOWEBHEADER_METHOD method, DIOURL& url, XBUFFE
 
       md5.ResetResult();
 
-      { calculatehash.Format(_L("%s:%s"), methodstring.Get(), resource.Get());
+      { calculatehash.Format(NL("%s:%s"), methodstring.Get(), resource.Get());
   
         XBUFFER charhash;
         
@@ -2723,7 +2723,7 @@ bool DIOWEBCLIENT::MakeOperation(DIOWEBHEADER_METHOD method, DIOURL& url, XBUFFE
 
       md5.ResetResult();  
 
-      { calculatehash.Format(_L("%s:%s:%s:%s:%s:%s"), HA1.Get(), nonce_str.Get(), nc_str.Get(), cnonce_str.Get(), auth_str.Get(), HA2.Get());
+      { calculatehash.Format(NL("%s:%s:%s:%s:%s:%s"), HA1.Get(), nonce_str.Get(), nc_str.Get(), cnonce_str.Get(), auth_str.Get(), HA2.Get());
   
         XBUFFER charhash;
         
@@ -2734,22 +2734,22 @@ bool DIOWEBCLIENT::MakeOperation(DIOWEBHEADER_METHOD method, DIOURL& url, XBUFFE
       }
      
    
-      sendheader.AddFormat(_L("Authorization: Digest "));     
-      sendheader.AddFormat(_L("username=\"%s\", "), login.Get());           
-      sendheader.AddFormat(_L("realm=\"%s\", "), realm_str.Get());           
-      sendheader.AddFormat(_L("nonce=\"%s\", "), nonce_str.Get());           
-      sendheader.AddFormat(_L("uri=\"%s\", "), resource.Get());     
-      sendheader.AddFormat(_L("algorithm=%s, "), algorithm_str.Get());
-      sendheader.AddFormat(_L("response=\"%s\", "), response.Get());   
-      sendheader.AddFormat(_L("qop=%s, "), auth_str.Get());     
-      sendheader.AddFormat(_L("nc=%s, "), nc_str.Get());     
-      sendheader.AddFormat(_L("cnonce=\"%s\" "), cnonce_str.Get());   
-      if(opaque_str.GetSize()) sendheader.AddFormat(_L(", opaque=\"%s\""), opaque_str.Get());           
-      sendheader += _L("\r\n");
+      sendheader.AddFormat(NL("Authorization: Digest "));     
+      sendheader.AddFormat(NL("username=\"%s\", "), login.Get());           
+      sendheader.AddFormat(NL("realm=\"%s\", "), realm_str.Get());           
+      sendheader.AddFormat(NL("nonce=\"%s\", "), nonce_str.Get());           
+      sendheader.AddFormat(NL("uri=\"%s\", "), resource.Get());     
+      sendheader.AddFormat(NL("algorithm=%s, "), algorithm_str.Get());
+      sendheader.AddFormat(NL("response=\"%s\", "), response.Get());   
+      sendheader.AddFormat(NL("qop=%s, "), auth_str.Get());     
+      sendheader.AddFormat(NL("nc=%s, "), nc_str.Get());     
+      sendheader.AddFormat(NL("cnonce=\"%s\" "), cnonce_str.Get());   
+      if(opaque_str.GetSize()) sendheader.AddFormat(NL(", opaque=\"%s\""), opaque_str.Get());           
+      sendheader += NL("\r\n");
 
-      sendheader += _L("\r\n");
+      sendheader += NL("\r\n");
       
-      //XTRACE_PRINTCOLOR(XTRACE_COLOR_PURPLE, _L("%s"), sendheader.Get());
+      //XTRACE_PRINTCOLOR(XTRACE_COLOR_PURPLE, NL("%s"), sendheader.Get());
 
       if(!diostream->WriteStr(sendheader))
         {
@@ -2835,7 +2835,7 @@ bool DIOWEBCLIENT::MakeOperation(DIOWEBHEADER_METHOD method, DIOURL& url, XBUFFE
       transferencoding.DeleteCharacter(_C(' '));
       transferencoding.DeleteCharacter(_C('\t'));
 
-      if(hascontentlength || transferencoding.Compare(_L("chunked"), true))
+      if(hascontentlength || transferencoding.Compare(NL("chunked"), true))
         {
           xevent.SetEventType(DIOWEBCLIENT_XEVENT_TYPE_HEADERERROR);
           PostEvent(&xevent);
@@ -3011,7 +3011,7 @@ bool DIOWEBCLIENT::GetSubStringWWWWAuthenticate(XSTRING& www_authenticate, XCHAR
   if(index == XSTRING_NOTFOUND) return false;
   index +=  sfield.GetSize();
 
-  index = www_authenticate.Find(_L("="), true, index);
+  index = www_authenticate.Find(NL("="), true, index);
   if(index == XSTRING_NOTFOUND) return false;
 
   int start = 0;
@@ -3019,17 +3019,17 @@ bool DIOWEBCLIENT::GetSubStringWWWWAuthenticate(XSTRING& www_authenticate, XCHAR
 
   if(betweenquotation)
     {
-      start = www_authenticate.Find(_L("\""), true, index+1);
+      start = www_authenticate.Find(NL("\""), true, index+1);
       if(start == XSTRING_NOTFOUND) return false;
 
-      end = www_authenticate.Find(_L("\""), true, start+1);
+      end = www_authenticate.Find(NL("\""), true, start+1);
       if(end == XSTRING_NOTFOUND) return false;
     }
    else
     { 
       start = index;
 
-      end = www_authenticate.Find(_L(","), true, start+1);
+      end = www_authenticate.Find(NL(","), true, start+1);
       if(end == XSTRING_NOTFOUND) return false;
     }
 
@@ -3091,7 +3091,7 @@ bool DIOWEBCLIENT::Headers_FilterSensitive(XCHAR* source, XSTRING& filtered)
   int start = 0;
   while(start < (int)headers.GetSize())
     {
-      int end = headers.Find(_L("\n"), true, start);
+      int end = headers.Find(NL("\n"), true, start);
       if(end == XSTRING_NOTFOUND) end = headers.GetSize();
 
       XSTRING line;
@@ -3102,14 +3102,14 @@ bool DIOWEBCLIENT::Headers_FilterSensitive(XCHAR* source, XSTRING& filtered)
       lowerline = line;
       lowerline.ToLowerCase();
 
-      bool sensitive = !lowerline.Find(_L("authorization:"), true) ||
-                       !lowerline.Find(_L("proxy-authorization:"), true) ||
-                       !lowerline.Find(_L("cookie:"), true);
+      bool sensitive = !lowerline.Find(NL("authorization:"), true) ||
+                       !lowerline.Find(NL("proxy-authorization:"), true) ||
+                       !lowerline.Find(NL("cookie:"), true);
 
       if(!sensitive && !line.IsEmpty())
         {
           filtered += line;
-          filtered += _L("\r\n");
+          filtered += NL("\r\n");
         }
 
       start = end + 1;

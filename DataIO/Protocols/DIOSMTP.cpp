@@ -1004,14 +1004,14 @@ bool DIOSMTP::Send()
   XSTRING domain;
   senderemail.GetDomain(domain);
 
-  response.Format(_L("EHLO %s\r\n"), domain.Get());
+  response.Format(NL("EHLO %s\r\n"), domain.Get());
   if(!SendResponse(response, 250))
     {
       diostream->Close();
       return false;
     }
 
-  response.Format(_L("AUTH LOGIN\r\n"));
+  response.Format(NL("AUTH LOGIN\r\n"));
   if(!SendResponseAndWait(response, 334, 250))
     {
       diostream->Close();
@@ -1024,14 +1024,14 @@ bool DIOSMTP::Send()
   serverlogin.ConvertToBase64(encoded64login);
   serverpassword.ConvertToBase64(encoded64password);
 
-  response.Format(_L("%s\r\n"), encoded64login.Get());
+  response.Format(NL("%s\r\n"), encoded64login.Get());
   if(!SendResponse(response, 334))
     {
       diostream->Close();
       return false;
     }
 
-  response.Format(_L("%s\r\n"), encoded64password.Get());
+  response.Format(NL("%s\r\n"), encoded64password.Get());
   if(!SendResponseAndWait(response, 235, 334))
     {
       diostream->Close();
@@ -1040,7 +1040,7 @@ bool DIOSMTP::Send()
 
   if(sendername.GetSize())
     {
-      response.Format(_L("MAIL FROM:<%s>\r\n"), sendername.Get());
+      response.Format(NL("MAIL FROM:<%s>\r\n"), sendername.Get());
       if(!SendResponse(response, 250))
         {
           diostream->Close();
@@ -1055,7 +1055,7 @@ bool DIOSMTP::Send()
       DIOSMTPRECIPIENT* recipient = recipients.Get(c);
       if(recipient)
         {
-          response.Format(_L("RCPT TO:<%s>\r\n"), recipient->GetEmail()->Get());
+          response.Format(NL("RCPT TO:<%s>\r\n"), recipient->GetEmail()->Get());
           if(!SendResponse(response, 250))
             {
 
@@ -1069,7 +1069,7 @@ bool DIOSMTP::Send()
       return false;
     }
 
-  response.Format(_L("DATA\r\n"), encoded64password.Get());
+  response.Format(NL("DATA\r\n"), encoded64password.Get());
   if(!SendResponseAndWait(response, 354, 250))
     {
       diostream->Close();
@@ -1097,11 +1097,11 @@ bool DIOSMTP::Send()
                                                 for(int c=0; c<GetMessage()->GetNLines(); c++)
                                                   {
                                                     XSTRING line;
-                                                    line.Format(_L("%s\r\n"), GetMessage()->GetLine(c)->Get());
+                                                    line.Format(NL("%s\r\n"), GetMessage()->GetLine(c)->Get());
                                                     response  += line.Get();
                                                   }
 
-                                                if(response.IsEmpty()) response  += _L(" \r\n");
+                                                if(response.IsEmpty()) response  += NL(" \r\n");
 
                                                 diostream->WriteStr(response);
                                                 if(!diostream->WaitToFlushOutXBuffer(serverconnectiontimeout))
@@ -1117,7 +1117,7 @@ bool DIOSMTP::Send()
                                                     XSTRING line;
 
                                                     line  = GetMessage()->GetLine(c)->Get();
-                                                    line += _L("\r\n");
+                                                    line += NL("\r\n");
 
                                                     line.ConvertToUTF8(xbufferline);
 
@@ -1133,7 +1133,7 @@ bool DIOSMTP::Send()
     }
    else
     {
-      response  += _L(" \r\n");
+      response  += NL(" \r\n");
 
       diostream->WriteStr(response);
       if(!diostream->WaitToFlushOutXBuffer(serverconnectiontimeout))
@@ -1160,13 +1160,13 @@ bool DIOSMTP::Send()
 
                   attachment->GetXPath()->GetNamefileExt(filenameext);
 
-                  response.Format(_L("--%s\r\n"), DIOSMTP_BOUNDARYTEXT);
-                  response += _L("Content-Type: application/octect-stream\r\n");
-                  response += _L("Content-Transfer-Encoding: base64\r\n");
-                  response += _L("Content-Disposition: attachment;\r\n filename=\"");
+                  response.Format(NL("--%s\r\n"), DIOSMTP_BOUNDARYTEXT);
+                  response += NL("Content-Type: application/octect-stream\r\n");
+                  response += NL("Content-Transfer-Encoding: base64\r\n");
+                  response += NL("Content-Disposition: attachment;\r\n filename=\"");
                   response += filenameext.Get();
-                  response += _L("\"\r\n");
-                  response += _L("\r\n");
+                  response += NL("\"\r\n");
+                  response += NL("\r\n");
 
                   diostream->WriteStr(response);
                   if(!diostream->WaitToFlushOutXBuffer(serverconnectiontimeout))
@@ -1203,7 +1203,7 @@ bool DIOSMTP::Send()
                           datafileenconded64.Copy(index, index+sizepart, partstring);
 
                           response += partstring;
-                          response += _L("\r\n");
+                          response += NL("\r\n");
 
                           index += sizepart;
 
@@ -1220,7 +1220,7 @@ bool DIOSMTP::Send()
             }
         }
 
-      response.Format(_L("--%s--\r\n"), DIOSMTP_BOUNDARYTEXT);
+      response.Format(NL("--%s--\r\n"), DIOSMTP_BOUNDARYTEXT);
       diostream->WriteStr(response);
       if(!diostream->WaitToFlushOutXBuffer(serverconnectiontimeout))
         {
@@ -1229,14 +1229,14 @@ bool DIOSMTP::Send()
         }
     }
 
-  response = _L("\r\n.\r\n");
+  response = NL("\r\n.\r\n");
   if(!SendResponse(response, 250))
     {
       diostream->Close();
       return false;
     }
 
-  response = _L("QUIT\r\n");
+  response = NL("QUIT\r\n");
   if(!SendResponse(response, 221))
     {
       diostream->Close();
@@ -1407,7 +1407,7 @@ bool DIOSMTP::SendResponseAndWait(XSTRING& response, int codevalid, int codecont
 * --------------------------------------------------------------------------------------------------------------------*/
 bool DIOSMTP::CreateHeader(XSTRING& header)
 {
-//XCHAR*  month[] = { _L("Jan") , _L("Feb"), _L("Mar"), _L("Apr"), _L("May"), _L("Jun"), _L("Jul") , _L("Aug"), _L("Sep"), _L("Oct"), _L("Nov"), _L("Dec") };
+//XCHAR*  month[] = { NL("Jan") , NL("Feb"), NL("Mar"), NL("Apr"), NL("May"), NL("Jun"), NL("Jul") , NL("Aug"), NL("Sep"), NL("Oct"), NL("Nov"), NL("Dec") };
   XSTRING to_line;
   XSTRING cc_line;
   XSTRING bcc_line;
@@ -1422,21 +1422,21 @@ bool DIOSMTP::CreateHeader(XSTRING& header)
           DIOSMTPRECIPIENT* recipient = recipients.Get(c);
           if(recipient)
             {
-              string.Format(_L("%s<%s>"), recipient->GetName()->Get(), recipient->GetEmail()->Get());
+              string.Format(NL("%s<%s>"), recipient->GetName()->Get(), recipient->GetEmail()->Get());
 
               switch(recipient->GetType())
                 {
                   case DIOSMTPRECIPIENTTYPE_UNKNOWN : break;
 
-                  case DIOSMTPRECIPIENTTYPE_TO      : if(!to_line.IsEmpty()) to_line+= _L(",");
+                  case DIOSMTPRECIPIENTTYPE_TO      : if(!to_line.IsEmpty()) to_line+= NL(",");
                                                       to_line += string.Get();
                                                       break;
 
-                  case DIOSMTPRECIPIENTTYPE_CC      : if(!cc_line.IsEmpty()) cc_line+= _L(",");
+                  case DIOSMTPRECIPIENTTYPE_CC      : if(!cc_line.IsEmpty()) cc_line+= NL(",");
                                                       cc_line += string.Get();
                                                       break;
 
-                  case DIOSMTPRECIPIENTTYPE_BCC     : if(!bcc_line.IsEmpty()) bcc_line+= _L(",");
+                  case DIOSMTPRECIPIENTTYPE_BCC     : if(!bcc_line.IsEmpty()) bcc_line+= NL(",");
                                                       bcc_line += string.Get();
                                                       break;
                 }
@@ -1452,7 +1452,7 @@ bool DIOSMTP::CreateHeader(XSTRING& header)
     {
       datetime->Read();
 
-      string.Format(_L("Date: %d %s %d %d:%d:%d\r\n"), datetime->GetDay()
+      string.Format(NL("Date: %d %s %d %d:%d:%d\r\n"), datetime->GetDay()
                                                       , month[datetime->GetMonth()-1]
                                                       , datetime->GetYear()
                                                       , datetime->GetHours()
@@ -1467,31 +1467,31 @@ bool DIOSMTP::CreateHeader(XSTRING& header)
   header+= string;
   */
 
-  string.Format(_L("From: %s <%s>\r\n"), GetSenderName()->Get(), GetSenderEmail()->Get());
+  string.Format(NL("From: %s <%s>\r\n"), GetSenderName()->Get(), GetSenderEmail()->Get());
   header+= string;
 
 
   if(!GetReplytoEmail()->IsEmpty())
     {
-      string.Format(_L("Reply-To: %s\r\n"), GetReplytoEmail()->Get());
+      string.Format(NL("Reply-To: %s\r\n"), GetReplytoEmail()->Get());
       header+= string;
     }
 
   XSTRING defaultxmailer;
 
   defaultxmailer  = GEN_VERSION.GetName()->Get();
-  defaultxmailer += _L(" ");
+  defaultxmailer += NL(" ");
   defaultxmailer += GEN_VERSION.GetVersion()->Get();
 
-  string.Format(_L("X-Mailer: %s\r\n"), GetXMailer()->IsEmpty()? defaultxmailer.Get() : GetXMailer()->Get());
+  string.Format(NL("X-Mailer: %s\r\n"), GetXMailer()->IsEmpty()? defaultxmailer.Get() : GetXMailer()->Get());
   header+= string;
 
   switch(xpriority)
     {
-      case DIOSMTPXPRIORITY_HIGH    : string = _L("X-Priority: 2 (High)\r\n");     break;
+      case DIOSMTPXPRIORITY_HIGH    : string = NL("X-Priority: 2 (High)\r\n");     break;
       case DIOSMTPXPRIORITY_UNKNOWN :
-      case DIOSMTPXPRIORITY_NORMAL  : string = _L("X-Priority: 3 (Normal)\r\n");   break;
-      case DIOSMTPXPRIORITY_LOW     : string = _L("X-Priority: 4 (Low)\r\n");      break;
+      case DIOSMTPXPRIORITY_NORMAL  : string = NL("X-Priority: 3 (Normal)\r\n");   break;
+      case DIOSMTPXPRIORITY_LOW     : string = NL("X-Priority: 4 (Low)\r\n");      break;
     }
 
   if(string.IsEmpty()) return false;
@@ -1499,19 +1499,19 @@ bool DIOSMTP::CreateHeader(XSTRING& header)
 
   if(!to_line.IsEmpty())
     {
-      string.Format(_L("To: %s\r\n"), to_line.Get());
+      string.Format(NL("To: %s\r\n"), to_line.Get());
       header+= string;
     }
 
   if(!cc_line.IsEmpty())
     {
-      string.Format(_L("Cc: %s\r\n"), cc_line.Get());
+      string.Format(NL("Cc: %s\r\n"), cc_line.Get());
       header+= string;
     }
 
   if(!bcc_line.IsEmpty())
     {
-      string.Format(_L("Bcc: %s\r\n"), bcc_line.Get());
+      string.Format(NL("Bcc: %s\r\n"), bcc_line.Get());
       header+= string;
     }
 
@@ -1519,7 +1519,7 @@ bool DIOSMTP::CreateHeader(XSTRING& header)
   string.Empty();
   switch(contenttype)
     {
-      case DIOSSMPTCONTENTTYPE_PLAINTTEXT : string.Format(_L("Subject: %s\r\n"), GetSubject()->IsEmpty()?_L(" "):GetSubject()->Get());
+      case DIOSSMPTCONTENTTYPE_PLAINTTEXT : string.Format(NL("Subject: %s\r\n"), GetSubject()->IsEmpty()?NL(" "):GetSubject()->Get());
                                             header+= string;
                                             break;
 
@@ -1530,9 +1530,9 @@ bool DIOSMTP::CreateHeader(XSTRING& header)
 
                                               subjectUTF8.ConvertToBase64(subjectbase64);
 
-                                              string = _L("Subject: =?UTF-8?B?");
+                                              string = NL("Subject: =?UTF-8?B?");
                                               string += subjectbase64;
-                                              string += _L("?=\r\n");
+                                              string += NL("?=\r\n");
                                             }
                                             break;
     }
@@ -1540,23 +1540,23 @@ bool DIOSMTP::CreateHeader(XSTRING& header)
   header += string;
 
 
-  string = _L("MIME-Version: 1.0\r\n");
+  string = NL("MIME-Version: 1.0\r\n");
 
   if(attachments.GetSize())
     {
       XSTRING string2;
-      string2.Format(_L("Content-Type: multipart/mixed; boundary=\"%s\"\r\n\r\n--%s\n\r"), DIOSMTP_BOUNDARYTEXT, DIOSMTP_BOUNDARYTEXT);
+      string2.Format(NL("Content-Type: multipart/mixed; boundary=\"%s\"\r\n\r\n--%s\n\r"), DIOSMTP_BOUNDARYTEXT, DIOSMTP_BOUNDARYTEXT);
       string += string2;
     }
 
   switch(contenttype)
     {
-      case DIOSSMPTCONTENTTYPE_PLAINTTEXT : string += _L("Content-type: text/plain; charset=utf-8\r\n"); break;
-      case DIOSSMPTCONTENTTYPE_UTF8       : string += _L("Content-type: text/plain; charset=utf-8\r\n"); break;
+      case DIOSSMPTCONTENTTYPE_PLAINTTEXT : string += NL("Content-type: text/plain; charset=utf-8\r\n"); break;
+      case DIOSSMPTCONTENTTYPE_UTF8       : string += NL("Content-type: text/plain; charset=utf-8\r\n"); break;
     }
 
-//string += _L("Content-Transfer-Encoding: 7bit\r\n");
-  string += _L("\r\n");
+//string += NL("Content-Transfer-Encoding: 7bit\r\n");
+  string += NL("\r\n");
 
   header += string;
 

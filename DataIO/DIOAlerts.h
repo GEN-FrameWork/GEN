@@ -70,12 +70,12 @@ enum DIOALERTSENDER
 };
 
 
-#define DIOALERTS_QSPARAM_APPLICATIONID   _L("applicationID")
-#define DIOALERTS_QSPARAM_TYPE            _L("type")
-#define DIOALERTS_QSPARAM_LEVEL           _L("level")
-#define DIOALERTS_QSPARAM_TITLE           _L("title")
-#define DIOALERTS_QSPARAM_ORIGIN          _L("origin")
-#define DIOALERTS_QSPARAM_MESSAGE         _L("message")
+#define DIOALERTS_QSPARAM_APPLICATIONID   NL("applicationID")
+#define DIOALERTS_QSPARAM_TYPE            NL("type")
+#define DIOALERTS_QSPARAM_LEVEL           NL("level")
+#define DIOALERTS_QSPARAM_TITLE           NL("title")
+#define DIOALERTS_QSPARAM_ORIGIN          NL("origin")
+#define DIOALERTS_QSPARAM_MESSAGE         NL("message")
 
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
 

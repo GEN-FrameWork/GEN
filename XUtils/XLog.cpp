@@ -434,15 +434,15 @@ bool XLOGBASE::GetLevelString(XLOGLEVEL level, XSTRING& strlevel, XDWORD size)
 
   switch(level)
     {
-      case XLOGLEVEL_INFO     : strlevel = _L("INFO");       break;
-      case XLOGLEVEL_WARNING  : strlevel = _L("WARNING");    break;
-      case XLOGLEVEL_ERROR    : strlevel = _L("ERROR");      break;
+      case XLOGLEVEL_INFO     : strlevel = NL("INFO");       break;
+      case XLOGLEVEL_WARNING  : strlevel = NL("WARNING");    break;
+      case XLOGLEVEL_ERROR    : strlevel = NL("ERROR");      break;
       default: break;
     }
 
   if(strlevel.IsEmpty()) return false;
 
-  if(size>0) strlevel.AdjustSize(size, false, _L(" "));
+  if(size>0) strlevel.AdjustSize(size, false, NL(" "));
 
   return true;
 }
@@ -506,7 +506,7 @@ bool XLOGBASE::PassFilters(XLOGLEVEL level, XCHAR* sectionID)
 * --------------------------------------------------------------------------------------------------------------------*/
 bool XLOGBASE::AddEntry(XLOGLEVEL level, XCHAR* sectionID, bool inmemory, XCHAR* mask, ...)
 {
-  //XTRACE_PRINTCOLOR(3,_L(" XLOG::AddEntry %u"),XMEMORY_GETMEMORYUSED);
+  //XTRACE_PRINTCOLOR(3,NL(" XLOG::AddEntry %u"),XMEMORY_GETMEMORYUSED);
 
   if(!IsActive()) return false;
   if(!mask)       return false;
@@ -526,7 +526,7 @@ bool XLOGBASE::AddEntry(XLOGLEVEL level, XCHAR* sectionID, bool inmemory, XCHAR*
         }
     }
 
-  //XTRACE_PRINTCOLOR(3,_L(" XLOG::AddEntry  %u"),XMEMORY_GETMEMORYUSED);
+  //XTRACE_PRINTCOLOR(3,NL(" XLOG::AddEntry  %u"),XMEMORY_GETMEMORYUSED);
 
   Backup_ControlLimits();
 
@@ -544,31 +544,31 @@ bool XLOGBASE::AddEntry(XLOGLEVEL level, XCHAR* sectionID, bool inmemory, XCHAR*
     }
 
   GetLevelString(level, levelstring, 7);
-  //XTRACE_PRINTCOLOR(3,_L(" XLOG::AddEntry %u"),XMEMORY_GETMEMORYUSED);
+  //XTRACE_PRINTCOLOR(3,NL(" XLOG::AddEntry %u"),XMEMORY_GETMEMORYUSED);
   if(sectionID)
     {
       string = datestring;
-      string.AdjustSize(XLOG_MAXDATETIMESIZE, false, _L(" "));
+      string.AdjustSize(XLOG_MAXDATETIMESIZE, false, NL(" "));
       outstring      += string;      
 
       string = levelstring.Get();
-      string.AdjustSize(XLOG_MAXLEVELSIZE, false, _L(" "));
+      string.AdjustSize(XLOG_MAXLEVELSIZE, false, NL(" "));
       outstring      += string;
       outstringtrace += string;
 
       string = sectionID;
-      string.AdjustSize(XLOG_MAXSECTIONIDSIZE, false, _L(" "));
+      string.AdjustSize(XLOG_MAXSECTIONIDSIZE, false, NL(" "));
     }
    else
     {
-      string = _L(" ");
-      string.AdjustSize(XLOG_MAXDATETIMESIZE + XLOG_MAXLEVELSIZE + XLOG_MAXSECTIONIDSIZE, false, _L(" "));
+      string = NL(" ");
+      string.AdjustSize(XLOG_MAXDATETIMESIZE + XLOG_MAXLEVELSIZE + XLOG_MAXSECTIONIDSIZE, false, NL(" "));
     }
-  //XTRACE_PRINTCOLOR(3,_L(" XLOG::AddEntry  %u"),XMEMORY_GETMEMORYUSED);
+  //XTRACE_PRINTCOLOR(3,NL(" XLOG::AddEntry  %u"),XMEMORY_GETMEMORYUSED);
   outstring      += string;
   outstringtrace += string;
-  outstring      += _L(" ");
-  outstringtrace += _L(" ");
+  outstring      += NL(" ");
+  outstringtrace += NL(" ");
 
  if(!prevlabel.IsEmpty())
    {
@@ -599,7 +599,7 @@ bool XLOGBASE::AddEntry(XLOGLEVEL level, XCHAR* sectionID, bool inmemory, XCHAR*
           case XLOGLEVEL_INFO     : leveldebug = 0; break;
         }
 
-     XTRACE_PRINTCOLOR(leveldebug , _L("[Log] %s "), outstringtrace.Get());
+     XTRACE_PRINTCOLOR(leveldebug , NL("[Log] %s "), outstringtrace.Get());
     }
 
   if(inmemory)
@@ -641,9 +641,9 @@ bool XLOGBASE::AddEntry(XLOGLEVEL level, XCHAR* sectionID, bool inmemory, XCHAR*
       nlines++;
     }
 
-  //XTRACE_PRINTCOLOR(3,_L(" XLOG::AddEntry %u"),XMEMORY_GETMEMORYUSED);
+  //XTRACE_PRINTCOLOR(3,NL(" XLOG::AddEntry %u"),XMEMORY_GETMEMORYUSED);
   mutex->UnLock();
-  //XTRACE_PRINTCOLOR(3,_L(" XLOG::AddEntry  %u"),XMEMORY_GETMEMORYUSED);
+  //XTRACE_PRINTCOLOR(3,NL(" XLOG::AddEntry  %u"),XMEMORY_GETMEMORYUSED);
 
   return true;
 }
@@ -694,14 +694,14 @@ bool XLOGBASE::AddEntry(XLOGLEVEL level, XCHAR* sectionID, bool inmemory, XBYTE*
 
       if(showoffset)
         {
-          strdata.Format(_L("%04X"), index);
+          strdata.Format(NL("%04X"), index);
           string += strdata;
-          string += _L(" ");
+          string += NL(" ");
         }
 
       for(XDWORD c=0; c<_sizeline; c++)
         {
-          strdata.Format(_L("%02X "), data[index]);
+          strdata.Format(NL("%02X "), data[index]);
           string += strdata;
           _size++;
           index++;
@@ -711,7 +711,7 @@ bool XLOGBASE::AddEntry(XLOGLEVEL level, XCHAR* sectionID, bool inmemory, XBYTE*
         {
           for(XDWORD c=0; c<(sizeline-_sizeline); c++)
             {
-              strdata.Format(_L(" "));
+              strdata.Format(NL(" "));
               string += strdata;
             }
         }
@@ -719,7 +719,7 @@ bool XLOGBASE::AddEntry(XLOGLEVEL level, XCHAR* sectionID, bool inmemory, XBYTE*
       if(showtext)
         {
           index -= _sizeline;
-          string += _L(" ");
+          string += NL(" ");
 
           for(XDWORD c=0; c<_sizeline; c++)
             {
@@ -727,7 +727,7 @@ bool XLOGBASE::AddEntry(XLOGLEVEL level, XCHAR* sectionID, bool inmemory, XBYTE*
 
               if((character<0x20) || (character>0x80) || (character==_C('%')) || (character==_C('\\'))) character = _C('.');
 
-              strdata.Format(_L("%c"), character);
+              strdata.Format(NL("%c"), character);
               string += strdata;
               index++;
             }
@@ -1117,7 +1117,7 @@ bool XLOGBASE::Backup_CreateNameZIP(XPATH& xpathzipfile)
 
   xpathzipfile  = xpathfile.Get();
   xpathzipfile.SetOnlyPathAndNamefile();
-  xpathzipfile += _L(".zip");
+  xpathzipfile += NL(".zip");
   xpathzipfile.AddToNameFile(true, XLOG_PREFIX);
 
   return true;

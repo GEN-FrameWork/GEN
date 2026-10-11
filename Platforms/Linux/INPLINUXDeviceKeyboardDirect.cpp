@@ -178,7 +178,7 @@ bool INPLINUXDEVICEKEYBOARDDIRECT::Update()
                           button->SetState(INPBUTTON_STATE_RELEASED);
                         }
 
-                      //XTRACE_PRINTCOLOR(1,_L("Keypres : code (%d) on : %s "), (buffer[c] & 0x7f), (button->IsPressed()?_L("Press"):_L("Release")));
+                      //XTRACE_PRINTCOLOR(1,NL("Keypres : code (%d) on : %s "), (buffer[c] & 0x7f), (button->IsPressed()?NL("Press"):NL("Release")));
                     }
                 }
             }
@@ -208,7 +208,7 @@ bool INPLINUXDEVICEKEYBOARDDIRECT::Update()
                       if(button)
                         {
                           button->SetPressed(event.value!=0);
-                          //XTRACE_PRINTCOLOR(1,_L("Keypres : code (%d) on : %s "), event.code, (button->IsPressed()?_L("Press"):_L("Release")));
+                          //XTRACE_PRINTCOLOR(1,NL("Keypres : code (%d) on : %s "), event.code, (button->IsPressed()?NL("Press"):NL("Release")));
 
                         } else continue;
 
@@ -393,7 +393,7 @@ bool INPLINUXDEVICEKEYBOARDDIRECT::CreateDevices()
           XSTRING event;
           int     filedescriptor = INPLINUXDEVICEID_INVALID;
      
-          event.Format(_L("/dev/input/event%d"), deviceID->GetEventIndex());
+          event.Format(NL("/dev/input/event%d"), deviceID->GetEventIndex());
 
           XBUFFER charstr;
           
@@ -464,7 +464,7 @@ bool INPLINUXDEVICEKEYBOARDDIRECT::Old_CreateDevices()
       deviceID->SetFileDescriptor(old_fd);
       keyboards.Add(deviceID);
 
-      //XTRACE_PRINTCOLOR((deviceID?1:4),_L("Keyboard handle %d"), old_fd);
+      //XTRACE_PRINTCOLOR((deviceID?1:4),NL("Keyboard handle %d"), old_fd);
     }
 
   return true;

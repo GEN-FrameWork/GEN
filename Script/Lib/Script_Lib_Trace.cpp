@@ -105,17 +105,17 @@ bool SCRIPT_LIB_TRACE::AddLibraryFunctions(SCRIPT* script)
 
   this->script = script;
 
-  script->AddLibraryFunction(this, _L("TraceClearScreen")         , Call_TraceClearScreen);
-  script->AddLibraryFunction(this, _L("TraceClearMsgsStatus")     , Call_TraceClearMsgsStatus);
-  script->AddLibraryFunction(this, _L("TracePrintColor")          , Call_TracePrintColor);
-  script->AddLibraryFunction(this, _L("TracePrintMsgTests")       , Call_TracePrintMsgTests);
-  script->AddLibraryFunction(this, _L("TraceTests_Load")          , Call_TraceTests_Load);
-  script->AddLibraryFunction(this, _L("TraceTests_Exists")        , Call_TraceTests_Exists);
-  script->AddLibraryFunction(this, _L("TraceTests_GetDescription"), Call_TraceTests_GetDescription);
-  script->AddLibraryFunction(this, _L("TraceTests_DeleteAll")     , Call_TraceTests_DeleteAll);
+  script->AddLibraryFunction(this, NL("TraceClearScreen")         , Call_TraceClearScreen);
+  script->AddLibraryFunction(this, NL("TraceClearMsgsStatus")     , Call_TraceClearMsgsStatus);
+  script->AddLibraryFunction(this, NL("TracePrintColor")          , Call_TracePrintColor);
+  script->AddLibraryFunction(this, NL("TracePrintMsgTests")       , Call_TracePrintMsgTests);
+  script->AddLibraryFunction(this, NL("TraceTests_Load")          , Call_TraceTests_Load);
+  script->AddLibraryFunction(this, NL("TraceTests_Exists")        , Call_TraceTests_Exists);
+  script->AddLibraryFunction(this, NL("TraceTests_GetDescription"), Call_TraceTests_GetDescription);
+  script->AddLibraryFunction(this, NL("TraceTests_DeleteAll")     , Call_TraceTests_DeleteAll);
 
   // Compatibility: eliminate in a future
-  script->AddLibraryFunction(this, _L("XTRACE_PRINTCOLOR"), Call_TracePrintColor);
+  script->AddLibraryFunction(this, NL("XTRACE_PRINTCOLOR"), Call_TracePrintColor);
 
   return true;
 }
@@ -333,7 +333,7 @@ void Call_TracePrintColor(SCRIPT_LIB* library, SCRIPT* script, XVECTOR<XVARIANT*
                                                   }
                                                   break;
 
-                                case _C('%')   : string = _L("%");
+                                case _C('%')   : string = NL("%");
                                                   end = true;
                                                   break;
 

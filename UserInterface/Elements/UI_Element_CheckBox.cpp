@@ -66,7 +66,7 @@ UI_ELEMENT_CHECKBOX::UI_ELEMENT_CHECKBOX()
   Clean();   
 
   SetType(UI_ELEMENT_TYPE_CHECKBOX);
-  GetTypeString()->Set(_L("checkbox"));   
+  GetTypeString()->Set(NL("checkbox"));   
 }
 
 

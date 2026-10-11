@@ -103,21 +103,21 @@ bool SCRIPT_LIB_STRING::AddLibraryFunctions(SCRIPT* script)
 
   this->script = script;
 
-  script->AddLibraryFunction(this, _L("AddString")       , Call_AddString);
-  script->AddLibraryFunction(this, _L("FindString")      , Call_FindString);
-  script->AddLibraryFunction(this, _L("CompareString")   , Call_CompareString);
-  script->AddLibraryFunction(this, _L("ReplaceString")   , Call_ReplaceString);
-  script->AddLibraryFunction(this, _L("ReplaceAllString"), Call_ReplaceAllString);
-  script->AddLibraryFunction(this, _L("SPrintf")         , Call_SPrintf);
-  script->AddLibraryFunction(this, _L("GetStringSize")   , Call_GetStringSize);
-  script->AddLibraryFunction(this, _L("IsEmptyString")   , Call_IsEmptyString);
-  script->AddLibraryFunction(this, _L("SubString")       , Call_SubString);
-  script->AddLibraryFunction(this, _L("SubStringFrom")   , Call_SubStringFrom);
-  script->AddLibraryFunction(this, _L("ExtractBetween")  , Call_ExtractBetween);
-  script->AddLibraryFunction(this, _L("TrimString")      , Call_TrimString);
-  script->AddLibraryFunction(this, _L("ToUpperString")   , Call_ToUpperString);
-  script->AddLibraryFunction(this, _L("ToLowerString")   , Call_ToLowerString);
-  script->AddLibraryFunction(this, _L("GetCharString")   , Call_GetCharString);
+  script->AddLibraryFunction(this, NL("AddString")       , Call_AddString);
+  script->AddLibraryFunction(this, NL("FindString")      , Call_FindString);
+  script->AddLibraryFunction(this, NL("CompareString")   , Call_CompareString);
+  script->AddLibraryFunction(this, NL("ReplaceString")   , Call_ReplaceString);
+  script->AddLibraryFunction(this, NL("ReplaceAllString"), Call_ReplaceAllString);
+  script->AddLibraryFunction(this, NL("SPrintf")         , Call_SPrintf);
+  script->AddLibraryFunction(this, NL("GetStringSize")   , Call_GetStringSize);
+  script->AddLibraryFunction(this, NL("IsEmptyString")   , Call_IsEmptyString);
+  script->AddLibraryFunction(this, NL("SubString")       , Call_SubString);
+  script->AddLibraryFunction(this, NL("SubStringFrom")   , Call_SubStringFrom);
+  script->AddLibraryFunction(this, NL("ExtractBetween")  , Call_ExtractBetween);
+  script->AddLibraryFunction(this, NL("TrimString")      , Call_TrimString);
+  script->AddLibraryFunction(this, NL("ToUpperString")   , Call_ToUpperString);
+  script->AddLibraryFunction(this, NL("ToLowerString")   , Call_ToLowerString);
+  script->AddLibraryFunction(this, NL("GetCharString")   , Call_GetCharString);
 
   return true;
 }
@@ -473,7 +473,7 @@ void Call_SPrintf(SCRIPT_LIB* library, SCRIPT* script, XVECTOR<XVARIANT*>* param
                                                   }
                                                   break;
 
-                                case _C('%')   : string = _L("%");
+                                case _C('%')   : string = NL("%");
                                                   end = true;
                                                   break;
 
@@ -793,8 +793,8 @@ void Call_TrimString(SCRIPT_LIB* library, SCRIPT* script, XVECTOR<XVARIANT*>* pa
       return;
     }
 
-  text.DeleteNoCharacters(_L(" \t\r\n"), 0, XSTRINGCONTEXT_FROM_FIRST);
-  text.DeleteNoCharacters(_L(" \t\r\n"), 0, XSTRINGCONTEXT_TO_END);
+  text.DeleteNoCharacters(NL(" \t\r\n"), 0, XSTRINGCONTEXT_FROM_FIRST);
+  text.DeleteNoCharacters(NL(" \t\r\n"), 0, XSTRINGCONTEXT_TO_END);
 
   (*returnvalue) = text;
 }

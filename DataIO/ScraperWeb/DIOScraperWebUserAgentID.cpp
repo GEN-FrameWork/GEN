@@ -417,11 +417,11 @@ bool DIOSCRAPERWEBUSERAGENTID::Get(XCHAR* useragent, DIOUSERAGENTID_RESULT& resu
 
   DIOSCRAPERSCRIPT runner;
 
-  runner.SetArg(_L("ua"), uaencoded.Get());
-  runner.SetArgInt(_L("timeout"), timeoutforurl);
+  runner.SetArg(NL("ua"), uaencoded.Get());
+  runner.SetArgInt(NL("timeout"), timeoutforurl);
   if(localIP && (!localIP->IsEmpty()))
     {
-      runner.SetArg(_L("localIP"), (*localIP));
+      runner.SetArg(NL("localIP"), (*localIP));
     }
 
   if(runner.Run(scriptpath.Get()))
@@ -436,17 +436,17 @@ bool DIOSCRAPERWEBUSERAGENTID::Get(XCHAR* useragent, DIOUSERAGENTID_RESULT& resu
       XSTRING language;
       XSTRING languagetag;
 
-      runner.GetResult(_L("ok"), ok);
-      runner.GetResult(_L("browser"), browser);
-      runner.GetResult(_L("browser_version"), browserversion);
-      runner.GetResult(_L("browser_type"), browsertype);
-      runner.GetResult(_L("os"), so);
-      runner.GetResult(_L("os_type"), ostype);
-      runner.GetResult(_L("os_version"), osversion);
-      runner.GetResult(_L("language"), language);
-      runner.GetResult(_L("language_tag"), languagetag);
+      runner.GetResult(NL("ok"), ok);
+      runner.GetResult(NL("browser"), browser);
+      runner.GetResult(NL("browser_version"), browserversion);
+      runner.GetResult(NL("browser_type"), browsertype);
+      runner.GetResult(NL("os"), so);
+      runner.GetResult(NL("os_type"), ostype);
+      runner.GetResult(NL("os_version"), osversion);
+      runner.GetResult(NL("language"), language);
+      runner.GetResult(NL("language_tag"), languagetag);
 
-      if((ok.Compare(_L("1")) == 0) && (!browser.IsEmpty()))
+      if((ok.Compare(NL("1")) == 0) && (!browser.IsEmpty()))
         {
           result.Set(browser.Get(),
                      browserversion.Get(),

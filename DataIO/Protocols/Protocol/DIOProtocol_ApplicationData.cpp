@@ -80,6 +80,10 @@ DIOPROTOCOL_APPLICATIONDATA::DIOPROTOCOL_APPLICATIONDATA()
 * --------------------------------------------------------------------------------------------------------------------*/
 DIOPROTOCOL_APPLICATIONDATA::~DIOPROTOCOL_APPLICATIONDATA()
 {
+  #ifdef DIO_ALERTS_ACTIVE
+  DeleteAllAlerts();
+  #endif
+
   if(xmutexalert) GEN_XFACTORY.Delete_Mutex(xmutexalert);
 
   Clean();
@@ -142,7 +146,11 @@ bool DIOPROTOCOL_APPLICATIONDATA::ExtractAlert(int index, DIOALERT& alert)
   if(_alert)
     {
       status = alert.CopyFrom(_alert);
-      if(status) alerts.Delete(_alert);
+      if(status)
+        {
+          alerts.Delete(_alert);
+          GEN_DELETE _alert;
+        }
     }
 
   if(xmutexalert) xmutexalert->UnLock();

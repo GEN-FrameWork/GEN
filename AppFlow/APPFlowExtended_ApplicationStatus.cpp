@@ -334,19 +334,19 @@ bool APPFLOWEXTENDED_APPLICATIONSTATUS::Update()
   
           if(ischecktotalCPUusage)
             {
-              averange.AddFormat(XT_L(XTRANSLATION_GEN_ID_APPFLOWEXTENDED_APPLICATIONSTATUS_CPUTOTALAVG), checkresourceshardware->GetCPUTotalCPUUsageAverange(), checkresourceshardware->GetCPUTotalCPUUsageMax());  
+              averange.AddFormat(GEN_TL(XTRANSLATION_GEN_ID_APPFLOWEXTENDED_APPLICATIONSTATUS_CPUTOTALAVG), checkresourceshardware->GetCPUTotalCPUUsageAverange(), checkresourceshardware->GetCPUTotalCPUUsageMax());  
             }
 
           if(ischeckappCPUusage)
             {
               if(ischecktotalCPUusage)
                 {
-                  averange.AddFormat(_L(", "));
+                  averange.AddFormat(NL(", "));
                 }
 
               if(ischeckappCPUusage)
                 {         
-                  averange.AddFormat(XT_L(XTRANSLATION_GEN_ID_APPFLOWEXTENDED_APPLICATIONSTATUS_CPUAPPAVG), cfg->CheckResourcesHardware_GetAppCPUUsageProcessName()->Get(), checkresourceshardware->GetCPUAppCPUUsageAverange(), checkresourceshardware->GetCPUAppCPUUsageMax());
+                  averange.AddFormat(GEN_TL(XTRANSLATION_GEN_ID_APPFLOWEXTENDED_APPLICATIONSTATUS_CPUAPPAVG), cfg->CheckResourcesHardware_GetAppCPUUsageProcessName()->Get(), checkresourceshardware->GetCPUAppCPUUsageAverange(), checkresourceshardware->GetCPUAppCPUUsageMax());
                 }
             } 
         }         
@@ -394,50 +394,50 @@ bool APPFLOWEXTENDED_APPLICATIONSTATUS::Show(XCONSOLE* console)
       return false;
     }
 
-  string  = XT_L(XTRANSLATION_GEN_ID_APPFLOWEXTENDED_APPLICATIONSTATUS_OSVERSION);
+  string  = GEN_TL(XTRANSLATION_GEN_ID_APPFLOWEXTENDED_APPLICATIONSTATUS_OSVERSION);
   string2 = GetOSVersion()->Get();
   APPFLOW_EXTENDED.GetConsole()->Show_Line(string, string2);
 
-  // string  = _L("Application Version");
+  // string  = NL("Application Version");
   // string2 = GetAppVersion()->Get();
   // APPFLOW_EXTENDED.ShowLine(console, string, string2);
   
-  string  = XT_L(XTRANSLATION_GEN_ID_APPFLOWEXTENDED_APPLICATIONSTATUS_CPUMEMORY);
+  string  = GEN_TL(XTRANSLATION_GEN_ID_APPFLOWEXTENDED_APPLICATIONSTATUS_CPUMEMORY);
 
   XDWORD      memorytotal       = GetMemoryTotal();
   XDWORD      memoryfree        = GetMemoryFree();
   double      memorydivisor     = 1.0;
-  const XCHAR* memoryunit       = _L("KB");
+  const XCHAR* memoryunit       = NL("KB");
 
   if(memorytotal >= (1024U * 1024U * 1024U))
     {
       memorydivisor = 1024.0 * 1024.0 * 1024.0;
-      memoryunit    = _L("TB");
+      memoryunit    = NL("TB");
     }
   else if(memorytotal >= (1024U * 1024U))
     {
       memorydivisor = 1024.0 * 1024.0;
-      memoryunit    = _L("GB");
+      memoryunit    = NL("GB");
     }
   else if(memorytotal >= 1024U)
     {
       memorydivisor = 1024.0;
-      memoryunit    = _L("MB");
+      memoryunit    = NL("MB");
     }
 
-  string2.Format(XT_L(XTRANSLATION_GEN_ID_APPFLOWEXTENDED_APPLICATIONSTATUS_MEMORYFREE), (double)memorytotal / memorydivisor, memoryunit, (double)memoryfree / memorydivisor, memoryunit, GetMemoryFreePercent());
+  string2.Format(GEN_TL(XTRANSLATION_GEN_ID_APPFLOWEXTENDED_APPLICATIONSTATUS_MEMORYFREE), (double)memorytotal / memorydivisor, memoryunit, (double)memoryfree / memorydivisor, memoryunit, GetMemoryFreePercent());
 
   APPFLOW_EXTENDED.GetConsole()->Show_Line(string, string2);
 
-  string  = XT_L(XTRANSLATION_GEN_ID_APPFLOWEXTENDED_APPLICATIONSTATUS_AVERANGE);
+  string  = GEN_TL(XTRANSLATION_GEN_ID_APPFLOWEXTENDED_APPLICATIONSTATUS_AVERANGE);
   string2 = GetAverange()->Get();
   APPFLOW_EXTENDED.GetConsole()->Show_Line(string, string2);
 
-  string  = XT_L(XTRANSLATION_GEN_ID_APPFLOWEXTENDED_APPLICATIONSTATUS_CURRENTDATE);
+  string  = GEN_TL(XTRANSLATION_GEN_ID_APPFLOWEXTENDED_APPLICATIONSTATUS_CURRENTDATE);
   string2 = GetCurrentDate()->Get();
   APPFLOW_EXTENDED.GetConsole()->Show_Line(string, string2);
 
-  string  = XT_L(XTRANSLATION_GEN_ID_APPFLOWEXTENDED_APPLICATIONSTATUS_OPERATINGTIME);
+  string  = GEN_TL(XTRANSLATION_GEN_ID_APPFLOWEXTENDED_APPLICATIONSTATUS_OPERATINGTIME);
   string2 = GetOperatingTime()->Get();
   APPFLOW_EXTENDED.GetConsole()->Show_Line(string, string2);
 
@@ -456,17 +456,17 @@ bool APPFLOWEXTENDED_APPLICATIONSTATUS::Show(XCONSOLE* console)
 * --------------------------------------------------------------------------------------------------------------------*/
 bool APPFLOWEXTENDED_APPLICATIONSTATUS::Serialize()
 {
-  Primitive_Add<XSTRING*>(&osversion      , _L("osversion"));
-  Primitive_Add<XSTRING*>(&appversion     , _L("appversion"));
-
-  Primitive_Add<int>(memory_total         , _L("memorytotal"));
-  Primitive_Add<int>(memory_free          , _L("memoryfree"));
-  Primitive_Add<int>(memory_freepercent   , _L("memoryfreepercent"));
-
-  Primitive_Add<XSTRING*>(&averange       , _L("averange"));
-
-  Primitive_Add<XSTRING*>(&currentdate    , _L("currentdate"));
-  Primitive_Add<XSTRING*>(&operatingtime  , _L("operatingtime"));
+  Primitive_Add<XSTRING*>(&osversion      , NL("osversion"));
+  Primitive_Add<XSTRING*>(&appversion     , NL("appversion"));
+                                            
+  Primitive_Add<int>(memory_total         , NL("memorytotal"));
+  Primitive_Add<int>(memory_free          , NL("memoryfree"));
+  Primitive_Add<int>(memory_freepercent   , NL("memoryfreepercent"));
+                                            
+  Primitive_Add<XSTRING*>(&averange       , NL("averange"));
+                                            
+  Primitive_Add<XSTRING*>(&currentdate    , NL("currentdate"));
+  Primitive_Add<XSTRING*>(&operatingtime  , NL("operatingtime"));
 
   return true;
 }
@@ -483,17 +483,17 @@ bool APPFLOWEXTENDED_APPLICATIONSTATUS::Serialize()
 * --------------------------------------------------------------------------------------------------------------------*/
 bool APPFLOWEXTENDED_APPLICATIONSTATUS::Deserialize()
 { 
-  Primitive_Extract<XSTRING>(osversion           , _L("osversion"));  
-  Primitive_Extract<XSTRING>(appversion          , _L("appversion"));
-
-  Primitive_Extract<XDWORD>(memory_total         , _L("memorytotal"));
-  Primitive_Extract<XDWORD>(memory_free          , _L("memoryfree"));
-  Primitive_Extract<XDWORD>(memory_freepercent   , _L("memoryfreepercent"));  
-
-  Primitive_Extract<XSTRING>(averange            , _L("averange"));
-
-  Primitive_Extract<XSTRING>(currentdate         , _L("currentdate"));
-  Primitive_Extract<XSTRING>(operatingtime       , _L("operatingtime"));
+  Primitive_Extract<XSTRING>(osversion           , NL("osversion"));  
+  Primitive_Extract<XSTRING>(appversion          , NL("appversion"));
+                                                   
+  Primitive_Extract<XDWORD>(memory_total         , NL("memorytotal"));
+  Primitive_Extract<XDWORD>(memory_free          , NL("memoryfree"));
+  Primitive_Extract<XDWORD>(memory_freepercent   , NL("memoryfreepercent"));  
+                                                   
+  Primitive_Extract<XSTRING>(averange            , NL("averange"));
+                                                   
+  Primitive_Extract<XSTRING>(currentdate         , NL("currentdate"));
+  Primitive_Extract<XSTRING>(operatingtime       , NL("operatingtime"));
 
   return true;
 }

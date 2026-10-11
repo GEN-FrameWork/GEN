@@ -277,7 +277,7 @@ bool XLINUXDIR::Delete(XCHAR* path, bool all)
 
   if(all)
     {
-      if(FirstSearch(path, _L("*"), &search))
+      if(FirstSearch(path, NL("*"), &search))
         {
           do { pathfile = path;
                pathfile.Slash_Add();
@@ -410,7 +410,7 @@ bool XLINUXDIR::NextSearch(XDIRELEMENT* searchelement)
     {
       name.ConvertFromUTF8((XBYTE*)entry->d_name, strlen(entry->d_name) /*_MAXPATH*/ );
 
-      if((name.Compare(_L("."))) && (name.Compare(_L(".."))))
+      if((name.Compare(NL("."))) && (name.Compare(NL(".."))))
         {
           searchelement->GetPatternSearch()->ConvertToUTF8(patternsearch);
           if(!fnmatch((char*)patternsearch.Get(), entry->d_name, 0))

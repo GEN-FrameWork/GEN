@@ -745,10 +745,10 @@ bool XFILECSV::CreateRecordOfLine(XSTRING& line, XFILECSV_RECORD* record)
   int start = 0;
   int end   = 0;
 
-  do{ end = line.Find(_L(";"), true, start);
+  do{ end = line.Find(NL(";"), true, start);
       if(end == XSTRING_NOTFOUND)
         {
-          end = line.Find(_L(","), true, start);
+          end = line.Find(NL(","), true, start);
           if(end != XSTRING_NOTFOUND) SetSeparator(_C(','));
 
         } else SetSeparator(_C(';'));

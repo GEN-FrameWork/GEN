@@ -50,9 +50,9 @@ enum UI_SKIN_DRAWMODE
   UI_SKIN_DRAWMODE_CONTEXT               ,
 };
 
-#define UI_SKIN_NAME_UNKNOWN      _L("")
-#define UI_SKIN_NAME_DEFAULT      _L("default")
-#define UI_SKIN_NAME_FLAT         _L("flat")
+#define UI_SKIN_NAME_UNKNOWN      NL("")
+#define UI_SKIN_NAME_DEFAULT      NL("default")
+#define UI_SKIN_NAME_FLAT         NL("flat")
 
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
 

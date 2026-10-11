@@ -115,7 +115,7 @@ bool DIOANDROIDSTREAMUARTLOCALENUMDEVICES::Search()
   XSTRING         sysdir;
   int             ndevices;
 
-  sysdir = _L("/sys/class/tty/");
+  sysdir = NL("/sys/class/tty/");
 
   XBUFFER charstr;
   
@@ -134,7 +134,7 @@ bool DIOANDROIDSTREAMUARTLOCALENUMDEVICES::Search()
               devicedir  = sysdir;
               devicedir += namelist[ndevices]->d_name;
 
-              devicedir += _L("/device");
+              devicedir += NL("/device");
 
               XBUFFER charstr;
               
@@ -146,7 +146,7 @@ bool DIOANDROIDSTREAMUARTLOCALENUMDEVICES::Search()
 
                   memset(buffer, 0, sizeof(buffer));
 
-                  devicedir += _L("/driver");
+                  devicedir += NL("/driver");
 
                   XBUFFER charstr;
                   
@@ -166,14 +166,14 @@ bool DIOANDROIDSTREAMUARTLOCALENUMDEVICES::Search()
 
                       devicepath.GetNamefile(devicefile);
 
-                      devicepath  = _L("/dev/");
+                      devicepath  = NL("/dev/");
                       devicepath += devicefile;
 
-                      // XTRACE_PRINTCOLOR(4,_L(" %s %s %s"),devicedir.Get(), devicepath.Get(), tty.Get());
+                      // XTRACE_PRINTCOLOR(4,NL(" %s %s %s"),devicedir.Get(), devicepath.Get(), tty.Get());
 
                       bool isvalid = false;
 
-                      if(tty.Find(_L("serial8250"), true) != XSTRING_NOTFOUND)
+                      if(tty.Find(NL("serial8250"), true) != XSTRING_NOTFOUND)
                         {
                            struct serial_struct serinfo;
                            XBUFFER              charstr;

@@ -49,11 +49,11 @@
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
 
 #ifndef APPMODE_SERVICE_NAME
-#define APPMODE_SERVICE_NAME              _L("GEN Service")
+#define APPMODE_SERVICE_NAME              NL("GEN Service")
 #endif
 
 #ifndef APPMODE_SERVICE_DISPLAYNAME
-#define APPMODE_SERVICE_DISPLAYNAME       _L("GEN Service")
+#define APPMODE_SERVICE_DISPLAYNAME       NL("GEN Service")
 #endif
 
 

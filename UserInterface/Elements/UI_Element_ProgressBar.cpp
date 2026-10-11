@@ -69,7 +69,7 @@ UI_ELEMENT_PROGRESSBAR::UI_ELEMENT_PROGRESSBAR()
   Clean();   
 
   SetType(UI_ELEMENT_TYPE_PROGRESSBAR);
-  GetTypeString()->Set(_L("progressbar")); 
+  GetTypeString()->Set(NL("progressbar")); 
 
   continuouscycle_xtimer=GEN_XFACTORY.CreateTimer();
 }

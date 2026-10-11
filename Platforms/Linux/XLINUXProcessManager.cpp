@@ -183,7 +183,7 @@ bool XLINUXPROCESSMANAGER::MakeCommand(XCHAR* command, XBUFFER* out, int* return
 * --------------------------------------------------------------------------------------------------------------------*/
 bool XLINUXPROCESSMANAGER::OpenURL(XCHAR* url)
 {
-  XSTRING command = _L("xdg-open ");
+  XSTRING command = NL("xdg-open ");
   int     result  = -1;
  
   command.Add(url);
@@ -260,7 +260,7 @@ bool XLINUXPROCESSMANAGER::Application_Execute(XCHAR* applicationpath, XCHAR* pa
 
   XSTRING cmd;
 
-  cmd  = _L("chmod 775 ");
+  cmd  = NL("chmod 775 ");
   cmd += applicationpath;
 
 
@@ -292,7 +292,7 @@ bool XLINUXPROCESSMANAGER::Application_Execute(XCHAR* applicationpath, XCHAR* pa
     {
       XSTRING   string;
       XBUFFER   xbuffer;
-      int       found = _params.Find(_L(" "), true, start);
+      int       found = _params.Find(NL(" "), true, start);
 
       if(found == XSTRING_NOTFOUND)
         {
@@ -571,7 +571,7 @@ bool XLINUXPROCESSMANAGER::Application_GetRunningList(XVECTOR<XPROCESS*>& applis
               if(xprocess)
                 {                  
                   xprocess->SetID((XDWORD)lpid); 
-                  xprocess->GetPath()->Set(_L(""));
+                  xprocess->GetPath()->Set(NL(""));
                   xprocess->GetName()->Set(nameall); 
                                 
                   applist.Add(xprocess); 

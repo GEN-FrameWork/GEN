@@ -190,7 +190,7 @@ bool APPFLOWWEBSERVER::Ini(APPFLOWCFG* cfg, bool doinitialconnectitivitytest, bo
       DIOSTREAMTLSCONFIG* tlsconfig = Ini_BuildTLSConfig(cfg);
       if(!tlsconfig)
         {
-          APPFLOW_LOG_ENTRY(XLOGLEVEL_ERROR, DIOWEBSERVER_LOGSECTIONID, false, XT_L(XTRANSLATION_GEN_ID_APPFLOWWEBSERVER_TLSCREDENTIALSNOTLOADED));
+          APPFLOW_LOG_ENTRY(XLOGLEVEL_ERROR, DIOWEBSERVER_LOGSECTIONID, false, GEN_TL(XTRANSLATION_GEN_ID_APPFLOWWEBSERVER_TLSCREDENTIALSNOTLOADED));
 
           return false;
         }
@@ -236,7 +236,7 @@ bool APPFLOWWEBSERVER::Ini(APPFLOWCFG* cfg, XDWORD port, int timeoutserverpage, 
       DIOSTREAMTLSCONFIG* tlsconfig = Ini_BuildTLSConfig(cfg);
       if(!tlsconfig)
         {
-          APPFLOW_LOG_ENTRY(XLOGLEVEL_ERROR, DIOWEBSERVER_LOGSECTIONID, false, XT_L(XTRANSLATION_GEN_ID_APPFLOWWEBSERVER_TLSCREDENTIALSNOTLOADED_PORT), (int)port);
+          APPFLOW_LOG_ENTRY(XLOGLEVEL_ERROR, DIOWEBSERVER_LOGSECTIONID, false, GEN_TL(XTRANSLATION_GEN_ID_APPFLOWWEBSERVER_TLSCREDENTIALSNOTLOADED_PORT), (int)port);
 
           return false;
         }
@@ -280,7 +280,7 @@ bool APPFLOWWEBSERVER::Ini_Authentication(APPFLOWCFG* cfg)
     {
       // Authenticated access is active but there is no password in the configuration:
       // the authentication is resolved by events (DOAUTHENTICATE / CHECKAUTHENTICATE).
-      APPFLOW_LOG_ENTRY(XLOGLEVEL_WARNING, DIOWEBSERVER_LOGSECTIONID, false, XT_L(XTRANSLATION_GEN_ID_APPFLOWWEBSERVER_AUTHNOPASSWORD));
+      APPFLOW_LOG_ENTRY(XLOGLEVEL_WARNING, DIOWEBSERVER_LOGSECTIONID, false, GEN_TL(XTRANSLATION_GEN_ID_APPFLOWWEBSERVER_AUTHNOPASSWORD));
 
       return true;
     }
@@ -302,7 +302,7 @@ bool APPFLOWWEBSERVER::Ini_Authentication(APPFLOWCFG* cfg)
         }
     }
 
-  APPFLOW_LOG_ENTRY(XLOGLEVEL_INFO, DIOWEBSERVER_LOGSECTIONID, false, XT_L(XTRANSLATION_GEN_ID_APPFLOWWEBSERVER_AUTHCONFIGURED), login->IsEmpty()?_L("<any>"):login->Get());
+  APPFLOW_LOG_ENTRY(XLOGLEVEL_INFO, DIOWEBSERVER_LOGSECTIONID, false, GEN_TL(XTRANSLATION_GEN_ID_APPFLOWWEBSERVER_AUTHCONFIGURED), login->IsEmpty()?NL("<any>"):login->Get());
 
   return true;
 }
@@ -956,7 +956,7 @@ bool APPFLOWWEBSERVER::ResolveRequest(DIOWEBSERVER* server, DIOWEBSERVER_CONNECT
               XSTRING IPstring;
               connection->GetDIOStream()->GetClientIP()->GetXString(IPstring);
 
-              APPFLOW_LOG_ENTRY((ispasswordvalid?XLOGLEVEL_INFO:XLOGLEVEL_WARNING), DIOWEBSERVER_LOGSECTIONID, false, XT_L(XTRANSLATION_GEN_ID_APPFLOWWEBSERVER_AUTHREQUEST), IPstring.Get(), login.Get(), (ispasswordvalid)? XT_L(XTRANSLATION_GEN_ID_OK): XT_L(XTRANSLATION_GEN_ID_APPFLOWWEBSERVER_AUTH_INVALID) );
+              APPFLOW_LOG_ENTRY((ispasswordvalid?XLOGLEVEL_INFO:XLOGLEVEL_WARNING), DIOWEBSERVER_LOGSECTIONID, false, GEN_TL(XTRANSLATION_GEN_ID_APPFLOWWEBSERVER_AUTHREQUEST), IPstring.Get(), login.Get(), (ispasswordvalid)? GEN_TL(XTRANSLATION_GEN_ID_OK): GEN_TL(XTRANSLATION_GEN_ID_APPFLOWWEBSERVER_AUTH_INVALID) );
 
               if(!ispasswordvalid)
                 {
@@ -986,8 +986,8 @@ bool APPFLOWWEBSERVER::ResolveRequest(DIOWEBSERVER* server, DIOWEBSERVER_CONNECT
 
               if(xevent.IsRequestAuthenticate())
                 {
-                  page_login    = _L("usr");
-                  page_password = _L("pwd");
+                  page_login    = NL("usr");
+                  page_password = NL("pwd");
 
                 } else invalidpassword = true;
             }
@@ -1008,7 +1008,7 @@ bool APPFLOWWEBSERVER::ResolveRequest(DIOWEBSERVER* server, DIOWEBSERVER_CONNECT
             {
               XSTRING leyend;
 
-              leyend = XT_L(XTRANSLATION_GEN_ID_APPFLOWWEBSERVER_INVALIDUSERORPASSWORD);
+              leyend = GEN_TL(XTRANSLATION_GEN_ID_APPFLOWWEBSERVER_INVALIDUSERORPASSWORD);
               GenerateResponse_Error(connection, DIOWEBHEADER_RESULT_NOTFOUND, leyend);
 
               APPFLOW_LOG_ENTRY(XLOGLEVEL_ERROR, DIOWEBSERVER_LOGSECTIONID, false, leyend.Get());
@@ -1027,7 +1027,7 @@ bool APPFLOWWEBSERVER::ResolveRequest(DIOWEBSERVER* server, DIOWEBSERVER_CONNECT
 
       if(useragentID->Get(request->GetUserAgent()->Get(), browser, SO, 5))
         {
-          APPFLOW_LOG_ENTRY(XLOGLEVEL_INFO, DIOWEBSERVER_LOGSECTIONID_VERBOSE, false, XT_L(XTRANSLATION_GEN_ID_APPFLOWWEBSERVER_WEBBROWSER), browser.Get(), SO.Get());
+          APPFLOW_LOG_ENTRY(XLOGLEVEL_INFO, DIOWEBSERVER_LOGSECTIONID_VERBOSE, false, GEN_TL(XTRANSLATION_GEN_ID_APPFLOWWEBSERVER_WEBBROWSER), browser.Get(), SO.Get());
         }
     }
   */  
@@ -1039,7 +1039,7 @@ bool APPFLOWWEBSERVER::ResolveRequest(DIOWEBSERVER* server, DIOWEBSERVER_CONNECT
 
   querystring.DeleteParamsFromURL(resourceconv);
 
-  if(!resourceconv.Compare(_L("/"), true)) resourceconv.Set(_L("/index.html"));
+  if(!resourceconv.Compare(NL("/"), true)) resourceconv.Set(NL("/index.html"));
 
 
   //-------------------------------------------------------------------------------------------------------------------------------
@@ -1085,7 +1085,7 @@ bool APPFLOWWEBSERVER::ResolveRequest(DIOWEBSERVER* server, DIOWEBSERVER_CONNECT
                     {
                       XSTRING leyend;
 
-                      leyend.Format(XT_L(XTRANSLATION_GEN_ID_APPFLOWWEBSERVER_ERRORTOEXECUTE), plugin->GetName()->Get());
+                      leyend.Format(GEN_TL(XTRANSLATION_GEN_ID_APPFLOWWEBSERVER_ERRORTOEXECUTE), plugin->GetName()->Get());
 
                       GenerateResponse_Error(connection, DIOWEBHEADER_RESULT_NOTFOUND, leyend);
                       APPFLOW_LOG_ENTRY(XLOGLEVEL_ERROR, DIOWEBSERVER_LOGSECTIONID, false, leyend.Get());
@@ -1096,7 +1096,7 @@ bool APPFLOWWEBSERVER::ResolveRequest(DIOWEBSERVER* server, DIOWEBSERVER_CONNECT
 
                   if(!status)
                     {
-                      APPFLOW_LOG_ENTRY((status?XLOGLEVEL_INFO:XLOGLEVEL_ERROR), DIOWEBSERVER_LOGSECTIONID, false, XT_L(XTRANSLATION_GEN_ID_APPFLOWWEBSERVER_REQUESTRESULT), IPstring.Get(), resourceconv.Get(), status?XT_L(XTRANSLATION_GEN_ID_APPFLOWWEBSERVER_SENT):XT_L(XTRANSLATION_GEN_ID_APPFLOWWEBSERVER_NOTSEND));
+                      APPFLOW_LOG_ENTRY((status?XLOGLEVEL_INFO:XLOGLEVEL_ERROR), DIOWEBSERVER_LOGSECTIONID, false, GEN_TL(XTRANSLATION_GEN_ID_APPFLOWWEBSERVER_REQUESTRESULT), IPstring.Get(), resourceconv.Get(), status?GEN_TL(XTRANSLATION_GEN_ID_APPFLOWWEBSERVER_SENT):GEN_TL(XTRANSLATION_GEN_ID_APPFLOWWEBSERVER_NOTSEND));
                     }
 
                   ispagepluging = true;
@@ -1168,7 +1168,7 @@ bool APPFLOWWEBSERVER::ResolveRequest(DIOWEBSERVER* server, DIOWEBSERVER_CONNECT
                 {
                   XSTRING leyend;
 
-                  leyend = XT_L(XTRANSLATION_GEN_ID_APPFLOWWEBSERVER_ERRORCOMMANDORPARAMS);
+                  leyend = GEN_TL(XTRANSLATION_GEN_ID_APPFLOWWEBSERVER_ERRORCOMMANDORPARAMS);
                   GenerateMessagePage(leyend, (*webHTMLpage));
 
                   GenerateResponse_Error(connection, DIOWEBHEADER_RESULT_NOTFOUND, leyend);
@@ -1181,7 +1181,7 @@ bool APPFLOWWEBSERVER::ResolveRequest(DIOWEBSERVER* server, DIOWEBSERVER_CONNECT
 
               if(!status)
                 {
-                  APPFLOW_LOG_ENTRY((status?XLOGLEVEL_INFO:XLOGLEVEL_ERROR), DIOWEBSERVER_LOGSECTIONID, false, XT_L(XTRANSLATION_GEN_ID_APPFLOWWEBSERVER_REQUESTRESULT), IPstring.Get(), resourceconv.Get(), status?XT_L(XTRANSLATION_GEN_ID_APPFLOWWEBSERVER_SENT):XT_L(XTRANSLATION_GEN_ID_APPFLOWWEBSERVER_NOTSEND));
+                  APPFLOW_LOG_ENTRY((status?XLOGLEVEL_INFO:XLOGLEVEL_ERROR), DIOWEBSERVER_LOGSECTIONID, false, GEN_TL(XTRANSLATION_GEN_ID_APPFLOWWEBSERVER_REQUESTRESULT), IPstring.Get(), resourceconv.Get(), status?GEN_TL(XTRANSLATION_GEN_ID_APPFLOWWEBSERVER_SENT):GEN_TL(XTRANSLATION_GEN_ID_APPFLOWWEBSERVER_NOTSEND));
                 }
 
               GEN_DELETE webHTMLpage;
@@ -1192,7 +1192,7 @@ bool APPFLOWWEBSERVER::ResolveRequest(DIOWEBSERVER* server, DIOWEBSERVER_CONNECT
           XSTRING IPstring;
           connection->GetDIOStream()->GetClientIP()->GetXString(IPstring);  
 
-          // APPFLOW_LOG_ENTRY(XLOGLEVEL_INFO, DIOWEBSERVER_LOGSECTIONID, false, _L("Request from [%s] to the web server of file \"%s\" sent."), IPstring.Get(), xpathfile.Get());
+          // APPFLOW_LOG_ENTRY(XLOGLEVEL_INFO, DIOWEBSERVER_LOGSECTIONID, false, NL("Request from [%s] to the web server of file \"%s\" sent."), IPstring.Get(), xpathfile.Get());
         }
     }
 
@@ -1214,9 +1214,9 @@ bool APPFLOWWEBSERVER::ResolveRequest(DIOWEBSERVER* server, DIOWEBSERVER_CONNECT
 * --------------------------------------------------------------------------------------------------------------------*/
 bool APPFLOWWEBSERVER::GenerateMessagePage(XCHAR* leyend, DIOWEBPAGEHTMLCREATOR& webHTMLpage)
 {
-  webHTMLpage.Printf(_L("<font color=\"red\" face=\"Courier New\" size=\"2\">"));
-  webHTMLpage.Printf(_L("<b>%s.</b>\n"), leyend);
-  webHTMLpage.Printf(_L("</font>"));
+  webHTMLpage.Printf(NL("<font color=\"red\" face=\"Courier New\" size=\"2\">"));
+  webHTMLpage.Printf(NL("<b>%s.</b>\n"), leyend);
+  webHTMLpage.Printf(NL("</font>"));
 
   return true;
 }

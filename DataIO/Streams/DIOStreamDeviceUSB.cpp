@@ -693,24 +693,24 @@ bool DIOSTREAMDEVICEUSB::DebugPrintInfo()
 
   DIOSTREAMDEVICE::DebugPrintInfo();
 
-  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, _L("Location : %s"), location.Get());
-  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, _L("Vendor ID : %08X"), vendorID);
-  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, _L("Product ID : %08X"), productID);
-  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, _L("Class : %02x"), classdev);
-  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, _L("Serial : %s"), serialstring.Get());
+  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, NL("Location : %s"), location.Get());
+  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, NL("Vendor ID : %08X"), vendorID);
+  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, NL("Product ID : %08X"), productID);
+  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, NL("Class : %02x"), classdev);
+  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, NL("Serial : %s"), serialstring.Get());
 
-  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, _L("BCD USB : %08X"), descriptor.GetBCDUSB());
-  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, _L("Device class : %d"), descriptor.GetDeviceClass());
-  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, _L("Device subclass : %d"), descriptor.GetDeviceSubClass());
-  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, _L("Device protocol : %d"), descriptor.GetDeviceProtocol());
-  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, _L("Max Packet Size : %d"), descriptor.GetMaxPacketSize());
-  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, _L("id Vendor : %d"), descriptor.GetIDVendor());
-  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, _L("id Product : %d"), descriptor.GetIDProduct());
-  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, _L("BCD device : %04X"), descriptor.GetBCDDevice());
-  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, _L("Manufacturer : %d"), descriptor.GetManufacturer());
-  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, _L("Product : %d"), descriptor.GetProduct());
-  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, _L("Serial Number : %d"), descriptor.GetSerialNumber());
-  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, _L("NConfigurations : %d"), descriptor.GetNumConfigurations());
+  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, NL("BCD USB : %08X"), descriptor.GetBCDUSB());
+  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, NL("Device class : %d"), descriptor.GetDeviceClass());
+  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, NL("Device subclass : %d"), descriptor.GetDeviceSubClass());
+  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, NL("Device protocol : %d"), descriptor.GetDeviceProtocol());
+  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, NL("Max Packet Size : %d"), descriptor.GetMaxPacketSize());
+  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, NL("id Vendor : %d"), descriptor.GetIDVendor());
+  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, NL("id Product : %d"), descriptor.GetIDProduct());
+  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, NL("BCD device : %04X"), descriptor.GetBCDDevice());
+  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, NL("Manufacturer : %d"), descriptor.GetManufacturer());
+  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, NL("Product : %d"), descriptor.GetProduct());
+  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, NL("Serial Number : %d"), descriptor.GetSerialNumber());
+  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, NL("NConfigurations : %d"), descriptor.GetNumConfigurations());
 
   return true;
 

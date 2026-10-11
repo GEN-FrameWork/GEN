@@ -39,7 +39,7 @@
 
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
 
-#define DIOSCRAPERWEBWEATHER_SCRIPTPATH    _L("weather.g")
+#define DIOSCRAPERWEBWEATHER_SCRIPTPATH    NL("weather.g")
 #define DIOSCRAPERWEBWEATHER_MAXTIMEOUT    DIOSCRAPERSCRIPT_DEFAULT_TIMEOUT
 
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/

@@ -471,11 +471,11 @@ bool DIOSCRAPERWEBGEOLOCATIONIP::Get(DIOIP& IP, DIOGEOLOCATIONIP_RESULT& geoloca
 
   DIOSCRAPERSCRIPT runner;
 
-  runner.SetArg(_L("ip"), IPstring);
-  runner.SetArgInt(_L("timeout"), timeoutforurl);
+  runner.SetArg(NL("ip"), IPstring);
+  runner.SetArgInt(NL("timeout"), timeoutforurl);
   if(localIP && (!localIP->IsEmpty()))
     {
-      runner.SetArg(_L("localIP"), (*localIP));
+      runner.SetArg(NL("localIP"), (*localIP));
     }
 
   if(runner.Run(scriptpath.Get()))
@@ -491,19 +491,19 @@ bool DIOSCRAPERWEBGEOLOCATIONIP::Get(DIOIP& IP, DIOGEOLOCATIONIP_RESULT& geoloca
       float   lat = 0.0f;
       float   lon = 0.0f;
 
-      runner.GetResult(_L("ok"), ok);
-      runner.GetResult(_L("country"), country);
-      runner.GetResult(_L("state"), state);
-      runner.GetResult(_L("city"), city);
-      runner.GetResult(_L("isp"), ISP);
-      runner.GetResult(_L("organization"), organization);
-      runner.GetResult(_L("latitude"), latitude);
-      runner.GetResult(_L("longitude"), longitude);
+      runner.GetResult(NL("ok"), ok);
+      runner.GetResult(NL("country"), country);
+      runner.GetResult(NL("state"), state);
+      runner.GetResult(NL("city"), city);
+      runner.GetResult(NL("isp"), ISP);
+      runner.GetResult(NL("organization"), organization);
+      runner.GetResult(NL("latitude"), latitude);
+      runner.GetResult(NL("longitude"), longitude);
 
-      if(!latitude.IsEmpty())  latitude.UnFormat(_L("%f"), &lat);
-      if(!longitude.IsEmpty()) longitude.UnFormat(_L("%f"), &lon);
+      if(!latitude.IsEmpty())  latitude.UnFormat(NL("%f"), &lat);
+      if(!longitude.IsEmpty()) longitude.UnFormat(NL("%f"), &lon);
 
-      if(ok.Compare(_L("1")) == 0)
+      if(ok.Compare(NL("1")) == 0)
         {
           geolocationIPresult.Set(country, state, city, ISP, organization);
           geolocationIPresult.Set(lat, lon);

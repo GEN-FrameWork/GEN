@@ -71,7 +71,7 @@
 * --------------------------------------------------------------------------------------------------------------------*/
 DIOWINDOWSSTREAMI2C::DIOWINDOWSSTREAMI2C() : DIOSTREAMI2C()
 {
-  threadconnection = CREATEXTHREAD(XTHREADGROUPID_DIOSTREAMI2C, _L("DIOWINDOWSSTREAMI2C::DIOWINDOWSSTREAMI2C"), ThreadConnection, (void*)this);
+  threadconnection = CREATEXTHREAD(XTHREADGROUPID_DIOSTREAMI2C, NL("DIOWINDOWSSTREAMI2C::DIOWINDOWSSTREAMI2C"), ThreadConnection, (void*)this);
 }
 
 

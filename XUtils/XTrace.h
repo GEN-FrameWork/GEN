@@ -97,7 +97,7 @@ enum XTRACE_TYPE_STATUS_MSG
   #define XTRACE_MAXNETBUFFER               512
 #endif
 
-#define XTRACE_DEFAULT_SPECIALAIM           _L("eXtended Trace Monitor")
+#define XTRACE_DEFAULT_SPECIALAIM           NL("eXtended Trace Monitor")
 
 #define XTRACE_LIMITCTRLNETRESURCES         25
 
@@ -107,10 +107,10 @@ enum XTRACE_TYPE_STATUS_MSG
 
 #define XTRACE_IDPACKET                     0xAADEB055
 
-#define XTRACE_IDMSGCLEARSCREEN             _L("#[CLEAR_SCREEN]# :")    
+#define XTRACE_IDMSGCLEARSCREEN             NL("#[CLEAR_SCREEN]# :")    
 
-#define XTRACE_IDMSGSTATUS                  _L("#[CHANGE_STATUS]# :")    
-#define XTRACE_IDMSGSTATUSCLEAR             _L("#[CLEAR_STATUS]# :")    
+#define XTRACE_IDMSGSTATUS                  NL("#[CHANGE_STATUS]# :")    
+#define XTRACE_IDMSGSTATUSCLEAR             NL("#[CLEAR_STATUS]# :")    
 #define XTRACE_IDMSGSTATUS_BOOLEAN          _C('B')    
 #define XTRACE_IDMSGSTATUS_INTEGER          _C('I')    
 #define XTRACE_IDMSGSTATUS_STRING           _C('S')    
@@ -118,7 +118,7 @@ enum XTRACE_TYPE_STATUS_MSG
 #define XTRACE_IDMSGSTATUS_FLOAT            _C('F')    
 #define XTRACE_IDMSGSTATUS_COLOR            _C('C')   
 
-#define XTRACE_IDMSGTESTS                   _L("#[TESTS_RESULT]# :")    
+#define XTRACE_IDMSGTESTS                   NL("#[TESTS_RESULT]# :")    
 
  
 

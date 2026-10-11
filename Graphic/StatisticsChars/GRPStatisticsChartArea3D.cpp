@@ -168,7 +168,7 @@ bool GRPSTATISTICSCHARTAREA3D::DrawPlot(GRPSTATISTICSCHARTBUILDER& builder, doub
       if(config.GetShowAxisLabels())
         {
           XSTRING label;
-          label.Format(_L("%g"), value);
+          label.Format(NL("%g"), value);
 
           builder.DrawText(fx0 + depth - (axisfontsize * 0.5), wy + (axisfontsize * 0.35), label.Get(), valuestyle);
         }
@@ -279,7 +279,7 @@ bool GRPSTATISTICSCHARTAREA3D::DrawPlot(GRPSTATISTICSCHARTBUILDER& builder, doub
               double py    = (basey - ((value / nicemax) * fheight)) - zfront;
 
               XSTRING vlabel;
-              vlabel.Format(_L("%g"), value);
+              vlabel.Format(NL("%g"), value);
 
               builder.DrawText(px, py - 3.0, vlabel.Get(), vstyle);
             }

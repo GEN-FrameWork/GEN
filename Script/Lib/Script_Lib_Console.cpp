@@ -110,9 +110,9 @@ bool SCRIPT_LIB_CONSOLE::AddLibraryFunctions(SCRIPT* script)
 
   this->script = script;
 
-  script->AddLibraryFunction(this, _L("Console_GetChar"), Call_Console_GetChar);
-  script->AddLibraryFunction(this, _L("Console_PutChar"), Call_Console_PutChar);
-  script->AddLibraryFunction(this, _L("Console_Printf"), Call_Console_Printf);
+  script->AddLibraryFunction(this, NL("Console_GetChar"), Call_Console_GetChar);
+  script->AddLibraryFunction(this, NL("Console_PutChar"), Call_Console_PutChar);
+  script->AddLibraryFunction(this, NL("Console_Printf"), Call_Console_Printf);
 
   return true;
 }
@@ -246,7 +246,7 @@ void Call_Console_PutChar(SCRIPT_LIB* library, SCRIPT* script, XVECTOR<XVARIANT*
   XCONSOLE* console = ((SCRIPT_LIB_CONSOLE*)library)->GetConsole();
   if(!console) return;
 
-  console->Printf(_L("%c"), character);
+  console->Printf(NL("%c"), character);
 }
 
 
@@ -353,7 +353,7 @@ void Call_Console_Printf(SCRIPT_LIB* library, SCRIPT* script, XVECTOR<XVARIANT*>
                                                   }
                                                   break;
 
-                                case _C('%')   : string = _L("%");
+                                case _C('%')   : string = NL("%");
                                                   end = true;
                                                   break;
 

@@ -168,7 +168,7 @@ bool APPFLOWEXTENDED::APPStart(APPFLOWCFG* appcfg, APPFLOWCONSOLE* appconsole)
       return false;
     }
       
-  updatethread = GEN_XFACTORY.CreateThread(XTHREADGROUPID_APPFLOWEXTENDED, _L("APPFLOWEXTENDED::APPFLOWEXTENDED"), ThreadFunction_Update, this);
+  updatethread = GEN_XFACTORY.CreateThread(XTHREADGROUPID_APPFLOWEXTENDED, NL("APPFLOWEXTENDED::APPFLOWEXTENDED"), ThreadFunction_Update, this);
   if(!updatethread) 
     {
       return false;
@@ -184,20 +184,20 @@ bool APPFLOWEXTENDED::APPStart(APPFLOWCFG* appcfg, APPFLOWCONSOLE* appconsole)
   XSTRING SO_ID;
   status = GEN_XSYSTEM.GetOperativeSystemID(SO_ID);
 
-  XTRACE_PRINT(_L(" "), NULL);
+  XTRACE_PRINT(NL(" "), NULL);
 
-  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, _L("%s"), GEN_VERSION.GetAppVersion()->Get()); 
-  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, _L("%s: %s"), XT_L(XTRANSLATION_GEN_ID_APPFLOWEXTENDED_APPROOTPATH), GEN_XPATHSMANAGER.GetPathSection(XPATHSMANAGERSECTIONTYPE_ROOT)->xpath->Get()); 
+  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, NL("%s"), GEN_VERSION.GetAppVersion()->Get()); 
+  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, NL("%s: %s"), GEN_TL(XTRANSLATION_GEN_ID_APPFLOWEXTENDED_APPROOTPATH), GEN_XPATHSMANAGER.GetPathSection(XPATHSMANAGERSECTIONTYPE_ROOT)->xpath->Get()); 
 
-  XTRACE_PRINT(_L(" "), NULL);
+  XTRACE_PRINT(NL(" "), NULL);
   
-  XTRACE_PRINTMSGSTATUS(XT_L(XTRANSLATION_GEN_ID_APPFLOWEXTENDED_APPVERSION), GEN_VERSION.GetAppVersion()->Get()); 
-  XTRACE_PRINTMSGSTATUS(XT_L(XTRANSLATION_GEN_ID_APPFLOWEXTENDED_SOVERSION), SO_ID.Get()); 
+  XTRACE_PRINTMSGSTATUS(GEN_TL(XTRANSLATION_GEN_ID_APPFLOWEXTENDED_APPVERSION), GEN_VERSION.GetAppVersion()->Get()); 
+  XTRACE_PRINTMSGSTATUS(GEN_TL(XTRANSLATION_GEN_ID_APPFLOWEXTENDED_SOVERSION), SO_ID.Get()); 
 
   status = APPFLOW_LOG.Ini(appcfg, GEN_VERSION.GetAppExecName()->Get()); 
 
-  string.Format(APPFLOWCONSOLE_DEFAULT_MESSAGEMASK, XT_L(XTRANSLATION_GEN_ID_APPFLOWEXTENDED_INILOG));  
-  stringresult.Format(_L("%s."), (status)?XT_L(XTRANSLATION_GEN_ID_OK):XT_L(XTRANSLATION_GEN_ID_ERROR));
+  string.Format(APPFLOWCONSOLE_DEFAULT_MESSAGEMASK, GEN_TL(XTRANSLATION_GEN_ID_APPFLOWEXTENDED_INILOG));  
+  stringresult.Format(NL("%s."), (status)?GEN_TL(XTRANSLATION_GEN_ID_OK):GEN_TL(XTRANSLATION_GEN_ID_ERROR));
 
   if(status)
     { 
@@ -206,11 +206,11 @@ bool APPFLOWEXTENDED::APPStart(APPFLOWCFG* appcfg, APPFLOWCONSOLE* appconsole)
 
       GEN_XSYSTEM.GetMemoryInfo(total, free);
 
-      APPFLOW_LOG_ENTRY(XLOGLEVEL_INFO, APPFLOW_CFG_LOG_SECTIONID_INITIATION, false, _L("-------------------------------------------------------------------------------------------------------------"));    
-      APPFLOW_LOG_ENTRY(XLOGLEVEL_INFO, APPFLOW_CFG_LOG_SECTIONID_INITIATION, false, _L("%s: %s"), XT_L(XTRANSLATION_GEN_ID_APPFLOWEXTENDED_SOVERSION), SO_ID.Get());
-      APPFLOW_LOG_ENTRY(XLOGLEVEL_INFO, APPFLOW_CFG_LOG_SECTIONID_INITIATION, false, XT_L(XTRANSLATION_GEN_ID_APPFLOWEXTENDED_TOTALMEMORY), total, free, GEN_XSYSTEM.GetFreeMemoryPercent());
+      APPFLOW_LOG_ENTRY(XLOGLEVEL_INFO, APPFLOW_CFG_LOG_SECTIONID_INITIATION, false, NL("-------------------------------------------------------------------------------------------------------------"));    
+      APPFLOW_LOG_ENTRY(XLOGLEVEL_INFO, APPFLOW_CFG_LOG_SECTIONID_INITIATION, false, NL("%s: %s"), GEN_TL(XTRANSLATION_GEN_ID_APPFLOWEXTENDED_SOVERSION), SO_ID.Get());
+      APPFLOW_LOG_ENTRY(XLOGLEVEL_INFO, APPFLOW_CFG_LOG_SECTIONID_INITIATION, false, GEN_TL(XTRANSLATION_GEN_ID_APPFLOWEXTENDED_TOTALMEMORY), total, free, GEN_XSYSTEM.GetFreeMemoryPercent());
 
-      APPFLOW_LOG_ENTRY(((status)?XLOGLEVEL_INFO:XLOGLEVEL_ERROR), APPFLOW_CFG_LOG_SECTIONID_INITIATION, false, _L("%s: %s") , string.Get(), stringresult.Get());       
+      APPFLOW_LOG_ENTRY(((status)?XLOGLEVEL_INFO:XLOGLEVEL_ERROR), APPFLOW_CFG_LOG_SECTIONID_INITIATION, false, NL("%s: %s") , string.Get(), stringresult.Get());       
     }
   
   #ifdef APPFLOW_CONSOLE_ACTIVE
@@ -239,10 +239,10 @@ bool APPFLOWEXTENDED::APPStart(APPFLOWCFG* appcfg, APPFLOWCONSOLE* appconsole)
       status = true;
     }
 
-  string.Format(APPFLOWCONSOLE_DEFAULT_MESSAGEMASK, XT_L(XTRANSLATION_GEN_ID_APPFLOWEXTENDED_INIAPPSTATUS));  
-  stringresult.Format(_L("%s."), (status)?XT_L(XTRANSLATION_GEN_ID_OK):XT_L(XTRANSLATION_GEN_ID_ERROR));
+  string.Format(APPFLOWCONSOLE_DEFAULT_MESSAGEMASK, GEN_TL(XTRANSLATION_GEN_ID_APPFLOWEXTENDED_INIAPPSTATUS));  
+  stringresult.Format(NL("%s."), (status)?GEN_TL(XTRANSLATION_GEN_ID_OK):GEN_TL(XTRANSLATION_GEN_ID_ERROR));
 
-  APPFLOW_LOG_ENTRY(((status)?XLOGLEVEL_INFO:XLOGLEVEL_ERROR), APPFLOW_CFG_LOG_SECTIONID_INITIATION, false, _L("%s: %s") , string.Get(), stringresult.Get());       
+  APPFLOW_LOG_ENTRY(((status)?XLOGLEVEL_INFO:XLOGLEVEL_ERROR), APPFLOW_CFG_LOG_SECTIONID_INITIATION, false, NL("%s: %s") , string.Get(), stringresult.Get());       
 
     #ifdef APPFLOW_CONSOLE_ACTIVE
     if(appconsole)
@@ -266,10 +266,10 @@ bool APPFLOWEXTENDED::APPStart(APPFLOWCFG* appcfg, APPFLOWCONSOLE* appconsole)
       status = true;
     }
 
-  string.Format(APPFLOWCONSOLE_DEFAULT_MESSAGEMASK, XT_L(XTRANSLATION_GEN_ID_APPFLOWEXTENDED_INIINTERNETSTATUS));  
-  stringresult.Format(_L("%s."), (status)?XT_L(XTRANSLATION_GEN_ID_OK):XT_L(XTRANSLATION_GEN_ID_ERROR));
+  string.Format(APPFLOWCONSOLE_DEFAULT_MESSAGEMASK, GEN_TL(XTRANSLATION_GEN_ID_APPFLOWEXTENDED_INIINTERNETSTATUS));  
+  stringresult.Format(NL("%s."), (status)?GEN_TL(XTRANSLATION_GEN_ID_OK):GEN_TL(XTRANSLATION_GEN_ID_ERROR));
 
-  APPFLOW_LOG_ENTRY(((status)?XLOGLEVEL_INFO:XLOGLEVEL_ERROR), APPFLOW_CFG_LOG_SECTIONID_INITIATION, false, _L("%s: %s") , string.Get(), stringresult.Get());       
+  APPFLOW_LOG_ENTRY(((status)?XLOGLEVEL_INFO:XLOGLEVEL_ERROR), APPFLOW_CFG_LOG_SECTIONID_INITIATION, false, NL("%s: %s") , string.Get(), stringresult.Get());       
 
     #ifdef APPFLOW_CONSOLE_ACTIVE
     if(appconsole)
@@ -322,10 +322,10 @@ bool APPFLOWEXTENDED::APPEnd()
       GEN_DELETE internetstatus;
       internetstatus = NULL;  
     
-      string.Format(APPFLOWCONSOLE_DEFAULT_MESSAGEMASK, XT_L(XTRANSLATION_GEN_ID_APPFLOWEXTENDED_ENDINTERNETSTATUS));
-      stringresult.Format(_L("%s."), XT_L(XTRANSLATION_GEN_ID_OK));    
+      string.Format(APPFLOWCONSOLE_DEFAULT_MESSAGEMASK, GEN_TL(XTRANSLATION_GEN_ID_APPFLOWEXTENDED_ENDINTERNETSTATUS));
+      stringresult.Format(NL("%s."), GEN_TL(XTRANSLATION_GEN_ID_OK));    
 
-      APPFLOW_LOG_ENTRY(XLOGLEVEL_INFO, APPFLOW_CFG_LOG_SECTIONID_ENDING, false, _L("%s: %s") , string.Get(), stringresult.Get()); 
+      APPFLOW_LOG_ENTRY(XLOGLEVEL_INFO, APPFLOW_CFG_LOG_SECTIONID_ENDING, false, NL("%s: %s") , string.Get(), stringresult.Get()); 
 
       #ifdef APPFLOW_CONSOLE_ACTIVE
       if(appconsole)
@@ -344,10 +344,10 @@ bool APPFLOWEXTENDED::APPEnd()
       GEN_DELETE applicationstatus;
       applicationstatus = NULL;  
 
-      string.Format(APPFLOWCONSOLE_DEFAULT_MESSAGEMASK, XT_L(XTRANSLATION_GEN_ID_APPFLOWEXTENDED_ENDAPPSTATUS));
-      stringresult.Format(_L("%s."), XT_L(XTRANSLATION_GEN_ID_OK));    
+      string.Format(APPFLOWCONSOLE_DEFAULT_MESSAGEMASK, GEN_TL(XTRANSLATION_GEN_ID_APPFLOWEXTENDED_ENDAPPSTATUS));
+      stringresult.Format(NL("%s."), GEN_TL(XTRANSLATION_GEN_ID_OK));    
 
-      APPFLOW_LOG_ENTRY(XLOGLEVEL_INFO, APPFLOW_CFG_LOG_SECTIONID_ENDING, false, _L("%s: %s") , string.Get(), stringresult.Get()); 
+      APPFLOW_LOG_ENTRY(XLOGLEVEL_INFO, APPFLOW_CFG_LOG_SECTIONID_ENDING, false, NL("%s: %s") , string.Get(), stringresult.Get()); 
 
       #ifdef APPFLOW_CONSOLE_ACTIVE
       if(appconsole)
@@ -360,11 +360,11 @@ bool APPFLOWEXTENDED::APPEnd()
   #endif
 
      
-  string.Format(APPFLOWCONSOLE_DEFAULT_MESSAGEMASK, XT_L(XTRANSLATION_GEN_ID_APPFLOWEXTENDED_ENDLOG));
-  stringresult.Format(_L("%s."), XT_L(XTRANSLATION_GEN_ID_OK));
+  string.Format(APPFLOWCONSOLE_DEFAULT_MESSAGEMASK, GEN_TL(XTRANSLATION_GEN_ID_APPFLOWEXTENDED_ENDLOG));
+  stringresult.Format(NL("%s."), GEN_TL(XTRANSLATION_GEN_ID_OK));
   
-  APPFLOW_LOG_ENTRY(XLOGLEVEL_INFO, APPFLOW_CFG_LOG_SECTIONID_ENDING, false, _L("%s: %s") , string.Get(), stringresult.Get());       
-  APPFLOW_LOG_ENTRY(XLOGLEVEL_INFO, APPFLOW_CFG_LOG_SECTIONID_ENDING, false, _L("-------------------------------------------------------------------------------------------------------------"));
+  APPFLOW_LOG_ENTRY(XLOGLEVEL_INFO, APPFLOW_CFG_LOG_SECTIONID_ENDING, false, NL("%s: %s") , string.Get(), stringresult.Get());       
+  APPFLOW_LOG_ENTRY(XLOGLEVEL_INFO, APPFLOW_CFG_LOG_SECTIONID_ENDING, false, NL("-------------------------------------------------------------------------------------------------------------"));
 
   APPFLOW_LOG.DelInstance();
 
@@ -500,21 +500,21 @@ bool APPFLOWEXTENDED::ShowAll()
   #ifdef APPFLOW_EXTENDED_APPLICATIONHEADER_ACTIVE
   if(appconsole->Show_Header(false))      
     {
-      console->PrintMessage(_L(""), 0, false, true);
+      console->PrintMessage(NL(""), 0, false, true);
     }
   #endif
 
   #ifdef APPFLOW_EXTENDED_APPLICATIONSTATUS_ACTIVE
   if(APPFLOW_EXTENDED.GetApplicationStatus()->Show(console))
     {
-      console->PrintMessage(_L(""), 0, false, true);
+      console->PrintMessage(NL(""), 0, false, true);
     }
   #endif
 
   #ifdef APPFLOW_EXTENDED_INTERNETSTATUS_ACTIVE
   if(APPFLOW_EXTENDED.GetInternetStatus()->Show(console))
     {
-      console->PrintMessage(_L(""), 0, false, true);
+      console->PrintMessage(NL(""), 0, false, true);
     }
   #endif
  

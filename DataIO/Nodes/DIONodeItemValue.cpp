@@ -136,22 +136,22 @@ bool DIONODEITEMVALUE::GetDescription(XSTRING& description)
 
   switch(type)
     {
-      case DIONODEITEMVALUE_TYPE_UNKNOWN        : description = _L("unknown"); 
+      case DIONODEITEMVALUE_TYPE_UNKNOWN        : description = NL("unknown"); 
                                                   break;
            
-      case DIONODEITEMVALUE_TYPE_TEMPERATURE    : description = _L("temperature");     
+      case DIONODEITEMVALUE_TYPE_TEMPERATURE    : description = NL("temperature");     
                                                   break;
 
-      case DIONODEITEMVALUE_TYPE_HUMIDITY       : description = _L("humidity");        
+      case DIONODEITEMVALUE_TYPE_HUMIDITY       : description = NL("humidity");        
                                                   break; 
 
-      case DIONODEITEMVALUE_TYPE_MOTIONDETECT   : description = _L("Motion Detect");        
+      case DIONODEITEMVALUE_TYPE_MOTIONDETECT   : description = NL("Motion Detect");        
                                                   break;
 
-      case DIONODEITEMVALUE_TYPE_LIGHTSWITCH    : description = _L("Light Switch");        
+      case DIONODEITEMVALUE_TYPE_LIGHTSWITCH    : description = NL("Light Switch");        
                                                   break;
 
-      case DIONODEITEMVALUE_TYPE_LIGHTLEVEL     : description = _L("light level");     
+      case DIONODEITEMVALUE_TYPE_LIGHTLEVEL     : description = NL("light level");     
                                                   break;
 
                                       default   : break; 
@@ -209,16 +209,16 @@ void DIONODEITEMVALUE::GetModeString(XSTRING& modestring)
   switch(mode)
     {
       case DIONODEITEMVALUE_MODE_NONE       :
-                            default         : modestring = _L("none");
+                            default         : modestring = NL("none");
                                               break;
 
-      case DIONODEITEMVALUE_MODE_READ       : modestring = _L("only read");
+      case DIONODEITEMVALUE_MODE_READ       : modestring = NL("only read");
                                               break;
 
-      case DIONODEITEMVALUE_MODE_WRITE      : modestring = _L("only write");
+      case DIONODEITEMVALUE_MODE_WRITE      : modestring = NL("only write");
                                               break;
 
-      case DIONODEITEMVALUE_MODE_READWRITE  : modestring = _L("read/write");
+      case DIONODEITEMVALUE_MODE_READWRITE  : modestring = NL("read/write");
                                               break;
     }
 }
@@ -387,22 +387,22 @@ bool DIONODEITEMVALUE::Serialize()
   value.GetType(formatvaluestr);
   GetModeString(modestr);
 
-  Primitive_Add<int>(type, _L("type")); 
+  Primitive_Add<int>(type, NL("type")); 
 
-  Primitive_Add<XSTRING*>(&typedescription, _L("description"));
+  Primitive_Add<XSTRING*>(&typedescription, NL("description"));
 
-  Primitive_Add<XSTRING*>(&formatvaluestr, _L("formatvalue"));
-  Primitive_Add<XDWORD>((XDWORD)mode, _L("mode"));
+  Primitive_Add<XSTRING*>(&formatvaluestr, NL("formatvalue"));
+  Primitive_Add<XDWORD>((XDWORD)mode, NL("mode"));
 
   GetModeString(modestr);
-  Primitive_Add<XSTRING*>(&modestr, _L("modestr"));
+  Primitive_Add<XSTRING*>(&modestr, NL("modestr"));
 
-  Primitive_Add<XVARIANT*>(&datetimelastupdate, _L("lastupdate"));
-  Primitive_Add<XVARIANT*>(&value, _L("value")); 
-  Primitive_Add<XVARIANT*>(&minvalue, _L("minvalue"));
-  Primitive_Add<XVARIANT*>(&maxvalue, _L("maxvalue")); 
-  Primitive_Add<XVARIANT*>(&differenceforchange, _L("differenceforchange"));
-  Class_Add<DIONODEITEMVALUEUNITFORMAT>(&unitformat, _L("unitformat"));
+  Primitive_Add<XVARIANT*>(&datetimelastupdate, NL("lastupdate"));
+  Primitive_Add<XVARIANT*>(&value, NL("value")); 
+  Primitive_Add<XVARIANT*>(&minvalue, NL("minvalue"));
+  Primitive_Add<XVARIANT*>(&maxvalue, NL("maxvalue")); 
+  Primitive_Add<XVARIANT*>(&differenceforchange, NL("differenceforchange"));
+  Class_Add<DIONODEITEMVALUEUNITFORMAT>(&unitformat, NL("unitformat"));
   
   return true;
 }
@@ -419,17 +419,17 @@ bool DIONODEITEMVALUE::Serialize()
 * --------------------------------------------------------------------------------------------------------------------*/
 bool DIONODEITEMVALUE::Deserialize()
 {   
-  Primitive_Extract<XDWORD>(type                  , _L("type"));  
-  Primitive_Extract<XDWORD>((XDWORD&)mode         , _L("mode"));
+  Primitive_Extract<XDWORD>(type                  , NL("type"));  
+  Primitive_Extract<XDWORD>((XDWORD&)mode         , NL("mode"));
   
-//Primitive_Extract<XVARIANT>(datetimelastupdate, _L("lastupdate"));
+//Primitive_Extract<XVARIANT>(datetimelastupdate, NL("lastupdate"));
 
-  Primitive_Extract<XVARIANT>(value               , _L("value")); 
-  Primitive_Extract<XVARIANT>(minvalue            , _L("minvalue"));
-  Primitive_Extract<XVARIANT>(maxvalue            , _L("maxvalue"));  
-  Primitive_Extract<XVARIANT>(differenceforchange , _L("differenceforchange"));
+  Primitive_Extract<XVARIANT>(value               , NL("value")); 
+  Primitive_Extract<XVARIANT>(minvalue            , NL("minvalue"));
+  Primitive_Extract<XVARIANT>(maxvalue            , NL("maxvalue"));  
+  Primitive_Extract<XVARIANT>(differenceforchange , NL("differenceforchange"));
   
-  Class_Extract<DIONODEITEMVALUEUNITFORMAT>(&unitformat, _L("unitformat"));
+  Class_Extract<DIONODEITEMVALUEUNITFORMAT>(&unitformat, NL("unitformat"));
   
   return true;
 }

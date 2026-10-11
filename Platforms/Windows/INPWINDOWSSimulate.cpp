@@ -179,8 +179,8 @@ bool INPWINDOWSSIMULATE::Key_PressByLiteral(XCHAR* literal)
       switch(altkey)
         {
           case ALTERNATIVE_KEY_NONE   : break;
-          case ALTERNATIVE_KEY_ALTGR  : Key_PressByLiteral(_L("Right ALT"));  break;
-          case ALTERNATIVE_KEY_SHIFT  : Key_PressByLiteral(_L("SHIFT"));      break;
+          case ALTERNATIVE_KEY_ALTGR  : Key_PressByLiteral(NL("Right ALT"));  break;
+          case ALTERNATIVE_KEY_SHIFT  : Key_PressByLiteral(NL("SHIFT"));      break;
         }
       
       bool status = Key_Press(code);  
@@ -214,8 +214,8 @@ bool INPWINDOWSSIMULATE::Key_UnPressByLiteral(XCHAR* literal)
       switch(altkey)
         {
           case ALTERNATIVE_KEY_NONE   : break;
-          case ALTERNATIVE_KEY_ALTGR  : Key_UnPressByLiteral(_L("Right ALT"));  break;
-          case ALTERNATIVE_KEY_SHIFT  : Key_UnPressByLiteral(_L("SHIFT"));      break;
+          case ALTERNATIVE_KEY_ALTGR  : Key_UnPressByLiteral(NL("Right ALT"));  break;
+          case ALTERNATIVE_KEY_SHIFT  : Key_UnPressByLiteral(NL("SHIFT"));      break;
         }
       
       return status;   
@@ -247,8 +247,8 @@ bool INPWINDOWSSIMULATE::Key_ClickByLiteral(XCHAR* literal, int pressuretime)
       switch(altkey)
         {
           case ALTERNATIVE_KEY_NONE   : break;
-          case ALTERNATIVE_KEY_ALTGR  : Key_PressByLiteral(_L("Right ALT"));  break;
-          case ALTERNATIVE_KEY_SHIFT  : Key_PressByLiteral(_L("SHIFT"));      break;
+          case ALTERNATIVE_KEY_ALTGR  : Key_PressByLiteral(NL("Right ALT"));  break;
+          case ALTERNATIVE_KEY_SHIFT  : Key_PressByLiteral(NL("SHIFT"));      break;
         }
 
       bool status = Key_Click(code, pressuretime);  
@@ -256,8 +256,8 @@ bool INPWINDOWSSIMULATE::Key_ClickByLiteral(XCHAR* literal, int pressuretime)
       switch(altkey)
         {
           case ALTERNATIVE_KEY_NONE   : break;
-          case ALTERNATIVE_KEY_ALTGR  : Key_UnPressByLiteral(_L("Right ALT"));  break;
-          case ALTERNATIVE_KEY_SHIFT  : Key_UnPressByLiteral(_L("SHIFT"));      break;
+          case ALTERNATIVE_KEY_ALTGR  : Key_UnPressByLiteral(NL("Right ALT"));  break;
+          case ALTERNATIVE_KEY_SHIFT  : Key_UnPressByLiteral(NL("SHIFT"));      break;
         }
 
       return status;
@@ -335,7 +335,7 @@ bool INPWINDOWSSIMULATE::Key_ClickByText(XCHAR* text, int pressuretimeinterval)
                               
                               if(!IsCapsLockActive())
                                 {
-                                  if(!Key_ClickByLiteral(_L("CAPS LOCK"), pressuretimeinterval)) status = false;
+                                  if(!Key_ClickByLiteral(NL("CAPS LOCK"), pressuretimeinterval)) status = false;
                                   changecapslock = true;      
                                 }
 
@@ -343,12 +343,12 @@ bool INPWINDOWSSIMULATE::Key_ClickByText(XCHAR* text, int pressuretimeinterval)
 
                               if(changecapslock)
                                 {
-                                  if(!Key_ClickByLiteral(_L("CAPS LOCK"), pressuretimeinterval)) status = false;
+                                  if(!Key_ClickByLiteral(NL("CAPS LOCK"), pressuretimeinterval)) status = false;
                                 }    
                             }
                             break;
 
-          case _C(' ')   : if(!Key_ClickByLiteral(_L("SPACEBAR"), pressuretimeinterval)) status = false;
+          case _C(' ')   : if(!Key_ClickByLiteral(NL("SPACEBAR"), pressuretimeinterval)) status = false;
                             break;
 
           case _C('a')   : 
@@ -381,7 +381,7 @@ bool INPWINDOWSSIMULATE::Key_ClickByText(XCHAR* text, int pressuretimeinterval)
                               
                               if(IsCapsLockActive())
                                 {
-                                  if(!Key_ClickByLiteral(_L("CAPS LOCK"), pressuretimeinterval)) status = false;
+                                  if(!Key_ClickByLiteral(NL("CAPS LOCK"), pressuretimeinterval)) status = false;
                                   changecapslock = true;      
                                 }
 
@@ -389,7 +389,7 @@ bool INPWINDOWSSIMULATE::Key_ClickByText(XCHAR* text, int pressuretimeinterval)
 
                               if(changecapslock)
                                 {
-                                  if(!Key_ClickByLiteral(_L("CAPS LOCK"), pressuretimeinterval)) status = false;
+                                  if(!Key_ClickByLiteral(NL("CAPS LOCK"), pressuretimeinterval)) status = false;
                                 }    
                             }
                             break;

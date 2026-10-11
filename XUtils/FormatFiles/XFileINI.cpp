@@ -1616,7 +1616,7 @@ bool XFILEINI::ConvertToLines()
       XFILEINISECTION* section = (XFILEINISECTION*)sections.Get(c);
       if(section)
         { 
-          XSTRING line(_L(" "));
+          XSTRING line(NL(" "));
           XSTRING text_remark;
           XSTRING key;
           XSTRING value;
@@ -1636,20 +1636,20 @@ bool XFILEINI::ConvertToLines()
                         {
                           for(XDWORD e=0; e<remark->GetXPos(); e++)
                             {
-                              line.Add(_L(" "));
+                              line.Add(NL(" "));
                             }
 
                           remark->GetTextRemark()->DeleteCharacter(_C(' '), XSTRINGCONTEXT_FROM_FIRST);    
                           remark->GetTextRemark()->DeleteCharacter(_C(' '), XSTRINGCONTEXT_TO_END);
                           
-                          line.AddFormat(_L("; %s"), remark->GetTextRemark()->Get());
+                          line.AddFormat(NL("; %s"), remark->GetTextRemark()->Get());
                           AddLine(line.Get());
                         }    
                     }                     
                 }  
             }            
        
-          line.Format(_L("[%s]"), section->GetName()->Get());
+          line.Format(NL("[%s]"), section->GetName()->Get());
 
           for(XDWORD d=0; d<remarks.GetSize(); d++)
             {
@@ -1664,13 +1664,13 @@ bool XFILEINI::ConvertToLines()
 
                           for(XDWORD e=inisizeline; e<remark->GetXPos(); e++)
                             {
-                              line.Add(_L(" "));
+                              line.Add(NL(" "));
                             }
 
                           remark->GetTextRemark()->DeleteCharacter(_C(' '), XSTRINGCONTEXT_FROM_FIRST);    
                           remark->GetTextRemark()->DeleteCharacter(_C(' '), XSTRINGCONTEXT_TO_END);
 
-                          line.AddFormat(_L("; %s"), remark->GetTextRemark()->Get());
+                          line.AddFormat(NL("; %s"), remark->GetTextRemark()->Get());
 
                           break;
                         }    
@@ -1697,20 +1697,20 @@ bool XFILEINI::ConvertToLines()
                             {
                               for(XDWORD e=0; e<remark->GetXPos(); e++)
                                 {
-                                  line.Add(_L(" "));
+                                  line.Add(NL(" "));
                                 }
 
                               remark->GetTextRemark()->DeleteCharacter(_C(' '), XSTRINGCONTEXT_FROM_FIRST);    
                               remark->GetTextRemark()->DeleteCharacter(_C(' '), XSTRINGCONTEXT_TO_END);
 
-                              line.AddFormat(_L("; %s"), remark->GetTextRemark()->Get());  
+                              line.AddFormat(NL("; %s"), remark->GetTextRemark()->Get());  
                               AddLine(line.Get());                     
                             }    
                         }                     
                     }  
                 }           
 
-              line.Format(_L("%s=%s"), key.Get(), value.Get());
+              line.Format(NL("%s=%s"), key.Get(), value.Get());
 
               for(XDWORD d=0; d<remarks.GetSize(); d++)
                 {
@@ -1725,13 +1725,13 @@ bool XFILEINI::ConvertToLines()
 
                               for(XDWORD e=inisizeline; e<remark->GetXPos(); e++)
                                 {
-                                  line.Add(_L(" "));
+                                  line.Add(NL(" "));
                                 }
 
                               remark->GetTextRemark()->DeleteCharacter(_C(' '), XSTRINGCONTEXT_FROM_FIRST);    
                               remark->GetTextRemark()->DeleteCharacter(_C(' '), XSTRINGCONTEXT_TO_END);
 
-                              line.AddFormat(_L("; %s"), remark->GetTextRemark()->Get());
+                              line.AddFormat(NL("; %s"), remark->GetTextRemark()->Get());
 
                               break;
                             }    
@@ -1867,7 +1867,7 @@ bool XFILEINI::Line_IsSection(XSTRING& line, XSTRING& section)
 
   if(line.IsEmpty()) return false;
 
-  line.Copy(_L("["), _L("]"), true, 0, section);  
+  line.Copy(NL("["), NL("]"), true, 0, section);  
   if(section.IsEmpty()) return false;
  
   section.ToUpperCase();
@@ -1898,10 +1898,10 @@ bool XFILEINI::Line_IsKey(XSTRING& line, XSTRING& key, XSTRING& value)
 
   if(line.IsEmpty()) return false;
 
-  if((line.Find(_L("["), true) != XSTRING_NOTFOUND) &&
-     (line.Find(_L("]"), true) != XSTRING_NOTFOUND))  return false;
+  if((line.Find(NL("["), true) != XSTRING_NOTFOUND) &&
+     (line.Find(NL("]"), true) != XSTRING_NOTFOUND))  return false;
  
-  int indexvalue = line.Find(_L("="), true);
+  int indexvalue = line.Find(NL("="), true);
   if(indexvalue == XSTRING_NOTFOUND) return false;
 
   line.Copy(0, indexvalue, key);
@@ -1936,7 +1936,7 @@ bool XFILEINI::Line_GetRemark(XSTRING& line, XFILEINIREMARK& remark)
 {
   if(line.IsEmpty()) return false;
 
-  int index = line.Find(_L(";"), true);
+  int index = line.Find(NL(";"), true);
   if(index == XSTRING_NOTFOUND) return false;
  
   remark.SetXPos(index);

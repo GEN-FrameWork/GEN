@@ -107,12 +107,12 @@ enum DIOWEBSERVER_WEBSOCKET_OPCODE
 
 #define DIOWEBSERVER_MAXPAGECONNECTIONS           10
 
-#define DIOWEBSERVER_IDSERVER                     _L("GEN Web Server v2.0")
-#define DIOWEBSERVER_LOGSECTIONID                 _L("WEB Server")
-#define DIOWEBSERVER_LOGSECTIONID_VERBOSE         _L("WEB Server Verbose")
+#define DIOWEBSERVER_IDSERVER                     NL("GEN Web Server v2.0")
+#define DIOWEBSERVER_LOGSECTIONID                 NL("WEB Server")
+#define DIOWEBSERVER_LOGSECTIONID_VERBOSE         NL("WEB Server Verbose")
 
-#define DIOWEBSERVER_AUTHENTICATION_ALLGUESTS     _L("*")
-#define DIOWEBSERVER_AUTHENTICATION_DEFAULTREALM  _L("GEN Web Server")
+#define DIOWEBSERVER_AUTHENTICATION_ALLGUESTS     NL("*")
+#define DIOWEBSERVER_AUTHENTICATION_DEFAULTREALM  NL("GEN Web Server")
 
 #define DIOWEBSERVER_DEFAULTPORT                  80
 #define DIOWEBSERVER_KEEPALIVE                    5     // Seconds

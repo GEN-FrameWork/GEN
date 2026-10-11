@@ -182,11 +182,11 @@ bool GRPVECTORFILESVGOBJPOLYLINE::ParsePoints(XFILEXMLELEMENT* element)
 {
   points.DeleteAll();
 
-  XCHAR* valuepoints = element->GetValueAttribute(_L("points"));
+  XCHAR* valuepoints = element->GetValueAttribute(NL("points"));
   if(!valuepoints) return false;
 
   XSTRING source(valuepoints);
-  source.Replace(_L(","), _L(" "));
+  source.Replace(NL(","), NL(" "));
 
   XVECTOR<XSTRING*> tokens;
   source.Split(_C(' '), tokens, false);

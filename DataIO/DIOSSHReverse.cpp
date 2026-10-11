@@ -29,6 +29,7 @@
 /*---- PRECOMPILATION INCLUDES ---------------------------------------------------------------------------------------*/
 
 #include "GEN_Defines.h"
+#include "XTranslation_GEN.h"
 
 
 
@@ -252,11 +253,11 @@ bool DIOSSHREVERSE::DownloadCFG(XCHAR* URL, XSTRING& publicIP, XSTRING& localIP)
                       XSTRING section;
                       XSTRING value;
 
-                      section.Format(_L("ENTRY%02d"), c);
+                      section.Format(NL("ENTRY%02d"), c);
 
                       if(!fileini->SelectSection(section)) break;
 
-                      status = fileini->ReadValue(_L("isactive"), value);
+                      status = fileini->ReadValue(NL("isactive"), value);
                       if(status)
                         {
                           if(value.ConvertToBoolean()
@@ -267,7 +268,7 @@ bool DIOSSHREVERSE::DownloadCFG(XCHAR* URL, XSTRING& publicIP, XSTRING& localIP)
                                   XSTRING _publicIP;
                                   XSTRING _localremoteIP;
 
-                                  status = fileini->ReadValue(_L("urlorigin"), (*urlorigin));
+                                  status = fileini->ReadValue(NL("urlorigin"), (*urlorigin));
                                   if(status)
                                     {
                                       bool validaccess = false;
@@ -278,7 +279,7 @@ bool DIOSSHREVERSE::DownloadCFG(XCHAR* URL, XSTRING& publicIP, XSTRING& localIP)
                                         {
                                           validaccess = true;
 
-                                          status = fileini->ReadValue(_L("localremoteip"), _localremoteIP);
+                                          status = fileini->ReadValue(NL("localremoteip"), _localremoteIP);
                                           if(status)
                                             {
                                               if(_localremoteIP.GetSize())
@@ -290,21 +291,21 @@ bool DIOSSHREVERSE::DownloadCFG(XCHAR* URL, XSTRING& publicIP, XSTRING& localIP)
 
                                       if(validaccess)
                                         {
-                                          localIP   = _L("localhost");
+                                          localIP   = NL("localhost");
 
-                                          status = fileini->ReadValue(_L("urltarget"), value);
+                                          status = fileini->ReadValue(NL("urltarget"), value);
                                           if(status) GetURLTarget()->Set(value);
 
-                                          status = fileini->ReadValue(_L("localip"), value);
+                                          status = fileini->ReadValue(NL("localip"), value);
                                           if(status)  GetLocalIP()->Set(value);
 
-                                          status = fileini->ReadValue(_L("login"), value);
+                                          status = fileini->ReadValue(NL("login"), value);
                                           if(status) GetLogin()->Set(value);
 
-                                          status = fileini->ReadValue(_L("password"), value);
+                                          status = fileini->ReadValue(NL("password"), value);
                                           if(status) GetPassword()->Set(value);
 
-                                          status = fileini->ReadValue(_L("port"), value);
+                                          status = fileini->ReadValue(NL("port"), value);
                                           if(status) SetPort(value.ConvertToInt());
 
                                           result = true;
@@ -385,8 +386,8 @@ bool DIOSSHREVERSE::Activate()
   bool    status     = false;
   int     returncode = 0;
 
-  //command.AddFormat(_L("%s -p %s ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -o ExitOnForwardFailure=yes -N -R %d:%s:%d %s@%s &"), DIOSSHREVERSE_DEFAULTAPPLICATION, password.Get(), port, localIP.Get() ,DIOSSHREVERSE_DEFAULTPORTSSH, login.Get(), URLtarget.Get());
-  command.AddFormat(_L("%s -p %s autossh -M 0 -o \"ServerAliveInterval 30\" -o \"ServerAliveCountMax 3\" -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -o ExitOnForwardFailure=yes -N -R %d:%s:%d %s@%s &"), DIOSSHREVERSE_DEFAULTAPPLICATION, password.Get(), port, localIP.Get(), DIOSSHREVERSE_DEFAULTPORTSSH, login.Get(), URLtarget.Get());
+  //command.AddFormat(NL("%s -p %s ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -o ExitOnForwardFailure=yes -N -R %d:%s:%d %s@%s &"), DIOSSHREVERSE_DEFAULTAPPLICATION, password.Get(), port, localIP.Get() ,DIOSSHREVERSE_DEFAULTPORTSSH, login.Get(), URLtarget.Get());
+  command.AddFormat(NL("%s -p %s autossh -M 0 -o \"ServerAliveInterval 30\" -o \"ServerAliveCountMax 3\" -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -o ExitOnForwardFailure=yes -N -R %d:%s:%d %s@%s &"), DIOSSHREVERSE_DEFAULTAPPLICATION, password.Get(), port, localIP.Get(), DIOSSHREVERSE_DEFAULTPORTSSH, login.Get(), URLtarget.Get());
   status = GEN_XPROCESSMANAGER.MakeCommand(command.Get(), output, &returncode);
 
   XTIMER* xtimerout=GEN_XFACTORY.CreateTimer();
@@ -406,7 +407,7 @@ bool DIOSSHREVERSE::Activate()
         }
     }
 
-  GEN_XLOG.AddEntry((status?XLOGLEVEL_INFO:XLOGLEVEL_ERROR), DIOSSHREVERSE_LOGSECTIONID, false, _L("Activate service return code [%d]"), returncode);
+  GEN_XLOG.AddEntry((status?XLOGLEVEL_INFO:XLOGLEVEL_ERROR), DIOSSHREVERSE_LOGSECTIONID, false, GEN_TL(XTRANSLATION_GEN_ID_DIOSSHREVERSE_ACTIVATE_SERVICE_RETURN_CODE), returncode);
 
   return status;
 }
@@ -428,13 +429,13 @@ bool DIOSSHREVERSE::DeActivate()
   bool    status     = false;
   int     returncode = 0;
 
-  command.Format(_L("killall -9 %s > /dev/null"), DIOSSHREVERSE_DEFAULTAPPLICATION);
+  command.Format(NL("killall -9 %s > /dev/null"), DIOSSHREVERSE_DEFAULTAPPLICATION);
   status = GEN_XPROCESSMANAGER.MakeCommand(command.Get(), output, &returncode);
 
-  command.Format(_L("killall -9 %s > /dev/null"), DIOSSHREVERSE_DEFAULTAPPLICATION2);
+  command.Format(NL("killall -9 %s > /dev/null"), DIOSSHREVERSE_DEFAULTAPPLICATION2);
   status = GEN_XPROCESSMANAGER.MakeCommand(command.Get(), output, &returncode);
 
-  GEN_XLOG.AddEntry((status?XLOGLEVEL_INFO:XLOGLEVEL_ERROR), DIOSSHREVERSE_LOGSECTIONID, false, _L("Deactivate service return code [%d]"), returncode);
+  GEN_XLOG.AddEntry((status?XLOGLEVEL_INFO:XLOGLEVEL_ERROR), DIOSSHREVERSE_LOGSECTIONID, false, GEN_TL(XTRANSLATION_GEN_ID_DIOSSHREVERSE_DEACTIVATE_SERVICE_RETURN_CODE), returncode);
 
   status = true;
   if(returncode) status = false;
@@ -481,9 +482,9 @@ bool DIOSSHREVERSE::IsRunning()
           XPATH   xpath;
           GEN_XPATHSMANAGER.GetPathOfSection(XPATHSMANAGERSECTIONTYPE_ROOT, xpath);
           xpath.Slash_Add();
-          xpath.Add(_L("backscreen"));
+          xpath.Add(NL("backscreen"));
 
-          command.Format(_L("netstat -napt > %s"), xpath.Get());
+          command.Format(NL("netstat -napt > %s"), xpath.Get());
           if(GEN_XPROCESSMANAGER.MakeCommand(command.Get(), output, &returncode))
             {
               XFILETXT* xfiletxt = GEN_NEW XFILETXT();
@@ -502,10 +503,10 @@ bool DIOSSHREVERSE::IsRunning()
                                     {
                                       XSTRING application;
 
-                                      application = _L("/ssh ");
+                                      application = NL("/ssh ");
 
                                       if((line->Find(publicIPtarget.Get() , false, 0) != XSTRING_NOTFOUND) &&
-                                         (line->Find(_L("ESTABLISHED")   , false, 0) != XSTRING_NOTFOUND) &&
+                                         (line->Find(NL("ESTABLISHED")   , false, 0) != XSTRING_NOTFOUND) &&
                                          (line->Find(application.Get()    , false, 0) != XSTRING_NOTFOUND))
                                         {
                                           status = true;
@@ -530,7 +531,7 @@ bool DIOSSHREVERSE::IsRunning()
   XSTRING string;
   string.ConvertFromBoolean(status, XSTRINGBOOLEANMODE_HUMAN);
   
-  GEN_XLOG.AddEntry(XLOGLEVEL_INFO, DIOSSHREVERSE_LOGSECTIONID, false, _L("Check is active: %s"), string.Get());
+  GEN_XLOG.AddEntry(XLOGLEVEL_INFO, DIOSSHREVERSE_LOGSECTIONID, false, NL("Check is active: %s"), string.Get());
 
   return status;
 }

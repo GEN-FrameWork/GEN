@@ -151,7 +151,7 @@ bool XFILECOBOL_PIC::ResolveMask()
 {
   if(mask.IsEmpty())
     {
-      XTRACE_PRINTCOLOR(4, _L("Cobol Reader: Error PIC Missing"));
+      XTRACE_PRINTCOLOR(4, NL("Cobol Reader: Error PIC Missing"));
       return false;
     }
 
@@ -198,19 +198,19 @@ bool XFILECOBOL_PIC::ResolveMask()
           case _C('(')   : { XSTRING modificator;
                               int     sizemodificator;
 
-                              int end = mask.Find(_L(")"), true, index+1);
+                              int end = mask.Find(NL(")"), true, index+1);
                               if(end == XSTRING_NOTFOUND)
                                 {
-                                  XTRACE_PRINTCOLOR(4, _L("Cobol Reader: Error PIC invalid %s. Missing ')'"), mask.Get());
+                                  XTRACE_PRINTCOLOR(4, NL("Cobol Reader: Error PIC invalid %s. Missing ')'"), mask.Get());
                                   return false;
                                 }
 
                              mask.Copy(index, end+1, modificator);
-                             modificator.UnFormat(_L("(%d)"), &sizemodificator);
+                             modificator.UnFormat(NL("(%d)"), &sizemodificator);
 
                              if(!sizemodificator)
                                {
-                                 XTRACE_PRINTCOLOR(4, _L("Cobol Reader: Error PIC invalid %s. Modificador is zero '(0)'"), mask.Get());
+                                 XTRACE_PRINTCOLOR(4, NL("Cobol Reader: Error PIC invalid %s. Modificador is zero '(0)'"), mask.Get());
                                  return false;
                                }
 
@@ -233,7 +233,7 @@ bool XFILECOBOL_PIC::ResolveMask()
                            index++;
                            break;
 
-                 default : XTRACE_PRINTCOLOR(4, _L("Cobol Reader: Error PIC invalid %s. Unknown Specifier '%c'"), mask.Get(), mask.Get()[index]);
+                 default : XTRACE_PRINTCOLOR(4, NL("Cobol Reader: Error PIC invalid %s. Unknown Specifier '%c'"), mask.Get(), mask.Get()[index]);
                            return false;
                            break;
         }
@@ -278,7 +278,7 @@ bool XFILECOBOL_PIC::ResolveMask()
                                 }
                                else
                                 {
-                                  XTRACE_PRINTCOLOR(4, _L("Cobol Reader: Error PIC invalid %s. Size of modificator to long %s > 18 "), mask.Get(), sizedata);
+                                  XTRACE_PRINTCOLOR(4, NL("Cobol Reader: Error PIC invalid %s. Size of modificator to long %s > 18 "), mask.Get(), sizedata);
                                   return false;
                                 }
                             }
@@ -1113,7 +1113,7 @@ bool XFILECOBOL_RECORD::ConvertDataTo(XFILECOBOL_PIC* picture, XBUFFER& bufferda
                         case _C('S') : { XBYTE lastdata = bufferdata.GetLastByte();
                                           if(lastdata & XFILECOBOL_MASK_SIGN)
                                             {
-                                              datastring += _L("-");
+                                              datastring += NL("-");
                                               lastdata &= ~XFILECOBOL_MASK_SIGN;
 
                                               bufferdata.Get()[bufferdata.GetSize()-1] = lastdata;
@@ -1123,12 +1123,12 @@ bool XFILECOBOL_RECORD::ConvertDataTo(XFILECOBOL_PIC* picture, XBUFFER& bufferda
 
                         case _C('9') :
                         case _C('X') :
-                        case _C('A') : datastring.AddFormat(_L("%c"), bufferdata.Get()[indexdata]);
+                        case _C('A') : datastring.AddFormat(NL("%c"), bufferdata.Get()[indexdata]);
                                         indexdata++;
                                         break;
 
                         case _C('V') :
-                        case _C('.') : datastring += _L(".");
+                        case _C('.') : datastring += NL(".");
                                         break;
                       }
                   }
@@ -1142,7 +1142,7 @@ bool XFILECOBOL_RECORD::ConvertDataTo(XFILECOBOL_PIC* picture, XBUFFER& bufferda
                   switch(lastdata)
                     {
                       case 0x0C : break;
-                      case 0x0D : datastring = _L("-");
+                      case 0x0D : datastring = NL("-");
                                   break;
                       case 0x0F : break;
                     }
@@ -1151,10 +1151,10 @@ bool XFILECOBOL_RECORD::ConvertDataTo(XFILECOBOL_PIC* picture, XBUFFER& bufferda
 
                   for(XDWORD c=0; c< bufferdata.GetSize()-1; c++)
                     {
-                      datastring.AddFormat(_L("%02X"), bufferdata.Get()[c]);
+                      datastring.AddFormat(NL("%02X"), bufferdata.Get()[c]);
                     }
 
-                  datastring.AddFormat(_L("%1X"), lastdata);
+                  datastring.AddFormat(NL("%1X"), lastdata);
                 }
                 break;
 
@@ -1163,28 +1163,28 @@ bool XFILECOBOL_RECORD::ConvertDataTo(XFILECOBOL_PIC* picture, XBUFFER& bufferda
                     case 1 : { char byte;
 
                                bufferdata.Get((XBYTE&)byte);
-                               datastring.Format(_L("%02d"), byte);
+                               datastring.Format(NL("%02d"), byte);
                              }
                              break;
 
                     case 2 : { short word;
 
                                bufferdata.Get((XWORD&)word);
-                               datastring.Format(_L("%04d"), word);
+                               datastring.Format(NL("%04d"), word);
                              }
                              break;
 
                     case 4 : { int integer;
 
                                bufferdata.Get((XDWORD&)integer);
-                               datastring.Format(_L("%08d"), integer);
+                               datastring.Format(NL("%08d"), integer);
                              }
                              break;
 
                     case 8 : { long long large;
 
                                bufferdata.Get((XQWORD&)large);
-                               datastring.Format(_L("%016d"), large);
+                               datastring.Format(NL("%016d"), large);
                              }
                              break;
                   }
@@ -2117,7 +2117,7 @@ bool XFILECOBOL::CapabilitiesFile_Load(XPATH& xpathcapabilitiesfile)
                               IDfile->AdjustSize(_MAXSTR);
                               xpathfile->AdjustSize(_MAXSTR);
 
-                              line->UnFormat(_L("%s:%s"), IDfile->Get(), xpathfile->Get());
+                              line->UnFormat(NL("%s:%s"), IDfile->Get(), xpathfile->Get());
 
                               IDfile->AdjustSize();
                               xpathfile->AdjustSize();
@@ -2277,7 +2277,7 @@ bool XFILECOBOL::Eliminate_TabsForSpaces(XVECTOR<XSTRING*>* lines)
 
   for(int c=0; c<XFILECOBOL_TABSFORSPACES; c++)
     {
-      tabspaces += _L(" ");
+      tabspaces += NL(" ");
     }
 
   for(XDWORD c=0; c<lines->GetSize(); c++)
@@ -2285,7 +2285,7 @@ bool XFILECOBOL::Eliminate_TabsForSpaces(XVECTOR<XSTRING*>* lines)
       XSTRING* line = lines->Get(c);
       if(line)
         {
-          int index = line->Find(_L("\x09"), true);
+          int index = line->Find(NL("\x09"), true);
           if(index != XSTRING_NOTFOUND)
             {
               line->DeleteCharacters(index, 1);
@@ -2343,7 +2343,7 @@ bool XFILECOBOL::Eliminate_Comments(XVECTOR<XSTRING*>* lines)
       XSTRING* line = lines->Get(c);
       if(line)
         {
-          int index = line->Find(_L("*"), true);
+          int index = line->Find(NL("*"), true);
           if(index != XSTRING_NOTFOUND) line->DeleteCharacters(index, line->GetSize()-index);
         }
     }
@@ -2507,7 +2507,7 @@ bool XFILECOBOL::ExtractReservedToken(XSTRING& line, XCHAR* token, XSTRING& var)
   XSTRING mask;
   XSTRING strvar;
 
-  mask.Format(_L("%s "), token);
+  mask.Format(NL("%s "), token);
 
   int start         = line.Find(mask.Get(), true);
   int startendtoken = 0;
@@ -2516,8 +2516,8 @@ bool XFILECOBOL::ExtractReservedToken(XSTRING& line, XCHAR* token, XSTRING& var)
 
   startendtoken = start + mask.GetSize();
 
-  end = line.Find(_L(" "), true, startendtoken);
-  if(end == XSTRING_NOTFOUND) end = line.Find(_L("."), true, startendtoken);
+  end = line.Find(NL(" "), true, startendtoken);
+  if(end == XSTRING_NOTFOUND) end = line.Find(NL("."), true, startendtoken);
   if(end == XSTRING_NOTFOUND) return false;
 
   line.Copy(startendtoken, end, var);
@@ -2587,25 +2587,25 @@ XFILECOBOL_LINE_TYPE XFILECOBOL::InterpreterLineForHandle(XSTRING& line, int& le
 
   //----------------------------------------------------------
   // FD
-  index = line.Find(_L("FD "), true);
+  index = line.Find(NL("FD "), true);
   if(!index)
     {
-      ExtractReservedToken(line, _L("VALUE OF LABEL IS"), (*handle.GetValueLabel()));
+      ExtractReservedToken(line, NL("VALUE OF LABEL IS"), (*handle.GetValueLabel()));
       param.DeleteCharacter(_C('\''), XSTRINGCONTEXT_ALLSTRING);
 
-      ExtractReservedToken(line, _L("DATA RECORD IS"), (*handle.GetDataRecord()));
-      ExtractReservedToken(line, _L("FD"), (*handle.GetName()));
+      ExtractReservedToken(line, NL("DATA RECORD IS"), (*handle.GetDataRecord()));
+      ExtractReservedToken(line, NL("FD"), (*handle.GetName()));
 
       returntype = XFILECOBOL_LINE_TYPE_FD;
     }
    else
     {
-      index = line.Find(_L("SELECT "), true);
+      index = line.Find(NL("SELECT "), true);
       if(!index)
         {
-          ExtractReservedToken(line, _L("SELECT"), name);
-          ExtractReservedToken(line, _L("ORGANIZATION IS") , param);
-          ExtractReservedToken(line, _L("ASSIGN TO"), param2);
+          ExtractReservedToken(line, NL("SELECT"), name);
+          ExtractReservedToken(line, NL("ORGANIZATION IS") , param);
+          ExtractReservedToken(line, NL("ASSIGN TO"), param2);
 
           returntype = XFILECOBOL_LINE_TYPE_SELECT;
         }
@@ -2623,28 +2623,28 @@ XFILECOBOL_LINE_TYPE XFILECOBOL::InterpreterLineForHandle(XSTRING& line, int& le
             {
               noccurs = 0;
 
-              ExtractReservedToken(line, _L(" TIMES"));
-              ExtractReservedToken(line, _L("OCCURS"), param2);
+              ExtractReservedToken(line, NL(" TIMES"));
+              ExtractReservedToken(line, NL("OCCURS"), param2);
               if(!param2.IsEmpty())
                 {
-                  param2.UnFormat(_L("%d"), &noccurs);
+                  param2.UnFormat(NL("%d"), &noccurs);
                   param2.Empty();
                 }
 
-              ExtractReservedToken(line, _L("REDEFINES"), param2);
+              ExtractReservedToken(line, NL("REDEFINES"), param2);
 
-              if(line.Find(_L("PIC "), true) != XSTRING_NOTFOUND)
+              if(line.Find(NL("PIC "), true) != XSTRING_NOTFOUND)
                 {
-                  if(ExtractReservedToken(line, _L("COMP-1")))  PICcomputationaltype = 1;
-                  if(ExtractReservedToken(line, _L("COMP-2")))  PICcomputationaltype = 2;
-                  if(ExtractReservedToken(line, _L("COMP-3")))  PICcomputationaltype = 3;
-                  if(ExtractReservedToken(line, _L("COMP-4")))  PICcomputationaltype = 4;
-                  if(ExtractReservedToken(line, _L("COMP-5")))  PICcomputationaltype = 5;
+                  if(ExtractReservedToken(line, NL("COMP-1")))  PICcomputationaltype = 1;
+                  if(ExtractReservedToken(line, NL("COMP-2")))  PICcomputationaltype = 2;
+                  if(ExtractReservedToken(line, NL("COMP-3")))  PICcomputationaltype = 3;
+                  if(ExtractReservedToken(line, NL("COMP-4")))  PICcomputationaltype = 4;
+                  if(ExtractReservedToken(line, NL("COMP-5")))  PICcomputationaltype = 5;
 
-                  ExtractReservedToken(line, _L("PIC"), param);
+                  ExtractReservedToken(line, NL("PIC"), param);
 
                   name.AdjustSize(_MAXSTR);
-                  line.UnFormat(_L("%02d %s"), &level, name.Get());
+                  line.UnFormat(NL("%02d %s"), &level, name.Get());
                   name.AdjustSize();
 
                   fieldtype =  XFILECOBOL_FIELD_TYPE_VAR;
@@ -2654,7 +2654,7 @@ XFILECOBOL_LINE_TYPE XFILECOBOL::InterpreterLineForHandle(XSTRING& line, int& le
                   param.Empty();
 
                   name.AdjustSize(_MAXSTR);
-                  line.UnFormat(_L("%02d %s."), &level, name.Get());
+                  line.UnFormat(NL("%02d %s."), &level, name.Get());
                   name.AdjustSize();
 
                   fieldtype =  XFILECOBOL_FIELD_TYPE_KEY;
@@ -2765,7 +2765,7 @@ bool XFILECOBOL::TraslateTextToHandle(XVECTOR<XSTRING*>* lines, XFILECOBOL_HANDL
                                                         return false;
                                                       }
 
-                                                    rootfielddata->GetName()->Set(_L("ROOT"));
+                                                    rootfielddata->GetName()->Set(NL("ROOT"));
                                                     rootfielddata->SetLevel(0);
 
                                                     handle.GetFDTree()->SetRoot(rootfieldnode);
@@ -2784,15 +2784,15 @@ bool XFILECOBOL::TraslateTextToHandle(XVECTOR<XSTRING*>* lines, XFILECOBOL_HANDL
 
                                                     if(!param.IsEmpty())
                                                       {
-                                                        if(!param.Compare(_L("INDEXED")         , true)) handle.SetTypeRecord(XFILECOBOL_RECORD_TYPE_INDEXED);
-                                                        if(!param.Compare(_L("LINE SEQUENTIAL") , true)) handle.SetTypeRecord(XFILECOBOL_RECORD_TYPE_LINE_SEQUENTIAL);
-                                                        if(!param.Compare(_L("SEQUENTIAL")      , true)) handle.SetTypeRecord(XFILECOBOL_RECORD_TYPE_SEQUENTIAL);
-                                                        if(!param.Compare(_L("RELATIVE")        , true)) handle.SetTypeRecord(XFILECOBOL_RECORD_TYPE_RELATIVE);
+                                                        if(!param.Compare(NL("INDEXED")         , true)) handle.SetTypeRecord(XFILECOBOL_RECORD_TYPE_INDEXED);
+                                                        if(!param.Compare(NL("LINE SEQUENTIAL") , true)) handle.SetTypeRecord(XFILECOBOL_RECORD_TYPE_LINE_SEQUENTIAL);
+                                                        if(!param.Compare(NL("SEQUENTIAL")      , true)) handle.SetTypeRecord(XFILECOBOL_RECORD_TYPE_SEQUENTIAL);
+                                                        if(!param.Compare(NL("RELATIVE")        , true)) handle.SetTypeRecord(XFILECOBOL_RECORD_TYPE_RELATIVE);
                                                       }
 
                                                     if(!param2.IsEmpty())
                                                       {
-                                                        if(!param2.Compare(_L("DISK"), true))
+                                                        if(!param2.Compare(NL("DISK"), true))
                                                           {
                                                             CapabilitiesFile_GetFile(handle.GetName(), xpathdata);
                                                             xpathdata.SetOnlyPathAndNamefileExt();
@@ -2801,8 +2801,8 @@ bool XFILECOBOL::TraslateTextToHandle(XVECTOR<XSTRING*>* lines, XFILECOBOL_HANDL
                                                           {
                                                             xpathdata.AdjustSize(_MAXSTR);
 
-                                                            if(param2.Find(_L("'") , true) != XSTRING_NOTFOUND)  param2.UnFormat(_L("'%s'"), xpathdata.Get());
-                                                            if(param2.Find(_L("\""), true) != XSTRING_NOTFOUND)  param2.UnFormat(_L("\"%s\""), xpathdata.Get());
+                                                            if(param2.Find(NL("'") , true) != XSTRING_NOTFOUND)  param2.UnFormat(NL("'%s'"), xpathdata.Get());
+                                                            if(param2.Find(NL("\""), true) != XSTRING_NOTFOUND)  param2.UnFormat(NL("\"%s\""), xpathdata.Get());
 
                                                             xpathdata.AdjustSize();
                                                           }
@@ -2943,18 +2943,18 @@ bool XFILECOBOL::ChangeNameNodeWithOccurs(int index, XSTRING* name)
   if(!name)             return false;
   if(name->IsEmpty())   return false;
 
-  int indexstart = name->Find(_L("("), true);
+  int indexstart = name->Find(NL("("), true);
   if(indexstart == XSTRING_NOTFOUND)
     {
-      name->AddFormat(_L("(%d)"), index);
+      name->AddFormat(NL("(%d)"), index);
     }
    else
     {
-      int indexend = name->Find(_L(")"), true);
+      int indexend = name->Find(NL(")"), true);
       if(indexend == XSTRING_NOTFOUND) return false;
 
       XSTRING addindexstr;
-      addindexstr.Format(_L(",%d"), index);
+      addindexstr.Format(NL(",%d"), index);
 
       name->Insert(addindexstr, indexend);
     }

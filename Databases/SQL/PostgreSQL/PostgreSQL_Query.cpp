@@ -143,7 +143,7 @@ bool POSTGRESQL_QUERY::Execute()
       DB_SQL_ERROR* error = GEN_NEW DB_SQL_ERROR(DB_SQL_ERROR_TYPE_STATEMENT_ERROR);
       if(!error) return false;
 
-      error->description.Set(_L("void statement"));
+      error->description.Set(NL("void statement"));
       database->GetErrorList()->Add(error);
 
       if(database->IsTransactionStarted())  database->Rollback();
@@ -153,11 +153,11 @@ bool POSTGRESQL_QUERY::Execute()
    else
     {
       if( value.FindCharacter(_C('*'))     !=  NOTFOUND          &&
-          value.Find(_L("COUNT(*)"), true)  ==  XSTRING_NOTFOUND)
+          value.Find(NL("COUNT(*)"), true)  ==  XSTRING_NOTFOUND)
         {
           DB_SQL_STRING error;
           database->ClearPreviousErrors();
-          error.Set(_L("Wildcard * is discouraged and therefore disabled in this implementation"));
+          error.Set(NL("Wildcard * is discouraged and therefore disabled in this implementation"));
           database->Error(error.Get());
 
           return false;
@@ -169,7 +169,7 @@ bool POSTGRESQL_QUERY::Execute()
 
       if(database->IsTransactionStarted() && hascursor && cursorname.GetSize())
         {
-          cursordeclare.Format(_L("DECLARE %s CURSOR FOR "), cursorname.Get());
+          cursordeclare.Format(NL("DECLARE %s CURSOR FOR "), cursorname.Get());
         }
 
       query.Add(cursordeclare);
@@ -212,7 +212,7 @@ bool POSTGRESQL_QUERY::Execute()
       statementtype.Set(cmdstatus);
 
       // Prepare result
-      if(statementtype.Find(_L("select"), true) != NOTFOUND)
+      if(statementtype.Find(NL("select"), true) != NOTFOUND)
         {
           if(result)
             {
@@ -229,7 +229,7 @@ bool POSTGRESQL_QUERY::Execute()
                   DB_SQL_ERROR* error = GEN_NEW DB_SQL_ERROR(DB_SQL_ERROR_TYPE_MEMORY_ERROR);
                   if (!error) return false;
 
-                  error->description.Set(_L("not enought memory for result"));
+                  error->description.Set(NL("not enought memory for result"));
                   database->GetErrorList()->Add(error);
 
                   if(database->IsTransactionStarted()) database->Rollback();
@@ -288,7 +288,7 @@ bool POSTGRESQL_QUERY::ClearCursor()
   if(hascursor && cursorname.GetSize()>0)
     {
       DB_SQL_STRING close;
-      close.Format(_L("CLOSE %s"), this->cursorname.Get());
+      close.Format(NL("CLOSE %s"), this->cursorname.Get());
 
       XBUFFER oem;
       
@@ -345,7 +345,7 @@ bool POSTGRESQL_QUERY::BindParametersToQuery()
           DB_SQL_ERROR* error = GEN_NEW DB_SQL_ERROR(DB_SQL_ERROR_TYPE_MEMORY_ERROR);
           if(!error) return false;
 
-          error->description.Set(_L("not enought memory for statements"));
+          error->description.Set(NL("not enought memory for statements"));
           database->GetErrorList()->Add(error);
 
           if(database->IsTransactionStarted())  database->Rollback();
@@ -361,7 +361,7 @@ bool POSTGRESQL_QUERY::BindParametersToQuery()
           DB_SQL_ERROR* error=GEN_NEW DB_SQL_ERROR(DB_SQL_ERROR_TYPE_MEMORY_ERROR);
           if(!error) return false;
 
-          error->description.Set(_L("not enought memory for statements"));
+          error->description.Set(NL("not enought memory for statements"));
           database->GetErrorList()->Add(error);
 
           if(database->IsTransactionStarted())  database->Rollback();
@@ -379,7 +379,7 @@ bool POSTGRESQL_QUERY::BindParametersToQuery()
           DB_SQL_ERROR* error = GEN_NEW DB_SQL_ERROR(DB_SQL_ERROR_TYPE_MEMORY_ERROR);
           if(!error) return false;
 
-          error->description.Set(_L("not enought memory for statements"));
+          error->description.Set(NL("not enought memory for statements"));
           database->GetErrorList()->Add(error);
 
           if(database->IsTransactionStarted()) database->Rollback();
@@ -400,7 +400,7 @@ bool POSTGRESQL_QUERY::BindParametersToQuery()
               DB_SQL_ERROR* error = GEN_NEW DB_SQL_ERROR(DB_SQL_ERROR_TYPE_UNKNOWN);
               if(!error) return false;
 
-              error->description.Set(_L("unknown type for binding"));
+              error->description.Set(NL("unknown type for binding"));
               database->GetErrorList()->Add(error);
 
               if (database->IsTransactionStarted())

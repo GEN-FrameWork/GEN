@@ -37,7 +37,7 @@
 
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
 
-#define VECTORFILEDXFCONFIG_SECTION_DFX_CFG    _L("DXF Config")
+#define VECTORFILEDXFCONFIG_SECTION_DFX_CFG    NL("DXF Config")
 
 
 

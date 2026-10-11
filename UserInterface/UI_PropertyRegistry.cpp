@@ -386,7 +386,7 @@ bool UI_PROPERTYREGISTRY::ResolveMarginEdges(UI_STYLE& style, bool use_css_trbl,
   bool   use_lengths = (lengthctx != NULL) && use_css_trbl;
 
   XSTRING marginstr;
-  if(style.Get(_L("margin"), marginstr))
+  if(style.Get(NL("margin"), marginstr))
     {
       any = true;
 
@@ -450,18 +450,18 @@ bool UI_PROPERTYREGISTRY::ResolveMarginEdges(UI_STYLE& style, bool use_css_trbl,
         {
           XSTRING mvstr;
           double  mv = 0.0;
-          if(style.Get(_L("margin-left")  , mvstr) && ResolveLengthToken(mvstr, *lengthctx, mv)) { left  = mv; any = true; }
-          if(style.Get(_L("margin-right") , mvstr) && ResolveLengthToken(mvstr, *lengthctx, mv)) { right = mv; any = true; }
-          if(style.Get(_L("margin-top")   , mvstr) && ResolveLengthToken(mvstr, *lengthctx, mv)) { up    = mv; any = true; }
-          if(style.Get(_L("margin-bottom"), mvstr) && ResolveLengthToken(mvstr, *lengthctx, mv)) { down  = mv; any = true; }
+          if(style.Get(NL("margin-left")  , mvstr) && ResolveLengthToken(mvstr, *lengthctx, mv)) { left  = mv; any = true; }
+          if(style.Get(NL("margin-right") , mvstr) && ResolveLengthToken(mvstr, *lengthctx, mv)) { right = mv; any = true; }
+          if(style.Get(NL("margin-top")   , mvstr) && ResolveLengthToken(mvstr, *lengthctx, mv)) { up    = mv; any = true; }
+          if(style.Get(NL("margin-bottom"), mvstr) && ResolveLengthToken(mvstr, *lengthctx, mv)) { down  = mv; any = true; }
         }
        else
         {
           double mv = 0.0;
-          if(style.Get(_L("margin-left")  , mv)) { left  = mv; any = true; }
-          if(style.Get(_L("margin-right") , mv)) { right = mv; any = true; }
-          if(style.Get(_L("margin-top")   , mv)) { up    = mv; any = true; }
-          if(style.Get(_L("margin-bottom"), mv)) { down  = mv; any = true; }
+          if(style.Get(NL("margin-left")  , mv)) { left  = mv; any = true; }
+          if(style.Get(NL("margin-right") , mv)) { right = mv; any = true; }
+          if(style.Get(NL("margin-top")   , mv)) { up    = mv; any = true; }
+          if(style.Get(NL("margin-bottom"), mv)) { down  = mv; any = true; }
         }
     }
 

@@ -122,17 +122,17 @@ bool APPFLOWCFG::DoVariableMapping()
   //---------------------------------------------------------------------------------------------------------------------------------------------------------------
 
   #ifdef APPFLOW_CFG_GENERAL_ACTIVE  
-  AddRemark(APPFLOW_CFG_SECTION_GENERAL, _L("--------------------------------------------------------------------------------------------------------------------------------------------"), 0, 1);
-  AddRemark(APPFLOW_CFG_SECTION_GENERAL, _L(" General section of configuration"), 0, 2);
+  AddRemark(APPFLOW_CFG_SECTION_GENERAL, NL("--------------------------------------------------------------------------------------------------------------------------------------------"), 0, 1);
+  AddRemark(APPFLOW_CFG_SECTION_GENERAL, NL(" General section of configuration"), 0, 2);
 
-  AddValue(XFILECFG_VALUETYPE_STRING, APPFLOW_CFG_SECTION_GENERAL, APPFLOW_CFG_SCRAPERWEBSCRIPTURLDOWNLOAD, &scraperwebscripturldownload, _L("Scrapper WEB Script URL download"), APPFLOW_CFG_DEFAULT_REMARK_COLUMN);
-  AddValue(XFILECFG_VALUETYPE_STRING, APPFLOW_CFG_SECTION_GENERAL, APPFLOW_CFG_SHOWDETAILINFO, &showdetailinfo, _L("Show Detail info"), APPFLOW_CFG_DEFAULT_REMARK_COLUMN);
+  AddValue(XFILECFG_VALUETYPE_STRING, APPFLOW_CFG_SECTION_GENERAL, APPFLOW_CFG_SCRAPERWEBSCRIPTURLDOWNLOAD, &scraperwebscripturldownload, NL("Scrapper WEB Script URL download"), APPFLOW_CFG_DEFAULT_REMARK_COLUMN);
+  AddValue(XFILECFG_VALUETYPE_STRING, APPFLOW_CFG_SECTION_GENERAL, APPFLOW_CFG_SHOWDETAILINFO, &showdetailinfo, NL("Show Detail info"), APPFLOW_CFG_DEFAULT_REMARK_COLUMN);
 
   #ifdef XTRACE_ACTIVE
-  XFILECFGVALUE* CFGvalue = AddValueSecuence<XSTRING>(XFILECFG_VALUETYPE_STRING, APPFLOW_CFG_SECTION_GENERAL, APPFLOW_CFG_TRACETARGET, _L("%02d"), XTRACE_MINNTARGETS
+  XFILECFGVALUE* CFGvalue = AddValueSecuence<XSTRING>(XFILECFG_VALUETYPE_STRING, APPFLOW_CFG_SECTION_GENERAL, APPFLOW_CFG_TRACETARGET, NL("%02d"), XTRACE_MINNTARGETS
                                                                                                             , XTRACE_MAXNTARGETS
                                                                                                             , tracetargets
-                                                                                                            , ntracetargets                                                                                                   , _L("eXtended Trace Aim ")                                                , APPFLOW_CFG_DEFAULT_REMARK_COLUMN);
+                                                                                                            , ntracetargets                                                                                                   , NL("eXtended Trace Aim ")                                                , APPFLOW_CFG_DEFAULT_REMARK_COLUMN);
   if(CFGvalue) 
     { 
       CFGvalue->SetModeRemoteMix((XFILECFG_MODEREMOTEMIX)(CFGvalue->GetModeRemoteMix() | XFILECFG_MODEREMOTEMIX_NOTDELADDKEYS));
@@ -143,152 +143,152 @@ bool APPFLOWCFG::DoVariableMapping()
   //---------------------------------------------------------------------------------------------------------------------------------------------------------------
 
   #ifdef APPFLOW_CFG_CHECKRESOURCESHARDWARE_ACTIVE
-  AddRemark(APPFLOW_CFG_SECTION_CHECKRESOURCESHARDWARE, _L("--------------------------------------------------------------------------------------------------------------------------------------------"), 0, 1);
-  AddRemark(APPFLOW_CFG_SECTION_CHECKRESOURCESHARDWARE, _L(" Check resources section of configuration"), 0, 2);
+  AddRemark(APPFLOW_CFG_SECTION_CHECKRESOURCESHARDWARE, NL("--------------------------------------------------------------------------------------------------------------------------------------------"), 0, 1);
+  AddRemark(APPFLOW_CFG_SECTION_CHECKRESOURCESHARDWARE, NL(" Check resources section of configuration"), 0, 2);
 
-  AddValue(XFILECFG_VALUETYPE_INT, APPFLOW_CFG_SECTION_CHECKRESOURCESHARDWARE, APPFLOW_CFG_CHECKRESOURCESHARDWARE_MEMSTATUSCHECKCADENCE, &checkresourceshardware_memstatuscheckcadence, _L("System Memory status check cadence"), APPFLOW_CFG_DEFAULT_REMARK_COLUMN);
-  AddValue(XFILECFG_VALUETYPE_INT, APPFLOW_CFG_SECTION_CHECKRESOURCESHARDWARE, APPFLOW_CFG_CHECKRESOURCESHARDWARE_MEMSTATUSLIMITPERCENT, &checkresourceshardware_memstatuslimitpercent, _L("System Memory free Limit percent"), APPFLOW_CFG_DEFAULT_REMARK_COLUMN);
-  AddValue(XFILECFG_VALUETYPE_INT, APPFLOW_CFG_SECTION_CHECKRESOURCESHARDWARE, APPFLOW_CFG_CHECKRESOURCESHARDWARE_TOTALCPUUSAGECHECKCADENCE, &checkresourceshardware_totalcpuusagecheckcadence, _L("System Total CPU usage cadence"), APPFLOW_CFG_DEFAULT_REMARK_COLUMN);
-  AddValue(XFILECFG_VALUETYPE_INT, APPFLOW_CFG_SECTION_CHECKRESOURCESHARDWARE, APPFLOW_CFG_CHECKRESOURCESHARDWARE_TOTALCPUUSAGELIMITPERCENT, &checkresourceshardware_totalcpuusagelimitpercent, _L("System Total CPU limit percent"), APPFLOW_CFG_DEFAULT_REMARK_COLUMN);  
-  AddValue(XFILECFG_VALUETYPE_STRING, APPFLOW_CFG_SECTION_CHECKRESOURCESHARDWARE, APPFLOW_CFG_CHECKRESOURCESHARDWARE_APPCPUUSAGEPROCESSNAME, &checkresourceshardware_appcpuusageprocessname, _L("System App CPU usage process name"), APPFLOW_CFG_DEFAULT_REMARK_COLUMN);
-  AddValue(XFILECFG_VALUETYPE_INT, APPFLOW_CFG_SECTION_CHECKRESOURCESHARDWARE, APPFLOW_CFG_CHECKRESOURCESHARDWARE_APPCPUUSAGECHECKCADENCE, &checkresourceshardware_appcpuusagecheckcadence, _L("System App CPU usage cadence"), APPFLOW_CFG_DEFAULT_REMARK_COLUMN);
-  AddValue(XFILECFG_VALUETYPE_INT, APPFLOW_CFG_SECTION_CHECKRESOURCESHARDWARE, APPFLOW_CFG_CHECKRESOURCESHARDWARE_APPCPUUSAGELIMITPERCENT, &checkresourceshardware_appcpuusagelimitpercent, _L("System App CPU limit percent"), APPFLOW_CFG_DEFAULT_REMARK_COLUMN);    
+  AddValue(XFILECFG_VALUETYPE_INT, APPFLOW_CFG_SECTION_CHECKRESOURCESHARDWARE, APPFLOW_CFG_CHECKRESOURCESHARDWARE_MEMSTATUSCHECKCADENCE, &checkresourceshardware_memstatuscheckcadence, NL("System Memory status check cadence"), APPFLOW_CFG_DEFAULT_REMARK_COLUMN);
+  AddValue(XFILECFG_VALUETYPE_INT, APPFLOW_CFG_SECTION_CHECKRESOURCESHARDWARE, APPFLOW_CFG_CHECKRESOURCESHARDWARE_MEMSTATUSLIMITPERCENT, &checkresourceshardware_memstatuslimitpercent, NL("System Memory free Limit percent"), APPFLOW_CFG_DEFAULT_REMARK_COLUMN);
+  AddValue(XFILECFG_VALUETYPE_INT, APPFLOW_CFG_SECTION_CHECKRESOURCESHARDWARE, APPFLOW_CFG_CHECKRESOURCESHARDWARE_TOTALCPUUSAGECHECKCADENCE, &checkresourceshardware_totalcpuusagecheckcadence, NL("System Total CPU usage cadence"), APPFLOW_CFG_DEFAULT_REMARK_COLUMN);
+  AddValue(XFILECFG_VALUETYPE_INT, APPFLOW_CFG_SECTION_CHECKRESOURCESHARDWARE, APPFLOW_CFG_CHECKRESOURCESHARDWARE_TOTALCPUUSAGELIMITPERCENT, &checkresourceshardware_totalcpuusagelimitpercent, NL("System Total CPU limit percent"), APPFLOW_CFG_DEFAULT_REMARK_COLUMN);  
+  AddValue(XFILECFG_VALUETYPE_STRING, APPFLOW_CFG_SECTION_CHECKRESOURCESHARDWARE, APPFLOW_CFG_CHECKRESOURCESHARDWARE_APPCPUUSAGEPROCESSNAME, &checkresourceshardware_appcpuusageprocessname, NL("System App CPU usage process name"), APPFLOW_CFG_DEFAULT_REMARK_COLUMN);
+  AddValue(XFILECFG_VALUETYPE_INT, APPFLOW_CFG_SECTION_CHECKRESOURCESHARDWARE, APPFLOW_CFG_CHECKRESOURCESHARDWARE_APPCPUUSAGECHECKCADENCE, &checkresourceshardware_appcpuusagecheckcadence, NL("System App CPU usage cadence"), APPFLOW_CFG_DEFAULT_REMARK_COLUMN);
+  AddValue(XFILECFG_VALUETYPE_INT, APPFLOW_CFG_SECTION_CHECKRESOURCESHARDWARE, APPFLOW_CFG_CHECKRESOURCESHARDWARE_APPCPUUSAGELIMITPERCENT, &checkresourceshardware_appcpuusagelimitpercent, NL("System App CPU limit percent"), APPFLOW_CFG_DEFAULT_REMARK_COLUMN);    
   #endif
 
   //---------------------------------------------------------------------------------------------------------------------------------------------------------------
 
   #ifdef APPFLOW_CFG_INTERNETSERVICES_ACTIVE
-  AddRemark(APPFLOW_CFG_SECTION_INTERNETSERVICES, _L("--------------------------------------------------------------------------------------------------------------------------------------------"), 0, 1);
-  AddRemark(APPFLOW_CFG_SECTION_INTERNETSERVICES, _L(" Internet services section of configuration"), 0, 2);
+  AddRemark(APPFLOW_CFG_SECTION_INTERNETSERVICES, NL("--------------------------------------------------------------------------------------------------------------------------------------------"), 0, 1);
+  AddRemark(APPFLOW_CFG_SECTION_INTERNETSERVICES, NL(" Internet services section of configuration"), 0, 2);
 
-  AddValue(XFILECFG_VALUETYPE_INT, APPFLOW_CFG_SECTION_INTERNETSERVICES, APPFLOW_CFG_INTERNETSERVICES_CHECKINTERNETSTATUSCADENCE, &internetservices_checkinternetstatuscadence, _L("Internet connection status cadence"), APPFLOW_CFG_DEFAULT_REMARK_COLUMN);
-  AddValue(XFILECFG_VALUETYPE_BOOLEAN, APPFLOW_CFG_SECTION_INTERNETSERVICES, APPFLOW_CFG_INTERNETSERVICES_DONOTLETINTERNETCONNECTIONMATTER, &internetservices_donotletinternetconnectionmatter, _L("Do not let Internet connection matter"), APPFLOW_CFG_DEFAULT_REMARK_COLUMN); 
-  AddValue(XFILECFG_VALUETYPE_INT, APPFLOW_CFG_SECTION_INTERNETSERVICES, APPFLOW_CFG_INTERNETSERVICES_CHECKIPSCHANGECADENCE, &internetservices_checkipschangecadence, _L("Internet IP Change Cadence"), APPFLOW_CFG_DEFAULT_REMARK_COLUMN);
-  AddValue(XFILECFG_VALUETYPE_INT, APPFLOW_CFG_SECTION_INTERNETSERVICES, APPFLOW_CFG_INTERNETSERVICES_UPDATETIMEBYNTPCADENCE, &internetservices_updatetimebyntpcadence, _L("Internet update time by NTP cadence"), APPFLOW_CFG_DEFAULT_REMARK_COLUMN);
+  AddValue(XFILECFG_VALUETYPE_INT, APPFLOW_CFG_SECTION_INTERNETSERVICES, APPFLOW_CFG_INTERNETSERVICES_CHECKINTERNETSTATUSCADENCE, &internetservices_checkinternetstatuscadence, NL("Internet connection status cadence"), APPFLOW_CFG_DEFAULT_REMARK_COLUMN);
+  AddValue(XFILECFG_VALUETYPE_BOOLEAN, APPFLOW_CFG_SECTION_INTERNETSERVICES, APPFLOW_CFG_INTERNETSERVICES_DONOTLETINTERNETCONNECTIONMATTER, &internetservices_donotletinternetconnectionmatter, NL("Do not let Internet connection matter"), APPFLOW_CFG_DEFAULT_REMARK_COLUMN); 
+  AddValue(XFILECFG_VALUETYPE_INT, APPFLOW_CFG_SECTION_INTERNETSERVICES, APPFLOW_CFG_INTERNETSERVICES_CHECKIPSCHANGECADENCE, &internetservices_checkipschangecadence, NL("Internet IP Change Cadence"), APPFLOW_CFG_DEFAULT_REMARK_COLUMN);
+  AddValue(XFILECFG_VALUETYPE_INT, APPFLOW_CFG_SECTION_INTERNETSERVICES, APPFLOW_CFG_INTERNETSERVICES_UPDATETIMEBYNTPCADENCE, &internetservices_updatetimebyntpcadence, NL("Internet update time by NTP cadence"), APPFLOW_CFG_DEFAULT_REMARK_COLUMN);
 
-  AddValueSecuence<XSTRING>(XFILECFG_VALUETYPE_STRING, APPFLOW_CFG_SECTION_INTERNETSERVICES,  APPFLOW_CFG_INTERNETSERVICES_UPDATETIMENTPSERVER, _L("%02d") , 3, XFILECFG_DEFAULTMAXSECUENCEENTRYS
+  AddValueSecuence<XSTRING>(XFILECFG_VALUETYPE_STRING, APPFLOW_CFG_SECTION_INTERNETSERVICES,  APPFLOW_CFG_INTERNETSERVICES_UPDATETIMENTPSERVER, NL("%02d") , 3, XFILECFG_DEFAULTMAXSECUENCEENTRYS
                                                                                                                                                             , internetservices_updatetimentpservers
-                                                                                                                                                            , internetservices_nupdatetimentpservers                          , _L("Internet update NTP Server")                                         , APPFLOW_CFG_DEFAULT_REMARK_COLUMN); 
+                                                                                                                                                            , internetservices_nupdatetimentpservers                          , NL("Internet update NTP Server")                                         , APPFLOW_CFG_DEFAULT_REMARK_COLUMN); 
 
-  AddValue(XFILECFG_VALUETYPE_INT, APPFLOW_CFG_SECTION_INTERNETSERVICES, APPFLOW_CFG_INTERNETSERVICES_UPDATETIMENTPMERIDIANDIFFERENCE, &internetservices_updatetimentpmeridiandifference, _L("Internet update meridian difference"), APPFLOW_CFG_DEFAULT_REMARK_COLUMN);
-  AddValue(XFILECFG_VALUETYPE_BOOLEAN, APPFLOW_CFG_SECTION_INTERNETSERVICES, APPFLOW_CFG_INTERNETSERVICES_UPDATETIMENTPUSEDAYLIGHTSAVING, &internetservices_updatetimentpusedaylightsaving, _L("Internet update time day light saving"), APPFLOW_CFG_DEFAULT_REMARK_COLUMN);
+  AddValue(XFILECFG_VALUETYPE_INT, APPFLOW_CFG_SECTION_INTERNETSERVICES, APPFLOW_CFG_INTERNETSERVICES_UPDATETIMENTPMERIDIANDIFFERENCE, &internetservices_updatetimentpmeridiandifference, NL("Internet update meridian difference"), APPFLOW_CFG_DEFAULT_REMARK_COLUMN);
+  AddValue(XFILECFG_VALUETYPE_BOOLEAN, APPFLOW_CFG_SECTION_INTERNETSERVICES, APPFLOW_CFG_INTERNETSERVICES_UPDATETIMENTPUSEDAYLIGHTSAVING, &internetservices_updatetimentpusedaylightsaving, NL("Internet update time day light saving"), APPFLOW_CFG_DEFAULT_REMARK_COLUMN);
 
   #ifdef APPFLOW_CFG_DNSRESOLVER_ACTIVE
-  AddRemark(APPFLOW_CFG_SECTION_DNSRESOLVER, _L("--------------------------------------------------------------------------------------------------------------------------------------------"), 0, 1);
-  AddRemark(APPFLOW_CFG_SECTION_DNSRESOLVER, _L(" DNS resolved section of configuration"), 0, 2); 
+  AddRemark(APPFLOW_CFG_SECTION_DNSRESOLVER, NL("--------------------------------------------------------------------------------------------------------------------------------------------"), 0, 1);
+  AddRemark(APPFLOW_CFG_SECTION_DNSRESOLVER, NL(" DNS resolved section of configuration"), 0, 2); 
 
-  AddValueSecuence<XSTRING>(XFILECFG_VALUETYPE_STRING, APPFLOW_CFG_SECTION_DNSRESOLVER, APPFLOW_CFG_DNSRESOLVER_HOSTRESOLVED, _L("%02d") , 3, XFILECFG_DEFAULTMAXSECUENCEENTRYS
+  AddValueSecuence<XSTRING>(XFILECFG_VALUETYPE_STRING, APPFLOW_CFG_SECTION_DNSRESOLVER, APPFLOW_CFG_DNSRESOLVER_HOSTRESOLVED, NL("%02d") , 3, XFILECFG_DEFAULTMAXSECUENCEENTRYS
                                                                                                                                           , hostsresolved
-                                                                                                                                          , nhostsresolved                                                                    , _L("Host resolved for DNS ")                                     , APPFLOW_CFG_DEFAULT_REMARK_COLUMN);
-  AddValueSecuence<XSTRING>(XFILECFG_VALUETYPE_STRING, APPFLOW_CFG_SECTION_DNSRESOLVER, APPFLOW_CFG_DNSRESOLVER_DNSSERVER   , _L("%02d") , 3, XFILECFG_DEFAULTMAXSECUENCEENTRYS
-                                                                                                                                          , DNSservers, nDNSservers                                                           , _L("Server for DNS ")                                            , APPFLOW_CFG_DEFAULT_REMARK_COLUMN);
+                                                                                                                                          , nhostsresolved                                                                    , NL("Host resolved for DNS ")                                     , APPFLOW_CFG_DEFAULT_REMARK_COLUMN);
+  AddValueSecuence<XSTRING>(XFILECFG_VALUETYPE_STRING, APPFLOW_CFG_SECTION_DNSRESOLVER, APPFLOW_CFG_DNSRESOLVER_DNSSERVER   , NL("%02d") , 3, XFILECFG_DEFAULTMAXSECUENCEENTRYS
+                                                                                                                                          , DNSservers, nDNSservers                                                           , NL("Server for DNS ")                                            , APPFLOW_CFG_DEFAULT_REMARK_COLUMN);
   #endif
 
   #ifdef APPFLOW_CFG_DYNDNSMANAGER_ACTIVE
-  AddRemark(APPFLOW_CFG_DYNDNSMANAGER_URL, _L("--------------------------------------------------------------------------------------------------------------------------------------------"), 0, 1);
-  AddRemark(APPFLOW_CFG_DYNDNSMANAGER_URL, _L(" DynDNS Manager section of iguration"), 0, 2);
+  AddRemark(APPFLOW_CFG_DYNDNSMANAGER_URL, NL("--------------------------------------------------------------------------------------------------------------------------------------------"), 0, 1);
+  AddRemark(APPFLOW_CFG_DYNDNSMANAGER_URL, NL(" DynDNS Manager section of iguration"), 0, 2);
 
-  AddValueSecuence<XSTRING>(XFILECFG_VALUETYPE_STRING, APPFLOW_CFG_SECTION_DYNDNSMANAGER,  APPFLOW_CFG_DYNDNSMANAGER_URL, _L("%02d")     , 3, XFILECFG_DEFAULTMAXSECUENCEENTRYS
+  AddValueSecuence<XSTRING>(XFILECFG_VALUETYPE_STRING, APPFLOW_CFG_SECTION_DYNDNSMANAGER,  APPFLOW_CFG_DYNDNSMANAGER_URL, NL("%02d")     , 3, XFILECFG_DEFAULTMAXSECUENCEENTRYS
                                                                                                                                           , dnsmanager_urls
-                                                                                                                                          , dnsmanager_nurls                                                                  , _L("DynDNS Manager URL to assign")                                       , APPFLOW_CFG_DEFAULT_REMARK_COLUMN);
+                                                                                                                                          , dnsmanager_nurls                                                                  , NL("DynDNS Manager URL to assign")                                       , APPFLOW_CFG_DEFAULT_REMARK_COLUMN);
   #endif
   #endif
 
   //---------------------------------------------------------------------------------------------------------------------------------------------------------------
 
   #ifdef APPFLOW_CFG_DIOLOCATION_ACTIVE
-  AddRemark(APPFLOW_CFG_SECTION_LOCATION, _L("--------------------------------------------------------------------------------------------------------------------------------------------"), 0, 1);
-  AddRemark(APPFLOW_CFG_SECTION_LOCATION, _L(" Location info section of configuration"), 0, 2);
+  AddRemark(APPFLOW_CFG_SECTION_LOCATION, NL("--------------------------------------------------------------------------------------------------------------------------------------------"), 0, 1);
+  AddRemark(APPFLOW_CFG_SECTION_LOCATION, NL(" Location info section of configuration"), 0, 2);
   
-  AddValue(XFILECFG_VALUETYPE_STRING, APPFLOW_CFG_SECTION_LOCATION, APPFLOW_CFG_LOCATION_STREET, &location_street, _L("Location street"), APPFLOW_CFG_DEFAULT_REMARK_COLUMN);
-  AddValue(XFILECFG_VALUETYPE_STRING, APPFLOW_CFG_SECTION_LOCATION, APPFLOW_CFG_LOCATION_TOWN, &location_city, _L("Location city"), APPFLOW_CFG_DEFAULT_REMARK_COLUMN);
-  AddValue(XFILECFG_VALUETYPE_STRING, APPFLOW_CFG_SECTION_LOCATION, APPFLOW_CFG_LOCATION_STATE, &location_state, _L("Location state"), APPFLOW_CFG_DEFAULT_REMARK_COLUMN);
-  AddValue(XFILECFG_VALUETYPE_STRING, APPFLOW_CFG_SECTION_LOCATION, APPFLOW_CFG_LOCATION_COUNTRY, &location_country, _L("Location country"), APPFLOW_CFG_DEFAULT_REMARK_COLUMN);
-  AddValue(XFILECFG_VALUETYPE_INT, APPFLOW_CFG_SECTION_LOCATION, APPFLOW_CFG_LOCATION_POSTALCODE, &location_postalcode, _L("Location postal code"), APPFLOW_CFG_DEFAULT_REMARK_COLUMN);
+  AddValue(XFILECFG_VALUETYPE_STRING, APPFLOW_CFG_SECTION_LOCATION, APPFLOW_CFG_LOCATION_STREET, &location_street, NL("Location street"), APPFLOW_CFG_DEFAULT_REMARK_COLUMN);
+  AddValue(XFILECFG_VALUETYPE_STRING, APPFLOW_CFG_SECTION_LOCATION, APPFLOW_CFG_LOCATION_TOWN, &location_city, NL("Location city"), APPFLOW_CFG_DEFAULT_REMARK_COLUMN);
+  AddValue(XFILECFG_VALUETYPE_STRING, APPFLOW_CFG_SECTION_LOCATION, APPFLOW_CFG_LOCATION_STATE, &location_state, NL("Location state"), APPFLOW_CFG_DEFAULT_REMARK_COLUMN);
+  AddValue(XFILECFG_VALUETYPE_STRING, APPFLOW_CFG_SECTION_LOCATION, APPFLOW_CFG_LOCATION_COUNTRY, &location_country, NL("Location country"), APPFLOW_CFG_DEFAULT_REMARK_COLUMN);
+  AddValue(XFILECFG_VALUETYPE_INT, APPFLOW_CFG_SECTION_LOCATION, APPFLOW_CFG_LOCATION_POSTALCODE, &location_postalcode, NL("Location postal code"), APPFLOW_CFG_DEFAULT_REMARK_COLUMN);
   #endif
 
   //---------------------------------------------------------------------------------------------------------------------------------------------------------------
 
   #ifdef APPFLOW_CFG_APPUPDATE_ACTIVE
-  AddRemark(APPFLOW_CFG_SECTION_APPLICATIONUPDATE, _L("--------------------------------------------------------------------------------------------------------------------------------------------"), 0, 1);
-  AddRemark(APPFLOW_CFG_SECTION_APPLICATIONUPDATE, _L(" Application Update section of configuration"), 0, 2);
+  AddRemark(APPFLOW_CFG_SECTION_APPLICATIONUPDATE, NL("--------------------------------------------------------------------------------------------------------------------------------------------"), 0, 1);
+  AddRemark(APPFLOW_CFG_SECTION_APPLICATIONUPDATE, NL(" Application Update section of configuration"), 0, 2);
 
-  AddValue(XFILECFG_VALUETYPE_BOOLEAN, APPFLOW_CFG_SECTION_APPLICATIONUPDATE, APPFLOW_CFG_APPLICATIONUPDATE_ISACTIVE, &applicationupdate_isactive, _L("Application Update is active"), APPFLOW_CFG_DEFAULT_REMARK_COLUMN);
-  AddValue(XFILECFG_VALUETYPE_STRING, APPFLOW_CFG_SECTION_APPLICATIONUPDATE, APPFLOW_CFG_APPLICATIONUPDATE_URL, &applicationupdate_URL, _L("Application Update URL"), APPFLOW_CFG_DEFAULT_REMARK_COLUMN);      
-  AddValue(XFILECFG_VALUETYPE_INT, APPFLOW_CFG_SECTION_APPLICATIONUPDATE, APPFLOW_CFG_APPLICATIONUPDATE_PORT, &applicationupdate_port, _L("Application Update port"), APPFLOW_CFG_DEFAULT_REMARK_COLUMN);
-  AddValue(XFILECFG_VALUETYPE_INT, APPFLOW_CFG_SECTION_APPLICATIONUPDATE, APPFLOW_CFG_APPLICATIONUPDATE_CHECKCADENCE, &applicationupdate_checkcadence, _L("Application Update check cadence"), APPFLOW_CFG_DEFAULT_REMARK_COLUMN);
-  AddValue(XFILECFG_VALUETYPE_STRING, APPFLOW_CFG_SECTION_APPLICATIONUPDATE, APPFLOW_CFG_APPLICATIONUPDATE_CHECKTIME, &applicationupdate_checktime, _L("Application Update check time"), APPFLOW_CFG_DEFAULT_REMARK_COLUMN);
-  AddValue(XFILECFG_VALUETYPE_INT, APPFLOW_CFG_SECTION_APPLICATIONUPDATE, APPFLOW_CFG_APPLICATIONUPDATE_MAXRESTORATIONS, &applicationupdate_maxrestorations, _L("Application Update maximum number of restorations"), APPFLOW_CFG_DEFAULT_REMARK_COLUMN);
+  AddValue(XFILECFG_VALUETYPE_BOOLEAN, APPFLOW_CFG_SECTION_APPLICATIONUPDATE, APPFLOW_CFG_APPLICATIONUPDATE_ISACTIVE, &applicationupdate_isactive, NL("Application Update is active"), APPFLOW_CFG_DEFAULT_REMARK_COLUMN);
+  AddValue(XFILECFG_VALUETYPE_STRING, APPFLOW_CFG_SECTION_APPLICATIONUPDATE, APPFLOW_CFG_APPLICATIONUPDATE_URL, &applicationupdate_URL, NL("Application Update URL"), APPFLOW_CFG_DEFAULT_REMARK_COLUMN);      
+  AddValue(XFILECFG_VALUETYPE_INT, APPFLOW_CFG_SECTION_APPLICATIONUPDATE, APPFLOW_CFG_APPLICATIONUPDATE_PORT, &applicationupdate_port, NL("Application Update port"), APPFLOW_CFG_DEFAULT_REMARK_COLUMN);
+  AddValue(XFILECFG_VALUETYPE_INT, APPFLOW_CFG_SECTION_APPLICATIONUPDATE, APPFLOW_CFG_APPLICATIONUPDATE_CHECKCADENCE, &applicationupdate_checkcadence, NL("Application Update check cadence"), APPFLOW_CFG_DEFAULT_REMARK_COLUMN);
+  AddValue(XFILECFG_VALUETYPE_STRING, APPFLOW_CFG_SECTION_APPLICATIONUPDATE, APPFLOW_CFG_APPLICATIONUPDATE_CHECKTIME, &applicationupdate_checktime, NL("Application Update check time"), APPFLOW_CFG_DEFAULT_REMARK_COLUMN);
+  AddValue(XFILECFG_VALUETYPE_INT, APPFLOW_CFG_SECTION_APPLICATIONUPDATE, APPFLOW_CFG_APPLICATIONUPDATE_MAXRESTORATIONS, &applicationupdate_maxrestorations, NL("Application Update maximum number of restorations"), APPFLOW_CFG_DEFAULT_REMARK_COLUMN);
   #endif
 
 
   #ifdef APPFLOW_CFG_WEBSERVER_ACTIVE
-  AddRemark(APPFLOW_CFG_SECTION_WEBSERVER, _L("--------------------------------------------------------------------------------------------------------------------------------------------"), 0, 1);
-  AddRemark(APPFLOW_CFG_SECTION_WEBSERVER, _L(" Web server section of configuration"), 0, 2);
+  AddRemark(APPFLOW_CFG_SECTION_WEBSERVER, NL("--------------------------------------------------------------------------------------------------------------------------------------------"), 0, 1);
+  AddRemark(APPFLOW_CFG_SECTION_WEBSERVER, NL(" Web server section of configuration"), 0, 2);
 
-  AddValue(XFILECFG_VALUETYPE_STRING, APPFLOW_CFG_SECTION_WEBSERVER, APPFLOW_CFG_WEBSERVER_LOCALADDR, &webserver_localaddr, _L("Local IP for the WEB server"), APPFLOW_CFG_DEFAULT_REMARK_COLUMN);
-  AddValue(XFILECFG_VALUETYPE_INT, APPFLOW_CFG_SECTION_WEBSERVER, APPFLOW_CFG_WEBSERVER_PORT, &webserver_port, _L("Port for the WEB server"), APPFLOW_CFG_DEFAULT_REMARK_COLUMN);
-  AddValue(XFILECFG_VALUETYPE_INT, APPFLOW_CFG_SECTION_WEBSERVER, APPFLOW_CFG_WEBSERVER_TIMEOUTTOSERVERPAGE, &webserver_timeouttoserverpage, _L("Timeout for the WEB server"), APPFLOW_CFG_DEFAULT_REMARK_COLUMN);
-  AddValue(XFILECFG_VALUETYPE_BOOLEAN, APPFLOW_CFG_SECTION_WEBSERVER, APPFLOW_CFG_WEBSERVER_AUTHENTICATEDACCESS, &webserver_isauthenticatedaccess, _L("Authenticate access for the WEB server"), APPFLOW_CFG_DEFAULT_REMARK_COLUMN);
-  AddValue(XFILECFG_VALUETYPE_STRING, APPFLOW_CFG_SECTION_WEBSERVER, APPFLOW_CFG_WEBSERVER_LOGIN, &webserver_login, _L("Login (user) for the WEB server"), APPFLOW_CFG_DEFAULT_REMARK_COLUMN);
-  AddValue(XFILECFG_VALUETYPE_STRING, APPFLOW_CFG_SECTION_WEBSERVER, APPFLOW_CFG_WEBSERVER_PASSWORD, &webserver_password, _L("Password for the WEB server"), APPFLOW_CFG_DEFAULT_REMARK_COLUMN);
-  AddValue(XFILECFG_VALUETYPE_STRING, APPFLOW_CFG_SECTION_WEBSERVER, APPFLOW_CFG_WEBSERVER_PATH_RESOURCES, &webserver_path_resources, _L("Path resources for the WEB server"), APPFLOW_CFG_DEFAULT_REMARK_COLUMN);
-  AddValue(XFILECFG_VALUETYPE_STRING, APPFLOW_CFG_SECTION_WEBSERVER, APPFLOW_CFG_WEBSERVER_PATH_PHP, &webserver_path_PHP, _L("Path instalation PHP for the WEB server"), APPFLOW_CFG_DEFAULT_REMARK_COLUMN);
+  AddValue(XFILECFG_VALUETYPE_STRING, APPFLOW_CFG_SECTION_WEBSERVER, APPFLOW_CFG_WEBSERVER_LOCALADDR, &webserver_localaddr, NL("Local IP for the WEB server"), APPFLOW_CFG_DEFAULT_REMARK_COLUMN);
+  AddValue(XFILECFG_VALUETYPE_INT, APPFLOW_CFG_SECTION_WEBSERVER, APPFLOW_CFG_WEBSERVER_PORT, &webserver_port, NL("Port for the WEB server"), APPFLOW_CFG_DEFAULT_REMARK_COLUMN);
+  AddValue(XFILECFG_VALUETYPE_INT, APPFLOW_CFG_SECTION_WEBSERVER, APPFLOW_CFG_WEBSERVER_TIMEOUTTOSERVERPAGE, &webserver_timeouttoserverpage, NL("Timeout for the WEB server"), APPFLOW_CFG_DEFAULT_REMARK_COLUMN);
+  AddValue(XFILECFG_VALUETYPE_BOOLEAN, APPFLOW_CFG_SECTION_WEBSERVER, APPFLOW_CFG_WEBSERVER_AUTHENTICATEDACCESS, &webserver_isauthenticatedaccess, NL("Authenticate access for the WEB server"), APPFLOW_CFG_DEFAULT_REMARK_COLUMN);
+  AddValue(XFILECFG_VALUETYPE_STRING, APPFLOW_CFG_SECTION_WEBSERVER, APPFLOW_CFG_WEBSERVER_LOGIN, &webserver_login, NL("Login (user) for the WEB server"), APPFLOW_CFG_DEFAULT_REMARK_COLUMN);
+  AddValue(XFILECFG_VALUETYPE_STRING, APPFLOW_CFG_SECTION_WEBSERVER, APPFLOW_CFG_WEBSERVER_PASSWORD, &webserver_password, NL("Password for the WEB server"), APPFLOW_CFG_DEFAULT_REMARK_COLUMN);
+  AddValue(XFILECFG_VALUETYPE_STRING, APPFLOW_CFG_SECTION_WEBSERVER, APPFLOW_CFG_WEBSERVER_PATH_RESOURCES, &webserver_path_resources, NL("Path resources for the WEB server"), APPFLOW_CFG_DEFAULT_REMARK_COLUMN);
+  AddValue(XFILECFG_VALUETYPE_STRING, APPFLOW_CFG_SECTION_WEBSERVER, APPFLOW_CFG_WEBSERVER_PATH_PHP, &webserver_path_PHP, NL("Path instalation PHP for the WEB server"), APPFLOW_CFG_DEFAULT_REMARK_COLUMN);
 
   #ifdef DIO_STREAMTLS_ACTIVE
-  AddValue(XFILECFG_VALUETYPE_STRING, APPFLOW_CFG_SECTION_WEBSERVER, APPFLOW_CFG_WEBSERVER_PATH_PRIVATEKEY, &webserver_path_privatekey, _L("Path to the private key file for the WEB server (empty = no TLS)"), APPFLOW_CFG_DEFAULT_REMARK_COLUMN);
-  AddValue(XFILECFG_VALUETYPE_STRING, APPFLOW_CFG_SECTION_WEBSERVER, APPFLOW_CFG_WEBSERVER_PATH_CERTIFICATE, &webserver_path_certificate, _L("Path to the certificate file for the WEB server (empty = no TLS)"), APPFLOW_CFG_DEFAULT_REMARK_COLUMN);
-  AddValue(XFILECFG_VALUETYPE_STRING, APPFLOW_CFG_SECTION_WEBSERVER, APPFLOW_CFG_WEBSERVER_PRIVATEKEY_PASSWORD, &webserver_privatekey_password, _L("Password for encrypted TLS private key / PKCS#12 container"), APPFLOW_CFG_DEFAULT_REMARK_COLUMN);
+  AddValue(XFILECFG_VALUETYPE_STRING, APPFLOW_CFG_SECTION_WEBSERVER, APPFLOW_CFG_WEBSERVER_PATH_PRIVATEKEY, &webserver_path_privatekey, NL("Path to the private key file for the WEB server (empty = no TLS)"), APPFLOW_CFG_DEFAULT_REMARK_COLUMN);
+  AddValue(XFILECFG_VALUETYPE_STRING, APPFLOW_CFG_SECTION_WEBSERVER, APPFLOW_CFG_WEBSERVER_PATH_CERTIFICATE, &webserver_path_certificate, NL("Path to the certificate file for the WEB server (empty = no TLS)"), APPFLOW_CFG_DEFAULT_REMARK_COLUMN);
+  AddValue(XFILECFG_VALUETYPE_STRING, APPFLOW_CFG_SECTION_WEBSERVER, APPFLOW_CFG_WEBSERVER_PRIVATEKEY_PASSWORD, &webserver_privatekey_password, NL("Password for encrypted TLS private key / PKCS#12 container"), APPFLOW_CFG_DEFAULT_REMARK_COLUMN);
   #endif
   #endif
 
 
   #ifdef APPFLOW_CFG_ALERTS_ACTIVE
-  AddRemark(APPFLOW_CFG_SECTION_ALERTS, _L("--------------------------------------------------------------------------------------------------------------------------------------------"), 0, 1);
-  AddRemark(APPFLOW_CFG_SECTION_ALERTS, _L(" Alerts section of configuration"), 0, 2);
+  AddRemark(APPFLOW_CFG_SECTION_ALERTS, NL("--------------------------------------------------------------------------------------------------------------------------------------------"), 0, 1);
+  AddRemark(APPFLOW_CFG_SECTION_ALERTS, NL(" Alerts section of configuration"), 0, 2);
   
-  AddValue(XFILECFG_VALUETYPE_BOOLEAN, APPFLOW_CFG_SECTION_ALERTS, APPFLOW_CFG_ALERTS_ISACTIVE, &alerts_isactive, _L("De/Activate all alerts"), APPFLOW_CFG_DEFAULT_REMARK_COLUMN);
-  AddValueSecuence<XSTRING>(XFILECFG_VALUETYPE_STRING, APPFLOW_CFG_SECTION_ALERTS,  APPFLOW_CFG_ALERTS_CONDITION, _L("%02d")     , 3, XFILECFG_DEFAULTMAXSECUENCEENTRYS
+  AddValue(XFILECFG_VALUETYPE_BOOLEAN, APPFLOW_CFG_SECTION_ALERTS, APPFLOW_CFG_ALERTS_ISACTIVE, &alerts_isactive, NL("De/Activate all alerts"), APPFLOW_CFG_DEFAULT_REMARK_COLUMN);
+  AddValueSecuence<XSTRING>(XFILECFG_VALUETYPE_STRING, APPFLOW_CFG_SECTION_ALERTS,  APPFLOW_CFG_ALERTS_CONDITION, NL("%02d")     , 3, XFILECFG_DEFAULTMAXSECUENCEENTRYS
                                                                                                                                   , alerts_conditions
-                                                                                                                                  , alerts_nconditions                                                                        , _L("Conditions for alerts")                                              , APPFLOW_CFG_DEFAULT_REMARK_COLUMN);
+                                                                                                                                  , alerts_nconditions                                                                        , NL("Conditions for alerts")                                              , APPFLOW_CFG_DEFAULT_REMARK_COLUMN);
 
-  AddValue(XFILECFG_VALUETYPE_BOOLEAN, APPFLOW_CFG_SECTION_ALERTS, APPFLOW_CFG_ALERTS_SMTP_ISACTIVE, &alerts_SMTP_isactive, _L("De/Activate alerts by SMTP"), APPFLOW_CFG_DEFAULT_REMARK_COLUMN);
-  AddValue(XFILECFG_VALUETYPE_STRING, APPFLOW_CFG_SECTION_ALERTS, APPFLOW_CFG_ALERTS_SMTP_URL, &alerts_SMTP_URL, _L("URL for the SMTP server"), APPFLOW_CFG_DEFAULT_REMARK_COLUMN);
-  AddValue(XFILECFG_VALUETYPE_INT, APPFLOW_CFG_SECTION_ALERTS, APPFLOW_CFG_ALERTS_SMTP_PORT, &alerts_SMTP_port, _L("Port for the SMTP server"), APPFLOW_CFG_DEFAULT_REMARK_COLUMN);
-  AddValue(XFILECFG_VALUETYPE_STRING, APPFLOW_CFG_SECTION_ALERTS, APPFLOW_CFG_ALERTS_SMTP_LOGIN, &alerts_SMTP_login, _L("Login for the SMTP server"), APPFLOW_CFG_DEFAULT_REMARK_COLUMN);
-  AddValue(XFILECFG_VALUETYPE_STRING, APPFLOW_CFG_SECTION_ALERTS, APPFLOW_CFG_ALERTS_SMTP_PASSWORD, &alerts_SMTP_password, _L("Password for the SMTP server"), APPFLOW_CFG_DEFAULT_REMARK_COLUMN);
-  AddValue(XFILECFG_VALUETYPE_STRING, APPFLOW_CFG_SECTION_ALERTS, APPFLOW_CFG_ALERTS_SMTP_SENDER, &alerts_SMTP_sender, _L("Sender for the SMTP server"), APPFLOW_CFG_DEFAULT_REMARK_COLUMN);
-  AddValueSecuence<XSTRING>(XFILECFG_VALUETYPE_STRING, APPFLOW_CFG_SECTION_ALERTS, APPFLOW_CFG_ALERTS_SMTP_RECIPIENT, _L("%02d") , 3, XFILECFG_DEFAULTMAXSECUENCEENTRYS
+  AddValue(XFILECFG_VALUETYPE_BOOLEAN, APPFLOW_CFG_SECTION_ALERTS, APPFLOW_CFG_ALERTS_SMTP_ISACTIVE, &alerts_SMTP_isactive, NL("De/Activate alerts by SMTP"), APPFLOW_CFG_DEFAULT_REMARK_COLUMN);
+  AddValue(XFILECFG_VALUETYPE_STRING, APPFLOW_CFG_SECTION_ALERTS, APPFLOW_CFG_ALERTS_SMTP_URL, &alerts_SMTP_URL, NL("URL for the SMTP server"), APPFLOW_CFG_DEFAULT_REMARK_COLUMN);
+  AddValue(XFILECFG_VALUETYPE_INT, APPFLOW_CFG_SECTION_ALERTS, APPFLOW_CFG_ALERTS_SMTP_PORT, &alerts_SMTP_port, NL("Port for the SMTP server"), APPFLOW_CFG_DEFAULT_REMARK_COLUMN);
+  AddValue(XFILECFG_VALUETYPE_STRING, APPFLOW_CFG_SECTION_ALERTS, APPFLOW_CFG_ALERTS_SMTP_LOGIN, &alerts_SMTP_login, NL("Login for the SMTP server"), APPFLOW_CFG_DEFAULT_REMARK_COLUMN);
+  AddValue(XFILECFG_VALUETYPE_STRING, APPFLOW_CFG_SECTION_ALERTS, APPFLOW_CFG_ALERTS_SMTP_PASSWORD, &alerts_SMTP_password, NL("Password for the SMTP server"), APPFLOW_CFG_DEFAULT_REMARK_COLUMN);
+  AddValue(XFILECFG_VALUETYPE_STRING, APPFLOW_CFG_SECTION_ALERTS, APPFLOW_CFG_ALERTS_SMTP_SENDER, &alerts_SMTP_sender, NL("Sender for the SMTP server"), APPFLOW_CFG_DEFAULT_REMARK_COLUMN);
+  AddValueSecuence<XSTRING>(XFILECFG_VALUETYPE_STRING, APPFLOW_CFG_SECTION_ALERTS, APPFLOW_CFG_ALERTS_SMTP_RECIPIENT, NL("%02d") , 3, XFILECFG_DEFAULTMAXSECUENCEENTRYS
                                                                                                                                   , alerts_SMTP_recipients
-                                                                                                                                  , alerts_SMTP_nrecipients                                                                   , _L("Recipient for sending by SMTP")                                      , APPFLOW_CFG_DEFAULT_REMARK_COLUMN);
+                                                                                                                                  , alerts_SMTP_nrecipients                                                                   , NL("Recipient for sending by SMTP")                                      , APPFLOW_CFG_DEFAULT_REMARK_COLUMN);
   
-  AddValue(XFILECFG_VALUETYPE_BOOLEAN, APPFLOW_CFG_SECTION_ALERTS, APPFLOW_CFG_ALERTS_SMS_ISACTIVE, &alerts_SMS_isactive, _L("De/Activate alerts by SMS"), APPFLOW_CFG_DEFAULT_REMARK_COLUMN);
-  AddValueSecuence<XSTRING>(XFILECFG_VALUETYPE_STRING, APPFLOW_CFG_SECTION_ALERTS, APPFLOW_CFG_ALERTS_SMS_RECIPIENT, _L("%02d")  , 3, XFILECFG_DEFAULTMAXSECUENCEENTRYS
+  AddValue(XFILECFG_VALUETYPE_BOOLEAN, APPFLOW_CFG_SECTION_ALERTS, APPFLOW_CFG_ALERTS_SMS_ISACTIVE, &alerts_SMS_isactive, NL("De/Activate alerts by SMS"), APPFLOW_CFG_DEFAULT_REMARK_COLUMN);
+  AddValueSecuence<XSTRING>(XFILECFG_VALUETYPE_STRING, APPFLOW_CFG_SECTION_ALERTS, APPFLOW_CFG_ALERTS_SMS_RECIPIENT, NL("%02d")  , 3, XFILECFG_DEFAULTMAXSECUENCEENTRYS
                                                                                                                                   , alerts_SMS_recipients
-                                                                                                                                  , alerts_SMS_nrecipients                                                                    , _L("Recipient for sending by SMS")                                       , APPFLOW_CFG_DEFAULT_REMARK_COLUMN);
+                                                                                                                                  , alerts_SMS_nrecipients                                                                    , NL("Recipient for sending by SMS")                                       , APPFLOW_CFG_DEFAULT_REMARK_COLUMN);
 
-  AddValue(XFILECFG_VALUETYPE_BOOLEAN, APPFLOW_CFG_SECTION_ALERTS, APPFLOW_CFG_ALERTS_WEB_ISACTIVE, &alerts_WEB_isactive, _L("De/Activate alerts by WEB"), APPFLOW_CFG_DEFAULT_REMARK_COLUMN);
-  AddValue(XFILECFG_VALUETYPE_BOOLEAN, APPFLOW_CFG_SECTION_ALERTS, APPFLOW_CFG_ALERTS_WEB_UISUSEGET, &alerts_WEB_isuseget, _L("Use Get for alerts by WEB"), APPFLOW_CFG_DEFAULT_REMARK_COLUMN);
-  AddValueSecuence<XSTRING>(XFILECFG_VALUETYPE_STRING, APPFLOW_CFG_SECTION_ALERTS, APPFLOW_CFG_ALERTS_WEB_RECIPIENT, _L("%02d")  , 3, XFILECFG_DEFAULTMAXSECUENCEENTRYS
+  AddValue(XFILECFG_VALUETYPE_BOOLEAN, APPFLOW_CFG_SECTION_ALERTS, APPFLOW_CFG_ALERTS_WEB_ISACTIVE, &alerts_WEB_isactive, NL("De/Activate alerts by WEB"), APPFLOW_CFG_DEFAULT_REMARK_COLUMN);
+  AddValue(XFILECFG_VALUETYPE_BOOLEAN, APPFLOW_CFG_SECTION_ALERTS, APPFLOW_CFG_ALERTS_WEB_UISUSEGET, &alerts_WEB_isuseget, NL("Use Get for alerts by WEB"), APPFLOW_CFG_DEFAULT_REMARK_COLUMN);
+  AddValueSecuence<XSTRING>(XFILECFG_VALUETYPE_STRING, APPFLOW_CFG_SECTION_ALERTS, APPFLOW_CFG_ALERTS_WEB_RECIPIENT, NL("%02d")  , 3, XFILECFG_DEFAULTMAXSECUENCEENTRYS
                                                                                                                                   , alerts_WEB_recipients
-                                                                                                                                  , alerts_WEB_nrecipients                                                                    , _L("Recipient for sending by WEB")                                       , APPFLOW_CFG_DEFAULT_REMARK_COLUMN);
+                                                                                                                                  , alerts_WEB_nrecipients                                                                    , NL("Recipient for sending by WEB")                                       , APPFLOW_CFG_DEFAULT_REMARK_COLUMN);
 
-  AddValue(XFILECFG_VALUETYPE_BOOLEAN, APPFLOW_CFG_SECTION_ALERTS, APPFLOW_CFG_ALERTS_UDP_ISACTIVE, &alerts_UDP_isactive, _L("De/Activate alerts by UDP"), APPFLOW_CFG_DEFAULT_REMARK_COLUMN);
-  AddValue(XFILECFG_VALUETYPE_INT, APPFLOW_CFG_SECTION_ALERTS, APPFLOW_CFG_ALERTS_UDP_PORT, &alerts_UDP_port, _L("Port for the UDP server"), APPFLOW_CFG_DEFAULT_REMARK_COLUMN);
-  AddValueSecuence<XSTRING>(XFILECFG_VALUETYPE_STRING, APPFLOW_CFG_SECTION_ALERTS, APPFLOW_CFG_ALERTS_UDP_RECIPIENT, _L("%02d")  , 3, XFILECFG_DEFAULTMAXSECUENCEENTRYS
+  AddValue(XFILECFG_VALUETYPE_BOOLEAN, APPFLOW_CFG_SECTION_ALERTS, APPFLOW_CFG_ALERTS_UDP_ISACTIVE, &alerts_UDP_isactive, NL("De/Activate alerts by UDP"), APPFLOW_CFG_DEFAULT_REMARK_COLUMN);
+  AddValue(XFILECFG_VALUETYPE_INT, APPFLOW_CFG_SECTION_ALERTS, APPFLOW_CFG_ALERTS_UDP_PORT, &alerts_UDP_port, NL("Port for the UDP server"), APPFLOW_CFG_DEFAULT_REMARK_COLUMN);
+  AddValueSecuence<XSTRING>(XFILECFG_VALUETYPE_STRING, APPFLOW_CFG_SECTION_ALERTS, APPFLOW_CFG_ALERTS_UDP_RECIPIENT, NL("%02d")  , 3, XFILECFG_DEFAULTMAXSECUENCEENTRYS
                                                                                                                                   , alerts_UDP_recipients
-                                                                                                                                  , alerts_UDP_nrecipients                                                                    , _L("Recipient for sending by UDP")                                       , APPFLOW_CFG_DEFAULT_REMARK_COLUMN);
+                                                                                                                                  , alerts_UDP_nrecipients                                                                    , NL("Recipient for sending by UDP")                                       , APPFLOW_CFG_DEFAULT_REMARK_COLUMN);
   #endif
 
 
   #ifdef APPFLOW_CFG_SCRIPTS_ACTIVE
 
-  AddRemark(APPFLOW_CFG_SECTION_LOG, _L("--------------------------------------------------------------------------------------------------------------------------------------------"), 0, 1);
-  AddRemark(APPFLOW_CFG_SECTION_LOG, _L(" Scripts list"), 0, 2);
+  AddRemark(APPFLOW_CFG_SECTION_LOG, NL("--------------------------------------------------------------------------------------------------------------------------------------------"), 0, 1);
+  AddRemark(APPFLOW_CFG_SECTION_LOG, NL(" Scripts list"), 0, 2);
 
-  AddValueSecuence<XSTRING>(XFILECFG_VALUETYPE_STRING, APPFLOW_CFG_SECTION_SCRIPTS    , APPFLOW_CFG_SCRIPTS_SCRIPT                , _L("%03d"), 1, 999 
+  AddValueSecuence<XSTRING>(XFILECFG_VALUETYPE_STRING, APPFLOW_CFG_SECTION_SCRIPTS    , APPFLOW_CFG_SCRIPTS_SCRIPT                , NL("%03d"), 1, 999 
                                                                                                                                   , scripts_list
-                                                                                                                                  , scripts_nscripts                                                                          , _L("Scripts")                                                            , APPFLOW_CFG_DEFAULT_REMARK_COLUMN);
+                                                                                                                                  , scripts_nscripts                                                                          , NL("Scripts")                                                            , APPFLOW_CFG_DEFAULT_REMARK_COLUMN);
 
 
 
@@ -297,17 +297,17 @@ bool APPFLOWCFG::DoVariableMapping()
 
   #ifdef APPFLOW_CFG_LOG_ACTIVE
 
-  AddRemark(APPFLOW_CFG_SECTION_LOG, _L("--------------------------------------------------------------------------------------------------------------------------------------------"), 0, 1);
-  AddRemark(APPFLOW_CFG_SECTION_LOG, _L(" Log section of configuration"), 0, 2);
+  AddRemark(APPFLOW_CFG_SECTION_LOG, NL("--------------------------------------------------------------------------------------------------------------------------------------------"), 0, 1);
+  AddRemark(APPFLOW_CFG_SECTION_LOG, NL(" Log section of configuration"), 0, 2);
   
-  AddValue(XFILECFG_VALUETYPE_BOOLEAN, APPFLOW_CFG_SECTION_LOG, APPFLOW_CFG_LOG_ISACTIVE, &log_isactive, _L("De/Activate log generation"), APPFLOW_CFG_DEFAULT_REMARK_COLUMN);
-  AddValue(XFILECFG_VALUETYPE_BOOLEAN, APPFLOW_CFG_SECTION_LOG, APPFLOW_CFG_LOG_BACKUPISACTIVE, &log_backupisactive, _L("De/Activate backup for the log"), APPFLOW_CFG_DEFAULT_REMARK_COLUMN);
-  AddValue(XFILECFG_VALUETYPE_INT, APPFLOW_CFG_SECTION_LOG, APPFLOW_CFG_LOG_BACKUPMAXFILES, &log_backupmaxfiles, _L("Maximum number of backup files (ZIP)"), APPFLOW_CFG_DEFAULT_REMARK_COLUMN);
-  AddValue(XFILECFG_VALUETYPE_BOOLEAN, APPFLOW_CFG_SECTION_LOG, APPFLOW_CFG_LOG_BACKUPISCOMPRESS, &log_backupiscompress, _L("De/Activate compression in log backup"), APPFLOW_CFG_DEFAULT_REMARK_COLUMN);   
-  AddValue(XFILECFG_VALUETYPE_STRING, APPFLOW_CFG_SECTION_LOG, APPFLOW_CFG_LOG_ACTIVESECTIONSID, &log_activesectionsID, _L("Section filter by ID in the log"), APPFLOW_CFG_DEFAULT_REMARK_COLUMN);
-  AddValue(XFILECFG_VALUETYPE_MASK, APPFLOW_CFG_SECTION_LOG, APPFLOW_CFG_LOG_LEVELMASK, &log_levelmask, _L("Filter by level mask"), APPFLOW_CFG_DEFAULT_REMARK_COLUMN);
-  AddValue(XFILECFG_VALUETYPE_INT, APPFLOW_CFG_SECTION_LOG, APPFLOW_CFG_LOG_MAXSIZE, &log_maxsize, _L("Limit of the main file to perform the backup (in Kb)"), APPFLOW_CFG_DEFAULT_REMARK_COLUMN);
-  AddValue(XFILECFG_VALUETYPE_INT, APPFLOW_CFG_SECTION_LOG, APPFLOW_CFG_LOG_REDUCTIONPERCENT, &log_reductionpercent, _L("Reduction (percentage) of the main file when performing backup"), APPFLOW_CFG_DEFAULT_REMARK_COLUMN);
+  AddValue(XFILECFG_VALUETYPE_BOOLEAN, APPFLOW_CFG_SECTION_LOG, APPFLOW_CFG_LOG_ISACTIVE, &log_isactive, NL("De/Activate log generation"), APPFLOW_CFG_DEFAULT_REMARK_COLUMN);
+  AddValue(XFILECFG_VALUETYPE_BOOLEAN, APPFLOW_CFG_SECTION_LOG, APPFLOW_CFG_LOG_BACKUPISACTIVE, &log_backupisactive, NL("De/Activate backup for the log"), APPFLOW_CFG_DEFAULT_REMARK_COLUMN);
+  AddValue(XFILECFG_VALUETYPE_INT, APPFLOW_CFG_SECTION_LOG, APPFLOW_CFG_LOG_BACKUPMAXFILES, &log_backupmaxfiles, NL("Maximum number of backup files (ZIP)"), APPFLOW_CFG_DEFAULT_REMARK_COLUMN);
+  AddValue(XFILECFG_VALUETYPE_BOOLEAN, APPFLOW_CFG_SECTION_LOG, APPFLOW_CFG_LOG_BACKUPISCOMPRESS, &log_backupiscompress, NL("De/Activate compression in log backup"), APPFLOW_CFG_DEFAULT_REMARK_COLUMN);   
+  AddValue(XFILECFG_VALUETYPE_STRING, APPFLOW_CFG_SECTION_LOG, APPFLOW_CFG_LOG_ACTIVESECTIONSID, &log_activesectionsID, NL("Section filter by ID in the log"), APPFLOW_CFG_DEFAULT_REMARK_COLUMN);
+  AddValue(XFILECFG_VALUETYPE_MASK, APPFLOW_CFG_SECTION_LOG, APPFLOW_CFG_LOG_LEVELMASK, &log_levelmask, NL("Filter by level mask"), APPFLOW_CFG_DEFAULT_REMARK_COLUMN);
+  AddValue(XFILECFG_VALUETYPE_INT, APPFLOW_CFG_SECTION_LOG, APPFLOW_CFG_LOG_MAXSIZE, &log_maxsize, NL("Limit of the main file to perform the backup (in Kb)"), APPFLOW_CFG_DEFAULT_REMARK_COLUMN);
+  AddValue(XFILECFG_VALUETYPE_INT, APPFLOW_CFG_SECTION_LOG, APPFLOW_CFG_LOG_REDUCTIONPERCENT, &log_reductionpercent, NL("Reduction (percentage) of the main file when performing backup"), APPFLOW_CFG_DEFAULT_REMARK_COLUMN);
   #endif
 
   return true;
@@ -332,7 +332,7 @@ bool APPFLOWCFG::DoDefault()
   
 
   #ifdef APPFLOW_CFG_GENERAL_ACTIVE
-  showdetailinfo = _L("0000");
+  showdetailinfo = NL("0000");
   #ifdef XTRACE_ACTIVE
   SetDefaultTraceTargets();
   #endif
@@ -355,9 +355,9 @@ bool APPFLOWCFG::DoDefault()
   internetservices_donotletinternetconnectionmatter = false;
   internetservices_checkipschangecadence            = 3600;
   internetservices_updatetimebyntpcadence           = 4;
-  internetservices_updatetimentpservers.Get(0)->Set(_L("1.es.pool.ntp.org")); 
-  internetservices_updatetimentpservers.Get(1)->Set(_L("1.europe.pool.ntp.org")); 
-  internetservices_updatetimentpservers.Get(2)->Set(_L("3.europe.pool.ntp.org")); 
+  internetservices_updatetimentpservers.Get(0)->Set(NL("1.es.pool.ntp.org")); 
+  internetservices_updatetimentpservers.Get(1)->Set(NL("1.europe.pool.ntp.org")); 
+  internetservices_updatetimentpservers.Get(2)->Set(NL("3.europe.pool.ntp.org")); 
   internetservices_updatetimentpmeridiandifference  = APPFLOW_CFG_INTERNETSERVICES_UPDATETIMENTPMERIDIANDIFFERENCE_AUTO;
   internetservices_updatetimentpusedaylightsaving   = true;
   #endif
@@ -380,25 +380,25 @@ bool APPFLOWCFG::DoDefault()
   log_backupiscompress                              = true;
   log_activesectionsID.Empty();
   log_activesectionsID                             += APPFLOW_CFG_LOG_SECTIONID_INITIATION;
-  log_activesectionsID                             += _L(",");
+  log_activesectionsID                             += NL(",");
   log_activesectionsID                             += APPFLOW_CFG_LOG_SECTIONID_GENERIC;
-  log_activesectionsID                             += _L(",");
+  log_activesectionsID                             += NL(",");
   log_activesectionsID                             += APPFLOW_CFG_LOG_SECTIONID_STATUSAPP;
-  log_activesectionsID                             += _L(",");
+  log_activesectionsID                             += NL(",");
 
   #ifdef XFEEDBACK_CONTROL_ACTIVE  
   log_activesectionsID                             += XFEEDBACK_CONTROL_LOG_SECTIONID; 
-  log_activesectionsID                             += _L(","); 
+  log_activesectionsID                             += NL(","); 
   #endif
 
   #ifdef DIO_WEBSERVER_ACTIVE
   log_activesectionsID                             += DIOWEBSERVER_LOGSECTIONID;
-  log_activesectionsID                             += _L(",");
+  log_activesectionsID                             += NL(",");
   #endif
   
   #ifdef DIO_SSHREVERSE_ACTIVE
   log_activesectionsID                             += DIOSSHREVERSE_LOGSECTIONID;
-  log_activesectionsID                             += _L(",");
+  log_activesectionsID                             += NL(",");
   #endif
 
   log_activesectionsID                             += APPFLOW_CFG_LOG_SECTIONID_ENDING;
@@ -504,7 +504,7 @@ XWORD APPFLOWCFG::GetShowDetailInfo()
   XDWORD detail = 0x0000;
 
   showdetailinfo.ToUpperCase();
-  showdetailinfo.UnFormat(_L("%04X"), &detail);
+  showdetailinfo.UnFormat(NL("%04X"), &detail);
 
   return detail;
 }
@@ -521,7 +521,7 @@ XWORD APPFLOWCFG::GetShowDetailInfo()
 * --------------------------------------------------------------------------------------------------------------------*/
 void APPFLOWCFG::SetShowDetailInfo(XWORD detail)
 {
-  showdetailinfo.Format(_L("%04X"), detail);
+  showdetailinfo.Format(NL("%04X"), detail);
 }
 
 
@@ -593,7 +593,7 @@ bool APPFLOWCFG::SetAutomaticTraceTargets()
               XSTRING  aim;
 
               aim.AdjustSize(_MAXSTR);
-              debugcfg->UnFormat(_L("%d,%s"), &type, aim.Get());
+              debugcfg->UnFormat(NL("%d,%s"), &type, aim.Get());
               aim.AdjustSize();
 
               XTRACE_SETTARGET(c, (XTRACE_TYPE)type, aim.Get());
@@ -888,7 +888,7 @@ bool APPFLOWCFG::DNSResolver_GetHost(int index, XSTRING& host, XSTRING& IPresolv
   host.AdjustSize(_MAXSTR);
   IPresolved.AdjustSize(_MAXSTR);
 
-  hostsresolved.Get(index)->UnFormat(_L("%s,%s"), host.Get(), IPresolved.Get());
+  hostsresolved.Get(index)->UnFormat(NL("%s,%s"), host.Get(), IPresolved.Get());
 
   host.AdjustSize();
   IPresolved.AdjustSize();
@@ -1248,7 +1248,7 @@ bool APPFLOWCFG::Alerts_GetCondition(int index, XDWORD& conditionID, int& timeli
   timelimitforrepeat   = 0;
   everynumberoftimes   = 0;
 
-  string->UnFormat(_L("%d,%d,%d"), &conditionID, &timelimitforrepeat, &everynumberoftimes);
+  string->UnFormat(NL("%d,%d,%d"), &conditionID, &timelimitforrepeat, &everynumberoftimes);
 
   return true;
 }

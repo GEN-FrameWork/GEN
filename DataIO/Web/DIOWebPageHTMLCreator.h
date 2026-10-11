@@ -54,7 +54,7 @@ enum DIOWEBPAGEHTMLCREATORTAGXENGINESTATUS
   DIOWEBPAGEHTMLCREATORTAGXENGINESTATUS_FOUNDEND
 };
 
-#define DIOWEBPAGEHTMLCREATOR_TAGXENGINE   _L("GEN")
+#define DIOWEBPAGEHTMLCREATOR_TAGXENGINE   NL("GEN")
 
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
 

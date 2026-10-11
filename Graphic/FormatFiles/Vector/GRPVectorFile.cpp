@@ -287,16 +287,16 @@ XCHAR* GRPVECTORFILE::GetTypeText(GRPVECTORFILETYPE type)
   switch(type)
     {
       case GRPVECTORFILETYPE_UNKNOWN : 
-                           default   :  typeTXT = _L("Unknown");
+                           default   :  typeTXT = NL("Unknown");
                                         break;
 
       #ifdef GRP_VECTOR_FILE_DXF_ACTIVE
-      case GRPVECTORFILETYPE_DXF     :  typeTXT = _L("DXF");
+      case GRPVECTORFILETYPE_DXF     :  typeTXT = NL("DXF");
                                         break; 
       #endif     
 
       #ifdef GRP_VECTOR_FILE_SVG_ACTIVE
-      case GRPVECTORFILETYPE_SVG     :  typeTXT = _L("SVG");
+      case GRPVECTORFILETYPE_SVG     :  typeTXT = NL("SVG");
                                         break; 
       #endif     
     }

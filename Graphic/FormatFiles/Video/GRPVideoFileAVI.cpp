@@ -120,20 +120,20 @@ bool GRPVIDEOFILEAVI::Open(XCHAR* path)
   memset((XBYTE*)&streamheader, 0, sizeof(GRPVIDEOFILEAVI_STREAMHEADER));
   memset((XBYTE*)&bitmapheader, 0, sizeof(GRPVIDEOFILEAVI_BITMAPHEADER));
 
-  XFILERIFF_LIST* chunk_mainheader = fileRIFF->GetChunk(_L("avih"), _L("hdrl"));
+  XFILERIFF_LIST* chunk_mainheader = fileRIFF->GetChunk(NL("avih"), NL("hdrl"));
   if(!chunk_mainheader) return false;
   
   fileRIFF->GetChunkData(chunk_mainheader, (XBYTE*)&mainheader, sizedata);
 
-  XFILERIFF_LIST* strl_list = fileRIFF->GetList(_L("strl"), _L("hdrl"));
+  XFILERIFF_LIST* strl_list = fileRIFF->GetList(NL("strl"), NL("hdrl"));
   if(!strl_list) return false;
 
-  XFILERIFF_LIST* strh_chunk = fileRIFF->GetChunk(_L("strh"), _L("strl"));
+  XFILERIFF_LIST* strh_chunk = fileRIFF->GetChunk(NL("strh"), NL("strl"));
   if(!strh_chunk) return false;
 
   fileRIFF->GetChunkData(strh_chunk, (XBYTE*)&streamheader, sizedata);
   
-  XFILERIFF_LIST* strf_chunk = fileRIFF->GetChunk(_L("strf"), _L("strl"));
+  XFILERIFF_LIST* strf_chunk = fileRIFF->GetChunk(NL("strf"), NL("strl"));
   if(!strf_chunk) return false;
   
   fileRIFF->GetChunkData(strf_chunk, (XBYTE*)&bitmapheader, sizedata);
@@ -143,10 +143,10 @@ bool GRPVIDEOFILEAVI::Open(XCHAR* path)
   propertys.nframes     = mainheader.totalframes;
   propertys.framerate   = streamheader.rate;
 
-  frames_node = fileRIFF->GetListNode(_L("movi"));
+  frames_node = fileRIFF->GetListNode(NL("movi"));
   if(!frames_node) return false;
 
-  XFILERIFF_LIST* index_list = fileRIFF->GetChunk(_L("idx1"), _L("AVI "));
+  XFILERIFF_LIST* index_list = fileRIFF->GetChunk(NL("idx1"), NL("AVI "));
   if(!index_list) return false;
  
   fileRIFF->GetFileBase()->SetPosition(index_list->GetPositionFileData());
@@ -186,7 +186,7 @@ bool GRPVIDEOFILEAVI::Create(XCHAR* path, GRPVIDEOFILE_PROPERTYS& propertys)
   //--------------------------------------------------------------------
   // AVI (Root)
 
-  avi_node = fileRIFF->CreateListNode(_L("RIFF"), _L("AVI "));
+  avi_node = fileRIFF->CreateListNode(NL("RIFF"), NL("AVI "));
   if(!avi_node) return false;
 
   fileRIFF->UpdateFilePosition(avi_node);  
@@ -198,7 +198,7 @@ bool GRPVIDEOFILEAVI::Create(XCHAR* path, GRPVIDEOFILE_PROPERTYS& propertys)
   //--------------------------------------------------------------------
   // AVI->hdrl
 
-  hdrl_node = fileRIFF->CreateListNode(_L("LIST"), _L("hdrl"));
+  hdrl_node = fileRIFF->CreateListNode(NL("LIST"), NL("hdrl"));
   if(!hdrl_node) return false;
 
   fileRIFF->UpdateFilePosition(hdrl_node);  
@@ -210,7 +210,7 @@ bool GRPVIDEOFILEAVI::Create(XCHAR* path, GRPVIDEOFILE_PROPERTYS& propertys)
   //--------------------------------------------------------------------
   // AVI->hdrl->avih
 
-  avih_node = fileRIFF->CreateChunkNode(_L("avih"), sizeof(GRPVIDEOFILEAVI_MAINHEADER));
+  avih_node = fileRIFF->CreateChunkNode(NL("avih"), sizeof(GRPVIDEOFILEAVI_MAINHEADER));
   if(!avih_node) return false;
 
   memset((XBYTE*)&mainheader, 0, sizeof(GRPVIDEOFILEAVI_MAINHEADER));
@@ -239,7 +239,7 @@ bool GRPVIDEOFILEAVI::Create(XCHAR* path, GRPVIDEOFILE_PROPERTYS& propertys)
   //--------------------------------------------------------------------
   // AVI->hdrl->srtl
   
-  strl_node = fileRIFF->CreateListNode(_L("LIST"), _L("strl"));
+  strl_node = fileRIFF->CreateListNode(NL("LIST"), NL("strl"));
   if(!strl_node) return false;
 
   fileRIFF->UpdateFilePosition(strl_node);  
@@ -251,14 +251,14 @@ bool GRPVIDEOFILEAVI::Create(XCHAR* path, GRPVIDEOFILE_PROPERTYS& propertys)
   //--------------------------------------------------------------------
   // AVI->hdrl->srtl->strh
   
-  strh_node = fileRIFF->CreateChunkNode(_L("strh"), sizeof(GRPVIDEOFILEAVI_STREAMHEADER));
+  strh_node = fileRIFF->CreateChunkNode(NL("strh"), sizeof(GRPVIDEOFILEAVI_STREAMHEADER));
   if(!strh_node) return false;
 
   memset((XBYTE*)&streamheader, 0, sizeof(GRPVIDEOFILEAVI_STREAMHEADER));
 
   if(!propertys.framerate) propertys.framerate = GRPVIDEOFILE_DEFAULTFRAMERATE;
 
-  streamheader.fcctype              = fileRIFF->GetTypeFromString(_L("vids"));
+  streamheader.fcctype              = fileRIFF->GetTypeFromString(NL("vids"));
   streamheader.fcchandler           = fileRIFF->GetTypeFromString(propertys.codecstr.Get());  
   streamheader.flags                = 0;
   streamheader.priority             = 0;
@@ -285,7 +285,7 @@ bool GRPVIDEOFILEAVI::Create(XCHAR* path, GRPVIDEOFILE_PROPERTYS& propertys)
   //--------------------------------------------------------------------
   // AVI->hdrl->srtl->strf
   
-  strf_node = fileRIFF->CreateChunkNode(_L("strf"), sizeof(GRPVIDEOFILEAVI_BITMAPHEADER));
+  strf_node = fileRIFF->CreateChunkNode(NL("strf"), sizeof(GRPVIDEOFILEAVI_BITMAPHEADER));
   if(!strf_node) return false;
 
   memset((XBYTE*)&bitmapheader, 0, sizeof(GRPVIDEOFILEAVI_BITMAPHEADER));
@@ -311,7 +311,7 @@ bool GRPVIDEOFILEAVI::Create(XCHAR* path, GRPVIDEOFILE_PROPERTYS& propertys)
   //--------------------------------------------------------------------
   // AVI->MOVI
   
-  movi_node = fileRIFF->CreateListNode(_L("LIST"), _L("movi"));
+  movi_node = fileRIFF->CreateListNode(NL("LIST"), NL("movi"));
   if(!movi_node) return false;
 
   fileRIFF->UpdateFilePosition(movi_node);  
@@ -490,7 +490,7 @@ bool GRPVIDEOFILEAVI::CreateAndWriteJUNK(XFILERIFF_LIST_NODE* father_node, XDWOR
 {
   if(!father_node) return false;
 
-  XFILERIFF_LIST_NODE* junk_node = fileRIFF->CreateChunkNode(_L("JUNK"), datasize);
+  XFILERIFF_LIST_NODE* junk_node = fileRIFF->CreateChunkNode(NL("JUNK"), datasize);
   if(!junk_node) return false;
 
   XBYTE* data = GEN_NEW XBYTE[datasize];
@@ -524,7 +524,7 @@ bool GRPVIDEOFILEAVI::CreateIndexofFrames()
 
   XDWORD sizeindex = sizeof(GRPVIDEOFILEAVI_INDEXENTRY) * mainheader.totalframes;
   
-  XFILERIFF_LIST_NODE* index_node = fileRIFF->CreateChunkNode(_L("idx1"), sizeindex);
+  XFILERIFF_LIST_NODE* index_node = fileRIFF->CreateChunkNode(NL("idx1"), sizeindex);
   if(!index_node) return false;
 
   fileRIFF->UpdateFilePosition(index_node);    

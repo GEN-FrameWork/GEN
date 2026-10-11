@@ -103,78 +103,78 @@ bool POSTGRESQL_CONNECTION::Connect()
   DB_SQL_STRING databasePort;
   DB_SQL_STRING databaseTimeOut;
 
-  if(!FindOption(_L("URL"), &databaseUrl))
+  if(!FindOption(NL("URL"), &databaseUrl))
     {
-      database->Error(_L("DATABASE URL argument not supplied"));
+      database->Error(NL("DATABASE URL argument not supplied"));
       return false;
     }
 
-  if(!FindOption(_L("USER"), &databaseUser))
+  if(!FindOption(NL("USER"), &databaseUser))
     {
-      database->Error(_L("DATABASE User Name argument not supplied"));
+      database->Error(NL("DATABASE User Name argument not supplied"));
       return false;
     }
 
-  if(!FindOption(_L("PASSWORD"), &databasePassword))
+  if(!FindOption(NL("PASSWORD"), &databasePassword))
     {
-      database->Error(_L("DATABASE User Password argument not supplied"));
+      database->Error(NL("DATABASE User Password argument not supplied"));
       return false;
     }
 
-  if(!FindOption(_L("DATABASE"), &databaseName))
+  if(!FindOption(NL("DATABASE"), &databaseName))
     {
-      database->Error(_L("DATABASE Name argument not supplied"));
+      database->Error(NL("DATABASE Name argument not supplied"));
       return false;
     }
 
-  if(!FindOption(_L("PORT"), &databasePort))
+  if(!FindOption(NL("PORT"), &databasePort))
     {
-      database->Error(_L("DATABASE Port argument not supplied"));
+      database->Error(NL("DATABASE Port argument not supplied"));
       return false;
     }
 
-  FindOption(_L("TIMEOUT"), &databaseTimeOut);
+  FindOption(NL("TIMEOUT"), &databaseTimeOut);
 
   if(!databaseUrl.IsEmpty())
     {
-      connectionstring.Add(_L("host = "));
+      connectionstring.Add(NL("host = "));
       connectionstring.Add(databaseUrl);
-      connectionstring.Add(_L(" "));
+      connectionstring.Add(NL(" "));
     }
 
   if(!databaseUser.IsEmpty())
     {
-      connectionstring.Add(_L("user = "));
+      connectionstring.Add(NL("user = "));
       connectionstring.Add(databaseUser);
-      connectionstring.Add(_L(" "));
+      connectionstring.Add(NL(" "));
     }
 
   if(!databasePassword.IsEmpty())
     {
-      connectionstring.Add(_L("password = "));
+      connectionstring.Add(NL("password = "));
       connectionstring.Add(databasePassword);
-      connectionstring.Add(_L(" "));
+      connectionstring.Add(NL(" "));
     }
 
   if(!databaseName.IsEmpty())
     {
-      connectionstring.Add(_L("dbname = "));
+      connectionstring.Add(NL("dbname = "));
       connectionstring.Add(databaseName);
-      connectionstring.Add(_L(" "));
+      connectionstring.Add(NL(" "));
     }
 
   if(!databasePort.IsEmpty())
     {
-      connectionstring.Add(_L("port = "));
+      connectionstring.Add(NL("port = "));
       connectionstring.Add(databasePort);
-      connectionstring.Add(_L(" "));
+      connectionstring.Add(NL(" "));
     }
 
   if(!databaseTimeOut.IsEmpty())
     {
-      connectionstring.Add(_L("connect_timeout = "));
+      connectionstring.Add(NL("connect_timeout = "));
       connectionstring.Add(databaseTimeOut);
-      connectionstring.Add(_L(" "));
+      connectionstring.Add(NL(" "));
     }
 
   XBUFFER conninfo;

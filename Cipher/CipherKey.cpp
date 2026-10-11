@@ -131,34 +131,34 @@ XCHAR* CIPHERKEY::GetTypeStr()
   switch(type)
     {
       case CIPHERKEYTYPE_UNKNOWN                        : 
-                                  default               : nametype = _L("Unknown");                         break;                                                        
-      case CIPHERKEYTYPE_SYMMETRICAL                    : nametype = _L("Symmetrical");                     break;                                                                                                                
-      case CIPHERKEYTYPE_RSA_PUBLIC                     : nametype = _L("RSA public");                      break;                                                         
-      case CIPHERKEYTYPE_RSA_PRIVATE                    : nametype = _L("RSA private");                     break;                                                                                                                
-      case CIPHERKEYTYPE_ECDSA_SECP192R1_PUBLIC	        : nametype = _L("ECDSA secp192r1 public");          break;                                                        
-      case CIPHERKEYTYPE_ECDSA_SECP192R1_PRIVATE	      : nametype = _L("ECDSA secp192r1 private");         break;                                                        
-      case CIPHERKEYTYPE_ECDSA_SECP224R1_PUBLIC	        : nametype = _L("ECDSA secp224r1 public");          break;                                                        
-      case CIPHERKEYTYPE_ECDSA_SECP224R1_PRIVATE	      : nametype = _L("ECDSA secp224r1 private");         break;                                                        
-      case CIPHERKEYTYPE_ECDSA_SECP256R1_PUBLIC	        : nametype = _L("ECDSA secp256r1 public");          break;                                                        
-      case CIPHERKEYTYPE_ECDSA_SECP256R1_PRIVATE	      : nametype = _L("ECDSA secp256r1 private");         break;                                                        
-      case CIPHERKEYTYPE_ECDSA_SECP384R1_PUBLIC	        : nametype = _L("ECDSA secp384r1 public");          break;                                                        
-      case CIPHERKEYTYPE_ECDSA_SECP384R1_PRIVATE	      : nametype = _L("ECDSA secp384r1 private");         break;                                                        
-      case CIPHERKEYTYPE_ECDSA_SECP521R1_PUBLIC	        : nametype = _L("ECDSA secp521r1 public");          break;                                                        
-      case CIPHERKEYTYPE_ECDSA_SECP521R1_PRIVATE	      : nametype = _L("ECDSA secp521r1 private");         break;                                                        
-      case CIPHERKEYTYPE_ECDSA_SECP256K1_PUBLIC	        : nametype = _L("ECDSA secp256k1 public");          break;                                                        
-      case CIPHERKEYTYPE_ECDSA_SECP256K1_PRIVATE	      : nametype = _L("ECDSA secp256k1 private");         break;                                                        
-      case CIPHERKEYTYPE_ECDSA_SECT163K1_PUBLIC	        : nametype = _L("ECDSA sect163k1 public");          break;                                                        
-      case CIPHERKEYTYPE_ECDSA_SECT163K1_PRIVATE	      : nametype = _L("ECDSA sect163k1 private");         break;                                                        
-      case CIPHERKEYTYPE_ECDSA_SECT233K1_PUBLIC	        : nametype = _L("ECDSA sect233k1 public");          break;                                                        
-      case CIPHERKEYTYPE_ECDSA_SECT233K1_PRIVATE	      : nametype = _L("ECDSA sect233k1 private");         break;                                                        
-      case CIPHERKEYTYPE_ECDSA_BRAINPOOLP256R1_PUBLIC	  : nametype = _L("ECDSA brainpoolp256r1 public");    break;                                                        
-      case CIPHERKEYTYPE_ECDSA_BRAINPOOLP256R1_PRIVATE  : nametype = _L("ECDSA brainpoolp256r1 private");   break;                                                        
-      case CIPHERKEYTYPE_ECDSA_BRAINPOOLP384R1_PUBLIC	  : nametype = _L("ECDSA brainpoolp384r1 public");    break;                                                        
-      case CIPHERKEYTYPE_ECDSA_BRAINPOOLP384R1_PRIVATE  : nametype = _L("ECDSA brainpoolp384r1 private");   break;                                                        
-      case CIPHERKEYTYPE_ECDSA_BRAINPOOLP512R1_PUBLIC	  : nametype = _L("ECDSA brainpoolp512r1 public");    break;                                                                                                          
-      case CIPHERKEYTYPE_ECDSA_BRAINPOOLP512R1_PRIVATE  : nametype = _L("ECDSA brainpoolp512r1 private");   break;                                                        
-      case CIPHERKEYTYPE_ED25519_PUBLIC                  : nametype = _L("Ed25519 public");                   break;
-      case CIPHERKEYTYPE_ED25519_PRIVATE                 : nametype = _L("Ed25519 private");                  break;
+                                  default               : nametype = NL("Unknown");                         break;                                                        
+      case CIPHERKEYTYPE_SYMMETRICAL                    : nametype = NL("Symmetrical");                     break;                                                                                                                
+      case CIPHERKEYTYPE_RSA_PUBLIC                     : nametype = NL("RSA public");                      break;                                                         
+      case CIPHERKEYTYPE_RSA_PRIVATE                    : nametype = NL("RSA private");                     break;                                                                                                                
+      case CIPHERKEYTYPE_ECDSA_SECP192R1_PUBLIC	        : nametype = NL("ECDSA secp192r1 public");          break;                                                        
+      case CIPHERKEYTYPE_ECDSA_SECP192R1_PRIVATE	      : nametype = NL("ECDSA secp192r1 private");         break;                                                        
+      case CIPHERKEYTYPE_ECDSA_SECP224R1_PUBLIC	        : nametype = NL("ECDSA secp224r1 public");          break;                                                        
+      case CIPHERKEYTYPE_ECDSA_SECP224R1_PRIVATE	      : nametype = NL("ECDSA secp224r1 private");         break;                                                        
+      case CIPHERKEYTYPE_ECDSA_SECP256R1_PUBLIC	        : nametype = NL("ECDSA secp256r1 public");          break;                                                        
+      case CIPHERKEYTYPE_ECDSA_SECP256R1_PRIVATE	      : nametype = NL("ECDSA secp256r1 private");         break;                                                        
+      case CIPHERKEYTYPE_ECDSA_SECP384R1_PUBLIC	        : nametype = NL("ECDSA secp384r1 public");          break;                                                        
+      case CIPHERKEYTYPE_ECDSA_SECP384R1_PRIVATE	      : nametype = NL("ECDSA secp384r1 private");         break;                                                        
+      case CIPHERKEYTYPE_ECDSA_SECP521R1_PUBLIC	        : nametype = NL("ECDSA secp521r1 public");          break;                                                        
+      case CIPHERKEYTYPE_ECDSA_SECP521R1_PRIVATE	      : nametype = NL("ECDSA secp521r1 private");         break;                                                        
+      case CIPHERKEYTYPE_ECDSA_SECP256K1_PUBLIC	        : nametype = NL("ECDSA secp256k1 public");          break;                                                        
+      case CIPHERKEYTYPE_ECDSA_SECP256K1_PRIVATE	      : nametype = NL("ECDSA secp256k1 private");         break;                                                        
+      case CIPHERKEYTYPE_ECDSA_SECT163K1_PUBLIC	        : nametype = NL("ECDSA sect163k1 public");          break;                                                        
+      case CIPHERKEYTYPE_ECDSA_SECT163K1_PRIVATE	      : nametype = NL("ECDSA sect163k1 private");         break;                                                        
+      case CIPHERKEYTYPE_ECDSA_SECT233K1_PUBLIC	        : nametype = NL("ECDSA sect233k1 public");          break;                                                        
+      case CIPHERKEYTYPE_ECDSA_SECT233K1_PRIVATE	      : nametype = NL("ECDSA sect233k1 private");         break;                                                        
+      case CIPHERKEYTYPE_ECDSA_BRAINPOOLP256R1_PUBLIC	  : nametype = NL("ECDSA brainpoolp256r1 public");    break;                                                        
+      case CIPHERKEYTYPE_ECDSA_BRAINPOOLP256R1_PRIVATE  : nametype = NL("ECDSA brainpoolp256r1 private");   break;                                                        
+      case CIPHERKEYTYPE_ECDSA_BRAINPOOLP384R1_PUBLIC	  : nametype = NL("ECDSA brainpoolp384r1 public");    break;                                                        
+      case CIPHERKEYTYPE_ECDSA_BRAINPOOLP384R1_PRIVATE  : nametype = NL("ECDSA brainpoolp384r1 private");   break;                                                        
+      case CIPHERKEYTYPE_ECDSA_BRAINPOOLP512R1_PUBLIC	  : nametype = NL("ECDSA brainpoolp512r1 public");    break;                                                                                                          
+      case CIPHERKEYTYPE_ECDSA_BRAINPOOLP512R1_PRIVATE  : nametype = NL("ECDSA brainpoolp512r1 private");   break;                                                        
+      case CIPHERKEYTYPE_ED25519_PUBLIC                 : nametype = NL("Ed25519 public");                  break;
+      case CIPHERKEYTYPE_ED25519_PRIVATE                : nametype = NL("Ed25519 private");                 break;
     }
 
   return nametype;

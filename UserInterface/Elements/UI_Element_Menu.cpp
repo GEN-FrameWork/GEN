@@ -125,7 +125,7 @@ UI_ELEMENT_MENU::UI_ELEMENT_MENU()
 
   SetType(UI_ELEMENT_TYPE_MENU);
 
-  GetTypeString()->Set(_L("menu"));
+  GetTypeString()->Set(NL("menu"));
 }
 
 

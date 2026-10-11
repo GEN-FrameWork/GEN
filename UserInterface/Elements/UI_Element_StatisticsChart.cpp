@@ -91,7 +91,7 @@ UI_ELEMENT_STATISTICSCHART::UI_ELEMENT_STATISTICSCHART()
   Clean();
 
   SetType(UI_ELEMENT_TYPE_STATISTICSCHART);
-  GetTypeString()->Set(_L("statisticschart"));
+  GetTypeString()->Set(NL("statisticschart"));
 }
 
 
@@ -212,7 +212,7 @@ bool UI_ELEMENT_STATISTICSCHART::ClearData()
 * --------------------------------------------------------------------------------------------------------------------*/
 bool UI_ELEMENT_STATISTICSCHART::AddCategory(XCHAR* label)
 {
-  XSTRING* category = GEN_NEW XSTRING(label ? label : _L(""));
+  XSTRING* category = GEN_NEW XSTRING(label ? label : NL(""));
   if(!category) return false;
 
   if(!categories.Add(category))
@@ -324,11 +324,11 @@ bool UI_ELEMENT_STATISTICSCHART::SetSerieFromSamples(XCHAR* seriename, const flo
 
       if((c == 0) || (c == (count - 1)) || ((c % 5) == 0))
         {
-          label.Format(_L("%d"), c + 1);
+          label.Format(NL("%d"), c + 1);
         }
        else
         {
-          label.Set(_L(""));
+          label.Set(NL(""));
         }
 
       if(!AddCategory(label.Get())) return false;
@@ -374,7 +374,7 @@ bool UI_ELEMENT_STATISTICSCHART::SetColumnsFromValues(XCHAR* seriename, XCHAR** 
 
   for(int c=0; c<count; c++)
     {
-      if(!AddCategory(labels[c] ? labels[c] : _L(""))) return false;
+      if(!AddCategory(labels[c] ? labels[c] : NL(""))) return false;
     }
 
   if(!AddSerie(seriename, r, g, b)) return false;
@@ -664,7 +664,7 @@ bool UI_ELEMENT_STATISTICSCHART::RasterizeChartBitmap(GRP2DCANVAS* referencecanv
   for(XDWORD c=0; c<categories.GetSize(); c++)
     {
       XSTRING* category = categories.Get(c);
-      data->AddCategory(category ? category->Get() : _L(""));
+      data->AddCategory(category ? category->Get() : NL(""));
     }
 
   for(XDWORD s=0; s<series.GetSize(); s++)
@@ -862,7 +862,7 @@ void UI_ELEMENT_STATISTICSCHART::ReapplyStyleVisual()
   bag.FillFromCSSDeclarations(sheet, this);
 
   XSTRING v;
-  if(UI_PROPERTYREGISTRY::GetAliased(bag, _L("bckgrdcolor"), _L("background-color"), v))
+  if(UI_PROPERTYREGISTRY::GetAliased(bag, NL("bckgrdcolor"), NL("background-color"), v))
     {
       if(GetBackgroundColor()->SetFromString(v))
         {
@@ -871,7 +871,7 @@ void UI_ELEMENT_STATISTICSCHART::ReapplyStyleVisual()
         }
     }
 
-  if(bag.Get(_L("color"), v))
+  if(bag.Get(NL("color"), v))
     {
       if(GetColor()->SetFromString(v))
         {

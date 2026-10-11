@@ -234,7 +234,7 @@ bool XWINDOWSVIRTUALDESKTOPMANAGER::CreateNewDesktop(XCHAR* name, bool addexplor
 
   if(IsDesktopCreated(name))
     {
-      //XTRACE_PRINTCOLOR(1, _L("CreateNewDesktop [%s] -> is desktop created."), name);
+      //XTRACE_PRINTCOLOR(1, NL("CreateNewDesktop [%s] -> is desktop created."), name);
       return false;
     }
 
@@ -252,7 +252,7 @@ bool XWINDOWSVIRTUALDESKTOPMANAGER::CreateNewDesktop(XCHAR* name, bool addexplor
           pathexplorer.AdjustSize(_MAXSTR);
           GetWindowsDirectory(pathexplorer.Get(), _MAXSTR-1);
           pathexplorer.AdjustSize();
-          pathexplorer += _L("\\Explorer.Exe");
+          pathexplorer += NL("\\Explorer.Exe");
 
           LaunchApplication(pathexplorer.Get(), name);
         }
@@ -264,7 +264,7 @@ bool XWINDOWSVIRTUALDESKTOPMANAGER::CreateNewDesktop(XCHAR* name, bool addexplor
       status = true;
     }
 
-  //XTRACE_PRINTCOLOR((status?1:4), _L("CreateNewDesktop [%s] -> %s"), name, (status?_L("Ok"):_L("Error")));
+  //XTRACE_PRINTCOLOR((status?1:4), NL("CreateNewDesktop [%s] -> %s"), name, (status?NL("Ok"):NL("Error")));
 
   return status;
 }
@@ -308,14 +308,14 @@ bool XWINDOWSVIRTUALDESKTOPMANAGER::SwitchDesktop(XCHAR* desktopname, bool inher
 
   //HDESK hdesktoptoswitch = OpenDesktop(desktopname, DF_ALLOWOTHERACCOUNTHOOK, (inherit?TRUE:FALSE), GENERIC_ALL);
   HDESK hdesk = OpenDesktop(desktopname, 0, FALSE, MAXIMUM_ALLOWED);          
-  //XTRACE_PRINTCOLOR((hdesk?1:4), _L("OpenDesktop [%s] -> %s"), desktopname, (hdesk?_L("Ok"):_L("Error")));
+  //XTRACE_PRINTCOLOR((hdesk?1:4), NL("OpenDesktop [%s] -> %s"), desktopname, (hdesk?NL("Ok"):NL("Error")));
   if(hdesk)
     {
       status = (::SwitchDesktop(hdesk) == TRUE)?true:false;
       CloseDesktop(hdesk);
     }
 
-  //XTRACE_PRINTCOLOR((status?1:4), _L("SwitchDesktop [%s] -> %s"), desktopname, (status?_L("Ok"):_L("Error")));
+  //XTRACE_PRINTCOLOR((status?1:4), NL("SwitchDesktop [%s] -> %s"), desktopname, (status?NL("Ok"):NL("Error")));
 
   return status;
 }
@@ -441,19 +441,19 @@ bool XWINDOWSVIRTUALDESKTOPMANAGER::SwitchProcessSpecifiedDesktop(XCHAR* desktop
   BOOL status = FALSE;
 
   HWINSTA hwinsta0 = OpenWindowStation(TEXT("WinSta0"), FALSE, MAXIMUM_ALLOWED);
-  //XTRACE_PRINTCOLOR((hwinsta0?1:4), _L("SwitchProcessSpecifiedDesktop [%s] -> OpenWindowStation %08X"), desktopname, hwinsta0);
+  //XTRACE_PRINTCOLOR((hwinsta0?1:4), NL("SwitchProcessSpecifiedDesktop [%s] -> OpenWindowStation %08X"), desktopname, hwinsta0);
   if(hwinsta0)
     {
       status = SetProcessWindowStation(hwinsta0);
-      //XTRACE_PRINTCOLOR((status?1:4), _L("SwitchProcessSpecifiedDesktop [%s]  SetProcessWindowStation -> %s"), desktopname, (status?_L("Ok"):_L("Error")));
+      //XTRACE_PRINTCOLOR((status?1:4), NL("SwitchProcessSpecifiedDesktop [%s]  SetProcessWindowStation -> %s"), desktopname, (status?NL("Ok"):NL("Error")));
       if(status)
         {                
           HDESK hdesk = OpenDesktop(desktopname, 0, FALSE, MAXIMUM_ALLOWED);          
-          //XTRACE_PRINTCOLOR//((hdesk?1:4), _L("SwitchProcessSpecifiedDesktop [%s]  OpenDesktop -> %08X"), desktopname, hdesk);
+          //XTRACE_PRINTCOLOR//((hdesk?1:4), NL("SwitchProcessSpecifiedDesktop [%s]  OpenDesktop -> %08X"), desktopname, hdesk);
           if(hdesk)
             {
               status = SetThreadDesktop(hdesk);
-              //XTRACE_PRINTCOLOR((status?1:4), _L("SwitchProcessSpecifiedDesktop [%s] -> SetThreadDesktop %s error [%d]"), desktopname, (status?_L("Ok"):_L("Error")), GetLastError());
+              //XTRACE_PRINTCOLOR((status?1:4), NL("SwitchProcessSpecifiedDesktop [%s] -> SetThreadDesktop %s error [%d]"), desktopname, (status?NL("Ok"):NL("Error")), GetLastError());
               CloseDesktop(hdesk);
             }                  
         }

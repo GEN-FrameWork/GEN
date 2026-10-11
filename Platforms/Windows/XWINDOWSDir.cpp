@@ -111,7 +111,7 @@ bool XWINDOWSDIR::Exist(XCHAR* path)
   if(xpath.IsEmpty())
     {
       XDWORD size = _MAXPATH;
-      xpath.AdjustSize(size, false, _L(" "));
+      xpath.AdjustSize(size, false, NL(" "));
 
       GetCurrentDirectory(size, xpath.Get());
     }
@@ -178,13 +178,13 @@ bool XWINDOWSDIR::Make(XCHAR* path, bool recursive)
           if(xpath.GetPathInSequence(index, pathpart))
             {
               xpathsequence += pathpart;
-              xpathsequence += _L("\\");
+              xpathsequence += NL("\\");
 
               if(pathpart.Character_GetLast()!=_C(':'))
                 {
                   if(!Exist(xpathsequence.Get()))
                     {
-                      //XTRACE_PRINTCOLOR(2, _L("---> Make: %s"), xpathsequence.Get());
+                      //XTRACE_PRINTCOLOR(2, NL("---> Make: %s"), xpathsequence.Get());
 
                       int result = CreateDirectory(xpathsequence.Get(), NULL);
                       if(!result) 
@@ -263,7 +263,7 @@ bool XWINDOWSDIR::Delete(XCHAR* path, bool all)
   if(all)
     {
       xpathname     = path;
-      patternsearch = _L("*");
+      patternsearch = NL("*");
 
       if(FirstSearch(xpathname.Get(), patternsearch.Get(), &search))
         {
@@ -369,8 +369,8 @@ bool XWINDOWSDIR::FirstSearch(XCHAR* xpath, XCHAR* patternsearch, XDIRELEMENT* s
   
   XSTRING searchfilename(search->cFileName);
   
-  if((!searchfilename.Compare(_L(".")))||
-     (!searchfilename.Compare(_L(".."))))
+  if((!searchfilename.Compare(NL(".")))||
+     (!searchfilename.Compare(NL(".."))))
     {
       return NextSearch(searchelement);
     }
@@ -409,8 +409,8 @@ bool XWINDOWSDIR::NextSearch(XDIRELEMENT* searchelement)
 
    XSTRING searchfilename(search->cFileName);
    
-   if((!searchfilename.Compare(_L(".")))||
-      (!searchfilename.Compare(_L(".."))))
+   if((!searchfilename.Compare(NL(".")))||
+      (!searchfilename.Compare(NL(".."))))
      {
        return NextSearch(searchelement);
      }

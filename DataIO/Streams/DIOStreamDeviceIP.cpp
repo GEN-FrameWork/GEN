@@ -213,20 +213,20 @@ bool DIOSTREAMDEVICEIP::DebugPrintInfo()
 
   switch(IPtype)
     {                           default       :
-      case DIOSTREAMIPDEVICE_TYPE_UNKNOWN     : data = _L("Unknown");      break;
-      case DIOSTREAMIPDEVICE_TYPE_ETHERNET    : data = _L("Ethernet");     break;
-      case DIOSTREAMIPDEVICE_TYPE_WIFI        : data = _L("Wi-Fi");        break;
-      case DIOSTREAMIPDEVICE_TYPE_PPP         : data = _L("PPP");          break;
-      case DIOSTREAMIPDEVICE_TYPE_LOOPBACK    : data = _L("Loopback");     break;
+      case DIOSTREAMIPDEVICE_TYPE_UNKNOWN     : data = NL("Unknown");      break;
+      case DIOSTREAMIPDEVICE_TYPE_ETHERNET    : data = NL("Ethernet");     break;
+      case DIOSTREAMIPDEVICE_TYPE_WIFI        : data = NL("Wi-Fi");        break;
+      case DIOSTREAMIPDEVICE_TYPE_PPP         : data = NL("PPP");          break;
+      case DIOSTREAMIPDEVICE_TYPE_LOOPBACK    : data = NL("Loopback");     break;
     }
 
-  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, _L("Type : %s"), data.Get());
+  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, NL("Type : %s"), data.Get());
 
   GetMAC()->GetXString(data);
-  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, _L("MAC : %s"), data.Get());
+  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, NL("MAC : %s"), data.Get());
 
   GetIP()->GetXString(data);
-  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, _L("IP : %s"), data.Get());
+  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, NL("IP : %s"), data.Get());
 
  
   return true;

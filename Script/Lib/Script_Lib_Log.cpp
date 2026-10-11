@@ -109,11 +109,11 @@ bool SCRIPT_LIB_LOG::AddLibraryFunctions(SCRIPT* script)
 
   this->script = script;
 
-  script->AddLibraryFunction(this, _L("Log_Ini"), Call_Log_Ini);
-  script->AddLibraryFunction(this, _L("Log_CFG_SetLimit"), Call_Log_CFG_SetLimit);
-  script->AddLibraryFunction(this, _L("Log_CFG_SetFilters"), Call_Log_CFG_SetFilters);
-  script->AddLibraryFunction(this, _L("Log_CFG_SetBackup"), Call_Log_CFG_SetBackup);
-  script->AddLibraryFunction(this, _L("Log_AddEntry"), Call_Log_AddEntry);
+  script->AddLibraryFunction(this, NL("Log_Ini"), Call_Log_Ini);
+  script->AddLibraryFunction(this, NL("Log_CFG_SetLimit"), Call_Log_CFG_SetLimit);
+  script->AddLibraryFunction(this, NL("Log_CFG_SetFilters"), Call_Log_CFG_SetFilters);
+  script->AddLibraryFunction(this, NL("Log_CFG_SetBackup"), Call_Log_CFG_SetBackup);
+  script->AddLibraryFunction(this, NL("Log_AddEntry"), Call_Log_AddEntry);
   
   return true;
 }
@@ -461,7 +461,7 @@ void Call_Log_AddEntry(SCRIPT_LIB* library, SCRIPT* script, XVECTOR<XVARIANT*>* 
                                                   }
                                                   break;
 
-                                case _C('%')   : string = _L("%");
+                                case _C('%')   : string = NL("%");
                                                   end = true;
                                                   break;
 

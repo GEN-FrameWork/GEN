@@ -103,19 +103,19 @@ bool GRPVECTORFILESVGOBJRECT::ApplyData(XFILEXMLELEMENT* element)
 
   GRPVECTORFILESVGOBJ::ApplyData(element);
 
-  x      = element->GetFloatValueAttribute(_L("x"));
-  y      = element->GetFloatValueAttribute(_L("y"));
-  width  = element->GetFloatValueAttribute(_L("width"));
-  height = element->GetFloatValueAttribute(_L("height"));
+  x      = element->GetFloatValueAttribute(NL("x"));
+  y      = element->GetFloatValueAttribute(NL("y"));
+  width  = element->GetFloatValueAttribute(NL("width"));
+  height = element->GetFloatValueAttribute(NL("height"));
 
-  XCHAR* valuerx = element->GetValueAttribute(_L("rx"));
-  XCHAR* valuery = element->GetValueAttribute(_L("ry"));
+  XCHAR* valuerx = element->GetValueAttribute(NL("rx"));
+  XCHAR* valuery = element->GetValueAttribute(NL("ry"));
 
   bool hasrx = (valuerx != NULL);
   bool hasry = (valuery != NULL);
 
-  rx = hasrx ? element->GetFloatValueAttribute(_L("rx")) : 0.0;
-  ry = hasry ? element->GetFloatValueAttribute(_L("ry")) : 0.0;
+  rx = hasrx ? element->GetFloatValueAttribute(NL("rx")) : 0.0;
+  ry = hasry ? element->GetFloatValueAttribute(NL("ry")) : 0.0;
 
   if(hasrx && !hasry)  ry = rx;
   if(hasry && !hasrx)  rx = ry;

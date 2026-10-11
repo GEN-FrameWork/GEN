@@ -43,10 +43,10 @@
 
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
 
-#define DIOREMOTEFILECFG_PREFIXNAMEFILE    _L("remote_")
+#define DIOREMOTEFILECFG_PREFIXNAMEFILE    NL("remote_")
 
-#define DIOREMOTEFILECFG_SECTIONGENERAL    _L("general")
-#define DIOREMOTEFILECFG_URLREMOTECFG      _L("urlremotecfg")
+#define DIOREMOTEFILECFG_SECTIONGENERAL    NL("general")
+#define DIOREMOTEFILECFG_URLREMOTECFG      NL("urlremotecfg")
 
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
 
@@ -118,7 +118,7 @@ class DIOREMOTEFILECFG : public XFILECFG
                                               if(!URLremoteCFG.IsEmpty())
                                                 {
                                                   downloadURL.Set(URLremoteCFG.Get());      
-                                                  if(downloadURL.Find(_L("?"), false) == XSTRING_NOTFOUND)
+                                                  if(downloadURL.Find(NL("?"), false) == XSTRING_NOTFOUND)
                                                     {      
                                                       downloadURL.Slash_Add();
                                                       downloadURL.Add(DIOREMOTEFILECFG_PREFIXNAMEFILE);

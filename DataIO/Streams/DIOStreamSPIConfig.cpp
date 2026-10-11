@@ -145,15 +145,15 @@ bool DIOSTREAMSPICONFIG::SetLocalDeviceNameByPort()
     {
       case XSYSTEM_HARDWARETYPE_PC          :
                                               #ifdef LINUX
-                                              localdevicename.Format(_L("/dev/spi%d"), port-1);
+                                              localdevicename.Format(NL("/dev/spi%d"), port-1);
                                               #endif
 
                                               #ifdef WINDOWS
-                                              localdevicename.Format(_L("spi%d"), port-1);
+                                              localdevicename.Format(NL("spi%d"), port-1);
                                               #endif
                                               break;
 
-      case XSYSTEM_HARDWARETYPE_RASPBERRYPI : localdevicename.Format(_L("/dev/spidev%d.%d"), port-1, chipselect);
+      case XSYSTEM_HARDWARETYPE_RASPBERRYPI : localdevicename.Format(NL("/dev/spidev%d.%d"), port-1, chipselect);
                                               break;
 
                                    default  : break;

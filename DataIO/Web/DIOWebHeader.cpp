@@ -135,7 +135,7 @@ bool DIOWEBHEADER::Read(DIOSTREAMTCPIP* diostream, int timeout, XDWORD maximumsi
                 }
 
               totalsize += linesize;
-              //XTRACE_PRINTCOLOR(3, _L("WEB CLIENT HEADER LINE: %s"), line.Get());
+              //XTRACE_PRINTCOLOR(3, NL("WEB CLIENT HEADER LINE: %s"), line.Get());
               if(!AddLine(line)) break;
             }
         }
@@ -183,14 +183,14 @@ bool DIOWEBHEADER::Write(DIOSTREAMTCPIP* diostream, int timeout)
       XSTRING* line = (XSTRING*)lines.Get(c);
       if(line)
         {
-          //XTRACE_PRINTCOLOR(2, _L("%s"), line.Get());
+          //XTRACE_PRINTCOLOR(2, NL("%s"), line.Get());
 
           diostream->WriteStr((*line));
-          diostream->WriteStr(_L("\r\n"));
+          diostream->WriteStr(NL("\r\n"));
         }
     }
 
-  diostream->WriteStr(_L("\r\n"));
+  diostream->WriteStr(NL("\r\n"));
   diostream->WaitToFlushOutXBuffer(timeout);
 
   if(diostream->GetStatus() != DIOSTREAMSTATUS_CONNECTED) return false;
@@ -280,7 +280,7 @@ bool DIOWEBHEADER::GetLines(XSTRING& result)
       if(line)
         {
           result += line->Get();
-          result += _L("\r\n");
+          result += NL("\r\n");
         }
     }
 
@@ -401,7 +401,7 @@ bool DIOWEBHEADER::GetFormat(bool isserver, int type, void* data)
       int     code;
       XSTRING codestring(DIOWEBHEADER_MAXLINE);
 
-      line.UnFormat(_L("HTTP/%d.%d %d %s"), &version, &subversion, &code, codestring.Get());
+      line.UnFormat(NL("HTTP/%d.%d %d %s"), &version, &subversion, &code, codestring.Get());
       codestring.AdjustSize();
 
       switch(type)
@@ -419,9 +419,9 @@ bool DIOWEBHEADER::GetFormat(bool isserver, int type, void* data)
 
       if(line.GetSize())
         {
-          int foundindex = line.Find(_L("HTTP/"), true);
+          int foundindex = line.Find(NL("HTTP/"), true);
 
-          if(foundindex != XSTRING_NOTFOUND) line.UnFormat(_L("%s %s HTTP/%d.%d"), method.Get(), resource.Get(), &version, &subversion);
+          if(foundindex != XSTRING_NOTFOUND) line.UnFormat(NL("%s %s HTTP/%d.%d"), method.Get(), resource.Get(), &version, &subversion);
         }
 
       method.AdjustSize();

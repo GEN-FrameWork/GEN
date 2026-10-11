@@ -64,7 +64,7 @@ UI_ELEMENT_PROGRESS_IMAGE::UI_ELEMENT_PROGRESS_IMAGE()
   Clean();
 
   SetType(UI_ELEMENT_TYPE_PROGRESSIMAGE);
-  GetTypeString()->Set(_L("progressimage"));
+  GetTypeString()->Set(NL("progressimage"));
 }
 
 

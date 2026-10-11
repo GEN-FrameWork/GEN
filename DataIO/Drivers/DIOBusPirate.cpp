@@ -116,9 +116,9 @@ bool DIOBUSPIRATE::Ini(int timeout)
   if(!diostream->Open())                   return false;
   if(!diostream->WaitToConnected(timeout)) return false;
 
-  if(!WriteCommand(_L(""), timeout))      return false;
-  if(!WriteCommand(_L("m"), timeout))     return false;
-  if(!WriteCommand(_L("1") , timeout))    return false;
+  if(!WriteCommand(NL(""), timeout))      return false;
+  if(!WriteCommand(NL("m"), timeout))     return false;
+  if(!WriteCommand(NL("1") , timeout))    return false;
 
   GEN_XSLEEP.Seconds(1);
   diostream->GetInXBuffer()->Empty();
@@ -145,7 +145,7 @@ DIOBUSPIRATETYPEPROCOTOL DIOBUSPIRATE::GetActualProtocol(int timeout)
 
   XSTRING promptstatus;
 
-  WriteCommand(_L(""), timeout);
+  WriteCommand(NL(""), timeout);
   ReadPromptStatus(promptstatus, timeout);
 
   if(promptstatus.Find(DIOBUSPIRATE_COMMANDMENU_PROTOCOL_HIZ, false) != XSTRING_NOTFOUND)        return DIOBUSPIRATETYPEPROCOTOL_HIZ;
@@ -186,20 +186,20 @@ bool DIOBUSPIRATE::SetMode(DIOBUSPIRATETYPEPROCOTOL protocol, bool issoftware, i
 
   switch(protocol)
     {
-      case DIOBUSPIRATETYPEPROCOTOL_I2C : if(WriteCommand(_L("m"), timeout))
+      case DIOBUSPIRATETYPEPROCOTOL_I2C : if(WriteCommand(NL("m"), timeout))
                                             {
-                                              option.Format(_L("%d"), protocol);
+                                              option.Format(NL("%d"), protocol);
                                               if(WriteCommand(option, timeout))
                                                 {
-                                                  option.Format(_L("%d"), issoftware?1:2);
+                                                  option.Format(NL("%d"), issoftware?1:2);
                                                   if(WriteCommand(option, timeout))
                                                     {
-                                                      option.Format(_L("%d"), speed);
+                                                      option.Format(NL("%d"), speed);
                                                       if(WriteCommand(option, timeout))
                                                         {
                                                           if(issniffer)
                                                             {
-                                                              option.Format(_L("(2)"), speed);
+                                                              option.Format(NL("(2)"), speed);
                                                               status = WriteCommand(option, timeout);
 
                                                             } else status = true;
@@ -357,7 +357,7 @@ bool DIOBUSPIRATE::WriteCommand(XCHAR* command, int timeout)
   bool    status;
 
   _command  = command;
-  _command += _L("\r");
+  _command += NL("\r");
   
   XBUFFER charstr;
   

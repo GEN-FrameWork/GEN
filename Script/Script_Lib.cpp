@@ -355,7 +355,7 @@ bool SCRIPT_LIB::GetParamConverted(XVARIANT* variant, XSTRING& value)
 {
   if(!variant) return false;
 
-  value = _L("");
+  value = NL("");
 
   switch(variant->GetType())
     {

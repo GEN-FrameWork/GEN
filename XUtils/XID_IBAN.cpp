@@ -124,7 +124,7 @@ bool XID_IBAN::Set(XCHAR* IBAN)
   status = IsValidSizeCountry(IDcountry.Get(), IBANstr.GetSize());
   if (status)
   {
-    if (!IDcountry.Compare(_L("ES"), true))
+    if (!IDcountry.Compare(NL("ES"), true))
     {
       if (!Spain_ValidateControlDigit(IBANstr))
       {
@@ -211,71 +211,71 @@ bool XID_IBAN::IsValidSizeCountry(XCHAR* countrystr, int size)
   typedef struct
   {
     XCHAR* IDcontry;
-    int       size;
+    int    size;
     XCHAR* contry;
 
   } CONTRYLIST;
 
 
-  CONTRYLIST  countrylist[] = { { _L("DE"), 22, _L("Germany")                },
-                                  { _L("AD"), 24, _L("Andorra")                },
-                                  { _L("SA"), 24, _L("Saudi Arabia")           },
-                                  { _L("AT"), 20, _L("Austria")                },
-                                  { _L("BH"), 22, _L("Bahrain")                },
-                                  { _L("BE"), 16, _L("Belgium")                },
-                                  { _L("BA"), 20, _L("Bosnia-Herzegovina")     },
-                                  { _L("BG"), 22, _L("Bulgaria")               },
-                                  { _L("QA"), 29, _L("Qatar")                  },
-                                  { _L("CY"), 28, _L("Cyprus")                 },
-                                  { _L("CR"), 22, _L("Costa Rica")             },
-                                  { _L("HR"), 21, _L("Croatia")                },
-                                  { _L("DK"), 18, _L("Denmark")                },
-                                  { _L("AE"), 23, _L("United Arab Emirates")   },
-                                  { _L("SK"), 24, _L("Slovakia")               },
-                                  { _L("SI"), 19, _L("Slovenia")               },
-                                  { _L("ES"), 24, _L("Spain")                  },
-                                  { _L("EE"), 20, _L("Estonia")                },
-                                  { _L("FI"), 18, _L("Finland")                },
-                                  { _L("FR"), 27, _L("France")                 },
-                                  { _L("GE"), 22, _L("Georgia")                },
-                                  { _L("GI"), 23, _L("Gibraltar")              },
-                                  { _L("GB"), 22, _L("Great Britain")          },
-                                  { _L("GR"), 27, _L("Greece")                 },
-                                  { _L("GL"), 18, _L("Greenland")              },
-                                  { _L("GB"), 22, _L("Guernsey")               },
-                                  { _L("HU"), 28, _L("Hungary")                },
-                                  { _L("IE"), 22, _L("Ireland")                },
-                                  { _L("GB"), 22, _L("Isle of Man")            },
-                                  { _L("IM"), 22, _L("Isle of Man")            },
-                                  { _L("IS"), 26, _L("Iceland")                },
-                                  { _L("FO"), 18, _L("Faroe Islands")          },
-                                  { _L("IT"), 27, _L("Italy")                  },
-                                  { _L("GB"), 22, _L("Jersey")                 },
-                                  { _L("JO"), 30, _L("Jordan")                 },
-                                  { _L("KZ"), 20, _L("Kazakhstan")             },
-                                  { _L("KW"), 30, _L("Kuwait")                 },
-                                  { _L("LV"), 21, _L("Latvia")                 },
-                                  { _L("LB"), 28, _L("Lebanon")                },
-                                  { _L("LI"), 21, _L("Liechtenstein")          },
-                                  { _L("LT"), 20, _L("Lithuania")              },
-                                  { _L("LU"), 20, _L("Luxembourg")             },
-                                  { _L("MK"), 19, _L("Macedonia")              },
-                                  { _L("MT"), 31, _L("Malta")                  },
-                                  { _L("MD"), 24, _L("Moldova")                },
-                                  { _L("MC"), 27, _L("Monaco")                 },
-                                  { _L("ME"), 22, _L("Montenegro")             },
-                                  { _L("NO"), 15, _L("Norway")                 },
-                                  { _L("NL"), 18, _L("Netherlands")            },
-                                  { _L("PS"), 29, _L("Palestine")              },
-                                  { _L("PL"), 28, _L("Poland")                 },
-                                  { _L("PT"), 25, _L("Portugal")               },
-                                  { _L("CZ"), 24, _L("Czech Republic")         },
-                                  { _L("RO"), 24, _L("Romania")                },
-                                  { _L("SM"), 27, _L("San Marino")             },
-                                  { _L("SE"), 24, _L("Sweden")                 },
-                                  { _L("CH"), 21, _L("Switzerland")            },
-                                  { _L("TN"), 24, _L("Tunisia")                },
-                                  { _L("TR"), 26, _L("Turkiye")                }
+  CONTRYLIST  countrylist[] = {   { NL("DE"), 22, NL("Germany")                },
+                                  { NL("AD"), 24, NL("Andorra")                },
+                                  { NL("SA"), 24, NL("Saudi Arabia")           },
+                                  { NL("AT"), 20, NL("Austria")                },
+                                  { NL("BH"), 22, NL("Bahrain")                },
+                                  { NL("BE"), 16, NL("Belgium")                },
+                                  { NL("BA"), 20, NL("Bosnia-Herzegovina")     },
+                                  { NL("BG"), 22, NL("Bulgaria")               },
+                                  { NL("QA"), 29, NL("Qatar")                  },
+                                  { NL("CY"), 28, NL("Cyprus")                 },
+                                  { NL("CR"), 22, NL("Costa Rica")             },
+                                  { NL("HR"), 21, NL("Croatia")                },
+                                  { NL("DK"), 18, NL("Denmark")                },
+                                  { NL("AE"), 23, NL("United Arab Emirates")   },
+                                  { NL("SK"), 24, NL("Slovakia")               },
+                                  { NL("SI"), 19, NL("Slovenia")               },
+                                  { NL("ES"), 24, NL("Spain")                  },
+                                  { NL("EE"), 20, NL("Estonia")                },
+                                  { NL("FI"), 18, NL("Finland")                },
+                                  { NL("FR"), 27, NL("France")                 },
+                                  { NL("GE"), 22, NL("Georgia")                },
+                                  { NL("GI"), 23, NL("Gibraltar")              },
+                                  { NL("GB"), 22, NL("Great Britain")          },
+                                  { NL("GR"), 27, NL("Greece")                 },
+                                  { NL("GL"), 18, NL("Greenland")              },
+                                  { NL("GB"), 22, NL("Guernsey")               },
+                                  { NL("HU"), 28, NL("Hungary")                },
+                                  { NL("IE"), 22, NL("Ireland")                },
+                                  { NL("GB"), 22, NL("Isle of Man")            },
+                                  { NL("IM"), 22, NL("Isle of Man")            },
+                                  { NL("IS"), 26, NL("Iceland")                },
+                                  { NL("FO"), 18, NL("Faroe Islands")          },
+                                  { NL("IT"), 27, NL("Italy")                  },
+                                  { NL("GB"), 22, NL("Jersey")                 },
+                                  { NL("JO"), 30, NL("Jordan")                 },
+                                  { NL("KZ"), 20, NL("Kazakhstan")             },
+                                  { NL("KW"), 30, NL("Kuwait")                 },
+                                  { NL("LV"), 21, NL("Latvia")                 },
+                                  { NL("LB"), 28, NL("Lebanon")                },
+                                  { NL("LI"), 21, NL("Liechtenstein")          },
+                                  { NL("LT"), 20, NL("Lithuania")              },
+                                  { NL("LU"), 20, NL("Luxembourg")             },
+                                  { NL("MK"), 19, NL("Macedonia")              },
+                                  { NL("MT"), 31, NL("Malta")                  },
+                                  { NL("MD"), 24, NL("Moldova")                },
+                                  { NL("MC"), 27, NL("Monaco")                 },
+                                  { NL("ME"), 22, NL("Montenegro")             },
+                                  { NL("NO"), 15, NL("Norway")                 },
+                                  { NL("NL"), 18, NL("Netherlands")            },
+                                  { NL("PS"), 29, NL("Palestine")              },
+                                  { NL("PL"), 28, NL("Poland")                 },
+                                  { NL("PT"), 25, NL("Portugal")               },
+                                  { NL("CZ"), 24, NL("Czech Republic")         },
+                                  { NL("RO"), 24, NL("Romania")                },
+                                  { NL("SM"), 27, NL("San Marino")             },
+                                  { NL("SE"), 24, NL("Sweden")                 },
+                                  { NL("CH"), 21, NL("Switzerland")            },
+                                  { NL("TN"), 24, NL("Tunisia")                },
+                                  { NL("TR"), 26, NL("Turkiye")                }
   };
   XSTRING     cs;
 
@@ -466,7 +466,7 @@ bool XID_IBAN::Spain_ValidateControlDigit(XSTRING& IBANstr)
   int     DC = 0;
 
   DC = Spain_CalculeControlDigit(IBANstr);
-  DCstring.Format(_L("%02d"), DC);
+  DCstring.Format(NL("%02d"), DC);
 
   DCstring2.Add(IBANstr.Get()[12]);
   DCstring2.Add(IBANstr.Get()[13]);

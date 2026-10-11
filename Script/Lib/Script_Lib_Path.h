@@ -36,7 +36,7 @@
 
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
 
-#define SCRIPT_LIB_NAME_PATH   _L("Path")
+#define SCRIPT_LIB_NAME_PATH   NL("Path")
 
 
 

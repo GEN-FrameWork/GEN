@@ -41,10 +41,10 @@
 #define DIOCLIPROTOCOLBUS_ENUM_DEFAULTMAXTIME     30
 #define DIOCLIPROTOCOLBUS_SEND_DEFAULNRETRIES     3
 
-#define DIOCLIPROTOCOLBUS_COMMAND_VERSION			    _L("version")
-#define DIOCLIPROTOCOLBUS_COMMAND_PING   			    _L("ping")
-#define DIOCLIPROTOCOLBUS_COMMAND_ENUM  			    _L("enum")
-#define DIOCLIPROTOCOLBUS_COMMAND_ENUMREQUEST     _L("enumrequest")
+#define DIOCLIPROTOCOLBUS_COMMAND_VERSION			    NL("version")
+#define DIOCLIPROTOCOLBUS_COMMAND_PING   			    NL("ping")
+#define DIOCLIPROTOCOLBUS_COMMAND_ENUM  			    NL("enum")
+#define DIOCLIPROTOCOLBUS_COMMAND_ENUMREQUEST     NL("enumrequest")
 
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
 

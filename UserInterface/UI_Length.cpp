@@ -180,10 +180,10 @@ bool UI_LENGTH::Parse(XSTRING& raw)
   UI_LENGTH_TYPE unittype  = UI_LENGTH_TYPE_NUMBER;
   int             numericend = end;
 
-  if(MatchesUnitSuffix(raw, end-3, end, _L("rem")))      { unittype = UI_LENGTH_TYPE_REM;     numericend = end-3; }
-   else if(MatchesUnitSuffix(raw, end-2, end, _L("em"))) { unittype = UI_LENGTH_TYPE_EM;      numericend = end-2; }
-   else if(MatchesUnitSuffix(raw, end-2, end, _L("vw"))) { unittype = UI_LENGTH_TYPE_VW;      numericend = end-2; }
-   else if(MatchesUnitSuffix(raw, end-2, end, _L("vh"))) { unittype = UI_LENGTH_TYPE_VH;      numericend = end-2; }
+  if(MatchesUnitSuffix(raw, end-3, end, NL("rem")))      { unittype = UI_LENGTH_TYPE_REM;     numericend = end-3; }
+   else if(MatchesUnitSuffix(raw, end-2, end, NL("em"))) { unittype = UI_LENGTH_TYPE_EM;      numericend = end-2; }
+   else if(MatchesUnitSuffix(raw, end-2, end, NL("vw"))) { unittype = UI_LENGTH_TYPE_VW;      numericend = end-2; }
+   else if(MatchesUnitSuffix(raw, end-2, end, NL("vh"))) { unittype = UI_LENGTH_TYPE_VH;      numericend = end-2; }
    else if(raw[end-1] == _C('%'))                        { unittype = UI_LENGTH_TYPE_PERCENT; numericend = end-1; }
 
   XSTRING numeric;
@@ -406,10 +406,10 @@ UI_LENGTHCALCNODE* UI_LENGTH::ParseCalcFactor(XSTRING& text, int& pos, int end)
 
   UI_LENGTH_TYPE leaftype = UI_LENGTH_TYPE_NUMBER;
 
-  if(MatchesUnitSuffix(text, pos, end, _L("rem")))      { leaftype = UI_LENGTH_TYPE_REM;     pos += 3; }
-   else if(MatchesUnitSuffix(text, pos, end, _L("em"))) { leaftype = UI_LENGTH_TYPE_EM;      pos += 2; }
-   else if(MatchesUnitSuffix(text, pos, end, _L("vw"))) { leaftype = UI_LENGTH_TYPE_VW;      pos += 2; }
-   else if(MatchesUnitSuffix(text, pos, end, _L("vh"))) { leaftype = UI_LENGTH_TYPE_VH;      pos += 2; }
+  if(MatchesUnitSuffix(text, pos, end, NL("rem")))      { leaftype = UI_LENGTH_TYPE_REM;     pos += 3; }
+   else if(MatchesUnitSuffix(text, pos, end, NL("em"))) { leaftype = UI_LENGTH_TYPE_EM;      pos += 2; }
+   else if(MatchesUnitSuffix(text, pos, end, NL("vw"))) { leaftype = UI_LENGTH_TYPE_VW;      pos += 2; }
+   else if(MatchesUnitSuffix(text, pos, end, NL("vh"))) { leaftype = UI_LENGTH_TYPE_VH;      pos += 2; }
    else if(pos < end && text[pos]==_C('%'))             { leaftype = UI_LENGTH_TYPE_PERCENT; pos += 1; }
 
   XSTRING numeric;

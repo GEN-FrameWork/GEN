@@ -118,7 +118,7 @@ DB_SQL_DATABASE_TYPE POSTGRESQL_DATABASE::GetType()
 * --------------------------------------------------------------------------------------------------------------------*/
 XCHAR* POSTGRESQL_DATABASE::GetTypeName()
 {
-  return _L("PostgreSQL");
+  return NL("PostgreSQL");
 }
 
 
@@ -225,7 +225,7 @@ bool POSTGRESQL_DATABASE::Savepoint(XCHAR* savepoint)
   XSTRING savepointstring;
   bool    success;
 
-  savepointstring.Format(_L("SAVEPOINT %s"), savepoint);
+  savepointstring.Format(NL("SAVEPOINT %s"), savepoint);
 
   XBUFFER oem;
   
@@ -261,7 +261,7 @@ bool POSTGRESQL_DATABASE::ReleaseSavepoint(XCHAR* savepoint)
   XSTRING savepointstring;
   bool    success;
 
-  savepointstring.Format(_L("RELEASE %s"), savepoint);
+  savepointstring.Format(NL("RELEASE %s"), savepoint);
 
   XBUFFER oem;
   
@@ -326,7 +326,7 @@ DB_SQL_CONNECTION* POSTGRESQL_DATABASE::CreateConnection()
 bool POSTGRESQL_DATABASE::GetTables()
 {
   DB_SQL_STRING querystring;
-  querystring.Format(_L("SELECT relname FROM pg_class WHERE relkind='r';"));
+  querystring.Format(NL("SELECT relname FROM pg_class WHERE relkind='r';"));
 
   DB_SQL_QUERY*   query = CreateQuery();
   DB_SQL_VARIANT  variant;
@@ -457,7 +457,7 @@ bool POSTGRESQL_DATABASE::SetDatabaseEncoding(DB_SQL_DATABASE_ENCODING encodingt
                                       default         : break;
     }
 
-  Error (_L("Unable to set the charset encoding"));
+  Error (NL("Unable to set the charset encoding"));
 
   return false;
 }

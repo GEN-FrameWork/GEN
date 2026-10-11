@@ -122,17 +122,17 @@ bool GRPSTATISTICSCHARTBUILDERSVG::BeginDocument(double width, double height)
 {
   content.Empty();
 
-  content.Add(_L("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"));
+  content.Add(NL("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"));
 
-  content.Add(_L("<svg xmlns=\"http://www.w3.org/2000/svg\" width=\""));
+  content.Add(NL("<svg xmlns=\"http://www.w3.org/2000/svg\" width=\""));
   AppendNumber(content, width);
-  content.Add(_L("\" height=\""));
+  content.Add(NL("\" height=\""));
   AppendNumber(content, height);
-  content.Add(_L("\" viewBox=\"0 0 "));
+  content.Add(NL("\" viewBox=\"0 0 "));
   AppendNumber(content, width);
   content.Add(_C(' '));
   AppendNumber(content, height);
-  content.Add(_L("\">\n"));
+  content.Add(NL("\">\n"));
 
   return true;
 }
@@ -149,7 +149,7 @@ bool GRPSTATISTICSCHARTBUILDERSVG::BeginDocument(double width, double height)
 * --------------------------------------------------------------------------------------------------------------------*/
 bool GRPSTATISTICSCHARTBUILDERSVG::EndDocument()
 {
-  content.Add(_L("</svg>\n"));
+  content.Add(NL("</svg>\n"));
 
   return true;
 }
@@ -172,19 +172,19 @@ bool GRPSTATISTICSCHARTBUILDERSVG::EndDocument()
 * --------------------------------------------------------------------------------------------------------------------*/
 bool GRPSTATISTICSCHARTBUILDERSVG::DrawRect(double x, double y, double width, double height, GRPSTATISTICSCHARTSTYLE& style)
 {
-  content.Add(_L(" <rect x=\""));
+  content.Add(NL(" <rect x=\""));
   AppendNumber(content, x);
-  content.Add(_L("\" y=\""));
+  content.Add(NL("\" y=\""));
   AppendNumber(content, y);
-  content.Add(_L("\" width=\""));
+  content.Add(NL("\" width=\""));
   AppendNumber(content, width);
-  content.Add(_L("\" height=\""));
+  content.Add(NL("\" height=\""));
   AppendNumber(content, height);
   content.Add(_C('"'));
 
   AppendFillAndStroke(content, style);
 
-  content.Add(_L("/>\n"));
+  content.Add(NL("/>\n"));
 
   return true;
 }
@@ -207,23 +207,23 @@ bool GRPSTATISTICSCHARTBUILDERSVG::DrawRect(double x, double y, double width, do
 * --------------------------------------------------------------------------------------------------------------------*/
 bool GRPSTATISTICSCHARTBUILDERSVG::DrawLine(double x1, double y1, double x2, double y2, GRPSTATISTICSCHARTSTYLE& style)
 {
-  content.Add(_L(" <line x1=\""));
+  content.Add(NL(" <line x1=\""));
   AppendNumber(content, x1);
-  content.Add(_L("\" y1=\""));
+  content.Add(NL("\" y1=\""));
   AppendNumber(content, y1);
-  content.Add(_L("\" x2=\""));
+  content.Add(NL("\" x2=\""));
   AppendNumber(content, x2);
-  content.Add(_L("\" y2=\""));
+  content.Add(NL("\" y2=\""));
   AppendNumber(content, y2);
-  content.Add(_L("\" stroke=\""));
+  content.Add(NL("\" stroke=\""));
   AppendColor(content, style.strokecolor);
-  content.Add(_L("\" stroke-width=\""));
+  content.Add(NL("\" stroke-width=\""));
   AppendNumber(content, style.strokewidth);
   content.Add(_C('"'));
 
-  AppendOpacity(content, _L("stroke-opacity"), style.strokecolor);
+  AppendOpacity(content, NL("stroke-opacity"), style.strokecolor);
 
-  content.Add(_L("/>\n"));
+  content.Add(NL("/>\n"));
 
   return true;
 }
@@ -247,32 +247,32 @@ bool GRPSTATISTICSCHARTBUILDERSVG::DrawText(double x, double y, XCHAR* text, GRP
 {
   if(!text) return false;
 
-  content.Add(_L(" <text x=\""));
+  content.Add(NL(" <text x=\""));
   AppendNumber(content, x);
-  content.Add(_L("\" y=\""));
+  content.Add(NL("\" y=\""));
   AppendNumber(content, y);
-  content.Add(_L("\" font-size=\""));
+  content.Add(NL("\" font-size=\""));
   AppendNumber(content, style.size);
-  content.Add(_L("\" fill=\""));
+  content.Add(NL("\" fill=\""));
   AppendColor(content, style.color);
-  content.Add(_L("\" text-anchor=\""));
+  content.Add(NL("\" text-anchor=\""));
   content.Add(AnchorToString(style.anchor));
   content.Add(_C('"'));
 
   if(style.bold)
     {
-      content.Add(_L(" font-weight=\"bold\""));
+      content.Add(NL(" font-weight=\"bold\""));
     }
 
   if(style.rotation != 0.0)
     {
-      content.Add(_L(" transform=\"rotate("));
+      content.Add(NL(" transform=\"rotate("));
       AppendNumber(content, style.rotation);
       content.Add(_C(' '));
       AppendNumber(content, x);
       content.Add(_C(' '));
       AppendNumber(content, y);
-      content.Add(_L(")\""));
+      content.Add(NL(")\""));
     }
 
   content.Add(_C('>'));
@@ -281,7 +281,7 @@ bool GRPSTATISTICSCHARTBUILDERSVG::DrawText(double x, double y, XCHAR* text, GRP
   EscapeXML(text, escaped);
   content.Add(escaped);
 
-  content.Add(_L("</text>\n"));
+  content.Add(NL("</text>\n"));
 
   return true;
 }
@@ -304,7 +304,7 @@ bool GRPSTATISTICSCHARTBUILDERSVG::DrawPolygon(const double* xy, XDWORD npoints,
 {
   if(!xy || (npoints < 2)) return false;
 
-  content.Add(_L(" <polygon points=\""));
+  content.Add(NL(" <polygon points=\""));
 
   for(XDWORD p=0; p<npoints; p++)
     {
@@ -319,7 +319,7 @@ bool GRPSTATISTICSCHARTBUILDERSVG::DrawPolygon(const double* xy, XDWORD npoints,
 
   AppendFillAndStroke(content, style);
 
-  content.Add(_L("/>\n"));
+  content.Add(NL("/>\n"));
 
   return true;
 }
@@ -371,8 +371,8 @@ void GRPSTATISTICSCHARTBUILDERSVG::AppendNumber(XSTRING& out, double value)
 {
   XSTRING number;
 
-  number.Format(_L("%g"), value);
-  number.Replace(_L(","), _L("."));
+  number.Format(NL("%g"), value);
+  number.Replace(NL(","), NL("."));
 
   out.Add(number);
 }
@@ -392,26 +392,26 @@ void GRPSTATISTICSCHARTBUILDERSVG::AppendFillAndStroke(XSTRING& out, GRPSTATISTI
 {
   if(style.hasfill)
     {
-      out.Add(_L(" fill=\""));
+      out.Add(NL(" fill=\""));
       AppendColor(out, style.fillcolor);
       out.Add(_C('"'));
 
-      AppendOpacity(out, _L("fill-opacity"), style.fillcolor);
+      AppendOpacity(out, NL("fill-opacity"), style.fillcolor);
     }
    else
     {
-      out.Add(_L(" fill=\"none\""));
+      out.Add(NL(" fill=\"none\""));
     }
 
   if(style.hasstroke)
     {
-      out.Add(_L(" stroke=\""));
+      out.Add(NL(" stroke=\""));
       AppendColor(out, style.strokecolor);
-      out.Add(_L("\" stroke-width=\""));
+      out.Add(NL("\" stroke-width=\""));
       AppendNumber(out, style.strokewidth);
       out.Add(_C('"'));
 
-      AppendOpacity(out, _L("stroke-opacity"), style.strokecolor);
+      AppendOpacity(out, NL("stroke-opacity"), style.strokecolor);
     }
 }
 
@@ -430,7 +430,7 @@ void GRPSTATISTICSCHARTBUILDERSVG::AppendColor(XSTRING& out, GRPSTATISTICSCHARTC
 {
   XSTRING rgb;
 
-  rgb.Format(_L("rgb(%d,%d,%d)"), (int)color.r, (int)color.g, (int)color.b);
+  rgb.Format(NL("rgb(%d,%d,%d)"), (int)color.r, (int)color.g, (int)color.b);
 
   out.Add(rgb);
 }
@@ -453,7 +453,7 @@ void GRPSTATISTICSCHARTBUILDERSVG::AppendOpacity(XSTRING& out, XCHAR* attribute,
 
   out.Add(_C(' '));
   out.Add(attribute);
-  out.Add(_L("=\""));
+  out.Add(NL("=\""));
   AppendNumber(out, (double)color.a / 255.0);
   out.Add(_C('"'));
 }
@@ -474,10 +474,10 @@ XCHAR* GRPSTATISTICSCHARTBUILDERSVG::AnchorToString(GRPSTATISTICSCHARTTEXTANCHOR
 {
   switch(anchor)
     {
-      case GRPSTATISTICSCHARTTEXTANCHOR_MIDDLE  : return _L("middle");
-      case GRPSTATISTICSCHARTTEXTANCHOR_END     : return _L("end");
+      case GRPSTATISTICSCHARTTEXTANCHOR_MIDDLE  : return NL("middle");
+      case GRPSTATISTICSCHARTTEXTANCHOR_END     : return NL("end");
       case GRPSTATISTICSCHARTTEXTANCHOR_START   :
-                            default   : return _L("start");
+                            default   : return NL("start");
     }
 }
 
@@ -500,11 +500,11 @@ void GRPSTATISTICSCHARTBUILDERSVG::EscapeXML(XCHAR* text, XSTRING& out)
 
   out.Set(text);
 
-  out.Replace(_L("&"), _L("&amp;"));
-  out.Replace(_L("<"), _L("&lt;"));
-  out.Replace(_L(">"), _L("&gt;"));
-  out.Replace(_L("\""), _L("&quot;"));
-  out.Replace(_L("'"), _L("&apos;"));
+  out.Replace(NL("&"), NL("&amp;"));
+  out.Replace(NL("<"), NL("&lt;"));
+  out.Replace(NL(">"), NL("&gt;"));
+  out.Replace(NL("\""), NL("&quot;"));
+  out.Replace(NL("'"), NL("&apos;"));
 }
 
 

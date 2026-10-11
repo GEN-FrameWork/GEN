@@ -100,7 +100,7 @@ bool GRPVECTORFILESVGOBJPATH::ApplyData(XFILEXMLELEMENT* element)
 
   GRPVECTORFILESVGOBJ::ApplyData(element);
 
-  XCHAR* valued = element->GetValueAttribute(_L("d"));
+  XCHAR* valued = element->GetValueAttribute(NL("d"));
   if(valued)  ParsePathData(valued);
 
   return true;

@@ -64,11 +64,11 @@ enum XLOGTYPELIMIT
 
 #define XLOG_MAXLINESTOFLUSH            1000     // Number lines to Flush
 
-#define XLOG_PREFIX                     _L("[LOG]_")
-#define XLOG_CREATEMASKBACKUPFILE       _L("[LOG]_%04d_%02d_%02d-%02d_%02d_%02d_")
-#define XLOG_SEARCHMASKBACKUPFILE       _L("[LOG]_*-*")
+#define XLOG_PREFIX                     NL("[LOG]_")
+#define XLOG_CREATEMASKBACKUPFILE       NL("[LOG]_%04d_%02d_%02d-%02d_%02d_%02d_")
+#define XLOG_SEARCHMASKBACKUPFILE       NL("[LOG]_*-*")
 
-#define XLOG_NAMEFILEEXT                _L(".log")
+#define XLOG_NAMEFILEEXT                NL(".log")
 
 #define XLOG_MAXDATETIMESIZE            20
 #define XLOG_MAXLEVELSIZE                8

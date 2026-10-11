@@ -70,13 +70,13 @@ DIOWEBSERVER_PLUGIN_PHP::DIOWEBSERVER_PLUGIN_PHP()
 {
   Clean();
 
-  GetName()->Set(_L("PHP CGI Pluging"));
+  GetName()->Set(NL("PHP CGI Pluging"));
 
   // Only for extension.
   //SetTypeTAG(DIOWEBSERVER_PLUGIN_TYPE_TAGLABEL_PHP);
   //GetLabelTAG()->Set(DIOWEBSERVER_PLUGIN_PHP_TAGLABEL);
 
-  PageExtension_Add(_L(".php"));
+  PageExtension_Add(NL(".php"));
 }
 
 
@@ -109,9 +109,9 @@ bool DIOWEBSERVER_PLUGIN_PHP::Config(XPATH* pathinterpreter)
 {
   XSTRING nameexec;
 
-  nameexec = _L("php-cgi");
+  nameexec = NL("php-cgi");
   #ifdef WINDOWS
-  nameexec += _L(".exe");
+  nameexec += NL(".exe");
   #endif
 
   return DIOWEBSERVER_PLUGIN_CGI::Config(pathinterpreter, nameexec.Get());

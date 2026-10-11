@@ -100,16 +100,16 @@ bool GRPVECTORFILESVGOBJTEXT::ApplyData(XFILEXMLELEMENT* element)
 
   GRPVECTORFILESVGOBJ::ApplyData(element);
 
-  hasx = (element->GetValueAttribute(_L("x")) != NULL);
-  hasy = (element->GetValueAttribute(_L("y")) != NULL);
+  hasx = (element->GetValueAttribute(NL("x")) != NULL);
+  hasy = (element->GetValueAttribute(NL("y")) != NULL);
 
-  x  = element->GetFloatValueAttribute(_L("x"));
-  y  = element->GetFloatValueAttribute(_L("y"));
-  dx = element->GetFloatValueAttribute(_L("dx"));
-  dy = element->GetFloatValueAttribute(_L("dy"));
+  x  = element->GetFloatValueAttribute(NL("x"));
+  y  = element->GetFloatValueAttribute(NL("y"));
+  dx = element->GetFloatValueAttribute(NL("dx"));
+  dy = element->GetFloatValueAttribute(NL("dy"));
 
   XSTRING valuefontsize;
-  if(GetProperty(element, _L("font-size"), valuefontsize))
+  if(GetProperty(element, NL("font-size"), valuefontsize))
     {
       double parsed = valuefontsize.ConvertToDouble(0, NULL, false);           // tolerates "16px" -> 16
       if(parsed > 0.0)
@@ -120,10 +120,10 @@ bool GRPVECTORFILESVGOBJTEXT::ApplyData(XFILEXMLELEMENT* element)
     }
 
   XSTRING valueanchor;
-  if(GetProperty(element, _L("text-anchor"), valueanchor))
+  if(GetProperty(element, NL("text-anchor"), valueanchor))
     {
-      if(!valueanchor.Compare(_L("middle"), true))     textanchor = GRPVECTORFILESVGTEXTANCHOR_MIDDLE;
-       else if(!valueanchor.Compare(_L("end"), true))  textanchor = GRPVECTORFILESVGTEXTANCHOR_END;
+      if(!valueanchor.Compare(NL("middle"), true))     textanchor = GRPVECTORFILESVGTEXTANCHOR_MIDDLE;
+       else if(!valueanchor.Compare(NL("end"), true))  textanchor = GRPVECTORFILESVGTEXTANCHOR_END;
        else                                             textanchor = GRPVECTORFILESVGTEXTANCHOR_START;
     }
 
@@ -287,19 +287,19 @@ bool GRPVECTORFILESVGOBJTEXT::GetProperty(XFILEXMLELEMENT* element, XCHAR* name,
       return true;
     }
 
-  XCHAR* style = element->GetValueAttribute(_L("style"));
+  XCHAR* style = element->GetValueAttribute(NL("style"));
   if(!style) return false;
 
   XSTRING stylestr(style);
 
   XSTRING key(name);
-  key += _L(":");
+  key += NL(":");
 
   int index = stylestr.Find(key.Get(), true, 0);
   if(index < 0) return false;
 
   int start = index + (int)key.GetSize();
-  int end   = stylestr.Find(_L(";"), false, start);
+  int end   = stylestr.Find(NL(";"), false, start);
   if(end < 0)  end = (int)stylestr.GetSize();
 
   stylestr.Copy(start, end, outvalue);

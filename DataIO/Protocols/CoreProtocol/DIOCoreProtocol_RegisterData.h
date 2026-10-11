@@ -35,12 +35,12 @@
 
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
 
-#define DIOCOREPROTOCOL_REGISTERDATA_HEADER_VAR_ID_MACHINE          _L("ID_machine")    
-#define DIOCOREPROTOCOL_REGISTERDATA_HEADER_VAR_ID_CONNECTION       _L("ID_connection")    
-#define DIOCOREPROTOCOL_REGISTERDATA_HEADER_VAR_PLATAFORM           _L("plataform")
-#define DIOCOREPROTOCOL_REGISTERDATA_HEADER_VAR_SOIDENTIFIER        _L("soidentifier")
-#define DIOCOREPROTOCOL_REGISTERDATA_HEADER_VAR_USER                _L("user")    
-#define DIOCOREPROTOCOL_REGISTERDATA_HEADER_VAR_DOMAIN              _L("domain")    
+#define DIOCOREPROTOCOL_REGISTERDATA_HEADER_VAR_ID_MACHINE          NL("ID_machine")    
+#define DIOCOREPROTOCOL_REGISTERDATA_HEADER_VAR_ID_CONNECTION       NL("ID_connection")    
+#define DIOCOREPROTOCOL_REGISTERDATA_HEADER_VAR_PLATAFORM           NL("plataform")
+#define DIOCOREPROTOCOL_REGISTERDATA_HEADER_VAR_SOIDENTIFIER        NL("soidentifier")
+#define DIOCOREPROTOCOL_REGISTERDATA_HEADER_VAR_USER                NL("user")    
+#define DIOCOREPROTOCOL_REGISTERDATA_HEADER_VAR_DOMAIN              NL("domain")    
 
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
 

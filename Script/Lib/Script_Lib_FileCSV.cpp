@@ -88,7 +88,7 @@ static bool ScriptLibFileCSV_VariantToElement(XVARIANT* variant, XSTRING& elemen
                                             element = string.Get();
 
                                             // If a numeric ID arrived already stringified with decimals, strip them.
-                                            int dot = element.Find(_L("."), false, 0);
+                                            int dot = element.Find(NL("."), false, 0);
                                             if(dot != XSTRING_NOTFOUND)
                                               {
                                                 bool alldigits = (dot > 0);
@@ -191,20 +191,20 @@ bool SCRIPT_LIB_FILECSV::AddLibraryFunctions(SCRIPT* script)
 
   this->script = script;
 
-  script->AddLibraryFunction(this, _L("FileCSV_Create")            , Call_FileCSV_Create);
-  script->AddLibraryFunction(this, _L("FileCSV_Open")              , Call_FileCSV_Open);
-  script->AddLibraryFunction(this, _L("FileCSV_Close")             , Call_FileCSV_Close);
-  script->AddLibraryFunction(this, _L("FileCSV_Save")              , Call_FileCSV_Save);
-  script->AddLibraryFunction(this, _L("FileCSV_SetSeparator")      , Call_FileCSV_SetSeparator);
-  script->AddLibraryFunction(this, _L("FileCSV_SetHeader")         , Call_FileCSV_SetHeader);
-  script->AddLibraryFunction(this, _L("FileCSV_AddRecord")         , Call_FileCSV_AddRecord);
-  script->AddLibraryFunction(this, _L("FileCSV_GetNRecords")       , Call_FileCSV_GetNRecords);
-  script->AddLibraryFunction(this, _L("FileCSV_GetNHeaderElements"), Call_FileCSV_GetNHeaderElements);
-  script->AddLibraryFunction(this, _L("FileCSV_GetHeaderElement")  , Call_FileCSV_GetHeaderElement);
-  script->AddLibraryFunction(this, _L("FileCSV_GetElement")        , Call_FileCSV_GetElement);
-  script->AddLibraryFunction(this, _L("FileCSV_GetPath")           , Call_FileCSV_GetPath);
-  script->AddLibraryFunction(this, _L("FileCSV_IsOpen")            , Call_FileCSV_IsOpen);
-  script->AddLibraryFunction(this, _L("FileCSV_GetShortDateTime")  , Call_FileCSV_GetShortDateTime);
+  script->AddLibraryFunction(this, NL("FileCSV_Create")            , Call_FileCSV_Create);
+  script->AddLibraryFunction(this, NL("FileCSV_Open")              , Call_FileCSV_Open);
+  script->AddLibraryFunction(this, NL("FileCSV_Close")             , Call_FileCSV_Close);
+  script->AddLibraryFunction(this, NL("FileCSV_Save")              , Call_FileCSV_Save);
+  script->AddLibraryFunction(this, NL("FileCSV_SetSeparator")      , Call_FileCSV_SetSeparator);
+  script->AddLibraryFunction(this, NL("FileCSV_SetHeader")         , Call_FileCSV_SetHeader);
+  script->AddLibraryFunction(this, NL("FileCSV_AddRecord")         , Call_FileCSV_AddRecord);
+  script->AddLibraryFunction(this, NL("FileCSV_GetNRecords")       , Call_FileCSV_GetNRecords);
+  script->AddLibraryFunction(this, NL("FileCSV_GetNHeaderElements"), Call_FileCSV_GetNHeaderElements);
+  script->AddLibraryFunction(this, NL("FileCSV_GetHeaderElement")  , Call_FileCSV_GetHeaderElement);
+  script->AddLibraryFunction(this, NL("FileCSV_GetElement")        , Call_FileCSV_GetElement);
+  script->AddLibraryFunction(this, NL("FileCSV_GetPath")           , Call_FileCSV_GetPath);
+  script->AddLibraryFunction(this, NL("FileCSV_IsOpen")            , Call_FileCSV_IsOpen);
+  script->AddLibraryFunction(this, NL("FileCSV_GetShortDateTime")  , Call_FileCSV_GetShortDateTime);
 
   return true;
 }
@@ -582,7 +582,7 @@ bool SCRIPT_LIB_FILECSV::GetShortDateTime(XSTRING& stamp)
   if(!datetime) return false;
 
   datetime->Read(true);
-  stamp.Format(_L("%04d%02d%02d_%02d%02d%02d")
+  stamp.Format(NL("%04d%02d%02d_%02d%02d%02d")
              , datetime->GetYear()
              , datetime->GetMonth()
              , datetime->GetDay()

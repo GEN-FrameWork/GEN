@@ -34,7 +34,7 @@
 
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
 
-#define DIOXTRACEINTERSTREAMS_LOGSECTIONID    _L("Debug")
+#define DIOXTRACEINTERSTREAMS_LOGSECTIONID    NL("Debug")
 
 
 

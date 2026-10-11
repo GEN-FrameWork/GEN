@@ -102,7 +102,7 @@ bool SCRIPT_LIB_CFG::AddLibraryFunctions(SCRIPT* script)
 
   this->script = script;
 
-  script->AddLibraryFunction(this, _L("GetFileCFGValue"), Call_GetFileCFGValue);
+  script->AddLibraryFunction(this, NL("GetFileCFGValue"), Call_GetFileCFGValue);
 
   return true;
 }

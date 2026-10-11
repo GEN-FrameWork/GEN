@@ -687,7 +687,7 @@ bool XWINDOWSREGISTRYMANAGER::EnumKeys(XWINDOWSREGISTRYKEY& registrykey, XVECTOR
       status = RegEnumKeyEx(registrykey.GetHandle(), index, namekey.Get(), &size, 0, NULL, NULL, NULL);
       namekey.AdjustSize();
 
-      //XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, _L("--- %d"), status);
+      //XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, NL("--- %d"), status);
 
       if(status == ERROR_SUCCESS)
         {

@@ -100,7 +100,7 @@ bool SQLITE_QUERY::Execute()
   sqlite3* db = static_cast<SQLITE_DATABASE*>(database)->sqlite3database;
   if(!db)
     {
-      database->Error(_L("database not initialized"));
+      database->Error(NL("database not initialized"));
       return false;
     }
 
@@ -118,7 +118,7 @@ bool SQLITE_QUERY::Execute()
       DB_SQL_ERROR* error = GEN_NEW DB_SQL_ERROR(DB_SQL_ERROR_TYPE_STATEMENT_ERROR);
       if(!error) return false;
 
-      error->description.Set(_L("void statement"));
+      error->description.Set(NL("void statement"));
 
       database->ClearPreviousErrors();
 
@@ -359,7 +359,7 @@ int SQLITE_QUERY::Exec(const char* sql, XDWORD size)
                                           DB_SQL_ERROR* error = GEN_NEW DB_SQL_ERROR(DB_SQL_ERROR_TYPE_MEMORY_ERROR);
                                           if(!error) return 1;
 
-                                          error->description.Set(_L("not enought memory for result"));
+                                          error->description.Set(NL("not enought memory for result"));
 
                                           database->ClearPreviousErrors();
 

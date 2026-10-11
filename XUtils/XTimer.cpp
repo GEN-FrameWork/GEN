@@ -87,7 +87,7 @@ XTIMERCLOCK::XTIMERCLOCK()
   xmutexclock=GEN_XFACTORY.CreateMutex();
   if(xmutexclock)
     {
-      threadclock = CREATEXTHREAD(XTHREADGROUPID_XTIMERCLOCK, _L("XTIMERCLOCK::XTIMERCLOCK"), ThreadClockFunction, (void*)this);
+      threadclock = CREATEXTHREAD(XTHREADGROUPID_XTIMERCLOCK, NL("XTIMERCLOCK::XTIMERCLOCK"), ThreadClockFunction, (void*)this);
       if(threadclock) threadclock->Ini();
     }
 }
@@ -436,32 +436,32 @@ bool XTIMER::GetMeasureString(XSTRING& measure, bool large)
         {
           case 0: if(!years) break;
                   if(years>1) 
-                         string.Format(XT_L(XTRANSLATION_GEN_ID_XTIMER_XX_YEARS), years); 
-                    else string.Format(XT_L(XTRANSLATION_GEN_ID_XTIMER_ONE_YEAR));
+                         string.Format(GEN_TL(XTRANSLATION_GEN_ID_XTIMER_XX_YEARS), years); 
+                    else string.Format(GEN_TL(XTRANSLATION_GEN_ID_XTIMER_ONE_YEAR));
                   break;
 
           case 1: if(!months) break;
                   if(months>1) 
-                         string.Format(XT_L(XTRANSLATION_GEN_ID_XTIMER_XX_MONTHS), months);  
-                    else string.Format(XT_L(XTRANSLATION_GEN_ID_XTIMER_ONE_MONTH));
+                         string.Format(GEN_TL(XTRANSLATION_GEN_ID_XTIMER_XX_MONTHS), months);  
+                    else string.Format(GEN_TL(XTRANSLATION_GEN_ID_XTIMER_ONE_MONTH));
                   break;
 
           case 2: if(!days) break;
                   if(days>1) 
-                         string.Format(XT_L(XTRANSLATION_GEN_ID_XTIMER_XX_DAYS), days); 
-                    else string.Format(XT_L(XTRANSLATION_GEN_ID_XTIMER_ONE_DAY));
+                         string.Format(GEN_TL(XTRANSLATION_GEN_ID_XTIMER_XX_DAYS), days); 
+                    else string.Format(GEN_TL(XTRANSLATION_GEN_ID_XTIMER_ONE_DAY));
                   break;
 
           case 3: if(large)
                     {
                       if(!hours) break;
                       if(hours>1) 
-                             string.Format(XT_L(XTRANSLATION_GEN_ID_XTIMER_XX_HOURS), hours); 
-                        else string.Format(XT_L(XTRANSLATION_GEN_ID_XTIMER_ONE_HOUR));
+                             string.Format(GEN_TL(XTRANSLATION_GEN_ID_XTIMER_XX_HOURS), hours); 
+                        else string.Format(GEN_TL(XTRANSLATION_GEN_ID_XTIMER_ONE_HOUR));
                     }
                    else
                     {
-                      string.Format(_L("%02d"), hours);
+                      string.Format(NL("%02d"), hours);
                     }
                   break;
 
@@ -469,12 +469,12 @@ bool XTIMER::GetMeasureString(XSTRING& measure, bool large)
                     {
                       if(!minutes) break;
                       if(minutes>1) 
-                             string.Format(XT_L(XTRANSLATION_GEN_ID_XTIMER_XX_MINUTES), minutes); 
-                        else string.Format(XT_L(XTRANSLATION_GEN_ID_XTIMER_ONE_MINUTE));
+                             string.Format(GEN_TL(XTRANSLATION_GEN_ID_XTIMER_XX_MINUTES), minutes); 
+                        else string.Format(GEN_TL(XTRANSLATION_GEN_ID_XTIMER_ONE_MINUTE));
                     }
                    else
                     {
-                      string.Format(_L("%02d"), minutes);
+                      string.Format(NL("%02d"), minutes);
                     }
                   break;
 
@@ -482,12 +482,12 @@ bool XTIMER::GetMeasureString(XSTRING& measure, bool large)
                     {
                       if(!seconds) break;
                       if(seconds>1) 
-                             string.Format(XT_L(XTRANSLATION_GEN_ID_XTIMER_XX_SECONDS), seconds); 
-                        else string.Format(XT_L(XTRANSLATION_GEN_ID_XTIMER_ONE_SECOND));
+                             string.Format(GEN_TL(XTRANSLATION_GEN_ID_XTIMER_XX_SECONDS), seconds); 
+                        else string.Format(GEN_TL(XTRANSLATION_GEN_ID_XTIMER_ONE_SECOND));
                     }
                    else
                     {
-                      string.Format(_L("%02d"), seconds);
+                      string.Format(NL("%02d"), seconds);
                     }
                   break;
 
@@ -513,7 +513,7 @@ bool XTIMER::GetMeasureString(XSTRING& measure, bool large)
 
   if(measure.IsEmpty())
     {
-      measure.Format(XT_L(XTRANSLATION_GEN_ID_XTIMER_ZERO_SECONDS));
+      measure.Format(GEN_TL(XTRANSLATION_GEN_ID_XTIMER_ZERO_SECONDS));
       return false;
     }
 

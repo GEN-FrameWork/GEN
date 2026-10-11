@@ -106,7 +106,7 @@ bool SQLITE_CONNECTION::Connect()
 {
   if(!database)
     {
-      database->Error(_L("DATABASE not initialized"));
+      database->Error(NL("DATABASE not initialized"));
       return false;
     }
 
@@ -115,18 +115,18 @@ bool SQLITE_CONNECTION::Connect()
   DB_SQL_STRING databasename;
   DB_SQL_STRING databasetimeout;
 
-  if(!FindOption(_L("DATABASE"), &databasename))
+  if(!FindOption(NL("DATABASE"), &databasename))
     {
-      database->Error(_L("DATABASE argument not supplied"));
+      database->Error(NL("DATABASE argument not supplied"));
       return false;
     }
 
   // Attempt connection
   XPATH xpathdatabase;
 
-  if(!FindOption(_L("PATH"), &xpathdatabase))
+  if(!FindOption(NL("PATH"), &xpathdatabase))
     {
-      database->Error(_L("DATABASE argument not supplied"));
+      database->Error(NL("DATABASE argument not supplied"));
       return false;
     }
 
@@ -144,7 +144,7 @@ bool SQLITE_CONNECTION::Connect()
       return false;
     }
 
-  if(FindOption(_L("TIMEOUT"), &databasetimeout))
+  if(FindOption(NL("TIMEOUT"), &databasetimeout))
     {
       int timeoutseconds = databasetimeout.ConvertToInt();
 

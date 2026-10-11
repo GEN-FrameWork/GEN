@@ -717,7 +717,7 @@ static GRPBITMAP* UI_SkinCanvas_BuildSoftShadowBitmap(int shape_w, int shape_h, 
   static bool once = true;
   if(once)
     {
-      XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, _L("[UI Draw] soft shadow: bitmap=%dx%d blur=%d shadow_alpha=%d"), bw, bh, blur_radius, (int)shadow_color->GetAlpha());
+      XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, NL("[UI Draw] soft shadow: bitmap=%dx%d blur=%d shadow_alpha=%d"), bw, bh, blur_radius, (int)shadow_color->GetAlpha());
       once = false;
     }
 
@@ -1278,7 +1278,7 @@ bool UI_SKINCANVAS_REBUILDAREAS::RebuildAllAreas()
     }
 
   #ifdef XTRACE_ACTIVE
-  //XTRACE_PRINTCOLOR(XTRACE_COLOR_INFO, _L("[DEBUGCAPTION] UI_SKINCANVAS_REBUILDAREAS::RebuildAllAreas: nareas=%d max_z_level=%d"), (int)nareas, (int)max_z_level);
+  //XTRACE_PRINTCOLOR(XTRACE_COLOR_INFO, NL("[DEBUGCAPTION] UI_SKINCANVAS_REBUILDAREAS::RebuildAllAreas: nareas=%d max_z_level=%d"), (int)nareas, (int)max_z_level);
   #endif
 
   // Level zero is a real paint layer, not a sentinel. Every fatherless element keeps the default z_level=0,
@@ -1312,7 +1312,7 @@ bool UI_SKINCANVAS_REBUILDAREAS::RebuildAllAreas()
                               continue;
                             }
 
-                          // XTRACE_PRINTCOLOR(XTRACE_COLOR_PURPLE, _L("Del area level [%d] [%s] "), element->GetZLevel(), element->GetName()->Get());
+                          // XTRACE_PRINTCOLOR(XTRACE_COLOR_PURPLE, NL("Del area level [%d] [%s] "), element->GetZLevel(), element->GetName()->Get());
                           GRPBITMAP* bitmap = area->GetBitmap();
                           if(bitmap) PutBitmapNoAlpha(area->GetXPos(), area->GetYPos(), bitmap);
 
@@ -2352,7 +2352,7 @@ bool UI_SKINCANVAS::CalculateBoundaryLine_Text(UI_ELEMENT* element, bool adjusts
       string_max.Empty();
       for(XDWORD c=0; c<size_max; c++)
         {
-          string_max += _L("A");
+          string_max += NL("A");
         }
     }
 
@@ -2784,7 +2784,7 @@ bool UI_SKINCANVAS::CalculateBoundaryLine_EditText(UI_ELEMENT* element, bool adj
   if(!size_max) size_max = text.GetSize();
   for(XDWORD c=0; c<size_max; c++)
     {
-      string_max += _L("A");
+      string_max += NL("A");
     }
 
   switch((int)element->GetBoundaryLine()->width)
@@ -2965,7 +2965,7 @@ bool UI_SKINCANVAS::CalculateBoundaryLine_ListBox(UI_ELEMENT* element, bool adju
   if(!size_max) size_max = text.GetSize();
   for(XDWORD c=0; c<size_max; c++)
     {
-      string_max += _L("A");
+      string_max += NL("A");
     }
 
   switch((int)element->GetBoundaryLine()->width)
@@ -3851,7 +3851,7 @@ bool UI_SKINCANVAS::Draw_TextBox(UI_ELEMENT* element)
                   GRP2DCOLOR_RGBA8  color_debug(255, 0, 255);
 
                   int width   = (int)canvas->VectorFont_GetWidth(textbox_part->GetText()->Get());
-                  int height  = (int)canvas->VectorFont_GetHeight(_L("A"));
+                  int height  = (int)canvas->VectorFont_GetHeight(NL("A"));
 
                   canvas->SetLineWidth(1.0f);
                   canvas->SetLineColor(&color_debug);
@@ -4874,7 +4874,7 @@ bool UI_SKINCANVAS::Draw_Form(UI_ELEMENT* element)
 
       if(!element_form->IsBackgroundColorSet() && !element_form->GetLegacyFillWarningEmitted())
         {
-          XTRACE_PRINTCOLOR(XTRACE_COLOR_WARNING, _L("[UI Draw] Form [%s]: fill via legacy \"color\" property; migrate to \"bckgrdcolor\" (or CSS \"background-color\") for CSS-natural semantics"), element_form->GetName() ? element_form->GetName()->Get() : _L("(unnamed)"));
+          XTRACE_PRINTCOLOR(XTRACE_COLOR_WARNING, NL("[UI Draw] Form [%s]: fill via legacy \"color\" property; migrate to \"bckgrdcolor\" (or CSS \"background-color\") for CSS-natural semantics"), element_form->GetName() ? element_form->GetName()->Get() : NL("(unnamed)"));
           element_form->SetLegacyFillWarningEmitted(true);
         }
 
@@ -6240,9 +6240,9 @@ bool UI_SKINCANVAS::PreDrawFunction(UI_ELEMENT* element, GRP2DCANVAS* canvas, XR
 
       #ifdef XTRACE_ACTIVE
       /*
-      if(element->GetName() && (element->GetName()->Find(_L("chrome"), true) != XSTRING_NOTFOUND || !element->GetName()->Compare(_L("caption"), true)))
+      if(element->GetName() && (element->GetName()->Find(NL("chrome"), true) != XSTRING_NOTFOUND || !element->GetName()->Compare(NL("caption"), true)))
         {
-          XTRACE_PRINTCOLOR(XTRACE_COLOR_INFO, _L("[DEBUGCAPTION] PreDrawFunction: element=[%s] zlevel=%d createarea=%d hadexistingarea=%d"),
+          XTRACE_PRINTCOLOR(XTRACE_COLOR_INFO, NL("[DEBUGCAPTION] PreDrawFunction: element=[%s] zlevel=%d createarea=%d hadexistingarea=%d"),
                                                                                 element->GetName()->Get(),
                                                                                 (int)element->GetZLevel(),
                                                                                 createarea?1:0,
@@ -6254,7 +6254,7 @@ bool UI_SKINCANVAS::PreDrawFunction(UI_ELEMENT* element, GRP2DCANVAS* canvas, XR
 
   if(createarea)
     {     
-      //XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, _L("Add area: level [%d] [%s] "), element->GetZLevel(), element->GetName()->Get());
+      //XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, NL("Add area: level [%d] [%s] "), element->GetZLevel(), element->GetName()->Get());
 
       double area_left   = UI_BOUNDARYLINE_EdgeLeft  (x_position, element->GetBoundaryLine()->width);
       double area_right  = UI_BOUNDARYLINE_EdgeRight  (x_position, element->GetBoundaryLine()->width);
@@ -6775,17 +6775,17 @@ static void UI_SkinCanvas_TextObstacle(double x, double ltop, double lbot, const
 bool UI_SKINCANVAS::TextBox_GenerateLines(UI_ELEMENT_TEXTBOX* element_textbox, GRP2DCANVAS* canvas, double x_position, double y_position, XVECTOR<UI_SKIN_TEXTBOX_PART*>& parts)
 {
   double                  x_text_position = x_position;
-  double                  y_text_position = UI_BOUNDARYLINE_EdgeTop(y_position, element_textbox->GetBoundaryLine()->height) + (double)canvas->VectorFont_GetHeight(_L("A")) + element_textbox->Scroll_GetDisplacement(UI_PROPERTY_SCROLLEABLE_TYPE_VERTICAL);  
+  double                  y_text_position = UI_BOUNDARYLINE_EdgeTop(y_position, element_textbox->GetBoundaryLine()->height) + (double)canvas->VectorFont_GetHeight(NL("A")) + element_textbox->Scroll_GetDisplacement(UI_PROPERTY_SCROLLEABLE_TYPE_VERTICAL);  
   XDWORD                  index_char      = 0;  
   UI_COLOR                actual_color;
   XDWORD                  nline           = 1;
-  double                  lineheight      = (canvas->VectorFont_GetHeight(_L("A")) + element_textbox->GetLineSpacing());
+  double                  lineheight      = (canvas->VectorFont_GetHeight(NL("A")) + element_textbox->GetLineSpacing());
   XSTRING                 text;
   UI_SKIN_TEXTBOX_PART*   textbox_part    = NULL;
   bool                    outlimit        = false;
   bool                    newpart         = false;  
 
-  double                  fontheight      = (double)canvas->VectorFont_GetHeight(_L("A"));
+  double                  fontheight      = (double)canvas->VectorFont_GetHeight(NL("A"));
   double                  box_right       = (double)element_textbox->GetXPosition() + (double)element_textbox->GetBoundaryLine()->width;
 
   double                  obs_l[UI_SKINCANVAS_TEXTBOX_MAXINLINEIMAGES];   // active inline-image rectangles (text flows around them)
@@ -6823,7 +6823,7 @@ bool UI_SKINCANVAS::TextBox_GenerateLines(UI_ELEMENT_TEXTBOX* element_textbox, G
               if(!textbox_part->GetText()->IsEmpty())
                 {
                   textbox_part->SetWidth((XDWORD)canvas->VectorFont_GetWidth(textbox_part->GetText()->Get()));
-                  textbox_part->SetHeight((XDWORD)canvas->VectorFont_GetHeight(_L("A")));
+                  textbox_part->SetHeight((XDWORD)canvas->VectorFont_GetHeight(NL("A")));
                   parts.Add(textbox_part);
                   textbox_part = GEN_NEW UI_SKIN_TEXTBOX_PART();
                   if(!textbox_part) return false;
@@ -6856,9 +6856,9 @@ bool UI_SKINCANVAS::TextBox_GenerateLines(UI_ELEMENT_TEXTBOX* element_textbox, G
                                   int indexend = text.FindCharacter(_C(']'), indexstart);
                                   if(indexend != XSTRING_NOTFOUND)
                                     {                                                                      
-                                      XCHAR*    keywords[] = {  _L("COLOR") ,                                                              
-                                                                _L("END") ,
-                                                                _L("IMAGE") ,
+                                      XCHAR*    keywords[] = {  NL("COLOR") ,                                                              
+                                                                NL("END") ,
+                                                                NL("IMAGE") ,
                                                              };
                                       XSTRING   keyword;
                                       bool      found_keyword = false;  
@@ -6907,7 +6907,7 @@ bool UI_SKINCANVAS::TextBox_GenerateLines(UI_ELEMENT_TEXTBOX* element_textbox, G
 
                                                   case  2 : { // IMAGE <file> : insert an inline image; following text flows after it (wrapping to the next line)
                                                               GRPBITMAP*    bitmap = NULL;
-                                                              UI_ANIMATION* anim   = GEN_USERINTERFACE.GetOrAddAnimationCache(UI_SKIN_DRAWMODE_CANVAS, canvas->GetMode(), _L(""), keyword_params.Get());
+                                                              UI_ANIMATION* anim   = GEN_USERINTERFACE.GetOrAddAnimationCache(UI_SKIN_DRAWMODE_CANVAS, canvas->GetMode(), NL(""), keyword_params.Get());
                                                               if(anim) bitmap = anim->GetBitmap();
 
                                                               if(bitmap)
@@ -6920,7 +6920,7 @@ bool UI_SKINCANVAS::TextBox_GenerateLines(UI_ELEMENT_TEXTBOX* element_textbox, G
                                                                   if(!textbox_part->GetText()->IsEmpty())
                                                                     {
                                                                       textbox_part->SetWidth((XDWORD)canvas->VectorFont_GetWidth(textbox_part->GetText()->Get()));
-                                                                      textbox_part->SetHeight((XDWORD)canvas->VectorFont_GetHeight(_L("A")));
+                                                                      textbox_part->SetHeight((XDWORD)canvas->VectorFont_GetHeight(NL("A")));
                                                                       parts.Add(textbox_part);
                                                                       textbox_part = GEN_NEW UI_SKIN_TEXTBOX_PART();
                                                                     }
@@ -6997,7 +6997,7 @@ bool UI_SKINCANVAS::TextBox_GenerateLines(UI_ELEMENT_TEXTBOX* element_textbox, G
 
                                               if(text.Get()[indexstart] != _C(' '))  
                                                 {
-                                                  text.Insert(_L(" "), indexstart);                                                                                                  
+                                                  text.Insert(NL(" "), indexstart);                                                                                                  
                                                 }
                                             }
                                             
@@ -7039,7 +7039,7 @@ bool UI_SKINCANVAS::TextBox_GenerateLines(UI_ELEMENT_TEXTBOX* element_textbox, G
                                           if(!textbox_part->GetText()->IsEmpty())
                                             {
                                               textbox_part->SetWidth((XDWORD)canvas->VectorFont_GetWidth(textbox_part->GetText()->Get()));
-                                              textbox_part->SetHeight((XDWORD)canvas->VectorFont_GetHeight(_L("A")));
+                                              textbox_part->SetHeight((XDWORD)canvas->VectorFont_GetHeight(NL("A")));
                                               parts.Add(textbox_part);
                                               textbox_part = GEN_NEW UI_SKIN_TEXTBOX_PART();
                                               if(!textbox_part) return false;
@@ -7104,7 +7104,7 @@ bool UI_SKINCANVAS::TextBox_GenerateLines(UI_ELEMENT_TEXTBOX* element_textbox, G
           if(!textbox_part->GetText()->IsEmpty())    
             {
               textbox_part->SetWidth((XDWORD)canvas->VectorFont_GetWidth(textbox_part->GetText()->Get()));
-              textbox_part->SetHeight((XDWORD)canvas->VectorFont_GetHeight(_L("A")));
+              textbox_part->SetHeight((XDWORD)canvas->VectorFont_GetHeight(NL("A")));
               parts.Add(textbox_part);  
 
               textbox_part = GEN_NEW UI_SKIN_TEXTBOX_PART();

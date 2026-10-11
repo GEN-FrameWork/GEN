@@ -82,6 +82,10 @@
 #include "GRPWINDOWSFactory.h"
 #endif
 
+#ifdef USERINTERFACE_ACTIVE
+#include "UI_Manager.h"
+#endif
+
 #ifdef INP_ACTIVE
 #include "INPManager.h"
 #include "INPFactory.h"
@@ -572,6 +576,13 @@ bool MAINPROCWINDOWS::Factorys_Ini()
 * --------------------------------------------------------------------------------------------------------------------*/
 bool MAINPROCWINDOWS::Factorys_End()
 {
+  #ifdef USERINTERFACE_ACTIVE
+  if(UI_MANAGER::GetIsInstanced())
+    {
+      UI_MANAGER::DelInstance();
+    }
+  #endif
+
   #ifdef GRP_ACTIVE
   GRPSCREEN::GetListScreens()->DeleteAll();
   GRPFACTORY::DelInstance();
@@ -1265,7 +1276,7 @@ int WINAPI WinMain(HINSTANCE hinstance, HINSTANCE hprevinst, LPSTR cmdline, int 
   XMEMORY_CONTROL_ACTIVATED
 
   int      nargs        = 0;
-  LPWSTR*  ptrpathexec  = CommandLineToArgvW(_L(""), &nargs);
+  LPWSTR*  ptrpathexec  = CommandLineToArgvW(NL(""), &nargs);
   XSTRING  xpathexecutable;
   XSTRING  cmdlinestr   = cmdline;
 
@@ -1274,7 +1285,7 @@ int WINAPI WinMain(HINSTANCE hinstance, HINSTANCE hprevinst, LPSTR cmdline, int 
   for(int c=0; c<nargs; c++)
     {
       xpathexecutable += ptrpathexec[c];
-      if(c != nargs-1)  xpathexecutable += _L(" ");
+      if(c != nargs-1)  xpathexecutable += NL(" ");
     }
 
   mainprocwindows.GetXPathExec()->Set(xpathexecutable);
@@ -1412,7 +1423,7 @@ void LIBRARY_End(void)
 * --------------------------------------------------------------------------------------------------------------------*/
 void MAINPROCWINDOWSSTACKWALKER::OnSymInit(LPCSTR szSearchPath, DWORD symOptions, LPCSTR szUserName)
 {
-  Exception_Printf(true, NULL, _L("Stack trace: "));
+  Exception_Printf(true, NULL, NL("Stack trace: "));
 }
 
 
@@ -1448,7 +1459,7 @@ void MAINPROCWINDOWSSTACKWALKER::OnCallstackEntry(CallstackEntryType eType, Call
       linefilename = entry.lineFileName;
       name         = entry.name;
 
-      Exception_Printf(true, NULL, _L("%08X  %-48s (%6d) %-64s"), (LPVOID) entry.offset, name.Get(), entry.lineNumber, linefilename.Get());
+      Exception_Printf(true, NULL, NL("%08X  %-48s (%6d) %-64s"), (LPVOID) entry.offset, name.Get(), entry.lineNumber, linefilename.Get());
     }
 }
 
@@ -1475,13 +1486,13 @@ BOOL WINAPI Exception_ConsoleHandler(DWORD fdwctrltype)
 
   switch(fdwctrltype)
     {
-      case CTRL_BREAK_EVENT     : Exception_Printf(false, _L("EVENT"), _L("Ctrl-Break event."));
+      case CTRL_BREAK_EVENT     : Exception_Printf(false, NL("EVENT"), NL("Ctrl-Break event."));
                                   #ifdef APPFLOW_ACTIVE
                                   if(app) app->SetExitType(APPFLOWBASE_EXITTYPE_BY_USER);
                                   #endif
                                   return FALSE;
 
-      case CTRL_C_EVENT         : Exception_Printf(false, _L("EVENT"), _L("Ctrl-C event."));
+      case CTRL_C_EVENT         : Exception_Printf(false, NL("EVENT"), NL("Ctrl-C event."));
                                   #ifdef APPFLOW_ACTIVE
                                   if(app) app->SetExitType(APPFLOWBASE_EXITTYPE_BY_USER);
                                   #endif
@@ -1494,7 +1505,7 @@ BOOL WINAPI Exception_ConsoleHandler(DWORD fdwctrltype)
                                   FreeConsole();         // Detachxconsole
                                   break;
 
-      case CTRL_LOGOFF_EVENT    : Exception_Printf(false, _L("EVENT"), _L("Ctrl-Logoff event."));
+      case CTRL_LOGOFF_EVENT    : Exception_Printf(false, NL("EVENT"), NL("Ctrl-Logoff event."));
                                   #ifdef APPFLOW_ACTIVE
                                   if(app) app->SetExitType(APPFLOWBASE_EXITTYPE_BY_SHUTDOWN);
                                   #endif
@@ -1502,7 +1513,7 @@ BOOL WINAPI Exception_ConsoleHandler(DWORD fdwctrltype)
                                   ExitThread(0);         // Prevent closing.
                                   break;
 
-      case CTRL_SHUTDOWN_EVENT  : Exception_Printf(false, _L("EVENT"), _L("Ctrl-Shutdown event."));
+      case CTRL_SHUTDOWN_EVENT  : Exception_Printf(false, NL("EVENT"), NL("Ctrl-Shutdown event."));
                                   #ifdef APPFLOW_ACTIVE
                                   if(app) app->SetExitType(APPFLOWBASE_EXITTYPE_BY_SHUTDOWN);
                                   #endif
@@ -1546,95 +1557,95 @@ int Exception_Filter(XDWORD code, struct _EXCEPTION_POINTERS* ep)
 
   switch(code)
     {
-      case EXCEPTION_ACCESS_VIOLATION         : exception   = _L("ACCESS VIOLATION");
-                                                description = _L("Read from or write to a virtual address for which it does not have access.");
+      case EXCEPTION_ACCESS_VIOLATION         : exception   = NL("ACCESS VIOLATION");
+                                                description = NL("Read from or write to a virtual address for which it does not have access.");
                                                 break;
 
-      case EXCEPTION_ARRAY_BOUNDS_EXCEEDED    : exception   = _L("ARRAY BOUNDS EXCEEDED");
-                                                description = _L("Access an array element that is out of bounds");
+      case EXCEPTION_ARRAY_BOUNDS_EXCEEDED    : exception   = NL("ARRAY BOUNDS EXCEEDED");
+                                                description = NL("Access an array element that is out of bounds");
                                                 break;
 
-      case EXCEPTION_DATATYPE_MISALIGNMENT    : exception   = _L("DATATYPE MISALIGNMENT");
-                                                description = _L("Read or write data that is misaligned on hardware that does not provide alignment.");
+      case EXCEPTION_DATATYPE_MISALIGNMENT    : exception   = NL("DATATYPE MISALIGNMENT");
+                                                description = NL("Read or write data that is misaligned on hardware that does not provide alignment.");
                                                 break;
 
-      case EXCEPTION_FLT_DENORMAL_OPERAND     : exception   = _L("FLT DENORMAL OPERAND]");
-                                                description = _L("One of the operands in a floating point operation is denormal.");
+      case EXCEPTION_FLT_DENORMAL_OPERAND     : exception   = NL("FLT DENORMAL OPERAND]");
+                                                description = NL("One of the operands in a floating point operation is denormal.");
                                                 break;
 
-      case EXCEPTION_FLT_DIVIDE_BY_ZERO       : exception   = _L("FLT DIVIDE BY ZERO");
-                                                description = _L("Divide a floating point value by a floating point divisor of 0 (zero).");
+      case EXCEPTION_FLT_DIVIDE_BY_ZERO       : exception   = NL("FLT DIVIDE BY ZERO");
+                                                description = NL("Divide a floating point value by a floating point divisor of 0 (zero).");
                                                 break;
 
-      case EXCEPTION_FLT_INEXACT_RESULT       : exception   = _L("FLT INEXACT RESULT");
-                                                description = _L("A floating point operation cannot be represented exactly as a decimal fraction.");
+      case EXCEPTION_FLT_INEXACT_RESULT       : exception   = NL("FLT INEXACT RESULT");
+                                                description = NL("A floating point operation cannot be represented exactly as a decimal fraction.");
                                                 break;
 
-      case EXCEPTION_FLT_INVALID_OPERATION    : exception   = _L("FLT INVALID OPERATION");
-                                                description = _L("A floating point exception (not defined).");
+      case EXCEPTION_FLT_INVALID_OPERATION    : exception   = NL("FLT INVALID OPERATION");
+                                                description = NL("A floating point exception (not defined).");
                                                 break;
 
-      case EXCEPTION_FLT_OVERFLOW             : exception   = _L("FLT OVERFLOW");
-                                                description = _L("The exponent of a floating point operation is greater than the magnitude allowed by the corresponding type.");
+      case EXCEPTION_FLT_OVERFLOW             : exception   = NL("FLT OVERFLOW");
+                                                description = NL("The exponent of a floating point operation is greater than the magnitude allowed by the corresponding type.");
                                                 break;
 
-      case EXCEPTION_FLT_STACK_CHECK          : exception   = _L("FLT STACK CHECK");
-                                                description = _L("The stack has overflowed or underflowed, because of a floating point operation.");
+      case EXCEPTION_FLT_STACK_CHECK          : exception   = NL("FLT STACK CHECK");
+                                                description = NL("The stack has overflowed or underflowed, because of a floating point operation.");
                                                 break;
 
-      case EXCEPTION_FLT_UNDERFLOW            : exception   = _L("FLT UNDERFLOW");
-                                                description = _L("The exponent of a floating point operation is less than the magnitude allowed by the corresponding type.");
+      case EXCEPTION_FLT_UNDERFLOW            : exception   = NL("FLT UNDERFLOW");
+                                                description = NL("The exponent of a floating point operation is less than the magnitude allowed by the corresponding type.");
                                                 break;
 
-      case EXCEPTION_GUARD_PAGE               : exception   = _L("GUARD PAGE");
-                                                description = _L("Accessed memory allocated with the PAGE GUARD modifier.");
+      case EXCEPTION_GUARD_PAGE               : exception   = NL("GUARD PAGE");
+                                                description = NL("Accessed memory allocated with the PAGE GUARD modifier.");
                                                 break;
 
-      case EXCEPTION_ILLEGAL_INSTRUCTION      : exception   = _L("ILLEGAL INSTRUCTION");
-                                                description = _L("Tries to execute an invalid instruction.");
+      case EXCEPTION_ILLEGAL_INSTRUCTION      : exception   = NL("ILLEGAL INSTRUCTION");
+                                                description = NL("Tries to execute an invalid instruction.");
                                                 break;
 
-      case EXCEPTION_IN_PAGE_ERROR            : exception   = _L("IN PAGE ERROR");
-                                                description = _L("Tries to access a page that is not present, and the system is unable to load the page.");
+      case EXCEPTION_IN_PAGE_ERROR            : exception   = NL("IN PAGE ERROR");
+                                                description = NL("Tries to access a page that is not present, and the system is unable to load the page.");
                                                 break;
 
-      case EXCEPTION_INT_DIVIDE_BY_ZERO       : exception   = _L("INT DIVIDE BY ZERO");
-                                                description = _L("Divide an integer value by an integer divisor of 0 (zero).");
+      case EXCEPTION_INT_DIVIDE_BY_ZERO       : exception   = NL("INT DIVIDE BY ZERO");
+                                                description = NL("Divide an integer value by an integer divisor of 0 (zero).");
                                                 break;
 
-      case EXCEPTION_INT_OVERFLOW             : exception   = _L("INT OVERFLOW");
-                                                description = _L("The result of an integer operation creates a value that is too large to be held by the destination register.");
+      case EXCEPTION_INT_OVERFLOW             : exception   = NL("INT OVERFLOW");
+                                                description = NL("The result of an integer operation creates a value that is too large to be held by the destination register.");
                                                 break;
 
-      case EXCEPTION_INVALID_DISPOSITION      : exception   = _L("INVALID DISPOSITION");
-                                                description = _L("An exception handler returns an invalid disposition to the exception dispatcher.");
+      case EXCEPTION_INVALID_DISPOSITION      : exception   = NL("INVALID DISPOSITION");
+                                                description = NL("An exception handler returns an invalid disposition to the exception dispatcher.");
                                                 break;
 
-      case EXCEPTION_INVALID_HANDLE           : exception   = _L("INVALID HANDLE") ;
-                                                description = _L("The thread used a handle to a kernel object that was invalid (probably because it had been closed).");
+      case EXCEPTION_INVALID_HANDLE           : exception   = NL("INVALID HANDLE") ;
+                                                description = NL("The thread used a handle to a kernel object that was invalid (probably because it had been closed).");
                                                 break;
 
-      case EXCEPTION_NONCONTINUABLE_EXCEPTION : exception   = _L("NONCONTINUABLE EXCEPTION");
-                                                description = _L("The thread attempts to continue execution after a non-continuable exception occurs.");
+      case EXCEPTION_NONCONTINUABLE_EXCEPTION : exception   = NL("NONCONTINUABLE EXCEPTION");
+                                                description = NL("The thread attempts to continue execution after a non-continuable exception occurs.");
                                                 break;
 
-      case EXCEPTION_PRIV_INSTRUCTION         : exception   = _L("PRIV INSTRUCTION");
-                                                description = _L("Execute an instruction with an operation that is not allowed in the current computer mode.");
+      case EXCEPTION_PRIV_INSTRUCTION         : exception   = NL("PRIV INSTRUCTION");
+                                                description = NL("Execute an instruction with an operation that is not allowed in the current computer mode.");
                                                 break;
 
-      case EXCEPTION_STACK_OVERFLOW           : exception   = _L("STACK OVERFLOW");
-                                                description = _L("Stack overflow");
+      case EXCEPTION_STACK_OVERFLOW           : exception   = NL("STACK OVERFLOW");
+                                                description = NL("Stack overflow");
                                                 break;
 
-      case EXCEPTION_BREAKPOINT               : //Exception_Printf(_L("[EXCEPTION_BREAKPOINT]")              , _L("A breakpoint is encountered"));
-      case EXCEPTION_SINGLE_STEP              : //Exception_Printf(_L("[EXCEPTION_SINGLE_STEP]")             , _L("A trace trap or other single instruction mechanism signals that one instruction is executed."));
+      case EXCEPTION_BREAKPOINT               : //Exception_Printf(NL("[EXCEPTION_BREAKPOINT]")              , NL("A breakpoint is encountered"));
+      case EXCEPTION_SINGLE_STEP              : //Exception_Printf(NL("[EXCEPTION_SINGLE_STEP]")             , NL("A trace trap or other single instruction mechanism signals that one instruction is executed."));
       case STATUS_UNWIND_CONSOLIDATE          : return EXCEPTION_CONTINUE_SEARCH;
                                                 break;
 
                                       default : return EXCEPTION_EXECUTE_HANDLER;
     }
 
-  Exception_Printf(true, _L("EXCEPTION"), _L("%s: %s"), exception.Get(), description.Get());
+  Exception_Printf(true, NL("EXCEPTION"), NL("%s: %s"), exception.Get(), description.Get());
 
   #ifdef APPFLOW_ACTIVE
   if(app)
@@ -1642,7 +1653,7 @@ int Exception_Filter(XDWORD code, struct _EXCEPTION_POINTERS* ep)
       if(app->GetTimerGlobal())
         {
           app->GetTimerGlobal()->GetMeasureString(string, true);
-          Exception_Printf(false, NULL, _L("Time working: %s."), string.Get());
+          Exception_Printf(false, NULL, NL("Time working: %s."), string.Get());
         }
     }
   #endif
@@ -1675,7 +1686,7 @@ int Exception_Filter(XDWORD code, struct _EXCEPTION_POINTERS* ep)
                                                   stackwalker.ShowCallstack(GetCurrentThread(), ep->ContextRecord);
 
 
-                                                  string.Format(_L("EXCEPTION %s"), exception.Get());
+                                                  string.Format(NL("EXCEPTION %s"), exception.Get());
 
                                                   #ifdef DIO_ALERTS_ACTIVE
                                                   DIOALERT* alert = GEN_DIOALERTS.CreateAlert(DIOALERTLEVEL_DANGER, string.Get(), allexceptiontext->Get());
@@ -1736,7 +1747,7 @@ bool Exception_Printf(bool iserror, XCHAR* title, XCHAR* mask, ...)
   #ifdef XLOG_ACTIVE
   if(GEN_XLOG.IsActive())
     {
-      GEN_XLOG.SetFilters(_L(""));
+      GEN_XLOG.SetFilters(NL(""));
 
       if(GEN_XLOG.AddEntry(iserror?XLOGLEVEL_ERROR:XLOGLEVEL_WARNING, title, false, outstring.Get()))
         {
@@ -1748,7 +1759,7 @@ bool Exception_Printf(bool iserror, XCHAR* title, XCHAR* mask, ...)
   if(allexceptiontext)
     {
       (*allexceptiontext) += outstring;
-      (*allexceptiontext) += _L("\r\n");
+      (*allexceptiontext) += NL("\r\n");
     }
 
   #ifdef XTRACE_ACTIVE

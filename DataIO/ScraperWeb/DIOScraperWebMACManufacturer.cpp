@@ -322,11 +322,11 @@ bool DIOSCRAPERWEBMACMANUFACTURER::Get(XCHAR* MAC, DIOMACMANUFACTURED_RESULT& re
 
   DIOSCRAPERSCRIPT runner;
 
-  runner.SetArg(_L("mac"), MAC);
-  runner.SetArgInt(_L("timeout"), timeoutforurl);
+  runner.SetArg(NL("mac"), MAC);
+  runner.SetArgInt(NL("timeout"), timeoutforurl);
   if(localIP && (!localIP->IsEmpty()))
     {
-      runner.SetArg(_L("localIP"), (*localIP));
+      runner.SetArg(NL("localIP"), (*localIP));
     }
 
   if(runner.Run(scriptpath.Get()))
@@ -334,10 +334,10 @@ bool DIOSCRAPERWEBMACMANUFACTURER::Get(XCHAR* MAC, DIOMACMANUFACTURED_RESULT& re
       XSTRING ok;
       XSTRING manufacturer;
 
-      runner.GetResult(_L("ok"), ok);
-      runner.GetResult(_L("manufacturer"), manufacturer);
+      runner.GetResult(NL("ok"), ok);
+      runner.GetResult(NL("manufacturer"), manufacturer);
 
-      if((ok.Compare(_L("1")) == 0) && (!manufacturer.IsEmpty()))
+      if((ok.Compare(NL("1")) == 0) && (!manufacturer.IsEmpty()))
         {
           result.Set(manufacturer);
 

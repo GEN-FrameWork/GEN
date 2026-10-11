@@ -61,7 +61,7 @@
 /*---- GENERAL VARIABLE ----------------------------------------------------------------------------------------------*/
 
 #include "cacert.h"
-//XCHAR*  trustedrootcertificatesX509[] = { _L("")  };
+//XCHAR*  trustedrootcertificatesX509[] = { NL("")  };
                        
 
 
@@ -656,18 +656,18 @@ bool CIPHERTRUSTEDROOTCERTIFICATESX509::GenerateEmbeddedHeadere(XPATH* originpat
   
                       if(!c)
                         {
-                          line.AddFormat(_L("XCHAR* trustedrootcertificates[] = { _L(\"%s\") ,"), originxfiletxt->GetLine(c)->Get()); 
+                          line.AddFormat(NL("XCHAR* trustedrootcertificates[] = { NL(\"%s\") ,"), originxfiletxt->GetLine(c)->Get()); 
                         }
                        else
                         {
-                          line.AddFormat(_L(" _L(\"%s\") ,"), originxfiletxt->GetLine(c)->Get());  
+                          line.AddFormat(NL(" NL(\"%s\") ,"), originxfiletxt->GetLine(c)->Get());  
                         }
 
                       targetxfiletxt->AddLine(line);                                                                            
                     } 
 
                   line.Empty();
-                  line.AddFormat(_L(" };"));  
+                  line.AddFormat(NL(" };"));  
                   targetxfiletxt->AddLine(line);                                                                            
 
                   status = targetxfiletxt->WriteAllFile();
@@ -745,7 +745,7 @@ bool CIPHERTRUSTEDROOTCERTIFICATESX509::Certificates_Decode()
       XSTRING* line = lines.Get(c);
       if(!line) continue;
 
-      if(line->Find(_L("-----BEGIN CERTIFICATE-----"), true) != XSTRING_NOTFOUND)
+      if(line->Find(NL("-----BEGIN CERTIFICATE-----"), true) != XSTRING_NOTFOUND)
         {
           if(iscertificate)
             {
@@ -758,7 +758,7 @@ bool CIPHERTRUSTEDROOTCERTIFICATESX509::Certificates_Decode()
           continue;
         }
 
-      if(line->Find(_L("-----END CERTIFICATE-----"), true) != XSTRING_NOTFOUND)
+      if(line->Find(NL("-----END CERTIFICATE-----"), true) != XSTRING_NOTFOUND)
         {
           XBUFFER* certificate;
 

@@ -53,10 +53,10 @@
 #define XLICENSE_VERSION                  1
 #define XLICENSE_SUBVERSION               0
 
-#define XLICENSE_FILESECTION              _L("LICENSE")
-#define XLICENSE_FILEVALUE_ID             _L("licenseID")
-#define XLICENSE_FILEVALUE_LICENSE        _L("license")
-#define XLICENSE_FILEVALUE_EXPIRATION     _L("expiration")
+#define XLICENSE_FILESECTION              NL("LICENSE")
+#define XLICENSE_FILEVALUE_ID             NL("licenseID")
+#define XLICENSE_FILEVALUE_LICENSE        NL("license")
+#define XLICENSE_FILEVALUE_EXPIRATION     NL("expiration")
 
 
 #define CREATEMASTERLICENSE(xlicense, xpath, xlicenseID, applicationID, expirationseconds)    { XSTRING appID;                                                                      \

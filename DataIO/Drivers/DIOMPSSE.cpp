@@ -121,14 +121,14 @@ XCHAR* DIOMPSSE::GetChipTypeName()
 {
   switch(chiptype)
     {
-      case DIOMPSSE_CHIP_TYPE_AM       :  return _L("AM");
-      case DIOMPSSE_CHIP_TYPE_BM       :  return _L("BM");
-      case DIOMPSSE_CHIP_TYPE_2232C    :  return _L("2232C");
-      case DIOMPSSE_CHIP_TYPE_R        :  return _L("R");
-      case DIOMPSSE_CHIP_TYPE_2232H    :  return _L("2232H");
-      case DIOMPSSE_CHIP_TYPE_4232H    :  return _L("4232H");
-      case DIOMPSSE_CHIP_TYPE_232H     :  return _L("232H");
-                            default    :  return _L("Unknown");
+      case DIOMPSSE_CHIP_TYPE_AM       :  return NL("AM");
+      case DIOMPSSE_CHIP_TYPE_BM       :  return NL("BM");
+      case DIOMPSSE_CHIP_TYPE_2232C    :  return NL("2232C");
+      case DIOMPSSE_CHIP_TYPE_R        :  return NL("R");
+      case DIOMPSSE_CHIP_TYPE_2232H    :  return NL("2232H");
+      case DIOMPSSE_CHIP_TYPE_4232H    :  return NL("4232H");
+      case DIOMPSSE_CHIP_TYPE_232H     :  return NL("232H");
+                            default    :  return NL("Unknown");
     }
 
   return NULL;

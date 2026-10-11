@@ -123,7 +123,7 @@ bool XWINDOWSFILEBORLAND::Exist(XCHAR* path)
 * --------------------------------------------------------------------------------------------------------------------*/
 bool XWINDOWSFILEBORLAND::Open(XCHAR* path, bool isreadonly)
 {
-  return ExtendedOpen(path, (isreadonly)? _L("rb") : _L("r+b"));
+  return ExtendedOpen(path, (isreadonly)? NL("rb") : NL("r+b"));
 }
 
 
@@ -140,7 +140,7 @@ bool XWINDOWSFILEBORLAND::Open(XCHAR* path, bool isreadonly)
 * --------------------------------------------------------------------------------------------------------------------*/
 bool XWINDOWSFILEBORLAND::Create(XCHAR* path)
 {
-  return ExtendedOpen(path, _L("w+b"));
+  return ExtendedOpen(path, NL("w+b"));
 }
 
 

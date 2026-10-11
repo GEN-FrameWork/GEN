@@ -524,10 +524,10 @@ void GRPSCREENCFGCHROMES::Clean()
 
   GEN_XPATHSMANAGER.GetPathOfSection(XPATHSMANAGERSECTIONTYPE_UI_LAYOUTS, defaultlayoutfile);
   defaultlayoutfile.Slash_Add();
-  defaultlayoutfile.Add(_L("defaultwindowschromes.zip"));
+  defaultlayoutfile.Add(NL("defaultwindowschromes.zip"));
 
   customlayoutfile = defaultlayoutfile;
-  customlayoutname = _L("chrome");
+  customlayoutname = NL("chrome");
   customautohide   = 0;
 
   #endif

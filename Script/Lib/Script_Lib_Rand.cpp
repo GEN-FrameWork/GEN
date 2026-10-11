@@ -126,8 +126,8 @@ bool SCRIPT_LIB_RAND::AddLibraryFunctions(SCRIPT* script)
 
   this->script = script;
 
-  script->AddLibraryFunction(this, _L("RandMax"), Call_RandMax);
-  script->AddLibraryFunction(this, _L("RandBetween"), Call_RandBetween);
+  script->AddLibraryFunction(this, NL("RandMax"), Call_RandMax);
+  script->AddLibraryFunction(this, NL("RandBetween"), Call_RandBetween);
 
   return true;
 }

@@ -39,7 +39,7 @@
 
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
 
-#define SCRIPT_LIB_NAME_WEBCLIENT   _L("WebClient")
+#define SCRIPT_LIB_NAME_WEBCLIENT   NL("WebClient")
 
 
 

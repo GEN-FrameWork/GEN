@@ -2330,7 +2330,7 @@ bool XMPINTEGER::GetToString(int radix, XSTRING& string)
   XSTRING     charshex;
 //int         n;
   
-  charshex = _L("0123456789ABCDEF");
+  charshex = NL("0123456789ABCDEF");
 
   string.Empty();
 

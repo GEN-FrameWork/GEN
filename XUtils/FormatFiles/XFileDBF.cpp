@@ -1514,7 +1514,7 @@ bool XFILEDBF::Pack()
   XPATH xpathtmp;
 
   xpathtmp  = GetXPath()->Get();
-  xpathtmp += _L(".tmp");
+  xpathtmp += NL(".tmp");
 
   XFILEDBF* dbftmp = GEN_NEW XFILEDBF();
   if(!dbftmp) return false;

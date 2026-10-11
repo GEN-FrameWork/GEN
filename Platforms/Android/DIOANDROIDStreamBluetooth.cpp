@@ -107,7 +107,7 @@ DIOANDROIDSTREAMBLUETOOTH::DIOANDROIDSTREAMBLUETOOTH( ) : DIOSTREAMBLUETOOTH() ,
             DIOANDROIDBTFSMEVENT_SENDINGDATA          , DIOANDROIDBTFSMSTATE_SENDINGDATA       ,
             XFSMACHINESTATE_EVENTDEFEND);
 
-  threadconnection = CREATEXTHREAD(_L("DIOANDROIDSTREAMBLUETOOTH::DIOANDROIDSTREAMBLUETOOTH"), ThreadRunFunction, (void*)this);
+  threadconnection = CREATEXTHREAD(NL("DIOANDROIDSTREAMBLUETOOTH::DIOANDROIDSTREAMBLUETOOTH"), ThreadRunFunction, (void*)this);
 }
 
 
@@ -378,11 +378,11 @@ bool DIOANDROIDSTREAMBLUETOOTH::ManagementOfPIN(bool active, XSTRING &localMACst
   local.ToUpperCase();
   remote.ToUpperCase();
 
-  //XTRACE_PRINTCOLOR(1, _L("Local  MAC: %s"), local.Get());
-  //XTRACE_PRINTCOLOR(1, _L("Remote MAC: %s"), remote.Get());
+  //XTRACE_PRINTCOLOR(1, NL("Local  MAC: %s"), local.Get());
+  //XTRACE_PRINTCOLOR(1, NL("Remote MAC: %s"), remote.Get());
 
-  xpathfile.Format(_L("/var/lib/bluetooth/%s"), local.Get());
-  //xpathfile.Format(_L("D:/Projects/pinprobe/%s"), local.Get());
+  xpathfile.Format(NL("/var/lib/bluetooth/%s"), local.Get());
+  //xpathfile.Format(NL("D:/Projects/pinprobe/%s"), local.Get());
   xpathfile.Slash_Add();
 
   xdir=GEN_XFACTORY.Create_Dir();
@@ -395,7 +395,7 @@ bool DIOANDROIDSTREAMBLUETOOTH::ManagementOfPIN(bool active, XSTRING &localMACst
 
   if(status)
     {
-      xpathfile += _L("pincodes");
+      xpathfile += NL("pincodes");
 
       XFILETXT* filetxt = GEN_NEW XFILETXT();
       if(!filetxt) return false;
@@ -428,12 +428,12 @@ bool DIOANDROIDSTREAMBLUETOOTH::ManagementOfPIN(bool active, XSTRING &localMACst
                   if(indexfound != XSTRING_NOTFOUND)
                     {
                       XSTRING* line = filetxt->GetLine(indexfound);
-                      if(line) line->Format(_L("%s %s"), remote.Get(), PIN.Get());
+                      if(line) line->Format(NL("%s %s"), remote.Get(), PIN.Get());
                     }
                    else
                     {
                       XSTRING line;
-                      line.Format(_L("%s %s"), remote.Get(), PIN.Get());
+                      line.Format(NL("%s %s"), remote.Get(), PIN.Get());
                       filetxt->AddLine(line);
                     }
 

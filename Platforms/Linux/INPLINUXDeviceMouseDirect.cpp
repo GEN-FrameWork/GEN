@@ -353,7 +353,7 @@ bool INPLINUXDEVICEMOUSEDIRECT::OpenAllDevicesID()
           XSTRING event;
           int     filedescriptor = INPLINUXDEVICEID_INVALID;
      
-          event.Format(_L("/dev/input/event%d"), deviceID->GetEventIndex());
+          event.Format(NL("/dev/input/event%d"), deviceID->GetEventIndex());
                      
           XBUFFER charstr;
           

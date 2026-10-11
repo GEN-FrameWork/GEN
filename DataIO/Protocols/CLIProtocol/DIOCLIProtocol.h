@@ -54,14 +54,14 @@ enum DIOCLIPROTOCOL_ERROR
 
 #define DIOCLIPROTOCOL_MARK_DONOTANSWER     _C('#')
 #define DIOCLIPROTOCOL_MARK_ISANSWER        _C('>')
-#define DIOCLIPROTOCOL_MARK_ORIGIN          _L("[@]")
-#define DIOCLIPROTOCOL_MARK_TARGET          _L("[$]") 
-#define DIOCLIPROTOCOL_MARK_BROADCAST       _L("[*]") 
-#define DIOCLIPROTOCOL_MARK_ANSWER          _L("[-]") 
-#define DIOCLIPROTOCOL_MARK_CRC32           _L("[|]") 
+#define DIOCLIPROTOCOL_MARK_ORIGIN          NL("[@]")
+#define DIOCLIPROTOCOL_MARK_TARGET          NL("[$]") 
+#define DIOCLIPROTOCOL_MARK_BROADCAST       NL("[*]") 
+#define DIOCLIPROTOCOL_MARK_ANSWER          NL("[-]") 
+#define DIOCLIPROTOCOL_MARK_CRC32           NL("[|]") 
 
-#define DIOCLIPROTOCOL_OK                   _L("ok")
-#define DIOCLIPROTOCOL_ERROR                _L("error")
+#define DIOCLIPROTOCOL_OK                   NL("ok")
+#define DIOCLIPROTOCOL_ERROR                NL("error")
 
 #define DIOCLIPROTOCOL_TIMEOUT              5  //Seconds
 

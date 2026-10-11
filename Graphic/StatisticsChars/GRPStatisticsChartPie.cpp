@@ -147,7 +147,7 @@ bool GRPSTATISTICSCHARTPIE::DrawPlot(GRPSTATISTICSCHARTBUILDER& builder, double 
           double ly     = cy + (lr * sin(midrad));
 
           XSTRING vlabel;
-          vlabel.Format(_L("%g"), value);
+          vlabel.Format(NL("%g"), value);
 
           GRPSTATISTICSCHARTTEXTSTYLE vstyle;
           vstyle.color  = config.GetTextColor();

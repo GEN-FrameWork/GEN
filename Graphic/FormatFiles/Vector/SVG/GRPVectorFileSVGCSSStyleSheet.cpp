@@ -203,7 +203,7 @@ bool GRPVECTORFILESVGCSSSTYLESHEET::CollectStyleElements(XFILEXMLELEMENT* elemen
 {
   if(!element) return false;
 
-  if(!element->GetName().Compare(_L("style"), true))
+  if(!element->GetName().Compare(NL("style"), true))
     {
       // NOTE: the CSS text of <style>...</style> is NOT held in this element's own GetValue(); the XML reader
       // parses it as a separate child node (typically of type XFILEXMLELEMENTTYPE_CDATA). Gather this element's
@@ -256,8 +256,8 @@ bool GRPVECTORFILESVGCSSSTYLESHEET::ParseStyleSheetText(XSTRING& text)
 
   // Defensive: some XML readers leave the CDATA delimiters in the element text content instead of stripping
   // them; if present, remove them here so they never get mistaken for part of the first/last selector.
-  sheet.Replace(_L("<![CDATA["), _L(""));
-  sheet.Replace(_L("]]>"), _L(""));
+  sheet.Replace(NL("<![CDATA["), NL(""));
+  sheet.Replace(NL("]]>"), NL(""));
 
   XVECTOR<XSTRING*> rules;
   sheet.Split(_C('}'), rules, false);
@@ -267,7 +267,7 @@ bool GRPVECTORFILESVGCSSSTYLESHEET::ParseStyleSheetText(XSTRING& text)
       XSTRING* rule = rules.Get(c);
       if(rule && !rule->IsEmpty())
         {
-          int brace = rule->Find(_L("{"), false, 0);
+          int brace = rule->Find(NL("{"), false, 0);
           if(brace > 0)
             {
               XSTRING selectors;
@@ -307,7 +307,7 @@ bool GRPVECTORFILESVGCSSSTYLESHEET::ParseStyleSheetText(XSTRING& text)
                           // GRPVECTORFILESVGSTYLE::ApplyData applies it FIRST, before presentation attributes,
                           // class rules or inline style -- exactly the lowest-specificity position the universal
                           // selector has in a real CSS cascade, so anything more specific still overrides it.
-                          Add(_L("*"), declarations.Get());
+                          Add(NL("*"), declarations.Get());
                         }
                     }
                 }

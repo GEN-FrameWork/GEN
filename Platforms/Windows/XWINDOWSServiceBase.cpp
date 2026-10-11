@@ -29,6 +29,7 @@
 /*---- PRECOMPILATION INCLUDES ---------------------------------------------------------------------------------------*/
 
 #include "GEN_Defines.h"
+#include "XTranslation_GEN.h"
 
 
 
@@ -40,6 +41,7 @@
 
 #include "XTrace.h"
 #include "XLog.h"
+#include "XString.h"
 
 
 
@@ -178,12 +180,12 @@ void XWINDOWSSERVICEBASE::Stop()
       }
     catch(DWORD error)
       {
-        WriteErrorLogEntry(_L("Service Stop"), error);
+        WriteErrorLogEntry(NL("Service Stop"), error);
         SetServiceStatus(originalstate);
       }
     catch(...)
       {
-        WriteEventLogEntry(_L("Service failed to stop."), EVENTLOG_ERROR_TYPE);
+        WriteEventLogEntry(NL("Service failed to stop."), EVENTLOG_ERROR_TYPE);
         SetServiceStatus(originalstate);
       }
 }
@@ -650,7 +652,7 @@ void XWINDOWSSERVICEBASE::WriteErrorLogEntry(XCHAR* function, XDWORD error)
 {
   XSTRING message;
 
-  message.Format( _L("%s failed w/err 0x%08lx"), function, error);
+  message.Format( NL("%s failed w/err 0x%08lx"), function, error);
 
   WriteEventLogEntry(message.Get(), EVENTLOG_ERROR_TYPE);
 }
@@ -996,14 +998,14 @@ void XWINDOWSSERVICEBASE::Start(XDWORD argc, XCHAR** args)
     catch(DWORD error)
       {
         #ifdef XLOG_ACTIVE
-        GEN_XLOG.AddEntry(XLOGLEVEL_ERROR, XWINDOWSSERVICEBASE_LOG_SECTIONID_SERVICE, false, _L("%s: Service failed to start Error[%08X]."), servicename, error);
+        GEN_XLOG.AddEntry(XLOGLEVEL_ERROR, XWINDOWSSERVICEBASE_LOG_SECTIONID_SERVICE, false, GEN_TL(XTRANSLATION_GEN_ID_XWINDOWSSERVICEBASE_SERVICE_FAILED_TO_START_ERROR), servicename, error);
         #endif
         SetServiceStatus(SERVICE_STOPPED, error);
       }
     catch(...)
       {
         #ifdef XLOG_ACTIVE
-        GEN_XLOG.AddEntry(XLOGLEVEL_ERROR, XWINDOWSSERVICEBASE_LOG_SECTIONID_SERVICE, false, _L("%s: Service failed to start."), servicename);
+        GEN_XLOG.AddEntry(XLOGLEVEL_ERROR, XWINDOWSSERVICEBASE_LOG_SECTIONID_SERVICE, false, GEN_TL(XTRANSLATION_GEN_ID_XWINDOWSSERVICEBASE_SERVICE_FAILED_TO_START), servicename);
         #endif
         SetServiceStatus(SERVICE_STOPPED);
       }
@@ -1028,7 +1030,7 @@ void XWINDOWSSERVICEBASE::Pause()
     catch(...)
       {
         #ifdef XLOG_ACTIVE
-        GEN_XLOG.AddEntry(XLOGLEVEL_ERROR, XWINDOWSSERVICEBASE_LOG_SECTIONID_SERVICE, false, _L("%s: Service failed to pause."), servicename);        
+        GEN_XLOG.AddEntry(XLOGLEVEL_ERROR, XWINDOWSSERVICEBASE_LOG_SECTIONID_SERVICE, false, GEN_TL(XTRANSLATION_GEN_ID_XWINDOWSSERVICEBASE_SERVICE_FAILED_TO_PAUSE), servicename);        
         #endif        
         SetServiceStatus(SERVICE_RUNNING);
       }
@@ -1052,7 +1054,7 @@ void XWINDOWSSERVICEBASE::Continue()
     catch(...)
       {
         #ifdef XLOG_ACTIVE
-        GEN_XLOG.AddEntry(XLOGLEVEL_ERROR, XWINDOWSSERVICEBASE_LOG_SECTIONID_SERVICE, false, _L("%s: Service failed to continue Error[%08X]."), servicename);        
+        GEN_XLOG.AddEntry(XLOGLEVEL_ERROR, XWINDOWSSERVICEBASE_LOG_SECTIONID_SERVICE, false, GEN_TL(XTRANSLATION_GEN_ID_XWINDOWSSERVICEBASE_SERVICE_FAILED_TO_CONTINUE_ERROR), servicename);        
         #endif
         SetServiceStatus(SERVICE_PAUSED);
      }
@@ -1075,7 +1077,7 @@ void XWINDOWSSERVICEBASE::Shutdown()
      catch (...)
       {
         #ifdef XLOG_ACTIVE
-        GEN_XLOG.AddEntry(XLOGLEVEL_ERROR, XWINDOWSSERVICEBASE_LOG_SECTIONID_SERVICE, false, _L("%s: Service failed to shutdown."), servicename);        
+        GEN_XLOG.AddEntry(XLOGLEVEL_ERROR, XWINDOWSSERVICEBASE_LOG_SECTIONID_SERVICE, false, GEN_TL(XTRANSLATION_GEN_ID_XWINDOWSSERVICEBASE_SERVICE_FAILED_TO_SHUTDOWN), servicename);        
         #endif
       }
 }
@@ -1094,7 +1096,7 @@ void XWINDOWSSERVICEBASE::PowerEvent(DWORD eventtype)
 {
   On_PowerEvent(eventtype);
   #ifdef XLOG_ACTIVE
-  GEN_XLOG.AddEntry(XLOGLEVEL_INFO, XWINDOWSSERVICEBASE_LOG_SECTIONID_SERVICE, false, _L("%s: Service Power Event : Event [%08X]."), servicename, eventtype);
+  GEN_XLOG.AddEntry(XLOGLEVEL_INFO, XWINDOWSSERVICEBASE_LOG_SECTIONID_SERVICE, false, GEN_TL(XTRANSLATION_GEN_ID_XWINDOWSSERVICEBASE_SERVICE_POWER_EVENT_EVENT), servicename, eventtype);
   #endif
 }
 
@@ -1112,7 +1114,7 @@ void XWINDOWSSERVICEBASE::SessionChange(DWORD eventtype)
 {
   On_SessionChange(eventtype);
   #ifdef XLOG_ACTIVE
-  GEN_XLOG.AddEntry(XLOGLEVEL_INFO, XWINDOWSSERVICEBASE_LOG_SECTIONID_SERVICE, false, _L("%s: Service Session Change: Event [%08X]."), servicename, eventtype);
+  GEN_XLOG.AddEntry(XLOGLEVEL_INFO, XWINDOWSSERVICEBASE_LOG_SECTIONID_SERVICE, false, GEN_TL(XTRANSLATION_GEN_ID_XWINDOWSSERVICEBASE_SERVICE_SESSION_CHANGE_EVENT), servicename, eventtype);
   #endif
 }
 
@@ -1127,7 +1129,7 @@ void XWINDOWSSERVICEBASE::SessionChange(DWORD eventtype)
 * --------------------------------------------------------------------------------------------------------------------*/
 void XWINDOWSSERVICEBASE::Clean()
 {
-  servicename           = _L("");
+  servicename           = NL("");
   statushandle          = NULL;
 
   service_config        = NULL; 

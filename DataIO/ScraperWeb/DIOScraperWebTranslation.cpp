@@ -531,7 +531,7 @@ bool DIOSCRAPERWEBTRANSLATION::DecodeTranslationText(XSTRING& text)
   XSTRING           work;
   DIOURL            url;
   XSTRING           decoded;
-  XSTRING           plusguard(_L("\x03"));
+  XSTRING           plusguard(NL("\x03"));
   bool              status = true;
 
   if(text.IsEmpty()) return false;
@@ -558,7 +558,7 @@ bool DIOSCRAPERWEBTRANSLATION::DecodeTranslationText(XSTRING& text)
               text.Copy(c, c + len, (*mask));
               masks.Add(mask);
 
-              token.Format(_L("\x01FMT%04d\x02"), (int)(masks.GetSize() - 1));
+              token.Format(NL("\x01FMT%04d\x02"), (int)(masks.GetSize() - 1));
               work.Add(token);
               c += len;
               continue;
@@ -573,7 +573,7 @@ bool DIOSCRAPERWEBTRANSLATION::DecodeTranslationText(XSTRING& text)
     {
       // Keep literal '+' (e.g. "C++"); DIOURL form-decoding maps '+' → space.
       {
-        XSTRING plus(_L("+"));
+        XSTRING plus(NL("+"));
         work.Replace(plus.Get(), plusguard.Get());
       }
 
@@ -583,14 +583,14 @@ bool DIOSCRAPERWEBTRANSLATION::DecodeTranslationText(XSTRING& text)
           work = decoded;
         }
 
-      work.Replace(plusguard.Get(), _L("+"));
+      work.Replace(plusguard.Get(), NL("+"));
 
       for(XDWORD i = 0; i < masks.GetSize(); i++)
         {
           XSTRING  token;
           XSTRING* mask = masks.Get(i);
 
-          token.Format(_L("\x01FMT%04d\x02"), (int)i);
+          token.Format(NL("\x01FMT%04d\x02"), (int)i);
           if(mask) work.Replace(token.Get(), mask->Get());
         }
 
@@ -626,7 +626,7 @@ bool DIOSCRAPERWEBTRANSLATION::Get(XCHAR* text, XCHAR* sourcelanguage, XCHAR* ta
     XSTRING             resolved;
 
     // Source: "auto" stays; otherwise resolve GEN alpha3/alpha2 (or legacy iw/jw) → ISO 639-1.
-    if(sourcelanguage && sourcelanguage[0] && (XSTRING::Compare(sourcelanguage, _L("auto"), true) != 0))
+    if(sourcelanguage && sourcelanguage[0] && (XSTRING::Compare(sourcelanguage, NL("auto"), true) != 0))
       {
         if(iso.CodeAlpha2_Resolve(sourcelanguage, resolved))
               sl = resolved;
@@ -634,7 +634,7 @@ bool DIOSCRAPERWEBTRANSLATION::Get(XCHAR* text, XCHAR* sourcelanguage, XCHAR* ta
       }
      else
       {
-        sl = _L("auto");
+        sl = NL("auto");
       }
 
     // Target must be a concrete language for translate APIs.
@@ -646,9 +646,9 @@ bool DIOSCRAPERWEBTRANSLATION::Get(XCHAR* text, XCHAR* sourcelanguage, XCHAR* ta
   if(xmutexdo) xmutexdo->Lock();
 
   cacheask  = text;
-  cacheask += _L("|");
+  cacheask += NL("|");
   cacheask += sl;
-  cacheask += _L("|");
+  cacheask += NL("|");
   cacheask += tl;
 
   if(usecache && cache)
@@ -665,13 +665,13 @@ bool DIOSCRAPERWEBTRANSLATION::Get(XCHAR* text, XCHAR* sourcelanguage, XCHAR* ta
 
   DIOSCRAPERSCRIPT runner;
 
-  runner.SetArg(_L("text"), text);
-  runner.SetArg(_L("sl"), sl);
-  runner.SetArg(_L("tl"), tl);
-  runner.SetArgInt(_L("timeout"), timeoutforurl);
+  runner.SetArg(NL("text"), text);
+  runner.SetArg(NL("sl"), sl);
+  runner.SetArg(NL("tl"), tl);
+  runner.SetArgInt(NL("timeout"), timeoutforurl);
   if(localIP && (!localIP->IsEmpty()))
     {
-      runner.SetArg(_L("localIP"), (*localIP));
+      runner.SetArg(NL("localIP"), (*localIP));
     }
 
   if(runner.Run(scriptpath.Get()))
@@ -680,11 +680,11 @@ bool DIOSCRAPERWEBTRANSLATION::Get(XCHAR* text, XCHAR* sourcelanguage, XCHAR* ta
       XSTRING translation;
       XSTRING detected;
 
-      runner.GetResult(_L("ok"), ok);
-      runner.GetResult(_L("translation"), translation);
-      runner.GetResult(_L("detected"), detected);
+      runner.GetResult(NL("ok"), ok);
+      runner.GetResult(NL("translation"), translation);
+      runner.GetResult(NL("detected"), detected);
 
-      if((ok.Compare(_L("1")) == 0) && (!translation.IsEmpty()))
+      if((ok.Compare(NL("1")) == 0) && (!translation.IsEmpty()))
         {
           if(detected.IsEmpty()) detected = sl;
 

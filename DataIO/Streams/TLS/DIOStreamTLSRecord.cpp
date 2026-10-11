@@ -311,9 +311,9 @@ bool DIOSTREAMTLSRECORD::SetKeys(DIOSTREAMTLS13KEYSCHEDULE_LEVEL level, DIOSTREA
   sequence[direction]    = 0;
   isprotected[direction] = true;
 
-  /* XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, _L("[TLS Record] Keys of the %s direction installed: %s level, key %d, iv %d"),
-                                       (direction == DIOSTREAMTLSKEYSCHEDULE_DIRECTION_LOCAL)?_L("local"):_L("remote"),
-                                       (level == DIOSTREAMTLS13KEYSCHEDULE_LEVEL_HANDSHAKE)?_L("handshake"):_L("application"),
+  /* XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, NL("[TLS Record] Keys of the %s direction installed: %s level, key %d, iv %d"),
+                                       (direction == DIOSTREAMTLSKEYSCHEDULE_DIRECTION_LOCAL)?NL("local"):NL("remote"),
+                                       (level == DIOSTREAMTLS13KEYSCHEDULE_LEVEL_HANDSHAKE)?NL("handshake"):NL("application"),
                                        trafficzkey.GetSize(), IV[direction].GetSize()); */
 
   return true;
@@ -886,7 +886,7 @@ bool DIOSTREAMTLSRECORD::Protect_OneRecord(DIOSTREAMTLS_CONTENTTYPE contenttype,
       return false;
     }
 
-  /* XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, _L("[TLS Record] Out %llu: type %02X, %d bytes"), sequence[direction], (XBYTE)contenttype, size); */
+  /* XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, NL("[TLS Record] Out %llu: type %02X, %d bytes"), sequence[direction], (XBYTE)contenttype, size); */
 
   XBUFFER encodedrecord;
 

@@ -66,7 +66,7 @@ UI_ELEMENT_OPTION::UI_ELEMENT_OPTION()
   Clean();   
 
   SetType(UI_ELEMENT_TYPE_OPTION);
-  GetTypeString()->Set(_L("option"));   
+  GetTypeString()->Set(NL("option"));   
 }
 
 

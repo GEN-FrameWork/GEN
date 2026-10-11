@@ -298,34 +298,34 @@ bool DIOSTREAMUARTCONFIG::GetToString(XSTRING* string)
   if(!GetLocalDeviceName()->IsEmpty())
     {
       string->Add(GetLocalDeviceName()->Get());
-      string->Add(_L(","));
+      string->Add(NL(","));
     }
    else
     {
       if(!GetPort()) return false;
-      string->Format(_L("%d,"), GetPort());
+      string->Format(NL("%d,"), GetPort());
     }
 
   if(!GetBaudRate()) return false;
-  xstringtmp.Format(_L("%d,"), GetBaudRate());
+  xstringtmp.Format(NL("%d,"), GetBaudRate());
   string->Add(xstringtmp);
 
   switch(GetDataBits())
     {
-      case DIOSTREAMUARTDATABIT_5       : string->Add(_L("5,"));     break;
-      case DIOSTREAMUARTDATABIT_6       : string->Add(_L("6,"));     break;
-      case DIOSTREAMUARTDATABIT_7       : string->Add(_L("7,"));     break;
-      case DIOSTREAMUARTDATABIT_8       : string->Add(_L("8,"));     break;
+      case DIOSTREAMUARTDATABIT_5       : string->Add(NL("5,"));     break;
+      case DIOSTREAMUARTDATABIT_6       : string->Add(NL("6,"));     break;
+      case DIOSTREAMUARTDATABIT_7       : string->Add(NL("7,"));     break;
+      case DIOSTREAMUARTDATABIT_8       : string->Add(NL("8,"));     break;
                         default         : return false;
     }
 
   switch(GetParity())
     {
-      case DIOSTREAMUARTPARITY_NONE     : string->Add(_L("N,"));   break;
-      case DIOSTREAMUARTPARITY_ODD      : string->Add(_L("O,"));   break;
-      case DIOSTREAMUARTPARITY_EVEN     : string->Add(_L("E,"));   break;
-      case DIOSTREAMUARTPARITY_MARK     : string->Add(_L("M,"));   break;
-      case DIOSTREAMUARTPARITY_SPACE    : string->Add(_L("S,"));   break;
+      case DIOSTREAMUARTPARITY_NONE     : string->Add(NL("N,"));   break;
+      case DIOSTREAMUARTPARITY_ODD      : string->Add(NL("O,"));   break;
+      case DIOSTREAMUARTPARITY_EVEN     : string->Add(NL("E,"));   break;
+      case DIOSTREAMUARTPARITY_MARK     : string->Add(NL("M,"));   break;
+      case DIOSTREAMUARTPARITY_SPACE    : string->Add(NL("S,"));   break;
                              default    : return false;
     }
 
@@ -385,7 +385,7 @@ bool DIOSTREAMUARTCONFIG::SetFromString(XCHAR* string)
   stopbits.AdjustSize(_MAXSTR);
   flowcontrol.AdjustSize(_MAXSTR);
 
-  _string.UnFormat(_L("%s,%d,%d,%c,%s,%s"), devicename.Get(), &baudrate, &databits, &parity, stopbits.Get(), flowcontrol.Get());
+  _string.UnFormat(NL("%s,%d,%d,%c,%s,%s"), devicename.Get(), &baudrate, &databits, &parity, stopbits.Get(), flowcontrol.Get());
 
   devicename.AdjustSize();
   stopbits.AdjustSize();
@@ -421,19 +421,19 @@ bool DIOSTREAMUARTCONFIG::SetFromString(XCHAR* string)
        default  : return false;
     }
 
-  if(!stopbits.Compare(_L("1")))
+  if(!stopbits.Compare(NL("1")))
     {
       SetStopBits(DIOSTREAMUARTSTOPBITS_ONE);
     }
    else
     {
-      if(!stopbits.Compare(_L("1.5")))
+      if(!stopbits.Compare(NL("1.5")))
         {
           SetStopBits(DIOSTREAMUARTSTOPBITS_ONEANDAHALF);
         }
        else
         {
-          if(!stopbits.Compare(_L("2")))
+          if(!stopbits.Compare(NL("2")))
             {
               SetStopBits(DIOSTREAMUARTSTOPBITS_TWO);
 
@@ -447,13 +447,13 @@ bool DIOSTREAMUARTCONFIG::SetFromString(XCHAR* string)
     }
    else
     {
-      if(!stopbits.Compare(DIOSTREAMUART_FLOWCONTROL_STR_SOFT) || !stopbits.Compare(_L("SOFT")))
+      if(!stopbits.Compare(DIOSTREAMUART_FLOWCONTROL_STR_SOFT) || !stopbits.Compare(NL("SOFT")))
         {
           SetFlowControl(DIOSTREAMUARTFLOWCONTROL_SOFT);
         }
        else
         {
-          if(!stopbits.Compare(DIOSTREAMUART_FLOWCONTROL_STR_HARD) || !stopbits.Compare(_L("HARD")))
+          if(!stopbits.Compare(DIOSTREAMUART_FLOWCONTROL_STR_HARD) || !stopbits.Compare(NL("HARD")))
             {
               SetFlowControl(DIOSTREAMUARTFLOWCONTROL_HARD);
 

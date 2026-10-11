@@ -512,36 +512,36 @@ XCHAR* DIOSTREAMTLS_MSG_ALERT::GetDescriptionString(DIOSTREAMTLS_ALERT_DESCRIPTI
 {
   switch(description)
     {
-      case DIOSTREAMTLS_ALERT_DESCRIPTION_CLOSE_NOTIFY                    : return _L("close_notify");
-      case DIOSTREAMTLS_ALERT_DESCRIPTION_UNEXPECTED_MESSAGE              : return _L("unexpected_message");
-      case DIOSTREAMTLS_ALERT_DESCRIPTION_BAD_RECORD_MAC                  : return _L("bad_record_mac");
-      case DIOSTREAMTLS_ALERT_DESCRIPTION_RECORD_OVERFLOW                 : return _L("record_overflow");
-      case DIOSTREAMTLS_ALERT_DESCRIPTION_HANDSHAKE_FAILURE               : return _L("handshake_failure (nothing offered is acceptable)");
-      case DIOSTREAMTLS_ALERT_DESCRIPTION_BAD_CERTIFICATE                 : return _L("bad_certificate");
-      case DIOSTREAMTLS_ALERT_DESCRIPTION_UNSUPPORTED_CERTIFICATE         : return _L("unsupported_certificate");
-      case DIOSTREAMTLS_ALERT_DESCRIPTION_CERTIFICATE_REVOKED             : return _L("certificate_revoked");
-      case DIOSTREAMTLS_ALERT_DESCRIPTION_CERTIFICATE_EXPIRED             : return _L("certificate_expired");
-      case DIOSTREAMTLS_ALERT_DESCRIPTION_CERTIFICATE_UNKNOWN             : return _L("certificate_unknown");
-      case DIOSTREAMTLS_ALERT_DESCRIPTION_ILLEGAL_PARAMETER               : return _L("illegal_parameter");
-      case DIOSTREAMTLS_ALERT_DESCRIPTION_UNKNOWN_CA                      : return _L("unknown_ca");
-      case DIOSTREAMTLS_ALERT_DESCRIPTION_ACCESS_DENIED                   : return _L("access_denied");
-      case DIOSTREAMTLS_ALERT_DESCRIPTION_DECODE_ERROR                    : return _L("decode_error");
-      case DIOSTREAMTLS_ALERT_DESCRIPTION_DECRYPT_ERROR                   : return _L("decrypt_error");
-      case DIOSTREAMTLS_ALERT_DESCRIPTION_PROTOCOL_VERSION                : return _L("protocol_version (the server does NOT support TLS 1.3)");
-      case DIOSTREAMTLS_ALERT_DESCRIPTION_INSUFFICIENT_SECURITY           : return _L("insufficient_security");
-      case DIOSTREAMTLS_ALERT_DESCRIPTION_INTERNAL_ERROR                  : return _L("internal_error");
-      case DIOSTREAMTLS_ALERT_DESCRIPTION_INAPPROPRIATE_FALLBACK          : return _L("inappropriate_fallback");
-      case DIOSTREAMTLS_ALERT_DESCRIPTION_USER_CANCELED                   : return _L("user_canceled");
-      case DIOSTREAMTLS_ALERT_DESCRIPTION_MISSING_EXTENSION               : return _L("missing_extension");
-      case DIOSTREAMTLS_ALERT_DESCRIPTION_UNSUPPORTED_EXTENSION           : return _L("unsupported_extension");
-      case DIOSTREAMTLS_ALERT_DESCRIPTION_UNRECOGNIZED_NAME               : return _L("unrecognized_name (SNI not served here)");
-      case DIOSTREAMTLS_ALERT_DESCRIPTION_BAD_CERTIFICATE_STATUS_RESPONSE : return _L("bad_certificate_status_response");
-      case DIOSTREAMTLS_ALERT_DESCRIPTION_UNKNOWN_PSK_IDENTITY            : return _L("unknown_psk_identity");
-      case DIOSTREAMTLS_ALERT_DESCRIPTION_CERTIFICATE_REQUIRED            : return _L("certificate_required");
-      case DIOSTREAMTLS_ALERT_DESCRIPTION_NO_APPLICATION_PROTOCOL         : return _L("no_application_protocol (ALPN not accepted)");
+      case DIOSTREAMTLS_ALERT_DESCRIPTION_CLOSE_NOTIFY                    : return NL("close_notify");
+      case DIOSTREAMTLS_ALERT_DESCRIPTION_UNEXPECTED_MESSAGE              : return NL("unexpected_message");
+      case DIOSTREAMTLS_ALERT_DESCRIPTION_BAD_RECORD_MAC                  : return NL("bad_record_mac");
+      case DIOSTREAMTLS_ALERT_DESCRIPTION_RECORD_OVERFLOW                 : return NL("record_overflow");
+      case DIOSTREAMTLS_ALERT_DESCRIPTION_HANDSHAKE_FAILURE               : return NL("handshake_failure (nothing offered is acceptable)");
+      case DIOSTREAMTLS_ALERT_DESCRIPTION_BAD_CERTIFICATE                 : return NL("bad_certificate");
+      case DIOSTREAMTLS_ALERT_DESCRIPTION_UNSUPPORTED_CERTIFICATE         : return NL("unsupported_certificate");
+      case DIOSTREAMTLS_ALERT_DESCRIPTION_CERTIFICATE_REVOKED             : return NL("certificate_revoked");
+      case DIOSTREAMTLS_ALERT_DESCRIPTION_CERTIFICATE_EXPIRED             : return NL("certificate_expired");
+      case DIOSTREAMTLS_ALERT_DESCRIPTION_CERTIFICATE_UNKNOWN             : return NL("certificate_unknown");
+      case DIOSTREAMTLS_ALERT_DESCRIPTION_ILLEGAL_PARAMETER               : return NL("illegal_parameter");
+      case DIOSTREAMTLS_ALERT_DESCRIPTION_UNKNOWN_CA                      : return NL("unknown_ca");
+      case DIOSTREAMTLS_ALERT_DESCRIPTION_ACCESS_DENIED                   : return NL("access_denied");
+      case DIOSTREAMTLS_ALERT_DESCRIPTION_DECODE_ERROR                    : return NL("decode_error");
+      case DIOSTREAMTLS_ALERT_DESCRIPTION_DECRYPT_ERROR                   : return NL("decrypt_error");
+      case DIOSTREAMTLS_ALERT_DESCRIPTION_PROTOCOL_VERSION                : return NL("protocol_version (the server does NOT support TLS 1.3)");
+      case DIOSTREAMTLS_ALERT_DESCRIPTION_INSUFFICIENT_SECURITY           : return NL("insufficient_security");
+      case DIOSTREAMTLS_ALERT_DESCRIPTION_INTERNAL_ERROR                  : return NL("internal_error");
+      case DIOSTREAMTLS_ALERT_DESCRIPTION_INAPPROPRIATE_FALLBACK          : return NL("inappropriate_fallback");
+      case DIOSTREAMTLS_ALERT_DESCRIPTION_USER_CANCELED                   : return NL("user_canceled");
+      case DIOSTREAMTLS_ALERT_DESCRIPTION_MISSING_EXTENSION               : return NL("missing_extension");
+      case DIOSTREAMTLS_ALERT_DESCRIPTION_UNSUPPORTED_EXTENSION           : return NL("unsupported_extension");
+      case DIOSTREAMTLS_ALERT_DESCRIPTION_UNRECOGNIZED_NAME               : return NL("unrecognized_name (SNI not served here)");
+      case DIOSTREAMTLS_ALERT_DESCRIPTION_BAD_CERTIFICATE_STATUS_RESPONSE : return NL("bad_certificate_status_response");
+      case DIOSTREAMTLS_ALERT_DESCRIPTION_UNKNOWN_PSK_IDENTITY            : return NL("unknown_psk_identity");
+      case DIOSTREAMTLS_ALERT_DESCRIPTION_CERTIFICATE_REQUIRED            : return NL("certificate_required");
+      case DIOSTREAMTLS_ALERT_DESCRIPTION_NO_APPLICATION_PROTOCOL         : return NL("no_application_protocol (ALPN not accepted)");
     }
 
-  return _L("unknown");
+  return NL("unknown");
 }
 
 

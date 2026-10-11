@@ -36,7 +36,7 @@
 
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
 
-#define SCRIPT_LIB_NAME_DIR  _L("Dir")
+#define SCRIPT_LIB_NAME_DIR  NL("Dir")
 
 
 

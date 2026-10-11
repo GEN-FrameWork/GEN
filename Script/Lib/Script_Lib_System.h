@@ -36,7 +36,7 @@
 
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
 
-#define SCRIPT_LIB_SYSTEM_NAME  _L("System")
+#define SCRIPT_LIB_SYSTEM_NAME  NL("System")
 
 
 

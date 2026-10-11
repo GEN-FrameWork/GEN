@@ -224,21 +224,21 @@ DIOATCMDGSM::DIOATCMDGSM(DIOSTREAM* diostream) : DIOATCMDS(diostream)
 {
   Clean();
 
-  AddCommand(DIOATCMD_TYPE_GSMGETMANUFACTURED, _L("+GMI"));
-  AddCommand(DIOATCMD_TYPE_GSMGETMODEL, _L("+GMM"));
-  AddCommand(DIOATCMD_TYPE_GSMGETSERIAL, _L("+GSN"));
-  AddCommand(DIOATCMD_TYPE_GSMGETVERSION, _L("+GMR"));
-  AddCommand(DIOATCMD_TYPE_GSMGETSIGNALQUALITY, _L("+CSQ"));
-  AddCommand(DIOATCMD_TYPE_GSMGETSERVICES, _L("+GCAP"));
-  AddCommand(DIOATCMD_TYPE_GSMGETIMSI, _L("+CIMI"));
-  AddCommand(DIOATCMD_TYPE_GSMPIN, _L("+CPIN"));
-  AddCommand(DIOATCMD_TYPE_GSMCOMMAND, _L("+CLCK"));
-  AddCommand(DIOATCMD_TYPE_GSMGETSMSSUPPORT, _L("+CSMS"));
-  AddCommand(DIOATCMD_TYPE_GSMGETSMSFORMAT, _L("+CMGF"));
-  AddCommand(DIOATCMD_TYPE_GSMSETSMSFORMAT, _L("+CMGF"));
-  AddCommand(DIOATCMD_TYPE_GSMGETSMSCENTER, _L("+CSCA"));
-  AddCommand(DIOATCMD_TYPE_GSMSETSMSCENTER, _L("+CSCA"));
-  AddCommand(DIOATCMD_TYPE_GSMSENDSMS, _L("+CMGS"));
+  AddCommand(DIOATCMD_TYPE_GSMGETMANUFACTURED, NL("+GMI"));
+  AddCommand(DIOATCMD_TYPE_GSMGETMODEL, NL("+GMM"));
+  AddCommand(DIOATCMD_TYPE_GSMGETSERIAL, NL("+GSN"));
+  AddCommand(DIOATCMD_TYPE_GSMGETVERSION, NL("+GMR"));
+  AddCommand(DIOATCMD_TYPE_GSMGETSIGNALQUALITY, NL("+CSQ"));
+  AddCommand(DIOATCMD_TYPE_GSMGETSERVICES, NL("+GCAP"));
+  AddCommand(DIOATCMD_TYPE_GSMGETIMSI, NL("+CIMI"));
+  AddCommand(DIOATCMD_TYPE_GSMPIN, NL("+CPIN"));
+  AddCommand(DIOATCMD_TYPE_GSMCOMMAND, NL("+CLCK"));
+  AddCommand(DIOATCMD_TYPE_GSMGETSMSSUPPORT, NL("+CSMS"));
+  AddCommand(DIOATCMD_TYPE_GSMGETSMSFORMAT, NL("+CMGF"));
+  AddCommand(DIOATCMD_TYPE_GSMSETSMSFORMAT, NL("+CMGF"));
+  AddCommand(DIOATCMD_TYPE_GSMGETSMSCENTER, NL("+CSCA"));
+  AddCommand(DIOATCMD_TYPE_GSMSETSMSCENTER, NL("+CSCA"));
+  AddCommand(DIOATCMD_TYPE_GSMSENDSMS, NL("+CMGS"));
 }
 
 
@@ -346,7 +346,7 @@ DIOATCMD_ERROR DIOATCMDGSM::GetVersion(XSTRING& version, int timeout)
       if(string)
         {
           version += (*string);
-          version += _L(" ");
+          version += NL(" ");
         }
     }
 
@@ -389,7 +389,7 @@ DIOATCMD_ERROR DIOATCMDGSM::GetSignalQuality(int& RSSI, int& BER, int timeout)
           XSTRING  mask;
 
           mask  = GetCommandString(DIOATCMD_TYPE_GSMGETSIGNALQUALITY);
-          mask += _L(":%d,%d");
+          mask += NL(":%d,%d");
 
           answer->UnFormat(mask.Get(), &RSSI, &BER);
         }
@@ -426,7 +426,7 @@ DIOATCMD_ERROR DIOATCMDGSM::IsAvailableServiceGSM(bool& available, int timeout)
   XSTRING* answer = GetLastAnswer();
   if(answer)
     {
-      if(answer->Find(_L("+CGSM"), true)!=XSTRING_NOTFOUND) available = true;
+      if(answer->Find(NL("+CGSM"), true)!=XSTRING_NOTFOUND) available = true;
       DeleteLastAnswer();
     }
 
@@ -470,7 +470,7 @@ DIOATCMD_ERROR DIOATCMDGSM::PIN_Is(bool& isresolved, int timeout)
 {
   isresolved = false;
 
-  DIOATCMD_ERROR error = SendCommand(DIOATCMD_TYPE_GSMPIN, _L("?"));
+  DIOATCMD_ERROR error = SendCommand(DIOATCMD_TYPE_GSMPIN, NL("?"));
   if(error!=DIOATCMD_ERROR_NONE) return error;
 
   error = WaitToProcessAnswer(timeout);
@@ -479,8 +479,8 @@ DIOATCMD_ERROR DIOATCMDGSM::PIN_Is(bool& isresolved, int timeout)
   XSTRING* answer = GetLastAnswer();
   if(answer)
     {      
-      if(answer->Find(_L("SIM PIN"), true)!=XSTRING_NOTFOUND) isresolved = false; 
-      if(answer->Find(_L("READY"), true)!=XSTRING_NOTFOUND) isresolved = true;     
+      if(answer->Find(NL("SIM PIN"), true)!=XSTRING_NOTFOUND) isresolved = false; 
+      if(answer->Find(NL("READY"), true)!=XSTRING_NOTFOUND) isresolved = true;     
     }
 
   DeleteAllAnswers();
@@ -508,7 +508,7 @@ DIOATCMD_ERROR DIOATCMDGSM::PIN_Enter(XCHAR* PIN, bool& isenter, int timeout)
 
   isenter = false;
 
-  PINstr.Format(_L("=%s"), PIN);
+  PINstr.Format(NL("=%s"), PIN);
 
   DIOATCMD_ERROR error = SendCommand(DIOATCMD_TYPE_GSMPIN, PINstr.Get());
   if(error!=DIOATCMD_ERROR_NONE) return error;  
@@ -541,7 +541,7 @@ DIOATCMD_ERROR DIOATCMDGSM::PIN_Activate(XCHAR* PIN, bool activate, int timeout)
 {
   XSTRING PINstr;  
 
-  PINstr.Format(_L("=\"SC\",%c,\"%s\""), (activate?_C('1'):_C('0')), PIN);
+  PINstr.Format(NL("=\"SC\",%c,\"%s\""), (activate?_C('1'):_C('0')), PIN);
 
   DIOATCMD_ERROR error = SendCommand(DIOATCMD_TYPE_GSMCOMMAND, PINstr.Get());
   if(error!=DIOATCMD_ERROR_NONE) return error;  
@@ -569,7 +569,7 @@ DIOATCMD_ERROR DIOATCMDGSM::PIN_Activate(XCHAR* PIN, bool activate, int timeout)
 * --------------------------------------------------------------------------------------------------------------------*/
 DIOATCMD_ERROR DIOATCMDGSM::GetSMSSupport(XBYTE& support, int timeout)
 {
-  DIOATCMD_ERROR error = SendCommand(DIOATCMD_TYPE_GSMGETSMSSUPPORT, _L("?"));
+  DIOATCMD_ERROR error = SendCommand(DIOATCMD_TYPE_GSMGETSMSSUPPORT, NL("?"));
   if(error!=DIOATCMD_ERROR_NONE) return error;
 
   error = WaitToProcessAnswer(timeout);
@@ -590,7 +590,7 @@ DIOATCMD_ERROR DIOATCMDGSM::GetSMSSupport(XBYTE& support, int timeout)
           XSTRING  mask;
 
           mask  = GetCommandString(DIOATCMD_TYPE_GSMGETSMSSUPPORT);
-          mask += _L(": %d,%d,%d,%d");
+          mask += NL(": %d,%d,%d,%d");
           answer->UnFormat(mask.Get(), &service, &mt, &mo, &bc);
 
           support|= (service<<4);
@@ -621,7 +621,7 @@ DIOATCMD_ERROR DIOATCMDGSM::GetSMSSupport(XBYTE& support, int timeout)
 * --------------------------------------------------------------------------------------------------------------------*/
 DIOATCMD_ERROR DIOATCMDGSM::GetSMSFormat(XBYTE& format, bool support, int timeout)
 {
-  DIOATCMD_ERROR error = SendCommand(DIOATCMD_TYPE_GSMGETSMSFORMAT, support?_L("=?"):_L("?"));
+  DIOATCMD_ERROR error = SendCommand(DIOATCMD_TYPE_GSMGETSMSFORMAT, support?NL("=?"):NL("?"));
   if(error!=DIOATCMD_ERROR_NONE) return error;
 
   error = WaitToProcessAnswer(timeout);
@@ -641,7 +641,7 @@ DIOATCMD_ERROR DIOATCMDGSM::GetSMSFormat(XBYTE& format, bool support, int timeou
 
           if(support)
             {
-              mask += _L(": (%d,%d)");
+              mask += NL(": (%d,%d)");
 
               int value[2] = { -1 , -1 };
 
@@ -653,7 +653,7 @@ DIOATCMD_ERROR DIOATCMDGSM::GetSMSFormat(XBYTE& format, bool support, int timeou
             }
            else
             {
-              mask += _L(": %d");
+              mask += NL(": %d");
 
               int value;
 
@@ -689,8 +689,8 @@ DIOATCMD_ERROR DIOATCMDGSM::SetSMSFormat(XBYTE format, int timeout)
 
   switch(format)
     {
-      case DIOATCMDGSM_SMSFORMAT_PDU : param = _L("=0"); break;
-      case DIOATCMDGSM_SMSFORMAT_TXT : param = _L("=1"); break;
+      case DIOATCMDGSM_SMSFORMAT_PDU : param = NL("=0"); break;
+      case DIOATCMDGSM_SMSFORMAT_TXT : param = NL("=1"); break;
     }
 
   DIOATCMD_ERROR error = SendCommand(DIOATCMD_TYPE_GSMSETSMSFORMAT, param.Get());
@@ -714,7 +714,7 @@ DIOATCMD_ERROR DIOATCMDGSM::SetSMSFormat(XBYTE format, int timeout)
 * --------------------------------------------------------------------------------------------------------------------*/
 DIOATCMD_ERROR DIOATCMDGSM::GetSMSCenter(XSTRING& SMScenter, int timeout)
 {
-  DIOATCMD_ERROR error = SendCommand(DIOATCMD_TYPE_GSMGETSMSCENTER, _L("?"));
+  DIOATCMD_ERROR error = SendCommand(DIOATCMD_TYPE_GSMGETSMSCENTER, NL("?"));
   if(error!=DIOATCMD_ERROR_NONE) return error;
 
   error = WaitToProcessAnswer(timeout);
@@ -731,7 +731,7 @@ DIOATCMD_ERROR DIOATCMDGSM::GetSMSCenter(XSTRING& SMScenter, int timeout)
           int      value;
 
           mask  = GetCommandString(DIOATCMD_TYPE_GSMGETSMSCENTER);
-          mask += _L(": \"%s\",%d");
+          mask += NL(": \"%s\",%d");
 
           answer->UnFormat(mask.Get(), smscenter, &value);
 
@@ -765,7 +765,7 @@ DIOATCMD_ERROR DIOATCMDGSM::SetSMSCenter(XCHAR* smscenter, int timeout)
 {
   XSTRING param;
 
-  param.Format(_L("=\"%s\""), smscenter);
+  param.Format(NL("=\"%s\""), smscenter);
 
   DIOATCMD_ERROR error = SendCommand(DIOATCMD_TYPE_GSMSETSMSCENTER, param.Get());
   if(error!=DIOATCMD_ERROR_NONE) return error;
@@ -805,13 +805,13 @@ DIOATCMD_ERROR DIOATCMDGSM::SendSMS(XCHAR* number, XCHAR* message, int* mrID, in
 
                                             CodecPDUFormat(number, message, false, 20, _number, _message);
 
-                                            gsmnumber.Format(_L("= %s "), _number.Get());
-                                            gsmmessage.Format(_L("%s\x1A"), _message.Get());
+                                            gsmnumber.Format(NL("= %s "), _number.Get());
+                                            gsmmessage.Format(NL("%s\x1A"), _message.Get());
                                           }
                                           break;
 
-      case DIOATCMDGSM_SMSFORMAT_TXT    : gsmnumber.Format(_L("=\"%s\""), number);
-                                          gsmmessage.Format(_L("%s\x1A"), message);
+      case DIOATCMDGSM_SMSFORMAT_TXT    : gsmnumber.Format(NL("=\"%s\""), number);
+                                          gsmmessage.Format(NL("%s\x1A"), message);
                                           break;
 
                                 default : return DIOATCMD_ERROR_INVALIDCMD;
@@ -822,7 +822,7 @@ DIOATCMD_ERROR DIOATCMDGSM::SendSMS(XCHAR* number, XCHAR* message, int* mrID, in
 
   error = DIOATCMD_ERROR_INVALIDCMD;
 
-  if(ReadAnswerWithOutEndChar(_L("> "), timeout))
+  if(ReadAnswerWithOutEndChar(NL("> "), timeout))
     {
       error = SendParam(gsmmessage.Get());
       if(error!=DIOATCMD_ERROR_NONE) return error;
@@ -841,7 +841,7 @@ DIOATCMD_ERROR DIOATCMDGSM::SendSMS(XCHAR* number, XCHAR* message, int* mrID, in
                   XSTRING  mask;
 
                   mask  = GetCommandString(DIOATCMD_TYPE_GSMSENDSMS);
-                  mask += _L(": %d");
+                  mask += NL(": %d");
 
                   answer->UnFormat(mask.Get(), mrID);
                 }
@@ -900,36 +900,36 @@ bool DIOATCMDGSM::CodecPDUFormat(XCHAR* number, XCHAR* message, bool inoctets, i
   _message = message;
 
   // No SMS Center.
-  result += _L("00");
+  result += NL("00");
   // SMS-SUBMIT mensaje.
-  result += _L("11");
-  result += _L("00");
+  result += NL("11");
+  result += NL("00");
 
   // Size Number (National)
-  string.Format(_L("%02X"), _number.GetSize());
+  string.Format(NL("%02X"), _number.GetSize());
   result += string;
 
   if(_number.GetSize()>9)
-         result += _L("91");    // Type Number (International);
-    else result += _L("81");    // Type Number (National);
+         result += NL("91");    // Type Number (International);
+    else result += NL("81");    // Type Number (National);
 
   // GSM Number
   string = number;
-  if(string.GetSize()%2) string += _L("F");
+  if(string.GetSize()%2) string += NL("F");
   string.Swab();
   result += string;
-  result += _L("00");
+  result += NL("00");
 
   // Codec 7/8 Bits
   if(inoctets)
-         result += _L("02");
-    else result += _L("00");
+         result += NL("02");
+    else result += NL("00");
 
   // Time Max Msg <28 days  >28 weeks
   if(validperiod>28)
           value = 168 + validperiod;
     else  value = 197 + validperiod;
-  string.Format(_L("%02X"), value);
+  string.Format(NL("%02X"), value);
   result += string;
 
   // Convert message
@@ -973,19 +973,19 @@ bool DIOATCMDGSM::CodecPDUFormat(XCHAR* number, XCHAR* message, bool inoctets, i
         }
     }
 
-  string.Format(_L("%02X"), _message.GetSize());
+  string.Format(NL("%02X"), _message.GetSize());
   result += string;
 
   for(c=0;c<((inoctets)?size8:size7);c++)
     {
-      string.Format(_L("%02X"), (inoctets)?codec8[c]:codec7[c]);
+      string.Format(NL("%02X"), (inoctets)?codec8[c]:codec7[c]);
       result += string;
     }
 
   GEN_DELETE_ARRAY codec7;
   GEN_DELETE_ARRAY codec8;
 
-  length.Format(_L("%d"), (result.GetSize()/2)-1);
+  length.Format(NL("%d"), (result.GetSize()/2)-1);
 
   return true;
 }

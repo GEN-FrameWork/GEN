@@ -36,7 +36,7 @@
 
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
 
-#define DIOPUBLICINTERNETIP_URL                                     _L("ipecho.net/plain");
+#define DIOPUBLICINTERNETIP_URL                                     NL("ipecho.net/plain");
 
 #define DIOPUBLICINTERNETIP_DEFAULTNCHECKSFOREVERYCONNECTION          5
 #define DIOPUBLICINTERNETIP_DEFAULTTIMERCONNECTIONCHECK             100   // milliseconds

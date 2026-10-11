@@ -40,16 +40,17 @@
 
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
 
-#define XTRANSLATION_NAMEFILEEXT         _L(".lng")
+#define XTRANSLATION_NAMEFILEEXT         NL(".lng")
 
-#define XTRANSLATION_GENRESERVE          500
 #ifndef MICROCONTROLLER
 #define XTRANSLATION_MAXSENTENCES        10000
 #else
 #define XTRANSLATION_MAXSENTENCES        100
 #endif
 
-#define XT_L(ID)                         GEN_XTRANSLATION.Translate_GetSentence(ID)
+
+#define TL(ID)                           GEN_XTRANSLATION.Translate_GetSentence(ID)
+
 
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
 
@@ -100,7 +101,7 @@ class XTRANSLATION
     XPATH                             xpath;
     #endif
 
-    XDWORD                            code;
+    XDWORD                            codelanguage;
 
     XLANGUAGE_ISO_639_3               ISO_639_3;
     XVECTOR<XDWORD>                   languageavailables;

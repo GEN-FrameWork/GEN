@@ -49,222 +49,222 @@
 
 /*---- GENERAL VARIABLE ----------------------------------------------------------------------------------------------*/
 
-INPUTSIMULATE_KDB_PC  inputsimulare_KDB_PC[]						= { { 0x01	, _L("Left mouse")						     , ALTERNATIVE_KEY_NONE			  },					
-																														{ 0x02	, _L("Right mouse")					     , ALTERNATIVE_KEY_NONE			  },					                                                           
-			                                                      { 0x03	, _L("Control-break")					   , ALTERNATIVE_KEY_NONE			  },					
-			                                                      { 0x04	, _L("Middle mouse")					     , ALTERNATIVE_KEY_NONE			  },					 
-			                                                      { 0x05	, _L("X1 mouse")						       , ALTERNATIVE_KEY_NONE			  },					
-			                                                      { 0x06	, _L("X2 mouse")						       , ALTERNATIVE_KEY_NONE			  },					
-			                                                      { 0x08	, _L("BACKSPACE")						     , ALTERNATIVE_KEY_NONE			  },					
-			                                                      { 0x09	, _L("TAB")							         , ALTERNATIVE_KEY_NONE			  },																															
-			                                                      { 0x0C	, _L("CLEAR")							       , ALTERNATIVE_KEY_NONE			  },					
-			                                                      { 0x0D	, _L("ENTER")							       , ALTERNATIVE_KEY_NONE			  },					
-			                                                      { 0x10	, _L("SHIFT")							       , ALTERNATIVE_KEY_NONE			  },					
-			                                                      { 0x11	, _L("CTRL")							         , ALTERNATIVE_KEY_NONE			  },					
-			                                                      { 0x12	, _L("ALT")							         , ALTERNATIVE_KEY_NONE			  },					
-			                                                      { 0x13	, _L("PAUSE")						         , ALTERNATIVE_KEY_NONE			  },					
-			                                                      { 0x14	, _L("CAPS LOCK")						     , ALTERNATIVE_KEY_NONE			  },					
-			                                                      { 0x15	, _L("IME Kana mode")					   , ALTERNATIVE_KEY_NONE			  },					
-			                                                      { 0x15	, _L("IME Hanguel mode")				   , ALTERNATIVE_KEY_NONE			  },					
-			                                                      { 0x15	, _L("IME Hangul mode")				   , ALTERNATIVE_KEY_NONE			  },					
-			                                                      { 0x16	, _L("IME On")							       , ALTERNATIVE_KEY_NONE			  },					
-			                                                      { 0x17	, _L("IME Junja mode")					   , ALTERNATIVE_KEY_NONE			  },					
-			                                                      { 0x18	, _L("IME final mode")					   , ALTERNATIVE_KEY_NONE			  },					
-			                                                      { 0x19	, _L("IME Hanja mode")					   , ALTERNATIVE_KEY_NONE			  },					
-			                                                      { 0x19	, _L("IME Kanji mode")					   , ALTERNATIVE_KEY_NONE			  },					
-			                                                      { 0x1A	, _L("IME Off")						       , ALTERNATIVE_KEY_NONE			  },					
-			                                                      { 0x1B	, _L("ESC")							         , ALTERNATIVE_KEY_NONE			  },					
-			                                                      { 0x1C	, _L("IME convert")					     , ALTERNATIVE_KEY_NONE			  },					
-			                                                      { 0x1D	, _L("IME nonconvert")					   , ALTERNATIVE_KEY_NONE			  },					
-			                                                      { 0x1E	, _L("IME accept")						     , ALTERNATIVE_KEY_NONE			  },					
-			                                                      { 0x1F	, _L("IME mode change request")	 , ALTERNATIVE_KEY_NONE			 	},					
-			                                                      { 0x20	, _L("SPACEBAR")						       , ALTERNATIVE_KEY_NONE			  },					
-			                                                      { 0x21	, _L("PAGE UP")						       , ALTERNATIVE_KEY_NONE			  },					
-			                                                      { 0x22	, _L("PAGE DOWN")						     , ALTERNATIVE_KEY_NONE			  },					
-			                                                      { 0x23	, _L("END")							         , ALTERNATIVE_KEY_NONE			  },					
-			                                                      { 0x24	, _L("HOME")							         , ALTERNATIVE_KEY_NONE			  },					
-			                                                      { 0x25	, _L("LEFT ARROW")						     , ALTERNATIVE_KEY_NONE			  },					
-			                                                      { 0x26	, _L("UP ARROW")						       , ALTERNATIVE_KEY_NONE			  },					
-			                                                      { 0x27	, _L("RIGHT ARROW")					     , ALTERNATIVE_KEY_NONE			  },					
-			                                                      { 0x28	, _L("DOWN ARROW")						     , ALTERNATIVE_KEY_NONE			  },					
-			                                                      { 0x29	, _L("SELECT")							       , ALTERNATIVE_KEY_NONE			  },					
-			                                                      { 0x2A	, _L("PRINT")							       , ALTERNATIVE_KEY_NONE			  },					
-			                                                      { 0x2B	, _L("EXECUTE")						       , ALTERNATIVE_KEY_NONE			  },					
-			                                                      { 0x2C	, _L("PRINT SCREEN")					     , ALTERNATIVE_KEY_NONE			  },					
-			                                                      { 0x2D	, _L("INS")							         , ALTERNATIVE_KEY_NONE			  },					
-			                                                      { 0x2E	, _L("DEL")							         , ALTERNATIVE_KEY_NONE			  },					
-			                                                      { 0x2F	, _L("HELP")							         , ALTERNATIVE_KEY_NONE			  },					
-			                                                      { 0x30	, _L("0")								         , ALTERNATIVE_KEY_NONE			  },					
-			                                                      { 0x31	, _L("1")								         , ALTERNATIVE_KEY_NONE			  },					
-			                                                      { 0x32	, _L("2")								         , ALTERNATIVE_KEY_NONE			  },					
-			                                                      { 0x33	, _L("3")								         , ALTERNATIVE_KEY_NONE			  },					
-			                                                      { 0x34	, _L("4")								         , ALTERNATIVE_KEY_NONE			  },					
-			                                                      { 0x35	, _L("5")								         , ALTERNATIVE_KEY_NONE			  },					
-			                                                      { 0x36	, _L("6")								         , ALTERNATIVE_KEY_NONE			  },					
-			                                                      { 0x37	, _L("7")								         , ALTERNATIVE_KEY_NONE			  },					
-			                                                      { 0x38	, _L("8")								         , ALTERNATIVE_KEY_NONE			  },					
-			                                                      { 0x39	, _L("9")								         , ALTERNATIVE_KEY_NONE			  },																																	                                                      				
-			                                                      { 0x41	, _L("A")								         , ALTERNATIVE_KEY_NONE			  },					
-			                                                      { 0x42	, _L("B")								         , ALTERNATIVE_KEY_NONE			  },					
-			                                                      { 0x43	, _L("C")								         , ALTERNATIVE_KEY_NONE			  },					
-			                                                      { 0x44	, _L("D")								         , ALTERNATIVE_KEY_NONE			  },					
-			                                                      { 0x45	, _L("E")								         , ALTERNATIVE_KEY_NONE			  },					
-			                                                      { 0x46	, _L("F")								         , ALTERNATIVE_KEY_NONE			  },					
-			                                                      { 0x47	, _L("G")								         , ALTERNATIVE_KEY_NONE			  },					
-			                                                      { 0x48	, _L("H")								         , ALTERNATIVE_KEY_NONE			  },					
-			                                                      { 0x49	, _L("I")								         , ALTERNATIVE_KEY_NONE			  },					
-			                                                      { 0x4A	, _L("J")								         , ALTERNATIVE_KEY_NONE			  },					
-			                                                      { 0x4B	, _L("K")								         , ALTERNATIVE_KEY_NONE			  },					
-			                                                      { 0x4C	, _L("L")								         , ALTERNATIVE_KEY_NONE			  },					
-			                                                      { 0x4D	, _L("M")								         , ALTERNATIVE_KEY_NONE			  },					
-			                                                      { 0x4E	, _L("N")								         , ALTERNATIVE_KEY_NONE			  },					
-			                                                      { 0x4F	, _L("O")								         , ALTERNATIVE_KEY_NONE			  },					
-			                                                      { 0x50	, _L("P")								         , ALTERNATIVE_KEY_NONE			  },					
-			                                                      { 0x51	, _L("Q")								         , ALTERNATIVE_KEY_NONE			  },					
-			                                                      { 0x52	, _L("R")								         , ALTERNATIVE_KEY_NONE			  },					
-			                                                      { 0x53	, _L("S")								         , ALTERNATIVE_KEY_NONE			  },					
-			                                                      { 0x54	, _L("T")								         , ALTERNATIVE_KEY_NONE			  },					
-			                                                      { 0x55	, _L("U")								         , ALTERNATIVE_KEY_NONE			  },					
-			                                                      { 0x56	, _L("V")								         , ALTERNATIVE_KEY_NONE			  },					
-			                                                      { 0x57	, _L("W")								         , ALTERNATIVE_KEY_NONE			  },					
-			                                                      { 0x58	, _L("X")								         , ALTERNATIVE_KEY_NONE			  },					
-			                                                      { 0x59	, _L("Y")								         , ALTERNATIVE_KEY_NONE			  },					
-			                                                      { 0x5A	, _L("Z")								         , ALTERNATIVE_KEY_NONE			  },					
-			                                                      { 0x5B	, _L("Left Windows")					     , ALTERNATIVE_KEY_NONE			  },					
-			                                                      { 0x5C	, _L("Right Windows")					   , ALTERNATIVE_KEY_NONE			  },					
-			                                                      { 0x5D	, _L("Applications")					     , ALTERNATIVE_KEY_NONE			  },																																		                                                                          
-			                                                      { 0x5F	, _L("Computer Sleep")					   , ALTERNATIVE_KEY_NONE			  },					
-			                                                      { 0x61	, _L("Numericpad 1")					     , ALTERNATIVE_KEY_NONE			  },					
-			                                                      { 0x60	, _L("Numericpad 0")					     , ALTERNATIVE_KEY_NONE			  },					
-			                                                      { 0x62	, _L("Numericpad 2")					     , ALTERNATIVE_KEY_NONE			  },					
-			                                                      { 0x63	, _L("Numericpad 3")					     , ALTERNATIVE_KEY_NONE			  },					
-			                                                      { 0x64	, _L("Numericpad 4")					     , ALTERNATIVE_KEY_NONE			  },					
-			                                                      { 0x65	, _L("Numericpad 5")					     , ALTERNATIVE_KEY_NONE			  },					
-			                                                      { 0x66	, _L("Numericpad 6")					     , ALTERNATIVE_KEY_NONE			  },					
-			                                                      { 0x67	, _L("Numericpad 7")					     , ALTERNATIVE_KEY_NONE			  },					
-			                                                      { 0x68	, _L("Numericpad 8")					     , ALTERNATIVE_KEY_NONE			  },					
-			                                                      { 0x69	, _L("Numericpad 9")					     , ALTERNATIVE_KEY_NONE			  },					
-			                                                      { 0x6A	, _L("Multiply")						       , ALTERNATIVE_KEY_NONE			  },					
-			                                                      { 0x6B	, _L("Add")							         , ALTERNATIVE_KEY_NONE			  },					
-			                                                      { 0x6C	, _L("Separator")						     , ALTERNATIVE_KEY_NONE			  },					
-			                                                      { 0x6D	, _L("Subtract")						       , ALTERNATIVE_KEY_NONE			  },					
-			                                                      { 0x6E	, _L("Decimal")						       , ALTERNATIVE_KEY_NONE			  },					
-			                                                      { 0x6F	, _L("Divide")							       , ALTERNATIVE_KEY_NONE			  },	
-																														{ 0x70	, _L("F1")								         , ALTERNATIVE_KEY_NONE			  },					
-			                                                      { 0x71	, _L("F2")								         , ALTERNATIVE_KEY_NONE			  },					
-			                                                      { 0x72	, _L("F3")								         , ALTERNATIVE_KEY_NONE			  },								                                                      
-			                                                      { 0x73	, _L("F4")								         , ALTERNATIVE_KEY_NONE			  },					
-			                                                      { 0x74	, _L("F5")								         , ALTERNATIVE_KEY_NONE			  },					
-			                                                      { 0x75	, _L("F6")								         , ALTERNATIVE_KEY_NONE			  },					
-			                                                      { 0x76	, _L("F7")								         , ALTERNATIVE_KEY_NONE			  },					
-			                                                      { 0x77	, _L("F8")								         , ALTERNATIVE_KEY_NONE			  },					
-			                                                      { 0x78	, _L("F9")								         , ALTERNATIVE_KEY_NONE			  },					
-			                                                      { 0x79	, _L("F10")							         , ALTERNATIVE_KEY_NONE			  },					
-			                                                      { 0x7A	, _L("F11")							         , ALTERNATIVE_KEY_NONE			  },					
-			                                                      { 0x7B	, _L("F12")							         , ALTERNATIVE_KEY_NONE			  },					
-			                                                      { 0x7C	, _L("F13")							         , ALTERNATIVE_KEY_NONE			  },					
-			                                                      { 0x7D	, _L("F14")							         , ALTERNATIVE_KEY_NONE			  },					
-			                                                      { 0x7E	, _L("F15")							         , ALTERNATIVE_KEY_NONE			  },					
-			                                                      { 0x7F	, _L("F16")							         , ALTERNATIVE_KEY_NONE			  },					
-			                                                      { 0x80	, _L("F17")							         , ALTERNATIVE_KEY_NONE			  },					
-			                                                      { 0x81	, _L("F18")							         , ALTERNATIVE_KEY_NONE			  },					
-			                                                      { 0x82	, _L("F19")							         , ALTERNATIVE_KEY_NONE			  },					
-			                                                      { 0x83	, _L("F20")							         , ALTERNATIVE_KEY_NONE			  },					
-			                                                      { 0x84	, _L("F21")							         , ALTERNATIVE_KEY_NONE			  },					
-			                                                      { 0x85	, _L("F22")							         , ALTERNATIVE_KEY_NONE			  },					
-			                                                      { 0x86	, _L("F23")							         , ALTERNATIVE_KEY_NONE			  },					
-			                                                      { 0x87	, _L("F24")							         , ALTERNATIVE_KEY_NONE			  },																												                                                                          
-			                                                      { 0x90	, _L("NUM LOCK")						       , ALTERNATIVE_KEY_NONE			  },					
-			                                                      { 0x91	, _L("SCROLL LOCK")					     , ALTERNATIVE_KEY_NONE			  },					                                                                          
-			                                                      { 0xA0	, _L("Left SHIFT")						     , ALTERNATIVE_KEY_NONE			  },					
-			                                                      { 0xA1	, _L("Right SHIFT")				 	     , ALTERNATIVE_KEY_NONE			  },					
-			                                                      { 0xA2	, _L("Left CONTROL")					     , ALTERNATIVE_KEY_NONE			  },					
-			                                                      { 0xA3	, _L("Right CONTROL")					   , ALTERNATIVE_KEY_NONE			  },					
-			                                                      { 0xA4	, _L("Left ALT")						       , ALTERNATIVE_KEY_NONE			  },					
-			                                                      { 0xA5	, _L("Right ALT")						     , ALTERNATIVE_KEY_NONE			  },					
-			                                                      { 0xA6	, _L("Browser Back")					     , ALTERNATIVE_KEY_NONE			  },					
-			                                                      { 0xA7	, _L("Browser Forward")				   , ALTERNATIVE_KEY_NONE			  },					
-			                                                      { 0xA8	, _L("Browser Refresh")				   , ALTERNATIVE_KEY_NONE			  },					
-			                                                      { 0xA9	, _L("Browser Stop")					     , ALTERNATIVE_KEY_NONE			  },					
-			                                                      { 0xAA	, _L("Browser Search")					   , ALTERNATIVE_KEY_NONE			  },					
-			                                                      { 0xAB	, _L("Browser Favorites")				 , ALTERNATIVE_KEY_NONE			  },					
-			                                                      { 0xAC	, _L("Browser Home")		      		 , ALTERNATIVE_KEY_NONE			  },					
-			                                                      { 0xAD	, _L("Volume Mute")					     , ALTERNATIVE_KEY_NONE			  },					
-			                                                      { 0xAE	, _L("Volume Down")					     , ALTERNATIVE_KEY_NONE			  },					
-			                                                      { 0xAF	, _L("Volume Up")						     , ALTERNATIVE_KEY_NONE			  },					
-			                                                      { 0xB0	, _L("Next Track")					       , ALTERNATIVE_KEY_NONE			  },					
-			                                                      { 0xB1	, _L("Previous Track")					   , ALTERNATIVE_KEY_NONE			  },					
-			                                                      { 0xB2	, _L("Stop Media")						     , ALTERNATIVE_KEY_NONE			  },					
-			                                                      { 0xB3	, _L("Play/Pause Media")					 , ALTERNATIVE_KEY_NONE			  },
-			                                                      { 0xB4	, _L("Start Mail")						     , ALTERNATIVE_KEY_NONE			  },					
- 			                                                      { 0xB5	, _L("Select Media")					     , ALTERNATIVE_KEY_NONE			  },					
-			                                                      { 0xB6	, _L("Start Application 1")			 , ALTERNATIVE_KEY_NONE			  },					
-			                                                      { 0xB7	, _L("Start Application 2")			 , ALTERNATIVE_KEY_NONE			  },					                                                                          			                                                     			                                                       		
-			                                                      { 0xE5	, _L("IME PROCESS")						   , ALTERNATIVE_KEY_NONE			  },					                                                                   
-			                                                      { 0xF6	, _L("Attn")							         , ALTERNATIVE_KEY_NONE			  },						
-			                                                      { 0xF7	, _L("CrSel")							       , ALTERNATIVE_KEY_NONE			  },					
-			                                                      { 0xF8	, _L("ExSel")							       , ALTERNATIVE_KEY_NONE			  },					
-			                                                      { 0xF9	, _L("Erase EOF")						     , ALTERNATIVE_KEY_NONE			  },					
-			                                                      { 0xFA	, _L("Play")							         , ALTERNATIVE_KEY_NONE			  },					
-			                                                      { 0xFB	, _L("Zoom")							         , ALTERNATIVE_KEY_NONE			  },	  				
-			                                                      { 0xFD	, _L("PA1")							         , ALTERNATIVE_KEY_NONE			  },					
-			                                                      { 0xFE	, _L("Clear")							       , ALTERNATIVE_KEY_NONE			  }
+INPUTSIMULATE_KDB_PC  inputsimulare_KDB_PC[]						= { { 0x01	, NL("Left mouse")						     , ALTERNATIVE_KEY_NONE			  },					
+																														{ 0x02	, NL("Right mouse")					     , ALTERNATIVE_KEY_NONE			  },					                                                           
+			                                                      { 0x03	, NL("Control-break")					   , ALTERNATIVE_KEY_NONE			  },					
+			                                                      { 0x04	, NL("Middle mouse")					     , ALTERNATIVE_KEY_NONE			  },					 
+			                                                      { 0x05	, NL("X1 mouse")						       , ALTERNATIVE_KEY_NONE			  },					
+			                                                      { 0x06	, NL("X2 mouse")						       , ALTERNATIVE_KEY_NONE			  },					
+			                                                      { 0x08	, NL("BACKSPACE")						     , ALTERNATIVE_KEY_NONE			  },					
+			                                                      { 0x09	, NL("TAB")							         , ALTERNATIVE_KEY_NONE			  },																															
+			                                                      { 0x0C	, NL("CLEAR")							       , ALTERNATIVE_KEY_NONE			  },					
+			                                                      { 0x0D	, NL("ENTER")							       , ALTERNATIVE_KEY_NONE			  },					
+			                                                      { 0x10	, NL("SHIFT")							       , ALTERNATIVE_KEY_NONE			  },					
+			                                                      { 0x11	, NL("CTRL")							         , ALTERNATIVE_KEY_NONE			  },					
+			                                                      { 0x12	, NL("ALT")							         , ALTERNATIVE_KEY_NONE			  },					
+			                                                      { 0x13	, NL("PAUSE")						         , ALTERNATIVE_KEY_NONE			  },					
+			                                                      { 0x14	, NL("CAPS LOCK")						     , ALTERNATIVE_KEY_NONE			  },					
+			                                                      { 0x15	, NL("IME Kana mode")					   , ALTERNATIVE_KEY_NONE			  },					
+			                                                      { 0x15	, NL("IME Hanguel mode")				   , ALTERNATIVE_KEY_NONE			  },					
+			                                                      { 0x15	, NL("IME Hangul mode")				   , ALTERNATIVE_KEY_NONE			  },					
+			                                                      { 0x16	, NL("IME On")							       , ALTERNATIVE_KEY_NONE			  },					
+			                                                      { 0x17	, NL("IME Junja mode")					   , ALTERNATIVE_KEY_NONE			  },					
+			                                                      { 0x18	, NL("IME final mode")					   , ALTERNATIVE_KEY_NONE			  },					
+			                                                      { 0x19	, NL("IME Hanja mode")					   , ALTERNATIVE_KEY_NONE			  },					
+			                                                      { 0x19	, NL("IME Kanji mode")					   , ALTERNATIVE_KEY_NONE			  },					
+			                                                      { 0x1A	, NL("IME Off")						       , ALTERNATIVE_KEY_NONE			  },					
+			                                                      { 0x1B	, NL("ESC")							         , ALTERNATIVE_KEY_NONE			  },					
+			                                                      { 0x1C	, NL("IME convert")					     , ALTERNATIVE_KEY_NONE			  },					
+			                                                      { 0x1D	, NL("IME nonconvert")					   , ALTERNATIVE_KEY_NONE			  },					
+			                                                      { 0x1E	, NL("IME accept")						     , ALTERNATIVE_KEY_NONE			  },					
+			                                                      { 0x1F	, NL("IME mode change request")	 , ALTERNATIVE_KEY_NONE			 	},					
+			                                                      { 0x20	, NL("SPACEBAR")						       , ALTERNATIVE_KEY_NONE			  },					
+			                                                      { 0x21	, NL("PAGE UP")						       , ALTERNATIVE_KEY_NONE			  },					
+			                                                      { 0x22	, NL("PAGE DOWN")						     , ALTERNATIVE_KEY_NONE			  },					
+			                                                      { 0x23	, NL("END")							         , ALTERNATIVE_KEY_NONE			  },					
+			                                                      { 0x24	, NL("HOME")							         , ALTERNATIVE_KEY_NONE			  },					
+			                                                      { 0x25	, NL("LEFT ARROW")						     , ALTERNATIVE_KEY_NONE			  },					
+			                                                      { 0x26	, NL("UP ARROW")						       , ALTERNATIVE_KEY_NONE			  },					
+			                                                      { 0x27	, NL("RIGHT ARROW")					     , ALTERNATIVE_KEY_NONE			  },					
+			                                                      { 0x28	, NL("DOWN ARROW")						     , ALTERNATIVE_KEY_NONE			  },					
+			                                                      { 0x29	, NL("SELECT")							       , ALTERNATIVE_KEY_NONE			  },					
+			                                                      { 0x2A	, NL("PRINT")							       , ALTERNATIVE_KEY_NONE			  },					
+			                                                      { 0x2B	, NL("EXECUTE")						       , ALTERNATIVE_KEY_NONE			  },					
+			                                                      { 0x2C	, NL("PRINT SCREEN")					     , ALTERNATIVE_KEY_NONE			  },					
+			                                                      { 0x2D	, NL("INS")							         , ALTERNATIVE_KEY_NONE			  },					
+			                                                      { 0x2E	, NL("DEL")							         , ALTERNATIVE_KEY_NONE			  },					
+			                                                      { 0x2F	, NL("HELP")							         , ALTERNATIVE_KEY_NONE			  },					
+			                                                      { 0x30	, NL("0")								         , ALTERNATIVE_KEY_NONE			  },					
+			                                                      { 0x31	, NL("1")								         , ALTERNATIVE_KEY_NONE			  },					
+			                                                      { 0x32	, NL("2")								         , ALTERNATIVE_KEY_NONE			  },					
+			                                                      { 0x33	, NL("3")								         , ALTERNATIVE_KEY_NONE			  },					
+			                                                      { 0x34	, NL("4")								         , ALTERNATIVE_KEY_NONE			  },					
+			                                                      { 0x35	, NL("5")								         , ALTERNATIVE_KEY_NONE			  },					
+			                                                      { 0x36	, NL("6")								         , ALTERNATIVE_KEY_NONE			  },					
+			                                                      { 0x37	, NL("7")								         , ALTERNATIVE_KEY_NONE			  },					
+			                                                      { 0x38	, NL("8")								         , ALTERNATIVE_KEY_NONE			  },					
+			                                                      { 0x39	, NL("9")								         , ALTERNATIVE_KEY_NONE			  },																																	                                                      				
+			                                                      { 0x41	, NL("A")								         , ALTERNATIVE_KEY_NONE			  },					
+			                                                      { 0x42	, NL("B")								         , ALTERNATIVE_KEY_NONE			  },					
+			                                                      { 0x43	, NL("C")								         , ALTERNATIVE_KEY_NONE			  },					
+			                                                      { 0x44	, NL("D")								         , ALTERNATIVE_KEY_NONE			  },					
+			                                                      { 0x45	, NL("E")								         , ALTERNATIVE_KEY_NONE			  },					
+			                                                      { 0x46	, NL("F")								         , ALTERNATIVE_KEY_NONE			  },					
+			                                                      { 0x47	, NL("G")								         , ALTERNATIVE_KEY_NONE			  },					
+			                                                      { 0x48	, NL("H")								         , ALTERNATIVE_KEY_NONE			  },					
+			                                                      { 0x49	, NL("I")								         , ALTERNATIVE_KEY_NONE			  },					
+			                                                      { 0x4A	, NL("J")								         , ALTERNATIVE_KEY_NONE			  },					
+			                                                      { 0x4B	, NL("K")								         , ALTERNATIVE_KEY_NONE			  },					
+			                                                      { 0x4C	, NL("L")								         , ALTERNATIVE_KEY_NONE			  },					
+			                                                      { 0x4D	, NL("M")								         , ALTERNATIVE_KEY_NONE			  },					
+			                                                      { 0x4E	, NL("N")								         , ALTERNATIVE_KEY_NONE			  },					
+			                                                      { 0x4F	, NL("O")								         , ALTERNATIVE_KEY_NONE			  },					
+			                                                      { 0x50	, NL("P")								         , ALTERNATIVE_KEY_NONE			  },					
+			                                                      { 0x51	, NL("Q")								         , ALTERNATIVE_KEY_NONE			  },					
+			                                                      { 0x52	, NL("R")								         , ALTERNATIVE_KEY_NONE			  },					
+			                                                      { 0x53	, NL("S")								         , ALTERNATIVE_KEY_NONE			  },					
+			                                                      { 0x54	, NL("T")								         , ALTERNATIVE_KEY_NONE			  },					
+			                                                      { 0x55	, NL("U")								         , ALTERNATIVE_KEY_NONE			  },					
+			                                                      { 0x56	, NL("V")								         , ALTERNATIVE_KEY_NONE			  },					
+			                                                      { 0x57	, NL("W")								         , ALTERNATIVE_KEY_NONE			  },					
+			                                                      { 0x58	, NL("X")								         , ALTERNATIVE_KEY_NONE			  },					
+			                                                      { 0x59	, NL("Y")								         , ALTERNATIVE_KEY_NONE			  },					
+			                                                      { 0x5A	, NL("Z")								         , ALTERNATIVE_KEY_NONE			  },					
+			                                                      { 0x5B	, NL("Left Windows")					     , ALTERNATIVE_KEY_NONE			  },					
+			                                                      { 0x5C	, NL("Right Windows")					   , ALTERNATIVE_KEY_NONE			  },					
+			                                                      { 0x5D	, NL("Applications")					     , ALTERNATIVE_KEY_NONE			  },																																		                                                                          
+			                                                      { 0x5F	, NL("Computer Sleep")					   , ALTERNATIVE_KEY_NONE			  },					
+			                                                      { 0x61	, NL("Numericpad 1")					     , ALTERNATIVE_KEY_NONE			  },					
+			                                                      { 0x60	, NL("Numericpad 0")					     , ALTERNATIVE_KEY_NONE			  },					
+			                                                      { 0x62	, NL("Numericpad 2")					     , ALTERNATIVE_KEY_NONE			  },					
+			                                                      { 0x63	, NL("Numericpad 3")					     , ALTERNATIVE_KEY_NONE			  },					
+			                                                      { 0x64	, NL("Numericpad 4")					     , ALTERNATIVE_KEY_NONE			  },					
+			                                                      { 0x65	, NL("Numericpad 5")					     , ALTERNATIVE_KEY_NONE			  },					
+			                                                      { 0x66	, NL("Numericpad 6")					     , ALTERNATIVE_KEY_NONE			  },					
+			                                                      { 0x67	, NL("Numericpad 7")					     , ALTERNATIVE_KEY_NONE			  },					
+			                                                      { 0x68	, NL("Numericpad 8")					     , ALTERNATIVE_KEY_NONE			  },					
+			                                                      { 0x69	, NL("Numericpad 9")					     , ALTERNATIVE_KEY_NONE			  },					
+			                                                      { 0x6A	, NL("Multiply")						       , ALTERNATIVE_KEY_NONE			  },					
+			                                                      { 0x6B	, NL("Add")							         , ALTERNATIVE_KEY_NONE			  },					
+			                                                      { 0x6C	, NL("Separator")						     , ALTERNATIVE_KEY_NONE			  },					
+			                                                      { 0x6D	, NL("Subtract")						       , ALTERNATIVE_KEY_NONE			  },					
+			                                                      { 0x6E	, NL("Decimal")						       , ALTERNATIVE_KEY_NONE			  },					
+			                                                      { 0x6F	, NL("Divide")							       , ALTERNATIVE_KEY_NONE			  },	
+																														{ 0x70	, NL("F1")								         , ALTERNATIVE_KEY_NONE			  },					
+			                                                      { 0x71	, NL("F2")								         , ALTERNATIVE_KEY_NONE			  },					
+			                                                      { 0x72	, NL("F3")								         , ALTERNATIVE_KEY_NONE			  },								                                                      
+			                                                      { 0x73	, NL("F4")								         , ALTERNATIVE_KEY_NONE			  },					
+			                                                      { 0x74	, NL("F5")								         , ALTERNATIVE_KEY_NONE			  },					
+			                                                      { 0x75	, NL("F6")								         , ALTERNATIVE_KEY_NONE			  },					
+			                                                      { 0x76	, NL("F7")								         , ALTERNATIVE_KEY_NONE			  },					
+			                                                      { 0x77	, NL("F8")								         , ALTERNATIVE_KEY_NONE			  },					
+			                                                      { 0x78	, NL("F9")								         , ALTERNATIVE_KEY_NONE			  },					
+			                                                      { 0x79	, NL("F10")							         , ALTERNATIVE_KEY_NONE			  },					
+			                                                      { 0x7A	, NL("F11")							         , ALTERNATIVE_KEY_NONE			  },					
+			                                                      { 0x7B	, NL("F12")							         , ALTERNATIVE_KEY_NONE			  },					
+			                                                      { 0x7C	, NL("F13")							         , ALTERNATIVE_KEY_NONE			  },					
+			                                                      { 0x7D	, NL("F14")							         , ALTERNATIVE_KEY_NONE			  },					
+			                                                      { 0x7E	, NL("F15")							         , ALTERNATIVE_KEY_NONE			  },					
+			                                                      { 0x7F	, NL("F16")							         , ALTERNATIVE_KEY_NONE			  },					
+			                                                      { 0x80	, NL("F17")							         , ALTERNATIVE_KEY_NONE			  },					
+			                                                      { 0x81	, NL("F18")							         , ALTERNATIVE_KEY_NONE			  },					
+			                                                      { 0x82	, NL("F19")							         , ALTERNATIVE_KEY_NONE			  },					
+			                                                      { 0x83	, NL("F20")							         , ALTERNATIVE_KEY_NONE			  },					
+			                                                      { 0x84	, NL("F21")							         , ALTERNATIVE_KEY_NONE			  },					
+			                                                      { 0x85	, NL("F22")							         , ALTERNATIVE_KEY_NONE			  },					
+			                                                      { 0x86	, NL("F23")							         , ALTERNATIVE_KEY_NONE			  },					
+			                                                      { 0x87	, NL("F24")							         , ALTERNATIVE_KEY_NONE			  },																												                                                                          
+			                                                      { 0x90	, NL("NUM LOCK")						       , ALTERNATIVE_KEY_NONE			  },					
+			                                                      { 0x91	, NL("SCROLL LOCK")					     , ALTERNATIVE_KEY_NONE			  },					                                                                          
+			                                                      { 0xA0	, NL("Left SHIFT")						     , ALTERNATIVE_KEY_NONE			  },					
+			                                                      { 0xA1	, NL("Right SHIFT")				 	     , ALTERNATIVE_KEY_NONE			  },					
+			                                                      { 0xA2	, NL("Left CONTROL")					     , ALTERNATIVE_KEY_NONE			  },					
+			                                                      { 0xA3	, NL("Right CONTROL")					   , ALTERNATIVE_KEY_NONE			  },					
+			                                                      { 0xA4	, NL("Left ALT")						       , ALTERNATIVE_KEY_NONE			  },					
+			                                                      { 0xA5	, NL("Right ALT")						     , ALTERNATIVE_KEY_NONE			  },					
+			                                                      { 0xA6	, NL("Browser Back")					     , ALTERNATIVE_KEY_NONE			  },					
+			                                                      { 0xA7	, NL("Browser Forward")				   , ALTERNATIVE_KEY_NONE			  },					
+			                                                      { 0xA8	, NL("Browser Refresh")				   , ALTERNATIVE_KEY_NONE			  },					
+			                                                      { 0xA9	, NL("Browser Stop")					     , ALTERNATIVE_KEY_NONE			  },					
+			                                                      { 0xAA	, NL("Browser Search")					   , ALTERNATIVE_KEY_NONE			  },					
+			                                                      { 0xAB	, NL("Browser Favorites")				 , ALTERNATIVE_KEY_NONE			  },					
+			                                                      { 0xAC	, NL("Browser Home")		      		 , ALTERNATIVE_KEY_NONE			  },					
+			                                                      { 0xAD	, NL("Volume Mute")					     , ALTERNATIVE_KEY_NONE			  },					
+			                                                      { 0xAE	, NL("Volume Down")					     , ALTERNATIVE_KEY_NONE			  },					
+			                                                      { 0xAF	, NL("Volume Up")						     , ALTERNATIVE_KEY_NONE			  },					
+			                                                      { 0xB0	, NL("Next Track")					       , ALTERNATIVE_KEY_NONE			  },					
+			                                                      { 0xB1	, NL("Previous Track")					   , ALTERNATIVE_KEY_NONE			  },					
+			                                                      { 0xB2	, NL("Stop Media")						     , ALTERNATIVE_KEY_NONE			  },					
+			                                                      { 0xB3	, NL("Play/Pause Media")					 , ALTERNATIVE_KEY_NONE			  },
+			                                                      { 0xB4	, NL("Start Mail")						     , ALTERNATIVE_KEY_NONE			  },					
+ 			                                                      { 0xB5	, NL("Select Media")					     , ALTERNATIVE_KEY_NONE			  },					
+			                                                      { 0xB6	, NL("Start Application 1")			 , ALTERNATIVE_KEY_NONE			  },					
+			                                                      { 0xB7	, NL("Start Application 2")			 , ALTERNATIVE_KEY_NONE			  },					                                                                          			                                                     			                                                       		
+			                                                      { 0xE5	, NL("IME PROCESS")						   , ALTERNATIVE_KEY_NONE			  },					                                                                   
+			                                                      { 0xF6	, NL("Attn")							         , ALTERNATIVE_KEY_NONE			  },						
+			                                                      { 0xF7	, NL("CrSel")							       , ALTERNATIVE_KEY_NONE			  },					
+			                                                      { 0xF8	, NL("ExSel")							       , ALTERNATIVE_KEY_NONE			  },					
+			                                                      { 0xF9	, NL("Erase EOF")						     , ALTERNATIVE_KEY_NONE			  },					
+			                                                      { 0xFA	, NL("Play")							         , ALTERNATIVE_KEY_NONE			  },					
+			                                                      { 0xFB	, NL("Zoom")							         , ALTERNATIVE_KEY_NONE			  },	  				
+			                                                      { 0xFD	, NL("PA1")							         , ALTERNATIVE_KEY_NONE			  },					
+			                                                      { 0xFE	, NL("Clear")							       , ALTERNATIVE_KEY_NONE			  }
                                                           };	
 
 
-INPUTSIMULATE_KDB_PC  inputsimulare_KDB_INTEL_Spanish[]		= { { 0xDC  , _L("\xBA")								  		 , ALTERNATIVE_KEY_NONE       },
-																														{ 0xDC  , _L("\xAA")										   , ALTERNATIVE_KEY_SHIFT      },
-																														{ 0xDC  , _L("\\")											   , ALTERNATIVE_KEY_ALTGR      },
-																														{ 0x31  , _L("!")											   , ALTERNATIVE_KEY_SHIFT      },
-																														{ 0x31  , _L("|")											   , ALTERNATIVE_KEY_ALTGR      },
-																														{ 0x32  , _L("\"")											   , ALTERNATIVE_KEY_SHIFT      },
-																														{ 0x32  , _L("@")											   , ALTERNATIVE_KEY_ALTGR      },
-																														{ 0x33  , _L("\x95")										   , ALTERNATIVE_KEY_SHIFT      },
-																														{ 0x33  , _L("#")											   , ALTERNATIVE_KEY_ALTGR      },
-																														{ 0x34  , _L("$")											   , ALTERNATIVE_KEY_SHIFT      },
-																														{ 0x35  , _L("%")											   , ALTERNATIVE_KEY_SHIFT      },
-																														{ 0x36  , _L("&")											   , ALTERNATIVE_KEY_SHIFT      },
-																														{ 0x37  , _L("/")											   , ALTERNATIVE_KEY_SHIFT      },
-																														{ 0x38  , _L("(")											   , ALTERNATIVE_KEY_SHIFT      },
-																														{ 0x39  , _L(")")											   , ALTERNATIVE_KEY_SHIFT      },
-																														{ 0x30  , _L("=")											   , ALTERNATIVE_KEY_SHIFT      },
+INPUTSIMULATE_KDB_PC  inputsimulare_KDB_INTEL_Spanish[]		= { { 0xDC  , NL("\xBA")								  		 , ALTERNATIVE_KEY_NONE       },
+																														{ 0xDC  , NL("\xAA")										   , ALTERNATIVE_KEY_SHIFT      },
+																														{ 0xDC  , NL("\\")											   , ALTERNATIVE_KEY_ALTGR      },
+																														{ 0x31  , NL("!")											   , ALTERNATIVE_KEY_SHIFT      },
+																														{ 0x31  , NL("|")											   , ALTERNATIVE_KEY_ALTGR      },
+																														{ 0x32  , NL("\"")											   , ALTERNATIVE_KEY_SHIFT      },
+																														{ 0x32  , NL("@")											   , ALTERNATIVE_KEY_ALTGR      },
+																														{ 0x33  , NL("\x95")										   , ALTERNATIVE_KEY_SHIFT      },
+																														{ 0x33  , NL("#")											   , ALTERNATIVE_KEY_ALTGR      },
+																														{ 0x34  , NL("$")											   , ALTERNATIVE_KEY_SHIFT      },
+																														{ 0x35  , NL("%")											   , ALTERNATIVE_KEY_SHIFT      },
+																														{ 0x36  , NL("&")											   , ALTERNATIVE_KEY_SHIFT      },
+																														{ 0x37  , NL("/")											   , ALTERNATIVE_KEY_SHIFT      },
+																														{ 0x38  , NL("(")											   , ALTERNATIVE_KEY_SHIFT      },
+																														{ 0x39  , NL(")")											   , ALTERNATIVE_KEY_SHIFT      },
+																														{ 0x30  , NL("=")											   , ALTERNATIVE_KEY_SHIFT      },
 
-																														{ 0xDB  , _L("'")											   , ALTERNATIVE_KEY_NONE	      },
-																														{ 0xDB  , _L("?")											   , ALTERNATIVE_KEY_SHIFT      },
+																														{ 0xDB  , NL("'")											   , ALTERNATIVE_KEY_NONE	      },
+																														{ 0xDB  , NL("?")											   , ALTERNATIVE_KEY_SHIFT      },
 
-																														{ 0xDD  , _L("\xA1")										   , ALTERNATIVE_KEY_NONE	      },
-																														{ 0xDD  , _L("\xBF")										   , ALTERNATIVE_KEY_SHIFT      },
+																														{ 0xDD  , NL("\xA1")										   , ALTERNATIVE_KEY_NONE	      },
+																														{ 0xDD  , NL("\xBF")										   , ALTERNATIVE_KEY_SHIFT      },
 
-																														{ 0xBA  , _L("`")											   , ALTERNATIVE_KEY_NONE	      },
-																														{ 0xBA  , _L("^")											   , ALTERNATIVE_KEY_SHIFT      },
-																														{ 0xBA  , _L("[")											   , ALTERNATIVE_KEY_ALTGR      },
+																														{ 0xBA  , NL("`")											   , ALTERNATIVE_KEY_NONE	      },
+																														{ 0xBA  , NL("^")											   , ALTERNATIVE_KEY_SHIFT      },
+																														{ 0xBA  , NL("[")											   , ALTERNATIVE_KEY_ALTGR      },
 
-																														{ 0xBB  , _L("+")											   , ALTERNATIVE_KEY_NONE	      },
-																														{ 0xBB  , _L("*")											   , ALTERNATIVE_KEY_SHIFT      },
-																														{ 0xBB  , _L("]")											   , ALTERNATIVE_KEY_ALTGR      },
+																														{ 0xBB  , NL("+")											   , ALTERNATIVE_KEY_NONE	      },
+																														{ 0xBB  , NL("*")											   , ALTERNATIVE_KEY_SHIFT      },
+																														{ 0xBB  , NL("]")											   , ALTERNATIVE_KEY_ALTGR      },
 
-																														{ 0xC0  , _L("\xF1")											 , ALTERNATIVE_KEY_NONE	      },
-																														{ 0xC0  , _L("\xD1")										   , ALTERNATIVE_KEY_SHIFT      },
+																														{ 0xC0  , NL("\xF1")											 , ALTERNATIVE_KEY_NONE	      },
+																														{ 0xC0  , NL("\xD1")										   , ALTERNATIVE_KEY_SHIFT      },
 
-																														{ 0xDE  , _L("\xB4")										   , ALTERNATIVE_KEY_NONE	      },
-																														{ 0xDE  , _L("\xA8")										   , ALTERNATIVE_KEY_SHIFT      },
-																														{ 0xDE  , _L("{")											   , ALTERNATIVE_KEY_ALTGR      },
+																														{ 0xDE  , NL("\xB4")										   , ALTERNATIVE_KEY_NONE	      },
+																														{ 0xDE  , NL("\xA8")										   , ALTERNATIVE_KEY_SHIFT      },
+																														{ 0xDE  , NL("{")											   , ALTERNATIVE_KEY_ALTGR      },
 
-																														{ 0xBF  , _L("\xE7")										   , ALTERNATIVE_KEY_NONE	      },
-																														{ 0xBF  , _L("\xC7")										   , ALTERNATIVE_KEY_SHIFT      },
-																														{ 0xBF  , _L("}")											   , ALTERNATIVE_KEY_ALTGR      },
+																														{ 0xBF  , NL("\xE7")										   , ALTERNATIVE_KEY_NONE	      },
+																														{ 0xBF  , NL("\xC7")										   , ALTERNATIVE_KEY_SHIFT      },
+																														{ 0xBF  , NL("}")											   , ALTERNATIVE_KEY_ALTGR      },
 
-																														{ 0xE2  , _L("<")											   , ALTERNATIVE_KEY_NONE	      },
-																														{ 0xE2  , _L(">")											   , ALTERNATIVE_KEY_SHIFT      },
+																														{ 0xE2  , NL("<")											   , ALTERNATIVE_KEY_NONE	      },
+																														{ 0xE2  , NL(">")											   , ALTERNATIVE_KEY_SHIFT      },
 																														
-																														{ 0xBC  , _L(",")											   , ALTERNATIVE_KEY_NONE	      },
-																														{ 0xBC  , _L(";")											   , ALTERNATIVE_KEY_SHIFT      },
+																														{ 0xBC  , NL(",")											   , ALTERNATIVE_KEY_NONE	      },
+																														{ 0xBC  , NL(";")											   , ALTERNATIVE_KEY_SHIFT      },
 
-																														{ 0xBE  , _L(".")											   , ALTERNATIVE_KEY_NONE	      },
-																														{ 0xBE  , _L(":")											   , ALTERNATIVE_KEY_SHIFT      },
+																														{ 0xBE  , NL(".")											   , ALTERNATIVE_KEY_NONE	      },
+																														{ 0xBE  , NL(":")											   , ALTERNATIVE_KEY_SHIFT      },
 
-																														{ 0xBD  , _L("-")											   , ALTERNATIVE_KEY_NONE	      },
-																														{ 0xBD  , _L("_")											   , ALTERNATIVE_KEY_SHIFT      },																														
+																														{ 0xBD  , NL("-")											   , ALTERNATIVE_KEY_NONE	      },
+																														{ 0xBD  , NL("_")											   , ALTERNATIVE_KEY_SHIFT      },																														
 																													};
 
 
@@ -371,8 +371,8 @@ bool INPSIMULATE::Key_PressByLiteral(XCHAR* literal)
       switch(altkey)
         {
           case ALTERNATIVE_KEY_NONE   : break;
-          case ALTERNATIVE_KEY_ALTGR  : Key_PressByLiteral(_L("Right ALT"));  break;
-          case ALTERNATIVE_KEY_SHIFT  : Key_PressByLiteral(_L("SHIFT"));      break;
+          case ALTERNATIVE_KEY_ALTGR  : Key_PressByLiteral(NL("Right ALT"));  break;
+          case ALTERNATIVE_KEY_SHIFT  : Key_PressByLiteral(NL("SHIFT"));      break;
         }
 
       return Key_Press(code);
@@ -405,8 +405,8 @@ bool INPSIMULATE::Key_UnPressByLiteral(XCHAR* literal)
       switch(altkey)
         {
           case ALTERNATIVE_KEY_NONE   : break;
-          case ALTERNATIVE_KEY_ALTGR  : Key_UnPressByLiteral(_L("Right ALT"));  break;
-          case ALTERNATIVE_KEY_SHIFT  : Key_UnPressByLiteral(_L("SHIFT"));      break;
+          case ALTERNATIVE_KEY_ALTGR  : Key_UnPressByLiteral(NL("Right ALT"));  break;
+          case ALTERNATIVE_KEY_SHIFT  : Key_UnPressByLiteral(NL("SHIFT"));      break;
         }
 
       return status;
@@ -438,8 +438,8 @@ bool INPSIMULATE::Key_ClickByLiteral(XCHAR* literal, int pressuretime)
       switch(altkey)
         {
           case ALTERNATIVE_KEY_NONE   : break;
-          case ALTERNATIVE_KEY_ALTGR  : Key_PressByLiteral(_L("Right ALT"));  break;
-          case ALTERNATIVE_KEY_SHIFT  : Key_PressByLiteral(_L("SHIFT"));      break;
+          case ALTERNATIVE_KEY_ALTGR  : Key_PressByLiteral(NL("Right ALT"));  break;
+          case ALTERNATIVE_KEY_SHIFT  : Key_PressByLiteral(NL("SHIFT"));      break;
         }
 
       bool status = Key_Click(code, pressuretime);
@@ -447,8 +447,8 @@ bool INPSIMULATE::Key_ClickByLiteral(XCHAR* literal, int pressuretime)
       switch(altkey)
         {
           case ALTERNATIVE_KEY_NONE   : break;
-          case ALTERNATIVE_KEY_ALTGR  : Key_UnPressByLiteral(_L("Right ALT"));  break;
-          case ALTERNATIVE_KEY_SHIFT  : Key_UnPressByLiteral(_L("SHIFT"));      break;
+          case ALTERNATIVE_KEY_ALTGR  : Key_UnPressByLiteral(NL("Right ALT"));  break;
+          case ALTERNATIVE_KEY_SHIFT  : Key_UnPressByLiteral(NL("SHIFT"));      break;
         }
 
       return status;
@@ -526,7 +526,7 @@ bool INPSIMULATE::Key_ClickByText(XCHAR* text, int pressuretimeinterval)
 
                               if(!IsCapsLockActive())
                                 {
-                                  if(!Key_ClickByLiteral(_L("CAPS LOCK"), pressuretimeinterval)) status = false;
+                                  if(!Key_ClickByLiteral(NL("CAPS LOCK"), pressuretimeinterval)) status = false;
                                   changecapslock = true;
                                 }
 
@@ -534,12 +534,12 @@ bool INPSIMULATE::Key_ClickByText(XCHAR* text, int pressuretimeinterval)
 
                               if(changecapslock)
                                 {
-                                  if(!Key_ClickByLiteral(_L("CAPS LOCK"), pressuretimeinterval)) status = false;
+                                  if(!Key_ClickByLiteral(NL("CAPS LOCK"), pressuretimeinterval)) status = false;
                                 }
                             }
                             break;
 
-          case _C(' ')   : if(!Key_ClickByLiteral(_L("SPACEBAR"), pressuretimeinterval)) status = false;
+          case _C(' ')   : if(!Key_ClickByLiteral(NL("SPACEBAR"), pressuretimeinterval)) status = false;
                             break;
 
           case _C('a')   :
@@ -572,7 +572,7 @@ bool INPSIMULATE::Key_ClickByText(XCHAR* text, int pressuretimeinterval)
 
                               if(IsCapsLockActive())
                                 {
-                                  if(!Key_ClickByLiteral(_L("CAPS LOCK"), pressuretimeinterval)) status = false;
+                                  if(!Key_ClickByLiteral(NL("CAPS LOCK"), pressuretimeinterval)) status = false;
                                   changecapslock = true;
                                 }
 
@@ -580,7 +580,7 @@ bool INPSIMULATE::Key_ClickByText(XCHAR* text, int pressuretimeinterval)
 
                               if(changecapslock)
                                 {
-                                  if(!Key_ClickByLiteral(_L("CAPS LOCK"), pressuretimeinterval)) status = false;
+                                  if(!Key_ClickByLiteral(NL("CAPS LOCK"), pressuretimeinterval)) status = false;
                                 }
                             }
                             break;

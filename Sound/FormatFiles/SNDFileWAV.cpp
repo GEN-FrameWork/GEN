@@ -79,6 +79,7 @@ SNDFILEWAV::SNDFILEWAV() : SNDFILE()
 * --------------------------------------------------------------------------------------------------------------------*/
 SNDFILEWAV::~SNDFILEWAV()
 {
+  Close();
   Clean();
 }
 
@@ -100,23 +101,23 @@ bool SNDFILEWAV::LoadFile()
       return false;
     }
 
-  bool status = false;
-
-  if(Open(path.Get()))
+  if(!Open(path.Get()))
     {
-      XDWORD  sizeread    = datasizeinfile;
-      bool    isfinished  = false;
-
-      xbufferdecodeddata->Resize(sizeread);
-
-      ReadData(xbufferdecodeddata->Get(), sizeread, isfinished);
-
-      Close();
-
-      status = true;
+      GEN_DELETE xbufferdecodeddata;
+      xbufferdecodeddata = NULL;
+      return false;
     }
-  
-  return status;
+
+  XDWORD  sizeread    = datasizeinfile;
+  bool    isfinished  = false;
+
+  xbufferdecodeddata->Resize(sizeread);
+
+  ReadData(xbufferdecodeddata->Get(), sizeread, isfinished);
+
+  Close();
+
+  return true;
 }
 
 
@@ -136,27 +137,41 @@ bool SNDFILEWAV::Open(XCHAR* path)
   fileRIFF = GEN_NEW XFILERIFF();
   if(!fileRIFF) return false;
 
-  if(!fileRIFF->Open(path)) return false;
+  if(!fileRIFF->Open(path) || !fileRIFF->ReadAllLists())
+    {
+      Close();
+      return false;
+    }
 
-  if(!fileRIFF->ReadAllLists()) return false; 
-
-  format_list = fileRIFF->GetChunk(_L("fmt "), _L("WAVE"));
-  if(!format_list) return false;
+  format_list = fileRIFF->GetChunk(NL("fmt "), NL("WAVE"));
+  if(!format_list)
+    {
+      Close();
+      return false;
+    }
 
   fileRIFF->GetFileBase()->SetPosition(format_list->GetPositionFileData());  
 
-  if(!fileRIFF->GetFileBase()->Read((XBYTE*)&format.audio_format    , sizeof(XWORD)))   return false;
-  if(!fileRIFF->GetFileBase()->Read((XBYTE*)&format.num_channels    , sizeof(XWORD)))   return false;
-  if(!fileRIFF->GetFileBase()->Read((XBYTE*)&format.sample_rate     , sizeof(XDWORD)))  return false;
-  if(!fileRIFF->GetFileBase()->Read((XBYTE*)&format.byte_rate       , sizeof(XDWORD)))  return false;
-  if(!fileRIFF->GetFileBase()->Read((XBYTE*)&format.block_align     , sizeof(XWORD)))   return false;
-  if(!fileRIFF->GetFileBase()->Read((XBYTE*)&format.bits_per_sample , sizeof(XWORD)))   return false;
+  if(!fileRIFF->GetFileBase()->Read((XBYTE*)&format.audio_format    , sizeof(XWORD))   ||
+     !fileRIFF->GetFileBase()->Read((XBYTE*)&format.num_channels    , sizeof(XWORD))   ||
+     !fileRIFF->GetFileBase()->Read((XBYTE*)&format.sample_rate     , sizeof(XDWORD))  ||
+     !fileRIFF->GetFileBase()->Read((XBYTE*)&format.byte_rate       , sizeof(XDWORD))  ||
+     !fileRIFF->GetFileBase()->Read((XBYTE*)&format.block_align     , sizeof(XWORD))   ||
+     !fileRIFF->GetFileBase()->Read((XBYTE*)&format.bits_per_sample , sizeof(XWORD)))
+    {
+      Close();
+      return false;
+    }
 
   channels          = format.num_channels;  
   samplerate        = format.sample_rate;
     
-  data_list = fileRIFF->GetChunk(_L("data"), _L("WAVE"));
-  if(!data_list) return false;
+  data_list = fileRIFF->GetChunk(NL("data"), NL("WAVE"));
+  if(!data_list)
+    {
+      Close();
+      return false;
+    }
 
   dataoffsetinfile  = data_list->GetPositionFileData();
   datasizeinfile    = data_list->GetSize();
@@ -166,7 +181,13 @@ bool SNDFILEWAV::Open(XCHAR* path)
   duration          =  ((XDWORD)(datasizeinfile/channels)/format.byte_rate)*1000;
   nsamples          =  (XDWORD)((datasizeinfile*8)/format.bits_per_sample);
 
-  return fileRIFF->GetFileBase()->SetPosition(dataoffsetinfile);  
+  if(!fileRIFF->GetFileBase()->SetPosition(dataoffsetinfile))
+    {
+      Close();
+      return false;
+    }
+
+  return true;
 }
 
 

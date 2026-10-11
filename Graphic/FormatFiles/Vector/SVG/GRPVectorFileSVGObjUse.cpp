@@ -100,8 +100,8 @@ bool GRPVECTORFILESVGOBJUSE::ApplyData(XFILEXMLELEMENT* element)
 
   GRPVECTORFILESVGOBJ::ApplyData(element);
 
-  XCHAR* valuehref = element->GetValueAttribute(_L("xlink:href"));
-  if(!valuehref)  valuehref = element->GetValueAttribute(_L("href"));
+  XCHAR* valuehref = element->GetValueAttribute(NL("xlink:href"));
+  if(!valuehref)  valuehref = element->GetValueAttribute(NL("href"));
 
   if(valuehref)
     {
@@ -115,8 +115,8 @@ bool GRPVECTORFILESVGOBJUSE::ApplyData(XFILEXMLELEMENT* element)
         }
     }
 
-  x = element->GetFloatValueAttribute(_L("x"));
-  y = element->GetFloatValueAttribute(_L("y"));
+  x = element->GetFloatValueAttribute(NL("x"));
+  y = element->GetFloatValueAttribute(NL("y"));
 
   return true;
 }

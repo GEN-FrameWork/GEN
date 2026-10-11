@@ -240,15 +240,15 @@ UI_COLORS::UI_COLORS()
 {
   Clean();
 
-  Add(_L("red"), _L("255,0,0"));
-  Add(_L("green"), _L("0,255,0"));
-  Add(_L("blue"), _L("0,0,255"));  
-  Add(_L("white"), _L("255,255,255"));
-  Add(_L("black"), _L("0,0,0"));
-  Add(_L("yellow"), _L("255,255,0"));
-  Add(_L("cyan"), _L("0,255,255"));
-  Add(_L("purple"), _L("128,0,128"));
-  Add(_L("gray"), _L("128,128,128"));
+  Add(NL("red"), NL("255,0,0"));
+  Add(NL("green"), NL("0,255,0"));
+  Add(NL("blue"), NL("0,0,255"));  
+  Add(NL("white"), NL("255,255,255"));
+  Add(NL("black"), NL("0,0,0"));
+  Add(NL("yellow"), NL("255,255,0"));
+  Add(NL("cyan"), NL("0,255,255"));
+  Add(NL("purple"), NL("128,0,128"));
+  Add(NL("gray"), NL("128,128,128"));
 }
 
 

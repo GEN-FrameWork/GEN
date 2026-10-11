@@ -117,19 +117,19 @@ XCHAR* HASH::GetTypeStr()
   switch(type)
     {
       case HASHTYPE_NONE      : 
-                    default   : name = _L("None");      break;
-      case HASHTYPE_CKS16     : name = _L("CKS16");     break;
-      case HASHTYPE_CRC16     : name = _L("CRC16");     break;
-      case HASHTYPE_CRC32     : name = _L("CRC32");     break;
-      case HASHTYPE_MD2       : name = _L("MD2");       break;
-      case HASHTYPE_MD4       : name = _L("MD4");       break;
-      case HASHTYPE_MD5       : name = _L("MD5");       break;
-      case HASHTYPE_SHA1      : name = _L("SHA1");      break;
-      case HASHTYPE_SHA224    : name = _L("SHA224");    break;
-      case HASHTYPE_SHA256    : name = _L("SHA256");    break;
-      case HASHTYPE_SHA384    : name = _L("SHA384");    break;
-      case HASHTYPE_SHA512    : name = _L("SHA512");    break;
-      case HASHTYPE_RIPEMD160 : name = _L("RIPEMD160"); break;
+                    default   : name = NL("None");      break;
+      case HASHTYPE_CKS16     : name = NL("CKS16");     break;
+      case HASHTYPE_CRC16     : name = NL("CRC16");     break;
+      case HASHTYPE_CRC32     : name = NL("CRC32");     break;
+      case HASHTYPE_MD2       : name = NL("MD2");       break;
+      case HASHTYPE_MD4       : name = NL("MD4");       break;
+      case HASHTYPE_MD5       : name = NL("MD5");       break;
+      case HASHTYPE_SHA1      : name = NL("SHA1");      break;
+      case HASHTYPE_SHA224    : name = NL("SHA224");    break;
+      case HASHTYPE_SHA256    : name = NL("SHA256");    break;
+      case HASHTYPE_SHA384    : name = NL("SHA384");    break;
+      case HASHTYPE_SHA512    : name = NL("SHA512");    break;
+      case HASHTYPE_RIPEMD160 : name = NL("RIPEMD160"); break;
     }                  
 
   return name;
@@ -386,7 +386,7 @@ bool HASH::GetResultString(XSTRING& stringhex)
     {
       XSTRING strbyte;
 
-      strbyte.Format(_L("%02x"), xbuffer->GetByte(c));
+      strbyte.Format(NL("%02x"), xbuffer->GetByte(c));
 
       stringhex += strbyte;
     }

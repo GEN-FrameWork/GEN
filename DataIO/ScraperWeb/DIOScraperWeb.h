@@ -43,7 +43,7 @@
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
 
 #define DIOSCRAPERWEB_MAXTIMEOUTFORURL         10
-#define DIOSCRAPERWEB_NAMEFILE                 _L("scraperweb.xml")
+#define DIOSCRAPERWEB_NAMEFILE                 NL("scraperweb.xml")
 #define DIOSCRAPERWEB_DEFAULTUSERAGENT         DIOWEBCLIENT_DEFAULTUSERAGENT
 
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/

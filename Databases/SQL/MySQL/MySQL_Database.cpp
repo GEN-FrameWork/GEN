@@ -114,7 +114,7 @@ DB_SQL_DATABASE_TYPE MYSQL_DATABASE::GetType()
 * --------------------------------------------------------------------------------------------------------------------*/
 XCHAR* MYSQL_DATABASE::GetTypeName()
 {
-  return _L("MySQL");
+  return NL("MySQL");
 }
 
 
@@ -223,7 +223,7 @@ bool MYSQL_DATABASE::Rollback(XCHAR* savepointname)
        else
         {
           DB_SQL_STRING text;
-          text.Format(_L("ROLLBACK TO SAVEPOINT %s"), savepointname);
+          text.Format(NL("ROLLBACK TO SAVEPOINT %s"), savepointname);
           
           XBUFFER rollbacktext;
           
@@ -264,7 +264,7 @@ bool MYSQL_DATABASE::Savepoint(XCHAR* savepoint)
 
   DB_SQL_STRING text;
 
-  text.Format(_L("SAVEPOINT %s"), savepoint);
+  text.Format(NL("SAVEPOINT %s"), savepoint);
 
   XBUFFER savetext;
   
@@ -298,7 +298,7 @@ bool MYSQL_DATABASE::ReleaseSavepoint(XCHAR* savepoint)
   if(!conn) return false;
 
   DB_SQL_STRING text;
-  text.Format(_L("RELEASE %s"), savepoint);
+  text.Format(NL("RELEASE %s"), savepoint);
 
   XBUFFER savetext;
   
@@ -367,7 +367,7 @@ bool MYSQL_DATABASE::GetTables()
   tables.DeleteContents();
   tables.DeleteAll();
 
-  query->Set(_L("SHOW TABLES"));
+  query->Set(NL("SHOW TABLES"));
   if(query->Execute())
     {
       DB_SQL_RESULT* result=query->GetResult();
@@ -398,7 +398,7 @@ bool MYSQL_DATABASE::GetTables()
     }
    else
     {
-      Error(_L("Unable to obtain Tables"));
+      Error(NL("Unable to obtain Tables"));
       delete(query);
 
       return false;
@@ -429,8 +429,8 @@ DB_SQL_DATABASE_ENCODING MYSQL_DATABASE::GetDatabaseEncoding()
   XSTRING s;
   s.Set(name);
 
-  if (s.Compare(_L("ucs2")) == 0)  return DB_SQL_DATABASE_ENCODING_UNKNOWN;
-  if (s.Compare(_L("utf8")) == 0)  return DB_SQL_DATABASE_ENCODING_UTF8;
+  if (s.Compare(NL("ucs2")) == 0)  return DB_SQL_DATABASE_ENCODING_UNKNOWN;
+  if (s.Compare(NL("utf8")) == 0)  return DB_SQL_DATABASE_ENCODING_UTF8;
 
   return DB_SQL_DATABASE_ENCODING_UNKNOWN;
 }
@@ -503,7 +503,7 @@ bool MYSQL_DATABASE::SetDatabaseEncoding(DB_SQL_DATABASE_ENCODING encodingtouse)
                                         default         : break;
     }
 
-  Error (_L("Unable to set the charset encoding"));
+  Error (NL("Unable to set the charset encoding"));
 
   return false;
 }

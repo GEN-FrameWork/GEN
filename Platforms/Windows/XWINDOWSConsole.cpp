@@ -42,10 +42,9 @@
 #include <tchar.h>
 #include <fcntl.h> 
 #include <io.h>
-#include <iostream>
-#include <fstream>
 
 #include "XString.h"
+#include "XBuffer.h"
 #include "XFileTXT.h"
 
 
@@ -73,14 +72,22 @@
 * --------------------------------------------------------------------------------------------------------------------*/
 XWINDOWSCONSOLE::XWINDOWSCONSOLE(): XCONSOLE()
 {
+  Clean();
+
   #ifndef APPFLOW_GRAPHICS_NOTCONSOLE_ACTIVE
 
-  HANDLE                hconsole    = GetStdHandle(STD_OUTPUT_HANDLE);   // Get the number of character cells in the current buffer.
-  CONSOLE_CURSOR_INFO   cursorinfo;
+  HANDLE              hconsole = GetStdHandle(STD_OUTPUT_HANDLE);
+  CONSOLE_CURSOR_INFO cursorinfo;
 
-  GetConsoleCursorInfo(hconsole, &cursorinfo);
-  cursorinfo.bVisible = false; // set the cursor visibility
-  SetConsoleCursorInfo(hconsole, &cursorinfo);
+  if(hconsole && (hconsole != INVALID_HANDLE_VALUE) && GetConsoleCursorInfo(hconsole, &cursorinfo))
+    {
+      cursororiginsize    = cursorinfo.dwSize;
+      cursororiginvisible = (cursorinfo.bVisible != FALSE);
+      cursororiginsaved   = true;
+
+      cursorinfo.bVisible = FALSE;
+      SetConsoleCursorInfo(hconsole, &cursorinfo);
+    }
 
   #endif
 }
@@ -96,7 +103,65 @@ XWINDOWSCONSOLE::XWINDOWSCONSOLE(): XCONSOLE()
 * --------------------------------------------------------------------------------------------------------------------*/
 XWINDOWSCONSOLE::~XWINDOWSCONSOLE()
 {
-  
+  RestoreCursorOrigin();
+  Clean();
+}
+
+
+/**-------------------------------------------------------------------------------------------------------------------
+*
+* @fn         void XWINDOWSCONSOLE::Clean()
+* @brief      Clean the attributes of the class: Default initialize.
+* @note       INTERNAL
+* @ingroup    PLATFORM_WINDOWS
+*
+*---------------------------------------------------------------------------------------------------------------------*/
+void XWINDOWSCONSOLE::Clean()
+{
+  cursororiginsize    = 0;
+  cursororiginvisible = true;
+  cursororiginsaved   = false;
+}
+
+
+/**-------------------------------------------------------------------------------------------------------------------
+*
+* @fn         bool XWINDOWSCONSOLE::RestoreCursorOrigin()
+* @brief      Restore the console cursor state saved when this instance hid it.
+* @note       INTERNAL
+* @ingroup    PLATFORM_WINDOWS
+*
+*---------------------------------------------------------------------------------------------------------------------*/
+bool XWINDOWSCONSOLE::RestoreCursorOrigin()
+{
+  #ifndef APPFLOW_GRAPHICS_NOTCONSOLE_ACTIVE
+
+  if(!cursororiginsaved) return false;
+
+  HANDLE              hconsole = GetStdHandle(STD_OUTPUT_HANDLE);
+  CONSOLE_CURSOR_INFO cursorinfo;
+
+  if(!hconsole || (hconsole == INVALID_HANDLE_VALUE)) return false;
+
+  if(!GetConsoleCursorInfo(hconsole, &cursorinfo))
+    {
+      cursorinfo.dwSize = 25;
+    }
+
+  if(cursororiginsize > 0) cursorinfo.dwSize = (DWORD)cursororiginsize;
+  cursorinfo.bVisible = cursororiginvisible ? TRUE : FALSE;
+
+  if(!SetConsoleCursorInfo(hconsole, &cursorinfo)) return false;
+
+  cursororiginsaved = false;
+
+  return true;
+
+  #else
+
+  return false;
+
+  #endif
 }
 
 
@@ -426,8 +491,42 @@ bool XWINDOWSCONSOLE::Print(XCHAR* string)
   if(!string)     return false;
   if(!string[0])  return false;
 
-  //wprintf((wchar_t *)string);
-  std::wcout << string;
+  fflush(stdout);
+
+  HANDLE consoleoutput = GetStdHandle(STD_OUTPUT_HANDLE);
+  DWORD  consolemode   = 0;
+
+  if((consoleoutput != NULL) && (consoleoutput != INVALID_HANDLE_VALUE) && GetConsoleMode(consoleoutput, &consolemode))
+    {
+      const XCHAR* pending   = string;
+      XDWORD       remaining = XSTRING::GetSize(string);
+
+      while(remaining)
+        {
+          DWORD chunk   = (DWORD)remaining;
+          DWORD written = 0;
+
+          if(chunk > 40000) chunk = 40000;
+
+          if(!WriteConsoleW(consoleoutput, pending, chunk, &written, NULL)) return false;
+          if(!written)                                                      return false;
+
+          pending   += written;
+          remaining -= written;
+        }
+
+      return true;
+    }
+
+  XSTRING _string;
+  XBUFFER charstr;
+
+  _string = string;
+
+  if(!_string.ConvertToUTF8(charstr)) return false;
+
+  printf("%s", charstr.GetPtrChar());
+  fflush(stdout);
 
   #endif
 
@@ -591,6 +690,22 @@ bool XWINDOWSCONSOLE::Generate()
 bool XWINDOWSCONSOLE::Close()
 {
   //#ifndef APPFLOW_GRAPHICS_NOTCONSOLE_ACTIVE
+
+  #ifndef APPFLOW_GRAPHICS_NOTCONSOLE_ACTIVE
+
+  // Close() is static: show the cursor again before FreeConsole detaches the parent CMD.
+  {
+    HANDLE              hconsole = GetStdHandle(STD_OUTPUT_HANDLE);
+    CONSOLE_CURSOR_INFO cursorinfo;
+
+    if(hconsole && (hconsole != INVALID_HANDLE_VALUE) && GetConsoleCursorInfo(hconsole, &cursorinfo))
+      {
+        cursorinfo.bVisible = TRUE;
+        SetConsoleCursorInfo(hconsole, &cursorinfo);
+      }
+  }
+
+  #endif
 
   SendEnterKey();
 

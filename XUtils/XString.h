@@ -125,16 +125,16 @@ typedef struct
   #define XSTRING_MAXTEMPOSTR           1024
 #endif
 
-//#define XSTRING_TABLE64BITSSIZE         64
-#define XSTRING_TABLE64BITS             _L("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/")
-
-#define XSTRING_VALIDCHARSINT           _L("0123456789-+");
-#define XSTRING_VALIDCHARSFLOAT         _L("0123456789-+.eE");
-
 #define NL(x)                           (XCHAR*)(L##x)
 #define FL(x)                           (XCHAR*)(L##x)
 #define _L(x)                           (XCHAR*)(L##x)
 #define _C(x)                           (XCHAR)(L##x)
+
+//#define XSTRING_TABLE64BITSSIZE         64
+#define XSTRING_TABLE64BITS             NL("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/")
+
+#define XSTRING_VALIDCHARSINT           NL("0123456789-+");
+#define XSTRING_VALIDCHARSFLOAT         NL("0123456789-+.eE");
 
 
 #if (defined(LINUX) || defined(ANDROID))
@@ -246,7 +246,7 @@ class GEN_API_LIB_EXP XSTRING
     bool                  DeleteCharactersToEnd           (XDWORD index);
     bool                  DeleteCharacter                 (XCHAR character, XSTRINGCONTEXT context = XSTRINGCONTEXT_ALLSTRING);
     bool                  DeleteNoCharacters              (XSTRINGCONTEXT context);
-    int                   DeleteNoCharacters              (XCHAR* needle=_L("\t\r\n"), int start=0, XSTRINGCONTEXT context= XSTRINGCONTEXT_ALLSTRING);
+    int                   DeleteNoCharacters              (XCHAR* needle=NL("\t\r\n"), int start=0, XSTRINGCONTEXT context= XSTRINGCONTEXT_ALLSTRING);
     bool                  DeleteLastCharacter             ();
     bool                  DeleteLastZeros                 ();
 

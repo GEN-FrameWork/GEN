@@ -68,7 +68,7 @@ UI_ELEMENT_FORM::UI_ELEMENT_FORM()
 
   SetType(UI_ELEMENT_TYPE_FORM);
 
-  GetTypeString()->Set(_L("form"));
+  GetTypeString()->Set(NL("form"));
 }
 
 

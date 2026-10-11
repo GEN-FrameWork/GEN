@@ -363,7 +363,7 @@ bool UI_COLOR::SetFromString(XCHAR* string)
                   XSTRING* resolved_colorstr = NULL;
 
                   _colorstr.AdjustSize(_MAXSTR);
-                  colorstr.UnFormat(_L("%s,%d"), _colorstr.Get(), &_alpha);
+                  colorstr.UnFormat(NL("%s,%d"), _colorstr.Get(), &_alpha);
                   _colorstr.AdjustSize();
 
                   resolved_colorstr = GEN_UI_COLORS.Get(_colorstr);
@@ -377,12 +377,12 @@ bool UI_COLOR::SetFromString(XCHAR* string)
                 break;
 
       case  2 : // int colors
-                status = colorstr.UnFormat(_L("%d,%d,%d"), &red, &green, &blue);
+                status = colorstr.UnFormat(NL("%d,%d,%d"), &red, &green, &blue);
                 alpha = 255;  
                 break;
 
       case  3 : // int colors + int alpha
-                status = colorstr.UnFormat(_L("%d,%d,%d,%d"), &red, &green, &blue, &_alpha);
+                status = colorstr.UnFormat(NL("%d,%d,%d,%d"), &red, &green, &blue, &_alpha);
                 alpha = GetAlphaForPercent(_alpha);
                 break;
 

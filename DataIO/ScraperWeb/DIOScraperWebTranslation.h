@@ -39,7 +39,7 @@
 
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
 
-#define DIOSCRAPERWEBTRANSLATION_SCRIPTPATH    _L("translation.g")
+#define DIOSCRAPERWEBTRANSLATION_SCRIPTPATH    NL("translation.g")
 #define DIOSCRAPERWEBTRANSLATION_MAXTIMEOUT    DIOSCRAPERSCRIPT_DEFAULT_TIMEOUT
 
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/

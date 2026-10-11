@@ -114,15 +114,15 @@ bool SCRIPT_LIB_WEBCLIENT::AddLibraryFunctions(SCRIPT* script)
 
   this->script = script;
 
-  script->AddLibraryFunction(this, _L("WebClient_Get")            , Call_WebClient_Get);
-  script->AddLibraryFunction(this, _L("WebClient_Post")           , Call_WebClient_Post);
-  script->AddLibraryFunction(this, _L("WebClient_GetToFile")      , Call_WebClient_GetToFile);
-  script->AddLibraryFunction(this, _L("WebClient_GetBody")        , Call_WebClient_GetBody);
-  script->AddLibraryFunction(this, _L("WebClient_GetStatus")      , Call_WebClient_GetStatus);
-  script->AddLibraryFunction(this, _L("WebClient_GetHeader")      , Call_WebClient_GetHeader);
-  script->AddLibraryFunction(this, _L("WebClient_GetLastError")   , Call_WebClient_GetLastError);
-  script->AddLibraryFunction(this, _L("WebClient_SetLogin")       , Call_WebClient_SetLogin);
-  script->AddLibraryFunction(this, _L("WebClient_DoStopHTTPError"), Call_WebClient_DoStopHTTPError);
+  script->AddLibraryFunction(this, NL("WebClient_Get")            , Call_WebClient_Get);
+  script->AddLibraryFunction(this, NL("WebClient_Post")           , Call_WebClient_Post);
+  script->AddLibraryFunction(this, NL("WebClient_GetToFile")      , Call_WebClient_GetToFile);
+  script->AddLibraryFunction(this, NL("WebClient_GetBody")        , Call_WebClient_GetBody);
+  script->AddLibraryFunction(this, NL("WebClient_GetStatus")      , Call_WebClient_GetStatus);
+  script->AddLibraryFunction(this, NL("WebClient_GetHeader")      , Call_WebClient_GetHeader);
+  script->AddLibraryFunction(this, NL("WebClient_GetLastError")   , Call_WebClient_GetLastError);
+  script->AddLibraryFunction(this, NL("WebClient_SetLogin")       , Call_WebClient_SetLogin);
+  script->AddLibraryFunction(this, NL("WebClient_DoStopHTTPError"), Call_WebClient_DoStopHTTPError);
 
   return true;
 }

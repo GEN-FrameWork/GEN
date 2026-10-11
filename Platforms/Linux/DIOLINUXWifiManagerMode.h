@@ -34,7 +34,7 @@
 
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
 
-#define DIOLINUXWIFIMANAGERMODE_PREFIXCOMMAND     _L("-i %s")
+#define DIOLINUXWIFIMANAGERMODE_PREFIXCOMMAND     NL("-i %s")
 
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
 

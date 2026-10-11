@@ -756,65 +756,65 @@ bool APPFLOWUPDATE::LogOfEvent(DIOAPPLICATIONUPDATE_XEVENT* event)
     {
       case DIOAPPLICATIONUPDATE_XEVENT_TYPE_GETVERSIONAVAILABLE       : if(event->GetError() == DIOAPPLICATIONUPDATE_NOT_ERROR)
                                                                           {
-                                                                            string.Format(XT_L(XTRANSLATION_GEN_ID_APPFLOWUPDATE_VERSIONAVAILABLE), event->GetVersionData()->GetVersion(), event->GetVersionData()->GetSubVersion(), event->GetVersionData()->GetSubVersionError());
+                                                                            string.Format(GEN_TL(XTRANSLATION_GEN_ID_APPFLOWUPDATE_VERSIONAVAILABLE), event->GetVersionData()->GetVersion(), event->GetVersionData()->GetSubVersion(), event->GetVersionData()->GetSubVersionError());
                                                                           }
                                                                          else
                                                                           {
-                                                                            string.Format(XT_L(XTRANSLATION_GEN_ID_APPFLOWUPDATE_NOVERSIONAVAILABLE));
+                                                                            string.Format(GEN_TL(XTRANSLATION_GEN_ID_APPFLOWUPDATE_NOVERSIONAVAILABLE));
                                                                           }
                                                                         break;
 
-      case DIOAPPLICATIONUPDATE_XEVENT_TYPE_CHECKVERSIONAVAILABLE     : string.Format(XT_L(XTRANSLATION_GEN_ID_APPFLOWUPDATE_VERSIONIS), event->GetVersionData()->GetVersion(), event->GetVersionData()->GetSubVersion(), event->GetVersionData()->GetSubVersionError());
+      case DIOAPPLICATIONUPDATE_XEVENT_TYPE_CHECKVERSIONAVAILABLE     : string.Format(GEN_TL(XTRANSLATION_GEN_ID_APPFLOWUPDATE_VERSIONIS), event->GetVersionData()->GetVersion(), event->GetVersionData()->GetSubVersion(), event->GetVersionData()->GetSubVersionError());
 
                                                                         switch(event->GetVersionComparation())
                                                                           {
-                                                                            case -1 : string.Add(XT_L(XTRANSLATION_GEN_ID_APPFLOWUPDATE_VERSION_OLD));   break;
-                                                                            case  0 : string.Add(XT_L(XTRANSLATION_GEN_ID_APPFLOWUPDATE_VERSION_EQUAL)); break;
-                                                                            case  1 : string.Add(XT_L(XTRANSLATION_GEN_ID_APPFLOWUPDATE_VERSION_NEW));   break;
+                                                                            case -1 : string.Add(GEN_TL(XTRANSLATION_GEN_ID_APPFLOWUPDATE_VERSION_OLD));   break;
+                                                                            case  0 : string.Add(GEN_TL(XTRANSLATION_GEN_ID_APPFLOWUPDATE_VERSION_EQUAL)); break;
+                                                                            case  1 : string.Add(GEN_TL(XTRANSLATION_GEN_ID_APPFLOWUPDATE_VERSION_NEW));   break;
                                                                           }
 
-                                                                        if(event->GetVersionComparation() <=0) string.Add(XT_L(XTRANSLATION_GEN_ID_APPFLOWUPDATE_WILLNOTBEUPDATED));
+                                                                        if(event->GetVersionComparation() <=0) string.Add(GEN_TL(XTRANSLATION_GEN_ID_APPFLOWUPDATE_WILLNOTBEUPDATED));
 
                                                                         break;
 
 
-      case DIOAPPLICATIONUPDATE_XEVENT_TYPE_DOWNLOADFILE              : if(updatefile) string.Format(XT_L(XTRANSLATION_GEN_ID_APPFLOWUPDATE_DOWNLOADFILE), updatefile->GetXPathFile()->Get(), updatefile->GetSize()/1024);
+      case DIOAPPLICATIONUPDATE_XEVENT_TYPE_DOWNLOADFILE              : if(updatefile) string.Format(GEN_TL(XTRANSLATION_GEN_ID_APPFLOWUPDATE_DOWNLOADFILE), updatefile->GetXPathFile()->Get(), updatefile->GetSize()/1024);
 
                                                                         break;
 
-      case DIOAPPLICATIONUPDATE_XEVENT_TYPE_UNZIPFILE                 : if(updatefile) string.Format(XT_L(XTRANSLATION_GEN_ID_APPFLOWUPDATE_UNZIPFILE), updatefile->GetXPathFile()->Get(), updatefile->GetSize()/1024, event->GetActualUnzipFileName()->Get());
+      case DIOAPPLICATIONUPDATE_XEVENT_TYPE_UNZIPFILE                 : if(updatefile) string.Format(GEN_TL(XTRANSLATION_GEN_ID_APPFLOWUPDATE_UNZIPFILE), updatefile->GetXPathFile()->Get(), updatefile->GetSize()/1024, event->GetActualUnzipFileName()->Get());
                                                                         break;
 
-      case DIOAPPLICATIONUPDATE_XEVENT_TYPE_DOWNLOADFILES             : string.Format(XT_L(XTRANSLATION_GEN_ID_APPFLOWUPDATE_DOWNLOADSFILE), (event->GetError() == DIOAPPLICATIONUPDATE_NOT_ERROR?XT_L(XTRANSLATION_GEN_ID_OK):XT_L(XTRANSLATION_GEN_ID_ERROR)));
+      case DIOAPPLICATIONUPDATE_XEVENT_TYPE_DOWNLOADFILES             : string.Format(GEN_TL(XTRANSLATION_GEN_ID_APPFLOWUPDATE_DOWNLOADSFILE), (event->GetError() == DIOAPPLICATIONUPDATE_NOT_ERROR?GEN_TL(XTRANSLATION_GEN_ID_OK):GEN_TL(XTRANSLATION_GEN_ID_ERROR)));
                                                                         break;
 
-      case DIOAPPLICATIONUPDATE_XEVENT_TYPE_BACKUPORIGINALFILE        : if(updatefile) string.Format(XT_L(XTRANSLATION_GEN_ID_APPFLOWUPDATE_BACKUPORIGINALFILE), updatefile->GetXPathFile()->Get(), updatefile->GetSize()/1024);
+      case DIOAPPLICATIONUPDATE_XEVENT_TYPE_BACKUPORIGINALFILE        : if(updatefile) string.Format(GEN_TL(XTRANSLATION_GEN_ID_APPFLOWUPDATE_BACKUPORIGINALFILE), updatefile->GetXPathFile()->Get(), updatefile->GetSize()/1024);
                                                                         break;
 
-      case DIOAPPLICATIONUPDATE_XEVENT_TYPE_BACKUPORIGINALFILES       : string.Format(XT_L(XTRANSLATION_GEN_ID_APPFLOWUPDATE_BACKUPORIGINALFILES), (event->GetError() == DIOAPPLICATIONUPDATE_NOT_ERROR?XT_L(XTRANSLATION_GEN_ID_OK):XT_L(XTRANSLATION_GEN_ID_ERROR)));
+      case DIOAPPLICATIONUPDATE_XEVENT_TYPE_BACKUPORIGINALFILES       : string.Format(GEN_TL(XTRANSLATION_GEN_ID_APPFLOWUPDATE_BACKUPORIGINALFILES), (event->GetError() == DIOAPPLICATIONUPDATE_NOT_ERROR?GEN_TL(XTRANSLATION_GEN_ID_OK):GEN_TL(XTRANSLATION_GEN_ID_ERROR)));
                                                                         break;
 
-      case DIOAPPLICATIONUPDATE_XEVENT_TYPE_APP_RELEASERESOURCES      : string.Format(XT_L(XTRANSLATION_GEN_ID_APPFLOWUPDATE_APP_RELEASERESOURCES));
-                                                                        break;
-
-
-      case DIOAPPLICATIONUPDATE_XEVENT_TYPE_UPDATEFILE                : if(updatefile) string.Format(XT_L(XTRANSLATION_GEN_ID_APPFLOWUPDATE_UPDATEFILE), updatefile->GetXPathFile()->Get(), updatefile->GetSize()/1024);
-                                                                        break;
-
-       case DIOAPPLICATIONUPDATE_XEVENT_TYPE_UPDATEEXECFILE           : if(updatefile) string.Format(XT_L(XTRANSLATION_GEN_ID_APPFLOWUPDATE_UPDATEEXECFILE), updatefile->GetXPathFile()->Get(), updatefile->GetSize()/1024);
-                                                                        break;
-
-      case DIOAPPLICATIONUPDATE_XEVENT_TYPE_UPDATEFILES               : string.Format(XT_L(XTRANSLATION_GEN_ID_APPFLOWUPDATE_UPDATEFILES), (event->GetError() == DIOAPPLICATIONUPDATE_NOT_ERROR?XT_L(XTRANSLATION_GEN_ID_OK):XT_L(XTRANSLATION_GEN_ID_ERROR)));
+      case DIOAPPLICATIONUPDATE_XEVENT_TYPE_APP_RELEASERESOURCES      : string.Format(GEN_TL(XTRANSLATION_GEN_ID_APPFLOWUPDATE_APP_RELEASERESOURCES));
                                                                         break;
 
 
-      case DIOAPPLICATIONUPDATE_XEVENT_TYPE_APP_END                   : string.Format(XT_L(XTRANSLATION_GEN_ID_APPFLOWUPDATE_APP_END));
+      case DIOAPPLICATIONUPDATE_XEVENT_TYPE_UPDATEFILE                : if(updatefile) string.Format(GEN_TL(XTRANSLATION_GEN_ID_APPFLOWUPDATE_UPDATEFILE), updatefile->GetXPathFile()->Get(), updatefile->GetSize()/1024);
                                                                         break;
 
-      case DIOAPPLICATIONUPDATE_XEVENT_TYPE_RESTOREUPDATEFILE         : if(updatefile) string.Format(XT_L(XTRANSLATION_GEN_ID_APPFLOWUPDATE_RESTOREUPDATEFILE), updatefile->GetXPathFile()->Get(), updatefile->GetSize()/1024);
+       case DIOAPPLICATIONUPDATE_XEVENT_TYPE_UPDATEEXECFILE           : if(updatefile) string.Format(GEN_TL(XTRANSLATION_GEN_ID_APPFLOWUPDATE_UPDATEEXECFILE), updatefile->GetXPathFile()->Get(), updatefile->GetSize()/1024);
                                                                         break;
 
-      case DIOAPPLICATIONUPDATE_XEVENT_TYPE_RESTOREUPDATEFILES        : string.Format(XT_L(XTRANSLATION_GEN_ID_APPFLOWUPDATE_RESTOREUPDATEFILES), (event->GetError() == DIOAPPLICATIONUPDATE_NOT_ERROR?XT_L(XTRANSLATION_GEN_ID_OK):XT_L(XTRANSLATION_GEN_ID_ERROR)));
+      case DIOAPPLICATIONUPDATE_XEVENT_TYPE_UPDATEFILES               : string.Format(GEN_TL(XTRANSLATION_GEN_ID_APPFLOWUPDATE_UPDATEFILES), (event->GetError() == DIOAPPLICATIONUPDATE_NOT_ERROR?GEN_TL(XTRANSLATION_GEN_ID_OK):GEN_TL(XTRANSLATION_GEN_ID_ERROR)));
+                                                                        break;
+
+
+      case DIOAPPLICATIONUPDATE_XEVENT_TYPE_APP_END                   : string.Format(GEN_TL(XTRANSLATION_GEN_ID_APPFLOWUPDATE_APP_END));
+                                                                        break;
+
+      case DIOAPPLICATIONUPDATE_XEVENT_TYPE_RESTOREUPDATEFILE         : if(updatefile) string.Format(GEN_TL(XTRANSLATION_GEN_ID_APPFLOWUPDATE_RESTOREUPDATEFILE), updatefile->GetXPathFile()->Get(), updatefile->GetSize()/1024);
+                                                                        break;
+
+      case DIOAPPLICATIONUPDATE_XEVENT_TYPE_RESTOREUPDATEFILES        : string.Format(GEN_TL(XTRANSLATION_GEN_ID_APPFLOWUPDATE_RESTOREUPDATEFILES), (event->GetError() == DIOAPPLICATIONUPDATE_NOT_ERROR?GEN_TL(XTRANSLATION_GEN_ID_OK):GEN_TL(XTRANSLATION_GEN_ID_ERROR)));
                                                                         break;
     }
 

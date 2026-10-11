@@ -310,19 +310,19 @@ bool APPFLOWALERTS::Ini(APPFLOWCFG* cfg, XCHAR* applicationname, int appversion,
   /*
       stringresult.Empty();
 
-      if(nsmtprecipients) stringresult += (status2)?_L("Email Ok"):_L("Email ERROR!");
+      if(nsmtprecipients) stringresult += (status2)?NL("Email Ok"):NL("Email ERROR!");
       if(nwebrecipients)
         {
-          stringresult += _L(", ");
-          stringresult += (status3)?_L("WEB Ok"):_L("WEB ERROR!");
+          stringresult += NL(", ");
+          stringresult += (status3)?NL("WEB Ok"):NL("WEB ERROR!");
         }
       if(nudprecipients)
         {
-          stringresult += _L(", ");
-          stringresult += (status4)?_L("UDP Ok")   :_L("UDP ERROR!");
+          stringresult += NL(", ");
+          stringresult += (status4)?NL("UDP Ok")   :NL("UDP ERROR!");
         }
 
-      stringresult += _L(".");
+      stringresult += NL(".");
 
     }
 */

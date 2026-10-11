@@ -75,7 +75,7 @@ UI_ELEMENT_ANIMATION::UI_ELEMENT_ANIMATION()
   SetMilliSecondsDelay();
 
   SetType(UI_ELEMENT_TYPE_ANIMATION);
-  GetTypeString()->Set(_L("animation"));  
+  GetTypeString()->Set(NL("animation"));  
 }
 
 

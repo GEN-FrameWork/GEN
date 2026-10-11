@@ -128,43 +128,43 @@ bool XBER::GetTagTypeName(XSTRING& name)
 
   switch(GetTagType())
     {
-      case XBER_TAGTYPE_CONTEXT_SPECIFIC     : name = _L("CONTEXT_SPECIFIC");	          break;
-      case XBER_TAGTYPE_BOOLEAN	             : name = _L("BOOLEAN");	  	                break;
-      case XBER_TAGTYPE_INTEGER	             : name = _L("INTEGER");	  	                break;
-      case XBER_TAGTYPE_BIT_STRING	         : name = _L("BIT STRING");	  	            break;
-      case XBER_TAGTYPE_OCTET_STRING         : name = _L("OCTET STRING");	  	          break;
-      case XBER_TAGTYPE_NULL                 : name = _L("NULL");	  	                  break;
-      case XBER_TAGTYPE_OBJECT_IDENTIFIER    : name = _L("OBJECT IDENTIFIER");	  	      break;
-      case XBER_TAGTYPE_OBJECT_DESCRIPTOR    : name = _L("Object Descriptor");	  	      break;
-      case XBER_TAGTYPE_EXTERNAL             : name = _L("EXTERNAL");	  	              break;
-      case XBER_TAGTYPE_REAL                 : name = _L("REAL (float)");	  	          break;
-      case XBER_TAGTYPE_ENUMERATED           : name = _L("ENUMERATED");	  	            break;
-      case XBER_TAGTYPE_EMBEDDED_PDV         : name = _L("EMBEDDED PDV");	  	          break;
-      case XBER_TAGTYPE_UTF8STRING           : name = _L("UTF8String");	  	            break;
-      case XBER_TAGTYPE_RELATIVE_OID         : name = _L("RELATIVE-OID");	  	          break;
-      case XBER_TAGTYPE_TIME                 : name = _L("TIME");	  	                  break;
-      case XBER_TAGTYPE_RESERVED             : name = _L("Reserved");	  		            break;
-      case XBER_TAGTYPE_SEQUENCE             : name = _L("SEQUENCE");	                  break;
-      case XBER_TAGTYPE_SET                  : name = _L("SET");	  	                    break;
-      case XBER_TAGTYPE_NUMERICSTRING        : name = _L("NumericString");	  	          break;
-      case XBER_TAGTYPE_PRINTABLESTRING      : name = _L("PrintableString");	  	        break;
-      case XBER_TAGTYPE_T61STRING            : name = _L("T61String");	  	              break;
-      case XBER_TAGTYPE_VIDEOTEXSTRING       : name = _L("VideotexString");	  	        break;
-      case XBER_TAGTYPE_IA5STRING            : name = _L("IA5String");	  	              break;
-      case XBER_TAGTYPE_UTCTIME              : name = _L("UTCTime");	  	                break;
-      case XBER_TAGTYPE_GENERALIZEDTIME      : name = _L("GeneralizedTime");	  	        break;
-      case XBER_TAGTYPE_GRAPHICSTRING        : name = _L("GraphicString");	  	          break;
-      case XBER_TAGTYPE_VISIBLESTRING        : name = _L("VisibleString");	  	          break;
-      case XBER_TAGTYPE_GENERALSTRING        : name = _L("GeneralString");	  	          break;
-      case XBER_TAGTYPE_UNIVERSALSTRING      : name = _L("UniversalString");	  	        break;
-      case XBER_TAGTYPE_CHARACTER_STRING     : name = _L("CHARACTER STRING");	  	      break;
-      case XBER_TAGTYPE_BMPSTRING            : name = _L("BMPString");	  		            break;
-      case XBER_TAGTYPE_DATE                 : name = _L("DATE");	  	                  break;
-      case XBER_TAGTYPE_TIME_OF_DAY          : name = _L("TIME-OF-DAY");	  	            break;
-      case XBER_TAGTYPE_DATE_TIME            : name = _L("DATE-TIME");	  	              break;
-      case XBER_TAGTYPE_DURATION             : name = _L("DURATION");	  	              break;
-      case XBER_TAGTYPE_OID_IRI              : name = _L("OID-IRI");	  	                break;
-      case XBER_TAGTYPE_RELATIVE_OID_IRI     : name = _L("RELATIVE-OID-IRI");	  	      break;
+      case XBER_TAGTYPE_CONTEXT_SPECIFIC     : name = NL("CONTEXT_SPECIFIC");	          break;
+      case XBER_TAGTYPE_BOOLEAN	             : name = NL("BOOLEAN");	  	              break;
+      case XBER_TAGTYPE_INTEGER	             : name = NL("INTEGER");	  	              break;
+      case XBER_TAGTYPE_BIT_STRING	         : name = NL("BIT STRING");	  	            break;
+      case XBER_TAGTYPE_OCTET_STRING         : name = NL("OCTET STRING");	  	          break;
+      case XBER_TAGTYPE_NULL                 : name = NL("NULL");	  	                  break;
+      case XBER_TAGTYPE_OBJECT_IDENTIFIER    : name = NL("OBJECT IDENTIFIER");	  	    break;
+      case XBER_TAGTYPE_OBJECT_DESCRIPTOR    : name = NL("Object Descriptor");	  	    break;
+      case XBER_TAGTYPE_EXTERNAL             : name = NL("EXTERNAL");	  	              break;
+      case XBER_TAGTYPE_REAL                 : name = NL("REAL (float)");	  	          break;
+      case XBER_TAGTYPE_ENUMERATED           : name = NL("ENUMERATED");	  	            break;
+      case XBER_TAGTYPE_EMBEDDED_PDV         : name = NL("EMBEDDED PDV");	  	          break;
+      case XBER_TAGTYPE_UTF8STRING           : name = NL("UTF8String");	  	            break;
+      case XBER_TAGTYPE_RELATIVE_OID         : name = NL("RELATIVE-OID");	  	          break;
+      case XBER_TAGTYPE_TIME                 : name = NL("TIME");	  	                  break;
+      case XBER_TAGTYPE_RESERVED             : name = NL("Reserved");	  		            break;
+      case XBER_TAGTYPE_SEQUENCE             : name = NL("SEQUENCE");	                  break;
+      case XBER_TAGTYPE_SET                  : name = NL("SET");	  	                  break;
+      case XBER_TAGTYPE_NUMERICSTRING        : name = NL("NumericString");	  	        break;
+      case XBER_TAGTYPE_PRINTABLESTRING      : name = NL("PrintableString");	  	      break;
+      case XBER_TAGTYPE_T61STRING            : name = NL("T61String");	  	            break;
+      case XBER_TAGTYPE_VIDEOTEXSTRING       : name = NL("VideotexString");	  	        break;
+      case XBER_TAGTYPE_IA5STRING            : name = NL("IA5String");	  	            break;
+      case XBER_TAGTYPE_UTCTIME              : name = NL("UTCTime");	  	              break;
+      case XBER_TAGTYPE_GENERALIZEDTIME      : name = NL("GeneralizedTime");	  	      break;
+      case XBER_TAGTYPE_GRAPHICSTRING        : name = NL("GraphicString");	  	        break;
+      case XBER_TAGTYPE_VISIBLESTRING        : name = NL("VisibleString");	  	        break;
+      case XBER_TAGTYPE_GENERALSTRING        : name = NL("GeneralString");	  	        break;
+      case XBER_TAGTYPE_UNIVERSALSTRING      : name = NL("UniversalString");	  	      break;
+      case XBER_TAGTYPE_CHARACTER_STRING     : name = NL("CHARACTER STRING");	  	      break;
+      case XBER_TAGTYPE_BMPSTRING            : name = NL("BMPString");	  		          break;
+      case XBER_TAGTYPE_DATE                 : name = NL("DATE");	  	                  break;
+      case XBER_TAGTYPE_TIME_OF_DAY          : name = NL("TIME-OF-DAY");	  	          break;
+      case XBER_TAGTYPE_DATE_TIME            : name = NL("DATE-TIME");	  	            break;
+      case XBER_TAGTYPE_DURATION             : name = NL("DURATION");	  	              break;
+      case XBER_TAGTYPE_OID_IRI              : name = NL("OID-IRI");	  	              break;
+      case XBER_TAGTYPE_RELATIVE_OID_IRI     : name = NL("RELATIVE-OID-IRI");	  	      break;
     }
 
   return (!name.IsEmpty());
@@ -320,7 +320,7 @@ bool XBER::GetLevels(XSTRING& string)
   int c=0; 
   while(levels[c])
     {
-      string.AddFormat(_L("%d"), levels[c]);
+      string.AddFormat(NL("%d"), levels[c]);
 
       c++;
       if(c >= XBER_MAXLEVELS)
@@ -330,7 +330,7 @@ bool XBER::GetLevels(XSTRING& string)
                                   
       if(levels[c])
         {
-          string.AddFormat(_L("."));
+          string.AddFormat(NL("."));
         }
     }
 
@@ -745,7 +745,7 @@ bool XBER::SetOID(XCHAR* OIDstring)
   while(1)
     {
       XSTRING numberstring;
-      int     indexstring = string.Find(_L("."), true, start);
+      int     indexstring = string.Find(NL("."), true, start);
 
       if(indexstring != XSTRING_NOTFOUND)
         {
@@ -1037,12 +1037,12 @@ bool XBER::SetFromDumpInternal(XBUFFER& buffer, XOBSERVER* observer, XBER* root)
   data.Delete();
   data.Add(&buffer.Get()[sizehead], size);
 
-  //line.Format(_L("(%d, %d) %s"), totalposition, size, nametagtype.Get());  
-  line.Format(_L("%s"), nametagtype.Get());  
+  //line.Format(NL("(%d, %d) %s"), totalposition, size, nametagtype.Get());  
+  line.Format(NL("%s"), nametagtype.Get());  
 
   switch(tagtype)
    {   
-     case XBER_TAGTYPE_CONTEXT_SPECIFIC    : line.AddFormat(_L(" (%d) "), contextspecificvalue);                                               
+     case XBER_TAGTYPE_CONTEXT_SPECIFIC    : line.AddFormat(NL(" (%d) "), contextspecificvalue);                                               
                                              break;
 
      case XBER_TAGTYPE_OBJECT_IDENTIFIER  : { XSTRING valuestr;
@@ -1054,7 +1054,7 @@ bool XBER::SetFromDumpInternal(XBUFFER& buffer, XOBSERVER* observer, XBER* root)
                                               propertyevent   = property;
                                               if(property)
                                                 {
-                                                  line.AddFormat(_L(": %s :"), property->description);  
+                                                  line.AddFormat(NL(": %s :"), property->description);  
                                                   
                                                   if(!property->isconstructed)
                                                     {
@@ -1067,7 +1067,7 @@ bool XBER::SetFromDumpInternal(XBUFFER& buffer, XOBSERVER* observer, XBER* root)
 
      case XBER_TAGTYPE_BIT_STRING         : unusedbits = data.Get()[0];   
                                             data.Extract(NULL, 0, 1);                                            
-                                            line.AddFormat(_L(" UnusedBits: %d "), unusedbits);                                                                           
+                                            line.AddFormat(NL(" UnusedBits: %d "), unusedbits);                                                                           
                                             if(property)
                                               {
                                                 isconstructed = property->isconstructed;
@@ -1222,7 +1222,7 @@ bool XBER::SetFromDumpInternal(XBUFFER& buffer, XOBSERVER* observer, XBER* root)
 
           if(!valuestr.IsEmpty())
             {     
-              line.AddFormat(_L(" '%s' "), valuestr.Get());  
+              line.AddFormat(NL(" '%s' "), valuestr.Get());  
             }         
         }
    
@@ -1271,7 +1271,7 @@ bool XBER::ConvertToBoolean(XBUFFER& data, XVARIANT& variant)
 {
   XSTRING string; 
     
-  string.Format(_L("%s"), data.Get()[0]?_L("True"):_L("False"));
+  string.Format(NL("%s"), data.Get()[0]?NL("True"):NL("False"));
   
   variant = string;
 
@@ -1305,13 +1305,13 @@ bool XBER::ConvertToInteger(XBUFFER& data, XVARIANT& variant)
           if(c != data.GetSize() -1) integerdec <<= 8;
         }   
 
-      string.Format(_L("%d"), integerdec);
+      string.Format(NL("%d"), integerdec);
     }
    else
     { 
       for(int c=0; c<data.GetSize(); c++)
         {
-          string.AddFormat(_L("%02X"), data.Get()[c]);
+          string.AddFormat(NL("%02X"), data.Get()[c]);
         }
     }
   
@@ -1339,7 +1339,7 @@ bool XBER::ConvertToOctetString(XBUFFER& data, XVARIANT& variant)
 
   for(int c=0; c<data.GetSize(); c++)
     {
-      string.AddFormat(_L("%02X"), data.Get()[c]);
+      string.AddFormat(NL("%02X"), data.Get()[c]);
     }
 
   variant = string;
@@ -1366,7 +1366,7 @@ bool XBER::ConvertToBitString(XBUFFER& data, XVARIANT& variant)
 
   for(int c=0; c<data.GetSize(); c++)
     {
-      string.AddFormat(_L("%02X"), data.Get()[c]);
+      string.AddFormat(NL("%02X"), data.Get()[c]);
     }
 
   variant = string;
@@ -1415,7 +1415,7 @@ bool XBER::ConvertToObjetIdentifier(XBUFFER& data, XVARIANT& variant)
       return false; 
     }
 
-  string.Format(_L("%d.%d"), (data.Get()[0]/40), (data.Get()[0]%40));
+  string.Format(NL("%d.%d"), (data.Get()[0]/40), (data.Get()[0]%40));
    
   size_t i = 0;
   while(i != length - 1)
@@ -1439,7 +1439,7 @@ bool XBER::ConvertToObjetIdentifier(XBUFFER& data, XVARIANT& variant)
             }
         }
 
-      string.AddFormat(_L(".%d"), component);
+      string.AddFormat(NL(".%d"), component);
 
     }
 
@@ -1490,7 +1490,7 @@ bool XBER::ConvertToUTCTime(XBUFFER& data, XVARIANT& variant)
   XSTRING string; 
 
   string.Add(data);
-  //string.Add(_L("Z"));
+  //string.Add(NL("Z"));
 
   variant = string;
 

@@ -123,7 +123,7 @@ int SCRIPT_LNG_JAVASCRIPT::Run(int* returnval)
   if(HaveMainFunction())
     {
       XSTRING mainfunctionname = SCRIPT_LNG_JAVASCRIPT_MAINFUNCTIONNAME;
-      _script.AddFormat(_L("\n%s()\n"), mainfunctionname.Get());
+      _script.AddFormat(NL("\n%s()\n"), mainfunctionname.Get());
     }
 
   XBUFFER charstr;
@@ -216,12 +216,12 @@ bool SCRIPT_LNG_JAVASCRIPT::HaveError(int _errorcode)
 
   currenttoken = duk_safe_to_string(context, -1);
 
-  if(currenttoken.Find(_L("EvalError")      , false) != XSTRING_NOTFOUND) errorcode = SCRIPT_LNG_JAVASCRIPT_ERRORCODE_EVAL_ERROR;
-  if(currenttoken.Find(_L("RangeError")     , false) != XSTRING_NOTFOUND) errorcode = SCRIPT_LNG_JAVASCRIPT_ERRORCODE_RANGE_ERROR;
-  if(currenttoken.Find(_L("ReferenceError") , false) != XSTRING_NOTFOUND) errorcode = SCRIPT_LNG_JAVASCRIPT_ERRORCODE_REFERENCE_ERROR;
-  if(currenttoken.Find(_L("SyntaxError")    , false) != XSTRING_NOTFOUND) errorcode = SCRIPT_LNG_JAVASCRIPT_ERRORCODE_SYNTAX_ERROR;
-  if(currenttoken.Find(_L("TypeError")      , false) != XSTRING_NOTFOUND) errorcode = SCRIPT_LNG_JAVASCRIPT_ERRORCODE_TYPE_ERROR;
-  if(currenttoken.Find(_L("URIError")       , false) != XSTRING_NOTFOUND) errorcode = SCRIPT_LNG_JAVASCRIPT_ERRORCODE_URI_ERROR;
+  if(currenttoken.Find(NL("EvalError")      , false) != XSTRING_NOTFOUND) errorcode = SCRIPT_LNG_JAVASCRIPT_ERRORCODE_EVAL_ERROR;
+  if(currenttoken.Find(NL("RangeError")     , false) != XSTRING_NOTFOUND) errorcode = SCRIPT_LNG_JAVASCRIPT_ERRORCODE_RANGE_ERROR;
+  if(currenttoken.Find(NL("ReferenceError") , false) != XSTRING_NOTFOUND) errorcode = SCRIPT_LNG_JAVASCRIPT_ERRORCODE_REFERENCE_ERROR;
+  if(currenttoken.Find(NL("SyntaxError")    , false) != XSTRING_NOTFOUND) errorcode = SCRIPT_LNG_JAVASCRIPT_ERRORCODE_SYNTAX_ERROR;
+  if(currenttoken.Find(NL("TypeError")      , false) != XSTRING_NOTFOUND) errorcode = SCRIPT_LNG_JAVASCRIPT_ERRORCODE_TYPE_ERROR;
+  if(currenttoken.Find(NL("URIError")       , false) != XSTRING_NOTFOUND) errorcode = SCRIPT_LNG_JAVASCRIPT_ERRORCODE_URI_ERROR;
 
   namefile.Set(namescript);
   namefile.SetOnlyNamefileExt();
@@ -233,7 +233,7 @@ bool SCRIPT_LNG_JAVASCRIPT::HaveError(int _errorcode)
   xevent.GetCurrentToken()->Set(currenttoken);
   xevent.SetNLine(nline);
 
-  XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, _L("Script [%s] ERROR %d:\"%s\"") , namefile.Get(), errorcode, currenttoken.Get());
+  XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, NL("Script [%s] ERROR %d:\"%s\"") , namefile.Get(), errorcode, currenttoken.Get());
 
   PostEvent(&xevent);
 
@@ -268,7 +268,7 @@ bool SCRIPT_LNG_JAVASCRIPT::HaveMainFunction()
   if(script.IsEmpty()) return false;
 
   mainfunctionname = SCRIPT_LNG_JAVASCRIPT_MAINFUNCTIONNAME;
-  searchmask.Format(_L("function%s()"), mainfunctionname.Get());
+  searchmask.Format(NL("function%s()"), mainfunctionname.Get());
 
   // Walk every "main" hit: comments/strings can contain the word before the real entry point.
   int index = 0;

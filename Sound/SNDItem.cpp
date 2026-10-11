@@ -153,8 +153,8 @@ bool SNDITEM::GetType(XSTRING& typestr)
       case SNDITEM_TYPE_UNKNOWN : 
                         default : status = false; break;
 
-      case SNDITEM_TYPE_FILE    : typestr = _L("File");    break;
-      case SNDITEM_TYPE_NOTE    : typestr = _L("Note");    break;
+      case SNDITEM_TYPE_FILE    : typestr = NL("File");    break;
+      case SNDITEM_TYPE_NOTE    : typestr = NL("Note");    break;
     }
 
   return status;
@@ -225,12 +225,12 @@ bool SNDITEM::GetStatus(XSTRING& statusstr)
 
   switch(status)
     {
-      case SNDITEM_STATUS_NONE    : statusstr = _L("None");    break;                        
-      case SNDITEM_STATUS_INI     : statusstr = _L("Ini");     break;             
-      case SNDITEM_STATUS_STOP    : statusstr = _L("Stop");    break;          
-      case SNDITEM_STATUS_PLAY    : statusstr = _L("Play");    break;         
-      case SNDITEM_STATUS_PAUSE   : statusstr = _L("Pause");   break;            
-      case SNDITEM_STATUS_END     : statusstr = _L("End");     break;  
+      case SNDITEM_STATUS_NONE    : statusstr = NL("None");    break;                        
+      case SNDITEM_STATUS_INI     : statusstr = NL("Ini");     break;             
+      case SNDITEM_STATUS_STOP    : statusstr = NL("Stop");    break;          
+      case SNDITEM_STATUS_PLAY    : statusstr = NL("Play");    break;         
+      case SNDITEM_STATUS_PAUSE   : statusstr = NL("Pause");   break;            
+      case SNDITEM_STATUS_END     : statusstr = NL("End");     break;  
                          default  : result = false;             break;             
     }
 

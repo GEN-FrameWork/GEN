@@ -65,7 +65,7 @@ UI_ELEMENT_MULTIOPTION::UI_ELEMENT_MULTIOPTION()
 
   SetType(UI_ELEMENT_TYPE_MULTIOPTION);
 
-  GetTypeString()->Set(_L("multioption"));
+  GetTypeString()->Set(NL("multioption"));
 }
 
 

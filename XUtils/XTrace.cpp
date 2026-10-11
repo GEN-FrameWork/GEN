@@ -277,9 +277,9 @@ bool XTRACE_TARGET::IPTarget()
 
   _aim = aim;
 
-  if(!_aim.Compare(_L("*"), true))
+  if(!_aim.Compare(NL("*"), true))
     {
-      _IPstring = _L("*");
+      _IPstring = NL("*");
     }
    else
     {          
@@ -745,7 +745,7 @@ XTRACE_STATUS_MSG* XTRACE_STATUS_MSGS::StatusMsg_Add(XSTRING* line)
   name.AdjustSize(_MAXSTR);
   valuestr.AdjustSize(_MAXSTR);
 
-  string.UnFormat(_L("%s,%s,%c,%s"), ID.Get(), name.Get(), &typechar, valuestr.Get());
+  string.UnFormat(NL("%s,%s,%c,%s"), ID.Get(), name.Get(), &typechar, valuestr.Get());
 
   ID.AdjustSize();
   name.AdjustSize();
@@ -764,7 +764,7 @@ XTRACE_STATUS_MSG* XTRACE_STATUS_MSGS::StatusMsg_Add(XSTRING* line)
   switch(typechar)
     {      
       case XTRACE_IDMSGSTATUS_BOOLEAN : { status_msg->SetType(XTRACE_TYPE_STATUS_MSG_BOOLEAN);
-                                          if(!valuestr.Compare(_L("true"), true))  status_msg->Value_SetBoolean(true); else status_msg->Value_SetBoolean(false);
+                                          if(!valuestr.Compare(NL("true"), true))  status_msg->Value_SetBoolean(true); else status_msg->Value_SetBoolean(false);
                                         }
                                         break;
 
@@ -792,7 +792,7 @@ XTRACE_STATUS_MSG* XTRACE_STATUS_MSGS::StatusMsg_Add(XSTRING* line)
 
                                           int    icolor[3];
                                           XBYTE  color[3]; 
-                                          valuestr.UnFormat(_L("%02X,%02X,%02X"), &icolor[0], &icolor[1], &icolor[2]);
+                                          valuestr.UnFormat(NL("%02X,%02X,%02X"), &icolor[0], &icolor[1], &icolor[2]);
 
                                           for(int c=0; c<3; c++)
                                             {  
@@ -971,7 +971,7 @@ bool XTRACE::SetTarget(int index, XTRACE_TYPE type, XCHAR* aim)
 
       string = aim;
       url.AdjustSize(_MAXSTR);
-      string.UnFormat(_L("%s:%d"), url.Get(), &port);
+      string.UnFormat(NL("%s:%d"), url.Get(), &port);
       url.AdjustSize();
 
       targets[index].SetAim(url.Get());
@@ -1242,7 +1242,7 @@ bool XTRACE::ClearScreen(XBYTE level)
 {
   XSTRING string;
 
-  string.Format(_L("%s"), XTRACE_IDMSGCLEARSCREEN);
+  string.Format(NL("%s"), XTRACE_IDMSGCLEARSCREEN);
 
   return Print(level, string.Get());
 }
@@ -1264,18 +1264,18 @@ void XTRACE::PrintHeader(XBYTE level, XCHAR* header)
 
   line.Empty();
 
-  line  = _L("---");
+  line  = NL("---");
 
   if(header)
     {
-      line += _L(" ");
+      line += NL(" ");
       line += header;
-      line += _L(" ");
+      line += NL(" ");
     }
 
   while(line.GetSize()<120)
     {
-      line += _L("-");
+      line += NL("-");
     }
 
   Print(level, line.Get());
@@ -1305,25 +1305,25 @@ bool XTRACE::Print(XBYTE level, XCHAR* mask, ...)
   string.Add(applicationname);
   if(string.GetSize())
     {
-      string.AdjustSize(XTRACE_MAXAPPLICATIONNAMESIZE, false, _L(" "));
+      string.AdjustSize(XTRACE_MAXAPPLICATIONNAMESIZE, false, NL(" "));
       outstring += string;
-      outstring += _L(" ");
+      outstring += NL(" ");
     }
 
-  string.Format(_L("%d.%d.%d"), applicationversion, applicationsubversion, applicationsubversionerr);
+  string.Format(NL("%d.%d.%d"), applicationversion, applicationsubversion, applicationsubversionerr);
   if(string.GetSize())
     {
-      string.AdjustSize(XTRACE_MAXAPPLICATIONVERSIONSIZE, false, _L(" "));      
+      string.AdjustSize(XTRACE_MAXAPPLICATIONVERSIONSIZE, false, NL(" "));      
       outstring += string;
-      outstring += _L(" ");
+      outstring += NL(" ");
     }
 
   string = applicationID;
   if(string.GetSize())
     {
-      string.AdjustSize(XTRACE_MAXAPPLICATIONIDSIZE, false, _L(" "));
+      string.AdjustSize(XTRACE_MAXAPPLICATIONIDSIZE, false, NL(" "));
       outstring += string;
-      outstring += _L(" ");
+      outstring += NL(" ");
     }
 
   va_list arg;
@@ -1358,7 +1358,7 @@ bool XTRACE::Print(XBYTE level, XCHAR* mask, ...)
                 {
                   XSTRING codestr;
 
-                  codestr.Format(_L("%02d: "), (level&0x0F));
+                  codestr.Format(NL("%02d: "), (level&0x0F));
 
                   string.Insert(codestr, 0);
                 }
@@ -1410,7 +1410,7 @@ bool XTRACE::PrintDataBlock(XBYTE level, XBYTE* data, XDWORD size, XDWORD margin
 
   for(XDWORD c=0; c<marginsize; c++)
     {
-      margin += _L(" ");
+      margin += NL(" ");
     }
 
   while(_size<size)
@@ -1423,14 +1423,14 @@ bool XTRACE::PrintDataBlock(XBYTE level, XBYTE* data, XDWORD size, XDWORD margin
 
       if(showoffset)
         {
-          strdata.Format(_L("%04X"), index);
+          strdata.Format(NL("%04X"), index);
           string += strdata;
-          string += _L(" ");
+          string += NL(" ");
         }
 
       for(XDWORD c=0; c<_sizeline; c++)
         {
-          strdata.Format(_L("%02X "), data[index]);
+          strdata.Format(NL("%02X "), data[index]);
           string += strdata;
           _size++;
           index++;
@@ -1440,14 +1440,14 @@ bool XTRACE::PrintDataBlock(XBYTE level, XBYTE* data, XDWORD size, XDWORD margin
         {
           for(XDWORD c=_sizeline; c<sizeline; c++)
             {
-              string += _L(" ");
+              string += NL(" ");
             }
         }
 
       if(showtext)
         {
           index -= _sizeline;
-          string += _L(" ");
+          string += NL(" ");
 
           for(XDWORD c=0; c<_sizeline; c++)
             {
@@ -1455,7 +1455,7 @@ bool XTRACE::PrintDataBlock(XBYTE level, XBYTE* data, XDWORD size, XDWORD margin
 
               if((character<0x20) || (character>0x80) || (character==_C('%')) || (character==_C('\\'))) character = _C('.');
 
-              strdata.Format(_L("%c"), character);
+              strdata.Format(NL("%c"), character);
               string += strdata;
               index++;
             }
@@ -1507,7 +1507,7 @@ bool XTRACE::ClearMsgsStatus(XBYTE level)
 {
   XSTRING string;
 
-  string.Format(_L("%s"), XTRACE_IDMSGSTATUSCLEAR);
+  string.Format(NL("%s"), XTRACE_IDMSGSTATUSCLEAR);
 
   return Print(level, string.Get());
 }
@@ -1530,7 +1530,7 @@ bool XTRACE::PrintMsgStatus(XBYTE level, XCHAR* name, bool value)
 {
   XSTRING string;
 
-  string.Format(_L("%s,%s,%c,%s"), XTRACE_IDMSGSTATUS, name, XTRACE_IDMSGSTATUS_BOOLEAN, (value?_L("true"):_L("false")));
+  string.Format(NL("%s,%s,%c,%s"), XTRACE_IDMSGSTATUS, name, XTRACE_IDMSGSTATUS_BOOLEAN, (value?NL("true"):NL("false")));
 
   return Print(level, string.Get());
 }
@@ -1553,7 +1553,7 @@ bool XTRACE::PrintMsgStatus(XBYTE level, XCHAR* name, int value)
 {
   XSTRING string;
 
-  string.Format(_L("%s,%s,%c,%d"), XTRACE_IDMSGSTATUS, name, XTRACE_IDMSGSTATUS_INTEGER, value);
+  string.Format(NL("%s,%s,%c,%d"), XTRACE_IDMSGSTATUS, name, XTRACE_IDMSGSTATUS_INTEGER, value);
 
   return Print(level, string.Get());
 }
@@ -1576,7 +1576,7 @@ bool XTRACE::PrintMsgStatus(XBYTE level, XCHAR* name, XCHAR* value)
 {
   XSTRING string;
 
-  string.Format(_L("%s,%s,%c,%s"), XTRACE_IDMSGSTATUS, name, XTRACE_IDMSGSTATUS_STRING, value);
+  string.Format(NL("%s,%s,%c,%s"), XTRACE_IDMSGSTATUS, name, XTRACE_IDMSGSTATUS_STRING, value);
 
   return Print(level, string.Get());
 }
@@ -1599,7 +1599,7 @@ bool XTRACE::PrintMsgStatus(XBYTE level, XCHAR* name, XDWORD value)
 {
   XSTRING string;
 
-  string.Format(_L("%s,%s,%c,%d"), XTRACE_IDMSGSTATUS, name, XTRACE_IDMSGSTATUS_DWORD, value);
+  string.Format(NL("%s,%s,%c,%d"), XTRACE_IDMSGSTATUS, name, XTRACE_IDMSGSTATUS_DWORD, value);
 
   return Print(level, string.Get());
 }
@@ -1622,7 +1622,7 @@ bool XTRACE::PrintMsgStatus(XBYTE level, XCHAR* name, float value)
 {
   XSTRING string;
 
-  string.Format(_L("%s,%s,%c,%f"), XTRACE_IDMSGSTATUS, name, XTRACE_IDMSGSTATUS_FLOAT, value);
+  string.Format(NL("%s,%s,%c,%f"), XTRACE_IDMSGSTATUS, name, XTRACE_IDMSGSTATUS_FLOAT, value);
 
   return Print(level, string.Get());
 }
@@ -1645,7 +1645,7 @@ bool XTRACE::PrintMsgStatus(XBYTE level, XCHAR* name, XBYTE value[3])
 {
   XSTRING string;
 
-  string.Format(_L("%s,%s,%c,%02X,%02X,%02X"), XTRACE_IDMSGSTATUS, name, XTRACE_IDMSGSTATUS_COLOR, value[0], value[1], value[2]);
+  string.Format(NL("%s,%s,%c,%02X,%02X,%02X"), XTRACE_IDMSGSTATUS, name, XTRACE_IDMSGSTATUS_COLOR, value[0], value[1], value[2]);
 
   return Print(level, string.Get());
 }
@@ -1667,7 +1667,7 @@ bool XTRACE::PrintMsgTests(XDWORD ID, int error)
 {
   XSTRING string;
 
-  string.Format(_L("%s,%d,%d"), XTRACE_IDMSGTESTS, ID, error);
+  string.Format(NL("%s,%d,%d"), XTRACE_IDMSGTESTS, ID, error);
 
   return Print(0, string.Get());
 }
@@ -1722,7 +1722,7 @@ bool XTRACE::Tests_Load(XSTRING& path)
 
   Tests_DeleteAll();
 
-  XFILEJSONARRAY* tests = (XFILEJSONARRAY*)xfilejson.GetObj(_L("tests"));
+  XFILEJSONARRAY* tests = (XFILEJSONARRAY*)xfilejson.GetObj(NL("tests"));
   if(!tests)
     {
       xfilejson.Close();
@@ -1738,8 +1738,8 @@ bool XTRACE::Tests_Load(XSTRING& path)
       XFILEJSONOBJECT* object = entry->GetValueObject();
       if(!object) continue;
 
-      XFILEJSONVALUE* idvalue   = xfilejson.GetValue(_L("id")         , object);
-      XFILEJSONVALUE* descvalue = xfilejson.GetValue(_L("description"), object);
+      XFILEJSONVALUE* idvalue   = xfilejson.GetValue(NL("id")         , object);
+      XFILEJSONVALUE* descvalue = xfilejson.GetValue(NL("description"), object);
       if(!idvalue || !descvalue) continue;
 
       XDWORD id = 0;
@@ -2312,7 +2312,7 @@ bool XTRACE::SetLocalIPString(XCHAR* localIPstring)
   int data[4];
 
   _localIPstring = localIPstring;
-  _localIPstring.UnFormat(_L("%d.%d.%d.%d"), &data[0], &data[1], &data[2], &data[3]);
+  _localIPstring.UnFormat(NL("%d.%d.%d.%d"), &data[0], &data[1], &data[2], &data[3]);
 
   localIP  |= (data[0] << 24);
   localIP  |= (data[1] << 16);
@@ -2400,7 +2400,7 @@ bool XTRACE::SetPublicIPString(XCHAR* publicIPstring)
 
   _publicIPstring = publicIPstring;
 
-  _publicIPstring.UnFormat(_L("%d.%d.%d.%d"), &data[0], &data[1], &data[2], &data[3]);
+  _publicIPstring.UnFormat(NL("%d.%d.%d.%d"), &data[0], &data[1], &data[2], &data[3]);
 
   publicIP  |= (data[0] << 24);
   publicIP  |= (data[1] << 16);
@@ -2548,7 +2548,7 @@ bool XTRACE::GenerateTab(int ntab, XSTRING& tab)
 
   for(int c=0;c<ntab;c++)
     {
-      tab += _L(" ");
+      tab += NL(" ");
     }
 
   return true;

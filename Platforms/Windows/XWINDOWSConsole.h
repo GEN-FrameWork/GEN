@@ -68,7 +68,13 @@ class XWINDOWSCONSOLE : public XCONSOLE
   private:
 
     static void             SendEnterKey                    ();
-   
+
+    void                    Clean                           ();
+    bool                    RestoreCursorOrigin             ();
+
+    unsigned long           cursororiginsize;
+    bool                    cursororiginvisible;
+    bool                    cursororiginsaved;
 };
 
 

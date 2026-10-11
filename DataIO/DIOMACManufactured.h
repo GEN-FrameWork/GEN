@@ -39,12 +39,12 @@
 
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
 
-#define DIOMACMANUFACTURED_URL             _L("http://standards.ieee.org/develop/regauth/oui/")
-#define DIOMACMANUFACTURED_URLNAMEFILE     _L("oui.txt")
+#define DIOMACMANUFACTURED_URL             NL("http://standards.ieee.org/develop/regauth/oui/")
+#define DIOMACMANUFACTURED_URLNAMEFILE     NL("oui.txt")
 
 #define DIOMACMANUFACTURED_FILE_VERSION    0x0100
-#define DIOMACMANUFACTURED_FILE_IDSTRING   _L("[MAC Manufactured ID]")
-#define DIOMACMANUFACTURED_FILE_NAME       _L("macmanufacturedid.dat")
+#define DIOMACMANUFACTURED_FILE_IDSTRING   NL("[MAC Manufactured ID]")
+#define DIOMACMANUFACTURED_FILE_NAME       NL("macmanufacturedid.dat")
 
 
 

@@ -170,7 +170,7 @@ bool UI_VIRTUALKEYBOARD::Ini(UI_LAYOUT* layout, GRPSCREEN* screen)
   main_form = GEN_NEW UI_ELEMENT_FORM();
   if(!main_form) return false;
 
-  main_form->GetName()->Set(_L("Virtual Keyboard"));
+  main_form->GetName()->Set(NL("Virtual Keyboard"));
 
   main_form->GetBoundaryLine()->x = 0;
   main_form->GetBoundaryLine()->y = 0;
@@ -183,8 +183,8 @@ bool UI_VIRTUALKEYBOARD::Ini(UI_LAYOUT* layout, GRPSCREEN* screen)
   UI_COLOR* bckgcolor = main_form->GetColor();  
   UI_COLOR* linecolor = main_form->GetLineColor();
      
-  if(bckgcolor) bckgcolor->SetFromString(_L("200,200,200,255"));
-  if(linecolor) linecolor->SetFromString(_L("100,100,100,150"));
+  if(bckgcolor) bckgcolor->SetFromString(NL("200,200,200,255"));
+  if(linecolor) linecolor->SetFromString(NL("100,100,100,150"));
 
   main_form->SetVisible(false);
  
@@ -447,14 +447,14 @@ bool UI_VIRTUALKEYBOARD::Show(bool on, UI_ELEMENT* element_editable)
 * --------------------------------------------------------------------------------------------------------------------*/
 bool UI_VIRTUALKEYBOARD::SelectInput(UI_ELEMENT* key_select)
 {
-  XCHAR* literals[] =  { _L("RETURN")        ,  // 0
-                          _L("CAPS")         ,  // 1
-                          _L("SYMBOLS")      ,  // 2
-                          _L("BACK")         ,  // 3
-                          _L("ARROWLEFT")    ,  // 4
-                          _L("ARROWRIGHT")   ,  // 5
-                          _L("SPACE")        ,  // 6
-                          _L("ESC")          ,  // 7
+  XCHAR* literals[] =  { NL("RETURN")        ,  // 0
+                          NL("CAPS")         ,  // 1
+                          NL("SYMBOLS")      ,  // 2
+                          NL("BACK")         ,  // 3
+                          NL("ARROWLEFT")    ,  // 4
+                          NL("ARROWRIGHT")   ,  // 5
+                          NL("SPACE")        ,  // 6
+                          NL("ESC")          ,  // 7
                         };
 
   if(!key_select) return false;
@@ -579,7 +579,7 @@ bool UI_VIRTUALKEYBOARD::SelectInput(UI_ELEMENT* key_select)
                 // SPACE  
 
                 {
-                  keystr = _L(" ");
+                  keystr = NL(" ");
                 } 
                 // fall through
 
@@ -738,7 +738,7 @@ GRPBITMAP* UI_VIRTUALKEYBOARD::LoadKeyImage(XCHAR* pathimage)
   UI_ANIMATION* animation = NULL;
   GRPBITMAP*    bitmap    = NULL;  
 
-  animation = AddImageCache(_L(""), pathimage);
+  animation = AddImageCache(NL(""), pathimage);
   if(animation) bitmap = animation->GetBitmap();
     
   return bitmap;
@@ -784,7 +784,7 @@ bool UI_VIRTUALKEYBOARD::AddKeyButton(XCHAR* leyend, XCHAR* text, XCHAR* xpathbi
               // box, and centering that box lifts the letter body above A–Z. Use a Latin reference height so
               // every key shares the same vertical slot.
               double label_w = skin->GetWidthString(text, keyinfo.sizefont);
-              double label_h = skin->GetHeightString(_L("M"), keyinfo.sizefont);
+              double label_h = skin->GetHeightString(NL("M"), keyinfo.sizefont);
               if(label_h <= 0.0) label_h = skin->GetHeightString(text, keyinfo.sizefont);
 
               element_text->GetBoundaryLine()->width  = label_w;
@@ -794,7 +794,7 @@ bool UI_VIRTUALKEYBOARD::AddKeyButton(XCHAR* leyend, XCHAR* text, XCHAR* xpathbi
  
               if(state == UI_PROPERTY_SELECTABLE_STATE_PRESELECT)
                 {
-                  element_text->GetColor()->SetFromString(_L("red,255"));
+                  element_text->GetColor()->SetFromString(NL("red,255"));
                 }
                else 
                 {
@@ -908,17 +908,17 @@ bool UI_VIRTUALKEYBOARD::CreateAllKeys(double x, double y)
 {
   #define UI_VIRTUALKEYBOARD_MARGIN   40
  
-  XSTRING line[3][3][10] =  { { { _L("Q"), _L("W"), _L("E"), _L("R"), _L("T"), _L("Y"), _L("U"), _L("I"), _L("O"), _L("P") },
-                                { _L("A"), _L("S"), _L("D"), _L("F"), _L("G"), _L("H"), _L("J"), _L("K"), _L("L"), _L("\xD1") },
-                                { _L("Z"), _L("X"), _L("C"), _L("V"), _L("B"), _L("N"), _L("M"), _L("") , _L("") , _L("")  },
+  XSTRING line[3][3][10] =  { { { NL("Q"), NL("W"), NL("E"), NL("R"), NL("T"), NL("Y"), NL("U"), NL("I"), NL("O"), NL("P") },
+                                { NL("A"), NL("S"), NL("D"), NL("F"), NL("G"), NL("H"), NL("J"), NL("K"), NL("L"), NL("\xD1") },
+                                { NL("Z"), NL("X"), NL("C"), NL("V"), NL("B"), NL("N"), NL("M"), NL("") , NL("") , NL("")  },
                               },
-                              { { _L("q"), _L("w"), _L("e"), _L("r"), _L("t"), _L("y"), _L("u"), _L("i"), _L("o"), _L("p") },
-                                { _L("a"), _L("s"), _L("d"), _L("f"), _L("g"), _L("h"), _L("j"), _L("k"), _L("l"), _L("\xF1") },
-                                { _L("z"), _L("x"), _L("c"), _L("v"), _L("b"), _L("n"), _L("m"), _L("") , _L("") , _L("")  },
+                              { { NL("q"), NL("w"), NL("e"), NL("r"), NL("t"), NL("y"), NL("u"), NL("i"), NL("o"), NL("p") },
+                                { NL("a"), NL("s"), NL("d"), NL("f"), NL("g"), NL("h"), NL("j"), NL("k"), NL("l"), NL("\xF1") },
+                                { NL("z"), NL("x"), NL("c"), NL("v"), NL("b"), NL("n"), NL("m"), NL("") , NL("") , NL("")  },
                               },
-                              { { _L("1"), _L("2"), _L("3"), _L("4"), _L("5"), _L("6"), _L("7"), _L("8"), _L("9"), _L("0") },
-                                { _L("@"), _L("#"), _L("!"), _L("_"), _L("&"), _L("-"), _L("+"), _L("("), _L(")"), _L("/") },
-                                { _L("*"), _L("\""), _L("'"), _L(":"), _L(";"), _L(","), _L("?"), _L("") , _L("") , _L("")  },
+                              { { NL("1"), NL("2"), NL("3"), NL("4"), NL("5"), NL("6"), NL("7"), NL("8"), NL("9"), NL("0") },
+                                { NL("@"), NL("#"), NL("!"), NL("_"), NL("&"), NL("-"), NL("+"), NL("("), NL(")"), NL("/") },
+                                { NL("*"), NL("\""), NL("'"), NL(":"), NL(";"), NL(","), NL("?"), NL("") , NL("") , NL("")  },
                               }
                             };
 
@@ -928,7 +928,7 @@ bool UI_VIRTUALKEYBOARD::CreateAllKeys(double x, double y)
   XDWORD                     key_normal_width  = 0; 
   XDWORD                     key_normal_height = 0; 
 
-  GRPBITMAP* keyimage = LoadKeyImage(_L("virtualkbd/key.png"));
+  GRPBITMAP* keyimage = LoadKeyImage(NL("virtualkbd/key.png"));
   if(keyimage)
     {
       key_normal_width  = keyimage->GetWidth();
@@ -937,7 +937,7 @@ bool UI_VIRTUALKEYBOARD::CreateAllKeys(double x, double y)
       //GEN_DELETE keyimage;
     }
 
-  keyinfo.color     = _L("black,255");
+  keyinfo.color     = NL("black,255");
   keyinfo.sizefont  = 32;
   keyinfo.margin    = 5;
   keyinfo.width     = key_normal_width;
@@ -978,7 +978,7 @@ bool UI_VIRTUALKEYBOARD::CreateAllKeys(double x, double y)
   // ESC left of Q (top row) — away from RETURN/confirm on the right.
   keyinfo.xpos      = xpos - key_normal_width;
   keyinfo.sizefont  = 22;
-  AddKeyButton(_L("ESC"), _L("Esc"), _L("virtualkbd/key.png"), keyinfo);
+  AddKeyButton(NL("ESC"), NL("Esc"), NL("virtualkbd/key.png"), keyinfo);
   keyinfo.sizefont  = 32;
   keyinfo.xpos      = xpos;
   
@@ -990,7 +990,7 @@ bool UI_VIRTUALKEYBOARD::CreateAllKeys(double x, double y)
         {              
           if(line[actualset][row][col].GetSize())
             {
-              AddKeyButton(line[actualset][row][col].Get(), line[actualset][row][col].Get(), _L("virtualkbd/key.png"), keyinfo);
+              AddKeyButton(line[actualset][row][col].Get(), line[actualset][row][col].Get(), NL("virtualkbd/key.png"), keyinfo);
               keyinfo.xpos += keyinfo.width;          
             }
         }
@@ -1011,13 +1011,13 @@ bool UI_VIRTUALKEYBOARD::CreateAllKeys(double x, double y)
     } while(row < 3);
 
  
-  GRPBITMAP* spaceimage = LoadKeyImage(_L("virtualkbd/space_key.png"));
+  GRPBITMAP* spaceimage = LoadKeyImage(NL("virtualkbd/space_key.png"));
   if(spaceimage)
     {
       keyinfo.width   = spaceimage->GetWidth();
       keyinfo.height  = spaceimage->GetHeight();
       keyinfo.xpos    = (main_form->GetBoundaryLine()->width - keyinfo.width)/2;
-      AddKeyButton(_L("SPACE"), NULL, _L("virtualkbd/space_key.png"), keyinfo);
+      AddKeyButton(NL("SPACE"), NULL, NL("virtualkbd/space_key.png"), keyinfo);
       
       //GEN_DELETE spaceimage;
     }  
@@ -1026,28 +1026,28 @@ bool UI_VIRTUALKEYBOARD::CreateAllKeys(double x, double y)
   keyinfo.height    = key_normal_height;
 
   keyinfo.xpos      = xpos + (key_normal_width *2);  
-  AddKeyButton(_L("ARROWLEFT"), NULL, _L("virtualkbd/arrowleft_key.png"), keyinfo);
+  AddKeyButton(NL("ARROWLEFT"), NULL, NL("virtualkbd/arrowleft_key.png"), keyinfo);
 
 
   keyinfo.xpos      = xpos + (key_normal_width * 7);  
-  AddKeyButton(_L("ARROWRIGHT"), NULL, _L("virtualkbd/arrowright_key.png"), keyinfo);
+  AddKeyButton(NL("ARROWRIGHT"), NULL, NL("virtualkbd/arrowright_key.png"), keyinfo);
 
 
   keyinfo.xpos      = xpos;
   keyinfo.ypos     += key_normal_height;
-  AddKeyButton(_L("CAPS"), NULL, _L("virtualkbd/caps_key.png"), keyinfo);
+  AddKeyButton(NL("CAPS"), NULL, NL("virtualkbd/caps_key.png"), keyinfo);
 
   keyinfo.xpos      = xpos;
   keyinfo.ypos     -= key_normal_height;
-  AddKeyButton(_L("SYMBOLS"), NULL, _L("virtualkbd/symbols_key.png"), keyinfo);
+  AddKeyButton(NL("SYMBOLS"), NULL, NL("virtualkbd/symbols_key.png"), keyinfo);
 
   keyinfo.xpos      = xpos + (key_normal_width * 9); 
   keyinfo.ypos     += key_normal_height;
-  AddKeyButton(_L("BACK"), NULL, _L("virtualkbd/back_key.png"), keyinfo);
+  AddKeyButton(NL("BACK"), NULL, NL("virtualkbd/back_key.png"), keyinfo);
 
   keyinfo.xpos      = xpos + (key_normal_width * 9); 
   keyinfo.ypos     -= key_normal_height;
-  AddKeyButton(_L("RETURN"), NULL, _L("virtualkbd/return_key.png"), keyinfo);
+  AddKeyButton(NL("RETURN"), NULL, NL("virtualkbd/return_key.png"), keyinfo);
     
   if(skin) skin->CalculeBoundaryLine_AllElements(main_form, true);
 
@@ -1101,8 +1101,8 @@ bool UI_VIRTUALKEYBOARD::CreateInputField(double sizewidth, double sizeheight)
   element_input->GetText()->Empty();
 
   // Readable on the grey keyboard panel — same widget path as layout edittext (Draw_EditText).
-  element_input->GetColor()->SetFromString(_L("20,20,20,255"));
-  element_input->GetBackgroundColor()->SetFromString(_L("245,245,245,255"));
+  element_input->GetColor()->SetFromString(NL("20,20,20,255"));
+  element_input->GetBackgroundColor()->SetFromString(NL("245,245,245,255"));
   element_input->SetBackgroundColorSet(true);
 
   element_input->SetVisible(true);

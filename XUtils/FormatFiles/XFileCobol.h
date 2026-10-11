@@ -87,8 +87,8 @@ enum XFILECOBOL_FILE_TYPE
 };
 
 
-#define XFILECOBOL_VALIDCHARS                    _L("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789 +-*/$,;.\"()><:'=")
-#define XFILECOBOL_CAPABILITIESFILE              _L("cobcap.dat")
+#define XFILECOBOL_VALIDCHARS                    NL("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789 +-*/$,;.\"()><:'=")
+#define XFILECOBOL_CAPABILITIESFILE              NL("cobcap.dat")
 
 #define XFILECOBOL_MASK_SIGN                     0x40
 

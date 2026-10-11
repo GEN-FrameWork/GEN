@@ -123,15 +123,12 @@ bool APPFLOWBASE::Ini(XVECTOR<XSTRING*>* execparams)
 
   XDWORD code = GEN_XSYSTEM.GetLanguageSO();
 
-  if(code == XLANGUAGE_ISO_639_3_CODE_INVALID) 
+  if(!XTRANSLATION_GEN::GetInstance().IsLanguageAvailable(code))
     {
       code = XLANGUAGE_ISO_639_3_CODE_ENG;
     }
 
-  if(code != XLANGUAGE_ISO_639_3_CODE_INVALID) 
-    {
-      XTRANSLATION_GEN::GetInstance().Sentences_AddToTranslation(code);
-    }
+  XTRANSLATION_GEN::GetInstance().SetActual(code);
 
   if(!AppProc_Ini()) return false;
 
@@ -414,14 +411,14 @@ bool APPFLOWBASE::GetExitTypeString(XSTRING& exittypestring)
 
   switch(GetExitType())
     {
-      case APPFLOWBASE_EXITTYPE_UNKNOWN             : exittypestring = XT_L(XTRANSLATION_GEN_ID_APPFLOWCONSOLE_EXIT_NOTINFO);             break;
-      case APPFLOWBASE_EXITTYPE_BY_SERIOUSERROR     : exittypestring = XT_L(XTRANSLATION_GEN_ID_APPFLOWCONSOLE_EXIT_BY_SERIOUSERROR);     break;
-      case APPFLOWBASE_EXITTYPE_BY_UPDATE           : exittypestring = XT_L(XTRANSLATION_GEN_ID_APPFLOWCONSOLE_EXIT_BY_UPDATE);           break;
-      case APPFLOWBASE_EXITTYPE_BY_APPLICATION      : exittypestring = XT_L(XTRANSLATION_GEN_ID_APPFLOWCONSOLE_EXIT_BY_APPLICATION);      break;
-      case APPFLOWBASE_EXITTYPE_BY_USER             : exittypestring = XT_L(XTRANSLATION_GEN_ID_APPFLOWCONSOLE_EXIT_BY_USER);             break;
-      case APPFLOWBASE_EXITTYPE_BY_SHUTDOWN         : exittypestring = XT_L(XTRANSLATION_GEN_ID_APPFLOWCONSOLE_EXIT_BY_SHUTDOWN);         break;
-      case APPFLOWBASE_EXITTYPE_BY_INVALIDLICENSE   : exittypestring = XT_L(XTRANSLATION_GEN_ID_APPFLOWCONSOLE_EXIT_BY_INVALIDLICENSE);   break;
-      case APPFLOWBASE_EXITTYPE_BY_EXPIREDLICENSE   : exittypestring = XT_L(XTRANSLATION_GEN_ID_APPFLOWCONSOLE_EXIT_BY_EXPIREDLICENSE) ;  break;
+      case APPFLOWBASE_EXITTYPE_UNKNOWN             : exittypestring = GEN_TL(XTRANSLATION_GEN_ID_APPFLOWCONSOLE_EXIT_NOTINFO);             break;
+      case APPFLOWBASE_EXITTYPE_BY_SERIOUSERROR     : exittypestring = GEN_TL(XTRANSLATION_GEN_ID_APPFLOWCONSOLE_EXIT_BY_SERIOUSERROR);     break;
+      case APPFLOWBASE_EXITTYPE_BY_UPDATE           : exittypestring = GEN_TL(XTRANSLATION_GEN_ID_APPFLOWCONSOLE_EXIT_BY_UPDATE);           break;
+      case APPFLOWBASE_EXITTYPE_BY_APPLICATION      : exittypestring = GEN_TL(XTRANSLATION_GEN_ID_APPFLOWCONSOLE_EXIT_BY_APPLICATION);      break;
+      case APPFLOWBASE_EXITTYPE_BY_USER             : exittypestring = GEN_TL(XTRANSLATION_GEN_ID_APPFLOWCONSOLE_EXIT_BY_USER);             break;
+      case APPFLOWBASE_EXITTYPE_BY_SHUTDOWN         : exittypestring = GEN_TL(XTRANSLATION_GEN_ID_APPFLOWCONSOLE_EXIT_BY_SHUTDOWN);         break;
+      case APPFLOWBASE_EXITTYPE_BY_INVALIDLICENSE   : exittypestring = GEN_TL(XTRANSLATION_GEN_ID_APPFLOWCONSOLE_EXIT_BY_INVALIDLICENSE);   break;
+      case APPFLOWBASE_EXITTYPE_BY_EXPIREDLICENSE   : exittypestring = GEN_TL(XTRANSLATION_GEN_ID_APPFLOWCONSOLE_EXIT_BY_EXPIREDLICENSE) ;  break;
                                       default   : return false;                                                                   
     }
 
@@ -468,19 +465,19 @@ void APPFLOWBASE::SetSystemChangeStatus(XSYSTEM_CHANGESTATUSTYPE systemchangesta
   switch(systemchangestatustype)
     {
       case XSYSTEM_CHANGESTATUSTYPE_NONE                :
-                                  default               : statusstr = _L("normal");                break;
-      case XSYSTEM_CHANGESTATUSTYPE_REBOOT              : statusstr = _L("reboot");                break;
-      case XSYSTEM_CHANGESTATUSTYPE_CONSOLE_CONNECT     : statusstr = _L("console connect");       break;
-      case XSYSTEM_CHANGESTATUSTYPE_CONSOLE_DISCONNECT  : statusstr = _L("console disconnect");    break;
-      case XSYSTEM_CHANGESTATUSTYPE_SESSION_LOGON       : statusstr = _L("session logon");         break;
-      case XSYSTEM_CHANGESTATUSTYPE_SESSION_LOGOFF      : statusstr = _L("session logooff");       break;
-      case XSYSTEM_CHANGESTATUSTYPE_SESSION_LOCK        : statusstr = _L("session lock");          break;
-      case XSYSTEM_CHANGESTATUSTYPE_SESSION_UNLOCK      : statusstr = _L("session unlock");        break;
-      case XSYSTEM_CHANGESTATUSTYPE_POWEROFF            : statusstr = _L("power off");             break;
-      case XSYSTEM_CHANGESTATUSTYPE_SUSPEND             : statusstr = _L("suspend");               break;
+                                  default               : statusstr = NL("normal");                break;
+      case XSYSTEM_CHANGESTATUSTYPE_REBOOT              : statusstr = NL("reboot");                break;
+      case XSYSTEM_CHANGESTATUSTYPE_CONSOLE_CONNECT     : statusstr = NL("console connect");       break;
+      case XSYSTEM_CHANGESTATUSTYPE_CONSOLE_DISCONNECT  : statusstr = NL("console disconnect");    break;
+      case XSYSTEM_CHANGESTATUSTYPE_SESSION_LOGON       : statusstr = NL("session logon");         break;
+      case XSYSTEM_CHANGESTATUSTYPE_SESSION_LOGOFF      : statusstr = NL("session logooff");       break;
+      case XSYSTEM_CHANGESTATUSTYPE_SESSION_LOCK        : statusstr = NL("session lock");          break;
+      case XSYSTEM_CHANGESTATUSTYPE_SESSION_UNLOCK      : statusstr = NL("session unlock");        break;
+      case XSYSTEM_CHANGESTATUSTYPE_POWEROFF            : statusstr = NL("power off");             break;
+      case XSYSTEM_CHANGESTATUSTYPE_SUSPEND             : statusstr = NL("suspend");               break;
     }
 
-  //XTRACE_PRINTCOLOR(XTRACE_COLOR_GREEN, _L("[APP Base System] Mode change to [%s]"), statusstr.Get());
+  //XTRACE_PRINTCOLOR(XTRACE_COLOR_GREEN, NL("[APP Base System] Mode change to [%s]"), statusstr.Get());
 
   APPFLOW_XEVENT  xevent(this, APPFLOW_XEVENT_TYPE_CHANGESTATUSTYPE);      
   xevent.SetChangeStatusType(systemchangestatustype);

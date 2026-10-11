@@ -126,7 +126,7 @@ SCRIPT::SCRIPT()
   RegisterEvent(SCRIPT_XEVENT_TYPE_ERROR);
   RegisterEvent(SCRIPT_XEVENT_TYPE_BREAK);
 
-  thread = CREATEXTHREAD(XTHREADGROUPID_SCRIPT, _L("SCRIPT::SCRIPT"), ThreadFunction, (void*)this);
+  thread = CREATEXTHREAD(XTHREADGROUPID_SCRIPT, NL("SCRIPT::SCRIPT"), ThreadFunction, (void*)this);
 }
 
 
@@ -203,21 +203,21 @@ SCRIPT_TYPE SCRIPT::GetTypeByExtension(XCHAR* namefilescript)
       _namefilescript.GetExt(ext);
 
       #ifdef SCRIPT_G_ACTIVE
-      if(!ext.Compare(_L(".g")   , true))  
+      if(!ext.Compare(NL(".g")   , true))  
         {
           type = SCRIPT_TYPE_G;
         }
       #endif
 
       #ifdef SCRIPT_LUA_ACTIVE
-      if(!ext.Compare(_L(".lua") , true))
+      if(!ext.Compare(NL(".lua") , true))
         {
           type = SCRIPT_TYPE_LUA;
         }
       #endif
 
       #ifdef SCRIPT_JAVASCRIPT_ACTIVE
-      if(!ext.Compare(_L(".js")  , true)) 
+      if(!ext.Compare(NL(".js")  , true)) 
         {
           type = SCRIPT_TYPE_JAVASCRIPT;
         }
@@ -313,7 +313,7 @@ bool SCRIPT::Load(XPATH& xpath)
       script.Empty();
       script += _script->Get();  
 
-      GetNameScript()->Format(_L("ID%08X"), ID);
+      GetNameScript()->Format(NL("ID%08X"), ID);
 
       return true;
     }
@@ -467,7 +467,7 @@ bool SCRIPT::LoadScriptAndRun(XVECTOR<XSTRING*>* listscripts, SCRFUNCADJUSTLIBRA
               // One CFG line is concatenated into a single in-memory script: all entries must share a language.
               if(!SCRIPT::HaveSameLanguage(&namescripts))
                 {
-                  XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, _L("Script CFG line rejected: mixed or unknown languages in \"%s\""), linescripts->Get());
+                  XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, NL("Script CFG line rejected: mixed or unknown languages in \"%s\""), linescripts->Get());
                   namescripts.DeleteContents();
                   namescripts.DeleteAll();
                   continue;
@@ -511,7 +511,7 @@ bool SCRIPT::LoadScriptAndRun(XVECTOR<XSTRING*>* listscripts, SCRFUNCADJUSTLIBRA
                           incache = true;
                           status  = !_script->IsEmpty();
 
-                          script->GetNameScript()->Format(_L("ID%08X"), ID);
+                          script->GetNameScript()->Format(NL("ID%08X"), ID);
                         }
 
                       #endif
@@ -614,10 +614,10 @@ bool SCRIPT::AddReturnByType()
   switch(type)
     {
       case SCRIPT_TYPE_UNKNOWN       : 
-                           default   : script += _L("\r\n"); break;
-      case SCRIPT_TYPE_G             : script += _L("\r\n"); break;
-      case SCRIPT_TYPE_LUA           : script += _L("\r");   break;
-      case SCRIPT_TYPE_JAVASCRIPT    : script += _L("\r");   break;
+                           default   : script += NL("\r\n"); break;
+      case SCRIPT_TYPE_G             : script += NL("\r\n"); break;
+      case SCRIPT_TYPE_LUA           : script += NL("\r");   break;
+      case SCRIPT_TYPE_JAVASCRIPT    : script += NL("\r");   break;
     }
 
   return true;
@@ -1308,7 +1308,7 @@ void SCRIPT::Clean()
   xpath.Empty();
 
   xfiletxt            = NULL;
-  namescript          = _L("");
+  namescript          = NL("");
   script.Empty();
 
   xtimer              = NULL;

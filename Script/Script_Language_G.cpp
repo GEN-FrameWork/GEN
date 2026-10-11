@@ -684,7 +684,7 @@ bool SCRIPT_LNG_G_VAR::ConvertToXVariant(XVARIANT& variant)
     {
       case SCRIPT_LNG_G_TOKENIREPS_CHAR     : { XSTRING str;
 
-                                                str.Format(_L("%c"), GetValueCharacter());
+                                                str.Format(NL("%c"), GetValueCharacter());
                                                 variant = (XCHAR)str.Get()[0];
                                               }
                                               break;
@@ -1026,20 +1026,20 @@ SCRIPT_LNG_G::SCRIPT_LNG_G()
 
   DeleteVarsExec();
 
-  AddCommand(_L("if"), SCRIPT_LNG_G_TOKENIREPS_IF);
-  AddCommand(_L("else"), SCRIPT_LNG_G_TOKENIREPS_ELSE);
-  AddCommand(_L("for"), SCRIPT_LNG_G_TOKENIREPS_FOR);
-  AddCommand(_L("do"), SCRIPT_LNG_G_TOKENIREPS_DO);
-  AddCommand(_L("while"), SCRIPT_LNG_G_TOKENIREPS_WHILE);
-  AddCommand(_L("char"), SCRIPT_LNG_G_TOKENIREPS_CHAR);
-  AddCommand(_L("int"), SCRIPT_LNG_G_TOKENIREPS_INT);
-  AddCommand(_L("float"), SCRIPT_LNG_G_TOKENIREPS_FLOAT);
-  AddCommand(_L("string"), SCRIPT_LNG_G_TOKENIREPS_STRING);
-  AddCommand(_L("return"), SCRIPT_LNG_G_TOKENIREPS_RETURN);
-  AddCommand(_L("switch"), SCRIPT_LNG_G_TOKENIREPS_SWITCH);
-  AddCommand(_L("break"), SCRIPT_LNG_G_TOKENIREPS_BREAK);
-  AddCommand(_L("case"), SCRIPT_LNG_G_TOKENIREPS_CASE);
-  AddCommand(_L("")        , SCRIPT_LNG_G_TOKENIREPS_END);
+  AddCommand(NL("if"), SCRIPT_LNG_G_TOKENIREPS_IF);
+  AddCommand(NL("else"), SCRIPT_LNG_G_TOKENIREPS_ELSE);
+  AddCommand(NL("for"), SCRIPT_LNG_G_TOKENIREPS_FOR);
+  AddCommand(NL("do"), SCRIPT_LNG_G_TOKENIREPS_DO);
+  AddCommand(NL("while"), SCRIPT_LNG_G_TOKENIREPS_WHILE);
+  AddCommand(NL("char"), SCRIPT_LNG_G_TOKENIREPS_CHAR);
+  AddCommand(NL("int"), SCRIPT_LNG_G_TOKENIREPS_INT);
+  AddCommand(NL("float"), SCRIPT_LNG_G_TOKENIREPS_FLOAT);
+  AddCommand(NL("string"), SCRIPT_LNG_G_TOKENIREPS_STRING);
+  AddCommand(NL("return"), SCRIPT_LNG_G_TOKENIREPS_RETURN);
+  AddCommand(NL("switch"), SCRIPT_LNG_G_TOKENIREPS_SWITCH);
+  AddCommand(NL("break"), SCRIPT_LNG_G_TOKENIREPS_BREAK);
+  AddCommand(NL("case"), SCRIPT_LNG_G_TOKENIREPS_CASE);
+  AddCommand(NL("")        , SCRIPT_LNG_G_TOKENIREPS_END);
 
   AddInternalLibraries();
 }
@@ -1096,10 +1096,10 @@ int SCRIPT_LNG_G::Run(int* returnval)
       XSTRING* version = GEN_NEW XSTRING();
       if(version)
         {
-          version->Format(_L("%d.%d.%d"), SCRIPT_LNG_G_VERSION, SCRIPT_LNG_G_SUBVERSION, SCRIPT_LNG_G_SUBVERSIONERR);
+          version->Format(NL("%d.%d.%d"), SCRIPT_LNG_G_VERSION, SCRIPT_LNG_G_SUBVERSION, SCRIPT_LNG_G_SUBVERSIONERR);
        
           versionvar->SetType(SCRIPT_LNG_G_TOKENIREPS_STRING);
-          versionvar->SetName(_L("VERSION"));    
+          versionvar->SetName(NL("VERSION"));    
           versionvar->SetValueString(version);    
           versionvar->SetHaveReservedSize(true);
           versionvar->SetIsArg(false);
@@ -1116,11 +1116,11 @@ int SCRIPT_LNG_G::Run(int* returnval)
 
   if(errorcode == SCRIPT_ERRORCODE_NONE)
     {
-      ipprg = FindFunction(_L("main"));
+      ipprg = FindFunction(NL("main"));
       if(ipprg)
         {
           ipprg--;
-          XSTRING::Set(currenttoken, _L("main"));
+          XSTRING::Set(currenttoken, NL("main"));
 
           Call();
         }
@@ -1401,31 +1401,31 @@ bool SCRIPT_LNG_G::HaveError(int errorcode)
   if(errorcode != SCRIPT_ERRORCODE_NONE)
     {
       // Must follow SCRIPT_ERRORCODE then SCRIPT_LNG_G_ERRORCODE (SYNTAX = SCRIPT_ERRORCODE_OWN).
-      static XCHAR* errorstr[]= { _L("None")                       ,
-                                  _L("Internal error")             ,
-                                  _L("Insufficient parameters")    ,
-                                  _L("Syntax error")               ,
-                                  _L("No expression present")      ,
-                                  _L("Not a variable")             ,
-                                  _L("Duplicate variable name")    ,
-                                  _L("Duplicate function name")    ,
-                                  _L("Semicolon expected")         ,
-                                  _L("Unbalanced braces")          ,
-                                  _L("Function undefined")         ,
-                                  _L("Type specifier expected")    ,
-                                  _L("Return without call")        ,
-                                  _L("Parentheses expected")       ,
-                                  _L("While expected")             ,
-                                  _L("Closing quote expected")     ,
-                                  _L("Division by zero")           ,
-                                  _L("{ expected (control statements must use blocks)"),
-                                  _L("Colon expected")             ,
-                                  _L("Break by user")              ,
-                                  _L("Too many parameters")        ,
-                                  _L("Token too long")             ,
-                                  _L("Type mismatch")
+      static XCHAR* errorstr[]= { NL("None")                       ,
+                                  NL("Internal error")             ,
+                                  NL("Insufficient parameters")    ,
+                                  NL("Syntax error")               ,
+                                  NL("No expression present")      ,
+                                  NL("Not a variable")             ,
+                                  NL("Duplicate variable name")    ,
+                                  NL("Duplicate function name")    ,
+                                  NL("Semicolon expected")         ,
+                                  NL("Unbalanced braces")          ,
+                                  NL("Function undefined")         ,
+                                  NL("Type specifier expected")    ,
+                                  NL("Return without call")        ,
+                                  NL("Parentheses expected")       ,
+                                  NL("While expected")             ,
+                                  NL("Closing quote expected")     ,
+                                  NL("Division by zero")           ,
+                                  NL("{ expected (control statements must use blocks)"),
+                                  NL("Colon expected")             ,
+                                  NL("Break by user")              ,
+                                  NL("Too many parameters")        ,
+                                  NL("Token too long")             ,
+                                  NL("Type mismatch")
                                 };
-      XCHAR* errormsg = _L("Unknown error");
+      XCHAR* errormsg = NL("Unknown error");
 
       if((errorcode >= 0) && (errorcode < (int)(sizeof(errorstr)/sizeof(errorstr[0]))))
         {
@@ -1466,7 +1466,7 @@ bool SCRIPT_LNG_G::HaveError(int errorcode)
       xevent.GetCurrentToken()->Set(currenttoken);
       xevent.SetNLine(nline);
 
-      XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, _L("Script [%s] ERROR %d: %s, line %d \"%s\"") , namescript.Get(), errorcode, errormsg, nline, currenttoken);
+      XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, NL("Script [%s] ERROR %d: %s, line %d \"%s\"") , namescript.Get(), errorcode, errormsg, nline, currenttoken);
 
       PostEvent(&xevent);      
       iscancelexec = true;
@@ -1595,7 +1595,7 @@ bool SCRIPT_LNG_G::IsDelimiter(XCHAR c)
 {
   if(c==0) return true;
 
-  XSTRING delimiter(_L("\x09\r\n {}!:;,+-<>'/*%^=()&|"));
+  XSTRING delimiter(NL("\x09\r\n {}!:;,+-<>'/*%^=()&|"));
 
   if(delimiter.FindCharacter(c)!=XSTRING_NOTFOUND) return true;
 
@@ -1949,7 +1949,7 @@ void SCRIPT_LNG_G::EvalExp1(SCRIPT_LNG_G_VAR& value)
   XCHAR   operation;
   XSTRING relops;
 
-  relops.Format(_L("%c%c%c%c%c%c"), SCRIPT_LNG_G_DOUBLEOPERATOR_LT, SCRIPT_LNG_G_DOUBLEOPERATOR_LE, SCRIPT_LNG_G_DOUBLEOPERATOR_GT, SCRIPT_LNG_G_DOUBLEOPERATOR_GE, SCRIPT_LNG_G_DOUBLEOPERATOR_EQ, SCRIPT_LNG_G_DOUBLEOPERATOR_NE);
+  relops.Format(NL("%c%c%c%c%c%c"), SCRIPT_LNG_G_DOUBLEOPERATOR_LT, SCRIPT_LNG_G_DOUBLEOPERATOR_LE, SCRIPT_LNG_G_DOUBLEOPERATOR_GT, SCRIPT_LNG_G_DOUBLEOPERATOR_GE, SCRIPT_LNG_G_DOUBLEOPERATOR_EQ, SCRIPT_LNG_G_DOUBLEOPERATOR_NE);
   EvalExp2(value);
 
   operation = currenttoken[0];
@@ -2034,7 +2034,7 @@ void SCRIPT_LNG_G::EvalExp2(SCRIPT_LNG_G_VAR& value)
   XCHAR   operation;
   XSTRING okops;
 
-  okops.Format(_L("(%c%c-+"), SCRIPT_LNG_G_DOUBLEOPERATOR_INC, SCRIPT_LNG_G_DOUBLEOPERATOR_DEC);
+  okops.Format(NL("(%c%c-+"), SCRIPT_LNG_G_DOUBLEOPERATOR_INC, SCRIPT_LNG_G_DOUBLEOPERATOR_DEC);
 
   EvalExp3(value);
 
@@ -2118,7 +2118,7 @@ void SCRIPT_LNG_G::EvalExp3(SCRIPT_LNG_G_VAR& value)
   XSTRING   okops;
   SCRIPT_LNG_G_VAR  partialvalue;
 
-  okops.Format(_L("(%c%c-+"), SCRIPT_LNG_G_DOUBLEOPERATOR_INC, SCRIPT_LNG_G_DOUBLEOPERATOR_DEC);
+  okops.Format(NL("(%c%c-+"), SCRIPT_LNG_G_DOUBLEOPERATOR_INC, SCRIPT_LNG_G_DOUBLEOPERATOR_DEC);
 
   EvalExp4(value);
 
@@ -3184,9 +3184,9 @@ SCRIPT_LNG_G_TOKENTYPES SCRIPT_LNG_G::GetToken()
   XSTRING   delimiters;  
   XSTRING   otherdelimiters;
 
-  dobleops        = _L("!<>=+-&|");
-  delimiters      = _L("{}");  
-  otherdelimiters = _L("+-*^/%=;:(),'");
+  dobleops        = NL("!<>=+-&|");
+  delimiters      = NL("{}");  
+  otherdelimiters = NL("+-*^/%=;:(),'");
 
   tokentype       = SCRIPT_LNG_G_TOKENTYPES_UNDEFTT;
   tokenireps      = SCRIPT_LNG_G_TOKENIREPS_UNDEFTOK;

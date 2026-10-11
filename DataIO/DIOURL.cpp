@@ -324,7 +324,7 @@ static bool DIOURL_PunycodeLabel(XSTRING& label, XSTRING& output)
     }
 
   XSTRING encoded;
-  encoded = _L("xn--");
+  encoded = NL("xn--");
   encoded += output;
   if(basic) encoded.Add(_C('-'));
 
@@ -622,10 +622,10 @@ bool DIOURL::GetHTTPServer(XSTRING& server, XSTRING& login, XSTRING& password)
 
   if(IsEmpty()) return false;
 
-  Copy(DIOURL_WEBURLID, _L("/"), true, 0, server);
+  Copy(DIOURL_WEBURLID, NL("/"), true, 0, server);
   if(server.IsEmpty())
     {
-      int index = Find(_L("/"), true);
+      int index = Find(NL("/"), true);
       if(index != XSTRING_NOTFOUND)
         {
           Copy(0, index, server);
@@ -635,7 +635,7 @@ bool DIOURL::GetHTTPServer(XSTRING& server, XSTRING& login, XSTRING& password)
 
   if(server.IsEmpty()) return false;
 
-  int indexlp = server.Find(_L("@"), true);
+  int indexlp = server.Find(NL("@"), true);
   if(indexlp!=XSTRING_NOTFOUND)
     {
       XSTRING  lpstring;
@@ -643,7 +643,7 @@ bool DIOURL::GetHTTPServer(XSTRING& server, XSTRING& login, XSTRING& password)
       server.Copy(0, indexlp, lpstring);
       server.DeleteCharacters(0, indexlp+1);
 
-      int indexp = lpstring.Find(_L(":"), true);
+      int indexp = lpstring.Find(NL(":"), true);
       if(indexp!=XSTRING_NOTFOUND)
         {
           lpstring.Copy(0, indexp, login);
@@ -681,7 +681,7 @@ bool DIOURL::GetHTTPResource(XSTRING& resource)
         index  = 0;
    else index += weburlid.GetSize();
 
-  index = Find(_L("/"), true, index);
+  index = Find(NL("/"), true, index);
   if(index != XSTRING_NOTFOUND)
     {
       Copy(index, GetSize(), resource);
@@ -922,8 +922,8 @@ bool DIOURL::Slash_Delete()
 * --------------------------------------------------------------------------------------------------------------------*/
 bool DIOURL::IsUnsafeChar(XCHAR character)
 {
-  //XSTRING safecharacters(_L("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_.~!*'();:@=+$,/?[]"));
-  XSTRING safecharacters(_L("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_/\\."));
+  //XSTRING safecharacters(NL("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_.~!*'();:@=+$,/?[]"));
+  XSTRING safecharacters(NL("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_/\\."));
 
   for(int c=0; c<(int)safecharacters.GetSize(); c++)
     {
@@ -953,8 +953,8 @@ bool DIOURL::EncodeUnsafeChar(XCHAR character, XSTRING& encodechar)
   encodechar.Empty();
 
   if(character&0xFF00)
-        encodechar.Format(_L("%%%02X%%%02X"), (normalizechar>>8), (normalizechar&0x00FF));
-   else encodechar.Format(_L("%%%02X"), normalizechar);
+        encodechar.Format(NL("%%%02X%%%02X"), (normalizechar>>8), (normalizechar&0x00FF));
+   else encodechar.Format(NL("%%%02X"), normalizechar);
 
   return true;
 }
@@ -1168,7 +1168,7 @@ bool DIOURL::DecodeUnsafeCharsToString(XSTRING& string)
                   part[0] = h2;
                   numberhex.Add(part);
 
-                  numberhex.UnFormat(_L("%02X"), &part[0]);
+                  numberhex.UnFormat(NL("%02X"), &part[0]);
                   part[0] &= 0x00FF;
                   string.Add(part);
 

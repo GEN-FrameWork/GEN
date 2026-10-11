@@ -1901,19 +1901,19 @@ bool XFILEJSON::DecodeObject(int& position, bool isobject, XFILEJSONOBJECT* obje
                                                       
                                                       value->Set();
 
-                                                      if(!valuestring.Compare(_L("true") , true))  
+                                                      if(!valuestring.Compare(NL("true") , true))  
                                                         {
                                                           value->Set(true);
                                                         }
                                                        else
                                                         {   
-                                                          if(!valuestring.Compare(_L("false"), true)) 
+                                                          if(!valuestring.Compare(NL("false"), true)) 
                                                             {
                                                               value->Set(false);                                                      
                                                             }
                                                            else
                                                             {     
-                                                              if(!valuestring.Compare(_L("null") , false)) 
+                                                              if(!valuestring.Compare(NL("null") , false)) 
                                                                 {
                                                                   value->Set();
                                                                 }                                                                  
@@ -2032,7 +2032,7 @@ bool XFILEJSON::DecodeObject(int& position, bool isobject, XFILEJSONOBJECT* obje
         }
     }
 
-  //XTRACE_PRINTCOLOR(2, _L("%d"), position);
+  //XTRACE_PRINTCOLOR(2, NL("%d"), position);
 
   return true;
 }
@@ -2408,7 +2408,7 @@ bool XFILEJSON::AddTabs(int level, int spacetabs, XSTRING& string)
     {
       for(int d=0;d<spacetabs;d++)
         {
-          string += _L(" ");
+          string += NL(" ");
         }
     }
 
@@ -2458,13 +2458,13 @@ bool XFILEJSON::EncodeObject(bool isobject, XFILEJSONOBJECT* object, bool istabu
             {
               XSTRING line2;
 
-              line2.Format(_L("%c%s%c : "), GetControlCharacter(XFILEJSONCONTROLCHAR_QUOTE), name->Get() , GetControlCharacter(XFILEJSONCONTROLCHAR_QUOTE));
+              line2.Format(NL("%c%s%c : "), GetControlCharacter(XFILEJSONCONTROLCHAR_QUOTE), name->Get() , GetControlCharacter(XFILEJSONCONTROLCHAR_QUOTE));
               line += line2;
             }
     
           switch(value->GetType())
             {              
-              case XFILEJSONVALUETYPE_NULL            : line += _L("null");
+              case XFILEJSONVALUETYPE_NULL            : line += NL("null");
                                                         break;
 
 
@@ -2472,7 +2472,7 @@ bool XFILEJSON::EncodeObject(bool isobject, XFILEJSONOBJECT* object, bool istabu
               case XFILEJSONVALUETYPE_STRING          : { XSTRING  ptrvaluestring = value->GetValueString();
                                                           XSTRING  valuestring;
                                                          
-                                                          valuestring.Format(_L("%c%s%c"), GetControlCharacter(XFILEJSONCONTROLCHAR_QUOTE), ptrvaluestring.Get(), GetControlCharacter(XFILEJSONCONTROLCHAR_QUOTE));
+                                                          valuestring.Format(NL("%c%s%c"), GetControlCharacter(XFILEJSONCONTROLCHAR_QUOTE), ptrvaluestring.Get(), GetControlCharacter(XFILEJSONCONTROLCHAR_QUOTE));
                                                           line += valuestring.Get();
                                                         }
                                                         break;              

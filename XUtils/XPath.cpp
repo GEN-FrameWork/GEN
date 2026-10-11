@@ -1198,7 +1198,7 @@ bool XPATH::AddToNameFile(bool isprefix, XCHAR* tag)
 
   if(!Split(&drive, &xpath, &name, &ext)) return false;
 
-  //if(!drive.IsEmpty()) drive.Add(_L("/"));
+  //if(!drive.IsEmpty()) drive.Add(NL("/"));
 
   xpath.Slash_Add();
 
@@ -1213,7 +1213,7 @@ bool XPATH::AddToNameFile(bool isprefix, XCHAR* tag)
       newname += tag;
     }
 
-  Format(_L("%s%s%s%s"), drive.Get(), xpath.Get(), newname.Get(), ext.Get());
+  Format(NL("%s%s%s%s"), drive.Get(), xpath.Get(), newname.Get(), ext.Get());
 
   return true;
 }
