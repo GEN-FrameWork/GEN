@@ -36,8 +36,8 @@
 
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
 
-#define APPFLOWCONSOLE_DEFAULT_MESSAGEMASK                   NL("%-36s ... ")
-#define APPFLOWCONSOLE_DEFAULT_MESSAGEMASKWITHOUTPOINTS      NL("%-36s ")
+#define APPFLOWCONSOLE_DEFAULT_MESSAGEMASK                   NL("%-42s ... ")
+#define APPFLOWCONSOLE_DEFAULT_MESSAGEMASKWITHOUTPOINTS      NL("%-42s ")
 
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
 

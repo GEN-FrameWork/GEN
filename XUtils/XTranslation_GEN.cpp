@@ -39,6 +39,7 @@
 #include <string.h>
 
 #include "XLanguage_ISO_639_3.h"
+#include "XSystem.h"
 
 /*---- PRECOMPILATION INCLUDES ---------------------------------------------------------------------------------------*/
 
@@ -211,6 +212,28 @@ XDWORD XTRANSLATION_GEN::GetActual()
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
+* @fn         bool XTRANSLATION_GEN::SetActual()
+* @brief      Activate the OS UI language when it exists in the GEN catalogue; otherwise English.
+* @ingroup    XUTILS
+* 
+* @return     bool : true if the operation is successful; otherwise false.
+* 
+* --------------------------------------------------------------------------------------------------------------------*/
+bool XTRANSLATION_GEN::SetActual()
+{
+  XDWORD code = GEN_XSYSTEM.GetLanguageSO();
+
+  if((code == XLANGUAGE_ISO_639_3_CODE_INVALID) || !IsLanguageAvailable(code))
+    {
+      code = XLANGUAGE_ISO_639_3_CODE_ENG;
+    }
+
+  return SetActual(code);
+}
+
+
+/**-------------------------------------------------------------------------------------------------------------------
+* 
 * @fn         bool XTRANSLATION_GEN::SetActual(XDWORD codelanguage)
 * @brief      Set actual
 * @ingroup    XUTILS
@@ -222,7 +245,7 @@ XDWORD XTRANSLATION_GEN::GetActual()
 * --------------------------------------------------------------------------------------------------------------------*/
 bool XTRANSLATION_GEN::SetActual(XDWORD codelanguage)
 {
-  if(this->codelanguage == codelanguage) return false;
+  if(this->codelanguage == codelanguage) return true;
 
   if(!IsLanguageAvailable(codelanguage)) return false;
 

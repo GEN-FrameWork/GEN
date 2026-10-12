@@ -1724,10 +1724,16 @@ void SCRIPT_LNG_G::EvalExp0(SCRIPT_LNG_G_VAR& value)
            GetToken();
 
            // Multi-assign: a, b, c = f()  (uses lastreturnmultiple when RHS is MULTIPLE)
+           // Commas also appear in call args (max(a, b)); only treat as multi-assign when '=' follows.
            if(currenttoken[0] == _C(','))
              {
                XVECTOR<XSTRING*> lhsnames;
                XSTRING*          firstname = GEN_NEW XSTRING();
+               XCHAR*            ipprg_at_comma;
+
+               PutBackToken();
+               ipprg_at_comma = ipprg;
+               GetToken();
 
                if(!firstname)
                  {
@@ -1774,9 +1780,15 @@ void SCRIPT_LNG_G::EvalExp0(SCRIPT_LNG_G_VAR& value)
 
                if(currenttoken[0] != _C('='))
                  {
+                   // e.g. max(number1, number2): restore first name as a normal rvalue.
                    lhsnames.DeleteContents();
                    lhsnames.DeleteAll();
-                   HaveError(SCRIPT_LNG_G_ERRORCODE_SYNTAX);
+
+                   ipprg = ipprg_at_comma;
+                   XSTRING::Set(currenttoken, tempttoken.Get());
+                   tokentype = temptokentype;
+
+                   EvalExpOr(value);
                    return;
                  }
 
@@ -4420,6 +4432,8 @@ bool SCRIPT_LNG_G::Interpret()
           PutBackToken();
 
           EvalExp(value);
+
+          if(errorcode != SCRIPT_ERRORCODE_NONE) return false;
       
           if(currenttoken[0] != ';')
             {

@@ -66,6 +66,7 @@ class XTRANSLATION_GEN
     bool                                  IsLanguageAvailable                 (XDWORD code);
 
     XDWORD                                GetActual                           ();
+    bool                                  SetActual                           ();
     bool                                  SetActual                           (XDWORD codelanguage);
 
     XCHAR*                                GetSentence                         (XDWORD ID);

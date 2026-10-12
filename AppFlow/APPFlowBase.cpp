@@ -39,13 +39,11 @@
 #include <stdio.h>
 
 #include "XFactory.h"
-#include "XSystem.h"
 #include "XTimer.h"
 #include "XPath.h"
 #include "XTrace.h"
 #include "XTranslation.h"
 #include "XTranslation_GEN.h"
-#include "XLanguage_ISO_639_3.h"
 #include "XObserver.h"
 #include "XSubject.h"
 
@@ -121,14 +119,7 @@ bool APPFLOWBASE::Ini(XVECTOR<XSTRING*>* execparams)
 
   firstupdate = false;
 
-  XDWORD code = GEN_XSYSTEM.GetLanguageSO();
-
-  if(!XTRANSLATION_GEN::GetInstance().IsLanguageAvailable(code))
-    {
-      code = XLANGUAGE_ISO_639_3_CODE_ENG;
-    }
-
-  XTRANSLATION_GEN::GetInstance().SetActual(code);
+  XTRANSLATION_GEN::GetInstance().SetActual();
 
   if(!AppProc_Ini()) return false;
 

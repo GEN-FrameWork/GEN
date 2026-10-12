@@ -71,6 +71,7 @@ class XTRANSLATION
     #endif
 
     XDWORD                            GetActual                           ();
+    bool                              SetActual                           ();
     virtual bool                      SetActual                           (XDWORD code);
 
     bool                              Translate_Add                       (XDWORD ID, XCHAR* sentence, XDWORD fixed);

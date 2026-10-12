@@ -41,6 +41,7 @@
 #include <string.h>
 
 #include "XBase.h"
+#include "XSystem.h"
 #include "XTranslation_GEN.h"
 #ifdef XFILE_ACTIVE
 #include "XFileJSON.h"
@@ -136,7 +137,9 @@ bool XTRANSLATION::Ini(XPATH& xpath)
 {
    this->xpath = xpath;
 
-   return LoadLanguageAvailable();
+   if(!LoadLanguageAvailable()) return false;
+
+   return SetActual();
 }
 #else
 /**-------------------------------------------------------------------------------------------------------------------
@@ -150,7 +153,9 @@ bool XTRANSLATION::Ini(XPATH& xpath)
 * --------------------------------------------------------------------------------------------------------------------*/
 bool XTRANSLATION::Ini()
 {   
-   return LoadLanguageAvailable();
+   if(!LoadLanguageAvailable()) return false;
+
+   return SetActual();
 }
 #endif
 
@@ -172,6 +177,30 @@ XDWORD XTRANSLATION::GetActual()
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
+* @fn         bool XTRANSLATION::SetActual()
+* @brief      Activate the OS UI language when it exists in both catalogues; otherwise English.
+* @ingroup    XUTILS
+* 
+* @return     bool : true if the operation is successful; otherwise false.
+* 
+* --------------------------------------------------------------------------------------------------------------------*/
+bool XTRANSLATION::SetActual()
+{
+  XDWORD code = GEN_XSYSTEM.GetLanguageSO();
+
+  if((code == XLANGUAGE_ISO_639_3_CODE_INVALID) ||
+     !IsLanguageAvailable(code) ||
+     !XTRANSLATION_GEN::GetInstance().IsLanguageAvailable(code))
+    {
+      code = XLANGUAGE_ISO_639_3_CODE_ENG;
+    }
+
+  return SetActual(code);
+}
+
+
+/**-------------------------------------------------------------------------------------------------------------------
+* 
 * @fn         bool XTRANSLATION::SetActual(XDWORD codelanguage)
 * @brief      Set actual
 * @ingroup    XUTILS
@@ -183,7 +212,7 @@ XDWORD XTRANSLATION::GetActual()
 * --------------------------------------------------------------------------------------------------------------------*/
 bool XTRANSLATION::SetActual(XDWORD codelanguage)
 {
-  if(this->codelanguage == codelanguage) return false;
+  if(this->codelanguage == codelanguage) return true;
 
   if(!IsLanguageAvailable(codelanguage)) return false;
 
