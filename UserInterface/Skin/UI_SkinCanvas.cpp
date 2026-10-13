@@ -548,16 +548,6 @@ static void UI_SkinCanvas_PunchRoundRectCornerTips(GRP2DCANVAS* canvas, GRP2DREB
 * @return     bool : true on success; false when the canvas mode is not 32-bit RGBA/BGRA (caller draws hard).
 *
 * --------------------------------------------------------------------------------------------------------------------*/
-// Soft-shadow call/cache-hit counters, split into cache hits/misses (see UI_SkinCanvas_DrawSoftShadow_FormCached
-// below and UI_ELEMENT_FORM::ShadowCache_* in UI_Element_Form.cpp/.h) so the effect of the bitmap cache is
-// visible. Read and reset once per frame from UI_SYSTEM::DrawFrame() (extern-declared there) -- kept here (rather
-// than removed outright) because that external reader still exists.
-XQWORD diagskin_shadowus         = 0;
-XDWORD diagskin_shadowcalls      = 0;
-XDWORD diagskin_shadowcachehits  = 0;
-XDWORD diagskin_shadowcachemiss  = 0;
-
-
 // Rasterises the shadow silhouette into a NEW off-screen RGBA bitmap, padded to hold the blur fade, and runs
 // agg::stack_blur_rgba32 on it. Does NOT composite it onto the canvas and does NOT delete it -- the caller owns
 // the returned bitmap (either compositing-then-deleting it immediately, as UI_SkinCanvas_DrawSoftShadow_Impl
@@ -793,14 +783,10 @@ static bool UI_SkinCanvas_DrawSoftShadow_Impl(GRP2DCANVAS* canvas, double minx, 
 
 
 // Thin wrapper around UI_SkinCanvas_DrawSoftShadow_Impl (renamed above), kept under the ORIGINAL name so the
-// two non-Form call sites are untouched. Tallies the call into diagskin_shadowcalls (see its own comment above).
+// two non-Form call sites are untouched.
 static bool UI_SkinCanvas_DrawSoftShadow(GRP2DCANVAS* canvas, double minx, double miny, double maxx, double maxy, double rTL, double rTR, double rBR, double rBL, UI_COLOR* shadow_color, int blur_radius)
 {
-  bool result = UI_SkinCanvas_DrawSoftShadow_Impl(canvas, minx, miny, maxx, maxy, rTL, rTR, rBR, rBL, shadow_color, blur_radius);
-
-  diagskin_shadowcalls++;
-
-  return result;
+  return UI_SkinCanvas_DrawSoftShadow_Impl(canvas, minx, miny, maxx, maxy, rTL, rTR, rBR, rBL, shadow_color, blur_radius);
 }
 
 
@@ -898,21 +884,14 @@ static bool UI_SkinCanvas_DrawSoftRingGlow(GRP2DCANVAS* canvas, double cx, doubl
   UI_SkinCanvas_CompositeSoftShadowBitmap(canvas, bitmap, minx, miny, blur_radius);
   GRPFACTORY::GetInstance().DeleteBitmap(bitmap);
 
-  diagskin_shadowcalls++;
   return true;
 }
 
 
-// Box-shadow entry point used ONLY by Draw_Form (the one path dashboard.css actually exercises -- "form.card"
-// is the sole "box-shadow" rule in the stylesheet, per the 2026-09 investigation). Reuses the already-blurred
-// bitmap cached on "element_form" when the shadow's appearance (size/corner-radii/blur/colour) has not changed
-// since it was last rendered, instead of rebuilding it from scratch on every redraw -- measured ~6.5ms per
-// call before this cache, almost entirely in the build step (fill passes + per-pixel rounded-rect test + AGG
-// blur), not the composite step, which still runs every time (see UI_SkinCanvas_CompositeSoftShadowBitmap).
-// The other 2 call sites (the generic DrawElementBoxShadow helper, used by images/animations; and the
-// ProgressBar track shadow) keep using the uncached UI_SkinCanvas_DrawSoftShadow above -- dashboard.css does
-// not author box-shadow on those element types today, so they were left as-is rather than widening this
-// change beyond what was actually measured.
+// Box-shadow entry point used ONLY by Draw_Form. Reuses the already-blurred bitmap cached on "element_form"
+// when the shadow's appearance (size/corner-radii/blur/colour) has not changed since it was last rendered,
+// instead of rebuilding it from scratch on every redraw. The other call sites (generic DrawElementBoxShadow
+// for images/animations; ProgressBar track shadow) keep using the uncached UI_SkinCanvas_DrawSoftShadow above.
 static bool UI_SkinCanvas_DrawSoftShadow_FormCached(GRP2DCANVAS* canvas, UI_ELEMENT_FORM* element_form, double minx, double miny, double maxx, double maxy, double rTL, double rTR, double rBR, double rBL, UI_COLOR* shadow_color, int blur_radius)
 {
   if(!canvas || !element_form) return false;
@@ -922,18 +901,11 @@ static bool UI_SkinCanvas_DrawSoftShadow_FormCached(GRP2DCANVAS* canvas, UI_ELEM
 
   GRPBITMAP* bitmap = element_form->ShadowCache_GetIfMatches(shape_w, shape_h, rTL, rTR, rBR, rBL, blur_radius, shadow_color);
 
-  if(bitmap)
+  if(!bitmap)
     {
-      diagskin_shadowcachehits++;
-    }
-   else
-    {
-      diagskin_shadowcachemiss++;
-
       bitmap = UI_SkinCanvas_BuildSoftShadowBitmap(shape_w, shape_h, rTL, rTR, rBR, rBL, shadow_color, blur_radius);
       if(!bitmap)
         {
-          diagskin_shadowcalls++;
           return false;
         }
 
@@ -944,8 +916,6 @@ static bool UI_SkinCanvas_DrawSoftShadow_FormCached(GRP2DCANVAS* canvas, UI_ELEM
     }
 
   UI_SkinCanvas_CompositeSoftShadowBitmap(canvas, bitmap, minx, miny, blur_radius);
-
-  diagskin_shadowcalls++;
 
   return true;
 }

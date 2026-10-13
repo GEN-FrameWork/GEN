@@ -296,6 +296,13 @@ bool UI_MANAGER::Load(XPATH& pathfile, GRPSCREEN* screen, int viewportindex)
         }
     }
 
+  // Layout #[TRANSLATE_N] was resolved during parse when translation is active; remember the language so
+  // Update() does not re-walk until SetActual() changes it.
+  if(status && GEN_XTRANSLATION.IsInitialized())
+    {
+      layout_translate_language = GEN_XTRANSLATION.GetActual();
+    }
+
   return status;
 }
 
@@ -1270,6 +1277,16 @@ bool UI_MANAGER::Update(XCHAR* layoutname)
 bool UI_MANAGER::Update()
 {
   bool status = false;
+
+  // Re-apply #[TRANSLATE_N] only when the active language changes (not every frame, not via the app).
+  if(GEN_XTRANSLATION.IsInitialized())
+    {
+      XDWORD lang = GEN_XTRANSLATION.GetActual();
+      if(lang != layout_translate_language)
+        {
+          Layouts_ApplyTranslations();
+        }
+    }
 
   #ifdef GRP_SCREEN_CUSTOMCHROMES_ACTIVE
 
@@ -3176,6 +3193,29 @@ bool UI_MANAGER::ChangeAutomaticTextElementValue(UI_ELEMENT* element, XSTRING* m
   if(!maskvalue)      return false;
   if(!maskresolved)   return false;
 
+  if(maskvalue->Find(UI_MANAGER_LAYOUT_TEXT_TRANSLATE, true) == 0)
+    {
+      if(!GEN_XTRANSLATION.IsInitialized()) return false;
+
+      XSTRING maskID;
+      int     ID = 0;
+
+      maskID  = UI_MANAGER_LAYOUT_TEXT_TRANSLATE;
+      maskID += NL("%d");
+
+      if(maskvalue->UnFormat(maskID.Get(), &ID))
+        {
+          XCHAR* translate_str = GEN_XTRANSLATION.Translate_GetSentence((XDWORD)ID);
+          if(translate_str)
+            {
+              maskresolved->Set(translate_str);
+              return true;
+            }
+        }
+
+      return false;
+    }
+
   UI_ELEMENT* father = element->GetFather();
   if(father)
     {
@@ -3308,6 +3348,10 @@ bool UI_MANAGER::ChangeTextElementValue(UI_LAYOUT* layout, UI_ELEMENT* element)
                                           XSTRING           resolve;
 
                                           if(element_text->GetMaskText()->IsEmpty())    return false;
+
+                                          // Static #[TRANSLATE_N] labels are applied at load / Layouts_ApplyTranslations(),
+                                          // not on the per-frame live-mask path (UserInterface_ChangeLiteralText).
+                                          if(MaskText_IsTranslateOnly(element_text->GetMaskText())) break;
                                                                                                                          
                                           change = ChangeTextElementValue(element_text, element_text->GetMaskText(), resolve);   
                                                                                                             
@@ -3409,6 +3453,8 @@ bool UI_MANAGER::ChangeTextElementValue(UI_LAYOUT* layout, UI_ELEMENT* element)
 
                                           if(element_textbox->GetMaskText()->IsEmpty()) return false;
 
+                                          if(MaskText_IsTranslateOnly(element_textbox->GetMaskText())) break;
+
                                           change = ChangeTextElementValue(element_textbox, element_textbox->GetMaskText(), resolve);                                      
                                           if(change) 
                                             {                                             
@@ -3482,16 +3528,278 @@ bool UI_MANAGER::ChangeTextElementValue(UI_LAYOUT* layout, UI_ELEMENT* element)
 
 
 /**-------------------------------------------------------------------------------------------------------------------
-* 
-* @fn         bool UI_MANAGER::SubscribeInputEvents(bool active)
-* @brief      Subscribe input events
+*
+* @fn         bool UI_MANAGER::MaskText_HasTranslate(XSTRING* masktext)
+* @brief      True when masktext contains at least one #[TRANSLATE_N] token.
 * @ingroup    USERINTERFACE
-* 
-* @param[in]  active : Active value.
-* 
-* @return     bool : true if the operation is successful; otherwise false.
-* 
-* --------------------------------------------------------------------------------------------------------------------*/
+*
+*---------------------------------------------------------------------------------------------------------------------*/
+bool UI_MANAGER::MaskText_HasTranslate(XSTRING* masktext)
+{
+  if(!masktext || masktext->IsEmpty()) return false;
+
+  XSTRING maskvalue;
+  int     start = 0;
+
+  for(;;)
+    {
+      int pos = GetOutputTextChangeID(masktext, start, maskvalue);
+      if(pos == XSTRING_NOTFOUND) break;
+
+      if(maskvalue.Find(UI_MANAGER_LAYOUT_TEXT_TRANSLATE, true) == 0) return true;
+
+      start = pos + maskvalue.GetSize() + 3;
+    }
+
+  return false;
+}
+
+
+/**-------------------------------------------------------------------------------------------------------------------
+*
+* @fn         bool UI_MANAGER::MaskText_IsTranslateOnly(XSTRING* masktext)
+* @brief      True when every #[...] token in masktext is a TRANSLATE_N id (no live data masks).
+* @ingroup    USERINTERFACE
+*
+*---------------------------------------------------------------------------------------------------------------------*/
+bool UI_MANAGER::MaskText_IsTranslateOnly(XSTRING* masktext)
+{
+  if(!masktext || masktext->IsEmpty()) return false;
+
+  XSTRING maskvalue;
+  int     start     = 0;
+  bool    any       = false;
+
+  for(;;)
+    {
+      int pos = GetOutputTextChangeID(masktext, start, maskvalue);
+      if(pos == XSTRING_NOTFOUND) break;
+
+      any = true;
+      if(maskvalue.Find(UI_MANAGER_LAYOUT_TEXT_TRANSLATE, true) != 0) return false;
+
+      start = pos + maskvalue.GetSize() + 3;
+    }
+
+  return any;
+}
+
+
+/**-------------------------------------------------------------------------------------------------------------------
+*
+* @fn         bool UI_MANAGER::ResolveTranslateMasks(XSTRING* masktext, XSTRING& resolved)
+* @brief      Builds display text by replacing every #[TRANSLATE_N] in masktext with the current sentence.
+*             Fails (false) if masktext has no TRANSLATE_ tokens or also contains non-translate masks.
+* @ingroup    USERINTERFACE
+*
+*---------------------------------------------------------------------------------------------------------------------*/
+bool UI_MANAGER::ResolveTranslateMasks(XSTRING* masktext, XSTRING& resolved)
+{
+  resolved.Empty();
+
+  if(!GEN_XTRANSLATION.IsInitialized()) return false;
+  if(!MaskText_IsTranslateOnly(masktext)) return false;
+
+  XSTRING maskvalue;
+  int     start = 0;
+
+  for(;;)
+    {
+      int pos = GetOutputTextChangeID(masktext, start, maskvalue);
+      if(pos == XSTRING_NOTFOUND)
+        {
+          XSTRING tail;
+          masktext->Copy(start, tail);
+          resolved.Add(tail);
+          break;
+        }
+
+      XSTRING head;
+      masktext->Copy(start, pos, head);
+      resolved.Add(head);
+
+      XSTRING maskID;
+      int     ID = 0;
+
+      maskID  = UI_MANAGER_LAYOUT_TEXT_TRANSLATE;
+      maskID += NL("%d");
+
+      if(!maskvalue.UnFormat(maskID.Get(), &ID)) return false;
+
+      XCHAR* translate_str = GEN_XTRANSLATION.Translate_GetSentence((XDWORD)ID);
+      if(!translate_str) return false;
+
+      resolved.Add(translate_str);
+      start = pos + maskvalue.GetSize() + 3;
+    }
+
+  return !resolved.IsEmpty();
+}
+
+
+/**-------------------------------------------------------------------------------------------------------------------
+*
+* @fn         bool UI_MANAGER::ApplyTranslateMasksToElement(UI_LAYOUT* layout, UI_ELEMENT* element)
+* @brief      If element carries translate-only masks, re-resolve into visible text and dirty on change.
+* @ingroup    USERINTERFACE
+*
+*---------------------------------------------------------------------------------------------------------------------*/
+bool UI_MANAGER::ApplyTranslateMasksToElement(UI_LAYOUT* layout, UI_ELEMENT* element)
+{
+  if(!layout || !element) return false;
+
+  bool status = true;
+
+  switch(element->GetType())
+    {
+      case UI_ELEMENT_TYPE_TEXT      : { UI_ELEMENT_TEXT* element_text = (UI_ELEMENT_TEXT*)element;
+                                         if(!element_text->GetMaskText()->IsEmpty() && MaskText_IsTranslateOnly(element_text->GetMaskText()))
+                                           {
+                                             XSTRING resolve;
+                                             if(ResolveTranslateMasks(element_text->GetMaskText(), resolve))
+                                               {
+                                                 if(element_text->GetText()->Compare(resolve.Get(), true))
+                                                   {
+                                                     element_text->GetText()->Set(resolve);
+
+                                                     if(layout->GetSkin() && layout->GetSkin()->GetDrawMode() == UI_SKIN_DRAWMODE_CANVAS)
+                                                       {
+                                                         UI_SKINCANVAS* ui_skincanvas = (UI_SKINCANVAS*)layout->GetSkin();
+                                                         UI_ELEMENT*    father        = element->GetFather();
+                                                         double         width         = 0.0f;
+                                                         double         height        = 0.0f;
+
+                                                         if(father)
+                                                           {
+                                                             width  = father->GetBoundaryLine()->width;
+                                                             height = father->GetBoundaryLine()->height;
+                                                           }
+                                                          else if(ui_skincanvas->GetCanvas())
+                                                           {
+                                                             width  = ui_skincanvas->GetCanvas()->GetWidth();
+                                                             height = ui_skincanvas->GetCanvas()->GetHeight();
+                                                           }
+
+                                                         element->GetBoundaryLine()->height = 0;
+                                                         element->GetBoundaryLine()->width  = 0;
+
+                                                         ui_skincanvas->CalculeBoundaryLine_AllElements(element, false);
+                                                         ui_skincanvas->CalculePosition(element, width, height);
+
+                                                         if(father && father->IsFlexContainer())
+                                                           {
+                                                             UI_LAYOUTENGINE::RunLayout(father, UI_LAYOUTSTRATEGY_CSS);
+                                                           }
+
+                                                         if(father) Elements_SetToRedraw(father);
+                                                         Elements_SetToRedraw(element);
+                                                       }
+                                                      else
+                                                       {
+                                                         Elements_SetToRedraw(element);
+                                                       }
+                                                   }
+                                               }
+                                              else
+                                               {
+                                                 status = false;
+                                               }
+                                           }
+                                       }
+                                       break;
+
+      case UI_ELEMENT_TYPE_TEXTBOX   : { UI_ELEMENT_TEXTBOX* element_textbox = (UI_ELEMENT_TEXTBOX*)element;
+                                         if(!element_textbox->GetMaskText()->IsEmpty() && MaskText_IsTranslateOnly(element_textbox->GetMaskText()))
+                                           {
+                                             XSTRING resolve;
+                                             if(ResolveTranslateMasks(element_textbox->GetMaskText(), resolve))
+                                               {
+                                                 if(element_textbox->GetText()->Compare(resolve.Get(), true))
+                                                   {
+                                                     element_textbox->GetText()->Set(resolve);
+                                                     Elements_SetToRedraw(element);
+                                                   }
+                                               }
+                                              else
+                                               {
+                                                 status = false;
+                                               }
+                                           }
+                                       }
+                                       break;
+
+      default                        : break;
+    }
+
+  for(XDWORD c=0; c<element->GetComposeElements()->GetSize(); c++)
+    {
+      UI_ELEMENT* subelement = element->GetComposeElements()->Get(c);
+      if(subelement)
+        {
+          if(!ApplyTranslateMasksToElement(layout, subelement)) status = false;
+        }
+    }
+
+  return status;
+}
+
+
+/**-------------------------------------------------------------------------------------------------------------------
+*
+* @fn         bool UI_MANAGER::Layouts_ApplyTranslations(UI_LAYOUT* layout)
+* @brief      Re-resolves #[TRANSLATE_N] masks in one layout into visible text (language-change path).
+* @ingroup    USERINTERFACE
+*
+*---------------------------------------------------------------------------------------------------------------------*/
+bool UI_MANAGER::Layouts_ApplyTranslations(UI_LAYOUT* layout)
+{
+  if(!layout) return false;
+  if(!GEN_XTRANSLATION.IsInitialized()) return false;
+
+  bool status = true;
+
+  for(XDWORD c=0; c<layout->Elements_Get()->GetSize(); c++)
+    {
+      UI_ELEMENT* element = layout->Elements_Get()->Get(c);
+      if(element)
+        {
+          if(!ApplyTranslateMasksToElement(layout, element)) status = false;
+        }
+    }
+
+  return status;
+}
+
+
+/**-------------------------------------------------------------------------------------------------------------------
+*
+* @fn         bool UI_MANAGER::Layouts_ApplyTranslations()
+* @brief      Re-resolves #[TRANSLATE_N] masks in every loaded layout.
+* @ingroup    USERINTERFACE
+*
+*---------------------------------------------------------------------------------------------------------------------*/
+bool UI_MANAGER::Layouts_ApplyTranslations()
+{
+  if(!GEN_XTRANSLATION.IsInitialized()) return false;
+
+  bool status = true;
+
+  for(XDWORD c=0; c<layouts.GetSize(); c++)
+    {
+      UI_LAYOUT* layout = layouts.Get(c);
+      if(layout)
+        {
+          if(!Layouts_ApplyTranslations(layout)) status = false;
+        }
+    }
+
+  if(status)
+    {
+      layout_translate_language = GEN_XTRANSLATION.GetActual();
+    }
+
+  return status;
+}
 bool UI_MANAGER::SubscribeInputEvents(bool active)
 {
   UI_XEVENT_TYPE eventtype[] = {  UI_XEVENT_TYPE_INPUT_CURSOR_MOVE            ,
@@ -5004,9 +5312,18 @@ UI_ELEMENT* UI_MANAGER::GetLayoutElement_Text(XFILEXMLELEMENT* node, UI_LAYOUT* 
   
   if(havemask)
     {
+      // Keep the source mask (including #[TRANSLATE_N]) so language changes can re-resolve without reload.
       element_text->GetMaskText()->Set(text.Get());
       element_text->GetText()->Empty();
-      
+
+      if(GEN_XTRANSLATION.IsInitialized() && MaskText_IsTranslateOnly(element_text->GetMaskText()))
+        {
+          XSTRING resolve;
+          if(ResolveTranslateMasks(element_text->GetMaskText(), resolve))
+            {
+              element_text->GetText()->Set(resolve);
+            }
+        }
     } 
    else
     { 
@@ -5018,69 +5335,6 @@ UI_ELEMENT* UI_MANAGER::GetLayoutElement_Text(XFILEXMLELEMENT* node, UI_LAYOUT* 
   if(outstyle.Get(NL("maxsizetext"), maxsizetext))
     {
       element_text->SetMaxSizeText((XDWORD)maxsizetext);
-    }
-
-  if(!element_text->GetMaskText()->IsEmpty()) 
-    {
-      XSTRING  maskvalue;
-      XSTRING  maskresolved;
-      XSTRING  _text;
-      int      start      = 0;
-      int      new_start  = XSTRING_NOTFOUND;
-      bool     change     = false;
-  
-      do{ int new_start = GEN_USERINTERFACE.GetOutputTextChangeID(element_text->GetMaskText(), start, maskvalue);
-          if(new_start != XSTRING_NOTFOUND)
-            {                                    
-              if(maskvalue.Find(UI_MANAGER_LAYOUT_TEXT_TRANSLATE, true) != XSTRING_NOTFOUND)
-                {
-                  XCHAR*    translate_str  = NULL;
-                  XSTRING   maskID;
-                  int       ID             = 0;
-
-                  maskID  = UI_MANAGER_LAYOUT_TEXT_TRANSLATE;
-                  maskID += NL("%d");
-
-                  maskvalue.UnFormat(maskID.Get(), &ID);
-
-                  translate_str = GEN_XTRANSLATION.Translate_GetSentence(ID);
-                  if(translate_str)  maskresolved.Set(translate_str);
-                } 
-  
-              if(!maskresolved.IsEmpty()) 
-                {
-                  element_text->GetMaskText()->DeleteCharacters(new_start, maskvalue.GetSize() +3 ); 
-                  element_text->GetMaskText()->Insert(maskresolved, new_start);  
-                  change = true;                
-                }
-            }
-
-        } while(new_start != XSTRING_NOTFOUND);    
-
-
-      if(change)
-        {
-          havemask = false;
-
-          text = element_text->GetMaskText()->Get();
-          if(text.Find(UI_MANAGER_LAYOUT_TEXT_INI, true) != XSTRING_NOTFOUND) 
-            {
-              if(text.Find(UI_MANAGER_LAYOUT_TEXT_END, true) != XSTRING_NOTFOUND)  havemask = true;
-            }
-  
-          if(havemask)
-            {
-              element_text->GetMaskText()->Set(text.Get());
-              element_text->GetText()->Empty();
-      
-            } 
-           else
-            { 
-              element_text->GetMaskText()->Empty();
-              element_text->GetText()->Set(text.Get());
-            } 
-         }
-  
     }
   
   GetLayoutElement_CalculateBoundaryLine(layout, element_text);
@@ -5192,44 +5446,18 @@ UI_ELEMENT* UI_MANAGER::GetLayoutElement_TextBox(XFILEXMLELEMENT* node, UI_LAYOU
         }
     }
   
-  if(!text.IsEmpty()) 
-    {
-      XSTRING  value;
-      XSTRING  resolved;      
-      int      start      = 0;
-      int      new_start  = XSTRING_NOTFOUND;
-      bool     change     = false;
-  
-      do{ int new_start = GEN_USERINTERFACE.GetOutputTextChangeID(&text, start, value);
-          if(new_start != XSTRING_NOTFOUND)
-            {                                    
-              if(value.Find(UI_MANAGER_LAYOUT_TEXT_TRANSLATE, true) != XSTRING_NOTFOUND)
-                {
-                  XCHAR*    translate_str  = NULL;
-                  XSTRING   IDstr;
-                  int       ID             = 0;
-
-                  IDstr  = UI_MANAGER_LAYOUT_TEXT_TRANSLATE;
-                  IDstr += NL("%d");
-
-                  value.UnFormat(IDstr.Get(), &ID);
-
-                  translate_str = GEN_XTRANSLATION.Translate_GetSentence(ID);
-                  if(translate_str) resolved.Set(translate_str);
-                } 
-  
-              if(!resolved.IsEmpty()) 
-                {
-                  text.DeleteCharacters(new_start, value.GetSize() +3 ); 
-                  text.Insert(resolved, new_start);  
-                  change = true;                
-                }
-            }
-
-        } while(new_start != XSTRING_NOTFOUND);      
-    }
-
+  // Keep #[TRANSLATE_N] in MaskText so language changes can re-resolve without reload.
   element_textbox->GetMaskText()->Set(text);
+  element_textbox->GetText()->Empty();
+
+  if(GEN_XTRANSLATION.IsInitialized() && MaskText_IsTranslateOnly(element_textbox->GetMaskText()))
+    {
+      XSTRING resolve;
+      if(ResolveTranslateMasks(element_textbox->GetMaskText(), resolve))
+        {
+          element_textbox->GetText()->Set(resolve);
+        }
+    }
 
   GetLayoutElement_CalculateBoundaryLine(layout, element_textbox, true);
 
@@ -9046,6 +9274,8 @@ void UI_MANAGER::Clean()
   preselect_element   = NULL;
 
   virtualkeyboard     = NULL;
+
+  layout_translate_language = XLANGUAGE_ISO_639_3_CODE_INVALID;
 }
 
 

@@ -65,16 +65,19 @@ class XWINDOWSCONSOLE : public XCONSOLE
     static bool             Generate                        ();
     static bool             Close                           ();
 
+    // Restore console cursor after Ctrl-C/Z/Break/close (handler may skip the destructor).
+    static bool             RestoreCursor                   ();
+
   private:
 
     static void             SendEnterKey                    ();
 
     void                    Clean                           ();
-    bool                    RestoreCursorOrigin             ();
+    static bool             RestoreCursorOrigin             ();
 
-    unsigned long           cursororiginsize;
-    bool                    cursororiginvisible;
-    bool                    cursororiginsaved;
+    static unsigned long    cursororiginsize;
+    static bool             cursororiginvisible;
+    static bool             cursororiginsaved;
 };
 
 

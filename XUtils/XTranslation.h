@@ -70,9 +70,12 @@ class XTRANSLATION
     bool                              Ini                                 ();
     #endif
 
+    bool                              IsInitialized                       ();
+
     XDWORD                            GetActual                           ();
     bool                              SetActual                           ();
     virtual bool                      SetActual                           (XDWORD code);
+    bool                              SetActual_Next                      ();
 
     bool                              Translate_Add                       (XDWORD ID, XCHAR* sentence, XDWORD fixed);
     XCHAR*                            Translate_GetSentence               (XDWORD ID);

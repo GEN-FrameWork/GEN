@@ -59,6 +59,11 @@
 /*---- GENERAL VARIABLE ----------------------------------------------------------------------------------------------*/
 
 
+unsigned long XWINDOWSCONSOLE::cursororiginsize    = 0;
+bool          XWINDOWSCONSOLE::cursororiginvisible = true;
+bool          XWINDOWSCONSOLE::cursororiginsaved   = false;
+
+
 
 /*---- CLASS MEMBERS -------------------------------------------------------------------------------------------------*/
 
@@ -118,9 +123,21 @@ XWINDOWSCONSOLE::~XWINDOWSCONSOLE()
 *---------------------------------------------------------------------------------------------------------------------*/
 void XWINDOWSCONSOLE::Clean()
 {
-  cursororiginsize    = 0;
-  cursororiginvisible = true;
-  cursororiginsaved   = false;
+}
+
+
+/**-------------------------------------------------------------------------------------------------------------------
+*
+* @fn         bool XWINDOWSCONSOLE::RestoreCursor()
+* @brief      Show the console cursor again (Ctrl-C/Z safe; no instance required).
+* @ingroup    PLATFORM_WINDOWS
+*
+* @return     bool : true if the cursor was restored.
+*
+*---------------------------------------------------------------------------------------------------------------------*/
+bool XWINDOWSCONSOLE::RestoreCursor()
+{
+  return RestoreCursorOrigin();
 }
 
 
@@ -136,8 +153,6 @@ bool XWINDOWSCONSOLE::RestoreCursorOrigin()
 {
   #ifndef APPFLOW_GRAPHICS_NOTCONSOLE_ACTIVE
 
-  if(!cursororiginsaved) return false;
-
   HANDLE              hconsole = GetStdHandle(STD_OUTPUT_HANDLE);
   CONSOLE_CURSOR_INFO cursorinfo;
 
@@ -145,11 +160,21 @@ bool XWINDOWSCONSOLE::RestoreCursorOrigin()
 
   if(!GetConsoleCursorInfo(hconsole, &cursorinfo))
     {
-      cursorinfo.dwSize = 25;
+      cursorinfo.dwSize   = 25;
+      cursorinfo.bVisible = TRUE;
     }
 
-  if(cursororiginsize > 0) cursorinfo.dwSize = (DWORD)cursororiginsize;
-  cursorinfo.bVisible = cursororiginvisible ? TRUE : FALSE;
+  if(cursororiginsaved)
+    {
+      if(cursororiginsize > 0) cursorinfo.dwSize = (DWORD)cursororiginsize;
+      cursorinfo.bVisible = cursororiginvisible ? TRUE : FALSE;
+    }
+   else
+    {
+      // Abrupt Ctrl-C / exit may skip the save path: force a visible cursor for the parent CMD.
+      if(cursorinfo.dwSize < 1) cursorinfo.dwSize = 25;
+      cursorinfo.bVisible = TRUE;
+    }
 
   if(!SetConsoleCursorInfo(hconsole, &cursorinfo)) return false;
 
@@ -694,16 +719,7 @@ bool XWINDOWSCONSOLE::Close()
   #ifndef APPFLOW_GRAPHICS_NOTCONSOLE_ACTIVE
 
   // Close() is static: show the cursor again before FreeConsole detaches the parent CMD.
-  {
-    HANDLE              hconsole = GetStdHandle(STD_OUTPUT_HANDLE);
-    CONSOLE_CURSOR_INFO cursorinfo;
-
-    if(hconsole && (hconsole != INVALID_HANDLE_VALUE) && GetConsoleCursorInfo(hconsole, &cursorinfo))
-      {
-        cursorinfo.bVisible = TRUE;
-        SetConsoleCursorInfo(hconsole, &cursorinfo);
-      }
-  }
+  RestoreCursor();
 
   #endif
 

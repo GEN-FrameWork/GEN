@@ -181,12 +181,20 @@ class UI_MANAGER : public XOBSERVER, public XSUBJECT
 
     bool                            Layouts_SetDesignSize                     (UI_LAYOUT* layout, XDWORD width, XDWORD height);
 
+    bool                            Layouts_ApplyTranslations                 ();
+    bool                            Layouts_ApplyTranslations                 (UI_LAYOUT* layout);
+
   private:
                                     UI_MANAGER                                ();
                                     UI_MANAGER                                (UI_MANAGER const&);
     virtual                        ~UI_MANAGER                                ();
 
     void                            operator =                                (UI_MANAGER const&);
+
+    bool                            MaskText_HasTranslate                     (XSTRING* masktext);
+    bool                            MaskText_IsTranslateOnly                  (XSTRING* masktext);
+    bool                            ResolveTranslateMasks                     (XSTRING* masktext, XSTRING& resolved);
+    bool                            ApplyTranslateMasksToElement              (UI_LAYOUT* layout, UI_ELEMENT* element);
 
     UI_SKIN*                        Skin_Create                               (XSTRING& skintypename, UI_SKIN_DRAWMODE drawmode, GRPSCREEN* screen, int viewportindex = 0);
 
@@ -306,6 +314,8 @@ class UI_MANAGER : public XOBSERVER, public XSUBJECT
     UI_ELEMENT*                     preselect_element;
 
     UI_VIRTUALKEYBOARD*             virtualkeyboard;
+
+    XDWORD                          layout_translate_language;
 };
 
 

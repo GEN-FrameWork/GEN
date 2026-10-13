@@ -53,19 +53,6 @@
 #include "GEN_Control.h"
 
 
-/*---- DIAGNOSTIC COUNTERS ------------------------------------------------------------------------------------------
-*  Counts every UI_SKIN::Draw() call THIS FRAME -- top-level AND every recursive descendant call made from
-*  Draw_Form()/Draw_Menu() etc, since those re-enter this exact same Draw() dispatcher for each child. Read and
-*  reset once per frame from UI_SYSTEM::DrawFrame() (extern-declared there, no header change needed) -- kept here
-*  (rather than removed outright) because that external reader still exists.
-* --------------------------------------------------------------------------------------------------------------------*/
-XDWORD diagskin_visits  = 0;      // every Draw() call, including invisible elements that bail out immediately
-XDWORD diagskin_visible = 0;      // calls where IsVisible() was true (i.e. did real administrative work)
-XDWORD diagskin_dirty   = 0;      // calls where MustReDraw() was true (i.e. did real painting work)
-
-
-
-
 /*---- GENERAL VARIABLE ----------------------------------------------------------------------------------------------*/
 
 
@@ -1043,8 +1030,6 @@ bool UI_SKIN::Elements_SetToRedraw(UI_ELEMENT* element, bool recursive)
 * --------------------------------------------------------------------------------------------------------------------*/
 bool UI_SKIN::Draw(UI_ELEMENT* element)
 {
-  diagskin_visits++;
-
   if(!element) return false;
 
   // Modal layer (option B): while the opaque offscreen cache is valid, skip layout Draw of the modal root —
@@ -1097,9 +1082,6 @@ bool UI_SKIN::Draw(UI_ELEMENT* element)
 
       return false;
     }
-
-  diagskin_visible++;
-  if(element->MustReDraw()) diagskin_dirty++;
 
   if(element->IsBlinking())
     {

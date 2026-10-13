@@ -51,6 +51,7 @@
 #include "XWINDOWSTrace.h"
 #include "XWINDOWSRand.h"
 #include "XWINDOWSSleep.h"
+#include "XWINDOWSConsole.h"
 
 #ifdef XSYSTEM_ACTIVE
 #include "XWINDOWSSystem.h"
@@ -1490,18 +1491,22 @@ BOOL WINAPI Exception_ConsoleHandler(DWORD fdwctrltype)
                                   #ifdef APPFLOW_ACTIVE
                                   if(app) app->SetExitType(APPFLOWBASE_EXITTYPE_BY_USER);
                                   #endif
+                                  // Default handler aborts without running ~XWINDOWSCONSOLE: restore CMD cursor now.
+                                  XWINDOWSCONSOLE::RestoreCursor();
                                   return FALSE;
 
       case CTRL_C_EVENT         : Exception_Printf(false, NL("EVENT"), NL("Ctrl-C event."));
                                   #ifdef APPFLOW_ACTIVE
                                   if(app) app->SetExitType(APPFLOWBASE_EXITTYPE_BY_USER);
                                   #endif
+                                  XWINDOWSCONSOLE::RestoreCursor();
                                   return FALSE;
 
       case CTRL_CLOSE_EVENT     :
                                   #ifdef APPFLOW_ACTIVE
                                   if(app) app->SetExitType(APPFLOWBASE_EXITTYPE_BY_USER);
                                   #endif
+                                  XWINDOWSCONSOLE::RestoreCursor();
                                   FreeConsole();         // Detachxconsole
                                   break;
 
@@ -1509,6 +1514,7 @@ BOOL WINAPI Exception_ConsoleHandler(DWORD fdwctrltype)
                                   #ifdef APPFLOW_ACTIVE
                                   if(app) app->SetExitType(APPFLOWBASE_EXITTYPE_BY_SHUTDOWN);
                                   #endif
+                                  XWINDOWSCONSOLE::RestoreCursor();
                                   FreeConsole();         // Detachxconsole
                                   ExitThread(0);         // Prevent closing.
                                   break;
@@ -1517,6 +1523,7 @@ BOOL WINAPI Exception_ConsoleHandler(DWORD fdwctrltype)
                                   #ifdef APPFLOW_ACTIVE
                                   if(app) app->SetExitType(APPFLOWBASE_EXITTYPE_BY_SHUTDOWN);
                                   #endif
+                                  XWINDOWSCONSOLE::RestoreCursor();
                                   FreeConsole();         // Detachxconsole
                                   ExitThread(0);         // Prevent closing.
                                   break;

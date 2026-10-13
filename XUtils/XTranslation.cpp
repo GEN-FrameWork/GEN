@@ -161,6 +161,19 @@ bool XTRANSLATION::Ini()
 
 
 /**-------------------------------------------------------------------------------------------------------------------
+*
+* @fn         bool XTRANSLATION::IsInitialized()
+* @brief      True after a successful Ini/SetActual (a language code is active).
+* @ingroup    XUTILS
+*
+*---------------------------------------------------------------------------------------------------------------------*/
+bool XTRANSLATION::IsInitialized()
+{
+  return (codelanguage != XLANGUAGE_ISO_639_3_CODE_INVALID);
+}
+
+
+/**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         XDWORD XTRANSLATION::GetActual()
 * @brief      Get actual
@@ -212,21 +225,75 @@ bool XTRANSLATION::SetActual()
 * --------------------------------------------------------------------------------------------------------------------*/
 bool XTRANSLATION::SetActual(XDWORD codelanguage)
 {
+  XDWORD previous;
+
   if(this->codelanguage == codelanguage) return true;
 
   if(!IsLanguageAvailable(codelanguage)) return false;
 
   if(!XTRANSLATION_GEN::GetInstance().IsLanguageAvailable(codelanguage)) return false;
 
+  previous = this->codelanguage;
   this->codelanguage = codelanguage;
 
   Translate_Delete();
 
-  if(!Translate_Load()) return false;
+  if(!Translate_Load())
+    {
+      // Never leave the catalogue empty after a failed switch: restore the previous language.
+      this->codelanguage = previous;
+
+      if(previous != XLANGUAGE_ISO_639_3_CODE_INVALID)
+        {
+          Translate_Delete();
+          if(Translate_Load())
+            {
+              XTRANSLATION_GEN::GetInstance().SetActual(previous);
+            }
+        }
+
+      return false;
+    }
 
   XTRANSLATION_GEN::GetInstance().SetActual(codelanguage);
 
   return true;
+}
+
+
+/**-------------------------------------------------------------------------------------------------------------------
+*
+* @fn         bool XTRANSLATION::SetActual_Next()
+* @brief      Advance to the next language listed in the application catalogue that also exists in GEN.
+* @ingroup    XUTILS
+*
+* @return     bool : true if the operation is successful; otherwise false.
+*
+*---------------------------------------------------------------------------------------------------------------------*/
+bool XTRANSLATION::SetActual_Next()
+{
+  XDWORD n = languageavailables.GetSize();
+  int    start;
+
+  if(n == 0) return false;
+
+  start = GetIndexLanguageByCode(codelanguage);
+  if(start < 0) start = -1;
+
+  for(XDWORD step=1; step<=n; step++)
+    {
+      XDWORD idx  = (XDWORD)((start + (int)step) % (int)n);
+      XDWORD code = languageavailables.Get(idx);
+
+      if(code == XLANGUAGE_ISO_639_3_CODE_INVALID) continue;
+      if(code == codelanguage) continue;
+      if(!XTRANSLATION_GEN::GetInstance().IsLanguageAvailable(code)) continue;
+
+      // Skip catalogue gaps (e.g. language listed but some sentences lack that column).
+      if(SetActual(code)) return true;
+    }
+
+  return false;
 }
 
 
@@ -518,8 +585,35 @@ bool XTRANSLATION::Translate_Load()
                       XFILEJSONARRAY* translationarray  = (XFILEJSONARRAY*)translation->GetValuePointer();
                       if(translationarray)
                         {
-                          XDWORD   sizesentencefixed = (XDWORD)translationarray->GetValues()->Get(0)->GetValueInteger();
-                          XSTRING  sentence          = (XSTRING)translationarray->GetValues()->Get(languageindex+1)->GetValueString();
+                          XDWORD nvalues = translationarray->GetValues()->GetSize();
+                          XDWORD slot    = (XDWORD)(languageindex + 1);
+
+                          // languages[i] maps to translation array slot i+1 (slot 0 is fixed width).
+                          // If this language column is missing, fall back to English, then to the first string.
+                          if(slot >= nvalues)
+                            {
+                              int engindex = GetIndexLanguageByCode(XLANGUAGE_ISO_639_3_CODE_ENG);
+
+                              if((engindex >= 0) && ((XDWORD)(engindex + 1) < nvalues))
+                                {
+                                  slot = (XDWORD)(engindex + 1);
+                                }
+                               else if(nvalues >= 2)
+                                {
+                                  slot = 1;
+                                }
+                               else
+                                {
+                                  continue;
+                                }
+                            }
+
+                          XFILEJSONVALUE* fixedvalue = translationarray->GetValues()->Get(0);
+                          XFILEJSONVALUE* sentencevalue = translationarray->GetValues()->Get(slot);
+                          if(!fixedvalue || !sentencevalue) continue;
+
+                          XDWORD  sizesentencefixed = (XDWORD)fixedvalue->GetValueInteger();
+                          XSTRING sentence          = (XSTRING)sentencevalue->GetValueString();
 
                           Translate_Add(ID, sentence.Get(), sizesentencefixed);
                         }
