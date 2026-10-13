@@ -191,7 +191,10 @@ XDWORD XTRANSLATION::GetActual()
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         bool XTRANSLATION::SetActual()
-* @brief      Activate the OS UI language when it exists in both catalogues; otherwise English.
+* @brief      Fallback language selection when CFG has no valid defaultlanguage:
+*             OS UI language if present in both catalogues, otherwise English.
+*             Prefer APPFLOWCFG::Language_ApplyDefault() for the full sequence
+*             (config → OS → English).
 * @ingroup    XUTILS
 * 
 * @return     bool : true if the operation is successful; otherwise false.

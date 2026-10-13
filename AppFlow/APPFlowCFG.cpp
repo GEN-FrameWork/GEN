@@ -52,6 +52,15 @@
 #endif
 #include "DIODNSResolver.h"
 
+#ifdef APPFLOW_CFG_GENERAL_ACTIVE
+#ifdef XTRANSLATION_ACTIVE
+#include "XLanguage_ISO_639_3.h"
+#include "XTranslation.h"
+#include "XTranslation_GEN.h"
+#include "XFileINI.h"
+#endif
+#endif
+
 
 /*---- PRECOMPILATION INCLUDES ---------------------------------------------------------------------------------------*/
 
@@ -137,7 +146,12 @@ bool APPFLOWCFG::DoVariableMapping()
     { 
       CFGvalue->SetModeRemoteMix((XFILECFG_MODEREMOTEMIX)(CFGvalue->GetModeRemoteMix() | XFILECFG_MODEREMOTEMIX_NOTDELADDKEYS));
     }
-  #endif  
+  #endif
+
+  #ifdef XTRANSLATION_ACTIVE
+  // Last key of the general group: ISO 639 alpha code; remark is the English name.
+  AddValue(XFILECFG_VALUETYPE_STRING, APPFLOW_CFG_SECTION_GENERAL, APPFLOW_CFG_DEFAULTLANGUAGE, &defaultlanguage, NL(""), APPFLOW_CFG_DEFAULT_REMARK_COLUMN);
+  #endif
   #endif
 
   //---------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -336,6 +350,10 @@ bool APPFLOWCFG::DoDefault()
   #ifdef XTRACE_ACTIVE
   SetDefaultTraceTargets();
   #endif
+  #ifdef XTRANSLATION_ACTIVE
+  defaultlanguage.Empty();
+  DefaultLanguage_UpdateRemark();
+  #endif
   #endif
 
 
@@ -412,6 +430,27 @@ bool APPFLOWCFG::DoDefault()
 
 
 /**-------------------------------------------------------------------------------------------------------------------
+*
+* @fn         bool APPFLOWCFG::LoadReadjustment()
+* @brief      Post-load CFG adjustments (e.g. defaultlanguage remark from ISO English name).
+* @ingroup    APPFLOW
+*
+* @return     bool : true if the operation is successful; otherwise false.
+*
+*---------------------------------------------------------------------------------------------------------------------*/
+bool APPFLOWCFG::LoadReadjustment()
+{
+  #ifdef APPFLOW_CFG_GENERAL_ACTIVE
+  #ifdef XTRANSLATION_ACTIVE
+  DefaultLanguage_UpdateRemark();
+  #endif
+  #endif
+
+  return XFILECFG::LoadReadjustment();
+}
+
+
+/**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         bool APPFLOWCFG::End()
 * @brief      End the object
@@ -427,6 +466,9 @@ bool APPFLOWCFG::End()
   #ifdef XTRACE_ACTIVE
   tracetargets.DeleteContents();
   tracetargets.DeleteAll();
+  #endif
+  #ifdef XTRANSLATION_ACTIVE
+  defaultlanguage.Empty();
   #endif
   #endif
 
@@ -523,6 +565,184 @@ void APPFLOWCFG::SetShowDetailInfo(XWORD detail)
 {
   showdetailinfo.Format(NL("%04X"), detail);
 }
+
+
+#ifdef XTRANSLATION_ACTIVE
+/**-------------------------------------------------------------------------------------------------------------------
+*
+* @fn         XSTRING* APPFLOWCFG::GetDefaultLanguage()
+* @brief      Get default language ISO alpha code from CFG (empty = no preference).
+* @ingroup    APPFLOW
+*
+* @return     XSTRING* : Pointer to the requested string; NULL if it is not available.
+*
+*---------------------------------------------------------------------------------------------------------------------*/
+XSTRING* APPFLOWCFG::GetDefaultLanguage()
+{
+  return &defaultlanguage;
+}
+
+
+/**-------------------------------------------------------------------------------------------------------------------
+*
+* @fn         bool APPFLOWCFG::SetDefaultLanguage(XCHAR* codealpha)
+* @brief      Set default language from ISO alpha2/alpha3; stores canonical alpha3 and updates remark.
+* @ingroup    APPFLOW
+*
+* @param[in]  codealpha : ISO 639 alpha2 or alpha3 (NULL/empty clears the preference).
+*
+* @return     bool : true if the operation is successful; otherwise false.
+*
+*---------------------------------------------------------------------------------------------------------------------*/
+bool APPFLOWCFG::SetDefaultLanguage(XCHAR* codealpha)
+{
+  XLANGUAGE_ISO_639_3 iso;
+  XDWORD              code = XLANGUAGE_ISO_639_3_CODE_INVALID;
+  XSTRING             alpha3;
+
+  if(!codealpha || !(*codealpha))
+    {
+      defaultlanguage.Empty();
+      DefaultLanguage_UpdateRemark();
+      return true;
+    }
+
+  code = iso.Code_GetByCodeAlpha3(codealpha);
+  if(code == XLANGUAGE_ISO_639_3_CODE_INVALID)
+    {
+      code = iso.Code_GetByCodeAlpha2(codealpha);
+    }
+
+  if(code == XLANGUAGE_ISO_639_3_CODE_INVALID) return false;
+  if(!iso.CodeAlpha3_GetByCode(code, alpha3)) return false;
+
+  defaultlanguage = alpha3;
+  DefaultLanguage_UpdateRemark();
+
+  return true;
+}
+
+
+/**-------------------------------------------------------------------------------------------------------------------
+*
+* @fn         bool APPFLOWCFG::SetDefaultLanguage(XDWORD code)
+* @brief      Set default language from ISO 639-3 numeric code; stores alpha3 and updates remark.
+* @ingroup    APPFLOW
+*
+* @param[in]  code : XLANGUAGE_ISO_639_3_CODE value.
+*
+* @return     bool : true if the operation is successful; otherwise false.
+*
+*---------------------------------------------------------------------------------------------------------------------*/
+bool APPFLOWCFG::SetDefaultLanguage(XDWORD code)
+{
+  XLANGUAGE_ISO_639_3 iso;
+  XSTRING             alpha3;
+
+  if(code == XLANGUAGE_ISO_639_3_CODE_INVALID)
+    {
+      defaultlanguage.Empty();
+      DefaultLanguage_UpdateRemark();
+      return true;
+    }
+
+  if(!iso.CodeAlpha3_GetByCode(code, alpha3)) return false;
+
+  defaultlanguage = alpha3;
+  DefaultLanguage_UpdateRemark();
+
+  return true;
+}
+
+
+/**-------------------------------------------------------------------------------------------------------------------
+*
+* @fn         bool APPFLOWCFG::Language_ApplyDefault()
+* @brief      Apply application language: CFG defaultlanguage → OS language → English.
+* @ingroup    APPFLOW
+*
+* @return     bool : true if the operation is successful; otherwise false.
+*
+*---------------------------------------------------------------------------------------------------------------------*/
+bool APPFLOWCFG::Language_ApplyDefault()
+{
+  XDWORD code = DefaultLanguage_ResolveCode();
+
+  DefaultLanguage_UpdateRemark();
+
+  if(code != XLANGUAGE_ISO_639_3_CODE_INVALID)
+    {
+      if(GEN_XTRANSLATION.SetActual(code)) return true;
+    }
+
+  return GEN_XTRANSLATION.SetActual();
+}
+
+
+/**-------------------------------------------------------------------------------------------------------------------
+*
+* @fn         XDWORD APPFLOWCFG::DefaultLanguage_ResolveCode()
+* @brief      Resolve defaultlanguage CFG string to an ISO 639-3 code (INVALID if empty/unknown).
+* @note       INTERNAL
+* @ingroup    APPFLOW
+*
+*---------------------------------------------------------------------------------------------------------------------*/
+XDWORD APPFLOWCFG::DefaultLanguage_ResolveCode()
+{
+  XLANGUAGE_ISO_639_3 iso;
+  XDWORD              code = XLANGUAGE_ISO_639_3_CODE_INVALID;
+
+  if(defaultlanguage.IsEmpty()) return XLANGUAGE_ISO_639_3_CODE_INVALID;
+
+  code = iso.Code_GetByCodeAlpha3(defaultlanguage.Get());
+  if(code == XLANGUAGE_ISO_639_3_CODE_INVALID)
+    {
+      code = iso.Code_GetByCodeAlpha2(defaultlanguage.Get());
+    }
+
+  return code;
+}
+
+
+/**-------------------------------------------------------------------------------------------------------------------
+*
+* @fn         bool APPFLOWCFG::DefaultLanguage_UpdateRemark()
+* @brief      Set the CFG key remark to the ISO English name of defaultlanguage.
+* @note       INTERNAL
+* @ingroup    APPFLOW
+*
+*---------------------------------------------------------------------------------------------------------------------*/
+bool APPFLOWCFG::DefaultLanguage_UpdateRemark()
+{
+  XLANGUAGE_ISO_639_3          iso;
+  XSTRING                      englishname;
+  XDWORD                       code = DefaultLanguage_ResolveCode();
+  XVECTOR<XFILEINIREMARK*>*    remarks = GetRemarks();
+
+  if(code != XLANGUAGE_ISO_639_3_CODE_INVALID)
+    {
+      iso.EnglishName_GetByCode(code, englishname);
+    }
+
+  if(!remarks) return false;
+
+  for(XDWORD c=0; c<remarks->GetSize(); c++)
+    {
+      XFILEINIREMARK* remark = remarks->Get(c);
+      if(!remark) continue;
+      if(!remark->GetRelativeSection()) continue;
+      if(!remark->GetRelativeKey()) continue;
+
+      if(remark->GetRelativeSection()->Compare(APPFLOW_CFG_SECTION_GENERAL, true) != 0) continue;
+      if(remark->GetRelativeKey()->Compare(APPFLOW_CFG_DEFAULTLANGUAGE, true) != 0) continue;
+
+      remark->GetTextRemark()->Set(englishname.Get());
+      return true;
+    }
+
+  return false;
+}
+#endif // XTRANSLATION_ACTIVE
 
 
 #ifdef XTRACE_ACTIVE
@@ -1931,6 +2151,9 @@ void APPFLOWCFG::Clean()
   showdetailinfo.Empty();
   #ifdef XTRACE_ACTIVE
   ntracetargets = 0;
+  #endif
+  #ifdef XTRANSLATION_ACTIVE
+  defaultlanguage.Empty();
   #endif
   #endif
 

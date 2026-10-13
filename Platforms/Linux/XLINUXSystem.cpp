@@ -308,11 +308,11 @@ bool XLINUXSYSTEM::GetOperativeSystemID(XSTRING& ID)
   int ret = uname(&details);    
   if(ret != 0) return false;
 
+  // sysname + release + machine only. details.version is the verbose uname
+  // build stamp ("#1 SMP PREEMPT_DYNAMIC Thu Jun 5 ...") and blows UI footers.
   ID += details.sysname;      ID += NL(" ");
-  // ID += details.nodename;     ID += NL(" ");
   ID += details.release;      ID += NL(" ");
-  ID += details.version;      ID += NL(" ");
-  ID += details.machine;      ID += NL(" ");
+  ID += details.machine;
   
   return true;
 }

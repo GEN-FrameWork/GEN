@@ -65,6 +65,9 @@
 #ifdef  XTRACE_ACTIVE
 #define APPFLOW_CFG_TRACETARGET                                                       NL("trace_target")
 #endif
+#ifdef XTRANSLATION_ACTIVE
+#define APPFLOW_CFG_DEFAULTLANGUAGE                                                   NL("defaultlanguage")
+#endif
 
 #endif
 
@@ -246,6 +249,7 @@ class APPFLOWCFG
 
     virtual bool         DoVariableMapping                                        (); 
     virtual bool         DoDefault                                                ();
+    virtual bool         LoadReadjustment                                         ();
 
     virtual bool         End                                                      ();  
 
@@ -258,6 +262,12 @@ class APPFLOWCFG
     bool                 SetTraceTarget                                           (int index, XSTRING& target);
     bool                 SetAutomaticTraceTargets                                 ();
     bool                 SetDefaultTraceTargets                                   ();
+    #endif
+    #ifdef XTRANSLATION_ACTIVE
+    XSTRING*             GetDefaultLanguage                                       ();
+    bool                 SetDefaultLanguage                                       (XCHAR* codealpha);
+    bool                 SetDefaultLanguage                                       (XDWORD code);
+    bool                 Language_ApplyDefault                                    ();
     #endif
     #endif
 
@@ -378,6 +388,9 @@ class APPFLOWCFG
     int                  ntracetargets;
     XVECTOR<XSTRING*>    tracetargets;
     #endif
+    #ifdef XTRANSLATION_ACTIVE
+    XSTRING              defaultlanguage;
+    #endif
     #endif
 
     #ifdef APPFLOW_CFG_CHECKRESOURCESHARDWARE_ACTIVE
@@ -488,6 +501,13 @@ class APPFLOWCFG
     #endif
 
   private:
+
+    #ifdef APPFLOW_CFG_GENERAL_ACTIVE
+    #ifdef XTRANSLATION_ACTIVE
+    bool                 DefaultLanguage_UpdateRemark                             ();
+    XDWORD               DefaultLanguage_ResolveCode                              ();
+    #endif
+    #endif
 
     void                 Clean                                                    ();
 };

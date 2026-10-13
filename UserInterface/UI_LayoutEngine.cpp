@@ -525,7 +525,14 @@ void UI_LAYOUTENGINE::ResolveFlexItemSizes(UI_LAYOUTBOX* container)
   UI_FLEX_DIRECTION direction = container->GetFlexDirection();
   bool mainishorizontal = (direction == UI_FLEX_DIRECTION_ROW) || (direction == UI_FLEX_DIRECTION_ROW_REVERSE);
 
-  double containermainsize = mainishorizontal ? container->GetContentWidth() : container->GetContentHeight();
+  // CSS: flex items pack inside the content box AFTER the container's own padding.
+  // (Paint and CalculateBoundaryLine already inset by padding; flex packing must match or
+  // padding-left on a row footer is a no-op and children sit under the sidebar.)
+  UI_LAYOUTBOX_EDGES& cpad = container->GetPadding();
+  double containermainsize = mainishorizontal
+    ? (container->GetContentWidth()  - cpad.left - cpad.right)
+    : (container->GetContentHeight() - cpad.top  - cpad.bottom);
+  if(containermainsize < 0.0) containermainsize = 0.0;
   double maingap            = mainishorizontal ? container->GetColumnGap()    : container->GetRowGap();
 
   // Pass 1: each child's base ("hypothetical") main size, and the totals needed to decide grow vs shrink.
@@ -801,10 +808,22 @@ void UI_LAYOUTENGINE::ArrangeFlexChildren(UI_LAYOUTBOX* container)
   bool mainishorizontal = (direction == UI_FLEX_DIRECTION_ROW) || (direction == UI_FLEX_DIRECTION_ROW_REVERSE);
   bool reversed          = (direction == UI_FLEX_DIRECTION_ROW_REVERSE) || (direction == UI_FLEX_DIRECTION_COLUMN_REVERSE);
 
-  double containermainsize   = mainishorizontal ? container->GetContentWidth()  : container->GetContentHeight();
-  double containermainstart  = mainishorizontal ? container->GetContentLeft()   : container->GetContentTop();
-  double containercrosssize  = mainishorizontal ? container->GetContentHeight() : container->GetContentWidth();
-  double containercrossstart = mainishorizontal ? container->GetContentTop()    : container->GetContentLeft();
+  // Inset the flex packing rectangle by the container's padding (same content-box CSS uses for flex items).
+  UI_LAYOUTBOX_EDGES& cpad = container->GetPadding();
+  double containermainsize   = mainishorizontal
+    ? (container->GetContentWidth()  - cpad.left - cpad.right)
+    : (container->GetContentHeight() - cpad.top  - cpad.bottom);
+  double containermainstart  = mainishorizontal
+    ? (container->GetContentLeft()   + cpad.left)
+    : (container->GetContentTop()    + cpad.top);
+  double containercrosssize  = mainishorizontal
+    ? (container->GetContentHeight() - cpad.top  - cpad.bottom)
+    : (container->GetContentWidth()  - cpad.left - cpad.right);
+  double containercrossstart = mainishorizontal
+    ? (container->GetContentTop()    + cpad.top)
+    : (container->GetContentLeft()   + cpad.left);
+  if(containermainsize  < 0.0) containermainsize  = 0.0;
+  if(containercrosssize < 0.0) containercrosssize = 0.0;
 
   // CSS: "column-gap" separates children along the HORIZONTAL axis, "row-gap" along the VERTICAL axis -- which
   // one is the MAIN-axis gap (and which is the CROSS-axis gap, between wrapped lines) depends on flex-direction.

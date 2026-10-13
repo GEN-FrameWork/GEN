@@ -155,6 +155,13 @@ bool APPFLOWEXTENDED::APPStart(APPFLOWCFG* appcfg, APPFLOWCONSOLE* appconsole)
       return false;
     }
 
+  // Application language: CFG defaultlanguage → OS → English (needs .lng already Ini'd).
+  #ifdef APPFLOW_CFG_GENERAL_ACTIVE
+  #ifdef XTRANSLATION_ACTIVE
+  appcfg->Language_ApplyDefault();
+  #endif
+  #endif
+
   if(!appcfg->Log_IsActive())
     {
       return false;
