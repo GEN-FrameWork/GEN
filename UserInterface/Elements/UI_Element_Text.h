@@ -31,6 +31,7 @@
 /*---- INCLUDES ------------------------------------------------------------------------------------------------------*/
 
 #include "UI_Element.h"
+#include "UI_PropertyRegistry.h"
 
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
 
@@ -45,6 +46,14 @@ class UI_ELEMENT_TEXT : public UI_ELEMENT
     XDWORD                            GetSizeFont                 ();      
     void                              SetSizeFont                 (XDWORD sizefont);   
 
+    // Phase 2/5: primary catalog face (first of stack); empty = resolved at draw (language/default).
+    XSTRING*                          GetFontFace                 ();
+    void                              SetFontFace                 (XCHAR* fontface);
+    // Phase 5: ordered font-family stack (catalog names only).
+    XDWORD                            GetFontFaceStackCount       ();
+    XSTRING*                          GetFontFaceStackEntry       (XDWORD index);
+    void                              SetFontFaceStack            (XSTRING* faces, XDWORD count);
+
     XSTRING*                          GetText                     ();   
     XSTRING*                          GetMaskText                 (); 
 
@@ -57,7 +66,10 @@ class UI_ELEMENT_TEXT : public UI_ELEMENT
 
 		void															Clean												();
        
-    XDWORD                            sizefont;   
+    XDWORD                            sizefont;
+    XSTRING                           fontface;
+    XSTRING                           fontfacestack[UI_PROPERTYREGISTRY_FONTFACE_STACK_MAX];
+    XDWORD                            fontfacestackcount;
     XSTRING                           text;  
     XSTRING                           masktext;   
     XDWORD                            maxsizetext;

@@ -39,6 +39,8 @@
 #include "XTrace.h"
 #include "XTimer.h"
 #include "XSleep.h"
+#include "XTranslation.h"
+#include "XFile.h"
 
 #include "GRP2DCanvas.h"
 #include "GRP2DColor.h"
@@ -1866,7 +1868,82 @@ bool UI_SKINCANVAS::LoadFonts()
               status = canvas->VectorFont_Load(xpath);    
             }
 
+          // Phase 0/1: skin@vectorfont is always the logical "default" face (compat).
+          if(status)
+            {
+              XPATH* loaded = canvas->VectorFont_GetPathFile();
+              if(loaded && !loaded->IsEmpty())
+                {
+                  canvas->VectorFont_Register(GRP2DCANVAS_VECTORFONT_DEFAULT, (*loaded));
+                  canvas->VectorFont_Select(GRP2DCANVAS_VECTORFONT_DEFAULT);
+                }
+            }
+
         } else status = true;
+    }
+
+  // Phase 1/4: register optional <fonts> catalog faces by path only (lazy).
+  // skin@vectorfont is loaded+selected above; catalog faces load on first VectorFont_Select.
+  // An unused CJK/Noto entry is never opened. Failures on extras do not fail layout load.
+  if(status)
+    {
+      for(XDWORD c=0; c<FontCatalog_GetSize(); c++)
+        {
+          UI_SKIN_FONT_ENTRY* entry = FontCatalog_Get(c);
+          if(!entry) continue;
+          if(entry->name.IsEmpty() || entry->filename.IsEmpty()) continue;
+
+          // "default" in the catalog is informational; skin@vectorfont already owns that slot.
+          if(!entry->name.Compare(GRP2DCANVAS_VECTORFONT_DEFAULT, true)) continue;
+
+          XPATH facepath;
+          bool  faceready = false;
+
+          if(GEN_USERINTERFACE.IsZippedFile())
+            {
+              XFILEUNZIP* unzipfile = GEN_USERINTERFACE.GetUnzipFile();
+              if(unzipfile)
+                {
+                  XPATH pathnamefilecmp;
+
+                  pathnamefilecmp = APPFLOW_DEFAULT_DIRECTORY_FONTS;
+                  pathnamefilecmp.Slash_Add();
+                  pathnamefilecmp += entry->filename;
+
+                  if(unzipfile->DecompressFile(pathnamefilecmp, (*GEN_USERINTERFACE.GetUnzipPathFile()), entry->filename.Get()))
+                    {
+                      facepath  = GEN_USERINTERFACE.GetUnzipPathFile()->Get();
+                      facepath += entry->filename;
+                      faceready = true;
+                    }
+                   else
+                    {
+                      XTRACE_PRINTCOLOR(XTRACE_COLOR_WARNING, NL("[UI Skin] font catalog '%s': cannot extract [%s] from bundle"),
+                                        entry->name.Get(), entry->filename.Get());
+                    }
+                }
+            }
+           else
+            {
+              GEN_XPATHSMANAGER.GetPathOfSection(XPATHSMANAGERSECTIONTYPE_FONTS, facepath);
+              facepath.Slash_Add();
+              facepath.Add(entry->filename.Get());
+
+              XFILE* check = GEN_XFACTORY.Create_File();
+              if(check)
+                {
+                  faceready = check->Exist(facepath.Get());
+                  if(!faceready)
+                    {
+                      XTRACE_PRINTCOLOR(XTRACE_COLOR_WARNING, NL("[UI Skin] font catalog '%s': file missing [%s]"),
+                                        entry->name.Get(), facepath.Get());
+                    }
+                  GEN_XFACTORY.Delete_File(check);
+                }
+            }
+
+          if(faceready) canvas->VectorFont_Register(entry->name.Get(), facepath);
+        }
     }
 
   return status;
@@ -2272,6 +2349,173 @@ bool UI_SKINCANVAS::CalculateBoundaryLine_Scroll(UI_ELEMENT* element, bool adjus
 }
 
 
+// Phase 4: one-shot warning when a resolved logical face is unknown / unloadable (no crash; fallback default).
+static void UI_SKINCANVAS_WarnUnknownFaceOnce(XCHAR* facename, XCHAR* elementname)
+{
+  if(!facename || !facename[0]) return;
+  if(!XSTRING::Compare(facename, GRP2DCANVAS_VECTORFONT_DEFAULT, true)) return;
+
+  static XVECTOR<XSTRING*> warned;
+  for(XDWORD c=0; c<warned.GetSize(); c++)
+    {
+      XSTRING* entry = warned.Get(c);
+      if(entry && !entry->Compare(facename, true)) return;
+    }
+
+  XSTRING* copy = GEN_NEW XSTRING();
+  if(copy)
+    {
+      copy->Set(facename);
+      warned.Add(copy);
+    }
+
+  XTRACE_PRINTCOLOR(XTRACE_COLOR_WARNING,
+                    NL("[UI Skin] unknown vector face '%s' (element '%s'); using default"),
+                    facename,
+                    (elementname && elementname[0]) ? elementname : NL("?"));
+}
+
+
+// Phase 2/3/4: single AGG FreeType face — Select for measure/draw, restore previous after.
+// Priority: explicit font-family/fontface → skin default.
+// Language/CJK faces are NOT selected here as the sole face: Noto SC also covers ASCII digits and
+// symbols, which would otherwise steal Nunito metrics in Chinese. CJK is a PrintStack/GetWidthStack
+// fallback only (see BuildTextFaceStack).
+// Catalog faces are lazy: VectorFont_Register at LoadFonts; VectorFont_Load runs on first successful Select.
+static void UI_SKINCANVAS_SelectResolvedFace(UI_SKIN* skin, GRP2DCANVAS* canvas, XCHAR* explicitface, XSTRING* masktext, XCHAR* elementname, XSTRING& previous)
+{
+  previous.Empty();
+  if(!canvas) return;
+
+  (void)skin;
+  (void)masktext;
+
+  XSTRING* selected = canvas->VectorFont_GetSelected();
+  if(selected && !selected->IsEmpty()) previous = selected->Get();
+
+  XSTRING resolved;
+
+  if(explicitface && explicitface[0])
+    {
+      resolved = explicitface;
+    }
+   else
+    {
+      resolved = GRP2DCANVAS_VECTORFONT_DEFAULT;
+    }
+
+  if(!canvas->VectorFont_Select(resolved.Get()))
+    {
+      UI_SKINCANVAS_WarnUnknownFaceOnce(resolved.Get(), elementname);
+      canvas->VectorFont_Select(GRP2DCANVAS_VECTORFONT_DEFAULT);
+    }
+}
+
+
+static void UI_SKINCANVAS_SelectTextFace(UI_SKIN* skin, GRP2DCANVAS* canvas, UI_ELEMENT_TEXT* element_text, XSTRING& previous)
+{
+  XCHAR* explicitface = NULL;
+  XSTRING* masktext   = NULL;
+  XCHAR* elementname  = NULL;
+
+  if(element_text)
+    {
+      if(element_text->GetFontFace() && !element_text->GetFontFace()->IsEmpty())
+        {
+          explicitface = element_text->GetFontFace()->Get();
+        }
+      masktext = element_text->GetMaskText();
+      if(element_text->GetName()) elementname = element_text->GetName()->Get();
+    }
+
+  UI_SKINCANVAS_SelectResolvedFace(skin, canvas, explicitface, masktext, elementname, previous);
+}
+
+
+// Phase 5: build ordered face pointers for GetWidthStack/PrintStack.
+// Order: authored stack (or single face) → default → language face (CJK fallback, if mapped).
+// Default before language so ASCII digits, IPs, versions and symbols keep Nunito like other
+// languages; Noto/CJK only paints glyphs the Latin face does not have.
+static XDWORD UI_SKINCANVAS_BuildTextFaceStack(UI_SKIN* skin, UI_ELEMENT_TEXT* element_text, XCHAR** outfaces, XDWORD maxfaces, XSTRING& langstorage)
+{
+  XDWORD n = 0;
+  if(!outfaces || !maxfaces) return 0;
+
+  langstorage.Empty();
+
+  if(element_text)
+    {
+      XDWORD stackn = element_text->GetFontFaceStackCount();
+      if(stackn)
+        {
+          for(XDWORD i=0; i<stackn && n<maxfaces; i++)
+            {
+              XSTRING* entry = element_text->GetFontFaceStackEntry(i);
+              if(entry && !entry->IsEmpty()) outfaces[n++] = entry->Get();
+            }
+        }
+       else if(element_text->GetFontFace() && !element_text->GetFontFace()->IsEmpty())
+        {
+          outfaces[n++] = element_text->GetFontFace()->Get();
+        }
+    }
+
+  bool hasdefault = false;
+  for(XDWORD i=0; i<n; i++)
+    {
+      if(outfaces[i] && !XSTRING::Compare(outfaces[i], GRP2DCANVAS_VECTORFONT_DEFAULT, true))
+        {
+          hasdefault = true;
+          break;
+        }
+    }
+  if(!hasdefault && n<maxfaces) outfaces[n++] = GRP2DCANVAS_VECTORFONT_DEFAULT;
+
+  if(skin && GEN_XTRANSLATION.IsInitialized())
+    {
+      if(skin->FontForLanguage(GEN_XTRANSLATION.GetActual(), langstorage) && !langstorage.IsEmpty())
+        {
+          bool listed = false;
+          for(XDWORD i=0; i<n; i++)
+            {
+              if(outfaces[i] && !XSTRING::Compare(outfaces[i], langstorage.Get(), true))
+                {
+                  listed = true;
+                  break;
+                }
+            }
+          if(!listed && n<maxfaces) outfaces[n++] = langstorage.Get();
+        }
+    }
+
+  return n;
+}
+
+
+static void UI_SKINCANVAS_SelectTextBoxFace(UI_SKIN* skin, GRP2DCANVAS* canvas, UI_ELEMENT_TEXTBOX* element_textbox, XSTRING& previous)
+{
+  XSTRING* masktext  = NULL;
+  XCHAR* elementname = NULL;
+
+  if(element_textbox)
+    {
+      masktext = element_textbox->GetMaskText();
+      if(element_textbox->GetName()) elementname = element_textbox->GetName()->Get();
+    }
+
+  // TextBox has no Phase-2 fontface field yet; measure uses default (CJK via PrintStack fallback).
+  UI_SKINCANVAS_SelectResolvedFace(skin, canvas, NULL, masktext, elementname, previous);
+}
+
+static void UI_SKINCANVAS_RestoreTextFace(GRP2DCANVAS* canvas, XSTRING& previous)
+{
+  if(!canvas) return;
+
+  if(!previous.IsEmpty()) canvas->VectorFont_Select(previous.Get());
+   else                    canvas->VectorFont_Select(GRP2DCANVAS_VECTORFONT_DEFAULT);
+}
+
+
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         bool UI_SKINCANVAS::CalculateBoundaryLine_Text(UI_ELEMENT* element, bool adjustsizemargin)
@@ -2292,7 +2536,7 @@ bool UI_SKINCANVAS::CalculateBoundaryLine_Text(UI_ELEMENT* element, bool adjusts
   GRP2DCANVAS*       canvas       = GetCanvas();
 
   if(!canvas) return false;
-  
+
   canvas->Vectorfont_GetConfig()->SetSize(element_text->GetSizeFont());
 
   XSTRING text;
@@ -2326,17 +2570,38 @@ bool UI_SKINCANVAS::CalculateBoundaryLine_Text(UI_ELEMENT* element, bool adjusts
         }
     }
 
+  XCHAR*  faces[GRP2DCANVAS_VECTORFONT_STACK_MAX];
+  XSTRING langface;
+  XDWORD  nfaces = UI_SKINCANVAS_BuildTextFaceStack(this, element_text, faces, GRP2DCANVAS_VECTORFONT_STACK_MAX, langface);
+
+  // Warn once for authored faces that cannot be selected (Phase 4 telemetry via stack walk).
+  for(XDWORD f=0; f<nfaces; f++)
+    {
+      if(!faces[f]) continue;
+      if(!XSTRING::Compare(faces[f], GRP2DCANVAS_VECTORFONT_DEFAULT, true)) continue;
+      if(!canvas->VectorFont_Select(faces[f]))
+        {
+          UI_SKINCANVAS_WarnUnknownFaceOnce(faces[f], element_text->GetName() ? element_text->GetName()->Get() : NL("?"));
+        }
+    }
+  canvas->VectorFont_Select(GRP2DCANVAS_VECTORFONT_DEFAULT);
+
   switch((int)element->GetBoundaryLine()->width)
     {
       case UI_ELEMENT_TYPE_ALIGN_AUTO	 :		 		
-      case                           0 : element->GetBoundaryLine()->width  = (double)canvas->VectorFont_GetWidth(string_max.Get());    break;
+      case                           0 : element->GetBoundaryLine()->width  = canvas->VectorFont_GetWidthStack(faces, nfaces, string_max.Get());    break;
       case UI_ELEMENT_TYPE_ALIGN_MAX   : element->GetBoundaryLine()->width = UI_SKINCANVAS_ResolveMaxSize(element, fatherwidth);                                               break;	    
     }
    
   switch((int)element->GetBoundaryLine()->height)
     {
       case UI_ELEMENT_TYPE_ALIGN_AUTO	 :		 		
-      case                           0 : element->GetBoundaryLine()->height  = (double)canvas->VectorFont_GetHeight(string_max.Get());  break;
+      case                           0 : { XSTRING previousface;
+                                           UI_SKINCANVAS_SelectTextFace(this, canvas, element_text, previousface);
+                                           element->GetBoundaryLine()->height  = (double)canvas->VectorFont_GetHeight(string_max.Get());
+                                           UI_SKINCANVAS_RestoreTextFace(canvas, previousface);
+                                         }
+                                         break;
       case UI_ELEMENT_TYPE_ALIGN_MAX   : element->GetBoundaryLine()->height  = UI_SKINCANVAS_ResolveMaxSize(element, fatherheight);                                            break;	    
     }
 
@@ -2802,35 +3067,36 @@ bool UI_SKINCANVAS::CalculateBoundaryLine_Form(UI_ELEMENT* element, bool adjusts
   // A form carrying role="caption" is the background bar of a GEN custom window chrome (see GRPSCREEN's
   // CFG Chromes). Its width is not a design decision of the layout: it IS the width of the window the chrome
   // is applied to. Resolving it here -- instead of making every chrome .xml hardcode a number -- is what lets
-  // the very same chrome bundle be reused by applications of different sizes.
+  // the very same chrome bundle (defaultwindowschromes.zip) be reused by applications of different sizes
+  // (WindowChromes 1024, UI_System 1440, …).
   //
   // Without this, a caption authored with no "width" attribute falls into the generic AUTO/0 case below, which
   // shrink-wraps the form around its own children. The bar then collapses to roughly the width of the title
   // text, and every child positioned with xpos="right" (minimize / maximize / close) resolves against that
   // collapsed width and lands on top of the icon -- the "only the caption icon shows" symptom.
   //
+  // ALWAYS override an authored numeric width too (e.g. legacy width="1024" in defaultwindowschromes.xml):
+  // UpdateCFGChromesButtonsPosition() can stretch the caption AABB later, but the min/max/close buttons are
+  // laid out once against the load-time father width. If that father stayed at 1024 while the app canvas is
+  // 1440, xpos="right" pins them to the wrong edge until/unless the shift path runs with a matching client
+  // size -- which fails as a universal default. Forcing canvas width here makes right-aligned chrome controls
+  // resolve correctly for every app size on first layout.
+  //
   // The value used is the FULL canvas width, not GetFatherSize()'s canvas width - 1: that -1 is the generic
   // "maximum valid coordinate" convention for width="max", and one pixel of bare canvas at the right end of
   // the caption bar is visible. A caption nested inside another element (unusual, but legal) simply takes its
-  // father's width. An explicitly authored numeric width still wins: it is not touched here.
+  // father's width.
   if(element->GetChromeRole() == UI_ELEMENT_CHROMEROLE_CAPTION)
     {
-      switch((int)element->GetBoundaryLine()->width)
+      double captionwidth = fatherwidth;
+
+      if(!element->GetFather())
         {
-          case UI_ELEMENT_TYPE_ALIGN_AUTO :
-          case UI_ELEMENT_TYPE_ALIGN_MAX  :
-          case                          0 : { double captionwidth = fatherwidth;
-
-                                              if(!element->GetFather())
-                                                {
-                                                  GRP2DCANVAS* canvas = GetCanvas();
-                                                  if(canvas) captionwidth = (double)canvas->GetWidth();
-                                                }
-
-                                              element->GetBoundaryLine()->width = captionwidth;
-                                            }
-                                            break;
+          GRP2DCANVAS* canvas = GetCanvas();
+          if(canvas) captionwidth = (double)canvas->GetWidth();
         }
+
+      element->GetBoundaryLine()->width = captionwidth;
     }
 
   switch((int)element->GetBoundaryLine()->width)
@@ -3548,6 +3814,125 @@ void UI_SKINCANVAS::InvalidateCompositionCaches()
 
 /**-------------------------------------------------------------------------------------------------------------------
 *
+* @fn         bool UI_SKINCANVAS::PrepareTextContentChange(UI_ELEMENT* element)
+* @brief      Synchronously erase a text element's alpha-blended glyph ink before its string (or language face)
+*             changes. Restores the text's TextBackdrop (if any) then the nearest paintable father FormBackdrop
+*             so CJK overhang outside the text box is cleared too. Call BEFORE replacing GetText() / remasuring.
+* @note       Chrome title language switch (UI_System F12, start in Chinese then change): translucent caption
+*             fill alone never erases Noto strokes; without this, Spanish paints over leftover 系统监控器.
+* @ingroup    USERINTERFACE
+*
+*---------------------------------------------------------------------------------------------------------------------*/
+bool UI_SKINCANVAS::PrepareTextContentChange(UI_ELEMENT* element)
+{
+  if(!element) return false;
+
+  bool erased = false;
+
+  GRP2DREBUILDAREA* textbackdrop = TextBackdrop_Find(element);
+  if(textbackdrop && textbackdrop->GetBitmap())
+    {
+      PutBitmapNoAlpha(textbackdrop->GetXPos(), textbackdrop->GetYPos(), textbackdrop->GetBitmap());
+      TextBackdrop_Delete(element);
+      erased = true;
+    }
+
+  // Nearest form/menu father (chrome caption, card, …).
+  UI_ELEMENT* father = element->GetFather();
+  while(father)
+    {
+      if((father->GetType() == UI_ELEMENT_TYPE_FORM) || (father->GetType() == UI_ELEMENT_TYPE_MENU))
+        break;
+      father = father->GetFather();
+    }
+
+  GRP2DCANVAS* canvas = GetCanvas();
+
+  if(father)
+    {
+      GRP2DREBUILDAREA* formbackdrop = FormBackdrop_Find(father);
+
+      // Prefer wiping the WHOLE caption with a sample of the true under-form backdrop (not the fill RGB):
+      // painting opaque "black" from color="black,25" left a visible pure-black patch under the new title
+      // while the rest of the bar stayed charcoal (translucent black over content).
+      XBYTE wr = 13, wg = 17, wb = 23; // neutral dark fallback (matches typical UI_System page fill)
+      if(formbackdrop && formbackdrop->GetBitmap())
+        {
+          GRPBITMAP* fbbmp = formbackdrop->GetBitmap();
+          XDWORD     fbw   = fbbmp->GetWidth();
+          XDWORD     fbh   = fbbmp->GetHeight();
+          if(fbw > 2 && fbh > 2)
+            {
+              // Sample near the top-left inside the caption (away from icon/title glyphs).
+              GRP2DCOLOR_RGBA8* sample = (GRP2DCOLOR_RGBA8*)fbbmp->GetPixel(2, 2);
+              if(sample)
+                {
+                  wr = (XBYTE)sample->r;
+                  wg = (XBYTE)sample->g;
+                  wb = (XBYTE)sample->b;
+                }
+            }
+
+          PutBitmapNoAlpha(formbackdrop->GetXPos(), formbackdrop->GetYPos(), formbackdrop->GetBitmap());
+          FormBackdrop_Delete(father);
+          erased = true;
+        }
+
+      if(canvas && father->GetBoundaryLine())
+        {
+          double fx = father->GetXPosition();
+          double fy = father->GetYPosition();
+          if(father->GetFather()) GetAddPositionScrollSteps(father->GetFather(), fx, fy);
+
+          double left   = UI_BOUNDARYLINE_EdgeLeft  (fx, father->GetBoundaryLine()->width);
+          double right  = UI_BOUNDARYLINE_EdgeRight (fx, father->GetBoundaryLine()->width);
+          double top    = UI_BOUNDARYLINE_EdgeTop   (fy, father->GetBoundaryLine()->height);
+          double bottom = UI_BOUNDARYLINE_EdgeBottom(fy, father->GetBoundaryLine()->height);
+
+          // Opaque wipe of the full caption bar so CJK cannot survive translucent black,25, and so the
+          // next FormBackdrop capture sees a uniform strip (no text-sized black patch).
+          GRP2DCOLOR_RGBA8 solid(wr, wg, wb, 255);
+          GRP2DCOLOR_RGBA8 noline(0, 0, 0, 0);
+          canvas->SetFillColor(&solid);
+          canvas->SetLineColor(&noline);
+          canvas->Rectangle(left, bottom, right, top, true);
+          erased = true;
+        }
+
+      father->SetMustReDraw(true);
+    }
+   else if(canvas && element->GetBoundaryLine())
+    {
+      // No form father: pad-wipe the text box only.
+      double x = element->GetXPosition();
+      double y = element->GetYPosition();
+      double pad = 8.0;
+      if(element->GetType() == UI_ELEMENT_TYPE_TEXT)
+        {
+          double sf = ((UI_ELEMENT_TEXT*)element)->GetSizeFont();
+          if(sf > 0.0) pad = __MAX(pad, sf * 0.35);
+        }
+
+      double left   = UI_BOUNDARYLINE_EdgeLeft  (x, element->GetBoundaryLine()->width)  - pad;
+      double right  = UI_BOUNDARYLINE_EdgeRight (x, element->GetBoundaryLine()->width)  + pad;
+      double top    = UI_BOUNDARYLINE_EdgeTop   (y, element->GetBoundaryLine()->height) - pad;
+      double bottom = UI_BOUNDARYLINE_EdgeBottom(y, element->GetBoundaryLine()->height) + pad;
+
+      GRP2DCOLOR_RGBA8 solid(13, 17, 23, 255);
+      GRP2DCOLOR_RGBA8 noline(0, 0, 0, 0);
+      canvas->SetFillColor(&solid);
+      canvas->SetLineColor(&noline);
+      canvas->Rectangle(left, bottom, right, top, true);
+      erased = true;
+    }
+
+  element->SetMustReDraw(true);
+  return erased;
+}
+
+
+/**-------------------------------------------------------------------------------------------------------------------
+*
 * @fn         XDWORD UI_SKINCANVAS::CompositionCacheCount()
 * @brief      Count persistent true-backdrop cache entries (for tests / diagnostics).
 * @ingroup    USERINTERFACE
@@ -3669,17 +4054,18 @@ bool UI_SKINCANVAS::Draw_Text(UI_ELEMENT* element)
               textbackdrop = NULL;
             }
 
-          if(!textbackdrop)
+          // LANGUAGE/CJK CONTENT-CHANGE FIX (2026-10): always restore-and-recapture on every real redraw,
+          // not only on size mismatch. A forever-cached TextBackdrop that was captured while previous glyph
+          // ink was still on screen (translucent chrome caption, language switch) would restore that
+          // contamination under every later string. Matching the OWNERLESS branch below.
+          if(textbackdrop)
             {
-              // First time this element is ever drawn (or first redraw after a size change): nothing has
-              // painted THIS tick's glyph ink here yet, so this is the pristine moment to capture the backdrop.
-              TextBackdrop_Capture(element, ownarea->GetXPos(), ownarea->GetYPos(), (double)ownarea->GetBitmap()->GetWidth(), (double)ownarea->GetBitmap()->GetHeight());
-            }
-           else
-            {
-              // Not the first draw at this size: restore the true backdrop now, before repainting below.
               PutBitmapNoAlpha(textbackdrop->GetXPos(), textbackdrop->GetYPos(), textbackdrop->GetBitmap());
+              TextBackdrop_Delete(element);
+              textbackdrop = NULL;
             }
+
+          TextBackdrop_Capture(element, ownarea->GetXPos(), ownarea->GetYPos(), (double)ownarea->GetBitmap()->GetWidth(), (double)ownarea->GetBitmap()->GetHeight());
         }
        else
         {
@@ -3732,9 +4118,12 @@ bool UI_SKINCANVAS::Draw_Text(UI_ELEMENT* element)
 
       GRP2DCOLOR_RGBA8  color(element->GetColor()->GetRed(), element->GetColor()->GetGreen(), element->GetColor()->GetBlue(), element->GetColor()->GetAlpha());
 
-
       canvas->Vectorfont_GetConfig()->SetColor(&color);
       canvas->Vectorfont_GetConfig()->SetSize(element_text->GetSizeFont());
+
+      XCHAR*  faces[GRP2DCANVAS_VECTORFONT_STACK_MAX];
+      XSTRING langface;
+      XDWORD  nfaces = UI_SKINCANVAS_BuildTextFaceStack(this, element_text, faces, GRP2DCANVAS_VECTORFONT_STACK_MAX, langface);
 
       // "text-align" (Step 10, see UI_ELEMENT::GetTextAlign() / UI_MANAGER::GetLayoutElement_Base). GEN's
       // VectorFont_Print(x, y, ...) always takes the LEFT edge of the string as its origin; CENTER/RIGHT are
@@ -3742,19 +4131,20 @@ bool UI_SKINCANVAS::Draw_Text(UI_ELEMENT* element)
       // the element's box width -- nothing in the canvas or layout layer needs to know alignment exists. LEFT
       // (the default for every element created before this) reduces to offset 0.0: pixel-identical to before.
       double alignoffset = 0.0f;
+      double textwidth   = canvas->VectorFont_GetWidthStack(faces, nfaces, element_text->GetText()->Get());
 
       switch(element_text->GetTextAlign())
         {
-          case UI_ELEMENT_TYPE_ALIGN_CENTER : alignoffset = (element_text->GetBoundaryLine()->width - canvas->VectorFont_GetWidth(element_text->GetText()->Get())) / 2.0;
+          case UI_ELEMENT_TYPE_ALIGN_CENTER : alignoffset = (element_text->GetBoundaryLine()->width - textwidth) / 2.0;
                                                break;
 
-          case UI_ELEMENT_TYPE_ALIGN_RIGHT  : alignoffset = element_text->GetBoundaryLine()->width - canvas->VectorFont_GetWidth(element_text->GetText()->Get());
+          case UI_ELEMENT_TYPE_ALIGN_RIGHT  : alignoffset = element_text->GetBoundaryLine()->width - textwidth;
                                                break;
 
           default                           : break; // LEFT (and any non-horizontal enum value): no offset.
         }
 
-      canvas->VectorFont_Print(x_position + alignoffset, y_position, element_text->GetText()->Get());
+      canvas->VectorFont_PrintStack(x_position + alignoffset, y_position, faces, nfaces, element_text->GetText()->Get());
     }
 
   PostDrawFunction(element, canvas, clip_rect, x_position, y_position);
@@ -3792,6 +4182,9 @@ bool UI_SKINCANVAS::Draw_TextBox(UI_ELEMENT* element)
     {
       GRP2DCOLOR_RGBA8                color(element->GetColor()->GetRed(), element->GetColor()->GetGreen(), element->GetColor()->GetBlue(), element->GetColor()->GetAlpha());
       XVECTOR<UI_SKIN_TEXTBOX_PART*>  parts;
+      XSTRING                         previousface;
+
+      UI_SKINCANVAS_SelectTextBoxFace(this, canvas, element_textbox, previousface);
                                      
       canvas->Vectorfont_GetConfig()->SetColor(&color);
       canvas->Vectorfont_GetConfig()->SetSize(element_textbox->GetSizeFont());  
@@ -3833,6 +4226,8 @@ bool UI_SKINCANVAS::Draw_TextBox(UI_ELEMENT* element)
    
       parts.DeleteContents();
       parts.DeleteAll();
+
+      UI_SKINCANVAS_RestoreTextFace(canvas, previousface);
     }
 
   PostDrawFunction(element, canvas, clip_rect, x_position, y_position);
@@ -4684,6 +5079,9 @@ bool UI_SKINCANVAS::Draw_Form(UI_ELEMENT* element)
 
               // First time this element is ever drawn: nothing has painted shadow/fill/border/children ink
               // here yet, so this is the one guaranteed-pristine moment to capture the true backdrop.
+              // (Do NOT TextBackdrop_InvalidateOverlapping here: a title TextBackdrop stores caption-fill
+              // pixels, not the true under-form backdrop -- restoring it before this capture would bake
+              // that fill into FormBackdrop and break ALPHA-DARKENING on later redraws.)
               FormBackdrop_Capture(element, bd_x, bd_y, bd_w, bd_h);
               formbackdrop_for_punch = FormBackdrop_Find(element);
             }
@@ -8146,15 +8544,17 @@ bool UI_SKINCANVAS::OptionBackdrop_InvalidateOverlapping(double x, double y, dou
 *             a form is about to paint real ink of its own -- purely geometric (box overlap against whatever is
 *             cached), never by element name or type, so it protects any current or future text/form pairing that
 *             happens to share screen space, not only today's nav-<section>-hl/-bar/-text triple.
-* @note       Deliberately does NOT restore the discarded entry's bitmap first (unlike
-*             OptionBackdrop_InvalidateOverlapping(), which never needs to either): the caller is a form about to
-*             alpha-blend its own new ink over this exact region, so whatever pixels are there immediately
-*             afterwards are already correct and current -- restoring the stale cached snapshot here first would
-*             only reintroduce the very staleness this function exists to remove, one call before it gets erased
-*             again anyway. Simply forgetting the entry is enough: the owning text element's own next real redraw
-*             (TextBackdrop_Find() returning NULL) naturally takes the "first time drawn" / "nothing to restore"
-*             path in Draw_Text(), which captures fresh, already-correct pixels -- no different from a genuine
-*             first-ever draw, both branches' existing code paths already handle that case correctly.
+* @note       RESTORE-THEN-DISCARD (2026-10, chrome title CJK ghost): unlike the earlier "forget only" approach,
+*             this MUST PutBitmapNoAlpha() the overlapping TextBackdrop before deleting it. Draw_Text paints
+*             glyph ink by pure alpha-blend with no opaque clear of its own. A caller form that then paints a
+*             translucent fill (e.g. defaultwindowschromes caption color="black,25") does NOT erase those
+*             glyphs -- it only darkens them -- so simply forgetting the cache left CJK strokes on screen.
+*             Confirmed live on UI_System: F12 Chinese → Spanish left "系统监控器" blended under the new
+*             "Monitor del Sistema" in the custom chrome title. Restoring the cached (glyph-free) backdrop
+*             first strips the old ink; the form's own fill then composites onto a clean region; Draw_Text's
+*             next redraw takes the "no TextBackdrop" path and re-captures fresh pixels. When the caller
+*             already restored a FormBackdrop covering the same box, this restore is idempotent (puts the
+*             caption fill that sat under the glyphs, which the upcoming form fill will repaint anyway).
 * @note       Unlike OptionBackdrop_InvalidateOverlapping(), there is no "busy owner" guard here: a text
 *             element's cached backdrop is a passive background snapshot, never live ink of its own that could
 *             legitimately still be mid-blend when a neighbour's box happens to overlap it, so there is no
@@ -8194,6 +8594,8 @@ bool UI_SKINCANVAS::TextBackdrop_InvalidateOverlapping(double x, double y, doubl
       bool overlaps = (left1 < right2) && (right1 > left2) && (top1 < bottom2) && (bottom1 > top2);
       if(overlaps)
         {
+          // Erase glyph ink BEFORE forgetting the cache (translucent form fills do not).
+          PutBitmapNoAlpha(entry->GetXPos(), entry->GetYPos(), entry->GetBitmap());
           textbackdrops.Delete(entry);
           GEN_DELETE entry;
           discardedany = true;

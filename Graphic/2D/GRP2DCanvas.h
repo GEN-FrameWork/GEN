@@ -55,6 +55,12 @@ enum GRP2DCANVASTYPE
 
 #define GRP2DCANVASTYPE_DRAWFRAMERATE_ADJUSTSCREEN  -1.0f
 
+// Phase 0 multi-font: logical name of the skin's primary vector face (skin@vectorfont).
+#define GRP2DCANVAS_VECTORFONT_DEFAULT              NL("default")
+
+// Phase 5: max faces walked per glyph in a font-family stack (plus language/default appended by UI).
+#define GRP2DCANVAS_VECTORFONT_STACK_MAX            6
+
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
 
 class GRPSCREEN;
@@ -95,6 +101,18 @@ class GRP2DCANVAS_VECTORFONT_CONFIG
     double                        height;    
     GRP2DCOLOR_RGBA8*             color;
     bool                          iskerning;
+};
+
+// Phase 0: registered logical face (name -> path). AGG keeps one active FreeType engine;
+// VectorFont_Select reloads the path into that engine (face-map of paths; multi-engine later if needed).
+class GRP2DCANVAS_VECTORFONT_FACE
+{
+  public:
+                                  GRP2DCANVAS_VECTORFONT_FACE           ();
+                                 ~GRP2DCANVAS_VECTORFONT_FACE           ();
+
+    XSTRING                       name;
+    XPATH                         pathfile;
 };
 
 class GRP2DCANVAS : public GRPPROPERTIES, public GRP2DREBUILDAREAS
@@ -167,12 +185,23 @@ class GRP2DCANVAS : public GRPPROPERTIES, public GRP2DREBUILDAREAS
 
     bool                              VectorFont_Load                     (XCHAR* fontnamefile);
     virtual bool                      VectorFont_Load                     (XPATH& fontnamefile);
+    // Phase 0 multi-font contract: register logical name -> file; select makes that face active for
+    // GetWidth/Print. Empty name / GRP2DCANVAS_VECTORFONT_DEFAULT = skin primary. Unknown name fails
+    // (caller may fall back to default). Select is a no-op when the name is already selected.
+    bool                              VectorFont_Register                 (XCHAR* logicalname, XPATH& fontpath);
+    bool                              VectorFont_Select                   (XCHAR* logicalname);
+    XSTRING*                          VectorFont_GetSelected              ();
+    // Phase 5: true if the currently selected face maps codepoint to a real glyph (not .notdef).
+    virtual bool                      VectorFont_HasChar                  (XDWORD codepoint);
     GRP2DCANVAS_VECTORFONT_CONFIG*    Vectorfont_GetConfig                ();
     XPATH*                            VectorFont_GetPathFile              ();
     bool                              VectorFont_CopyFrom                 (GRP2DCANVAS* canvas);
     virtual double                    VectorFont_GetWidth                 (XCHAR* string);
     virtual double                    VectorFont_GetHeight                (XCHAR* string);
     virtual double                    VectorFont_GetHeight                ();
+    // Phase 5: per-glyph walk of an ordered face stack (Select only when the face changes).
+    double                            VectorFont_GetWidthStack            (XCHAR** faces, XDWORD nfaces, XCHAR* string);
+    bool                              VectorFont_PrintStack               (double x, double y, XCHAR** faces, XDWORD nfaces, XCHAR* string);
     
     virtual bool                      VectorFont_Print                    (double x, double y, XCHAR* outstring);
     virtual bool                      VectorFont_PrintAngle               (double x, double y, double angle, XCHAR* outstring)                                                                      
@@ -201,10 +230,13 @@ class GRP2DCANVAS : public GRPPROPERTIES, public GRP2DREBUILDAREAS
 
     GRP2DCANVAS_VECTORFONT_CONFIG     vectorfont_config;
     XPATH                             vectorfont_pathfile;
+    XSTRING                           vectorfont_selected;
+    XVECTOR<GRP2DCANVAS_VECTORFONT_FACE*> vectorfont_faces;
 
   private:
 
     void                              Clean                               ();
+    GRP2DCANVAS_VECTORFONT_FACE*      VectorFont_FindFace                 (XCHAR* logicalname);
 };
 
 

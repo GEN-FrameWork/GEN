@@ -1285,14 +1285,30 @@ class GRP2DCANVASAGG: public GRP2DCANVAS
                                                                                   
                                                                                   vectorfont_namefile = charstr;     
 
-                                                                                  status = vectorfont_engine.load_font(charstr.GetPtrChar(), 0, gren);                                                                          
                                                                                   status = vectorfont_engine.load_font(charstr.GetPtrChar(), 0, gren);
 
                                                                                   if(status) vectorfont_pathfile = fontnamefile;
                                                                                   
                                                                                   return status;    
-                                                                                }        
+                                                                                }
+
+    // Phase 5: FreeType maps missing codepoints to glyph index 0 (.notdef).
+    bool                                                                        VectorFont_HasChar                (XDWORD codepoint)
+                                                                                {
+                                                                                  if((codepoint == (XDWORD)_C(' ')) ||
+                                                                                     (codepoint == (XDWORD)_C('\t')) ||
+                                                                                     (codepoint == (XDWORD)_C('\n')) ||
+                                                                                     (codepoint == (XDWORD)_C('\r')))
+                                                                                    {
+                                                                                      return true;
+                                                                                    }
+
+                                                                                  if(!vectorfont_engine.prepare_glyph((unsigned)codepoint)) return false;
+                                                                                  return (vectorfont_engine.glyph_index() != 0);
+                                                                                }
                                               
+    // Measure with Unicode codepoints (same as VectorFont_Print). ConvertToASCII + byte walk
+    // collapses CJK to 0 advance → PrintStack draws every glyph on the same X.
     double                                                                      VectorFont_GetWidth               (XCHAR* string)
                                                                                 {
                                                                                   double x        = 0;
@@ -1309,17 +1325,11 @@ class GRP2DCANVASAGG: public GRP2DCANVAS
                                                                                   vectorfont_engine.height(vectorfont_config.GetHeight());
                                                                                   vectorfont_engine.width(vectorfont_config.GetWidth());
                                                                                   vectorfont_engine.flip_y(true);
-                                                                                                                                                                 
-                                                                                  XBUFFER charstr;
-                                                                                  
-                                                                                  _string.ConvertToASCII(charstr);
-                                                                                                                                                                    
-                                                                                  const  char* p = charstr.GetPtrChar();
 
                                                                                   for(XDWORD c=0; c<_string.GetSize(); c++)
-
                                                                                     {
-                                                                                      const agg::glyph_cache* glyph = vectorfont_manager->glyph(*p);
+                                                                                      XCHAR character = _string.Get()[c];
+                                                                                      const agg::glyph_cache* glyph = vectorfont_manager->glyph(character);
 
                                                                                       if(glyph)
                                                                                         {
@@ -1329,10 +1339,10 @@ class GRP2DCANVASAGG: public GRP2DCANVAS
                                                                                             }
                                                                                                                                                                               
                                                                                           vectorfont_manager->init_embedded_adaptors(glyph, x, y);   
-                                                                                          _width += glyph->advance_x;   
+                                                                                          _width += glyph->advance_x;
+                                                                                          x      += glyph->advance_x;
+                                                                                          y      += glyph->advance_y;
                                                                                         }
-                                                                                                                                                                                                                                                            
-                                                                                      ++p;
                                                                                     }
 
                                                                                   AGG_SOLIDFILL_END
@@ -1340,7 +1350,7 @@ class GRP2DCANVASAGG: public GRP2DCANVAS
                                                                                   return _width;                      
                                                                                 }
 
- double                                                                         VectorFont_GetHeight              (XCHAR* string)
+    double                                                                      VectorFont_GetHeight              (XCHAR* string)
                                                                                 {
                                                                                   double x        = 0;
                                                                                   double y        = 0;
@@ -1356,17 +1366,11 @@ class GRP2DCANVASAGG: public GRP2DCANVAS
                                                                                   vectorfont_engine.height(vectorfont_config.GetHeight());
                                                                                   vectorfont_engine.width(vectorfont_config.GetWidth());
                                                                                   vectorfont_engine.flip_y(true);
-                                                                                
-                                                                                  XBUFFER charstr;
-                                                                                  
-                                                                                  _string.ConvertToASCII(charstr);
-                                                                                                                                                                  
-                                                                                  const char* p = charstr.GetPtrChar();
 
                                                                                   for(XDWORD c=0; c<_string.GetSize(); c++)
-
                                                                                     {
-                                                                                      const agg::glyph_cache* glyph = vectorfont_manager->glyph(*p);
+                                                                                      XCHAR character = _string.Get()[c];
+                                                                                      const agg::glyph_cache* glyph = vectorfont_manager->glyph(character);
 
                                                                                       if(glyph)
                                                                                         {
@@ -1377,15 +1381,16 @@ class GRP2DCANVASAGG: public GRP2DCANVAS
                                                                                                                                                                               
                                                                                           vectorfont_manager->init_embedded_adaptors(glyph, x, y);   
 
-                                                                                          if((*p) != ' ')
+                                                                                          if(character != _C(' '))
                                                                                             {
                                                                                               int glyph_height = abs(glyph->bounds.y2-glyph->bounds.y1);  
 
                                                                                               if( glyph_height > _height) _height = glyph_height;   
                                                                                             }
+
+                                                                                          x += glyph->advance_x;
+                                                                                          y += glyph->advance_y;
                                                                                         }
-                                                                                                                                                                                                                                                            
-                                                                                      ++p;
                                                                                     }
 
                                                                                   AGG_SOLIDFILL_END

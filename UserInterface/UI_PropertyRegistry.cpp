@@ -74,6 +74,113 @@ bool UI_PROPERTYREGISTRY::GetAliased(UI_STYLE& style, XCHAR* primarykey, XCHAR* 
 
 /**-------------------------------------------------------------------------------------------------------------------
 *
+* @fn         void UI_PROPERTYREGISTRY::NormalizeFontFace(XSTRING& face)
+* @brief      Normalize a font-family / fontface token for catalog lookup (Phase 2)
+* @ingroup    USERINTERFACE
+*
+* @param[in,out] face : Raw CSS/XML value; rewritten to a single unquoted catalog name (may become empty).
+*
+* --------------------------------------------------------------------------------------------------------------------*/
+static void UI_PROPERTYREGISTRY_StripFaceQuotes(XSTRING& face)
+{
+  face.DeleteNoCharacters(XSTRINGCONTEXT_FROM_FIRST);
+  face.DeleteNoCharacters(XSTRINGCONTEXT_TO_END);
+
+  if(face.GetSize() >= 2)
+    {
+      XCHAR q0 = face[0];
+      XCHAR q1 = face[(int)face.GetSize()-1];
+      if((q0 == _C('\"') && q1 == _C('\"')) || (q0 == _C('\'') && q1 == _C('\'')))
+        {
+          face.DeleteCharacters(0, 1);
+          face.DeleteCharactersToEnd((XDWORD)face.GetSize()-1);
+        }
+    }
+
+  face.DeleteNoCharacters(XSTRINGCONTEXT_FROM_FIRST);
+  face.DeleteNoCharacters(XSTRINGCONTEXT_TO_END);
+}
+
+
+static bool UI_PROPERTYREGISTRY_IsCSSGenericFamily(XSTRING& face)
+{
+  if(face.IsEmpty()) return true;
+  if(!face.Compare(NL("serif"), true)) return true;
+  if(!face.Compare(NL("sans-serif"), true)) return true;
+  if(!face.Compare(NL("monospace"), true)) return true;
+  if(!face.Compare(NL("cursive"), true)) return true;
+  if(!face.Compare(NL("fantasy"), true)) return true;
+  if(!face.Compare(NL("system-ui"), true)) return true;
+  if(!face.Compare(NL("ui-sans-serif"), true)) return true;
+  if(!face.Compare(NL("ui-serif"), true)) return true;
+  if(!face.Compare(NL("ui-monospace"), true)) return true;
+  if(!face.Compare(NL("emoji"), true)) return true;
+  if(!face.Compare(NL("math"), true)) return true;
+  if(!face.Compare(NL("fangsong"), true)) return true;
+  return false;
+}
+
+
+/**-------------------------------------------------------------------------------------------------------------------
+*
+* @fn         XDWORD UI_PROPERTYREGISTRY::ParseFontFamilyStack(XSTRING& raw, XSTRING* outfaces, XDWORD maxfaces)
+* @brief      Parse a CSS font-family list into catalog logical names (Phase 5)
+* @ingroup    USERINTERFACE
+*
+* @param[in]  raw : e.g. "cjk, ui, sans-serif" or "nosuch, alt".
+* @param[out] outfaces : Receives up to maxfaces catalog tokens (generics dropped).
+* @param[in]  maxfaces : Capacity of outfaces.
+*
+* @return     XDWORD : Number of catalog faces written.
+*
+* --------------------------------------------------------------------------------------------------------------------*/
+XDWORD UI_PROPERTYREGISTRY::ParseFontFamilyStack(XSTRING& raw, XSTRING* outfaces, XDWORD maxfaces)
+{
+  XDWORD n = 0;
+  if(!outfaces || !maxfaces || raw.IsEmpty()) return 0;
+
+  XSTRING work = raw;
+  int     start = 0;
+
+  while((n < maxfaces) && (start < (int)work.GetSize()))
+    {
+      int comma = work.Find(NL(","), true, start);
+      XSTRING token;
+
+      if(comma == XSTRING_NOTFOUND)
+        {
+          work.Copy(start, (int)work.GetSize(), token);
+          start = (int)work.GetSize();
+        }
+       else
+        {
+          work.Copy(start, comma, token);
+          start = comma + 1;
+        }
+
+      UI_PROPERTYREGISTRY_StripFaceQuotes(token);
+      if(token.IsEmpty()) continue;
+      if(UI_PROPERTYREGISTRY_IsCSSGenericFamily(token)) continue;
+
+      outfaces[n++] = token;
+    }
+
+  return n;
+}
+
+
+void UI_PROPERTYREGISTRY::NormalizeFontFace(XSTRING& face)
+{
+  XSTRING stack[UI_PROPERTYREGISTRY_FONTFACE_STACK_MAX];
+  XDWORD  n = ParseFontFamilyStack(face, stack, UI_PROPERTYREGISTRY_FONTFACE_STACK_MAX);
+
+  if(n) face = stack[0];
+   else  face.Empty();
+}
+
+
+/**-------------------------------------------------------------------------------------------------------------------
+*
 * @fn         XDWORD UI_PROPERTYREGISTRY::TokenizeNumbers(XSTRING& raw, double* outvalues, XDWORD maxvalues)
 * @brief      Tokenize numbers
 * @ingroup    USERINTERFACE

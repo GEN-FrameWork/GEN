@@ -175,6 +175,10 @@ class UI_SKINCANVAS : public UI_SKIN, public UI_SKINCANVAS_REBUILDAREAS
 
 		XDWORD                             CompositionCacheCount									();
 
+		// Erase alpha-blended glyph ink for a text element BEFORE its string/language changes
+		// (restore TextBackdrop + paintable father FormBackdrop). Used by chrome title language switch.
+		bool                               PrepareTextContentChange								(UI_ELEMENT* element);
+
 	  virtual bool                      Draw_Scroll															(UI_ELEMENT* element);
 	  virtual bool                      Draw_Text																(UI_ELEMENT* element);
 		virtual bool											Draw_TextBox														(UI_ELEMENT* element);

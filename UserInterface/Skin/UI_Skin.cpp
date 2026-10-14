@@ -346,7 +346,247 @@ UI_SKIN::UI_SKIN()
 * --------------------------------------------------------------------------------------------------------------------*/
 UI_SKIN::~UI_SKIN()    
 { 
+  fontcatalog.DeleteContents();
+  fontcatalog.DeleteAll();
+  languagefonts.DeleteContents();
+  languagefonts.DeleteAll();
   Clean();                            
+}
+
+
+/**-------------------------------------------------------------------------------------------------------------------
+*
+* @fn         UI_SKIN_FONT_ENTRY::UI_SKIN_FONT_ENTRY()
+* @brief      Constructor of class
+* @ingroup    USERINTERFACE
+*
+* --------------------------------------------------------------------------------------------------------------------*/
+UI_SKIN_FONT_ENTRY::UI_SKIN_FONT_ENTRY()
+{
+  name.Empty();
+  filename.Empty();
+}
+
+
+/**-------------------------------------------------------------------------------------------------------------------
+*
+* @fn         UI_SKIN_FONT_ENTRY::~UI_SKIN_FONT_ENTRY()
+* @brief      Destructor of class
+* @ingroup    USERINTERFACE
+*
+* --------------------------------------------------------------------------------------------------------------------*/
+UI_SKIN_FONT_ENTRY::~UI_SKIN_FONT_ENTRY()
+{
+  name.Empty();
+  filename.Empty();
+}
+
+
+/**-------------------------------------------------------------------------------------------------------------------
+*
+* @fn         bool UI_SKIN::FontCatalog_Add(XCHAR* logicalname, XCHAR* filename)
+* @brief      Add or replace a logical font in the skin catalog (Phase 1)
+* @ingroup    USERINTERFACE
+*
+* @param[in]  logicalname : Face name used by VectorFont_Select (e.g. "alt", "cjk").
+* @param[in]  filename : File under the fonts/ path section (e.g. "Inter-Black.ttf").
+*
+* @return     bool : true if added/updated.
+*
+* --------------------------------------------------------------------------------------------------------------------*/
+bool UI_SKIN::FontCatalog_Add(XCHAR* logicalname, XCHAR* filename)
+{
+  if(!logicalname || !logicalname[0]) return false;
+  if(!filename || !filename[0]) return false;
+
+  for(XDWORD c=0; c<fontcatalog.GetSize(); c++)
+    {
+      UI_SKIN_FONT_ENTRY* entry = fontcatalog.Get(c);
+      if(entry && !entry->name.Compare(logicalname, true))
+        {
+          entry->filename.Set(filename);
+          return true;
+        }
+    }
+
+  UI_SKIN_FONT_ENTRY* entry = GEN_NEW UI_SKIN_FONT_ENTRY();
+  if(!entry) return false;
+
+  entry->name.Set(logicalname);
+  entry->filename.Set(filename);
+  fontcatalog.Add(entry);
+
+  return true;
+}
+
+
+/**-------------------------------------------------------------------------------------------------------------------
+*
+* @fn         XDWORD UI_SKIN::FontCatalog_GetSize()
+* @brief      Number of catalog entries
+* @ingroup    USERINTERFACE
+*
+* @return     XDWORD : Count (0 if none).
+*
+* --------------------------------------------------------------------------------------------------------------------*/
+XDWORD UI_SKIN::FontCatalog_GetSize()
+{
+  return fontcatalog.GetSize();
+}
+
+
+/**-------------------------------------------------------------------------------------------------------------------
+*
+* @fn         UI_SKIN_FONT_ENTRY* UI_SKIN::FontCatalog_Get(XDWORD index)
+* @brief      Get catalog entry by index
+* @ingroup    USERINTERFACE
+*
+* @param[in]  index : Zero-based index.
+*
+* @return     UI_SKIN_FONT_ENTRY* : Entry, or NULL if out of range.
+*
+* --------------------------------------------------------------------------------------------------------------------*/
+UI_SKIN_FONT_ENTRY* UI_SKIN::FontCatalog_Get(XDWORD index)
+{
+  return fontcatalog.Get(index);
+}
+
+
+/**-------------------------------------------------------------------------------------------------------------------
+*
+* @fn         bool UI_SKIN::FontCatalog_Has(XCHAR* logicalname)
+* @brief      True if logicalname is the default face or listed in the catalog (Phase 4)
+* @ingroup    USERINTERFACE
+*
+* @param[in]  logicalname : Catalog face name (e.g. "alt").
+*
+* @return     bool : true if known.
+*
+* --------------------------------------------------------------------------------------------------------------------*/
+bool UI_SKIN::FontCatalog_Has(XCHAR* logicalname)
+{
+  if(!logicalname || !logicalname[0]) return false;
+  if(!XSTRING::Compare(logicalname, NL("default"), true)) return true;
+
+  for(XDWORD c=0; c<fontcatalog.GetSize(); c++)
+    {
+      UI_SKIN_FONT_ENTRY* entry = fontcatalog.Get(c);
+      if(entry && !entry->name.Compare(logicalname, true)) return true;
+    }
+
+  return false;
+}
+
+
+/**-------------------------------------------------------------------------------------------------------------------
+*
+* @fn         UI_SKIN_LANGUAGEFONT_ENTRY::UI_SKIN_LANGUAGEFONT_ENTRY()
+* @brief      Constructor of class
+* @ingroup    USERINTERFACE
+*
+* --------------------------------------------------------------------------------------------------------------------*/
+UI_SKIN_LANGUAGEFONT_ENTRY::UI_SKIN_LANGUAGEFONT_ENTRY()
+{
+  languagecode = 0;
+  fontface.Empty();
+}
+
+
+/**-------------------------------------------------------------------------------------------------------------------
+*
+* @fn         UI_SKIN_LANGUAGEFONT_ENTRY::~UI_SKIN_LANGUAGEFONT_ENTRY()
+* @brief      Destructor of class
+* @ingroup    USERINTERFACE
+*
+* --------------------------------------------------------------------------------------------------------------------*/
+UI_SKIN_LANGUAGEFONT_ENTRY::~UI_SKIN_LANGUAGEFONT_ENTRY()
+{
+  languagecode = 0;
+  fontface.Empty();
+}
+
+
+/**-------------------------------------------------------------------------------------------------------------------
+*
+* @fn         bool UI_SKIN::LanguageFont_Add(XDWORD languagecode, XCHAR* fontface)
+* @brief      Add or replace a language → catalog face mapping (Phase 3)
+* @ingroup    USERINTERFACE
+*
+* @param[in]  languagecode : XLANGUAGE_ISO_639_3_CODE value.
+* @param[in]  fontface : Logical catalog name (e.g. "alt", "cjk").
+*
+* @return     bool : true if added/updated.
+*
+* --------------------------------------------------------------------------------------------------------------------*/
+bool UI_SKIN::LanguageFont_Add(XDWORD languagecode, XCHAR* fontface)
+{
+  if(!languagecode) return false;
+  if(!fontface || !fontface[0]) return false;
+
+  for(XDWORD c=0; c<languagefonts.GetSize(); c++)
+    {
+      UI_SKIN_LANGUAGEFONT_ENTRY* entry = languagefonts.Get(c);
+      if(entry && entry->languagecode == languagecode)
+        {
+          entry->fontface.Set(fontface);
+          return true;
+        }
+    }
+
+  UI_SKIN_LANGUAGEFONT_ENTRY* entry = GEN_NEW UI_SKIN_LANGUAGEFONT_ENTRY();
+  if(!entry) return false;
+
+  entry->languagecode = languagecode;
+  entry->fontface.Set(fontface);
+  languagefonts.Add(entry);
+
+  return true;
+}
+
+
+/**-------------------------------------------------------------------------------------------------------------------
+*
+* @fn         XDWORD UI_SKIN::LanguageFont_GetSize()
+* @brief      Number of language → face mappings
+* @ingroup    USERINTERFACE
+*
+* @return     XDWORD : Count (0 if none).
+*
+* --------------------------------------------------------------------------------------------------------------------*/
+XDWORD UI_SKIN::LanguageFont_GetSize()
+{
+  return languagefonts.GetSize();
+}
+
+
+/**-------------------------------------------------------------------------------------------------------------------
+*
+* @fn         bool UI_SKIN::FontForLanguage(XDWORD languagecode, XSTRING& outface)
+* @brief      Resolve catalog face for a language (Phase 3)
+* @ingroup    USERINTERFACE
+*
+* @param[in]  languagecode : Active XLANGUAGE_ISO_639_3_CODE.
+* @param[out] outface : Logical face name when mapped.
+*
+* @return     bool : true if a mapping exists; false if unmapped (caller uses default).
+*
+* --------------------------------------------------------------------------------------------------------------------*/
+bool UI_SKIN::FontForLanguage(XDWORD languagecode, XSTRING& outface)
+{
+  outface.Empty();
+  if(!languagecode) return false;
+
+  for(XDWORD c=0; c<languagefonts.GetSize(); c++)
+    {
+      UI_SKIN_LANGUAGEFONT_ENTRY* entry = languagefonts.Get(c);
+      if(entry && entry->languagecode == languagecode && !entry->fontface.IsEmpty())
+        {
+          outface = entry->fontface;
+          return true;
+        }
+    }
+
+  return false;
 }
 
 

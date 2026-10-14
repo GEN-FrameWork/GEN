@@ -72,6 +72,13 @@ class UI_PROPERTYREGISTRY
 
     static bool                    GetAliased                  (UI_STYLE& style, XCHAR* primarykey, XCHAR* secondarykey, XSTRING& value);
 
+    // Phase 2: trim, strip quotes, keep first catalog token of a CSS font-family list.
+    static void                    NormalizeFontFace           (XSTRING& face);
+
+    // Phase 5: split font-family into ordered catalog names (skips CSS generics like sans-serif).
+    #define UI_PROPERTYREGISTRY_FONTFACE_STACK_MAX             4
+    static XDWORD                  ParseFontFamilyStack        (XSTRING& raw, XSTRING* outfaces, XDWORD maxfaces);
+
     static XDWORD                  TokenizeNumbers              (XSTRING& raw, double* outvalues, XDWORD maxvalues);
 
     static XDWORD                  TokenizeTokens               (XSTRING& raw, XSTRING* outtokens, XDWORD maxvalues);

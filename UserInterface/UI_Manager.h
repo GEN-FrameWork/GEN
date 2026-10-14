@@ -184,6 +184,9 @@ class UI_MANAGER : public XOBSERVER, public XSUBJECT
     bool                            Layouts_ApplyTranslations                 ();
     bool                            Layouts_ApplyTranslations                 (UI_LAYOUT* layout);
 
+    // Phase 3 / callers outside UI_MANAGER: true when mask is only #[TRANSLATE_N] (no live placeholders).
+    bool                            MaskText_IsTranslateOnly                  (XSTRING* masktext);
+
   private:
                                     UI_MANAGER                                ();
                                     UI_MANAGER                                (UI_MANAGER const&);
@@ -192,7 +195,6 @@ class UI_MANAGER : public XOBSERVER, public XSUBJECT
     void                            operator =                                (UI_MANAGER const&);
 
     bool                            MaskText_HasTranslate                     (XSTRING* masktext);
-    bool                            MaskText_IsTranslateOnly                  (XSTRING* masktext);
     bool                            ResolveTranslateMasks                     (XSTRING* masktext, XSTRING& resolved);
     bool                            ApplyTranslateMasksToElement              (UI_LAYOUT* layout, UI_ELEMENT* element);
 

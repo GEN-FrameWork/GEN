@@ -315,6 +315,34 @@ void GRP2DCANVAS_VECTORFONT_CONFIG::Clean()
 
 
 /**-------------------------------------------------------------------------------------------------------------------
+*
+* @fn         GRP2DCANVAS_VECTORFONT_FACE::GRP2DCANVAS_VECTORFONT_FACE()
+* @brief      Constructor of class
+* @ingroup    GRAPHIC
+*
+* --------------------------------------------------------------------------------------------------------------------*/
+GRP2DCANVAS_VECTORFONT_FACE::GRP2DCANVAS_VECTORFONT_FACE()
+{
+  name.Empty();
+  pathfile.Empty();
+}
+
+
+/**-------------------------------------------------------------------------------------------------------------------
+*
+* @fn         GRP2DCANVAS_VECTORFONT_FACE::~GRP2DCANVAS_VECTORFONT_FACE()
+* @brief      Destructor of class
+* @ingroup    GRAPHIC
+*
+* --------------------------------------------------------------------------------------------------------------------*/
+GRP2DCANVAS_VECTORFONT_FACE::~GRP2DCANVAS_VECTORFONT_FACE()
+{
+  name.Empty();
+  pathfile.Empty();
+}
+
+
+/**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         GRP2DCANVAS::GRP2DCANVAS()
 * @brief      Constructor of class
@@ -339,6 +367,10 @@ GRP2DCANVAS::~GRP2DCANVAS()
 {
   RebuildAllAreas();
   DeleteAllRebuildAreas();
+
+  vectorfont_faces.DeleteContents();
+  vectorfont_faces.DeleteAll();
+  vectorfont_selected.Empty();
 
   Clean();
 }
@@ -1185,6 +1217,240 @@ bool GRP2DCANVAS::VectorFont_Load(XCHAR* fontnamefile)
 bool GRP2DCANVAS::VectorFont_Load(XPATH& fontnamefile)
 {
   return false;
+}
+
+
+/**-------------------------------------------------------------------------------------------------------------------
+*
+* @fn         GRP2DCANVAS_VECTORFONT_FACE* GRP2DCANVAS::VectorFont_FindFace(XCHAR* logicalname)
+* @brief      Find a registered vector font face by logical name
+* @note       INTERNAL
+* @ingroup    GRAPHIC
+*
+* @param[in]  logicalname : Logical face name (e.g. "default", "cjk").
+*
+* @return     GRP2DCANVAS_VECTORFONT_FACE* : Face entry, or NULL if not registered.
+*
+* --------------------------------------------------------------------------------------------------------------------*/
+GRP2DCANVAS_VECTORFONT_FACE* GRP2DCANVAS::VectorFont_FindFace(XCHAR* logicalname)
+{
+  if(!logicalname) return NULL;
+
+  for(XDWORD c=0; c<vectorfont_faces.GetSize(); c++)
+    {
+      GRP2DCANVAS_VECTORFONT_FACE* face = vectorfont_faces.Get(c);
+      if(face && !face->name.Compare(logicalname, true)) return face;
+    }
+
+  return NULL;
+}
+
+
+/**-------------------------------------------------------------------------------------------------------------------
+*
+* @fn         bool GRP2DCANVAS::VectorFont_Register(XCHAR* logicalname, XPATH& fontpath)
+* @brief      Register (or replace) a logical vector font name bound to a file path
+* @ingroup    GRAPHIC
+*
+* @param[in]  logicalname : Logical name used by Select / UI (GRP2DCANVAS_VECTORFONT_DEFAULT for skin primary).
+* @param[in]  fontpath : Absolute or resolved path to the TTF/OTF file.
+*
+* @return     bool : true if registered; false if name/path invalid.
+*
+* --------------------------------------------------------------------------------------------------------------------*/
+bool GRP2DCANVAS::VectorFont_Register(XCHAR* logicalname, XPATH& fontpath)
+{
+  if(!logicalname || !logicalname[0]) return false;
+  if(fontpath.IsEmpty()) return false;
+
+  GRP2DCANVAS_VECTORFONT_FACE* face = VectorFont_FindFace(logicalname);
+  if(face)
+    {
+      face->pathfile = fontpath;
+      return true;
+    }
+
+  face = GEN_NEW GRP2DCANVAS_VECTORFONT_FACE();
+  if(!face) return false;
+
+  face->name.Set(logicalname);
+  face->pathfile = fontpath;
+  vectorfont_faces.Add(face);
+
+  return true;
+}
+
+
+/**-------------------------------------------------------------------------------------------------------------------
+*
+* @fn         bool GRP2DCANVAS::VectorFont_Select(XCHAR* logicalname)
+* @brief      Make a registered vector font the active face for measure/print
+* @note       Phase 0: single AGG FreeType engine — Select reloads the face file via VectorFont_Load.
+* @ingroup    GRAPHIC
+*
+* @param[in]  logicalname : Registered name, or NULL/empty for GRP2DCANVAS_VECTORFONT_DEFAULT.
+*
+* @return     bool : true if the face is active (already selected or loaded); false if unknown/unloadable.
+*
+* --------------------------------------------------------------------------------------------------------------------*/
+bool GRP2DCANVAS::VectorFont_Select(XCHAR* logicalname)
+{
+  XCHAR* name = logicalname;
+  if(!name || !name[0]) name = GRP2DCANVAS_VECTORFONT_DEFAULT;
+
+  if(!vectorfont_selected.IsEmpty() && !vectorfont_selected.Compare(name, true)) return true;
+
+  GRP2DCANVAS_VECTORFONT_FACE* face = VectorFont_FindFace(name);
+  if(!face) return false;
+
+  if(!VectorFont_Load(face->pathfile)) return false;
+
+  vectorfont_selected.Set(name);
+  return true;
+}
+
+
+/**-------------------------------------------------------------------------------------------------------------------
+*
+* @fn         XSTRING* GRP2DCANVAS::VectorFont_GetSelected()
+* @brief      Get the logical name of the currently selected vector font
+* @ingroup    GRAPHIC
+*
+* @return     XSTRING* : Selected name (may be empty before first successful Load/Select).
+*
+* --------------------------------------------------------------------------------------------------------------------*/
+XSTRING* GRP2DCANVAS::VectorFont_GetSelected()
+{
+  return &vectorfont_selected;
+}
+
+
+/**-------------------------------------------------------------------------------------------------------------------
+*
+* @fn         bool GRP2DCANVAS::VectorFont_HasChar(XDWORD codepoint)
+* @brief      True if the active face has a real glyph for codepoint (Phase 5)
+* @note       Base: optimistic true. AGG overrides with FreeType glyph_index != 0.
+* @ingroup    GRAPHIC
+*
+* --------------------------------------------------------------------------------------------------------------------*/
+bool GRP2DCANVAS::VectorFont_HasChar(XDWORD codepoint)
+{
+  (void)codepoint;
+  return true;
+}
+
+
+/**-------------------------------------------------------------------------------------------------------------------
+*
+* @fn         double GRP2DCANVAS::VectorFont_GetWidthStack(XCHAR** faces, XDWORD nfaces, XCHAR* string)
+* @brief      Measure string width using a font-family stack (Phase 5)
+* @ingroup    GRAPHIC
+*
+* --------------------------------------------------------------------------------------------------------------------*/
+double GRP2DCANVAS::VectorFont_GetWidthStack(XCHAR** faces, XDWORD nfaces, XCHAR* string)
+{
+  if(!string) return 0.0;
+  if(!faces || !nfaces) return VectorFont_GetWidth(string);
+
+  XSTRING previous;
+  XSTRING* selected = VectorFont_GetSelected();
+  if(selected && !selected->IsEmpty()) previous = selected->Get();
+
+  XSTRING text;
+  text = string;
+
+  double width = 0.0;
+
+  for(XDWORD i=0; i<text.GetSize(); i++)
+    {
+      XCHAR  ch    = text.Get()[i];
+      XCHAR  one[2] = { ch, 0 };
+      bool   got   = false;
+      bool   space = ((ch == _C(' ')) || (ch == _C('\t')) || (ch == _C('\n')) || (ch == _C('\r')));
+
+      for(XDWORD f=0; f<nfaces; f++)
+        {
+          XCHAR* face = faces[f];
+          if(!face || !face[0]) continue;
+          if(!VectorFont_Select(face)) continue;
+
+          if(!space && !VectorFont_HasChar((XDWORD)ch)) continue;
+
+          width += VectorFont_GetWidth(one);
+          got = true;
+          break;
+        }
+
+      if(!got)
+        {
+          VectorFont_Select(GRP2DCANVAS_VECTORFONT_DEFAULT);
+          width += VectorFont_GetWidth(one);
+        }
+    }
+
+  if(!previous.IsEmpty()) VectorFont_Select(previous.Get());
+   else                    VectorFont_Select(GRP2DCANVAS_VECTORFONT_DEFAULT);
+
+  return width;
+}
+
+
+/**-------------------------------------------------------------------------------------------------------------------
+*
+* @fn         bool GRP2DCANVAS::VectorFont_PrintStack(double x, double y, XCHAR** faces, XDWORD nfaces, XCHAR* string)
+* @brief      Print string using a font-family stack (Phase 5)
+* @ingroup    GRAPHIC
+*
+* --------------------------------------------------------------------------------------------------------------------*/
+bool GRP2DCANVAS::VectorFont_PrintStack(double x, double y, XCHAR** faces, XDWORD nfaces, XCHAR* string)
+{
+  if(!string) return false;
+  if(!faces || !nfaces) return VectorFont_Print(x, y, string);
+
+  XSTRING previous;
+  XSTRING* selected = VectorFont_GetSelected();
+  if(selected && !selected->IsEmpty()) previous = selected->Get();
+
+  XSTRING text;
+  text = string;
+
+  double cursor = x;
+
+  for(XDWORD i=0; i<text.GetSize(); i++)
+    {
+      XCHAR  ch    = text.Get()[i];
+      XCHAR  one[2] = { ch, 0 };
+      bool   got   = false;
+      bool   space = ((ch == _C(' ')) || (ch == _C('\t')) || (ch == _C('\n')) || (ch == _C('\r')));
+
+      for(XDWORD f=0; f<nfaces; f++)
+        {
+          XCHAR* face = faces[f];
+          if(!face || !face[0]) continue;
+          if(!VectorFont_Select(face)) continue;
+
+          if(!space && !VectorFont_HasChar((XDWORD)ch)) continue;
+
+          double w = VectorFont_GetWidth(one);
+          VectorFont_Print(cursor, y, one);
+          cursor += w;
+          got = true;
+          break;
+        }
+
+      if(!got)
+        {
+          VectorFont_Select(GRP2DCANVAS_VECTORFONT_DEFAULT);
+          double w = VectorFont_GetWidth(one);
+          VectorFont_Print(cursor, y, one);
+          cursor += w;
+        }
+    }
+
+  if(!previous.IsEmpty()) VectorFont_Select(previous.Get());
+   else                    VectorFont_Select(GRP2DCANVAS_VECTORFONT_DEFAULT);
+
+  return true;
 }
 
 

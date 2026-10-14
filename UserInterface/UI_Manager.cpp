@@ -48,6 +48,7 @@
 #include "XFile.h"
 #include "XTrace.h"
 #include "XTranslation.h"
+#include "XLanguage_ISO_639_3.h"
 #include "XSleep.h"
 
 #include "INPCursorMotion.h"
@@ -3660,14 +3661,17 @@ bool UI_MANAGER::ApplyTranslateMasksToElement(UI_LAYOUT* layout, UI_ELEMENT* ele
                                                {
                                                  if(element_text->GetText()->Compare(resolve.Get(), true))
                                                    {
-                                                     element_text->GetText()->Set(resolve);
-
                                                      if(layout->GetSkin() && layout->GetSkin()->GetDrawMode() == UI_SKIN_DRAWMODE_CANVAS)
                                                        {
                                                          UI_SKINCANVAS* ui_skincanvas = (UI_SKINCANVAS*)layout->GetSkin();
                                                          UI_ELEMENT*    father        = element->GetFather();
                                                          double         width         = 0.0f;
                                                          double         height        = 0.0f;
+
+                                                         // Erase previous language glyph ink (CJK) before replacing the string.
+                                                         ui_skincanvas->PrepareTextContentChange(element);
+
+                                                         element_text->GetText()->Set(resolve);
 
                                                          if(father)
                                                            {
@@ -3696,6 +3700,7 @@ bool UI_MANAGER::ApplyTranslateMasksToElement(UI_LAYOUT* layout, UI_ELEMENT* ele
                                                        }
                                                       else
                                                        {
+                                                         element_text->GetText()->Set(resolve);
                                                          Elements_SetToRedraw(element);
                                                        }
                                                    }
@@ -3789,13 +3794,29 @@ bool UI_MANAGER::Layouts_ApplyTranslations()
       UI_LAYOUT* layout = layouts.Get(c);
       if(layout)
         {
+          // Static #[TRANSLATE_N] labels first, then live masks that embed TL() (FOOTER_*, etc.).
           if(!Layouts_ApplyTranslations(layout)) status = false;
+          ChangeTextElementValue(layout);
         }
     }
 
   if(status)
     {
       layout_translate_language = GEN_XTRANSLATION.GetActual();
+
+      // Drop form/text composition caches and dirty every layout so the whole screen
+      // redraws in the new language in one pass (no mixed-language frame leftovers).
+      for(XDWORD c=0; c<layouts.GetSize(); c++)
+        {
+          UI_LAYOUT* layout = layouts.Get(c);
+          if(!layout || !layout->GetSkin()) continue;
+          if(layout->GetSkin()->GetDrawMode() != UI_SKIN_DRAWMODE_CANVAS) continue;
+
+          UI_SKINCANVAS* skin_canvas = (UI_SKINCANVAS*)layout->GetSkin();
+          if(skin_canvas) skin_canvas->InvalidateCompositionCaches();
+
+          layout->Elements_SetToRedraw();
+        }
     }
 
   return status;
@@ -5299,6 +5320,32 @@ UI_ELEMENT* UI_MANAGER::GetLayoutElement_Text(XFILEXMLELEMENT* node, UI_LAYOUT* 
   }
 
   element_text->SetSizeFont((XDWORD)sizefont);
+
+  // Phase 2/5: fontface / font-family -> ordered catalog stack (comma list); empty = language/default at draw.
+  {
+    XSTRING facestr;
+    if(UI_PROPERTYREGISTRY::GetAliased(outstyle, NL("fontface"), NL("font-family"), facestr))
+      {
+        XSTRING stack[UI_PROPERTYREGISTRY_FONTFACE_STACK_MAX];
+        XDWORD  n = UI_PROPERTYREGISTRY::ParseFontFamilyStack(facestr, stack, UI_PROPERTYREGISTRY_FONTFACE_STACK_MAX);
+        element_text->SetFontFaceStack(stack, n);
+
+        // Phase 4/5: warn for stack entries missing from the skin catalog (kept; Select skips them).
+        if(layout && layout->GetSkin())
+          {
+            for(XDWORD i=0; i<n; i++)
+              {
+                if(!layout->GetSkin()->FontCatalog_Has(stack[i].Get()))
+                  {
+                    XTRACE_PRINTCOLOR(XTRACE_COLOR_WARNING,
+                                      NL("[UI Skin] font-family '%s' on element '%s' is not in the font catalog"),
+                                      stack[i].Get(),
+                                      element_text->GetName() ? element_text->GetName()->Get() : NL("?"));
+                  }
+              }
+          }
+      }
+  }
 
   text = node->GetValue().Get();
 
@@ -6912,6 +6959,8 @@ bool UI_MANAGER::CreateLayouts(XFILEXML& xml, XPATH& xmlpathfile, GRPSCREEN* scr
         }
     }
 
+  XFILEXMLELEMENT* skinnode = NULL;
+
   for(int c=0; c<root->GetNElements(); c++)
     {
       XFILEXMLELEMENT* nodeskin = root->GetElement(c);
@@ -6921,6 +6970,8 @@ bool UI_MANAGER::CreateLayouts(XFILEXML& xml, XPATH& xmlpathfile, GRPSCREEN* scr
             {                 
               XCHAR*    value;                             
               XSTRING   drawmodestr;
+
+              skinnode = nodeskin;
                  
               value = nodeskin->GetValueAttribute(NL("name"));
               if(value) nametypeskin = value;
@@ -6961,6 +7012,104 @@ bool UI_MANAGER::CreateLayouts(XFILEXML& xml, XPATH& xmlpathfile, GRPSCREEN* scr
        
   ui_skin->GetRasterFont()->Set(raster_fontname);
   ui_skin->GetVectorFont()->Set(vector_fontname);
+
+  // Phase 1: optional <fonts ><font name file></font></fonts> under <skin> or as a root sibling.
+  // Catalog only; skin@vectorfont remains the loaded default. Missing catalog = pre-Phase-1 behaviour.
+  // GEN XML quirk: start tags without attributes need a space before '>' (e.g. <fonts >).
+  {
+    XVECTOR<XFILEXMLELEMENT*> fontsparents;
+    if(skinnode) fontsparents.Add(skinnode);
+    fontsparents.Add(root);
+
+    for(XDWORD p=0; p<fontsparents.GetSize(); p++)
+      {
+        XFILEXMLELEMENT* parent = fontsparents.Get(p);
+        if(!parent) continue;
+
+        for(int f=0; f<parent->GetNElements(); f++)
+          {
+            XFILEXMLELEMENT* fontsnode = parent->GetElement(f);
+            if(!fontsnode) continue;
+            if(fontsnode->GetType() != XFILEXMLELEMENTTYPE_NORMAL) continue;
+            if(fontsnode->GetName().Compare(NL("fonts"), true)) continue;
+
+            for(int e=0; e<fontsnode->GetNElements(); e++)
+              {
+                XFILEXMLELEMENT* fontnode = fontsnode->GetElement(e);
+                if(!fontnode) continue;
+                if(fontnode->GetType() != XFILEXMLELEMENTTYPE_NORMAL) continue;
+                if(fontnode->GetName().Compare(NL("font"), true)) continue;
+
+                XCHAR* fname = fontnode->GetValueAttribute(NL("name"));
+                XCHAR* ffile = fontnode->GetValueAttribute(NL("file"));
+                if(fname && ffile) ui_skin->FontCatalog_Add(fname, ffile);
+              }
+          }
+      }
+
+    if(ui_skin->FontCatalog_GetSize())
+      {
+        XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, NL("[UI Skin] font catalog: %u face(s)"), (unsigned)ui_skin->FontCatalog_GetSize());
+      }
+  }
+
+  // Phase 3: optional <languagefonts ><map language font></map></languagefonts> (ISO 639-3 → catalog face).
+  // Applies at measure/draw for translate-only texts without an explicit font-family (see SelectTextFace).
+  {
+    XVECTOR<XFILEXMLELEMENT*> langparents;
+    if(skinnode) langparents.Add(skinnode);
+    langparents.Add(root);
+
+    XLANGUAGE_ISO_639_3 iso639;
+
+    for(XDWORD p=0; p<langparents.GetSize(); p++)
+      {
+        XFILEXMLELEMENT* parent = langparents.Get(p);
+        if(!parent) continue;
+
+        for(int f=0; f<parent->GetNElements(); f++)
+          {
+            XFILEXMLELEMENT* langsnode = parent->GetElement(f);
+            if(!langsnode) continue;
+            if(langsnode->GetType() != XFILEXMLELEMENTTYPE_NORMAL) continue;
+            if(langsnode->GetName().Compare(NL("languagefonts"), true)) continue;
+
+            for(int e=0; e<langsnode->GetNElements(); e++)
+              {
+                XFILEXMLELEMENT* mapnode = langsnode->GetElement(e);
+                if(!mapnode) continue;
+                if(mapnode->GetType() != XFILEXMLELEMENTTYPE_NORMAL) continue;
+                if(mapnode->GetName().Compare(NL("map"), true)) continue;
+
+                XCHAR* lang = mapnode->GetValueAttribute(NL("language"));
+                XCHAR* face = mapnode->GetValueAttribute(NL("font"));
+                if(!lang || !lang[0] || !face || !face[0]) continue;
+
+                XDWORD code = iso639.Code_GetByCodeAlpha3(lang);
+                if(!code) code = iso639.Code_GetByCodeAlpha2(lang);
+                if(!code) code = iso639.Code_GetByEnglishName(lang);
+
+                if(code)
+                  {
+                    ui_skin->LanguageFont_Add(code, face);
+
+                    // Phase 4: map must point at a catalog face (or default); unknown names are logged.
+                    if(!ui_skin->FontCatalog_Has(face))
+                      {
+                        XTRACE_PRINTCOLOR(XTRACE_COLOR_WARNING,
+                                          NL("[UI Skin] languagefonts map language='%s' font='%s' is not in the font catalog"),
+                                          lang, face);
+                      }
+                  }
+              }
+          }
+      }
+
+    if(ui_skin->LanguageFont_GetSize())
+      {
+        XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, NL("[UI Skin] language fonts: %u map(s)"), (unsigned)ui_skin->LanguageFont_GetSize());
+      }
+  }
 
   if(!ui_skin->LoadFonts()) 
     {

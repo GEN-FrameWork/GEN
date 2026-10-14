@@ -30,6 +30,9 @@
 
 /*---- INCLUDES ------------------------------------------------------------------------------------------------------*/
 
+#include "XString.h"
+#include "XVector.h"
+
 #include "UI_Element.h"
 #include "UI_Background.h"
 
@@ -101,6 +104,28 @@ class UI_SKIN_TEXTBOX_PART
     GRPBITMAP*                        image;
 };	
 
+// Phase 1: optional skin <fonts><font name="…" file="…"/></fonts> catalog entry (logical name -> filename under fonts/).
+class UI_SKIN_FONT_ENTRY
+{
+  public:
+                                  UI_SKIN_FONT_ENTRY                    ();
+                                 ~UI_SKIN_FONT_ENTRY                    ();
+
+    XSTRING                       name;
+    XSTRING                       filename;
+};
+
+// Phase 3: optional <languagefonts><map language="chi" font="cjk"/></languagefonts> (ISO 639-3 code -> catalog face).
+class UI_SKIN_LANGUAGEFONT_ENTRY
+{
+  public:
+                                  UI_SKIN_LANGUAGEFONT_ENTRY            ();
+                                 ~UI_SKIN_LANGUAGEFONT_ENTRY            ();
+
+    XDWORD                        languagecode;
+    XSTRING                       fontface;
+};
+
 class UI_SKIN 
 {
   public:
@@ -114,7 +139,17 @@ class UI_SKIN
     bool                              SetDrawMode                           (UI_SKIN_DRAWMODE drawmode);   
 
     XSTRING*                          GetRasterFont                         ();
-    XSTRING*                          GetVectorFont                         ();   
+    XSTRING*                          GetVectorFont                         ();
+    // Phase 1 font catalog (does not replace skin@vectorfont = default).
+    bool                              FontCatalog_Add                       (XCHAR* logicalname, XCHAR* filename);
+    XDWORD                            FontCatalog_GetSize                   ();
+    UI_SKIN_FONT_ENTRY*               FontCatalog_Get                       (XDWORD index);
+    // Phase 4: true for "default" or a catalog logical name (not the TTF filename).
+    bool                              FontCatalog_Has                       (XCHAR* logicalname);
+    // Phase 3: language → catalog logical face (empty / false = use default for that language).
+    bool                              LanguageFont_Add                      (XDWORD languagecode, XCHAR* fontface);
+    XDWORD                            LanguageFont_GetSize                  ();
+    bool                              FontForLanguage                       (XDWORD languagecode, XSTRING& outface);
     virtual bool                      LoadFonts                             ();
 
     virtual double                    GetWidthString                        (XCHAR* string, XDWORD sizefont = 12);  
@@ -178,6 +213,8 @@ class UI_SKIN
 
     XSTRING                           rasterfontname;
     XSTRING                           vectorfontname;
+    XVECTOR<UI_SKIN_FONT_ENTRY*>      fontcatalog;
+    XVECTOR<UI_SKIN_LANGUAGEFONT_ENTRY*> languagefonts;
 
   private:
 

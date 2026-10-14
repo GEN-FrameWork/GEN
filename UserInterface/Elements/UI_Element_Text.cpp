@@ -118,6 +118,98 @@ void UI_ELEMENT_TEXT::SetSizeFont(XDWORD sizefont)
 
 
 /**-------------------------------------------------------------------------------------------------------------------
+*
+* @fn         XSTRING* UI_ELEMENT_TEXT::GetFontFace()
+* @brief      Get logical vector font face (Phase 2)
+* @ingroup    USERINTERFACE
+*
+* @return     XSTRING* : Catalog face name; empty means default.
+*
+* --------------------------------------------------------------------------------------------------------------------*/
+XSTRING* UI_ELEMENT_TEXT::GetFontFace()
+{
+  return &fontface;
+}
+
+
+/**-------------------------------------------------------------------------------------------------------------------
+*
+* @fn         void UI_ELEMENT_TEXT::SetFontFace(XCHAR* fontface)
+* @brief      Set logical vector font face (Phase 2)
+* @ingroup    USERINTERFACE
+*
+* @param[in]  fontface : Catalog name (e.g. "alt"), or NULL/empty for default.
+*
+* --------------------------------------------------------------------------------------------------------------------*/
+void UI_ELEMENT_TEXT::SetFontFace(XCHAR* fontface)
+{
+  fontfacestackcount = 0;
+  this->fontface.Empty();
+
+  if(fontface && fontface[0])
+    {
+      this->fontface.Set(fontface);
+      fontfacestack[0] = this->fontface;
+      fontfacestackcount = 1;
+    }
+}
+
+
+/**-------------------------------------------------------------------------------------------------------------------
+*
+* @fn         XDWORD UI_ELEMENT_TEXT::GetFontFaceStackCount()
+* @brief      Number of faces in the Phase 5 font-family stack
+* @ingroup    USERINTERFACE
+*
+* --------------------------------------------------------------------------------------------------------------------*/
+XDWORD UI_ELEMENT_TEXT::GetFontFaceStackCount()
+{
+  return fontfacestackcount;
+}
+
+
+/**-------------------------------------------------------------------------------------------------------------------
+*
+* @fn         XSTRING* UI_ELEMENT_TEXT::GetFontFaceStackEntry(XDWORD index)
+* @brief      Get one face from the font-family stack
+* @ingroup    USERINTERFACE
+*
+* --------------------------------------------------------------------------------------------------------------------*/
+XSTRING* UI_ELEMENT_TEXT::GetFontFaceStackEntry(XDWORD index)
+{
+  if(index >= fontfacestackcount) return NULL;
+  return &fontfacestack[index];
+}
+
+
+/**-------------------------------------------------------------------------------------------------------------------
+*
+* @fn         void UI_ELEMENT_TEXT::SetFontFaceStack(XSTRING* faces, XDWORD count)
+* @brief      Set the Phase 5 font-family stack (primary = faces[0])
+* @ingroup    USERINTERFACE
+*
+* --------------------------------------------------------------------------------------------------------------------*/
+void UI_ELEMENT_TEXT::SetFontFaceStack(XSTRING* faces, XDWORD count)
+{
+  fontfacestackcount = 0;
+  fontface.Empty();
+
+  if(!faces || !count) return;
+
+  if(count > UI_PROPERTYREGISTRY_FONTFACE_STACK_MAX) count = UI_PROPERTYREGISTRY_FONTFACE_STACK_MAX;
+
+  for(XDWORD c=0; c<count; c++)
+    {
+      if(faces[c].IsEmpty()) continue;
+      fontfacestack[fontfacestackcount] = faces[c];
+      fontfacestackcount++;
+    }
+
+  if(fontfacestackcount) fontface = fontfacestack[0];
+}
+
+
+/**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         XSTRING* UI_ELEMENT_TEXT::GetText()
 * @brief      Get text
@@ -186,7 +278,8 @@ void UI_ELEMENT_TEXT::SetMaxSizeText(XDWORD maxsizetext)
 * --------------------------------------------------------------------------------------------------------------------*/
 void UI_ELEMENT_TEXT::ReapplyStyleVisual()
 {
-  XDWORD oldsize = sizefont;
+  XDWORD  oldsize = sizefont;
+  XSTRING oldface = fontface;
 
   UI_ELEMENT::ReapplyStyleVisual();
 
@@ -207,8 +300,18 @@ void UI_ELEMENT_TEXT::ReapplyStyleVisual()
       if(sf > 0.0) SetSizeFont((XDWORD)sf);
     }
 
-  // Phase 3.3: if sizefont changed inside a flex/grid father, re-run local layout.
-  if(sizefont != oldsize)
+  {
+    XSTRING facestr;
+    if(UI_PROPERTYREGISTRY::GetAliased(bag, NL("fontface"), NL("font-family"), facestr))
+      {
+        XSTRING stack[UI_PROPERTYREGISTRY_FONTFACE_STACK_MAX];
+        XDWORD  n = UI_PROPERTYREGISTRY::ParseFontFamilyStack(facestr, stack, UI_PROPERTYREGISTRY_FONTFACE_STACK_MAX);
+        SetFontFaceStack(stack, n);
+      }
+  }
+
+  // Phase 3.3: if sizefont/face changed inside a flex/grid father, re-run local layout.
+  if(sizefont != oldsize || fontface.Compare(oldface.Get(), true))
     {
       UI_ELEMENT* father = GetFather();
       if(father && (father->IsFlexContainer() || father->IsGridContainer()))
@@ -229,8 +332,10 @@ void UI_ELEMENT_TEXT::ReapplyStyleVisual()
 * --------------------------------------------------------------------------------------------------------------------*/
 void UI_ELEMENT_TEXT::Clean()
 {
-  sizefont     = 0;
-  maxsizetext  = 0;
+  sizefont           = 0;
+  fontface.Empty();
+  fontfacestackcount = 0;
+  maxsizetext        = 0;
 }
 
 
