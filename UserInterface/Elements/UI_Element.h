@@ -112,6 +112,7 @@ enum UI_ELEMENT_CHROMEROLE
 	UI_ELEMENT_CHROMEROLE_ICON												,	// Application icon
 	UI_ELEMENT_CHROMEROLE_TITLE											,	// Window title text
 	UI_ELEMENT_CHROMEROLE_MINIMIZE										,	// Minimize button
+	UI_ELEMENT_CHROMEROLE_LANGUAGE										,	// Cycle UI language (optional chrome control)
 	UI_ELEMENT_CHROMEROLE_MAXIMIZE										,	// Maximize / restore button
 	UI_ELEMENT_CHROMEROLE_CLOSE											,	// Close button
 };

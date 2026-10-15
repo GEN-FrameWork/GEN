@@ -50,6 +50,9 @@
 #include "INPManager.h"
 #include "XTimer.h"
 #include "XTrace.h"
+#ifdef XTRANSLATION_ACTIVE
+#include "XTranslation.h"
+#endif
 #endif
 
 
@@ -1053,7 +1056,37 @@ bool GRPSCREEN::LoadCFGChromesLayout()
   UI_ELEMENT* titleelement = cfgchromeslayout->Elements_Get(UI_ELEMENT_CHROMEROLE_TITLE);
   if(titleelement && (titleelement->GetType() == UI_ELEMENT_TYPE_TEXT))
     {
-      ((UI_ELEMENT_TEXT*)titleelement)->GetText()->Set(GetTitle()->Get());
+      UI_ELEMENT_TEXT* titletext = (UI_ELEMENT_TEXT*)titleelement;
+      titletext->GetText()->Set(GetTitle()->Get());
+
+      // Remasure after replacing the XML placeholder ("Title"): boundary was computed for that short
+      // string at load time. Leaving the old width makes TextBackdrop / hit boxes wrong and can leave a
+      // visible stub past the last glyph when a stale wider cache is restored.
+      if(cfgchromeslayout->GetSkin() && cfgchromeslayout->GetSkin()->GetDrawMode() == UI_SKIN_DRAWMODE_CANVAS)
+        {
+          UI_SKINCANVAS* ui_skincanvas = (UI_SKINCANVAS*)cfgchromeslayout->GetSkin();
+          UI_ELEMENT*    father        = titleelement->GetFather();
+          double         width         = 0.0f;
+          double         height        = 0.0f;
+
+          if(father)
+            {
+              width  = father->GetBoundaryLine()->width;
+              height = father->GetBoundaryLine()->height;
+            }
+           else if(ui_skincanvas->GetCanvas())
+            {
+              width  = ui_skincanvas->GetCanvas()->GetWidth();
+              height = ui_skincanvas->GetCanvas()->GetHeight();
+            }
+
+          titleelement->GetBoundaryLine()->height = 0;
+          titleelement->GetBoundaryLine()->width  = 0;
+          ui_skincanvas->CalculeBoundaryLine_AllElements(titleelement, false);
+          ui_skincanvas->CalculePosition(titleelement, width, height);
+        }
+
+      titleelement->SetMustReDraw(true);
     }
 
   // Sync the caption element's actual visibility to the initial desired state. When CustomAutoHide > 0,
@@ -1064,6 +1097,23 @@ bool GRPSCREEN::LoadCFGChromesLayout()
     {
       GRPSCREEN_SetElementVisibleRecursive(captionelement, cfgchromesautohidevisible);
     }
+
+  // role="language" is optional chrome: only when the app was built with XTRANSLATION_ACTIVE and a
+  // translation file was successfully Ini()'d. Otherwise hide it so minimize stays the leftmost window button.
+  {
+    UI_ELEMENT* languageelement = cfgchromeslayout->Elements_Get(UI_ELEMENT_CHROMEROLE_LANGUAGE);
+    if(languageelement)
+      {
+        bool show_language = false;
+
+        #ifdef XTRANSLATION_ACTIVE
+        show_language = GEN_XTRANSLATION.IsInitialized();
+        #endif
+
+        GRPSCREEN_SetElementVisibleRecursive(languageelement, show_language);
+        languageelement->SetActive(show_language);
+      }
+  }
 
   // Reference width for UpdateCFGChromesButtonsPosition(): the width the layout's element positions were just
   // resolved against. The min/max/close buttons keep their authored distance to the RIGHT edge of this width;
@@ -1375,11 +1425,12 @@ bool GRPSCREEN::IsOverCFGChromesButton(int uix, int uiy)
 {
   if(!cfgchromeslayout) return false;
 
-  UI_ELEMENT_CHROMEROLE roles[3] = { UI_ELEMENT_CHROMEROLE_MINIMIZE,
+  UI_ELEMENT_CHROMEROLE roles[4] = { UI_ELEMENT_CHROMEROLE_MINIMIZE,
+                                     UI_ELEMENT_CHROMEROLE_LANGUAGE,
                                      UI_ELEMENT_CHROMEROLE_MAXIMIZE,
                                      UI_ELEMENT_CHROMEROLE_CLOSE    };
 
-  for(int c=0; c<3; c++)
+  for(int c=0; c<4; c++)
     {
       UI_ELEMENT* element = cfgchromeslayout->Elements_Get(roles[c]);
       if(!element)                              continue;
@@ -1732,8 +1783,8 @@ bool GRPSCREEN::UpdateCFGChromesAutoHide()
 *
 * @fn         bool GRPSCREEN::UpdateCFGChromesButtonsPosition()
 * @brief      Update CFG chromes buttons position
-* @note       Keeps the chrome caption + minimize/maximize/close buttons locked to the LIVE client size:
-*             the caption bar width tracks the client width, and the three buttons shift by
+* @note       Keeps the chrome caption + minimize/language/maximize/close buttons locked to the LIVE client size:
+*             the caption bar width tracks the client width, and those buttons shift by
 *             (client width - reference width) so they hug the live right edge (shrink and grow).
 *             Any client size change — including height-only (resize from the top/bottom edge) — also
 *             dirties the chrome layout: UpdateSize recreates empty canvases, and without a redraw the
@@ -1794,11 +1845,12 @@ bool GRPSCREEN::UpdateCFGChromesButtonsPosition()
     {
       double dx = (double)(shift - cfgchromesbuttonsshift);
 
-      UI_ELEMENT_CHROMEROLE roles[3] = { UI_ELEMENT_CHROMEROLE_MINIMIZE,
+      UI_ELEMENT_CHROMEROLE roles[4] = { UI_ELEMENT_CHROMEROLE_MINIMIZE,
+                                         UI_ELEMENT_CHROMEROLE_LANGUAGE,
                                          UI_ELEMENT_CHROMEROLE_MAXIMIZE,
                                          UI_ELEMENT_CHROMEROLE_CLOSE    };
 
-      for(int c=0; c<3; c++)
+      for(int c=0; c<4; c++)
         {
           UI_ELEMENT* buttonelement = cfgchromeslayout->Elements_Get(roles[c]);
           if(buttonelement)

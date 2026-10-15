@@ -1384,7 +1384,7 @@ double GRP2DCANVAS::VectorFont_GetWidthStack(XCHAR** faces, XDWORD nfaces, XCHAR
       if(!got)
         {
           VectorFont_Select(GRP2DCANVAS_VECTORFONT_DEFAULT);
-          width += VectorFont_GetWidth(one);
+          if(space || VectorFont_HasChar((XDWORD)ch)) width += VectorFont_GetWidth(one);
         }
     }
 
@@ -1441,9 +1441,12 @@ bool GRP2DCANVAS::VectorFont_PrintStack(double x, double y, XCHAR** faces, XDWOR
       if(!got)
         {
           VectorFont_Select(GRP2DCANVAS_VECTORFONT_DEFAULT);
-          double w = VectorFont_GetWidth(one);
-          VectorFont_Print(cursor, y, one);
-          cursor += w;
+          if(space || VectorFont_HasChar((XDWORD)ch))
+            {
+              double w = VectorFont_GetWidth(one);
+              VectorFont_Print(cursor, y, one);
+              cursor += w;
+            }
         }
     }
 

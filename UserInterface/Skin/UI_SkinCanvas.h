@@ -171,6 +171,7 @@ class UI_SKINCANVAS : public UI_SKIN, public UI_SKINCANVAS_REBUILDAREAS
 
 		virtual bool                      RestoreOnHide														(UI_ELEMENT* element);
 
+		void                               RestoreCompositionCaches								();
 		void                               InvalidateCompositionCaches							();
 
 		XDWORD                             CompositionCacheCount									();

@@ -376,6 +376,13 @@ class GRP2DCANVASAGG: public GRP2DCANVAS
                                                                                     {
                                                                                       return false;
                                                                                     }
+
+                                                                                  // Buffer_Delete wiped the glyph; re-bind the last selected built-in raster face (e.g. after
+                                                                                  // minimize/restore WM_SIZE → UpdateSize) so DrawFramerate / RasterFont_* do not hit m_font==NULL.
+                                                                                  if(!rasterfont_selected.IsEmpty())
+                                                                                    {
+                                                                                      RasterFont_Select(rasterfont_selected.Get());
+                                                                                    }
                                                                                   
                                                                                   SetClipBox((double)0.0f, (double)0.0f, (double)(width-1), (double)(height-1));
 
@@ -407,6 +414,14 @@ class GRP2DCANVASAGG: public GRP2DCANVAS
                                                                                     {
                                                                                       GEN_DELETE rasterglyph;
                                                                                       rasterglyph = NULL;
+                                                                                    }
+
+                                                                                  // Framerate overlay bitmap outlives Buffer_Delete otherwise: minimize/WM_SIZE recreates
+                                                                                  // the AGG glyph with m_font==NULL, then ReleaseDrawFramerate → RasterFont_GetHeight crashes.
+                                                                                  if(framerate_bitmap)
+                                                                                    {
+                                                                                      GEN_DELETE framerate_bitmap;
+                                                                                      framerate_bitmap = NULL;
                                                                                     }
 
                                                                                   if(dashline)
@@ -1214,11 +1229,12 @@ class GRP2DCANVASAGG: public GRP2DCANVAS
                                                                                       if(!strfontname.Compare(_strfontname))
                                                                                         {
                                                                                           rasterglyph->font(fonts[c].font);
-                                                                                          break;
+                                                                                          rasterfont_selected = fonts[c].name;
+                                                                                          return true;
                                                                                         }
                                                                                     }
 
-                                                                                  return true;
+                                                                                  return false;
                                                                                 }
 
     GRP2DCOLOR*                                                                 RasterFont_GetColor               ()                                        
@@ -1233,14 +1249,15 @@ class GRP2DCANVASAGG: public GRP2DCANVAS
 
     double                                                                      RasterFont_GetWidth               (XCHAR* string)
                                                                                 {
-                                                                                   if(!rasterglyph) return 0.0f;
+                                                                                   if(!rasterglyph || !rasterglyph->font()) return 0.0f;
 
                                                                                    return rasterglyph->width(string);
                                                                                 }
 
     double                                                                      RasterFont_GetHeight              ()
                                                                                 {
-                                                                                   if(!rasterglyph) return 0;
+                                                                                   // AGG glyph_raster_bin::height() is m_font[0] — crash if Buffer_Create left m_font NULL.
+                                                                                   if(!rasterglyph || !rasterglyph->font()) return 0;
 
                                                                                    return rasterglyph->height();
                                                                                 }
@@ -1251,6 +1268,7 @@ class GRP2DCANVASAGG: public GRP2DCANVAS
                                                                                   va_list arg;
 
                                                                                   if(!renderer_rastertext) return false;
+                                                                                  if(!rasterglyph || !rasterglyph->font()) return false;
 
                                                                                   va_start(arg, mask);
 
@@ -1303,6 +1321,10 @@ class GRP2DCANVASAGG: public GRP2DCANVAS
                                                                                       return true;
                                                                                     }
 
+                                                                                  // Fast path: UI Latin faces always have Basic Latin. Avoid prepare_glyph per ASCII codepoint
+                                                                                  // on every Print/GetWidth (UI_Options textbox was paying this on every redraw).
+                                                                                  if(codepoint >= 0x20 && codepoint <= 0x7E) return true;
+
                                                                                   if(!vectorfont_engine.prepare_glyph((unsigned)codepoint)) return false;
                                                                                   return (vectorfont_engine.glyph_index() != 0);
                                                                                 }
@@ -1329,6 +1351,8 @@ class GRP2DCANVASAGG: public GRP2DCANVAS
                                                                                   for(XDWORD c=0; c<_string.GetSize(); c++)
                                                                                     {
                                                                                       XCHAR character = _string.Get()[c];
+                                                                                      if(!VectorFont_HasChar((XDWORD)character)) continue;
+
                                                                                       const agg::glyph_cache* glyph = vectorfont_manager->glyph(character);
 
                                                                                       if(glyph)
@@ -1424,6 +1448,10 @@ class GRP2DCANVASAGG: public GRP2DCANVAS
                                                                                   for(XDWORD c=0; c<outstring.GetSize(); c++)
                                                                                     {
                                                                                       XCHAR character = outstring.Get()[c];
+
+                                                                                      // Skip FreeType .notdef (glyph index 0): that face often draws a solid "tofu" rectangle
+                                                                                      // (the black box after chrome titles when an unsupported/trailing codepoint sneaks in).
+                                                                                      if(!VectorFont_HasChar((XDWORD)character)) continue;
 
                                                                                       const agg::glyph_cache* glyph = vectorfont_manager->glyph(character);
 
@@ -1592,9 +1620,14 @@ class GRP2DCANVASAGG: public GRP2DCANVAS
     bool                                                                        ReleaseDrawFramerate              ()  
                                                                                 {                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           
                                                                                   if(framerate_bitmap)
-                                                                                    {              
-                                                                                      int height = (int)RasterFont_GetHeight();                                                                        
-                                                                                      PutBitmap(framerate_x - 4 , framerate_y - height - 4, framerate_bitmap);
+                                                                                    {
+                                                                                      // Prefer the height stored at draw time: after minimize Buffer_Create the raster face
+                                                                                      // may be unbound (m_font NULL) until RasterFont_Select runs again.
+                                                                                      int height = (framerate_h > 0) ? framerate_h : (int)RasterFont_GetHeight();
+                                                                                      if(height > 0)
+                                                                                        {
+                                                                                          PutBitmap(framerate_x - 4 , framerate_y - height - 4, framerate_bitmap);
+                                                                                        }
                                                                                       
                                                                                       GEN_DELETE framerate_bitmap;
                                                                                       framerate_bitmap = NULL;
@@ -1610,6 +1643,11 @@ class GRP2DCANVASAGG: public GRP2DCANVAS
                                                                                       return false;
                                                                                     }
 
+                                                                                  if(!rasterglyph || !rasterglyph->font())
+                                                                                    {
+                                                                                      return false;
+                                                                                    }
+
                                                                                   XSTRING           text;
                                                                                   GRP2DCOLOR_RGBA8  colorback(255, 255, 255);
                                                                                   GRP2DCOLOR_RGBA8  color(0, 0, 0, 150);
@@ -1618,6 +1656,10 @@ class GRP2DCANVASAGG: public GRP2DCANVAS
 
                                                                                   int width  = (int)RasterFont_GetWidth(text.Get()) + 8;
                                                                                   int height = (int)RasterFont_GetHeight();
+                                                                                  if(height <= 0 || width <= 8)
+                                                                                    {
+                                                                                      return false;
+                                                                                    }
 
                                                                                   if(x == GRP2DCANVASTYPE_DRAWFRAMERATE_ADJUSTSCREEN)
                                                                                     {
@@ -1650,6 +1692,8 @@ class GRP2DCANVASAGG: public GRP2DCANVAS
                                                                                           framerate_y = y;
                                                                                         }
                                                                                     }
+
+                                                                                  framerate_h = height;
                                                                                            
                                                                                   framerate_bitmap = GetBitmap(framerate_x - 4 , framerate_y - height - 4, (width + 8), (height + 8));
                                                                                                                                                                        
@@ -1695,7 +1739,9 @@ class GRP2DCANVASAGG: public GRP2DCANVAS
 
                                                                                   framerate_x         = 0;
                                                                                   framerate_y         = 0;
+                                                                                  framerate_h         = 0;
                                                                                   framerate_bitmap    = 0;
+                                                                                  rasterfont_selected.Empty();
                                                                                 }
 
     agg::rendering_buffer                                                       rbuffer;
@@ -1725,7 +1771,9 @@ class GRP2DCANVASAGG: public GRP2DCANVAS
 
     double                                                                      framerate_x;
     double                                                                      framerate_y;
+    int                                                                         framerate_h;
     GRPBITMAP*                                                                  framerate_bitmap;
+    XSTRING                                                                     rasterfont_selected;
 };
 
 

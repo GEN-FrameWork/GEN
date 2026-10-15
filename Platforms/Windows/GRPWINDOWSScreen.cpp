@@ -2007,6 +2007,14 @@ LRESULT CALLBACK GRPWINDOWSSCREEN::BaseWndProc(HWND hwnd, UINT msg, WPARAM wpara
       case WM_SIZE                  : { GRPWINDOWSSCREEN* screen = (GRPWINDOWSSCREEN*)GRPSCREEN::GetListScreens()->Get((void*)hwnd);
                                         if(screen)
                                           {
+                                            // SIZE_MINIMIZED reports a tiny client rect; UpdateSize would Buffer_Delete/
+                                            // Buffer_Create the AGG canvas (rasterglyph with m_font==NULL) while the app
+                                            // keep drawing — ReleaseDrawFramerate then AVs in glyph_raster_bin::height().
+                                            if(wparam == SIZE_MINIMIZED)
+                                              {
+                                                break;
+                                              }
+
                                             int clientwidth  = 0;
                                             int clientheight = 0;
                                             if(screen->GetClientSize(clientwidth, clientheight) && (clientwidth > 0) && (clientheight > 0))

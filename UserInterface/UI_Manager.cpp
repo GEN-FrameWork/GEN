@@ -3804,8 +3804,9 @@ bool UI_MANAGER::Layouts_ApplyTranslations()
     {
       layout_translate_language = GEN_XTRANSLATION.GetActual();
 
-      // Drop form/text composition caches and dirty every layout so the whole screen
-      // redraws in the new language in one pass (no mixed-language frame leftovers).
+      // Restore translucent FormBackdrop/TextBackdrop ink BEFORE dropping caches, then dirty every
+      // layout. Without RestoreCompositionCaches, chrome caption color="black,25" (esp. with auto-hide)
+      // re-blends onto itself after Invalidate and compounds toward opaque black on language change.
       for(XDWORD c=0; c<layouts.GetSize(); c++)
         {
           UI_LAYOUT* layout = layouts.Get(c);
@@ -3813,7 +3814,11 @@ bool UI_MANAGER::Layouts_ApplyTranslations()
           if(layout->GetSkin()->GetDrawMode() != UI_SKIN_DRAWMODE_CANVAS) continue;
 
           UI_SKINCANVAS* skin_canvas = (UI_SKINCANVAS*)layout->GetSkin();
-          if(skin_canvas) skin_canvas->InvalidateCompositionCaches();
+          if(skin_canvas)
+            {
+              skin_canvas->RestoreCompositionCaches();
+              skin_canvas->InvalidateCompositionCaches();
+            }
 
           layout->Elements_SetToRedraw();
         }
@@ -4944,8 +4949,9 @@ bool UI_MANAGER::GetLayoutElement_Base(UI_STYLE& style, XSTRING& fathertagname, 
         else if(!rolestr.Compare(NL("icon")     , true))  element->SetChromeRole(UI_ELEMENT_CHROMEROLE_ICON);
           else if(!rolestr.Compare(NL("title")    , true))  element->SetChromeRole(UI_ELEMENT_CHROMEROLE_TITLE);
             else if(!rolestr.Compare(NL("minimize") , true))  element->SetChromeRole(UI_ELEMENT_CHROMEROLE_MINIMIZE);
-              else if(!rolestr.Compare(NL("maximize") , true))  element->SetChromeRole(UI_ELEMENT_CHROMEROLE_MAXIMIZE);
-                else if(!rolestr.Compare(NL("close")    , true))  element->SetChromeRole(UI_ELEMENT_CHROMEROLE_CLOSE);
+              else if(!rolestr.Compare(NL("language") , true))  element->SetChromeRole(UI_ELEMENT_CHROMEROLE_LANGUAGE);
+                else if(!rolestr.Compare(NL("maximize") , true))  element->SetChromeRole(UI_ELEMENT_CHROMEROLE_MAXIMIZE);
+                  else if(!rolestr.Compare(NL("close")    , true))  element->SetChromeRole(UI_ELEMENT_CHROMEROLE_CLOSE);
     }
 
   // Step 6: track authored-vs-default for "color" and "bckgrdcolor", and honour the CSS-natural aliases and

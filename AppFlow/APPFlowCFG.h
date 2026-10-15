@@ -268,6 +268,7 @@ class APPFLOWCFG
     bool                 SetDefaultLanguage                                       (XCHAR* codealpha);
     bool                 SetDefaultLanguage                                       (XDWORD code);
     bool                 Language_ApplyDefault                                    ();
+    bool                 Language_PersistActual                                   ();
     #endif
     #endif
 

@@ -681,6 +681,40 @@ bool APPFLOWCFG::Language_ApplyDefault()
 
 /**-------------------------------------------------------------------------------------------------------------------
 *
+* @fn         bool APPFLOWCFG::Language_PersistActual()
+* @brief      Write the current GEN_XTRANSLATION language into [general] defaultlanguage and save the CFG file.
+* @note       Call after SetActual / SetActual_Next so the next app start reloads the same language.
+* @ingroup    APPFLOW
+*
+* @return     bool : true if the operation is successful; otherwise false.
+*
+*---------------------------------------------------------------------------------------------------------------------*/
+bool APPFLOWCFG::Language_PersistActual()
+{
+  if(!GEN_XTRANSLATION.IsInitialized()) return false;
+  if(!SetDefaultLanguage(GEN_XTRANSLATION.GetActual())) return false;
+
+  XPATH* pathfile = GetPathFile();
+  if(!pathfile || pathfile->IsEmpty()) return false;
+
+  if(!Save())
+    {
+      XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, NL("[APPFLOWCFG] Failed to save defaultlanguage=%s to [%s]"),
+                        defaultlanguage.Get(),
+                        pathfile->Get());
+      return false;
+    }
+
+  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, NL("[APPFLOWCFG] defaultlanguage=%s persisted to [%s]"),
+                    defaultlanguage.Get(),
+                    pathfile->Get());
+
+  return true;
+}
+
+
+/**-------------------------------------------------------------------------------------------------------------------
+*
 * @fn         XDWORD APPFLOWCFG::DefaultLanguage_ResolveCode()
 * @brief      Resolve defaultlanguage CFG string to an ISO 639-3 code (INVALID if empty/unknown).
 * @note       INTERNAL
@@ -736,6 +770,7 @@ bool APPFLOWCFG::DefaultLanguage_UpdateRemark()
       if(remark->GetRelativeSection()->Compare(APPFLOW_CFG_SECTION_GENERAL, true) != 0) continue;
       if(remark->GetRelativeKey()->Compare(APPFLOW_CFG_DEFAULTLANGUAGE, true) != 0) continue;
 
+      // ISO 639-3 English name becomes the inline "; …" comment for defaultlanguage.
       remark->GetTextRemark()->Set(englishname.Get());
       return true;
     }

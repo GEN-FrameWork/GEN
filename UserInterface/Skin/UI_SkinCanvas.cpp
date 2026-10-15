@@ -3775,12 +3775,61 @@ bool UI_SKINCANVAS::RestoreOnHide(UI_ELEMENT* element)
 
 /**-------------------------------------------------------------------------------------------------------------------
 *
+* @fn         void UI_SKINCANVAS::RestoreCompositionCaches()
+* @brief      PutBitmapNoAlpha-restore every persistent true-backdrop WITHOUT discarding the caches.
+* @note       Use before InvalidateCompositionCaches() when the live canvas was NOT rewritten underneath
+*             (e.g. language change via Layouts_ApplyTranslations). Dropping FormBackdrop alone leaves
+*             translucent fills (chrome caption color="black,25") on the canvas; the next Draw_Form then
+*             alpha-blends the same fill again and the bar compounds toward opaque black — worst with
+*             CFG chromes auto-hide, where the caption is repeatedly shown/redrawn over content.
+* @ingroup    USERINTERFACE
+*
+* --------------------------------------------------------------------------------------------------------------------*/
+void UI_SKINCANVAS::RestoreCompositionCaches()
+{
+  // Leaf caches first (text/option/radial/progress), then forms — same order as PrepareTextContentChange.
+  for(XDWORD c=0; c<textbackdrops.GetSize(); c++)
+    {
+      GRP2DREBUILDAREA* entry = textbackdrops.Get(c);
+      if(entry && entry->GetBitmap()) PutBitmapNoAlpha(entry->GetXPos(), entry->GetYPos(), entry->GetBitmap());
+    }
+
+  for(XDWORD c=0; c<optionbackdrops.GetSize(); c++)
+    {
+      GRP2DREBUILDAREA* entry = optionbackdrops.Get(c);
+      if(entry && entry->GetBitmap()) PutBitmapNoAlpha(entry->GetXPos(), entry->GetYPos(), entry->GetBitmap());
+    }
+
+  for(XDWORD c=0; c<radialbackdrops.GetSize(); c++)
+    {
+      GRP2DREBUILDAREA* entry = radialbackdrops.Get(c);
+      if(entry && entry->GetBitmap()) PutBitmapNoAlpha(entry->GetXPos(), entry->GetYPos(), entry->GetBitmap());
+    }
+
+  for(XDWORD c=0; c<progressbackdrops.GetSize(); c++)
+    {
+      GRP2DREBUILDAREA* entry = progressbackdrops.Get(c);
+      if(entry && entry->GetBitmap()) PutBitmapNoAlpha(entry->GetXPos(), entry->GetYPos(), entry->GetBitmap());
+    }
+
+  for(XDWORD c=0; c<formbackdrops.GetSize(); c++)
+    {
+      GRP2DREBUILDAREA* entry = formbackdrops.Get(c);
+      if(entry && entry->GetBitmap()) PutBitmapNoAlpha(entry->GetXPos(), entry->GetYPos(), entry->GetBitmap());
+    }
+}
+
+
+/**-------------------------------------------------------------------------------------------------------------------
+*
 * @fn         void UI_SKINCANVAS::InvalidateCompositionCaches()
 * @brief      COMPOSITION-RESET (2026-09): drop every persistent true-backdrop cache and the one-shot rebuild
 *             areas after the canvas under the widgets has been fully rewritten (Layout_PutBackground, virtual
 *             keyboard modal show/hide, etc.). Without this, Draw_* restores bitmaps captured against the
 *             previous composition with PutBitmapNoAlpha and paints opaque white/stale rectangles over menus
 *             and chrome. Next Draw_* re-captures from the fresh background. Framework-wide, not example-specific.
+* @note       When the canvas was NOT rewritten first, call RestoreCompositionCaches() before this so
+*             translucent fills (e.g. chrome caption) are erased instead of compounding on the next Draw_Form.
 * @ingroup    USERINTERFACE
 *
 * --------------------------------------------------------------------------------------------------------------------*/
@@ -3852,34 +3901,25 @@ bool UI_SKINCANVAS::PrepareTextContentChange(UI_ELEMENT* element)
     {
       GRP2DREBUILDAREA* formbackdrop = FormBackdrop_Find(father);
 
-      // Prefer wiping the WHOLE caption with a sample of the true under-form backdrop (not the fill RGB):
-      // painting opaque "black" from color="black,25" left a visible pure-black patch under the new title
-      // while the rest of the bar stayed charcoal (translucent black over content).
-      XBYTE wr = 13, wg = 17, wb = 23; // neutral dark fallback (matches typical UI_System page fill)
+      // Prefer restoring the true under-form backdrop (not the fill RGB). Painting opaque "black" from
+      // color="black,25" left a visible pure-black patch under/after the title glyphs (text-box width
+      // includes side bearings past the last letter's ink) while the rest of the bar stayed charcoal.
+      //
+      // When FormBackdrop restore succeeds, that ALREADY clears glyph ink (including CJK overhang) back to
+      // the content under the caption. Do NOT follow with an opaque Rectangle wipe: Layouts_ApplyTranslations
+      // then calls RestoreCompositionCaches, but FormBackdrop was deleted here so the wipe would stay on the
+      // canvas, get re-captured as the new FormBackdrop/TextBackdrop, and show up as a black stub after the
+      // chrome title. Drop the cache so the next Draw_Form re-captures from the restored under-content.
       if(formbackdrop && formbackdrop->GetBitmap())
         {
-          GRPBITMAP* fbbmp = formbackdrop->GetBitmap();
-          XDWORD     fbw   = fbbmp->GetWidth();
-          XDWORD     fbh   = fbbmp->GetHeight();
-          if(fbw > 2 && fbh > 2)
-            {
-              // Sample near the top-left inside the caption (away from icon/title glyphs).
-              GRP2DCOLOR_RGBA8* sample = (GRP2DCOLOR_RGBA8*)fbbmp->GetPixel(2, 2);
-              if(sample)
-                {
-                  wr = (XBYTE)sample->r;
-                  wg = (XBYTE)sample->g;
-                  wb = (XBYTE)sample->b;
-                }
-            }
-
           PutBitmapNoAlpha(formbackdrop->GetXPos(), formbackdrop->GetYPos(), formbackdrop->GetBitmap());
           FormBackdrop_Delete(father);
           erased = true;
         }
-
-      if(canvas && father->GetBoundaryLine())
+       else if(canvas && father->GetBoundaryLine())
         {
+          // Fallback only when no FormBackdrop exists: wipe the FULL caption (never the text box alone)
+          // using a neutral page fill so CJK cannot survive translucent black,25.
           double fx = father->GetXPosition();
           double fy = father->GetYPosition();
           if(father->GetFather()) GetAddPositionScrollSteps(father->GetFather(), fx, fy);
@@ -3889,9 +3929,7 @@ bool UI_SKINCANVAS::PrepareTextContentChange(UI_ELEMENT* element)
           double top    = UI_BOUNDARYLINE_EdgeTop   (fy, father->GetBoundaryLine()->height);
           double bottom = UI_BOUNDARYLINE_EdgeBottom(fy, father->GetBoundaryLine()->height);
 
-          // Opaque wipe of the full caption bar so CJK cannot survive translucent black,25, and so the
-          // next FormBackdrop capture sees a uniform strip (no text-sized black patch).
-          GRP2DCOLOR_RGBA8 solid(wr, wg, wb, 255);
+          GRP2DCOLOR_RGBA8 solid(13, 17, 23, 255);
           GRP2DCOLOR_RGBA8 noline(0, 0, 0, 0);
           canvas->SetFillColor(&solid);
           canvas->SetLineColor(&noline);
@@ -3901,30 +3939,9 @@ bool UI_SKINCANVAS::PrepareTextContentChange(UI_ELEMENT* element)
 
       father->SetMustReDraw(true);
     }
-   else if(canvas && element->GetBoundaryLine())
-    {
-      // No form father: pad-wipe the text box only.
-      double x = element->GetXPosition();
-      double y = element->GetYPosition();
-      double pad = 8.0;
-      if(element->GetType() == UI_ELEMENT_TYPE_TEXT)
-        {
-          double sf = ((UI_ELEMENT_TEXT*)element)->GetSizeFont();
-          if(sf > 0.0) pad = __MAX(pad, sf * 0.35);
-        }
-
-      double left   = UI_BOUNDARYLINE_EdgeLeft  (x, element->GetBoundaryLine()->width)  - pad;
-      double right  = UI_BOUNDARYLINE_EdgeRight (x, element->GetBoundaryLine()->width)  + pad;
-      double top    = UI_BOUNDARYLINE_EdgeTop   (y, element->GetBoundaryLine()->height) - pad;
-      double bottom = UI_BOUNDARYLINE_EdgeBottom(y, element->GetBoundaryLine()->height) + pad;
-
-      GRP2DCOLOR_RGBA8 solid(13, 17, 23, 255);
-      GRP2DCOLOR_RGBA8 noline(0, 0, 0, 0);
-      canvas->SetFillColor(&solid);
-      canvas->SetLineColor(&noline);
-      canvas->Rectangle(left, bottom, right, top, true);
-      erased = true;
-    }
+  // No form father: do NOT pad-wipe the text box with opaque fill — that is the "black box after the
+  // title letters" artefact (text-box width includes side bearings past the last glyph). TextBackdrop
+  // restore above already cleared prior ink; MustReDraw below forces a clean repaint.
 
   element->SetMustReDraw(true);
   return erased;
@@ -4038,83 +4055,15 @@ bool UI_SKINCANVAS::Draw_Text(UI_ELEMENT* element)
       // That erases the stale ink from the sub-region the old entry covered, so the fresh capture that follows
       // reads genuinely clean pixels there; the newly-exposed strip outside the old bounds was never painted by
       // this element in the first place, so it is already correct.
-      GRP2DREBUILDAREA* ownarea = GetRebuildAreaByElement(element);
-
-      if(ownarea)
-        {
-          GRP2DREBUILDAREA* textbackdrop = TextBackdrop_Find(element);
-
-          if(textbackdrop && !TextBackdrop_MatchesArea(textbackdrop, ownarea))
-            {
-              // Erase this element's own leftover ink from the OLD (smaller) region first -- see the RESIZE-
-              // RECAPTURE FIX comment above -- so the fresh, wider capture below reads true pixels there instead
-              // of baking the stale glyph in permanently.
-              PutBitmapNoAlpha(textbackdrop->GetXPos(), textbackdrop->GetYPos(), textbackdrop->GetBitmap());
-              TextBackdrop_Delete(element);
-              textbackdrop = NULL;
-            }
-
-          // LANGUAGE/CJK CONTENT-CHANGE FIX (2026-10): always restore-and-recapture on every real redraw,
-          // not only on size mismatch. A forever-cached TextBackdrop that was captured while previous glyph
-          // ink was still on screen (translucent chrome caption, language switch) would restore that
-          // contamination under every later string. Matching the OWNERLESS branch below.
-          if(textbackdrop)
-            {
-              PutBitmapNoAlpha(textbackdrop->GetXPos(), textbackdrop->GetYPos(), textbackdrop->GetBitmap());
-              TextBackdrop_Delete(element);
-              textbackdrop = NULL;
-            }
-
-          TextBackdrop_Capture(element, ownarea->GetXPos(), ownarea->GetYPos(), (double)ownarea->GetBitmap()->GetWidth(), (double)ownarea->GetBitmap()->GetHeight());
-        }
-       else
-        {
-          // OWNERLESS-ANCESTOR GHOSTING FIX (2026-09): this element never gets its own rebuild area from
-          // PreDrawFunction() at all (ownarea is nil on every tick, including the first) -- e.g. dashboard.xml's
-          // "nav-*-text" sidebar labels, whose immediate father ("nav-*-row") is a purely structural, fully
-          // transparent (background alpha 0) FORM used only for click/hover hit-testing. Two of PreDrawFunction()'s
-          // generic, framework-wide protections both disqualify a rebuild area here: (1) that father is ALSO
-          // MustReDraw() on the very same tick the label's colour changes (selection/hover), which trips the
-          // "an ancestor that is about to redraw has already cleared this region" ancestor-trust rule -- an
-          // assumption that does not hold for an ancestor that paints nothing of its own; and (2) that same
-          // father is independently a clipping scrollable container (UI_PROPERTY_SCROLLEABLE::Scroll_NeedClip()
-          // == true), a separate, unrelated disqualification. Both rules protect real cases elsewhere (nested
-          // transparent buttons, genuinely clipped scroll content), so narrowing either of them here risked
-          // weakening real, framework-wide protections instead of fixing this one label. Confirmed live (temporary
-          // diagnostics): without a fix here the OLD-colour glyph ink never gets erased, so it stays on screen,
-          // blended under the NEW colour's ink on every later redraw -- a stuck "ghost" of the previous selection
-          // colour.
-          //
-          // Fix: manage this element's own backdrop entirely independently of the ownarea/rebuild-area system,
-          // reusing the exact same real capture/restore primitives (GetBitmap()/PutBitmapNoAlpha(), via
-          // TextBackdrop_Capture/Find/Delete -- never a synthetic/flat fill colour) as the ownarea-gated branch
-          // above, just computing its own box directly from its boundary line instead of borrowing ownarea's.
-          // Unlike that branch (which captures ONLY once, on the first draw at a given size, trusting the
-          // rebuild-area system to restore the true backdrop before every later redraw), this element has no such
-          // external restore to rely on, so it restores-and-recaptures on EVERY real redraw: first put back
-          // whatever THIS element itself painted last time (erasing only its own ink, never anyone else's), then
-          // capture whatever is genuinely on screen right now -- which, by this point in the tick, already
-          // reflects any sibling's own redraw/restore for the same tick (dashboard.xml declares, and therefore
-          // paints, the selection highlight band before the sidebar label that sits on top of it) -- then paint
-          // the new glyph on top of that freshly-captured backdrop. Reusing the same restore-then-recapture step
-          // for every tick (rather than only on a size change) also means an auto-width label whose string length
-          // changes is handled automatically: the old box is always fully erased before the new box is captured,
-          // with no separate size-mismatch check needed.
-          double selfbox_left   = UI_BOUNDARYLINE_EdgeLeft  (x_position, element->GetBoundaryLine()->width);
-          double selfbox_right  = UI_BOUNDARYLINE_EdgeRight (x_position, element->GetBoundaryLine()->width);
-          double selfbox_top    = UI_BOUNDARYLINE_EdgeTop   (y_position, element->GetBoundaryLine()->height);
-          double selfbox_bottom = UI_BOUNDARYLINE_EdgeBottom(y_position, element->GetBoundaryLine()->height);
-
-          GRP2DREBUILDAREA* selftextbackdrop = TextBackdrop_Find(element);
-
-          if(selftextbackdrop)
-            {
-              PutBitmapNoAlpha(selftextbackdrop->GetXPos(), selftextbackdrop->GetYPos(), selftextbackdrop->GetBitmap());
-              TextBackdrop_Delete(element);
-            }
-
-          TextBackdrop_Capture(element, selfbox_left, selfbox_top, selfbox_right - selfbox_left, selfbox_bottom - selfbox_top);
-        }
+      // TEXTBACKDROP OFF IN Draw_Text (2026-10): the Sept TextBackdrop capture/restore path (and the Oct
+      // always-recapture / progress-bar InvalidateOverlapping that forced GetBitmap every tick) breaks the
+      // classic XML-without-CSS examples (UI_Options): PutBitmapNoAlpha of a bad/black capture shows as a
+      // solid black rectangle under glyphs, and GetBitmap every frame of every "#[...]" / progress % label
+      // collapses FPS even when present is OpenGL. Rebuild areas (PreDrawFunction / RebuildAllAreas) already
+      // erase for texts that own an area; progress captions get an own area via the father MustReDraw toggle
+      // below in Draw_ProgressBar; chrome title erase is FormBackdrop + PrepareTextContentChange. Drop any
+      // leftover TextBackdrop so a stale cache cannot paint a black pad, then print glyphs only.
+      TextBackdrop_Delete(element);
 
       GRP2DCOLOR_RGBA8  color(element->GetColor()->GetRed(), element->GetColor()->GetGreen(), element->GetColor()->GetBlue(), element->GetColor()->GetAlpha());
 
@@ -4397,22 +4346,10 @@ bool UI_SKINCANVAS::Draw_Animation(UI_ELEMENT* element)
   
   if(redraw) 
     {
-      Elements_SetToRedraw(element_animation);  
-
-      // If this animation lives inside a clipping scrollable container, it no longer owns a rebuild area. The rebuild
-      // area belongs to the OUTERMOST clipping scrollable ancestor (an inner one — e.g. a MultiOption — also skips its
-      // area because IT is inside the outer container). So walk the whole chain and mark that outermost owner: its area
-      // (stretched to cover the VISIBLE-axis overflow in PreDrawFunction) is what erases the previous sprite. Marking an
-      // inner scrollable that owns no area would do nothing, which is why the sprite was piling up.
-      UI_ELEMENT* ancestor = element_animation->GetFather();
-      UI_ELEMENT* owner    = NULL;
-      while(ancestor)
-        {
-          UI_PROPERTY_SCROLLEABLE* sc = dynamic_cast<UI_PROPERTY_SCROLLEABLE*>(ancestor);
-          if(sc && sc->Scroll_NeedClip()) owner = ancestor;   // keep the outermost
-          ancestor = ancestor->GetFather();
-        }
-      if(owner) Elements_SetToRedraw(owner, true);
+      // Self only. Animations now keep their own rebuild area inside scrolleables (see PreDrawFunction), so
+      // advancing a frame must NOT Elements_SetToRedraw(owner, true): that re-rasterized entire textboxes /
+      // multioptions every tick (UI_Options ~11 fps with Quixote + walking sprites).
+      Elements_SetToRedraw(element_animation);
     }
 
   return true;
@@ -5867,28 +5804,11 @@ bool UI_SKINCANVAS::Draw_ProgressBar(UI_ELEMENT* element)
                 }
             }
 
-          // STALE %-CAPTION BACKDROP (2026-09): the fill amount changes every value tick, but the caption's
-          // TextBackdrop was captured against a PREVIOUS fill (or against blue,30 under a CENTER/%-on-track
-          // label). Draw_Text() then PutBitmapNoAlpha-restores that stale rectangle — a solid light-blue box
-          // behind "6%" — before blending the new glyphs (UI_Options progressbar3, intermittent). Drop any
-          // text backdrop that overlaps the track (and the caption box) so Draw(element_text) below re-captures
-          // from the track+fill just painted.
+          // %-caption must repaint when the fill changes. TextBackdrop invalidate/recapture was removed from
+          // Draw_Text (classic XML / UI_Options): it forced GetBitmap every tick and could paste a solid box
+          // under the glyphs. Rebuild-area restore + this MustReDraw is enough.
           if(element_text)
             {
-              double trx = element_progressrect->GetXPosition();
-              double trw = element_progressrect->GetBoundaryLine()->width;
-              double trh = element_progressrect->GetBoundaryLine()->height;
-              double trt = UI_BOUNDARYLINE_EdgeTop(element_progressrect->GetYPosition(), trh);
-
-              TextBackdrop_InvalidateOverlapping(trx, trt, trw, trh);
-
-              double tx = element_text->GetXPosition();
-              double tw = element_text->GetBoundaryLine()->width;
-              double th = element_text->GetBoundaryLine()->height;
-              double tt = UI_BOUNDARYLINE_EdgeTop(element_text->GetYPosition(), th);
-
-              TextBackdrop_InvalidateOverlapping(tx, tt, tw, th);
-
               element_text->SetMustReDraw(true);
             }
 
@@ -6257,20 +6177,10 @@ bool UI_SKINCANVAS::Draw_ProgressRadial(UI_ELEMENT* element)
         }
 
       // ---- 3) centered caption (e.g. "37%") --------------------------------------------------------------------------
-      // STALE %-CAPTION BACKDROP (2026-09): RadialBackdrop restore wiped the previous glow/ring, then we
-      // repainted a (possibly different) annular halo. Any TextBackdrop captured under the old wash must not
-      // PutBitmapNoAlpha back as a hard rect behind the digits -- drop overlapping text caches and force a
-      // pristine re-capture from the pixels just painted (card + ring glow, centre clear).
+      // TextBackdrop invalidate/recapture removed (see Draw_Text): rebuild area + MustReDraw is enough.
       if(element_text)
         {
-          double tx = element_text->GetXPosition();
-          double tw = element_text->GetBoundaryLine()->width;
-          double th = element_text->GetBoundaryLine()->height;
-          double tt = UI_BOUNDARYLINE_EdgeTop(element_text->GetYPosition(), th);
-
-          TextBackdrop_InvalidateOverlapping(tx, tt, tw, th);
           element_text->SetMustReDraw(true);
-
           Draw(element_text);
         }
 
@@ -6596,13 +6506,23 @@ bool UI_SKINCANVAS::PreDrawFunction(UI_ELEMENT* element, GRP2DCANVAS* canvas, XR
       // A descendant of a clipping scrollable container must NOT own a rebuild area either: it moves with the
       // container's scroll, and the area's save/restore (a fixed screen rectangle) would repaint ghosts at
       // stale/scrolled positions. The container's single rebuild area covers all its content and redraws it as a unit.
+      //
+      // EXCEPTION — UI_ELEMENT_TYPE_ANIMATION: keep a per-sprite rebuild area even inside a scrolleable. The
+      // previous rule forced Draw_Animation to Elements_SetToRedraw(owner, true) on every frame advance so the
+      // owner's area could erase the old sprite. That recursively re-dirtied every text/option child (UI_Options
+      // textbox Quixote, multioption trees) and collapsed FPS to ~11. Clip still applies via SetClipBox; the
+      // animation's own area erases the prior frame without re-rasterizing the whole container.
       UI_ELEMENT* ancestor = element->GetFather();
       while(ancestor)
         {
           if(ancestor->MustReDraw()) { createarea = false; break; }
 
           UI_PROPERTY_SCROLLEABLE* sc = dynamic_cast<UI_PROPERTY_SCROLLEABLE*>(ancestor);
-          if(sc && sc->Scroll_NeedClip()) { createarea = false; break; }
+          if(sc && sc->Scroll_NeedClip() && (element->GetType() != UI_ELEMENT_TYPE_ANIMATION))
+            {
+              createarea = false;
+              break;
+            }
           ancestor = ancestor->GetFather();
         }
 
