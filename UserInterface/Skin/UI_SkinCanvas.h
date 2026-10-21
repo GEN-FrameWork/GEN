@@ -164,6 +164,7 @@ class UI_SKINCANVAS : public UI_SKIN, public UI_SKINCANVAS_REBUILDAREAS
 		virtual bool                      CalculateBoundaryLine_ProgressBar				(UI_ELEMENT* element, bool adjustsizemargin = false);
     virtual bool                      CalculateBoundaryLine_ProgressRadial		(UI_ELEMENT* element, bool adjustsizemargin = false);
 		virtual bool                      CalculateBoundaryLine_ProgressImage			(UI_ELEMENT* element, bool adjustsizemargin = false);
+		virtual bool                      CalculateBoundaryLine_StatisticsChart		(UI_ELEMENT* element, bool adjustsizemargin = false);
 
 		void                               ReapplyProgressBarAllocationLayout			(UI_ELEMENT_PROGRESSBAR* element_progressbar, bool adjustsizemargin = false);
 
@@ -172,6 +173,7 @@ class UI_SKINCANVAS : public UI_SKIN, public UI_SKINCANVAS_REBUILDAREAS
 		virtual bool                      RestoreOnHide														(UI_ELEMENT* element);
 
 		void                               RestoreCompositionCaches								();
+		void                               RestoreRebuildAreas										();
 		void                               InvalidateCompositionCaches							();
 
 		XDWORD                             CompositionCacheCount									();
@@ -179,6 +181,19 @@ class UI_SKINCANVAS : public UI_SKIN, public UI_SKINCANVAS_REBUILDAREAS
 		// Erase alpha-blended glyph ink for a text element BEFORE its string/language changes
 		// (restore TextBackdrop + paintable father FormBackdrop). Used by chrome title language switch.
 		bool                               PrepareTextContentChange								(UI_ELEMENT* element);
+
+		// Drop TextBackdrop without restoring (caller already painted an opaque wash under the glyphs).
+		// Used when a list row selection color changes so Draw_Text re-captures the new wash instead of
+		// punching a stale white caption box into the gray selection bar.
+		bool                               DiscardTextBackdrop										(UI_ELEMENT* element);
+
+		// Same for AnimBackdrop: selection wash change must not restore a stale white icon plate into gray.
+		bool                               DiscardAnimBackdrop										(UI_ELEMENT* element);
+
+		// Language-change leaf erase: drop intersecting rebuild areas (no restore) then blit layout
+		// background into the element AABB. Avoids global RestoreRebuildAreas (chrome-suppressed menus).
+		bool                               EraseElementRebuildArea								(UI_ELEMENT* element);
+		bool                               EraseElementWithLayoutBackground				(UI_ELEMENT* element);
 
 	  virtual bool                      Draw_Scroll															(UI_ELEMENT* element);
 	  virtual bool                      Draw_Text																(UI_ELEMENT* element);
@@ -265,9 +280,19 @@ class UI_SKINCANVAS : public UI_SKIN, public UI_SKINCANVAS_REBUILDAREAS
 		bool													TextBackdrop_Delete										(UI_ELEMENT* element);
 		bool													TextBackdrop_Capture										(UI_ELEMENT* element, double x, double y, double width, double height);
 
-		bool													TextBackdrop_InvalidateOverlapping					(double x, double y, double width, double height);
+		bool													TextBackdrop_InvalidateOverlapping					(double x, double y, double width, double height, UI_ELEMENT* source = NULL);
 
 		XVECTOR<GRP2DREBUILDAREA*>				textbackdrops;
+
+		// Static/section icons (type=animation) alpha-blend like text; orphan rebuild discard without a
+		// persistent backdrop stacks PutBitmapAlpha and darkens (UI_Options ic_list / GALLERYS header).
+		GRP2DREBUILDAREA*								AnimBackdrop_Find											(UI_ELEMENT* element);
+		bool													AnimBackdrop_MatchesArea								(GRP2DREBUILDAREA* animbackdrop, GRP2DREBUILDAREA* ownarea);
+		bool													AnimBackdrop_Delete										(UI_ELEMENT* element);
+		bool													AnimBackdrop_Capture										(UI_ELEMENT* element, double x, double y, double width, double height);
+		bool													AnimBackdrop_InvalidateOverlapping					(double x, double y, double width, double height, UI_ELEMENT* source = NULL);
+
+		XVECTOR<GRP2DREBUILDAREA*>				animbackdrops;
 
 		GRP2DREBUILDAREA*								OptionBackdrop_Find											(UI_ELEMENT* element);
 		bool													OptionBackdrop_Delete										(UI_ELEMENT* element);

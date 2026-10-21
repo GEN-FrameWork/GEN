@@ -980,31 +980,79 @@ class GRP2DCANVASAGG: public GRP2DCANVAS
 
     void                                                                        RoundRect                         (double x1, double y1, double x2, double y2, double radius, bool isfill = false)
                                                                                 {
-                                                                                  if(isfill)
+                                                                                  // Normalize so AGG's rounded_rect always sees min..max (GEN often passes y-bottom first).
+                                                                                  double minx = (x1 < x2) ? x1 : x2;
+                                                                                  double maxx = (x1 < x2) ? x2 : x1;
+                                                                                  double miny = (y1 < y2) ? y1 : y2;
+                                                                                  double maxy = (y1 < y2) ? y2 : y1;
+
+                                                                                  double rr = radius;
+                                                                                  double hw = (maxx - minx) * 0.5;
+                                                                                  double hh = (maxy - miny) * 0.5;
+                                                                                  if(rr > hw) rr = hw;
+                                                                                  if(rr > hh) rr = hh;
+                                                                                  if(rr < 0.0) rr = 0.0;
+
+                                                                                  double lw = linewidth;
+                                                                                  if(lw < 0.0) lw = 0.0;
+
+                                                                                  // CORNER SPIKES FIX: never stroke rounded_rect via rasterizer_outline_aa / conv_stroke.
+                                                                                  // Both leave dark "picos" in the AABB corner tips (AA against black / miter fringes).
+                                                                                  // Instead paint the border as a filled outer rounded rect in the line colour, then (when
+                                                                                  // isfill) punch the interior with a slightly smaller rounded rect in the fill colour.
+                                                                                  //
+                                                                                  // OUTER EDGE: use the BINARY (non-AA) solid renderer. AA of gold/fill against a leftover
+                                                                                  // black destination produces the visible "pico negro" (e.g. 0D1117 fringe). Bin coverage
+                                                                                  // is all-or-nothing so tips outside the arc stay untouched (true backdrop) and the border
+                                                                                  // has no dark AA fringe. Inner fill keeps AA so the panel body stays smooth.
+                                                                                  if(lw >= 1.0)
                                                                                     {
                                                                                       AGG_SOLIDFILL_INI
 
-                                                                                      ren.color(renderer_primitives->fill_color());
+                                                                                      ren_bin.color(renderer_primitives->line_color());
 
-                                                                                      GRP2DCANVASAGG_AA_SET_RASTERIZER_GAMMA(ras);
+                                                                                      agg::rounded_rect outer(minx, miny, maxx, maxy, rr);
+                                                                                      ras.gamma(agg::gamma_none());
+                                                                                      ras.add_path(outer);
 
-                                                                                      agg::rounded_rect roundrect(x1, y1, x2, y2, radius);
-                                                                                      ras.add_path(roundrect);
+                                                                                      agg::render_scanlines(ras, sl, ren_bin);
 
-                                                                                      AGG_SOLIDFILL_END
+                                                                                      if(isfill)
+                                                                                        {
+                                                                                          double inx0 = minx + lw;
+                                                                                          double iny0 = miny + lw;
+                                                                                          double inx1 = maxx - lw;
+                                                                                          double iny1 = maxy - lw;
+                                                                                          double irr  = rr - lw;
+                                                                                          if(irr < 0.0) irr = 0.0;
+
+                                                                                          if((inx1 > inx0) && (iny1 > iny0))
+                                                                                            {
+                                                                                              AGG_SOLIDFILL_INI
+
+                                                                                              ren.color(renderer_primitives->fill_color());
+
+                                                                                              GRP2DCANVASAGG_AA_SET_RASTERIZER_GAMMA(ras);
+
+                                                                                              agg::rounded_rect inner(inx0, iny0, inx1, iny1, irr);
+                                                                                              ras.add_path(inner);
+
+                                                                                              AGG_SOLIDFILL_END
+                                                                                            }
+                                                                                        }
                                                                                     }
-
-                                                                                  if(linewidth >= 1.0)
+                                                                                  else if(isfill)
                                                                                     {
-                                                                                      AGG_OUTLINE_INI
+                                                                                      // Fill-only: same pico risk on the outer arc — bin coverage keeps tips as backdrop.
+                                                                                      AGG_SOLIDFILL_INI
 
-                                                                                      ren.color(renderer_primitives->line_color());
+                                                                                      ren_bin.color(renderer_primitives->fill_color());
 
-                                                                                      agg::rounded_rect roundrect (x1, y1, x2, y2, radius);
-
+                                                                                      agg::rounded_rect roundrect(minx, miny, maxx, maxy, rr);
+                                                                                      ras.gamma(agg::gamma_none());
                                                                                       ras.add_path(roundrect);
 
-                                                                                      AGG_OUTLINE_END
+                                                                                      agg::render_scanlines(ras, sl, ren_bin);
                                                                                     }
                                                                                 }
 

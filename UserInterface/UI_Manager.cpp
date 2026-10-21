@@ -1929,7 +1929,10 @@ bool UI_MANAGER::ModalLayer_SuppressesContentDraw(UI_ELEMENT* element)
 * 
 * @fn         bool UI_MANAGER::ChromeCaption_SuppressesContentDraw(UI_ELEMENT* element)
 * @brief      True when content intersects the visible custom-chrome caption band.
-* @note       Content paints before chrome. A translucent caption (black,25) then shows ListBoxMenu / edit
+* @note       Content paints before chrome. A translucent caption (black,25) would then show ListBoxMenu /
+*             edittext through the bar, so overlapping content is suppressed. A fully transparent caption
+*             (black,0 — drag-hit-test only, e.g. UI_Options) must NOT suppress: content may sit under the
+*             strip without visual conflict.
 * @ingroup    USERINTERFACE
 * 
 * @param[in]  element : 
@@ -1961,6 +1964,10 @@ bool UI_MANAGER::ChromeCaption_SuppressesContentDraw(UI_ELEMENT* element)
 
   UI_ELEMENT* caption = chromelayout->Elements_Get(UI_ELEMENT_CHROMEROLE_CAPTION);
   if(!caption || !caption->IsVisible() || !caption->GetBoundaryLine()) return false;
+
+  // Drag-only transparent strip: no ink to composite over content — allow overlap.
+  UI_COLOR* capfill = caption->IsBackgroundColorSet() ? caption->GetBackgroundColor() : caption->GetColor();
+  if(!capfill || capfill->GetAlpha() == 0) return false;
 
   double cw = caption->GetBoundaryLine()->width;
   double ch = caption->GetBoundaryLine()->height;
@@ -3350,11 +3357,23 @@ bool UI_MANAGER::ChangeTextElementValue(UI_LAYOUT* layout, UI_ELEMENT* element)
 
                                           if(element_text->GetMaskText()->IsEmpty())    return false;
 
-                                          // Static #[TRANSLATE_N] labels are applied at load / Layouts_ApplyTranslations(),
-                                          // not on the per-frame live-mask path (UserInterface_ChangeLiteralText).
-                                          if(MaskText_IsTranslateOnly(element_text->GetMaskText())) break;
-                                                                                                                         
-                                          change = ChangeTextElementValue(element_text, element_text->GetMaskText(), resolve);   
+                                          // Pure #[TRANSLATE_N] labels are applied at load / Layouts_ApplyTranslations().
+                                          // Catalogue sentences that embed live #[MASK] after translate (e.g. #[TEST_TEXT]
+                                          // inside UI_Options ID 100) still need the per-frame live-mask path.
+                                          if(MaskText_IsTranslateOnly(element_text->GetMaskText()))
+                                            {
+                                              if(!ResolveTranslateMasks(element_text->GetMaskText(), resolve)) break;
+                                              if(resolve.Find(UI_MANAGER_LAYOUT_TEXT_INI, true) == XSTRING_NOTFOUND) break;
+
+                                              XSTRING with_live;
+                                              change = ChangeTextElementValue(element_text, &resolve, with_live);
+                                              if(!change || with_live.IsEmpty()) break;
+                                              resolve.Set(with_live.Get());
+                                            }
+                                           else
+                                            {
+                                              change = ChangeTextElementValue(element_text, element_text->GetMaskText(), resolve);
+                                            }
                                                                                                             
                                           if(change)
                                             {                                                                                                                                                                                                                                                                                                                                                                                                                    
@@ -3454,13 +3473,33 @@ bool UI_MANAGER::ChangeTextElementValue(UI_LAYOUT* layout, UI_ELEMENT* element)
 
                                           if(element_textbox->GetMaskText()->IsEmpty()) return false;
 
-                                          if(MaskText_IsTranslateOnly(element_textbox->GetMaskText())) break;
+                                          // Same nested-live rule as TEXT: translate-only MaskText is skipped unless
+                                          // the catalogue sentence still embeds live #[MASK] tokens after resolve.
+                                          if(MaskText_IsTranslateOnly(element_textbox->GetMaskText()))
+                                            {
+                                              if(!ResolveTranslateMasks(element_textbox->GetMaskText(), resolve)) break;
+                                              if(resolve.Find(UI_MANAGER_LAYOUT_TEXT_INI, true) == XSTRING_NOTFOUND) break;
 
-                                          change = ChangeTextElementValue(element_textbox, element_textbox->GetMaskText(), resolve);                                      
+                                              XSTRING with_live;
+                                              change = ChangeTextElementValue(element_textbox, &resolve, with_live);
+                                              if(!change || with_live.IsEmpty()) break;
+                                              resolve.Set(with_live.Get());
+                                            }
+                                           else
+                                            {
+                                              change = ChangeTextElementValue(element_textbox, element_textbox->GetMaskText(), resolve);
+                                            }
+
                                           if(change) 
                                             {                                             
                                               if(element_textbox->GetText()->Compare(resolve.Get(), true)) 
                                                 {
+                                                  if(layout->GetSkin() && layout->GetSkin()->GetDrawMode() == UI_SKIN_DRAWMODE_CANVAS)
+                                                    {
+                                                      UI_SKINCANVAS* ui_skincanvas = (UI_SKINCANVAS*)layout->GetSkin();
+                                                      ui_skincanvas->PrepareTextContentChange(element);
+                                                    }
+
                                                   element_textbox->GetText()->Set(resolve);
                                                   Elements_SetToRedraw(element);    
                                                 }
@@ -3640,6 +3679,28 @@ bool UI_MANAGER::ResolveTranslateMasks(XSTRING* masktext, XSTRING& resolved)
 
 /**-------------------------------------------------------------------------------------------------------------------
 *
+* @fn         bool UI_MANAGER::ExpandNestedLiveMasks(UI_ELEMENT* element, XSTRING& text)
+* @brief      Expands live #[MASK] tokens that remain inside a catalogue sentence after TRANSLATE_ resolve
+*             (e.g. UI_Options ID 100 embeds #[TEST_TEXT]). No-op when text has no #[...].
+* @ingroup    USERINTERFACE
+*
+*---------------------------------------------------------------------------------------------------------------------*/
+bool UI_MANAGER::ExpandNestedLiveMasks(UI_ELEMENT* element, XSTRING& text)
+{
+  if(!element || text.IsEmpty()) return false;
+  if(text.Find(UI_MANAGER_LAYOUT_TEXT_INI, true) == XSTRING_NOTFOUND) return false;
+
+  XSTRING expanded;
+  ChangeTextElementValue(element, &text, expanded);
+  if(expanded.IsEmpty()) return false;
+
+  text.Set(expanded.Get());
+  return true;
+}
+
+
+/**-------------------------------------------------------------------------------------------------------------------
+*
 * @fn         bool UI_MANAGER::ApplyTranslateMasksToElement(UI_LAYOUT* layout, UI_ELEMENT* element)
 * @brief      If element carries translate-only masks, re-resolve into visible text and dirty on change.
 * @ingroup    USERINTERFACE
@@ -3659,6 +3720,8 @@ bool UI_MANAGER::ApplyTranslateMasksToElement(UI_LAYOUT* layout, UI_ELEMENT* ele
                                              XSTRING resolve;
                                              if(ResolveTranslateMasks(element_text->GetMaskText(), resolve))
                                                {
+                                                 ExpandNestedLiveMasks(element_text, resolve);
+
                                                  if(element_text->GetText()->Compare(resolve.Get(), true))
                                                    {
                                                      if(layout->GetSkin() && layout->GetSkin()->GetDrawMode() == UI_SKIN_DRAWMODE_CANVAS)
@@ -3668,7 +3731,9 @@ bool UI_MANAGER::ApplyTranslateMasksToElement(UI_LAYOUT* layout, UI_ELEMENT* ele
                                                          double         width         = 0.0f;
                                                          double         height        = 0.0f;
 
-                                                         // Erase previous language glyph ink (CJK) before replacing the string.
+                                                         // Leaf erase only (rebuild area + FormBackdrop/TextBackdrop).
+                                                         // Never global RestoreRebuildAreas here — see Layouts_ApplyTranslations.
+                                                         ui_skincanvas->EraseElementRebuildArea(element);
                                                          ui_skincanvas->PrepareTextContentChange(element);
 
                                                          element_text->GetText()->Set(resolve);
@@ -3719,10 +3784,27 @@ bool UI_MANAGER::ApplyTranslateMasksToElement(UI_LAYOUT* layout, UI_ELEMENT* ele
                                              XSTRING resolve;
                                              if(ResolveTranslateMasks(element_textbox->GetMaskText(), resolve))
                                                {
+                                                 ExpandNestedLiveMasks(element_textbox, resolve);
+
                                                  if(element_textbox->GetText()->Compare(resolve.Get(), true))
                                                    {
-                                                     element_textbox->GetText()->Set(resolve);
-                                                     Elements_SetToRedraw(element);
+                                                     if(layout->GetSkin() && layout->GetSkin()->GetDrawMode() == UI_SKIN_DRAWMODE_CANVAS)
+                                                       {
+                                                         UI_SKINCANVAS* ui_skincanvas = (UI_SKINCANVAS*)layout->GetSkin();
+
+                                                         // TEXTBOX often has no form father (textbox01): rebuild-area
+                                                         // restore is the only reliable glyph erase with TEXTBACKDROP off.
+                                                         ui_skincanvas->EraseElementRebuildArea(element);
+                                                         ui_skincanvas->PrepareTextContentChange(element);
+
+                                                         element_textbox->GetText()->Set(resolve);
+                                                         Elements_SetToRedraw(element);
+                                                       }
+                                                      else
+                                                       {
+                                                         element_textbox->GetText()->Set(resolve);
+                                                         Elements_SetToRedraw(element);
+                                                       }
                                                    }
                                                }
                                               else
@@ -3804,28 +3886,27 @@ bool UI_MANAGER::Layouts_ApplyTranslations()
     {
       layout_translate_language = GEN_XTRANSLATION.GetActual();
 
-      // Restore translucent FormBackdrop/TextBackdrop ink BEFORE dropping caches, then dirty every
-      // layout. Without RestoreCompositionCaches, chrome caption color="black,25" (esp. with auto-hide)
-      // re-blends onto itself after Invalidate and compounds toward opaque black on language change.
+      // Leaf TEXT/TEXTBOX already erased via EraseElementRebuildArea + PrepareTextContentChange and
+      // were marked MustReDraw. Do NOT RestoreRebuildAreas/InvalidateCompositionCaches + full
+      // Elements_SetToRedraw here:
+      //   - ListBoxMenu (y=250,h=225 → EdgeTop=25) and edit form (y=100,h=75 → EdgeTop=25) intersect
+      //     the chrome caption band (y=0..46). While the auto-hide caption is visible,
+      //     Overlay_ClearSuppressedContentDirt() clears their dirt after a parchment restore, so the
+      //     widgets stay blank until the bar hides (exact UI_Options symptom).
+      // Only force a chrome-layout redraw so the translated title/buttons refresh.
+      #ifdef GRP_SCREEN_CUSTOMCHROMES_ACTIVE
       for(XDWORD c=0; c<layouts.GetSize(); c++)
         {
           UI_LAYOUT* layout = layouts.Get(c);
-          if(!layout || !layout->GetSkin()) continue;
-          if(layout->GetSkin()->GetDrawMode() != UI_SKIN_DRAWMODE_CANVAS) continue;
-
-          UI_SKINCANVAS* skin_canvas = (UI_SKINCANVAS*)layout->GetSkin();
-          if(skin_canvas)
-            {
-              skin_canvas->RestoreCompositionCaches();
-              skin_canvas->InvalidateCompositionCaches();
-            }
-
-          layout->Elements_SetToRedraw();
+          if(layout && IsCFGChromesLayout(layout)) layout->Elements_SetToRedraw();
         }
+      #endif
     }
 
   return status;
 }
+
+
 bool UI_MANAGER::SubscribeInputEvents(bool active)
 {
   UI_XEVENT_TYPE eventtype[] = {  UI_XEVENT_TYPE_INPUT_CURSOR_MOVE            ,

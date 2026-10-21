@@ -616,14 +616,20 @@ bool UI_ELEMENT_STATISTICSCHART::RasterizeChartBitmap(GRP2DCANVAS* referencecanv
     {
       if(!title.IsEmpty()) config->SetTitle(title.Get());
 
+      // Compact widgets (e.g. UI_Options demo ~52px): default 12px margins left almost no plot.
+      double design_h = chartheight / density;
+      double margin   = (design_h < 72.0) ? (4.0 * density) : (12.0 * density);
+      bool   show_axes = (design_h >= 90.0);
+      bool   show_grid = (design_h >= 36.0);
+
       config->SetTitleFontSize(14.0 * density);
       config->SetFontSize(11.0 * density);
       config->SetAxisFontSize(10.0 * density);
       config->SetShowValues(false);
       config->SetShowLegend(false);
-      config->SetShowGrid(true);
-      config->SetShowAxisLabels(true);
-      config->SetMargin(12.0 * density);
+      config->SetShowGrid(show_grid);
+      config->SetShowAxisLabels(show_axes);
+      config->SetMargin(margin);
 
       bool usedcssbg = false;
       if(IsBackgroundColorSet())
@@ -639,13 +645,30 @@ bool UI_ELEMENT_STATISTICSCHART::RasterizeChartBitmap(GRP2DCANVAS* referencecanv
 
       if(!usedcssbg)
         {
-          GRPSTATISTICSCHARTCOLOR bgcolor(22, 27, 34, 255);
-          config->SetBackgroundColor(bgcolor);
+          // Compact / blueprint demos: light card. Larger dashboards keep the dark panel default.
+          if(design_h < 72.0)
+            {
+              GRPSTATISTICSCHARTCOLOR bgcolor(255, 255, 255, 255);
+              config->SetBackgroundColor(bgcolor);
+              config->GetAxisColor().Set(120, 135, 145);
+              config->GetGridColor().Set(220, 226, 230);
+              config->GetTextColor().Set(32, 42, 52);
+            }
+           else
+            {
+              GRPSTATISTICSCHARTCOLOR bgcolor(22, 27, 34, 255);
+              config->SetBackgroundColor(bgcolor);
+              config->GetAxisColor().Set(110, 118, 129);
+              config->GetGridColor().Set(48, 54, 61);
+              config->GetTextColor().Set(201, 209, 217);
+            }
         }
-
-      config->GetAxisColor().Set(110, 118, 129);
-      config->GetGridColor().Set(48, 54, 61);
-      config->GetTextColor().Set(201, 209, 217);
+       else
+        {
+          config->GetAxisColor().Set(110, 118, 129);
+          config->GetGridColor().Set(48, 54, 61);
+          config->GetTextColor().Set(201, 209, 217);
+        }
 
       UI_COLOR* accent = GetColor();
       if(accent && accent->IsValid())

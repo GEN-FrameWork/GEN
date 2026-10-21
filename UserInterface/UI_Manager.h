@@ -196,6 +196,7 @@ class UI_MANAGER : public XOBSERVER, public XSUBJECT
 
     bool                            MaskText_HasTranslate                     (XSTRING* masktext);
     bool                            ResolveTranslateMasks                     (XSTRING* masktext, XSTRING& resolved);
+    bool                            ExpandNestedLiveMasks                     (UI_ELEMENT* element, XSTRING& text);
     bool                            ApplyTranslateMasksToElement              (UI_LAYOUT* layout, UI_ELEMENT* element);
 
     UI_SKIN*                        Skin_Create                               (XSTRING& skintypename, UI_SKIN_DRAWMODE drawmode, GRPSCREEN* screen, int viewportindex = 0);

@@ -459,7 +459,8 @@ static void UI_SkinCanvas_PunchRoundRectCornerTips(GRP2DCANVAS* canvas, GRP2DREB
 
   GRPBITMAP* bmp = (backdrop) ? backdrop->GetBitmap() : NULL;
 
-  // Parent ink: override (must be non-black) > FormBackdrop mid-edge > father's CSS bg (passed as override).
+  // Parent ink: override (must be non-black) > FormBackdrop mid-edge > sample just OUTSIDE the AABB
+  // (true screen backdrop for top-level panels) > father's CSS bg (passed as override).
   // Never punch with 0,0,0 — that paints black picos worse than AGG tips.
   GRP2DCOLOR_RGBA8 parent(0, 0, 0, 255);
   bool have_parent = false;
@@ -486,12 +487,27 @@ static void UI_SkinCanvas_PunchRoundRectCornerTips(GRP2DCANVAS* canvas, GRP2DREB
           if(s.a > 0 && (s.r + s.g + s.b) > 8) { parent = s; have_parent = true; }
         }
     }
+  // Top-level forms often have no father and a FormBackdrop mid-edge that already baked panel ink.
+  // Sample the live canvas just outside each AABB corner and pick the first non-black neighbour.
+  if(!have_parent)
+    {
+      const int ox[4] = { x0 - 2, x0 + w + 1, x0 + w + 1, x0 - 2 };
+      const int oy[4] = { y0 - 2, y0 - 2,     y0 + h + 1, y0 + h + 1 };
+      for(int i = 0; i < 4 && !have_parent; i++)
+        {
+          GRP2DCOLOR* c = canvas->GetPixel((double)ox[i], (double)oy[i]);
+          if(!c) continue;
+          GRP2DCOLOR_RGBA8 s = *(GRP2DCOLOR_RGBA8*)c;
+          if(s.a > 0 && (s.r + s.g + s.b) > 8) { parent = s; have_parent = true; }
+        }
+    }
   if(!have_parent) return;
 
-  int rTLi = (int)rTL; if(rTLi > w) rTLi = w; if(rTLi > h) rTLi = h;
-  int rTRi = (int)rTR; if(rTRi > w) rTRi = w; if(rTRi > h) rTRi = h;
-  int rBRi = (int)rBR; if(rBRi > w) rBRi = w; if(rBRi > h) rBRi = h;
-  int rBLi = (int)rBL; if(rBLi > w) rBLi = w; if(rBLi > h) rBLi = h;
+  // Inflate tip boxes by +2 so outline AA spikes past the geometric radius are still cleared.
+  int rTLi = (int)(rTL + 2.0); if(rTLi > w) rTLi = w; if(rTLi > h) rTLi = h;
+  int rTRi = (int)(rTR + 2.0); if(rTRi > w) rTRi = w; if(rTRi > h) rTRi = h;
+  int rBRi = (int)(rBR + 2.0); if(rBRi > w) rBRi = w; if(rBRi > h) rBRi = h;
+  int rBLi = (int)(rBL + 2.0); if(rBLi > w) rBLi = w; if(rBLi > h) rBLi = h;
 
   double ox1 = 0.0, oy1 = 0.0, ox2 = 0.0, oy2 = 0.0;
   canvas->GetClipBox(ox1, oy1, ox2, oy2);
@@ -511,10 +527,9 @@ static void UI_SkinCanvas_PunchRoundRectCornerTips(GRP2DCANVAS* canvas, GRP2DREB
           bool in_BL = (px <= rBLi) && (py >= (h - rBLi));
           if(!in_TL && !in_TR && !in_BR && !in_BL) continue;
 
-          // Slightly inflate radii for the inside test so we don't erase AGG's AA fringe of the true fill
-          // (pixel (3,3) with r=12 is just outside the strict disc but still part of the painted arc).
+          // Clear everything outside the geometric arc in the AABB tip (where AA-on-black left "pico negro").
           bool inside_shape = (px >= 0 && py >= 0 && px < w && py < h) &&
-                              UI_SkinCanvas_RoundedRectInside(px, py, w, h, rTL + 0.75, rTR + 0.75, rBR + 0.75, rBL + 0.75);
+                              UI_SkinCanvas_RoundedRectInside(px, py, w, h, rTL, rTR, rBR, rBL);
           if(inside_shape) continue;
 
           canvas->PutPixel((double)(x0 + px), (double)(y0 + py), &parent);
@@ -1738,6 +1753,9 @@ UI_SKINCANVAS::~UI_SKINCANVAS()
   textbackdrops.DeleteContents();
   textbackdrops.DeleteAll();
 
+  animbackdrops.DeleteContents();
+  animbackdrops.DeleteAll();
+
   // Mirrors progressbackdrops above but for the HOVER-WASH GHOSTING FIX's own cache (see UI_SkinCanvas.h
   // and Draw_Option()): same reasoning, same cleanup.
   optionbackdrops.DeleteContents();
@@ -2793,6 +2811,15 @@ bool UI_SKINCANVAS::CalculateBoundaryLine_Option(UI_ELEMENT* element, bool adjus
   UI_ELEMENT_ANIMATION* element_animation = (UI_ELEMENT_ANIMATION*)element_option->Get_UIAnimation();
   UI_ELEMENT_TEXT*      element_text      = (UI_ELEMENT_TEXT*)element_option->Get_UIText();
 
+  // Explicit XML width/height (e.g. gal_* 208x28) must stay the wash/hit box. SetAroundFromSubElements
+  // unions compose children in absolute coords; an extra TEXT (gallery date) that was CalculePosition'd
+  // while the father button was still unpositioned sits near y≈0 and inflates height to hundreds of px.
+  // DrawBackgroundColor then paints that huge opaque rect (SelectExclusiveRow white/gray alpha 255).
+  const int raw_w = (int)element->GetBoundaryLine()->width;
+  const int raw_h = (int)element->GetBoundaryLine()->height;
+  const bool explicit_box = (raw_w != UI_ELEMENT_TYPE_ALIGN_AUTO) && (raw_w != 0) && (raw_w != UI_ELEMENT_TYPE_ALIGN_MAX) &&
+                            (raw_h != UI_ELEMENT_TYPE_ALIGN_AUTO) && (raw_h != 0) && (raw_h != UI_ELEMENT_TYPE_ALIGN_MAX);
+
   double maximgwidth  = 0.0f; 
   double maximgheight = 0.0f; 
 
@@ -2873,7 +2900,19 @@ bool UI_SKINCANVAS::CalculateBoundaryLine_Option(UI_ELEMENT* element, bool adjus
         } 
     }
 
-  SetAroundFromSubElements(element_option);
+  // Extra compose TEXTs (e.g. nested gallery dates) are not Get_UIText() — reposition them now that
+  // the button has its final absolute box so Draw_Option and (optional) SetAround see correct coords.
+  for(XDWORD c=0; c<element_option->GetComposeElements()->GetSize(); c++)
+    {
+      UI_ELEMENT* sub = element_option->GetComposeElements()->Get(c);
+      if(!sub) continue;
+      if(sub == (UI_ELEMENT*)element_animation) continue;
+      if(sub == (UI_ELEMENT*)element_text)      continue;
+      CalculePosition(sub, element_option->GetBoundaryLine()->width, element_option->GetBoundaryLine()->height, adjustsizemargin);
+    }
+
+  // AUTO-sized options still grow to content; fixed boxes keep authored wash geometry (208x28).
+  if(!explicit_box) SetAroundFromSubElements(element_option);
 
   return true;
 }
@@ -3604,6 +3643,47 @@ static void UI_SkinCanvas_ProgressImage_Layout(int allocation, double imgw, doub
 
 
 /**-------------------------------------------------------------------------------------------------------------------
+*
+* @fn         bool UI_SKINCANVAS::CalculateBoundaryLine_StatisticsChart(UI_ELEMENT* element, bool adjustsizemargin)
+* @brief      Position/size statistics chart from authored width/height (CalculePosition).
+* @ingroup    USERINTERFACE
+*
+* @param[in]  element : Element to process.
+* @param[in]  adjustsizemargin : Adjustsizemargin value.
+*
+* @return     bool : true if the operation is successful; otherwise false.
+*
+* --------------------------------------------------------------------------------------------------------------------*/
+bool UI_SKINCANVAS::CalculateBoundaryLine_StatisticsChart(UI_ELEMENT* element, bool adjustsizemargin)
+{
+  if(!element) return false;
+
+  double fatherwidth  = 0.0f;
+  double fatherheight = 0.0f;
+
+  GetFatherSize(element, fatherwidth, fatherheight);
+
+  switch((int)element->GetBoundaryLine()->width)
+    {
+      case UI_ELEMENT_TYPE_ALIGN_AUTO :
+      case                          0 : element->GetBoundaryLine()->width  = 120.0; break;
+      case UI_ELEMENT_TYPE_ALIGN_MAX  : element->GetBoundaryLine()->width  = UI_SKINCANVAS_ResolveMaxSize(element, fatherwidth); break;
+    }
+
+  switch((int)element->GetBoundaryLine()->height)
+    {
+      case UI_ELEMENT_TYPE_ALIGN_AUTO :
+      case                          0 : element->GetBoundaryLine()->height = 64.0; break;
+      case UI_ELEMENT_TYPE_ALIGN_MAX  : element->GetBoundaryLine()->height = UI_SKINCANVAS_ResolveMaxSize(element, fatherheight); break;
+    }
+
+  CalculePosition(element, fatherwidth, fatherheight, adjustsizemargin);
+
+  return true;
+}
+
+
+/**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         bool UI_SKINCANVAS::CalculateBoundaryLine_ProgressImage(UI_ELEMENT* element, bool adjustsizemargin)
 * @brief      Calculate Boundary Line Progress Image
@@ -3787,10 +3867,16 @@ bool UI_SKINCANVAS::RestoreOnHide(UI_ELEMENT* element)
 * --------------------------------------------------------------------------------------------------------------------*/
 void UI_SKINCANVAS::RestoreCompositionCaches()
 {
-  // Leaf caches first (text/option/radial/progress), then forms — same order as PrepareTextContentChange.
+  // Leaf caches first (text/anim/option/radial/progress), then forms — same order as PrepareTextContentChange.
   for(XDWORD c=0; c<textbackdrops.GetSize(); c++)
     {
       GRP2DREBUILDAREA* entry = textbackdrops.Get(c);
+      if(entry && entry->GetBitmap()) PutBitmapNoAlpha(entry->GetXPos(), entry->GetYPos(), entry->GetBitmap());
+    }
+
+  for(XDWORD c=0; c<animbackdrops.GetSize(); c++)
+    {
+      GRP2DREBUILDAREA* entry = animbackdrops.Get(c);
       if(entry && entry->GetBitmap()) PutBitmapNoAlpha(entry->GetXPos(), entry->GetYPos(), entry->GetBitmap());
     }
 
@@ -3817,6 +3903,178 @@ void UI_SKINCANVAS::RestoreCompositionCaches()
       GRP2DREBUILDAREA* entry = formbackdrops.Get(c);
       if(entry && entry->GetBitmap()) PutBitmapNoAlpha(entry->GetXPos(), entry->GetYPos(), entry->GetBitmap());
     }
+}
+
+
+/**-------------------------------------------------------------------------------------------------------------------
+*
+* @fn         void UI_SKINCANVAS::RestoreRebuildAreas()
+* @brief      PutBitmapNoAlpha-restore every one-shot rebuild area WITHOUT deleting them.
+* @note       Language change (Layouts_ApplyTranslations) must erase alpha-blended glyph ink before
+*             InvalidateCompositionCaches(). DeleteAllRebuildAreas() alone drops the snapshots without
+*             restoring, so the next PreDraw captures old glyphs. Do NOT use Layout_PutBackground for
+*             that: a full canvas wipe under a visible auto-hide chrome caption leaves ListBoxMenu /
+*             edittext blank when Overlay_ClearSuppressedContentDirt freezes dirt under the caption band.
+* @ingroup    USERINTERFACE
+*
+* --------------------------------------------------------------------------------------------------------------------*/
+void UI_SKINCANVAS::RestoreRebuildAreas()
+{
+  XVECTOR<GRP2DREBUILDAREA*>* areas = GetRebuildAreas();
+  if(!areas) return;
+
+  // Highest index first so overlapping snapshots peel in reverse capture order.
+  for(XDWORD c = areas->GetSize(); c > 0; c--)
+    {
+      GRP2DREBUILDAREA* area = areas->Get(c - 1);
+      if(area && area->GetBitmap()) PutBitmapNoAlpha(area->GetXPos(), area->GetYPos(), area->GetBitmap());
+    }
+}
+
+
+/**-------------------------------------------------------------------------------------------------------------------
+*
+* @fn         bool UI_SKINCANVAS::EraseElementRebuildArea(UI_ELEMENT* element)
+* @brief      Clear glyph ink for a leaf TEXT/TEXTBOX before its string/language changes.
+* @note       Used by language apply. Prefer this over RestoreRebuildAreas()+InvalidateCompositionCaches()
+*             +full Elements_SetToRedraw(): that path restores ListBoxMenu/edit backdrops to parchment while
+*             the auto-hide caption is visible, then Overlay_ClearSuppressedContentDirt freezes their dirt
+*             (they intersect the caption AABB via EdgeTop=y-height) until the bar hides.
+*
+*             Idle translate-only TEXTBOX (UI_Options textbox01) often has no rebuild area (orphan-discard).
+*             Neighbour rebuild areas that still hold a snapshot of the OLD glyphs (e.g. thermometer "%" that
+*             overlaps the textbox) must be dropped WITHOUT restoring — otherwise RebuildAllAreas() would
+*             PutBitmapNoAlpha those stale pixels back after this erase and the next Draw_TextBox stacks the
+*             new language on top of the previous one.
+* @ingroup    USERINTERFACE
+*
+*---------------------------------------------------------------------------------------------------------------------*/
+bool UI_SKINCANVAS::EraseElementRebuildArea(UI_ELEMENT* element)
+{
+  if(!element || !element->GetBoundaryLine()) return false;
+
+  double x = element->GetXPosition();
+  double y = element->GetYPosition();
+  if(element->GetFather()) GetAddPositionScrollSteps(element->GetFather(), x, y);
+
+  double w = element->GetBoundaryLine()->width;
+  double h = element->GetBoundaryLine()->height;
+  if((w <= 0.0) || (h <= 0.0)) return EraseElementWithLayoutBackground(element);
+
+  const double pad = 8.0;
+  double left   = UI_BOUNDARYLINE_EdgeLeft  (x, w) - pad;
+  double top    = UI_BOUNDARYLINE_EdgeTop   (y, h) - pad;
+  double right  = UI_BOUNDARYLINE_EdgeRight (x, w) + pad;
+  double bottom = UI_BOUNDARYLINE_EdgeBottom(y, h) + pad;
+
+  // Drop every rebuild area that intersects the erase AABB (including this element) WITHOUT restoring.
+  // Restoring would re-introduce glyph ink captured while the previous language was on screen.
+  XVECTOR<GRP2DREBUILDAREA*>* areas = GetRebuildAreas();
+  if(areas)
+    {
+      for(int index = (int)areas->GetSize() - 1; index >= 0; index--)
+        {
+          GRP2DREBUILDAREA* area = areas->Get((XDWORD)index);
+          if(!area || !area->GetBitmap()) continue;
+
+          double ax1 = area->GetXPos();
+          double ay1 = area->GetYPos();
+          double ax2 = ax1 + (double)area->GetBitmap()->GetWidth();
+          double ay2 = ay1 + (double)area->GetBitmap()->GetHeight();
+
+          if(ax2 <= left || ax1 >= right || ay2 <= top || ay1 >= bottom) continue;
+
+          UI_ELEMENT* owner = (UI_ELEMENT*)area->GetExtraData();
+          if(owner) owner->SetMustReDraw(true);
+
+          areas->Delete(area);
+          GEN_DELETE area;
+        }
+    }
+
+  // Always blit clean layout parchment into the AABB (do not rely on a prior rebuild-area snapshot).
+  return EraseElementWithLayoutBackground(element);
+}
+
+
+/**-------------------------------------------------------------------------------------------------------------------
+*
+* @fn         bool UI_SKINCANVAS::EraseElementWithLayoutBackground(UI_ELEMENT* element)
+* @brief      Copy the owning layout's background image into the element's boundary (plus AA pad).
+* @note       Fallback for language change on fatherless TEXTBOX when no rebuild area / FormBackdrop
+*             exists. Uses GetCanvas()+GetPixel/PutPixel (same paint target as Draw_*) rather than
+*             GetSubBitmap+PutBitmapNoAlpha: the latter can miss the visible buffer when rebuild-area
+*             target canvas and GetCanvas() diverge, and GetSubBitmap's PutBlendPixel path can yield a
+*             failed/empty crop. Avoids a full-canvas wipe (chrome auto-hide / suppressed menu dirt).
+* @ingroup    USERINTERFACE
+*
+*---------------------------------------------------------------------------------------------------------------------*/
+bool UI_SKINCANVAS::EraseElementWithLayoutBackground(UI_ELEMENT* element)
+{
+  if(!element || !element->GetBoundaryLine()) return false;
+
+  // Must match Draw_* paint target (honours canvas_override / design canvas).
+  GRP2DCANVAS* canvas = GetCanvas();
+  if(!canvas) return false;
+
+  UI_LAYOUT* layout = GEN_USERINTERFACE.Element_GetLayout(element);
+  if(!layout || !layout->GetBackground()) return false;
+
+  GRPBITMAP* bg = layout->GetBackground()->GetBitmap();
+  if(!bg) return false;
+
+  int cw = (int)canvas->GetWidth();
+  int ch = (int)canvas->GetHeight();
+  if((cw <= 0) || (ch <= 0)) return false;
+
+  if((bg->GetWidth() != cw) || (bg->GetHeight() != ch))
+    {
+      bg->Scale(cw, ch);
+    }
+
+  double x = element->GetXPosition();
+  double y = element->GetYPosition();
+  if(element->GetFather()) GetAddPositionScrollSteps(element->GetFather(), x, y);
+
+  double w = element->GetBoundaryLine()->width;
+  double h = element->GetBoundaryLine()->height;
+  if((w <= 0.0) || (h <= 0.0)) return false;
+
+  // AA / inline-image (E.png drop-cap) overhang past the authored box.
+  const double pad = 8.0;
+  double left   = UI_BOUNDARYLINE_EdgeLeft  (x, w) - pad;
+  double top    = UI_BOUNDARYLINE_EdgeTop   (y, h) - pad;
+  double right  = UI_BOUNDARYLINE_EdgeRight (x, w) + pad;
+  double bottom = UI_BOUNDARYLINE_EdgeBottom(y, h) + pad;
+
+  if(left < 0.0) left = 0.0;
+  if(top  < 0.0) top  = 0.0;
+  if(right  > (double)cw) right  = (double)cw;
+  if(bottom > (double)ch) bottom = (double)ch;
+
+  int ix1 = (int)left;
+  int iy1 = (int)top;
+  int ix2 = (int)right;
+  int iy2 = (int)bottom;
+  if((ix2 <= ix1) || (iy2 <= iy1)) return false;
+
+  int bgw = (int)bg->GetWidth();
+  int bgh = (int)bg->GetHeight();
+
+  for(int py = iy1; py < iy2; py++)
+    {
+      if(py < 0 || py >= bgh || py >= ch) continue;
+
+      for(int px = ix1; px < ix2; px++)
+        {
+          if(px < 0 || px >= bgw || px >= cw) continue;
+
+          GRP2DCOLOR* pixel = bg->GetPixel(px, py);
+          if(pixel) canvas->PutPixel((double)px, (double)py, pixel);
+        }
+    }
+
+  return true;
 }
 
 
@@ -3852,6 +4110,9 @@ void UI_SKINCANVAS::InvalidateCompositionCaches()
   textbackdrops.DeleteContents();
   textbackdrops.DeleteAll();
 
+  animbackdrops.DeleteContents();
+  animbackdrops.DeleteAll();
+
   optionbackdrops.DeleteContents();
   optionbackdrops.DeleteAll();
 
@@ -3872,6 +4133,20 @@ void UI_SKINCANVAS::InvalidateCompositionCaches()
 * @ingroup    USERINTERFACE
 *
 *---------------------------------------------------------------------------------------------------------------------*/
+bool UI_SKINCANVAS::DiscardTextBackdrop(UI_ELEMENT* element)
+{
+  if(!element) return false;
+  return TextBackdrop_Delete(element);
+}
+
+
+bool UI_SKINCANVAS::DiscardAnimBackdrop(UI_ELEMENT* element)
+{
+  if(!element) return false;
+  return AnimBackdrop_Delete(element);
+}
+
+
 bool UI_SKINCANVAS::PrepareTextContentChange(UI_ELEMENT* element)
 {
   if(!element) return false;
@@ -3939,9 +4214,13 @@ bool UI_SKINCANVAS::PrepareTextContentChange(UI_ELEMENT* element)
 
       father->SetMustReDraw(true);
     }
-  // No form father: do NOT pad-wipe the text box with opaque fill — that is the "black box after the
-  // title letters" artefact (text-box width includes side bearings past the last glyph). TextBackdrop
-  // restore above already cleared prior ink; MustReDraw below forces a clean repaint.
+  // No form father (classic XML TEXTBOX): opaque fill would leave a black pad. Always blit layout
+  // background (even if a TextBackdrop was restored) so language change cannot stack glyph ink on
+  // parchment when TEXTBACKDROP is off and the leaf rebuild area was orphan-discarded.
+  if(!father)
+    {
+      erased = EraseElementWithLayoutBackground(element) || erased;
+    }
 
   element->SetMustReDraw(true);
   return erased;
@@ -3962,6 +4241,7 @@ XDWORD UI_SKINCANVAS::CompositionCacheCount()
   return formbackdrops.GetSize()
        + optionbackdrops.GetSize()
        + textbackdrops.GetSize()
+       + animbackdrops.GetSize()
        + progressbackdrops.GetSize()
        + radialbackdrops.GetSize();
 }
@@ -4055,15 +4335,67 @@ bool UI_SKINCANVAS::Draw_Text(UI_ELEMENT* element)
       // That erases the stale ink from the sub-region the old entry covered, so the fresh capture that follows
       // reads genuinely clean pixels there; the newly-exposed strip outside the old bounds was never painted by
       // this element in the first place, so it is already correct.
-      // TEXTBACKDROP OFF IN Draw_Text (2026-10): the Sept TextBackdrop capture/restore path (and the Oct
-      // always-recapture / progress-bar InvalidateOverlapping that forced GetBitmap every tick) breaks the
-      // classic XML-without-CSS examples (UI_Options): PutBitmapNoAlpha of a bad/black capture shows as a
-      // solid black rectangle under glyphs, and GetBitmap every frame of every "#[...]" / progress % label
-      // collapses FPS even when present is OpenGL. Rebuild areas (PreDrawFunction / RebuildAllAreas) already
-      // erase for texts that own an area; progress captions get an own area via the father MustReDraw toggle
-      // below in Draw_ProgressBar; chrome title erase is FormBackdrop + PrepareTextContentChange. Drop any
-      // leftover TextBackdrop so a stale cache cannot paint a black pad, then print glyphs only.
-      TextBackdrop_Delete(element);
+      // TEXT CAPTION GHOSTING (classic XML / UI_Options): rebuild areas are orphan-discarded while idle, so the
+      // next MustReDraw (hover overlap chain, exclusive-select redraw, chrome/content overlap invalidation)
+      // would alpha-blend glyphs onto the previous ink and titles go progressively blacker.
+      //
+      // Always: (1) restore any TextBackdrop (erase prior glyphs), (2) re-capture a clean backdrop if missing
+      // (ownarea geometry when available, else the text AABB), (3) never Delete without restoring first.
+      // Capturing without ownarea matters when a dirty father owns the rebuild area — FormBackdrop already
+      // cleared our box, so the canvas is clean HERE and we must snapshot before printing or the next solo
+      // redraw (orphan path) will bake the previous glyphs into a brand-new rebuild area.
+      if(!GEN_USERINTERFACE.ModalLayer_IsCompositing())
+        {
+          GRP2DREBUILDAREA* ownarea_text = GetRebuildAreaByElement(element);
+          GRP2DREBUILDAREA* textbackdrop = TextBackdrop_Find(element);
+
+          if(textbackdrop && textbackdrop->GetBitmap())
+            {
+              if(ownarea_text && ownarea_text->GetBitmap() && !TextBackdrop_MatchesArea(textbackdrop, ownarea_text))
+                {
+                  // Grow/shrink: erase old ink footprint first, then drop so we re-capture below.
+                  PutBitmapNoAlpha(textbackdrop->GetXPos(), textbackdrop->GetYPos(), textbackdrop->GetBitmap());
+                  TextBackdrop_Delete(element);
+                  textbackdrop = NULL;
+                }
+               else
+                {
+                  PutBitmapNoAlpha(textbackdrop->GetXPos(), textbackdrop->GetYPos(), textbackdrop->GetBitmap());
+                }
+            }
+
+          if(!TextBackdrop_Find(element))
+            {
+              double cap_x = 0.0;
+              double cap_y = 0.0;
+              double cap_w = 0.0;
+              double cap_h = 0.0;
+
+              if(ownarea_text && ownarea_text->GetBitmap())
+                {
+                  cap_x = ownarea_text->GetXPos();
+                  cap_y = ownarea_text->GetYPos();
+                  cap_w = (double)ownarea_text->GetBitmap()->GetWidth();
+                  cap_h = (double)ownarea_text->GetBitmap()->GetHeight();
+                }
+               else
+                {
+                  double tw = element->GetBoundaryLine()->width;
+                  double th = element->GetBoundaryLine()->height;
+                  if(tw < 1.0) tw = 1.0;
+                  if(th < 1.0) th = 1.0;
+                  cap_x = x_position;
+                  cap_y = UI_BOUNDARYLINE_EdgeTop(y_position, th);
+                  cap_w = tw;
+                  cap_h = th;
+                }
+
+              if((cap_w > 0.0) && (cap_h > 0.0))
+                {
+                  TextBackdrop_Capture(element, cap_x, cap_y, cap_w, cap_h);
+                }
+            }
+        }
 
       GRP2DCOLOR_RGBA8  color(element->GetColor()->GetRed(), element->GetColor()->GetGreen(), element->GetColor()->GetBlue(), element->GetColor()->GetAlpha());
 
@@ -4312,12 +4644,101 @@ bool UI_SKINCANVAS::Draw_Animation(UI_ELEMENT* element)
 
   if(element->MustReDraw()) 
     {
+      // ANIM ICON GHOSTING FIX (2026-10): same orphan-discard + alpha-blend stack as Draw_Text — idle
+      // rebuild areas are deleted without restore, so the next MustReDraw (menu select overlap chain)
+      // PutBitmapAlpha's the icon onto itself and section headers go progressively blacker
+      // (UI_Options ic_list next to "GALLERYS EXISTENTES"). Mirror TextBackdrop: restore then recapture.
+      //
+      // OPAQUE-PARENT WASH (2026-10): when the father option/button just painted an opaque selection
+      // wash (UI_Options gal_*/nav_* exclusive gray/white), a stale AnimBackdrop captured on the
+      // previous wash colour must NOT be PutBitmapNoAlpha'd — that punches a white icon plate into
+      // the gray selection bar (and vice versa on deselect). Drop without restore and re-capture
+      // whatever the parent wash left under us.
+      if(!GEN_USERINTERFACE.ModalLayer_IsCompositing())
+        {
+          GRP2DREBUILDAREA* ownarea_anim = GetRebuildAreaByElement(element);
+          GRP2DREBUILDAREA* animbackdrop = AnimBackdrop_Find(element);
+
+          bool father_opaque_wash = false;
+          UI_ELEMENT* father = element->GetFather();
+          if(father)
+            {
+              XDWORD ft = father->GetType();
+              if((ft == UI_ELEMENT_TYPE_OPTION) || (ft == UI_ELEMENT_TYPE_BUTTON) || (ft == UI_ELEMENT_TYPE_CHECKBOX))
+                {
+                  UI_ELEMENT_OPTION* father_opt = (UI_ELEMENT_OPTION*)father;
+                  if(father_opt->GetBackgroundColor() && (father_opt->GetBackgroundColor()->GetAlpha() == 255))
+                    {
+                      father_opaque_wash = true;
+                    }
+                }
+            }
+
+          // Opaque exclusive-row wash (nav/gal): never PutBitmapNoAlpha a stale AnimBackdrop (that
+          // punched a white icon plate into the gray selection). Drop and re-capture under the wash
+          // that is already on screen (parent just painted it, or it is still showing from an earlier
+          // select). Solo-icon redraws under an opaque parent are rare; a one-frame recapture is safer
+          // than restoring a white plate.
+          if(father_opaque_wash)
+            {
+              AnimBackdrop_Delete(element);
+              animbackdrop = NULL;
+            }
+           else if(animbackdrop && animbackdrop->GetBitmap())
+            {
+              if(ownarea_anim && ownarea_anim->GetBitmap() && !AnimBackdrop_MatchesArea(animbackdrop, ownarea_anim))
+                {
+                  PutBitmapNoAlpha(animbackdrop->GetXPos(), animbackdrop->GetYPos(), animbackdrop->GetBitmap());
+                  AnimBackdrop_Delete(element);
+                  animbackdrop = NULL;
+                }
+               else
+                {
+                  PutBitmapNoAlpha(animbackdrop->GetXPos(), animbackdrop->GetYPos(), animbackdrop->GetBitmap());
+                }
+            }
+
+          if(!AnimBackdrop_Find(element))
+            {
+              double cap_x = 0.0;
+              double cap_y = 0.0;
+              double cap_w = 0.0;
+              double cap_h = 0.0;
+
+              if(ownarea_anim && ownarea_anim->GetBitmap())
+                {
+                  cap_x = ownarea_anim->GetXPos();
+                  cap_y = ownarea_anim->GetYPos();
+                  cap_w = (double)ownarea_anim->GetBitmap()->GetWidth();
+                  cap_h = (double)ownarea_anim->GetBitmap()->GetHeight();
+                }
+               else if(element_image->GetImage())
+                {
+                  double ih = (double)element_image->GetImage()->GetHeight();
+                  double iw = (double)element_image->GetImage()->GetWidth();
+                  if(iw < 1.0) iw = 1.0;
+                  if(ih < 1.0) ih = 1.0;
+                  cap_x = x_position;
+                  cap_y = y_position - ih;
+                  cap_w = iw;
+                  cap_h = ih;
+                }
+
+              if((cap_w > 0.0) && (cap_h > 0.0))
+                {
+                  AnimBackdrop_Capture(element, cap_x, cap_y, cap_w, cap_h);
+                }
+            }
+        }
+
       if(element_animation)
         {
           XBYTE alpha = element_animation->GetAlpha();
           if(alpha < element_image->GetAlpha()) element_image->SetAlpha(alpha);
         }
 
+      // Image child only paints when ITS MustReDraw is set — force it when the animation father redraws.
+      element_image->SetMustReDraw(true);
       Draw(element_image);     
     }
 
@@ -4427,19 +4848,44 @@ bool UI_SKINCANVAS::Draw_Option(UI_ELEMENT* element)
       // one being interacted with (e.g. a different row gets selected while this one sits idle), so a backdrop
       // kept forever would go stale against that; re-capturing fresh at the start of every new episode always
       // picks up whatever those siblings currently show.
-      GRP2DREBUILDAREA* ownarea_bg = GetRebuildAreaByElement(element_option);
-      if(ownarea_bg && !GEN_USERINTERFACE.ModalLayer_IsCompositing())
+      // Opaque exclusive-row washes (UI_Options nav/gal): skip OptionBackdrop. An opaque fill already
+      // replaces prior pixels; keeping a permanent OptionBackdrop forced restore→force-dirty-children every
+      // paint, which MarkOverlapping'd frame_records and wiped sibling gallery rows into a blank column.
+      bool opaque_option_wash = (element_option->GetBackgroundColor()->GetAlpha() == 255);
+      bool optionbackdrop_restored = false;
+      if(opaque_option_wash)
         {
-          GRP2DREBUILDAREA* optionbackdrop = OptionBackdrop_Find(element_option);
+          OptionBackdrop_Delete(element_option);
+        }
+       else
+        {
+          GRP2DREBUILDAREA* ownarea_bg = GetRebuildAreaByElement(element_option);
+          if(ownarea_bg && !GEN_USERINTERFACE.ModalLayer_IsCompositing())
+            {
+              GRP2DREBUILDAREA* optionbackdrop = OptionBackdrop_Find(element_option);
 
-          if(!optionbackdrop)
-            {
-              OptionBackdrop_Capture(element_option, ownarea_bg->GetXPos(), ownarea_bg->GetYPos(), (double)ownarea_bg->GetBitmap()->GetWidth(), (double)ownarea_bg->GetBitmap()->GetHeight());
+              if(!optionbackdrop)
+                {
+                  OptionBackdrop_Capture(element_option, ownarea_bg->GetXPos(), ownarea_bg->GetYPos(), (double)ownarea_bg->GetBitmap()->GetWidth(), (double)ownarea_bg->GetBitmap()->GetHeight());
+                }
+               else
+                {
+                  PutBitmapNoAlpha(optionbackdrop->GetXPos(), optionbackdrop->GetYPos(), optionbackdrop->GetBitmap());
+                  optionbackdrop_restored = true;
+                }
             }
-           else
-            {
-              PutBitmapNoAlpha(optionbackdrop->GetXPos(), optionbackdrop->GetYPos(), optionbackdrop->GetBitmap());
-            }
+        }
+
+      // Classic XML buttons often keep bg alpha 0: OptionBackdrop restore can still leave prior glyph/icon
+      // ink (capture after orphan-discard). Opaque white erase under the content prevents stack-to-black on
+      // hover. CSS/dashboard options with a real wash (alpha > 0) rely on DrawBackgroundColor instead.
+      if(element_option->GetBackgroundColor()->GetAlpha() == 0)
+        {
+          GRP2DCOLOR_RGBA8 erase(255, 255, 255, 255);
+          canvas->SetLineWidth(0.0f);
+          canvas->SetLineColor(&erase);
+          canvas->SetFillColor(&erase);
+          canvas->Rectangle(x_position, y_position, x_position + element->GetBoundaryLine()->width, UI_BOUNDARYLINE_EdgeTop(y_position, element->GetBoundaryLine()->height), true);
         }
 
       DrawBackgroundColor(element_option, canvas, x_position, y_position);
@@ -4448,10 +4894,11 @@ bool UI_SKINCANVAS::Draw_Option(UI_ELEMENT* element)
         { 
           if(element_option->GetVisibleLimitType() & UI_ELEMENT_OPTION_VISIBLE_LIMIT_SELECT) 
             {     
-              GRP2DCOLOR_RGBA8  colorred(255, 0, 0);     
+              // Light blue select ring (was hard-coded red); matches technical-manual / UI_Options wash.
+              GRP2DCOLOR_RGBA8  colorselect(120, 180, 220);
               GRP2DCOLOR_RGBA8  colorhover(0x32, 0x33, 0x36, 150);
   
-              canvas->SetLineColor(&colorred);
+              canvas->SetLineColor(&colorselect);
               canvas->SetFillColor(&colorhover);
 
               canvas->SetLineWidth(1.0f);
@@ -4473,7 +4920,8 @@ bool UI_SKINCANVAS::Draw_Option(UI_ELEMENT* element)
               if(element_option->GetVisibleLimitType() & UI_ELEMENT_OPTION_VISIBLE_LIMIT_PRESELECT) 
                 {        
                   GRP2DCOLOR_RGBA8  colorwhite(255, 255, 255);
-                  GRP2DCOLOR_RGBA8  colorhover(0x32, 0x33, 0x36, 150);
+                  // Preselect wash: prior 50,51,54 → +25% → 101,102,104 → +10% → 116,117,119.
+                  GRP2DCOLOR_RGBA8  colorhover(116, 117, 119, 150);
   
                   canvas->SetLineColor(&colorwhite);
                   canvas->SetFillColor(&colorhover);
@@ -4534,8 +4982,53 @@ bool UI_SKINCANVAS::Draw_Option(UI_ELEMENT* element)
           OptionBackdrop_Delete(element_option);
         }
 
+      // After OptionBackdrop restore, compose child ink must be repainted (Draw_Form pattern).
+      // Opaque exclusive-row wash: drop stale Text/Anim backdrops WITHOUT restoring — the wash just
+      // painted is the new true backdrop. Restoring a white AnimBackdrop punched a white icon plate
+      // into the gray selection bar (UI_Options gallery). Do NOT force-dirty the whole compose tree
+      // every opaque paint (MarkOverlapping↔form wipe loop). Same-pass MustReDraw on the primary
+      // animation/text (+ extra TEXT siblings) is enough so Draw() below re-captures on the new wash;
+      // SelectExclusiveRow also MarkSubtreeDirties when the wash colour actually flips.
+      if(opaque_option_wash)
+        {
+          for(XDWORD c=0; c<element_option->GetComposeElements()->GetSize(); c++)
+            {
+              UI_ELEMENT* optionchild = (UI_ELEMENT*)element_option->GetComposeElements()->Get(c);
+              if(!optionchild) continue;
+              if(optionchild->GetType() == UI_ELEMENT_TYPE_TEXT)      DiscardTextBackdrop(optionchild);
+              if(optionchild->GetType() == UI_ELEMENT_TYPE_ANIMATION) DiscardAnimBackdrop(optionchild);
+            }
+          if(element_animation) element_animation->SetMustReDraw(true);
+          if(element_text)      element_text->SetMustReDraw(true);
+          for(XDWORD c=0; c<element_option->GetComposeElements()->GetSize(); c++)
+            {
+              UI_ELEMENT* optionchild = (UI_ELEMENT*)element_option->GetComposeElements()->Get(c);
+              if(optionchild && (optionchild->GetType() == UI_ELEMENT_TYPE_TEXT) && (optionchild != (UI_ELEMENT*)element_text))
+                optionchild->SetMustReDraw(true);
+            }
+        }
+
+      if(optionbackdrop_restored)
+        {
+          for(XDWORD c=0; c<element_option->GetComposeElements()->GetSize(); c++)
+            {
+              UI_ELEMENT* optionchild = (UI_ELEMENT*)element_option->GetComposeElements()->Get(c);
+              if(optionchild) optionchild->SetMustReDraw(true);
+            }
+        }
+
       if(element_animation)  Draw(element_animation);
       if(element_text)       Draw(element_text);
+
+      // Extra compose TEXT siblings (e.g. UI_Options gallery row dates nested in the button) — not
+      // returned by Get_UIText(), which only tracks the primary label.
+      for(XDWORD c=0; c<element_option->GetComposeElements()->GetSize(); c++)
+        {
+          UI_ELEMENT* sub = element_option->GetComposeElements()->Get(c);
+          if(!sub || (sub->GetType() != UI_ELEMENT_TYPE_TEXT)) continue;
+          if(sub == (UI_ELEMENT*)element_text) continue;
+          Draw(sub);
+        }
     }
 
   
@@ -5049,7 +5542,8 @@ bool UI_SKINCANVAS::Draw_Form(UI_ELEMENT* element)
               // blank strip forever (video 2026-09-20: sidebar empty until click). Force-discard now so the
               // buttons recapture AFTER compose children / later siblings have redrawn this frame.
               OptionBackdrop_InvalidateOverlapping(bd_x, bd_y, bd_w, bd_h, true);
-              TextBackdrop_InvalidateOverlapping(bd_x, bd_y, bd_w, bd_h);
+              TextBackdrop_InvalidateOverlapping(bd_x, bd_y, bd_w, bd_h, element);
+              AnimBackdrop_InvalidateOverlapping(bd_x, bd_y, bd_w, bd_h, element);
 
               // Cards in UI_System overlap each other by ~22px vertically even with AABB-only FormBackdrop;
               // dirty any layout sibling whose box intersects the restore rect so neighbour ink is redrawn
@@ -5092,14 +5586,16 @@ bool UI_SKINCANVAS::Draw_Form(UI_ELEMENT* element)
               // comment for the full root-cause writeup -- this form is about to paint real ink over this same
               // box, so any text element's cached backdrop overlapping it (e.g. a sidebar label sitting on top
               // of a selection-wash band) is now stale too, exactly like the option case just above.
-              TextBackdrop_InvalidateOverlapping(ownarea->GetXPos(), ownarea->GetYPos(), (double)ownarea->GetBitmap()->GetWidth(), (double)ownarea->GetBitmap()->GetHeight());
+              TextBackdrop_InvalidateOverlapping(ownarea->GetXPos(), ownarea->GetYPos(), (double)ownarea->GetBitmap()->GetWidth(), (double)ownarea->GetBitmap()->GetHeight(), element);
+              AnimBackdrop_InvalidateOverlapping(ownarea->GetXPos(), ownarea->GetYPos(), (double)ownarea->GetBitmap()->GetWidth(), (double)ownarea->GetBitmap()->GetHeight(), element);
             }
            else
             {
               OptionBackdrop_InvalidateOverlapping(vr_minx, vr_miny, vr_maxx - vr_minx, vr_maxy - vr_miny, formneverdrawnbefore);
 
               // STALE CAPTION BACKGROUND FIX (2026-09): see the ownarea branch just above.
-              TextBackdrop_InvalidateOverlapping(vr_minx, vr_miny, vr_maxx - vr_minx, vr_maxy - vr_miny);
+              TextBackdrop_InvalidateOverlapping(vr_minx, vr_miny, vr_maxx - vr_minx, vr_maxy - vr_miny, element);
+              AnimBackdrop_InvalidateOverlapping(vr_minx, vr_miny, vr_maxx - vr_minx, vr_maxy - vr_miny, element);
             }
         }
 
@@ -5250,6 +5746,26 @@ bool UI_SKINCANVAS::Draw_Form(UI_ELEMENT* element)
               }
           }
 
+          GRP2DCOLOR_RGBA8 seed_bg = corner_parent_ptr ? *corner_parent_ptr : GRP2DCOLOR_RGBA8(0x19, 0x1E, 0x24, 255);
+          {
+            GRP2DCOLOR_RGBA8 line_none(0, 0, 0, 0);
+            canvas->SetFillColor(&seed_bg);
+            canvas->SetLineColor(&line_none);
+            canvas->SetLineWidth(1.0f);
+            canvas->Rectangle(vr_minx - 1.0, vr_maxy + 1.0, vr_maxx + 1.0, vr_miny - 1.0, true);
+
+            UI_COLOR* fillsrc2 = element_form->IsBackgroundColorSet() ? element_form->GetBackgroundColor()
+                                                                       : element_form->GetColor();
+            UI_COLOR* bcsrc2   = element_form->IsBorderColorSet() ? element_form->GetBorderColor()
+                                                                   : element_form->GetLineColor();
+            GRP2DCOLOR_RGBA8 fill2(fillsrc2->GetRed(), fillsrc2->GetGreen(), fillsrc2->GetBlue(), fillsrc2->GetAlpha());
+            GRP2DCOLOR_RGBA8 line2(bcsrc2->GetRed(), bcsrc2->GetGreen(), bcsrc2->GetBlue(), bcsrc2->GetAlpha());
+            double bw2 = element_form->GetBorderWidth();
+            canvas->SetFillColor(&fill2);
+            if(bw2 == 0.0) { GRP2DCOLOR_RGBA8 ln(0,0,0,0); canvas->SetLineColor(&ln); canvas->SetLineWidth(1.0f); }
+            else { canvas->SetLineColor(&line2); canvas->SetLineWidth((bw2 < 0.0) ? 1.0f : bw2); }
+          }
+
           if(uniform)
             {
               canvas->RoundRect(vr_minx, vr_maxy, vr_maxx, vr_miny, rTL, true);
@@ -5264,15 +5780,12 @@ bool UI_SKINCANVAS::Draw_Form(UI_ELEMENT* element)
             }
 
           // CORNER SPIKES FIX: punch AABB cutouts with father/FormBackdrop parent ink.
-          UI_SkinCanvas_PunchRoundRectCornerTips(canvas, formbackdrop_for_punch, vr_minx, vr_miny, vr_maxx, vr_maxy, rTL, rTR, rBR, rBL, corner_parent_ptr);
+          UI_SkinCanvas_PunchRoundRectCornerTips(canvas, formbackdrop_for_punch, vr_minx, vr_miny, vr_maxx, vr_maxy, rTL, rTR, rBR, rBL, &seed_bg);
         }
        else if(element_form->GetRoundRect())
         {
-          double vx = element_form->GetVisibleRect()->x;
-          double vy = element_form->GetVisibleRect()->y;
-          double vw = element_form->GetVisibleRect()->width;
-          double vtop = element_form->GetVisibleRect()->GetTop();
-
+          // Use the same padded content box (vr_*) as the per-corner branch so fill, stroke and tip-punch agree.
+          // Sample TRUE backdrop BEFORE RoundRect paints -- after paint, outside GetPixel can still see AA tips.
           GRP2DCOLOR_RGBA8 corner_parent(0, 0, 0, 255);
           const GRP2DCOLOR_RGBA8* corner_parent_ptr = NULL;
           {
@@ -5288,12 +5801,60 @@ bool UI_SKINCANVAS::Draw_Form(UI_ELEMENT* element)
                 corner_parent = GRP2DCOLOR_RGBA8((XBYTE)fbg->GetRed(), (XBYTE)fbg->GetGreen(), (XBYTE)fbg->GetBlue(), (XBYTE)fbg->GetAlpha());
                 corner_parent_ptr = &corner_parent;
               }
+            if(!corner_parent_ptr)
+              {
+                const double sx[4] = { vr_minx - 2.0, vr_maxx + 1.0, vr_maxx + 1.0, vr_minx - 2.0 };
+                const double sy[4] = { vr_miny - 2.0, vr_miny - 2.0, vr_maxy + 1.0, vr_maxy + 1.0 };
+                for(int i = 0; i < 4 && !corner_parent_ptr; i++)
+                  {
+                    GRP2DCOLOR* c = canvas->GetPixel(sx[i], sy[i]);
+                    if(!c) continue;
+                    GRP2DCOLOR_RGBA8 s = *(GRP2DCOLOR_RGBA8*)c;
+                    if(s.a > 0 && (s.r + s.g + s.b) > 8)
+                      {
+                        corner_parent = s;
+                        corner_parent_ptr = &corner_parent;
+                      }
+                  }
+              }
           }
 
-          canvas->RoundRect(vx, vy, vx + vw, vtop, element_form->GetRoundRect(), true);
-
           double rr = (double)element_form->GetRoundRect();
-          UI_SkinCanvas_PunchRoundRectCornerTips(canvas, formbackdrop_for_punch, vx, vtop, vx + vw, vy, rr, rr, rr, rr, corner_parent_ptr);
+
+          // Seed the AABB with true backdrop BEFORE RoundRect. AGG AA of the rounded fill/border otherwise
+          // blends against leftover black in the corner tips and shows as "pico negro".
+          GRP2DCOLOR_RGBA8 seed_bg = corner_parent_ptr ? *corner_parent_ptr : GRP2DCOLOR_RGBA8(0x19, 0x1E, 0x24, 255);
+          {
+            GRP2DCOLOR_RGBA8 line_none(0, 0, 0, 0);
+            canvas->SetFillColor(&seed_bg);
+            canvas->SetLineColor(&line_none);
+            canvas->SetLineWidth(1.0f);
+            canvas->Rectangle(vr_minx - 1.0, vr_maxy + 1.0, vr_maxx + 1.0, vr_miny - 1.0, true);
+
+            // Re-apply the form's own fill/line colours for RoundRect (Rectangle overwrote them).
+            UI_COLOR* fillsrc2 = element_form->IsBackgroundColorSet() ? element_form->GetBackgroundColor()
+                                                                       : element_form->GetColor();
+            UI_COLOR* bcsrc2   = element_form->IsBorderColorSet() ? element_form->GetBorderColor()
+                                                                   : element_form->GetLineColor();
+            GRP2DCOLOR_RGBA8 fill2(fillsrc2->GetRed(), fillsrc2->GetGreen(), fillsrc2->GetBlue(), fillsrc2->GetAlpha());
+            GRP2DCOLOR_RGBA8 line2(bcsrc2->GetRed(), bcsrc2->GetGreen(), bcsrc2->GetBlue(), bcsrc2->GetAlpha());
+            double bw2 = element_form->GetBorderWidth();
+            if(bw2 == 0.0)
+              {
+                GRP2DCOLOR_RGBA8 line_none2(0, 0, 0, 0);
+                canvas->SetLineColor(&line_none2);
+                canvas->SetLineWidth(1.0f);
+              }
+             else
+              {
+                canvas->SetLineColor(&line2);
+                canvas->SetLineWidth((bw2 < 0.0) ? 1.0f : bw2);
+              }
+            canvas->SetFillColor(&fill2);
+          }
+
+          canvas->RoundRect(vr_minx, vr_maxy, vr_maxx, vr_miny, rr, true);
+          UI_SkinCanvas_PunchRoundRectCornerTips(canvas, formbackdrop_for_punch, vr_minx, vr_miny, vr_maxx, vr_maxy, rr, rr, rr, rr, &seed_bg);
         }
        else
         {
@@ -8137,11 +8698,13 @@ bool UI_SKINCANVAS::TextBackdrop_MatchesArea(GRP2DREBUILDAREA* textbackdrop, GRP
 
   if(!cachedbitmap || !areabitmap) return false;
 
-  if(textbackdrop->GetXPos() != ownarea->GetXPos()) return false;
-  if(textbackdrop->GetYPos() != ownarea->GetYPos()) return false;
+  // Epsilon: sub-pixel jitter from layout/scale must not force a recapture that can bake leftover ink.
+  const double eps = 0.75;
+  if(fabs(textbackdrop->GetXPos() - ownarea->GetXPos()) > eps) return false;
+  if(fabs(textbackdrop->GetYPos() - ownarea->GetYPos()) > eps) return false;
 
-  if(cachedbitmap->GetWidth()  != areabitmap->GetWidth())  return false;
-  if(cachedbitmap->GetHeight() != areabitmap->GetHeight()) return false;
+  if(fabs((double)cachedbitmap->GetWidth()  - (double)areabitmap->GetWidth())  > eps) return false;
+  if(fabs((double)cachedbitmap->GetHeight() - (double)areabitmap->GetHeight()) > eps) return false;
 
   return true;
 }
@@ -8485,17 +9048,21 @@ bool UI_SKINCANVAS::OptionBackdrop_InvalidateOverlapping(double x, double y, dou
 * @param[in]  y      : Top edge of the region about to be repainted.
 * @param[in]  width  : Width of the region about to be repainted.
 * @param[in]  height : Height of the region about to be repainted.
+* @param[in]  source : Form/menu about to paint (optional). When set, only invalidate TextBackdrops whose
+*                      owner lives in the SAME UI_LAYOUT — chrome caption AABBs must not discard content
+*                      title TextBackdrops (UI_Options: hover near the top stacked "GEN XML Gallery").
 *
 * @return     bool : true if at least one overlapping entry was found and discarded; false otherwise.
 *
 * --------------------------------------------------------------------------------------------------------------------*/
-bool UI_SKINCANVAS::TextBackdrop_InvalidateOverlapping(double x, double y, double width, double height)
+bool UI_SKINCANVAS::TextBackdrop_InvalidateOverlapping(double x, double y, double width, double height, UI_ELEMENT* source)
 {
   bool  discardedany = false;
   double left1        = x;
   double top1          = y;
   double right1        = x + width;
   double bottom1        = y + height;
+  UI_LAYOUT* source_layout = source ? source->GetLayout() : NULL;
 
   // Walk backwards since Delete() below removes entries from the same vector we are iterating.
   XDWORD remaining = textbackdrops.GetSize();
@@ -8505,6 +9072,9 @@ bool UI_SKINCANVAS::TextBackdrop_InvalidateOverlapping(double x, double y, doubl
 
       GRP2DREBUILDAREA* entry = textbackdrops.Get(remaining);
       if(!entry || !entry->GetBitmap()) continue;
+
+      UI_ELEMENT* text_owner = (UI_ELEMENT*)entry->GetExtraData();
+      if(source_layout && text_owner && (text_owner->GetLayout() != source_layout)) continue;
 
       double left2   = entry->GetXPos();
       double top2    = entry->GetYPos();
@@ -8516,7 +9086,165 @@ bool UI_SKINCANVAS::TextBackdrop_InvalidateOverlapping(double x, double y, doubl
         {
           // Erase glyph ink BEFORE forgetting the cache (translucent form fills do not).
           PutBitmapNoAlpha(entry->GetXPos(), entry->GetYPos(), entry->GetBitmap());
+
+          // Same-layout neighbour painted under us: repaint this tick with a fresh TextBackdrop.
+          if(text_owner) text_owner->SetMustReDraw(true);
+
           textbackdrops.Delete(entry);
+          GEN_DELETE entry;
+          discardedany = true;
+        }
+    }
+
+  return discardedany;
+}
+
+
+/**-------------------------------------------------------------------------------------------------------------------
+*
+* @fn         GRP2DREBUILDAREA* UI_SKINCANVAS::AnimBackdrop_Find(UI_ELEMENT* element)
+* @brief      Look up the persistent backdrop snapshot for an animation element (see Draw_Animation ANIM ICON GHOSTING FIX).
+* @ingroup    USERINTERFACE
+*
+* --------------------------------------------------------------------------------------------------------------------*/
+GRP2DREBUILDAREA* UI_SKINCANVAS::AnimBackdrop_Find(UI_ELEMENT* element)
+{
+  if(!element) return NULL;
+
+  for(XDWORD c=0; c<animbackdrops.GetSize(); c++)
+    {
+      GRP2DREBUILDAREA* entry = animbackdrops.Get(c);
+      if(entry && (entry->GetExtraData() == (void*)element)) return entry;
+    }
+
+  return NULL;
+}
+
+
+/**-------------------------------------------------------------------------------------------------------------------
+*
+* @fn         bool UI_SKINCANVAS::AnimBackdrop_MatchesArea(GRP2DREBUILDAREA* animbackdrop, GRP2DREBUILDAREA* ownarea)
+* @brief      Geometry match check (same epsilon policy as TextBackdrop_MatchesArea).
+* @ingroup    USERINTERFACE
+*
+* --------------------------------------------------------------------------------------------------------------------*/
+bool UI_SKINCANVAS::AnimBackdrop_MatchesArea(GRP2DREBUILDAREA* animbackdrop, GRP2DREBUILDAREA* ownarea)
+{
+  if(!animbackdrop || !ownarea) return false;
+
+  GRPBITMAP* cachedbitmap = animbackdrop->GetBitmap();
+  GRPBITMAP* areabitmap   = ownarea->GetBitmap();
+
+  if(!cachedbitmap || !areabitmap) return false;
+
+  const double eps = 0.75;
+  if(fabs(animbackdrop->GetXPos() - ownarea->GetXPos()) > eps) return false;
+  if(fabs(animbackdrop->GetYPos() - ownarea->GetYPos()) > eps) return false;
+
+  if(fabs((double)cachedbitmap->GetWidth()  - (double)areabitmap->GetWidth())  > eps) return false;
+  if(fabs((double)cachedbitmap->GetHeight() - (double)areabitmap->GetHeight()) > eps) return false;
+
+  return true;
+}
+
+
+/**-------------------------------------------------------------------------------------------------------------------
+*
+* @fn         bool UI_SKINCANVAS::AnimBackdrop_Delete(UI_ELEMENT* element)
+* @brief      Discard AnimBackdrop without restoring (caller already restored or is re-capturing).
+* @ingroup    USERINTERFACE
+*
+* --------------------------------------------------------------------------------------------------------------------*/
+bool UI_SKINCANVAS::AnimBackdrop_Delete(UI_ELEMENT* element)
+{
+  if(!element) return false;
+
+  for(XDWORD c=0; c<animbackdrops.GetSize(); c++)
+    {
+      GRP2DREBUILDAREA* entry = animbackdrops.Get(c);
+      if(entry && (entry->GetExtraData() == (void*)element))
+        {
+          animbackdrops.Delete(entry);
+          GEN_DELETE entry;
+
+          return true;
+        }
+    }
+
+  return false;
+}
+
+
+/**-------------------------------------------------------------------------------------------------------------------
+*
+* @fn         bool UI_SKINCANVAS::AnimBackdrop_Capture(UI_ELEMENT* element, double x, double y, double width, double height)
+* @brief      Capture true backdrop under an animation before PutBitmapAlpha.
+* @ingroup    USERINTERFACE
+*
+* --------------------------------------------------------------------------------------------------------------------*/
+bool UI_SKINCANVAS::AnimBackdrop_Capture(UI_ELEMENT* element, double x, double y, double width, double height)
+{
+  if(!element) return false;
+
+  GRPBITMAP* bitmap = GetBitmap(x, y, width, height);
+  if(!bitmap) return false;
+
+  GRP2DREBUILDAREA* entry = GEN_NEW GRP2DREBUILDAREA();
+  if(!entry)
+    {
+      GEN_DELETE bitmap;
+      return false;
+    }
+
+  entry->SetXPos(x);
+  entry->SetYPos(y);
+  entry->SetBitmap(bitmap);
+  entry->SetExtraData((void*)element);
+
+  return animbackdrops.Add(entry);
+}
+
+
+/**-------------------------------------------------------------------------------------------------------------------
+*
+* @fn         bool UI_SKINCANVAS::AnimBackdrop_InvalidateOverlapping(double x, double y, double width, double height, UI_ELEMENT* source)
+* @brief      Restore-then-discard AnimBackdrops overlapping a region about to be repainted (mirrors TextBackdrop).
+* @ingroup    USERINTERFACE
+*
+* --------------------------------------------------------------------------------------------------------------------*/
+bool UI_SKINCANVAS::AnimBackdrop_InvalidateOverlapping(double x, double y, double width, double height, UI_ELEMENT* source)
+{
+  bool  discardedany = false;
+  double left1        = x;
+  double top1          = y;
+  double right1        = x + width;
+  double bottom1        = y + height;
+  UI_LAYOUT* source_layout = source ? source->GetLayout() : NULL;
+
+  XDWORD remaining = animbackdrops.GetSize();
+  while(remaining > 0)
+    {
+      remaining--;
+
+      GRP2DREBUILDAREA* entry = animbackdrops.Get(remaining);
+      if(!entry || !entry->GetBitmap()) continue;
+
+      UI_ELEMENT* anim_owner = (UI_ELEMENT*)entry->GetExtraData();
+      if(source_layout && anim_owner && (anim_owner->GetLayout() != source_layout)) continue;
+
+      double left2   = entry->GetXPos();
+      double top2    = entry->GetYPos();
+      double right2  = left2 + (double)entry->GetBitmap()->GetWidth();
+      double bottom2 = top2  + (double)entry->GetBitmap()->GetHeight();
+
+      bool overlaps = (left1 < right2) && (right1 > left2) && (top1 < bottom2) && (bottom1 > top2);
+      if(overlaps)
+        {
+          PutBitmapNoAlpha(entry->GetXPos(), entry->GetYPos(), entry->GetBitmap());
+
+          if(anim_owner) anim_owner->SetMustReDraw(true);
+
+          animbackdrops.Delete(entry);
           GEN_DELETE entry;
           discardedany = true;
         }
