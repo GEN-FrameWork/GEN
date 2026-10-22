@@ -55,6 +55,8 @@
 #define UI_MANAGER_LAYOUT_TEXT_INI          NL("#[")
 #define UI_MANAGER_LAYOUT_TEXT_END          NL("]")
 #define UI_MANAGER_LAYOUT_TEXT_TRANSLATE    NL("TRANSLATE_")
+/** XML attr on text carriers: translate="false" keeps body literal (default/absent = true). */
+#define UI_MANAGER_LAYOUT_ATTR_TRANSLATE    NL("translate")
 
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
 

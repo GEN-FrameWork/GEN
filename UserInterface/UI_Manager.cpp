@@ -5439,9 +5439,27 @@ UI_ELEMENT* UI_MANAGER::GetLayoutElement_Text(XFILEXMLELEMENT* node, UI_LAYOUT* 
   XSTRING* textcache = GEN_UI_TEXTS.Get(text);
   if(textcache)  text = textcache->Get();
 
-  if(text.Find(UI_MANAGER_LAYOUT_TEXT_INI, true) != XSTRING_NOTFOUND) 
+  // translate="false" → literal body (no MaskText / no catalogue resolve). Absent attr = true (compat).
+  bool allow_translate = true;
+  {
+    XSTRING translateattr;
+    if(outstyle.Get(UI_MANAGER_LAYOUT_ATTR_TRANSLATE, translateattr) && !translateattr.IsEmpty())
+      {
+        if(!translateattr.Compare(NL("false"), true) || !translateattr.Compare(NL("no"), true) || !translateattr.Compare(NL("0"), true))
+          allow_translate = false;
+         else if(!translateattr.Compare(NL("true"), true) || !translateattr.Compare(NL("yes"), true) || !translateattr.Compare(NL("1"), true))
+          allow_translate = true;
+         else
+          allow_translate = translateattr.ConvertToBoolean();
+      }
+  }
+
+  if(allow_translate)
     {
-      if(text.Find(UI_MANAGER_LAYOUT_TEXT_END, true) != XSTRING_NOTFOUND)  havemask = true;
+      if(text.Find(UI_MANAGER_LAYOUT_TEXT_INI, true) != XSTRING_NOTFOUND) 
+        {
+          if(text.Find(UI_MANAGER_LAYOUT_TEXT_END, true) != XSTRING_NOTFOUND)  havemask = true;
+        }
     }
   
   if(havemask)
@@ -5579,18 +5597,41 @@ UI_ELEMENT* UI_MANAGER::GetLayoutElement_TextBox(XFILEXMLELEMENT* node, UI_LAYOU
             }    
         }
     }
-  
-  // Keep #[TRANSLATE_N] in MaskText so language changes can re-resolve without reload.
-  element_textbox->GetMaskText()->Set(text);
-  element_textbox->GetText()->Empty();
 
-  if(GEN_XTRANSLATION.IsInitialized() && MaskText_IsTranslateOnly(element_textbox->GetMaskText()))
+  // translate="false" on the textbox → literal body (default/absent = true).
+  bool allow_translate = true;
+  {
+    XSTRING translateattr;
+    if(outstyle.Get(UI_MANAGER_LAYOUT_ATTR_TRANSLATE, translateattr) && !translateattr.IsEmpty())
+      {
+        if(!translateattr.Compare(NL("false"), true) || !translateattr.Compare(NL("no"), true) || !translateattr.Compare(NL("0"), true))
+          allow_translate = false;
+         else if(!translateattr.Compare(NL("true"), true) || !translateattr.Compare(NL("yes"), true) || !translateattr.Compare(NL("1"), true))
+          allow_translate = true;
+         else
+          allow_translate = translateattr.ConvertToBoolean();
+      }
+  }
+  
+  if(allow_translate)
     {
-      XSTRING resolve;
-      if(ResolveTranslateMasks(element_textbox->GetMaskText(), resolve))
+      // Keep #[TRANSLATE_N] in MaskText so language changes can re-resolve without reload.
+      element_textbox->GetMaskText()->Set(text);
+      element_textbox->GetText()->Empty();
+
+      if(GEN_XTRANSLATION.IsInitialized() && MaskText_IsTranslateOnly(element_textbox->GetMaskText()))
         {
-          element_textbox->GetText()->Set(resolve);
+          XSTRING resolve;
+          if(ResolveTranslateMasks(element_textbox->GetMaskText(), resolve))
+            {
+              element_textbox->GetText()->Set(resolve);
+            }
         }
+    }
+   else
+    {
+      element_textbox->GetMaskText()->Empty();
+      element_textbox->GetText()->Set(text.Get());
     }
 
   GetLayoutElement_CalculateBoundaryLine(layout, element_textbox, true);

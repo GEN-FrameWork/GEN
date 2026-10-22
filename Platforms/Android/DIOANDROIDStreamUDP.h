@@ -33,7 +33,7 @@
 #include <stdio.h>
 
 #include "XFSMachine.h"
-#include "XANDROIDThread.h"
+#include "XThreadCollected.h"
 
 #include "DIOStreamUDP.h"
 
@@ -70,10 +70,6 @@ enum DIOANDROIDUDPFSMSTATES
 };
 
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
-
-/*---- INLINE FUNCTIONS + PROTOTYPES ---------------------------------------------------------------------------------*/
-
-class XTHREADCOLLECTED;
 
 
 class DIOANDROIDSTREAMUDP : public DIOSTREAMUDP , public XFSMACHINE

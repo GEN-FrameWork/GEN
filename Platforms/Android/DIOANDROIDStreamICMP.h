@@ -37,6 +37,7 @@
 #include <stdio.h>
 
 #include "XFSMachine.h"
+#include "XThreadCollected.h"
 
 #include "DIOStreamICMP.h"
 
@@ -72,8 +73,6 @@ enum DIOANDROIDICMPFSMSTATES
 };
 
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
-
-class XTHREADCOLLECTED;
 
 
 class DIOANDROIDSTREAMICMP : public DIOSTREAMICMP , public XFSMACHINE

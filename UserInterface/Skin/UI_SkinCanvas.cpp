@@ -4919,11 +4919,11 @@ bool UI_SKINCANVAS::Draw_Option(UI_ELEMENT* element)
             {       
               if(element_option->GetVisibleLimitType() & UI_ELEMENT_OPTION_VISIBLE_LIMIT_PRESELECT) 
                 {        
-                  GRP2DCOLOR_RGBA8  colorwhite(255, 255, 255);
-                  // Preselect wash: prior 50,51,54 → +25% → 101,102,104 → +10% → 116,117,119.
-                  GRP2DCOLOR_RGBA8  colorhover(116, 117, 119, 150);
+                  // Same wash as UI_Options left-menu exclusive selection (220,236,250).
+                  GRP2DCOLOR_RGBA8  colorline(120, 180, 220);
+                  GRP2DCOLOR_RGBA8  colorhover(220, 236, 250, 255);
   
-                  canvas->SetLineColor(&colorwhite);
+                  canvas->SetLineColor(&colorline);
                   canvas->SetFillColor(&colorhover);
 
                   canvas->SetLineWidth(1.0f);
