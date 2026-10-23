@@ -4879,13 +4879,35 @@ bool UI_SKINCANVAS::Draw_Option(UI_ELEMENT* element)
       // Classic XML buttons often keep bg alpha 0: OptionBackdrop restore can still leave prior glyph/icon
       // ink (capture after orphan-discard). Opaque white erase under the content prevents stack-to-black on
       // hover. CSS/dashboard options with a real wash (alpha > 0) rely on DrawBackgroundColor instead.
+      // Skip when the window is layered-transparent OR a translucent form ancestor would show through
+      // (UI_Message formcolorback=black,N): the white plate punches an opaque hole in the frosted panel.
       if(element_option->GetBackgroundColor()->GetAlpha() == 0)
         {
-          GRP2DCOLOR_RGBA8 erase(255, 255, 255, 255);
-          canvas->SetLineWidth(0.0f);
-          canvas->SetLineColor(&erase);
-          canvas->SetFillColor(&erase);
-          canvas->Rectangle(x_position, y_position, x_position + element->GetBoundaryLine()->width, UI_BOUNDARYLINE_EdgeTop(y_position, element->GetBoundaryLine()->height), true);
+          bool skip_white_erase = false;
+          GRPSCREEN* scr = GetScreen();
+          if(scr && scr->Style_Is(GRPSCREENSTYLE_TRANSPARENT)) skip_white_erase = true;
+          if(!skip_white_erase)
+            {
+              UI_ELEMENT* anc = element_option->GetFather();
+              while(anc)
+                {
+                  if(anc->GetType() == UI_ELEMENT_TYPE_FORM)
+                    {
+                      UI_COLOR* fc = anc->IsBackgroundColorSet() ? anc->GetBackgroundColor() : anc->GetColor();
+                      if(fc && (fc->GetAlpha() > 0) && (fc->GetAlpha() < 255)) skip_white_erase = true;
+                      break;
+                    }
+                  anc = anc->GetFather();
+                }
+            }
+          if(!skip_white_erase)
+            {
+              GRP2DCOLOR_RGBA8 erase(255, 255, 255, 255);
+              canvas->SetLineWidth(0.0f);
+              canvas->SetLineColor(&erase);
+              canvas->SetFillColor(&erase);
+              canvas->Rectangle(x_position, y_position, x_position + element->GetBoundaryLine()->width, UI_BOUNDARYLINE_EdgeTop(y_position, element->GetBoundaryLine()->height), true);
+            }
         }
 
       DrawBackgroundColor(element_option, canvas, x_position, y_position);
@@ -4919,9 +4941,17 @@ bool UI_SKINCANVAS::Draw_Option(UI_ELEMENT* element)
             {       
               if(element_option->GetVisibleLimitType() & UI_ELEMENT_OPTION_VISIBLE_LIMIT_PRESELECT) 
                 {        
-                  // Same wash as UI_Options left-menu exclusive selection (220,236,250).
+                  // Same wash as UI_Options left-menu exclusive selection (220,236,250) on opaque UIs.
+                  // On layered-transparent dialogs (UI_Message ok-btn + white "Confirmar" caption) that
+                  // plate is too light for readable text — start from 50% of (220,236,250) then +20%
+                  // lighter → (132,142,150).
                   GRP2DCOLOR_RGBA8  colorline(120, 180, 220);
                   GRP2DCOLOR_RGBA8  colorhover(220, 236, 250, 255);
+                  GRPSCREEN* scr_pre = GetScreen();
+                  if(scr_pre && scr_pre->Style_Is(GRPSCREENSTYLE_TRANSPARENT))
+                    {
+                      colorhover = GRP2DCOLOR_RGBA8(132, 142, 150, 255);
+                    }
   
                   canvas->SetLineColor(&colorline);
                   canvas->SetFillColor(&colorhover);
@@ -4942,21 +4972,30 @@ bool UI_SKINCANVAS::Draw_Option(UI_ELEMENT* element)
             { 
               if(element_option->GetVisibleLimitType() & UI_ELEMENT_OPTION_VISIBLE_LIMIT_ACTIVE)
                 {
-                  GRP2DCOLOR_RGBA8  colorwhite(255, 255, 255);
-                  GRP2DCOLOR_RGBA8  colorhover(0x32, 0x33, 0x36, 0);
+                  // RoundRect(..., true) first paints an OPAQUE outer disc in the line colour, then punches
+                  // the interior with the fill colour. On layered-transparent UIs (UI_Message) a white line
+                  // colour therefore leaves a solid white button plate. Skip the plate there; keep the classic
+                  // white outline look on opaque windows.
+                  GRPSCREEN* scr_active = GetScreen();
+                  bool skip_active_plate = (scr_active && scr_active->Style_Is(GRPSCREENSTYLE_TRANSPARENT));
+                  if(!skip_active_plate)
+                    {
+                      GRP2DCOLOR_RGBA8  colorwhite(255, 255, 255);
+                      GRP2DCOLOR_RGBA8  colorhover(0x32, 0x33, 0x36, 0);
   
-                  canvas->SetLineColor(&colorwhite);
-                  canvas->SetFillColor(&colorhover);
+                      canvas->SetLineColor(&colorwhite);
+                      canvas->SetFillColor(&colorhover);
 
-                  canvas->SetLineWidth(1.0f);
+                      canvas->SetLineWidth(1.0f);
       
-                  if(element_option->GetRoundRect())
-                    {
-                      canvas->RoundRect(x_position - UI_SKINCANVAS_PRESELECT_MAXEDGE, y_position + UI_SKINCANVAS_PRESELECT_MAXEDGE, x_position + element->GetBoundaryLine()->width + UI_SKINCANVAS_PRESELECT_MAXEDGE, UI_BOUNDARYLINE_EdgeTop(y_position, element->GetBoundaryLine()->height) - UI_SKINCANVAS_PRESELECT_MAXEDGE, element_option->GetRoundRect(), true);      
-                    }
-                   else
-                    {
-                      canvas->Rectangle(x_position - UI_SKINCANVAS_PRESELECT_MAXEDGE, y_position + UI_SKINCANVAS_PRESELECT_MAXEDGE, x_position + element->GetBoundaryLine()->width + UI_SKINCANVAS_PRESELECT_MAXEDGE, UI_BOUNDARYLINE_EdgeTop(y_position, element->GetBoundaryLine()->height) - UI_SKINCANVAS_PRESELECT_MAXEDGE, true);      
+                      if(element_option->GetRoundRect())
+                        {
+                          canvas->RoundRect(x_position - UI_SKINCANVAS_PRESELECT_MAXEDGE, y_position + UI_SKINCANVAS_PRESELECT_MAXEDGE, x_position + element->GetBoundaryLine()->width + UI_SKINCANVAS_PRESELECT_MAXEDGE, UI_BOUNDARYLINE_EdgeTop(y_position, element->GetBoundaryLine()->height) - UI_SKINCANVAS_PRESELECT_MAXEDGE, element_option->GetRoundRect(), true);      
+                        }
+                       else
+                        {
+                          canvas->Rectangle(x_position - UI_SKINCANVAS_PRESELECT_MAXEDGE, y_position + UI_SKINCANVAS_PRESELECT_MAXEDGE, x_position + element->GetBoundaryLine()->width + UI_SKINCANVAS_PRESELECT_MAXEDGE, UI_BOUNDARYLINE_EdgeTop(y_position, element->GetBoundaryLine()->height) - UI_SKINCANVAS_PRESELECT_MAXEDGE, true);      
+                        }
                     } 
                 }
             }
@@ -5746,7 +5785,19 @@ bool UI_SKINCANVAS::Draw_Form(UI_ELEMENT* element)
               }
           }
 
-          GRP2DCOLOR_RGBA8 seed_bg = corner_parent_ptr ? *corner_parent_ptr : GRP2DCOLOR_RGBA8(0x19, 0x1E, 0x24, 255);
+          // Opaque UI_System page fallback (0x191E24) must NOT run on GRPSCREENSTYLE_TRANSPARENT:
+          // seeding the AABB opaque then painting color="black,N" blends to an opaque gray panel
+          // (UI_Message frosted dialog) instead of keeping per-pixel alpha for UpdateLayeredWindow.
+          GRP2DCOLOR_RGBA8 seed_bg(0, 0, 0, 0);
+          if(corner_parent_ptr)
+            {
+              seed_bg = *corner_parent_ptr;
+            }
+           else if(screen && !screen->Style_Is(GRPSCREENSTYLE_TRANSPARENT))
+            {
+              seed_bg = GRP2DCOLOR_RGBA8(0x19, 0x1E, 0x24, 255);
+            }
+          if(seed_bg.a > 0)
           {
             GRP2DCOLOR_RGBA8 line_none(0, 0, 0, 0);
             canvas->SetFillColor(&seed_bg);
@@ -5801,7 +5852,9 @@ bool UI_SKINCANVAS::Draw_Form(UI_ELEMENT* element)
                 corner_parent = GRP2DCOLOR_RGBA8((XBYTE)fbg->GetRed(), (XBYTE)fbg->GetGreen(), (XBYTE)fbg->GetBlue(), (XBYTE)fbg->GetAlpha());
                 corner_parent_ptr = &corner_parent;
               }
-            if(!corner_parent_ptr)
+            // Do not sample canvas neighbours on transparent screens: leftover/opaque junk would
+            // become an opaque seed under black,N and destroy the frosted alpha (same as 0x191E24).
+            if(!corner_parent_ptr && screen && !screen->Style_Is(GRPSCREENSTYLE_TRANSPARENT))
               {
                 const double sx[4] = { vr_minx - 2.0, vr_maxx + 1.0, vr_maxx + 1.0, vr_minx - 2.0 };
                 const double sy[4] = { vr_miny - 2.0, vr_miny - 2.0, vr_maxy + 1.0, vr_maxy + 1.0 };
@@ -5823,15 +5876,27 @@ bool UI_SKINCANVAS::Draw_Form(UI_ELEMENT* element)
 
           // Seed the AABB with true backdrop BEFORE RoundRect. AGG AA of the rounded fill/border otherwise
           // blends against leftover black in the corner tips and shows as "pico negro".
-          GRP2DCOLOR_RGBA8 seed_bg = corner_parent_ptr ? *corner_parent_ptr : GRP2DCOLOR_RGBA8(0x19, 0x1E, 0x24, 255);
+          // On transparent screens the fallback must stay a=0 (see per-corner branch above).
+          GRP2DCOLOR_RGBA8 seed_bg(0, 0, 0, 0);
+          if(corner_parent_ptr)
+            {
+              seed_bg = *corner_parent_ptr;
+            }
+           else if(screen && !screen->Style_Is(GRPSCREENSTYLE_TRANSPARENT))
+            {
+              seed_bg = GRP2DCOLOR_RGBA8(0x19, 0x1E, 0x24, 255);
+            }
+          if(seed_bg.a > 0)
           {
             GRP2DCOLOR_RGBA8 line_none(0, 0, 0, 0);
             canvas->SetFillColor(&seed_bg);
             canvas->SetLineColor(&line_none);
             canvas->SetLineWidth(1.0f);
             canvas->Rectangle(vr_minx - 1.0, vr_maxy + 1.0, vr_maxx + 1.0, vr_miny - 1.0, true);
+          }
 
-            // Re-apply the form's own fill/line colours for RoundRect (Rectangle overwrote them).
+          // Re-apply the form's own fill/line colours for RoundRect (seed Rectangle may have overwritten them).
+          {
             UI_COLOR* fillsrc2 = element_form->IsBackgroundColorSet() ? element_form->GetBackgroundColor()
                                                                        : element_form->GetColor();
             UI_COLOR* bcsrc2   = element_form->IsBorderColorSet() ? element_form->GetBorderColor()

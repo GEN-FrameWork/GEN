@@ -996,20 +996,59 @@ class GRP2DCANVASAGG: public GRP2DCANVAS
                                                                                   double lw = linewidth;
                                                                                   if(lw < 0.0) lw = 0.0;
 
-                                                                                  // CORNER SPIKES FIX: never stroke rounded_rect via rasterizer_outline_aa / conv_stroke.
-                                                                                  // Both leave dark "picos" in the AABB corner tips (AA against black / miter fringes).
-                                                                                  // Instead paint the border as a filled outer rounded rect in the line colour, then (when
-                                                                                  // isfill) punch the interior with a slightly smaller rounded rect in the fill colour.
+                                                                                  // CORNER SPIKES FIX: never stroke rounded_rect via rasterizer_outline_aa / conv_stroke
+                                                                                  // for OPAQUE fills. Both leave dark "picos" in the AABB corner tips (AA against black /
+                                                                                  // miter fringes). Instead paint the border as a filled outer rounded rect in the line
+                                                                                  // colour, then punch the interior with a slightly smaller rounded rect in the fill colour.
                                                                                   //
                                                                                   // OUTER EDGE: use the BINARY (non-AA) solid renderer. AA of gold/fill against a leftover
                                                                                   // black destination produces the visible "pico negro" (e.g. 0D1117 fringe). Bin coverage
                                                                                   // is all-or-nothing so tips outside the arc stay untouched (true backdrop) and the border
                                                                                   // has no dark AA fringe. Inner fill keeps AA so the panel body stays smooth.
-                                                                                  if(lw >= 1.0)
+                                                                                  //
+                                                                                  // ALPHA FILL FIX (UI_Message frosted panels color="black,N"): the opaque line-colour
+                                                                                  // underpaint + translucent fill blends to an opaque mid-gray (black,50 over white =>
+                                                                                  // RGB 128,a=255) and kills UpdateLayeredWindow per-pixel alpha. For translucent fills,
+                                                                                  // paint the body first, then stroke the border on top — never underpaint with opaque ink.
+                                                                                  COLORTYPE fillc = renderer_primitives->fill_color();
+                                                                                  COLORTYPE linec = renderer_primitives->line_color();
+                                                                                  bool      translucent_fill = isfill && (fillc.a > 0) && (fillc.a < 255);
+
+                                                                                  if(translucent_fill)
                                                                                     {
                                                                                       AGG_SOLIDFILL_INI
 
-                                                                                      ren_bin.color(renderer_primitives->line_color());
+                                                                                      ren.color(fillc);
+                                                                                      GRP2DCANVASAGG_AA_SET_RASTERIZER_GAMMA(ras);
+
+                                                                                      agg::rounded_rect body(minx, miny, maxx, maxy, rr);
+                                                                                      ras.add_path(body);
+
+                                                                                      AGG_SOLIDFILL_END
+
+                                                                                      if((lw >= 1.0) && (linec.a > 0))
+                                                                                        {
+                                                                                          AGG_SOLIDFILL_INI
+
+                                                                                          ren.color(linec);
+                                                                                          GRP2DCANVASAGG_AA_SET_RASTERIZER_GAMMA(ras);
+
+                                                                                          agg::rounded_rect                 border_rc(minx, miny, maxx, maxy, rr);
+                                                                                          agg::conv_stroke<agg::rounded_rect> stroke(border_rc);
+                                                                                          stroke.width(lw);
+                                                                                          stroke.line_cap(agg::butt_cap);
+                                                                                          stroke.line_join(agg::round_join);
+
+                                                                                          ras.add_path(stroke);
+
+                                                                                          AGG_SOLIDFILL_END
+                                                                                        }
+                                                                                    }
+                                                                                  else if(lw >= 1.0)
+                                                                                    {
+                                                                                      AGG_SOLIDFILL_INI
+
+                                                                                      ren_bin.color(linec);
 
                                                                                       agg::rounded_rect outer(minx, miny, maxx, maxy, rr);
                                                                                       ras.gamma(agg::gamma_none());
@@ -1030,7 +1069,7 @@ class GRP2DCANVASAGG: public GRP2DCANVAS
                                                                                             {
                                                                                               AGG_SOLIDFILL_INI
 
-                                                                                              ren.color(renderer_primitives->fill_color());
+                                                                                              ren.color(fillc);
 
                                                                                               GRP2DCANVASAGG_AA_SET_RASTERIZER_GAMMA(ras);
 
@@ -1046,7 +1085,7 @@ class GRP2DCANVASAGG: public GRP2DCANVAS
                                                                                       // Fill-only: same pico risk on the outer arc — bin coverage keeps tips as backdrop.
                                                                                       AGG_SOLIDFILL_INI
 
-                                                                                      ren_bin.color(renderer_primitives->fill_color());
+                                                                                      ren_bin.color(fillc);
 
                                                                                       agg::rounded_rect roundrect(minx, miny, maxx, maxy, rr);
                                                                                       ras.gamma(agg::gamma_none());

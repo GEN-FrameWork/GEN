@@ -256,13 +256,13 @@ bool GRPWINDOWSSCREEN::Update(GRP2DCANVAS* canvas)
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         bool GRPWINDOWSSCREEN::UpdateTransparent(GRP2DCANVAS* canvas)
-* @brief      Update transparent
+* @brief      Present a per-pixel-alpha canvas via UpdateLayeredWindow(ULW_ALPHA).
 * @ingroup    PLATFORM_WINDOWS
-* 
-* @param[in]  canvas : Canvas object to use.
-* 
+*
+* @param[in]  canvas : 32-bpp BGRA canvas (straight alpha from AGG).
+*
 * @return     bool : true if the operation is successful; otherwise false.
-* 
+*
 * --------------------------------------------------------------------------------------------------------------------*/
 bool GRPWINDOWSSCREEN::UpdateTransparent(GRP2DCANVAS* canvas)
 {
@@ -276,30 +276,70 @@ bool GRPWINDOWSSCREEN::UpdateTransparent(GRP2DCANVAS* canvas)
       return false;
     }
 
-  HDC     hdcscreen = GetDC(NULL);
-  HDC     hdcmem    = CreateCompatibleDC(hdcscreen);
-  HBITMAP hbmmem    = CreateCompatibleBitmap(hdcscreen, (LONG)width, (LONG)height);
-  HBITMAP hbmold    = (HBITMAP)SelectObject(hdcmem, hbmmem);
+  // CreateCompatibleBitmap + SetDIBitsToDevice(BI_RGB) does NOT reliably carry per-pixel alpha into a
+  // GDI bitmap. Semi-transparent fills (e.g. UI_Message form color="black,N") become opaque while fully
+  // clear pixels can still look transparent. ULW_ALPHA needs a 32-bpp DIB with PREMULTIPLIED alpha.
+  HDC hdcscreen = GetDC(NULL);
+  if(!hdcscreen) return false;
 
-  RECT    rect      = { 0, 0, (LONG)width, (LONG)height };
-  HBRUSH  hbrush    = CreateSolidBrush(RGB(0, 0, 0));
+  HDC hdcmem = CreateCompatibleDC(hdcscreen);
+  if(!hdcmem)
+    {
+      ReleaseDC(NULL, hdcscreen);
+      return false;
+    }
 
-  FillRect(hdcmem, &rect, hbrush);
-  DeleteObject(hbrush);
+  BITMAPINFO bmi;
+  memset(&bmi, 0, sizeof(bmi));
+  bmi.bmiHeader.biSize        = sizeof(BITMAPINFOHEADER);
+  bmi.bmiHeader.biWidth       = (LONG)width;
+  bmi.bmiHeader.biHeight      = (LONG)height;   // bottom-up, same orientation as hinfo / SetDIBitsToDevice
+  bmi.bmiHeader.biPlanes      = 1;
+  bmi.bmiHeader.biBitCount    = 32;
+  bmi.bmiHeader.biCompression = BI_RGB;
+  bmi.bmiHeader.biSizeImage   = (DWORD)(width * height * 4);
 
-  SetBkMode(hdcmem, TRANSPARENT);
- 
-  // XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, NL("[Screen Windows] Update Transparent (Equal)  (%04d,%04d)  Bitxpixel (%d)"), width, height, GetBitsperPixel());
-     
-  SetDIBitsToDevice(hdcmem, 0, 0, width, height, 0, 0, 0, height, canvas->Buffer_Get(), &hinfo, DIB_RGB_COLORS);     
- 
+  void* bits = NULL;
+  HBITMAP hbmmem = CreateDIBSection(hdcmem, &bmi, DIB_RGB_COLORS, &bits, NULL, 0);
+  if(!hbmmem || !bits)
+    {
+      DeleteDC(hdcmem);
+      ReleaseDC(NULL, hdcscreen);
+      return false;
+    }
+
+  HBITMAP hbmold = (HBITMAP)SelectObject(hdcmem, hbmmem);
+
+  XBYTE* src = canvas->Buffer_Get();
+  XBYTE* dst = (XBYTE*)bits;
+  XDWORD npixels = (XDWORD)width * (XDWORD)height;
+
+  if(src && dst && (canvas->GetBytesperPixel() >= 4))
+    {
+      for(XDWORD i = 0; i < npixels; i++)
+        {
+          XBYTE b = src[0];
+          XBYTE g = src[1];
+          XBYTE r = src[2];
+          XBYTE a = src[3];
+
+          dst[0] = (XBYTE)((b * a) / 255);
+          dst[1] = (XBYTE)((g * a) / 255);
+          dst[2] = (XBYTE)((r * a) / 255);
+          dst[3] = a;
+
+          src += 4;
+          dst += 4;
+        }
+    }
+
   POINT         ptsrc   = { 0, 0 };
   SIZE          sizewnd = { (LONG)width, (LONG)height };
   BLENDFUNCTION blend   = { AC_SRC_OVER, 0, 255, AC_SRC_ALPHA };
   POINT         ptdst   = { (LONG)positionx, (LONG)positiony };
 
   UpdateLayeredWindow(hwnd, hdcscreen, &ptdst, &sizewnd, hdcmem, &ptsrc, 0, &blend, ULW_ALPHA);
- 
+
   SelectObject(hdcmem, hbmold);
   DeleteObject(hbmmem);
   DeleteDC(hdcmem);
