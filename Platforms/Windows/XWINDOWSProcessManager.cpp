@@ -556,6 +556,115 @@ bool XWINDOWSPROCESSMANAGER::Application_IsRunning(XCHAR* applicationname, XDWOR
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
+* @fn         bool XWINDOWSPROCESSMANAGER::Application_FindWindowAtPoint(int screenx, int screeny, XPROCESS& outprocess)
+* @brief      Resolve top-level window under desktop point (WindowFromPoint + GA_ROOT).
+* @ingroup    PLATFORM_WINDOWS
+* 
+* @param[in]  screenx : Desktop X coordinate.
+* @param[in]  screeny : Desktop Y coordinate.
+* @param[out] outprocess : Filled process/window snapshot on success.
+* 
+* @return     bool : true if the operation is successful; otherwise false.
+* 
+* --------------------------------------------------------------------------------------------------------------------*/
+bool XWINDOWSPROCESSMANAGER::Application_FindWindowAtPoint(int screenx, int screeny, XPROCESS& outprocess)
+{
+  POINT pt;
+  pt.x = screenx;
+  pt.y = screeny;
+
+  HWND hwnd = WindowFromPoint(pt);
+  if(!hwnd) return false;
+
+  HWND root = GetAncestor(hwnd, GA_ROOT);
+  if(root) hwnd = root;
+
+  if(!hwnd || (hwnd == GetDesktopWindow()) || !IsWindow(hwnd) || !IsWindowVisible(hwnd)) return false;
+
+  DWORD processID = 0;
+  GetWindowThreadProcessId(hwnd, &processID);
+  if(!processID) return false;
+
+  XSTRING    title;
+  GRPRECTINT rect;
+  if(!GetWindowPropertys(hwnd, title, rect))
+    {
+      // Title optional for hit-test; still need a valid outer rect.
+      RECT wrect;
+      if(!GetWindowRect(hwnd, &wrect)) return false;
+      rect.x1 = wrect.left;
+      rect.y1 = wrect.top;
+      rect.x2 = wrect.right;
+      rect.y2 = wrect.bottom;
+      title.Empty();
+    }
+
+  if(rect.IsEmpty()) return false;
+
+  XPROCESS found;
+  found.SetID((XDWORD)processID);
+  found.SetWindowHandle((void*)hwnd);
+  found.GetWindowTitle()->Set(title.Get());
+  found.GetWindowRect()->CopyFrom(&rect);
+  found.SetWindowTitleHeight(GetWindowTitleHeight(hwnd));
+  found.SetWindowBorderWidth(GetWindowBorderWidth(hwnd));
+
+  HANDLE processhandle = OpenProcess(PROCESS_QUERY_INFORMATION | PROCESS_VM_READ, FALSE, processID);
+  if(processhandle != NULL)
+    {
+      TCHAR pathfilename[MAX_PATH];
+      memset(pathfilename, 0, sizeof(pathfilename));
+
+      if(GetModuleFileNameEx(processhandle, NULL, pathfilename, MAX_PATH) && pathfilename[0])
+        {
+          found.GetPath()->Set(pathfilename);
+          XSTRING namefileext;
+          if(found.GetPath()->GetNamefileExt(namefileext) && !namefileext.IsEmpty())
+            {
+              found.GetName()->Set(namefileext.Get());
+            }
+        }
+
+      CloseHandle(processhandle);
+    }
+
+  if(found.GetName()->IsEmpty())
+    {
+      // Fallback: PROCESSENTRY32 executable name.
+      HANDLE         snapshot = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, NULL);
+      PROCESSENTRY32 processentry;
+
+      if(snapshot != INVALID_HANDLE_VALUE)
+        {
+          memset(&processentry, 0, sizeof(PROCESSENTRY32));
+          processentry.dwSize = sizeof(PROCESSENTRY32);
+
+          if(Process32First(snapshot, &processentry))
+            {
+              do{ if(processentry.th32ProcessID == processID)
+                    {
+                      found.GetName()->Set(processentry.szExeFile);
+                      break;
+                    }
+
+                  memset(&processentry, 0, sizeof(PROCESSENTRY32));
+                  processentry.dwSize = sizeof(PROCESSENTRY32);
+
+                } while(Process32Next(snapshot, &processentry));
+            }
+
+          CloseHandle(snapshot);
+        }
+    }
+
+  if(found.GetName()->IsEmpty()) return false;
+
+  return outprocess.CopyFrom(found);
+}
+
+
+/**-------------------------------------------------------------------------------------------------------------------
+* 
 * @fn         bool XWINDOWSPROCESSMANAGER::Application_GetRunningList(XVECTOR<XPROCESS*>& applist, bool onlywithvalidwindow)
 * @brief      Application get running list
 * @ingroup    PLATFORM_WINDOWS

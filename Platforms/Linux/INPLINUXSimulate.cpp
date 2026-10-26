@@ -47,6 +47,9 @@
 
 #ifdef LINUX_X11_ACTIVE
 #include <X11/Xlib.h>
+#ifdef LINUX_XTEST_ACTIVE
+#include <X11/extensions/XTest.h>
+#endif
 #endif
 
 
@@ -195,32 +198,38 @@ bool INPLINUXSIMULATE::Mouse_SetPos(int x, int y)
 * --------------------------------------------------------------------------------------------------------------------*/
 bool INPLINUXSIMULATE::Mouse_Click(int x, int y)
 {
-  // Best-effort warp; still click at current pointer if warp is unavailable (e.g. pure Wayland).
+  // Prefer XTest when available: uinput often does not reach Xwayland/WSLg client windows even
+  // when /dev/uinput accepts the events (false-positive success). Native X11 desktops also work.
+  #if defined(LINUX_X11_ACTIVE) && defined(LINUX_XTEST_ACTIVE)
+  {
+    Display* display = XOpenDisplay(NULL);
+    if(display)
+      {
+        Window root = DefaultRootWindow(display);
+        XWarpPointer(display, None, root, 0, 0, 0, 0, x, y);
+        XFlush(display);
+        usleep(10000);
+        XTestFakeButtonEvent(display, 1, True, CurrentTime);
+        XFlush(display);
+        usleep(30000);
+        XTestFakeButtonEvent(display, 1, False, CurrentTime);
+        XFlush(display);
+        XCloseDisplay(display);
+        return true;
+      }
+  }
+  #endif
+
+  // Best-effort warp + uinput fallback (pure Wayland / no XTest).
   Mouse_SetPos(x, y);
 
-  if(!UInput_Ini())
-    {
-      return false;
-    }
+  if(!UInput_Ini()) return false;
 
   usleep(10000);
 
-  if(!UInput_Emit(EV_KEY, BTN_LEFT, 1))
-    {
-      return false;
-    }
-
-  if(!UInput_Syn())
-    {
-      return false;
-    }
-
-  if(!UInput_Emit(EV_KEY, BTN_LEFT, 0))
-    {
-      return false;
-    }
-
-  return UInput_Syn();
+  if(!UInput_Emit(EV_KEY, BTN_LEFT, 1) || !UInput_Syn()) return false;
+  if(!UInput_Emit(EV_KEY, BTN_LEFT, 0) || !UInput_Syn()) return false;
+  return true;
 }
 
 

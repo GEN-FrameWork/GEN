@@ -893,6 +893,25 @@ bool XPROCESSMANAGER::Application_GetRunningList(XVECTOR<XPROCESS*>& applist, bo
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
+* @fn         bool XPROCESSMANAGER::Application_FindWindowAtPoint(int screenx, int screeny, XPROCESS& outprocess)
+* @brief      Application find window at point
+* @ingroup    XUTILS
+* 
+* @param[in]  screenx : Desktop X coordinate.
+* @param[in]  screeny : Desktop Y coordinate.
+* @param[out] outprocess : Filled process/window snapshot on success.
+* 
+* @return     bool : true if the operation is successful; otherwise false.
+* 
+* --------------------------------------------------------------------------------------------------------------------*/
+bool XPROCESSMANAGER::Application_FindWindowAtPoint(int screenx, int screeny, XPROCESS& outprocess)
+{
+  return false;
+}
+
+
+/**-------------------------------------------------------------------------------------------------------------------
+* 
 * @fn         bool XPROCESSMANAGER::Application_Terminate(XDWORD processID, XDWORD exitcode)
 * @brief      Application terminate
 * @ingroup    XUTILS

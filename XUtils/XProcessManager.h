@@ -121,6 +121,13 @@ class XPROCESSMANAGER
 
     virtual bool                    Application_GetRunningList        (XVECTOR<XPROCESS*>& applist, bool onlywithvalidwindow = false);
 
+    /**
+     * @brief Resolve the top-level window under a desktop point into an XPROCESS snapshot
+     *        (handle, title, rect, chrome metrics, name, path, ID). Platform hit-test
+     *        (e.g. WindowFromPoint); not a Z-order approximation over the running list.
+     */
+    virtual bool                    Application_FindWindowAtPoint     (int screenx, int screeny, XPROCESS& outprocess);
+
     virtual bool                    Application_Terminate             (XDWORD processID, XDWORD exitcode = 0);
     bool                            Application_Terminate             (XPROCESS& process, XDWORD exitcode = 0);
     bool                            Application_Terminate             (XCHAR* processname, XDWORD exitcode = 0);

@@ -40,19 +40,12 @@
 #include "XBuffer.h"
 #include "XProcessManager.h"
 
-#ifdef WINDOWS
-#include <Windows.h>
-#endif
-
 #include "APPFlowBase.h"
 #include "APPFlowMain.h"
 
 #ifdef SCRIPT_LIB_SCREEN_DEBUG
 #include "APPFlowGraphics.h"
 #endif
-
-#include "INPFactory.h"
-#include "INPSimulate.h"
 
 #include "XSleep.h"
 
@@ -322,19 +315,16 @@ bool Script_Lib_Screen_ResolvePos(SCRIPT_LIB* library, SCRIPT* script, XVECTOR<X
                           if(screen)
                             {                          
                               screen->SetHandle(handle_windows);
-                              // CaptureContent uses GetDC (client area). Prefer client size when available.
+                              // CaptureContent = client area: GRPSCREEN::GetClientSize, else XPROCESS outer rect.
                               int captw = applist.Get(c)->GetWindowRect()->x2 - applist.Get(c)->GetWindowRect()->x1;
                               int capth = applist.Get(c)->GetWindowRect()->y2 - applist.Get(c)->GetWindowRect()->y1;
-                              #ifdef WINDOWS
-                              RECT crect;
-                              if(GetClientRect((HWND)handle_windows, &crect))
+                              int cw = 0;
+                              int ch = 0;
+                              if(screen->GetClientSize(cw, ch) && (cw > 0) && (ch > 0))
                                 {
-                                  int cw = crect.right  - crect.left;
-                                  int ch = crect.bottom - crect.top;
-                                  if(cw > 0) captw = cw;
-                                  if(ch > 0) capth = ch;
+                                  captw = cw;
+                                  capth = ch;
                                 }
-                              #endif
                               screen->SetWidth(captw);
                               screen->SetHeight(capth);
                               

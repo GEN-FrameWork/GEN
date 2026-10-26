@@ -99,6 +99,17 @@ class INPDEVICE
 
     virtual bool                    Release             ();
     virtual bool                    Update              ();
+
+    /**
+     * @brief Translate a platform key code to Unicode text using the active keyboard layout
+     *        and current modifier state (Windows: ToUnicodeEx; other platforms stub/xkb later).
+     */
+    virtual bool                    TranslateKeyCodeToUnicode (XWORD keycode, XSTRING& outtext);
+
+    /**
+     * @brief Translate an INPBUTTON via its platform key code (layout-aware).
+     */
+    virtual bool                    TranslateButtonToUnicode  (INPBUTTON* button, XSTRING& outtext);
   
   protected:
 

@@ -56,6 +56,7 @@ class XLINUXPROCESSMANAGER : public XPROCESSMANAGER
 
     bool                    Application_IsRunning           (XCHAR* command, XDWORD* ID = NULL);
     bool                    Application_GetRunningList      (XVECTOR<XPROCESS*>& applist, bool onlywithvalidwindow = false);
+    bool                    Application_FindWindowAtPoint   (int screenx, int screeny, XPROCESS& outprocess);
     bool                    Application_Terminate           (XDWORD processID, XDWORD exitcode = 0);
 
   private:

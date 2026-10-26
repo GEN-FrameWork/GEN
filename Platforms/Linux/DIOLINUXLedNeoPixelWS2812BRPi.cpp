@@ -102,17 +102,8 @@ DIOLINUXLEDNEOPIXELWS2812BRPI::DIOLINUXLEDNEOPIXELWS2812BRPI()
   config.channel[0].invert     = 0;
   config.channel[0].brightness = brightnesslevel;
   config.channel[0].strip_type = NEOPIXELWS2812BRPI_DEFAULT_STRIP_TYPE;
-  
-  // ws2811 API requires both PWM channels initialized even when only channel[0] is used.
-  // RPI_PWM_CHANNELS is defined as 1 in pwm.h so channel[1] triggers -Warray-bounds.
-  // The access is intentional — suppress locally.
-  #pragma GCC diagnostic push
-  #pragma GCC diagnostic ignored "-Warray-bounds"
-  config.channel[1].gpionum    = 0;
-  config.channel[1].count      = 0;
-  config.channel[1].invert     = 0;
-  config.channel[1].brightness = 0;
-  #pragma GCC diagnostic pop
+
+  // RPI_PWM_CHANNELS is 1 on the Pi 5 / CM5 build. channel[1] is past the end of ws2811_t.
 }
 
 
@@ -150,8 +141,11 @@ bool DIOLINUXLEDNEOPIXELWS2812BRPI::Ini(XDWORD nled)
   ws2811_return_t returnvalue = ws2811_init(&config);
   if(returnvalue != WS2811_SUCCESS) 
     {
+      XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, NL("[NeoPixel] ws2811_init: %s"), ws2811_get_return_t_str(returnvalue));
       return false;
     }
+
+  initialized = true;
 
   return true;  
 }
@@ -168,6 +162,11 @@ bool DIOLINUXLEDNEOPIXELWS2812BRPI::Ini(XDWORD nled)
 * --------------------------------------------------------------------------------------------------------------------*/
 bool DIOLINUXLEDNEOPIXELWS2812BRPI::Send()
 {
+  if(!initialized || !config.device || !config.channel[0].leds)
+    {
+      return false;
+    }
+
   XBYTE* ptrdata  = databuffer.Get();
   XDWORD data     = 0;
   int    index    = 0;
@@ -219,11 +218,17 @@ bool DIOLINUXLEDNEOPIXELWS2812BRPI::Send()
 * --------------------------------------------------------------------------------------------------------------------*/
 bool DIOLINUXLEDNEOPIXELWS2812BRPI::End()
 {  
+  if(!initialized || !config.device)
+    {
+      return false;
+    }
+
   //databuffer.FillBuffer();
   SetBrightnessLevel(0);
   Send();
 
-  ws2811_fini(&config);   
+  ws2811_fini(&config);
+  initialized = false;
   
   return true;
 }
@@ -239,7 +244,7 @@ bool DIOLINUXLEDNEOPIXELWS2812BRPI::End()
 * --------------------------------------------------------------------------------------------------------------------*/
 void DIOLINUXLEDNEOPIXELWS2812BRPI::Clean()
 {
-  
+  initialized = false;
 }
 
 

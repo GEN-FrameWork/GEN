@@ -49,11 +49,15 @@
 #include "GRP2DCanvas.h"
 #include "GRPDesktopManager.h"
 #include "GRPViewPort.h"
+#include "GRPBitmap.h"
+#include "GRPFactory.h"
+#include "GRPProperties.h"
 
 #include "MainProcLINUX.h"
 #include "APPFlowGraphics.h"
 
 #include <unistd.h>
+#include <stdint.h>
 
 
 #ifdef GRP_OPENGL_ACTIVE
@@ -761,27 +765,11 @@ bool GRPLINUXSCREENX11::GetClientSize(int& width, int& height)
 }
 
 
-#ifdef GRP_SCREEN_CUSTOMCHROMES_ACTIVE
-
 /**-------------------------------------------------------------------------------------------------------------------
 *
 * @fn         bool GRPLINUXSCREENX11::GetCursorDesktopPosition(int& x, int& y)
 * @brief      Get cursor desktop position
-* @note       XQueryPointer against the ROOT window: root_x/root_y is the pointer in desktop coordinates, with
-*             no reference at all to this window's own position. That matters twice over on X11:
-*
-*               - XMoveWindow() is asynchronous (a request the window manager honours whenever it gets to it,
-*                 and on a reparenting WM like KWin it travels through the frame window -- see Set_Position()).
-*                 GetPositionX() therefore holds a REQUESTED position that can be several milliseconds ahead of
-*                 the real one. The old drag math added that requested position to a client-relative pointer
-*                 reading taken against the REAL one, and the difference went straight into the movement: the
-*                 window could travel further than the mouse did.
-*               - The client-relative reading is only valid while the pointer is over the window; the root one
-*                 is always valid.
-*
-*             INPLINUXDEVICEMOUSEX11::Update() already asks the server for exactly these two values on every
-*             tick and discards them; this is the same round trip, kept here so GRPSCREEN does not have to
-*             reach into a platform input device.
+* @note       XQueryPointer against the ROOT window: root_x/root_y is the pointer in desktop coordinates.
 * @ingroup    PLATFORM_LINUX
 *
 * @param[out] x : X coordinate, desktop (root) space.
@@ -817,6 +805,8 @@ bool GRPLINUXSCREENX11::GetCursorDesktopPosition(int& x, int& y)
   return true;
 }
 
+
+#ifdef GRP_SCREEN_CUSTOMCHROMES_ACTIVE
 
 /**-------------------------------------------------------------------------------------------------------------------
 *
@@ -1218,6 +1208,171 @@ bool GRPLINUXSCREENX11::Maximize(bool active)
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
+* @fn         void GRPLINUXSCREENX11::SetHandle(void* handle_window)
+* @brief      Bind this screen object to an existing native window (own or foreign) for capture/focus/size.
+* @ingroup    PLATFORM_LINUX
+* 
+* @param[in]  handle_window : Native Window XID cast to void*.
+* 
+* --------------------------------------------------------------------------------------------------------------------*/
+void GRPLINUXSCREENX11::SetHandle(void* handle_window)
+{
+  window = handle_window ? (Window)(uintptr_t)handle_window : (Window)0;
+}
+
+
+/**-------------------------------------------------------------------------------------------------------------------
+* 
+* @fn         bool GRPLINUXSCREENX11::Set_Focus()
+* @brief      Raise and focus the bound window (parity with GRPWINDOWSSCREEN::Set_Focus).
+* @ingroup    PLATFORM_LINUX
+* 
+* @return     bool : true if the operation is successful; otherwise false.
+* 
+* --------------------------------------------------------------------------------------------------------------------*/
+bool GRPLINUXSCREENX11::Set_Focus()
+{
+  if(!display || !window) return false;
+
+  XRaiseWindow(display, window);
+
+  Atom netactive = XInternAtom(display, "_NET_ACTIVE_WINDOW", False);
+  if(netactive != None)
+    {
+      XEvent event;
+      memset(&event, 0, sizeof(event));
+      event.xclient.type         = ClientMessage;
+      event.xclient.window       = window;
+      event.xclient.message_type = netactive;
+      event.xclient.format       = 32;
+      event.xclient.data.l[0]    = 1; // application
+      event.xclient.data.l[1]    = CurrentTime;
+      event.xclient.data.l[2]    = 0;
+      event.xclient.data.l[3]    = 0;
+      event.xclient.data.l[4]    = 0;
+      XSendEvent(display, DefaultRootWindow(display), False, SubstructureRedirectMask | SubstructureNotifyMask, &event);
+    }
+
+  XSetInputFocus(display, window, RevertToParent, CurrentTime);
+  XFlush(display);
+  return true;
+}
+
+
+/**-------------------------------------------------------------------------------------------------------------------
+* 
+* @fn         GRPBITMAP* GRPLINUXSCREENX11::CaptureContent(GRPRECTINT* rect, void* handle_window)
+* @brief      Capture client pixels of the bound or explicit foreign window via XGetImage.
+* @ingroup    PLATFORM_LINUX
+* 
+* @param[in]  rect : Optional sub-rect in client coordinates; NULL = full client.
+* @param[in]  handle_window : Optional foreign Window; NULL uses SetHandle/Create window.
+* 
+* @return     GRPBITMAP* : 32-bit BGRA bitmap, or NULL on failure.
+* 
+* --------------------------------------------------------------------------------------------------------------------*/
+GRPBITMAP* GRPLINUXSCREENX11::CaptureContent(GRPRECTINT* rect, void* handle_window)
+{
+  if(!display) return NULL;
+
+  Window hwndsrc = handle_window ? (Window)(uintptr_t)handle_window : window;
+  if(!hwndsrc) return NULL;
+
+  XWindowAttributes attr;
+  memset(&attr, 0, sizeof(attr));
+  if(!XGetWindowAttributes(display, hwndsrc, &attr)) return NULL;
+
+  int clientw = attr.width;
+  int clienth = attr.height;
+  if((clientw <= 0) || (clienth <= 0)) return NULL;
+
+  int x  = 0;
+  int y  = 0;
+  int cx = clientw;
+  int cy = clienth;
+
+  if(rect)
+    {
+      x  = rect->x1;
+      y  = rect->y1;
+      cx = rect->x2 - rect->x1;
+      cy = rect->y2 - rect->y1;
+    }
+
+  if(x < 0) { cx += x; x = 0; }
+  if(y < 0) { cy += y; y = 0; }
+  if((x >= clientw) || (y >= clienth)) return NULL;
+  if((x + cx) > clientw) cx = clientw - x;
+  if((y + cy) > clienth) cy = clienth - y;
+  if((cx <= 0) || (cy <= 0)) return NULL;
+
+  XImage* image = XGetImage(display, hwndsrc, x, y, (unsigned)cx, (unsigned)cy, AllPlanes, ZPixmap);
+  if(!image) return NULL;
+
+  GRPBITMAP* grpbitmap = GRPFACTORY::GetInstance().CreateBitmap(cx, cy, GRPPROPERTYMODE_32_BGRA_8888);
+  if(!grpbitmap)
+    {
+      XDestroyImage(image);
+      return NULL;
+    }
+
+  XDWORD* dst = (XDWORD*)grpbitmap->GetBuffer();
+  if(!dst)
+    {
+      GEN_DELETE grpbitmap;
+      XDestroyImage(image);
+      return NULL;
+    }
+
+  // Store bottom-up (row 0 = visual bottom) like Windows GetDIBits with positive
+  // biHeight. FindSubBitmap / GRPBitmap consumers assume that DIB orientation.
+  for(int py = 0; py < cy; py++)
+    {
+      XDWORD* row = dst + ((cy - 1 - py) * (XDWORD)cx);
+
+      for(int px = 0; px < cx; px++)
+        {
+          unsigned long pixel = XGetPixel(image, px, py);
+          unsigned int  r     = 0;
+          unsigned int  g     = 0;
+          unsigned int  b     = 0;
+
+          if(image->depth >= 24)
+            {
+              // Common TrueColor layouts (LSBFirst / MSBFirst handled by XGetPixel values).
+              r = (unsigned int)((pixel >> 16) & 0xFF);
+              g = (unsigned int)((pixel >>  8) & 0xFF);
+              b = (unsigned int)((pixel      ) & 0xFF);
+              if(image->red_mask && image->green_mask && image->blue_mask)
+                {
+                  // Prefer mask-based extract when available.
+                  unsigned long rshift = 0;
+                  unsigned long gshift = 0;
+                  unsigned long bshift = 0;
+                  unsigned long m;
+                  for(m = image->red_mask;   m && !(m & 1); m >>= 1) rshift++;
+                  for(m = image->green_mask; m && !(m & 1); m >>= 1) gshift++;
+                  for(m = image->blue_mask;  m && !(m & 1); m >>= 1) bshift++;
+                  r = (unsigned int)((pixel & image->red_mask)   >> rshift);
+                  g = (unsigned int)((pixel & image->green_mask) >> gshift);
+                  b = (unsigned int)((pixel & image->blue_mask)  >> bshift);
+                  while(r > 255) r >>= 1;
+                  while(g > 255) g >>= 1;
+                  while(b > 255) b >>= 1;
+                }
+            }
+
+          row[px] = 0xFF000000u | ((XDWORD)b) | ((XDWORD)g << 8) | ((XDWORD)r << 16);
+        }
+    }
+
+  XDestroyImage(image);
+  return grpbitmap;
+}
+
+
+/**-------------------------------------------------------------------------------------------------------------------
+* 
 * @fn         void* GRPLINUXSCREENX11::GetHandle()
 * @brief      Get handle
 * @ingroup    PLATFORM_LINUX
@@ -1227,7 +1382,7 @@ bool GRPLINUXSCREENX11::Maximize(bool active)
 * --------------------------------------------------------------------------------------------------------------------*/
 void* GRPLINUXSCREENX11::GetHandle()
 {
-  return (void*)window;
+  return (void*)(uintptr_t)window;
 
 }
 
@@ -1515,7 +1670,7 @@ void GRPLINUXSCREENX11::Chromes_ApplyPostCreate()
   // has no per-button standard mechanism -- UTILITY hides both, NORMAL shows both (ignoring hints).
   // Motif hints still handle those intermediate cases on WMs that respect them.
   // ----------------------------------------------------------------------------------------------------
-  if(cfgchromes->GetNativeCaptionActive()   &&
+      if(cfgchromes->GetNativeCaptionActive()   &&
      !cfgchromes->GetNativeMinimizeActive() &&
      !cfgchromes->GetNativeMaximizeActive())
     {
@@ -1527,6 +1682,17 @@ void GRPLINUXSCREENX11::Chromes_ApplyPostCreate()
           XChangeProperty(display, window, netwmwindowtype, XA_ATOM, 32, PropModeReplace, (unsigned char*)&netwmtypeutility, 1);
         }
     }
+
+  // Publish PID so XPROCESSMANAGER::Application_GetRunningList can bind this window to /proc (Windows
+  // parity with GetWindowThreadProcessId). Required for Screen_GetPosXY / WaitWindow on Linux/WSLg.
+  {
+    Atom netwmpid = XInternAtom(display, "_NET_WM_PID", False);
+    if(netwmpid != None)
+      {
+        unsigned long pid = (unsigned long)getpid();
+        XChangeProperty(display, window, netwmpid, XA_CARDINAL, 32, PropModeReplace, (unsigned char*)&pid, 1);
+      }
+  }
 }
 
 
@@ -2222,6 +2388,17 @@ bool GRPLINUXSCREENX11::Create_Window(bool show)
     {
       XSetWMProtocols(display, window, &wmdeletewindow, 1);
     }
+
+  // Always publish _NET_WM_PID (native and custom chromes). Without it, Application_GetRunningList
+  // cannot associate this window with /proc and Screen_GetPosXY/WaitWindow fail on Linux.
+  {
+    Atom netwmpid = XInternAtom(display, "_NET_WM_PID", False);
+    if(netwmpid != None)
+      {
+        unsigned long pid = (unsigned long)getpid();
+        XChangeProperty(display, window, netwmpid, XA_CARDINAL, 32, PropModeReplace, (unsigned char*)&pid, 1);
+      }
+  }
 
   // NOTE: XMapWindow()/XMoveWindow() used to happen HERE, before blitgles even existed -- see the
   // GRP_OPENGL_ACTIVE block below, right before the final "return true;", for why they were moved past it.

@@ -183,6 +183,9 @@ class GRPSCREEN : public GRPPROPERTIES, public XSUBJECT
     virtual bool                          Maximize                      (bool active);
 
     virtual GRPBITMAP*                    CaptureContent                (GRPRECTINT* rect = NULL, void* handle_window = NULL);
+
+    // Desktop (screen/root) pointer position — available to all apps, not only custom chromes.
+    virtual bool                          GetCursorDesktopPosition      (int& x, int& y);
     
     virtual void*                         GetDesktopHandle              ();
     virtual void*                         GetShellHandle                ();
@@ -202,8 +205,6 @@ class GRPSCREEN : public GRPPROPERTIES, public XSUBJECT
     bool                                  UpdateCFGChromesDrag          ();
     bool                                  UpdateCFGChromesAutoHide      ();
     bool                                  UpdateCFGChromesButtonsPosition ();
-
-    virtual bool                          GetCursorDesktopPosition      (int& x, int& y);
 
     virtual bool                          GetCFGChromesDragAnchor       (int& x, int& y);
 

@@ -4881,11 +4881,19 @@ bool UI_SKINCANVAS::Draw_Option(UI_ELEMENT* element)
       // hover. CSS/dashboard options with a real wash (alpha > 0) rely on DrawBackgroundColor instead.
       // Skip when the window is layered-transparent OR a translucent form ancestor would show through
       // (UI_Message formcolorback=black,N): the white plate punches an opaque hole in the frosted panel.
+      // Also skip empty hit overlays (UI_System nav-*-btn / disk-nav-hit): no compose children to repaint
+      // over the white plate, so erase bleaches sibling icons/labels under the transparent root button.
+      // UI_Options keeps white-erase — its nav/gal buttons own ic+tx children that redraw on top.
       if(element_option->GetBackgroundColor()->GetAlpha() == 0)
         {
           bool skip_white_erase = false;
           GRPSCREEN* scr = GetScreen();
           if(scr && scr->Style_Is(GRPSCREENSTYLE_TRANSPARENT)) skip_white_erase = true;
+          if(!skip_white_erase && element_option->GetComposeElements()->IsEmpty() &&
+             !element_option->Get_UIText() && !element_option->Get_UIAnimation())
+            {
+              skip_white_erase = true;
+            }
           if(!skip_white_erase)
             {
               UI_ELEMENT* anc = element_option->GetFather();

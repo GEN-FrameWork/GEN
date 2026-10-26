@@ -118,8 +118,9 @@ class GRPLINUXSCREENX11 : public GRPSCREEN
 
     bool                                  GetClientSize                     (int& width, int& height);
 
-    #ifdef GRP_SCREEN_CUSTOMCHROMES_ACTIVE
     bool                                  GetCursorDesktopPosition          (int& x, int& y);
+
+    #ifdef GRP_SCREEN_CUSTOMCHROMES_ACTIVE
     bool                                  GetCFGChromesDragAnchor           (int& x, int& y);
 
     bool                                  SystemMove                        ();
@@ -133,6 +134,10 @@ class GRPLINUXSCREENX11 : public GRPSCREEN
 
     bool                                  Minimize                          (bool active);
     bool                                  Maximize                          (bool active);
+
+    void                                  SetHandle                         (void* handle_window);
+    bool                                  Set_Focus                         ();
+    GRPBITMAP*                            CaptureContent                    (GRPRECTINT* rect = NULL, void* handle_window = NULL);
 
     void*                                 GetHandle                         ();
     

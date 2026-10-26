@@ -2361,24 +2361,43 @@ bool XFILEJSON::GetString(int& position, XSTRING& string)
 
   for(int c=position;c<(int)all.GetSize();c++)
     {
-      ctrlchar = CheckControlCharacter(all.Get()[c]);
+      XCHAR ch = all.Get()[c];
 
-      if((ctrlchar == XFILEJSONCONTROLCHAR_QUOTE) && !slashcontrol)
+      ctrlchar = CheckControlCharacter(ch);
+
+      if(slashcontrol)
+        {
+          // Apply JSON string escapes produced by writers such as TranslateScan EscapeForJSON.
+          switch(ch)
+            {
+              case _C('n')  : string += _C('\n'); break;
+              case _C('r')  : string += _C('\r'); break;
+              case _C('t')  : string += _C('\t'); break;
+              case _C('b')  : string += _C('\b'); break;
+              case _C('f')  : string += _C('\f'); break;
+              case _C('"')  : string += _C('"');  break;
+              case _C('\\') : string += _C('\\'); break;
+              case _C('/')  : string += _C('/');  break;
+              default       : string += _C('\\'); string += ch; break;
+            }
+
+          slashcontrol = false;
+          continue;
+        }
+
+      if(ctrlchar == XFILEJSONCONTROLCHAR_QUOTE)
         {
           position = (c + 1);
           return true;
         }
 
-      string += all.Get()[c];
-
-      if((ctrlchar == XFILEJSONCONTROLCHAR_BLACKSLASH) && !slashcontrol)
+      if(ctrlchar == XFILEJSONCONTROLCHAR_BLACKSLASH)
         {
           slashcontrol = true;
+          continue;
         }
-       else
-        {
-          slashcontrol = false;
-        }
+
+      string += ch;
     }
 
   position = XSTRING_NOTFOUND;

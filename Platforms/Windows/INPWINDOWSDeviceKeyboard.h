@@ -53,6 +53,8 @@ class INPWINDOWSDEVICEKEYBOARD : public INPDEVICE
 
     bool                  Update                        ();
 
+    bool                  TranslateKeyCodeToUnicode     (XWORD keycode, XSTRING& outtext);
+
   private:
 
     void                  Clean                         ();

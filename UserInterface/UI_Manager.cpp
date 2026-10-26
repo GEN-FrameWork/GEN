@@ -8174,7 +8174,9 @@ bool UI_MANAGER::UnSelectedElement(UI_ELEMENT* element)
                         
       if(element_selectable->GetXTimerSelected())
         {
-          if(element_selectable->GetXTimerSelected()->GetMeasureMilliSeconds() > element_selectable->GetTimeSelected()) 
+          // 0 = latched selection (stylesheet :selected nav, etc.). Do not treat as "already expired".
+          XDWORD holdms = element_selectable->GetTimeSelected();
+          if(holdms && (element_selectable->GetXTimerSelected()->GetMeasureMilliSeconds() > holdms)) 
             {             
               element->SetSelected(false);
               Elements_SetToRedraw(element);     

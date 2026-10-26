@@ -567,6 +567,46 @@ bool INPDEVICE::Update()
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
+* @fn         bool INPDEVICE::TranslateKeyCodeToUnicode(XWORD keycode, XSTRING& outtext)
+* @brief      Translate key code to unicode (layout-aware); base stub.
+* @ingroup    INPUT
+* 
+* @param[in]  keycode : Platform key code.
+* @param[out] outtext : Produced Unicode text.
+* 
+* @return     bool : true if the operation is successful; otherwise false.
+* 
+* --------------------------------------------------------------------------------------------------------------------*/
+bool INPDEVICE::TranslateKeyCodeToUnicode(XWORD keycode, XSTRING& outtext)
+{
+  outtext.Empty();
+  return false;
+}
+
+
+/**-------------------------------------------------------------------------------------------------------------------
+* 
+* @fn         bool INPDEVICE::TranslateButtonToUnicode(INPBUTTON* button, XSTRING& outtext)
+* @brief      Translate button to unicode via its key code; base uses TranslateKeyCodeToUnicode.
+* @ingroup    INPUT
+* 
+* @param[in]  button : Button pointer.
+* @param[out] outtext : Produced Unicode text.
+* 
+* @return     bool : true if the operation is successful; otherwise false.
+* 
+* --------------------------------------------------------------------------------------------------------------------*/
+bool INPDEVICE::TranslateButtonToUnicode(INPBUTTON* button, XSTRING& outtext)
+{
+  outtext.Empty();
+  if(!button) return false;
+
+  return TranslateKeyCodeToUnicode(button->GetKeyCode(), outtext);
+}
+
+
+/**-------------------------------------------------------------------------------------------------------------------
+* 
 * @fn         void INPDEVICE::Clean()
 * @brief      Clean the attributes of the class: Default initialize
 * @note       INTERNAL

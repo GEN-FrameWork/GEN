@@ -982,6 +982,30 @@ bool GRPSCREEN::IsCFGChromesActive()
 }
 
 
+/**-------------------------------------------------------------------------------------------------------------------
+* 
+* @fn         bool GRPSCREEN::GetCursorDesktopPosition(int& x, int& y)
+* @brief      Get cursor desktop position
+* @note       VIRTUAL. Base implementation: not available. Each platform screen that can report the pointer in
+*             desktop (screen/root) coordinates overrides this -- see GRPWINDOWSSCREEN (GetCursorPos) and
+*             GRPLINUXSCREENX11 (XQueryPointer against the root window).
+* @ingroup    GRAPHIC
+* 
+* @param[out] x : X coordinate, desktop space.
+* @param[out] y : Y coordinate, desktop space.
+* 
+* @return     bool : true if the operation is successful; otherwise false.
+* 
+* --------------------------------------------------------------------------------------------------------------------*/
+bool GRPSCREEN::GetCursorDesktopPosition(int& x, int& y)
+{
+  x = 0;
+  y = 0;
+
+  return false;
+}
+
+
 #ifdef GRP_SCREEN_CUSTOMCHROMES_ACTIVE
 
 // Forward declaration: defined later in this file, before UpdateCFGChromesAutoHide.
@@ -1450,31 +1474,6 @@ bool GRPSCREEN::IsOverCFGChromesButton(int uix, int uiy)
 
       if(bline.IsWithin(uix, uiy)) return true;
     }
-
-  return false;
-}
-
-
-/**-------------------------------------------------------------------------------------------------------------------
-* 
-* @fn         bool GRPSCREEN::GetCursorDesktopPosition(int& x, int& y)
-* @brief      Get cursor desktop position
-* @note       VIRTUAL. Base implementation: not available. Each platform screen that can report the pointer in
-*             desktop (screen/root) coordinates overrides this -- see GRPWINDOWSSCREEN (GetCursorPos) and
-*             GRPLINUXSCREENX11 (XQueryPointer against the root window). Where it is not available the custom
-*             caption drag simply never starts, which is the previous behaviour on those platforms anyway.
-* @ingroup    GRAPHIC
-* 
-* @param[out] x : X coordinate, desktop space.
-* @param[out] y : Y coordinate, desktop space.
-* 
-* @return     bool : true if the operation is successful; otherwise false.
-* 
-* --------------------------------------------------------------------------------------------------------------------*/
-bool GRPSCREEN::GetCursorDesktopPosition(int& x, int& y)
-{
-  x = 0;
-  y = 0;
 
   return false;
 }

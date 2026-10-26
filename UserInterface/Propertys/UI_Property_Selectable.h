@@ -47,6 +47,8 @@ enum UI_PROPERTY_SELECTABLE_STATE
 };
 
 #define UI_PROPERTY_SELECTABLE_DEFAULT_TIMESELECTED      100
+// TimeSelected 0 = latch IsSelected (CSS :selected / exclusive nav). >0 = auto-clear after N ms
+// (classic momentary click). UI_Options keeps SetSelected(false) and paints wash by hand instead.
 
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
 

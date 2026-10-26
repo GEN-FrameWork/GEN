@@ -448,18 +448,12 @@ bool GRPWINDOWSSCREEN::Set_Position(int x, int y)
 }
 
 
-#ifdef GRP_SCREEN_CUSTOMCHROMES_ACTIVE
-
 /**-------------------------------------------------------------------------------------------------------------------
 *
 * @fn         bool GRPWINDOWSSCREEN::GetCursorDesktopPosition(int& x, int& y)
 * @brief      Get cursor desktop position
 * @note       Plain GetCursorPos(): the pointer in DESKTOP coordinates, with no reference at all to this
-*             window's own position or size. GRPSCREEN::UpdateCFGChromesDrag() builds the drag delta on this
-*             (and only this) so that moving the window cannot feed back into the next reading, and so that
-*             the reading stays valid while the pointer is outside the window.
-*             NOTE: this is the very value INPWINDOWSDEVICEMOUSE::Update() already asks Windows for and then
-*             throws away after converting it to client-relative coordinates.
+*             window's own position or size.
 * @ingroup    PLATFORM_WINDOWS
 *
 * @param[out] x : X coordinate, desktop space.
@@ -483,6 +477,8 @@ bool GRPWINDOWSSCREEN::GetCursorDesktopPosition(int& x, int& y)
   return true;
 }
 
+
+#ifdef GRP_SCREEN_CUSTOMCHROMES_ACTIVE
 
 /**-------------------------------------------------------------------------------------------------------------------
 *

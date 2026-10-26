@@ -70,6 +70,7 @@ class DIOLINUXLEDNEOPIXELWS2812BRPI : public DIOLEDNEOPIXELWS2812B
     void                      Clean                             ();
    
     ws2811_t                  config;
+    bool                      initialized;
 };
 
 

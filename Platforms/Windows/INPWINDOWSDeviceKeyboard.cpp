@@ -164,6 +164,41 @@ bool INPWINDOWSDEVICEKEYBOARD::Update()
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
+* @fn         bool INPWINDOWSDEVICEKEYBOARD::TranslateKeyCodeToUnicode(XWORD keycode, XSTRING& outtext)
+* @brief      Translate VK to Unicode via active layout (ToUnicodeEx + keyboard state).
+* @ingroup    PLATFORM_WINDOWS
+* 
+* @param[in]  keycode : Virtual-key code.
+* @param[out] outtext : Produced Unicode text.
+* 
+* @return     bool : true if the operation is successful; otherwise false.
+* 
+* --------------------------------------------------------------------------------------------------------------------*/
+bool INPWINDOWSDEVICEKEYBOARD::TranslateKeyCodeToUnicode(XWORD keycode, XSTRING& outtext)
+{
+  outtext.Empty();
+  if(!keycode) return false;
+
+  BYTE keystate[256];
+  if(!GetKeyboardState(keystate)) return false;
+
+  UINT scancode = MapVirtualKey((UINT)keycode, MAPVK_VK_TO_VSC);
+  HKL  layout   = GetKeyboardLayout(0);
+  WCHAR buffer[8];
+  memset(buffer, 0, sizeof(buffer));
+
+  int result = ToUnicodeEx((UINT)keycode, scancode, keystate, buffer, (int)(sizeof(buffer) / sizeof(buffer[0])), 0, layout);
+
+  // Dead-key / no translation: ToUnicodeEx can return <0 or 0.
+  if(result <= 0) return false;
+
+  outtext.Set((const XCHAR*)buffer, (XDWORD)result);
+  return !outtext.IsEmpty();
+}
+
+
+/**-------------------------------------------------------------------------------------------------------------------
+* 
 * @fn         void INPWINDOWSDEVICEKEYBOARD::Clean()
 * @brief      Clean the attributes of the class: Default initialize
 * @note       INTERNAL
