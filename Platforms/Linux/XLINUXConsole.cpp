@@ -46,6 +46,12 @@
 #include <langinfo.h>
 #include <string.h>
 #include <strings.h>
+#include <stdint.h>
+
+#ifdef LINUX_X11_ACTIVE
+#include <X11/Xlib.h>
+#include <X11/Xatom.h>
+#endif
 
 #include "XTrace.h"
 
@@ -236,6 +242,252 @@ bool XLINUXCONSOLE::Maximize()
 bool XLINUXCONSOLE::Minimize()
 {
   return false;
+}
+
+
+#ifdef LINUX_X11_ACTIVE
+
+static int XLINUXConsole_XErrorIgnore(Display* /*display*/, XErrorEvent* /*event*/)
+{
+  return 0;
+}
+
+
+static bool XLINUXConsole_ActivateWindow(Display* display, Window window)
+{
+  if(!display || !window) return false;
+
+  XRaiseWindow(display, window);
+
+  Atom netactive = XInternAtom(display, "_NET_ACTIVE_WINDOW", False);
+  if(netactive != None)
+    {
+      XEvent event;
+      memset(&event, 0, sizeof(event));
+      event.xclient.type         = ClientMessage;
+      event.xclient.window       = window;
+      event.xclient.message_type = netactive;
+      event.xclient.format       = 32;
+      event.xclient.data.l[0]    = 1; // application
+      event.xclient.data.l[1]    = CurrentTime;
+      event.xclient.data.l[2]    = 0;
+      event.xclient.data.l[3]    = 0;
+      event.xclient.data.l[4]    = 0;
+      XSendEvent(display, DefaultRootWindow(display), False, SubstructureRedirectMask | SubstructureNotifyMask, &event);
+    }
+
+  XSetInputFocus(display, window, RevertToParent, CurrentTime);
+  XFlush(display);
+  return true;
+}
+
+
+static bool XLINUXConsole_GetWindowPid(Display* display, Window window, pid_t& outpid)
+{
+  outpid = 0;
+  if(!display || !window) return false;
+
+  Atom           atom = XInternAtom(display, "_NET_WM_PID", True);
+  Atom           actualtype = None;
+  int            actualformat = 0;
+  unsigned long  nitems = 0;
+  unsigned long  bytesafter = 0;
+  unsigned char* prop = NULL;
+
+  if(atom == None) return false;
+  if(XGetWindowProperty(display, window, atom, 0, 1, False, XA_CARDINAL, &actualtype, &actualformat, &nitems, &bytesafter, &prop) != Success)
+    {
+      return false;
+    }
+
+  bool ok = false;
+  if(prop && (actualformat == 32) && (nitems >= 1))
+    {
+      outpid = (pid_t)(*((unsigned long*)prop));
+      ok = (outpid != 0);
+    }
+
+  if(prop) XFree(prop);
+  return ok;
+}
+
+
+static Window XLINUXConsole_FindWindowByPid(Display* display, Window window, pid_t target, int depth)
+{
+  if(!display || !window || (depth > 8) || (target <= 0)) return None;
+
+  pid_t wpid = 0;
+  if(XLINUXConsole_GetWindowPid(display, window, wpid) && (wpid == target))
+    {
+      XWindowAttributes attr;
+      memset(&attr, 0, sizeof(attr));
+      if(XGetWindowAttributes(display, window, &attr) && (attr.map_state == IsViewable) && !attr.override_redirect)
+        {
+          return window;
+        }
+    }
+
+  Window root_ret = None;
+  Window parent = None;
+  Window* children = NULL;
+  unsigned int nchildren = 0;
+  if(!XQueryTree(display, window, &root_ret, &parent, &children, &nchildren)) return None;
+
+  Window found = None;
+  for(unsigned int c=0; c<nchildren && found == None; c++)
+    {
+      found = XLINUXConsole_FindWindowByPid(display, children[c], target, depth + 1);
+    }
+
+  if(children) XFree(children);
+  return found;
+}
+
+
+static pid_t XLINUXConsole_GetPpid(pid_t pid)
+{
+  if(pid <= 1) return 0;
+
+  char path[64];
+  snprintf(path, sizeof(path), "/proc/%d/stat", (int)pid);
+  FILE* fp = fopen(path, "r");
+  if(!fp) return 0;
+
+  // /proc/pid/stat: pid (comm) state ppid ...
+  int  ppid = 0;
+  char state = 0;
+  char comm[256];
+  if(fscanf(fp, "%*d %255s %c %d", comm, &state, &ppid) != 3)
+    {
+      fclose(fp);
+      return 0;
+    }
+  fclose(fp);
+  return (pid_t)ppid;
+}
+
+
+static Window XLINUXConsole_ResolveTerminalWindow(Display* display)
+{
+  if(!display) return None;
+
+  const char* envwid = getenv("WINDOWID");
+  if(envwid && envwid[0])
+    {
+      char* end = NULL;
+      unsigned long wid = strtoul(envwid, &end, 10);
+      if(wid && end && (*end == '\0'))
+        {
+          return (Window)wid;
+        }
+    }
+
+  pid_t pid = getpid();
+  for(int depth=0; depth<10 && pid > 1; depth++)
+    {
+      Window found = XLINUXConsole_FindWindowByPid(display, DefaultRootWindow(display), pid, 0);
+      if(found != None) return found;
+      pid = XLINUXConsole_GetPpid(pid);
+    }
+
+  return None;
+}
+
+#endif // LINUX_X11_ACTIVE
+
+
+/**-------------------------------------------------------------------------------------------------------------------
+*
+* @fn         bool XLINUXCONSOLE::Get_InputFocus(void*& handle)
+* @brief      Capture current X11 input-focus window.
+* @ingroup    PLATFORM_LINUX
+*
+* @param[out] handle : X11 Window cast to void*, or NULL.
+*
+* @return     bool : true if a focus window was captured.
+*
+* --------------------------------------------------------------------------------------------------------------------*/
+bool XLINUXCONSOLE::Get_InputFocus(void*& handle)
+{
+  handle = NULL;
+
+  #ifdef LINUX_X11_ACTIVE
+  Display* display = XOpenDisplay(NULL);
+  if(!display) return false;
+
+  XErrorHandler previous = XSetErrorHandler(XLINUXConsole_XErrorIgnore);
+
+  Window focus = None;
+  int    revert = RevertToParent;
+  XGetInputFocus(display, &focus, &revert);
+
+  XSetErrorHandler(previous);
+  XCloseDisplay(display);
+
+  if(!focus || (focus == PointerRoot) || (focus == None)) return false;
+
+  handle = (void*)(uintptr_t)focus;
+  return true;
+  #else
+  return false;
+  #endif
+}
+
+
+/**-------------------------------------------------------------------------------------------------------------------
+*
+* @fn         bool XLINUXCONSOLE::Set_InputFocus(void* handle)
+* @brief      Restore X11 input focus to a previously captured window.
+* @ingroup    PLATFORM_LINUX
+*
+* @param[in]  handle : X11 Window from Get_InputFocus.
+*
+* @return     bool : true if focus was requested.
+*
+* --------------------------------------------------------------------------------------------------------------------*/
+bool XLINUXCONSOLE::Set_InputFocus(void* handle)
+{
+  if(!handle) return false;
+
+  #ifdef LINUX_X11_ACTIVE
+  Display* display = XOpenDisplay(NULL);
+  if(!display) return false;
+
+  XErrorHandler previous = XSetErrorHandler(XLINUXConsole_XErrorIgnore);
+  bool ok = XLINUXConsole_ActivateWindow(display, (Window)(uintptr_t)handle);
+  XSetErrorHandler(previous);
+  XCloseDisplay(display);
+  return ok;
+  #else
+  return false;
+  #endif
+}
+
+
+/**-------------------------------------------------------------------------------------------------------------------
+*
+* @fn         bool XLINUXCONSOLE::Set_Focus()
+* @brief      Raise/focus the terminal emulator window that hosts this process.
+* @ingroup    PLATFORM_LINUX
+*
+* @return     bool : true if a terminal window was found and focused.
+*
+* --------------------------------------------------------------------------------------------------------------------*/
+bool XLINUXCONSOLE::Set_Focus()
+{
+  #ifdef LINUX_X11_ACTIVE
+  Display* display = XOpenDisplay(NULL);
+  if(!display) return false;
+
+  XErrorHandler previous = XSetErrorHandler(XLINUXConsole_XErrorIgnore);
+  Window terminal = XLINUXConsole_ResolveTerminalWindow(display);
+  bool ok = (terminal != None) && XLINUXConsole_ActivateWindow(display, terminal);
+  XSetErrorHandler(previous);
+  XCloseDisplay(display);
+  return ok;
+  #else
+  return false;
+  #endif
 }
 
 

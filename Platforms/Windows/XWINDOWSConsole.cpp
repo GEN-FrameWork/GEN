@@ -389,6 +389,84 @@ bool XWINDOWSCONSOLE::Maximize()
 
 
 /**-------------------------------------------------------------------------------------------------------------------
+*
+* @fn         bool XWINDOWSCONSOLE::Get_InputFocus(void*& handle)
+* @brief      Capture current foreground window handle.
+* @ingroup    PLATFORM_WINDOWS
+*
+* @param[out] handle : HWND cast to void*, or NULL.
+*
+* @return     bool : true if a focus window was captured.
+*
+* --------------------------------------------------------------------------------------------------------------------*/
+bool XWINDOWSCONSOLE::Get_InputFocus(void*& handle)
+{
+  handle = NULL;
+
+  #ifndef APPFLOW_GRAPHICS_NOTCONSOLE_ACTIVE
+  HWND foreground = GetForegroundWindow();
+  if(!foreground) return false;
+  handle = (void*)foreground;
+  return true;
+  #else
+  return false;
+  #endif
+}
+
+
+/**-------------------------------------------------------------------------------------------------------------------
+*
+* @fn         bool XWINDOWSCONSOLE::Set_InputFocus(void* handle)
+* @brief      Restore foreground focus to a previously captured HWND.
+* @ingroup    PLATFORM_WINDOWS
+*
+* @param[in]  handle : HWND from Get_InputFocus.
+*
+* @return     bool : true if focus was requested.
+*
+* --------------------------------------------------------------------------------------------------------------------*/
+bool XWINDOWSCONSOLE::Set_InputFocus(void* handle)
+{
+  if(!handle) return false;
+
+  #ifndef APPFLOW_GRAPHICS_NOTCONSOLE_ACTIVE
+  HWND hwnd = (HWND)handle;
+  if(!IsWindow(hwnd)) return false;
+
+  DWORD pidtarget = 0;
+  GetWindowThreadProcessId(hwnd, &pidtarget);
+  if(pidtarget) AllowSetForegroundWindow(pidtarget);
+
+  ShowWindow(hwnd, SW_RESTORE);
+  return SetForegroundWindow(hwnd) ? true : false;
+  #else
+  return false;
+  #endif
+}
+
+
+/**-------------------------------------------------------------------------------------------------------------------
+*
+* @fn         bool XWINDOWSCONSOLE::Set_Focus()
+* @brief      Bring this process console window to the foreground.
+* @ingroup    PLATFORM_WINDOWS
+*
+* @return     bool : true if focus was requested.
+*
+* --------------------------------------------------------------------------------------------------------------------*/
+bool XWINDOWSCONSOLE::Set_Focus()
+{
+  #ifndef APPFLOW_GRAPHICS_NOTCONSOLE_ACTIVE
+  HWND hwindow = GetConsoleWindow();
+  if(!hwindow) return false;
+  return Set_InputFocus((void*)hwindow);
+  #else
+  return false;
+  #endif
+}
+
+
+/**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         bool XWINDOWSCONSOLE::Minimize()
 * @brief      Minimize

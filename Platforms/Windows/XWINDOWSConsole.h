@@ -56,6 +56,10 @@ class XWINDOWSCONSOLE : public XCONSOLE
     bool                    IsHide                          ();
     bool                    UnHide                          ();
 
+    bool                    Get_InputFocus                  (void*& handle);
+    bool                    Set_InputFocus                  (void* handle);
+    bool                    Set_Focus                       ();
+
     bool                    Print                           (XCHAR* string);
     bool                    Clear                           (bool fill = true);
 

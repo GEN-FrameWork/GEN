@@ -57,6 +57,10 @@ class XLINUXCONSOLE : public XCONSOLE
     bool                  KBHit                 (void);
     int                   GetChar               ();
 
+    bool                  Get_InputFocus        (void*& handle);
+    bool                  Set_InputFocus        (void* handle);
+    bool                  Set_Focus             ();
+
   private:
 
     void                  RawModeEnable         ();

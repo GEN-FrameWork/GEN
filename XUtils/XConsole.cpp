@@ -193,6 +193,60 @@ bool XCONSOLE::Minimize()
 
 
 /**-------------------------------------------------------------------------------------------------------------------
+*
+* @fn         bool XCONSOLE::Get_InputFocus(void*& handle)
+* @brief      Capture the current window-manager input-focus handle (platform-specific).
+* @note       VIRTUAL
+* @ingroup    XUTILS
+*
+* @param[out] handle : Opaque native window handle; NULL if unavailable.
+*
+* @return     bool : true if a focus target was captured.
+*
+* --------------------------------------------------------------------------------------------------------------------*/
+bool XCONSOLE::Get_InputFocus(void*& handle)
+{
+  handle = NULL;
+  return false;
+}
+
+
+/**-------------------------------------------------------------------------------------------------------------------
+*
+* @fn         bool XCONSOLE::Set_InputFocus(void* handle)
+* @brief      Restore window-manager input focus to a previously captured handle.
+* @note       VIRTUAL
+* @ingroup    XUTILS
+*
+* @param[in]  handle : Opaque native window handle from Get_InputFocus.
+*
+* @return     bool : true if focus was requested successfully.
+*
+* --------------------------------------------------------------------------------------------------------------------*/
+bool XCONSOLE::Set_InputFocus(void* handle)
+{
+  if(!handle) return false;
+  return false;
+}
+
+
+/**-------------------------------------------------------------------------------------------------------------------
+*
+* @fn         bool XCONSOLE::Set_Focus()
+* @brief      Bring this process console/terminal window to the front and give it input focus.
+* @note       VIRTUAL
+* @ingroup    XUTILS
+*
+* @return     bool : true if focus was requested successfully.
+*
+* --------------------------------------------------------------------------------------------------------------------*/
+bool XCONSOLE::Set_Focus()
+{
+  return false;
+}
+
+
+/**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         bool XCONSOLE::Hide()
 * @brief      Hide

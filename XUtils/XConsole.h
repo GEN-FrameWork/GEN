@@ -90,6 +90,12 @@ class XCONSOLE
     virtual bool                    IsHide                        ();
     virtual bool                    UnHide                        ();
 
+    // Window-manager input focus (not tty attributes). Used after Screen_SetFocus /
+    // UI automation so keys return to the console that hosts ActionScriptQA.
+    virtual bool                    Get_InputFocus                (void*& handle);
+    virtual bool                    Set_InputFocus                (void* handle);
+    virtual bool                    Set_Focus                     ();
+
 
     virtual bool                    Print                         (XCHAR* string);
     bool                            Printf                        (XCHAR* mask, ...);
