@@ -221,7 +221,11 @@ XDWORD XTRANSLATION_GEN::GetActual()
 * --------------------------------------------------------------------------------------------------------------------*/
 bool XTRANSLATION_GEN::SetActual()
 {
-  XDWORD code = GEN_XSYSTEM.GetLanguageSO();
+  XDWORD code = XLANGUAGE_ISO_639_3_CODE_INVALID;
+
+  #ifdef XSYSTEM_ACTIVE
+  code = GEN_XSYSTEM.GetLanguageSO();
+  #endif
 
   if((code == XLANGUAGE_ISO_639_3_CODE_INVALID) || !IsLanguageAvailable(code))
     {
