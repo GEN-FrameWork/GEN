@@ -69,7 +69,10 @@ enum UI_ELEMENT_TYPE
 	UI_ELEMENT_TYPE_PROGRESSBAR												,	
   UI_ELEMENT_TYPE_PROGRESSRADIAL										,	
 	UI_ELEMENT_TYPE_PROGRESSIMAGE                       ,
-  UI_ELEMENT_TYPE_STATISTICSCHART  
+  UI_ELEMENT_TYPE_STATISTICSCHART                       ,
+  UI_ELEMENT_TYPE_CONSOLE                               ,
+  UI_ELEMENT_TYPE_PROPERTYLIST                          ,
+  UI_ELEMENT_TYPE_TREE
 };				
 
 

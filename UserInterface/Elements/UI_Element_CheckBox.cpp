@@ -116,6 +116,11 @@ bool  UI_ELEMENT_CHECKBOX::SetStatus(bool status)
 
   this->status = status;
 
+  // Keep the composed animation frame in sync immediately (not only on the next Draw_CheckBox),
+  // so a programmatic SetStatus (e.g. mirroring console autoscroll) cannot leave a stale glyph.
+  UI_ELEMENT_ANIMATION* animation = Get_UIAnimation();
+  if(animation) animation->IndexImage_Set(status ? 1 : 0);
+
   return true;
 }
 

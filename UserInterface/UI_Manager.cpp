@@ -83,6 +83,9 @@
 #include "UI_LayoutEngine.h"
 #include "UI_Element_Text.h"
 #include "UI_Element_TextBox.h"
+#include "UI_Element_Console.h"
+#include "UI_Element_PropertyList.h"
+#include "UI_Element_Tree.h"
 #include "UI_Element_Image.h"
 #include "UI_Element_Animation.h"
 #include "UI_Element_Option.h"
@@ -5641,6 +5644,329 @@ UI_ELEMENT* UI_MANAGER::GetLayoutElement_TextBox(XFILEXMLELEMENT* node, UI_LAYOU
 
 
 /**-------------------------------------------------------------------------------------------------------------------
+*
+* @fn         UI_ELEMENT* UI_MANAGER::GetLayoutElement_Console(XFILEXMLELEMENT* node, UI_LAYOUT* layout, UI_ELEMENT* father, UI_ELEMENT* element_legacy)
+* @brief      Get layout element console
+* @ingroup    USERINTERFACE
+*
+* @param[in]  node : Node pointer to use.
+* @param[in]  layout : Layout pointer to use.
+* @param[in]  father : Father pointer to use.
+* @param[in]  element_legacy : Element legacy pointer to use.
+*
+* @return     UI_ELEMENT* : Pointer to the requested object; NULL if it is not available.
+*
+* --------------------------------------------------------------------------------------------------------------------*/
+UI_ELEMENT* UI_MANAGER::GetLayoutElement_Console(XFILEXMLELEMENT* node, UI_LAYOUT* layout, UI_ELEMENT* father, UI_ELEMENT* element_legacy)
+{
+  UI_ELEMENT_CONSOLE* element_console = NULL;
+
+  if(element_legacy)
+    {
+      element_console = (UI_ELEMENT_CONSOLE*)element_legacy;
+    }
+   else
+    {
+      element_console = GEN_NEW UI_ELEMENT_CONSOLE();
+      if(!element_console) return NULL;
+    }
+
+  element_console->SetFather(father);
+
+  UI_COMPUTEDSTYLE outstyle;
+  if(!GetLayoutElement_Base(node, layout, element_console, outstyle, true))
+    {
+      GEN_DELETE element_console;
+      return NULL;
+    }
+
+  SetLevelAuto(element_console, father);
+
+  if(!element_console->GetBoundaryLine()->width)  return NULL;
+  if(!element_console->GetBoundaryLine()->height) return NULL;
+
+  double sizefont = 0;
+  {
+    XSTRING sizefontstr;
+    if(UI_PROPERTYREGISTRY::GetAliased(outstyle, NL("sizefont"), NL("font-size"), sizefontstr) && !sizefontstr.IsEmpty())
+      {
+        sizefont = sizefontstr.ConvertToDouble();
+      }
+     else if(!GetParentSizeFont(node->GetFather(), sizefont))
+      {
+        GEN_DELETE element_console;
+        return NULL;
+      }
+  }
+
+  element_console->SetSizeFont((XDWORD)sizefont);
+
+  double linespacing = UI_ELEMENT_CONSOLE_DEFAULT_LINESPACING;
+  outstyle.Get(NL("linespacing"), linespacing);
+  element_console->SetLineSpacing((XDWORD)linespacing);
+
+  XDWORD maxlines = UI_ELEMENT_CONSOLE_DEFAULT_MAXLINES;
+  {
+    double maxlinesvalue = (double)maxlines;
+    if(outstyle.Get(NL("maxlines"), maxlinesvalue))
+      {
+        maxlines = (XDWORD)maxlinesvalue;
+      }
+  }
+  element_console->SetMaxLines(maxlines);
+
+  {
+    double maxlinesoffvalue = (double)element_console->GetMaxLinesOff();
+    if(outstyle.Get(NL("maxlines-off"), maxlinesoffvalue) || outstyle.Get(NL("maxlinesoff"), maxlinesoffvalue))
+      {
+        element_console->SetMaxLinesOff((XDWORD)maxlinesoffvalue);
+      }
+  }
+
+  XSTRING autoscrollstr;
+  element_console->SetAutoscroll(true);
+  if(outstyle.Get(NL("autoscroll"), autoscrollstr))
+    {
+      element_console->SetAutoscroll(autoscrollstr.ConvertToBoolean());
+    }
+
+  XSTRING wordwrapstr;
+  element_console->SetWordWrap(true);
+  if(outstyle.Get(NL("wordwrap"), wordwrapstr))
+    {
+      element_console->SetWordWrap(wordwrapstr.ConvertToBoolean());
+    }
+
+  element_console->Scroll_SetOverflow(UI_PROPERTY_SCROLLEABLE_TYPE_VERTICAL, UI_OVERFLOW_AUTO);
+  // Long unwrapped lines need a horizontal axis; wrap mode keeps H hidden.
+  element_console->Scroll_SetOverflow(UI_PROPERTY_SCROLLEABLE_TYPE_HORIZONTAL,
+                                      element_console->IsWordWrap() ? UI_OVERFLOW_HIDDEN : UI_OVERFLOW_AUTO);
+
+  XSTRING overflowy;
+  if(outstyle.Get(NL("overflow-y"), overflowy) || outstyle.Get(NL("overflow"), overflowy))
+    {
+      if(!overflowy.Compare(NL("hidden"), true))   element_console->Scroll_SetOverflow(UI_PROPERTY_SCROLLEABLE_TYPE_VERTICAL, UI_OVERFLOW_HIDDEN);
+       else if(!overflowy.Compare(NL("scroll"), true))  element_console->Scroll_SetOverflow(UI_PROPERTY_SCROLLEABLE_TYPE_VERTICAL, UI_OVERFLOW_SCROLL);
+         else if(!overflowy.Compare(NL("auto"), true))  element_console->Scroll_SetOverflow(UI_PROPERTY_SCROLLEABLE_TYPE_VERTICAL, UI_OVERFLOW_AUTO);
+           else if(!overflowy.Compare(NL("visible"), true)) element_console->Scroll_SetOverflow(UI_PROPERTY_SCROLLEABLE_TYPE_VERTICAL, UI_OVERFLOW_VISIBLE);
+    }
+
+  XSTRING overflowx;
+  if(outstyle.Get(NL("overflow-x"), overflowx))
+    {
+      if(!overflowx.Compare(NL("hidden"), true))        element_console->Scroll_SetOverflow(UI_PROPERTY_SCROLLEABLE_TYPE_HORIZONTAL, UI_OVERFLOW_HIDDEN);
+       else if(!overflowx.Compare(NL("scroll"), true))   element_console->Scroll_SetOverflow(UI_PROPERTY_SCROLLEABLE_TYPE_HORIZONTAL, UI_OVERFLOW_SCROLL);
+         else if(!overflowx.Compare(NL("auto"), true))   element_console->Scroll_SetOverflow(UI_PROPERTY_SCROLLEABLE_TYPE_HORIZONTAL, UI_OVERFLOW_AUTO);
+           else if(!overflowx.Compare(NL("visible"), true)) element_console->Scroll_SetOverflow(UI_PROPERTY_SCROLLEABLE_TYPE_HORIZONTAL, UI_OVERFLOW_VISIBLE);
+    }
+
+  GetLayoutElement_CalculateBoundaryLine(layout, element_console, true);
+
+  return element_console;
+}
+
+
+/**-------------------------------------------------------------------------------------------------------------------
+*
+* @fn         UI_ELEMENT* UI_MANAGER::GetLayoutElement_PropertyList(XFILEXMLELEMENT* node, UI_LAYOUT* layout, UI_ELEMENT* father, UI_ELEMENT* element_legacy)
+* @brief      Get layout element property list
+* @ingroup    USERINTERFACE
+*
+* @param[in]  node : Node pointer to use.
+* @param[in]  layout : Layout pointer to use.
+* @param[in]  father : Father pointer to use.
+* @param[in]  element_legacy : Element legacy pointer to use.
+*
+* @return     UI_ELEMENT* : Pointer to the requested object; NULL if it is not available.
+*
+* --------------------------------------------------------------------------------------------------------------------*/
+UI_ELEMENT* UI_MANAGER::GetLayoutElement_PropertyList(XFILEXMLELEMENT* node, UI_LAYOUT* layout, UI_ELEMENT* father, UI_ELEMENT* element_legacy)
+{
+  UI_ELEMENT_PROPERTYLIST* element_propertylist = NULL;
+
+  if(element_legacy)
+    {
+      element_propertylist = (UI_ELEMENT_PROPERTYLIST*)element_legacy;
+    }
+   else
+    {
+      element_propertylist = GEN_NEW UI_ELEMENT_PROPERTYLIST();
+      if(!element_propertylist) return NULL;
+    }
+
+  element_propertylist->SetFather(father);
+
+  UI_COMPUTEDSTYLE outstyle;
+  if(!GetLayoutElement_Base(node, layout, element_propertylist, outstyle, true))
+    {
+      GEN_DELETE element_propertylist;
+      return NULL;
+    }
+
+  SetLevelAuto(element_propertylist, father);
+
+  if(!element_propertylist->GetBoundaryLine()->width)  return NULL;
+  if(!element_propertylist->GetBoundaryLine()->height) return NULL;
+
+  double sizefont = 0;
+  {
+    XSTRING sizefontstr;
+    if(UI_PROPERTYREGISTRY::GetAliased(outstyle, NL("sizefont"), NL("font-size"), sizefontstr) && !sizefontstr.IsEmpty())
+      {
+        sizefont = sizefontstr.ConvertToDouble();
+      }
+     else if(!GetParentSizeFont(node->GetFather(), sizefont))
+      {
+        GEN_DELETE element_propertylist;
+        return NULL;
+      }
+  }
+
+  element_propertylist->SetSizeFont((XDWORD)sizefont);
+
+  {
+    double value = 0.0f;
+    if(outstyle.Get(NL("rowheight"), value) || outstyle.Get(NL("row-height"), value))
+      {
+        element_propertylist->SetRowHeight(value);
+      }
+
+    if(outstyle.Get(NL("headerheight"), value) || outstyle.Get(NL("header-height"), value))
+      {
+        element_propertylist->SetHeaderHeight(value);
+      }
+
+    if(outstyle.Get(NL("namecolumnwidth"), value) || outstyle.Get(NL("name-column-width"), value))
+      {
+        element_propertylist->SetNameColumnWidth(value);
+      }
+  }
+
+  {
+    XSTRING headername;
+    XSTRING headervalue;
+
+    if(outstyle.Get(NL("headername"), headername)   || outstyle.Get(NL("header-name"), headername))   element_propertylist->GetHeaderName()->Set(headername.Get());
+    if(outstyle.Get(NL("headervalue"), headervalue) || outstyle.Get(NL("header-value"), headervalue)) element_propertylist->GetHeaderValue()->Set(headervalue.Get());
+  }
+
+  element_propertylist->Scroll_SetOverflow(UI_PROPERTY_SCROLLEABLE_TYPE_VERTICAL  , UI_OVERFLOW_AUTO);
+  element_propertylist->Scroll_SetOverflow(UI_PROPERTY_SCROLLEABLE_TYPE_HORIZONTAL, UI_OVERFLOW_HIDDEN);
+
+  XSTRING overflowy;
+  if(outstyle.Get(NL("overflow-y"), overflowy) || outstyle.Get(NL("overflow"), overflowy))
+    {
+      if(!overflowy.Compare(NL("hidden"), true))        element_propertylist->Scroll_SetOverflow(UI_PROPERTY_SCROLLEABLE_TYPE_VERTICAL, UI_OVERFLOW_HIDDEN);
+       else if(!overflowy.Compare(NL("scroll"), true))  element_propertylist->Scroll_SetOverflow(UI_PROPERTY_SCROLLEABLE_TYPE_VERTICAL, UI_OVERFLOW_SCROLL);
+         else if(!overflowy.Compare(NL("auto"), true))  element_propertylist->Scroll_SetOverflow(UI_PROPERTY_SCROLLEABLE_TYPE_VERTICAL, UI_OVERFLOW_AUTO);
+           else if(!overflowy.Compare(NL("visible"), true)) element_propertylist->Scroll_SetOverflow(UI_PROPERTY_SCROLLEABLE_TYPE_VERTICAL, UI_OVERFLOW_VISIBLE);
+    }
+
+  GetLayoutElement_CalculateBoundaryLine(layout, element_propertylist, true);
+
+  return element_propertylist;
+}
+
+
+/**-------------------------------------------------------------------------------------------------------------------
+*
+* @fn         UI_ELEMENT* UI_MANAGER::GetLayoutElement_Tree(XFILEXMLELEMENT* node, UI_LAYOUT* layout, UI_ELEMENT* father, UI_ELEMENT* element_legacy)
+* @brief      Get layout element tree
+* @ingroup    USERINTERFACE
+*
+* @param[in]  node : Node pointer to use.
+* @param[in]  layout : Layout pointer to use.
+* @param[in]  father : Father pointer to use.
+* @param[in]  element_legacy : Element legacy pointer to use.
+*
+* @return     UI_ELEMENT* : Pointer to the requested object; NULL if it is not available.
+*
+* --------------------------------------------------------------------------------------------------------------------*/
+UI_ELEMENT* UI_MANAGER::GetLayoutElement_Tree(XFILEXMLELEMENT* node, UI_LAYOUT* layout, UI_ELEMENT* father, UI_ELEMENT* element_legacy)
+{
+  UI_ELEMENT_TREE* element_tree = NULL;
+
+  if(element_legacy)
+    {
+      element_tree = (UI_ELEMENT_TREE*)element_legacy;
+    }
+   else
+    {
+      element_tree = GEN_NEW UI_ELEMENT_TREE();
+      if(!element_tree) return NULL;
+    }
+
+  element_tree->SetFather(father);
+
+  UI_COMPUTEDSTYLE outstyle;
+  if(!GetLayoutElement_Base(node, layout, element_tree, outstyle, true))
+    {
+      GEN_DELETE element_tree;
+      return NULL;
+    }
+
+  SetLevelAuto(element_tree, father);
+
+  if(!element_tree->GetBoundaryLine()->width)  return NULL;
+  if(!element_tree->GetBoundaryLine()->height) return NULL;
+
+  double sizefont = 0;
+  {
+    XSTRING sizefontstr;
+    if(UI_PROPERTYREGISTRY::GetAliased(outstyle, NL("sizefont"), NL("font-size"), sizefontstr) && !sizefontstr.IsEmpty())
+      {
+        sizefont = sizefontstr.ConvertToDouble();
+      }
+     else if(!GetParentSizeFont(node->GetFather(), sizefont))
+      {
+        GEN_DELETE element_tree;
+        return NULL;
+      }
+  }
+
+  element_tree->SetSizeFont((XDWORD)sizefont);
+
+  {
+    double value = 0.0f;
+    if(outstyle.Get(NL("rowheight"), value) || outstyle.Get(NL("row-height"), value))
+      {
+        element_tree->SetRowHeight(value);
+      }
+
+    if(outstyle.Get(NL("indentwidth"), value) || outstyle.Get(NL("indent-width"), value))
+      {
+        element_tree->SetIndentWidth(value);
+      }
+  }
+
+  element_tree->Scroll_SetOverflow(UI_PROPERTY_SCROLLEABLE_TYPE_VERTICAL  , UI_OVERFLOW_AUTO);
+  element_tree->Scroll_SetOverflow(UI_PROPERTY_SCROLLEABLE_TYPE_HORIZONTAL, UI_OVERFLOW_AUTO);
+
+  XSTRING overflowy;
+  if(outstyle.Get(NL("overflow-y"), overflowy) || outstyle.Get(NL("overflow"), overflowy))
+    {
+      if(!overflowy.Compare(NL("hidden"), true))        element_tree->Scroll_SetOverflow(UI_PROPERTY_SCROLLEABLE_TYPE_VERTICAL, UI_OVERFLOW_HIDDEN);
+       else if(!overflowy.Compare(NL("scroll"), true))  element_tree->Scroll_SetOverflow(UI_PROPERTY_SCROLLEABLE_TYPE_VERTICAL, UI_OVERFLOW_SCROLL);
+         else if(!overflowy.Compare(NL("auto"), true))  element_tree->Scroll_SetOverflow(UI_PROPERTY_SCROLLEABLE_TYPE_VERTICAL, UI_OVERFLOW_AUTO);
+           else if(!overflowy.Compare(NL("visible"), true)) element_tree->Scroll_SetOverflow(UI_PROPERTY_SCROLLEABLE_TYPE_VERTICAL, UI_OVERFLOW_VISIBLE);
+    }
+
+  XSTRING overflowx;
+  if(outstyle.Get(NL("overflow-x"), overflowx))
+    {
+      if(!overflowx.Compare(NL("hidden"), true))        element_tree->Scroll_SetOverflow(UI_PROPERTY_SCROLLEABLE_TYPE_HORIZONTAL, UI_OVERFLOW_HIDDEN);
+       else if(!overflowx.Compare(NL("scroll"), true))  element_tree->Scroll_SetOverflow(UI_PROPERTY_SCROLLEABLE_TYPE_HORIZONTAL, UI_OVERFLOW_SCROLL);
+         else if(!overflowx.Compare(NL("auto"), true))  element_tree->Scroll_SetOverflow(UI_PROPERTY_SCROLLEABLE_TYPE_HORIZONTAL, UI_OVERFLOW_AUTO);
+           else if(!overflowx.Compare(NL("visible"), true)) element_tree->Scroll_SetOverflow(UI_PROPERTY_SCROLLEABLE_TYPE_HORIZONTAL, UI_OVERFLOW_VISIBLE);
+    }
+
+  GetLayoutElement_CalculateBoundaryLine(layout, element_tree, true);
+
+  return element_tree;
+}
+
+
+/**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         UI_ELEMENT* UI_MANAGER::GetLayoutElement_Image(XFILEXMLELEMENT* node, UI_LAYOUT* layout, UI_ELEMENT* father, UI_ELEMENT* element_legacy)
 * @brief      Get layout element image
@@ -6931,6 +7257,21 @@ UI_ELEMENT* UI_MANAGER::CreatePartialLayout(XFILEXMLELEMENT* nodeelement, UI_LAY
           element = GetLayoutElement_TextBox(nodeelement, layout, father);          
         }
 
+      if(!value.Compare(NL("console")        , true))
+        {
+          element = GetLayoutElement_Console(nodeelement, layout, father);
+        }
+
+      if(!value.Compare(NL("propertylist")   , true))
+        {
+          element = GetLayoutElement_PropertyList(nodeelement, layout, father);
+        }
+
+      if(!value.Compare(NL("tree")           , true))
+        {
+          element = GetLayoutElement_Tree(nodeelement, layout, father);
+        }
+
       if(!value.Compare(NL("image")          , true))  
         {
           element = GetLayoutElement_Image(nodeelement, layout, father);
@@ -7872,6 +8213,12 @@ UI_ELEMENT* UI_MANAGER::PreSelectElement(UI_ELEMENT* element, int x, int y)
   bool            preselect         = false;
   bool            intofather        = false;
   UI_ELEMENT*     preselect_element = NULL;
+
+  // Hidden parents must not hit-test or recurse into still-"visible" children. Shared-slot
+  // toggles (e.g. stop-btn/run-btn at the same rect) otherwise leave the hidden sibling
+  // preselectable; SelectElement walks layout order and the hidden one can win first while
+  // OUTPUT_SELECTED is then dropped on the invisible father — the visible twin never fires.
+  if(!element || !element->IsVisible()) return NULL;
   
   if(dynamic_cast<UI_PROPERTY_SELECTABLE*>(element))                                                                                                                                                                                                                                          
     {    
@@ -8029,6 +8376,8 @@ UI_ELEMENT* UI_MANAGER::PreSelectElement(UI_ELEMENT* element, int x, int y)
 * --------------------------------------------------------------------------------------------------------------------*/
 bool UI_MANAGER::SelectElement(UI_ELEMENT* element)
 {
+  if(!element || !element->IsVisible()) return false;
+
   if(dynamic_cast<UI_PROPERTY_SELECTABLE*>(element))                                                                                                                                                                                                                                          
     {    
       if(SelectedElement(element)) 
@@ -8108,7 +8457,10 @@ bool UI_MANAGER::SelectedElement(UI_ELEMENT* element)
           
           // XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, NL("[Checkbox select] name %s status: %s"), element_checkbox->GetName()->Get(), (status?NL("true"):NL("false"))); 
 
-          Elements_SetToRedraw(element);  
+          Elements_SetToRedraw(element);
+
+          // Notify the app (same contract as buttons/options) so demos can react to the new status.
+          SendEvent(UI_XEVENT_TYPE_OUTPUT_SELECTED, element);
       }
     }
    else
@@ -8894,11 +9246,21 @@ bool UI_MANAGER::UseMotionInElement(UI_ELEMENT* element, INPCURSORMOTION* cursor
 
   if(!element->IsVisible()) return false;
 
-  UI_PROPERTY_SCROLLEABLE* property_scrolleable = dynamic_cast<UI_PROPERTY_SCROLLEABLE*>(element);
-  if(!property_scrolleable) 
+  // Nested scrolleables first (e.g. UI_ELEMENT_CONSOLE inside a form). The previous path only walked
+  // SELECTABLE children and also consumed gestures on a non-overflowing father form, so the console never
+  // received drag-scroll.
+  for(XDWORD d=0; d<element->GetComposeElements()->GetSize(); d++)
     {
-      return false;
+      UI_ELEMENT* subelement = element->GetComposeElements()->Get(d);
+      if(subelement && UseMotionInElement(subelement, cursormotion)) return true;
     }
+
+  UI_PROPERTY_SCROLLEABLE* property_scrolleable = dynamic_cast<UI_PROPERTY_SCROLLEABLE*>(element);
+  if(!property_scrolleable) return false;
+
+  bool can_v = (property_scrolleable->Scroll_GetLimit(UI_PROPERTY_SCROLLEABLE_TYPE_VERTICAL)   < 0.0f);
+  bool can_h = (property_scrolleable->Scroll_GetLimit(UI_PROPERTY_SCROLLEABLE_TYPE_HORIZONTAL) < 0.0f);
+  if(!can_v && !can_h) return false;
 
   // Motion points are in screen px; element AABB is in design px. Expand the rect to screen when UIScale is active
   // so IsInRect stays aligned (Fase 2 input path; paint scale arrives in Fase 3).
@@ -8920,52 +9282,28 @@ bool UI_MANAGER::UseMotionInElement(UI_ELEMENT* element, INPCURSORMOTION* cursor
     }
 
   bool isinrect = cursormotion->IsInRect((int)rect_x, (int)rect_y, (int)rect_w, (int)rect_h);
-  if(isinrect)
+  if(!isinrect) return false;
+
+  XDWORD differential = 0;
+  INPCURSORMOTION_DIR motiondir = cursormotion->GetDirectionByDifferential(&differential);
+
+  double shift = (differential / 3.0) / scale;
+
+  if(can_v && (motiondir == INPCURSORMOTION_DIR_UP || motiondir == INPCURSORMOTION_DIR_DOWN))
     {
-      XDWORD differential = 0;
-      INPCURSORMOTION_DIR motiondir = cursormotion->GetDirectionByDifferential(&differential);
-      if(motiondir != INPCURSORMOTION_DIR_UNKNOWN)
-        {
-          switch(motiondir)
-            {
-              case INPCURSORMOTION_DIR_UP         :
-              case INPCURSORMOTION_DIR_DOWN       : { double shift = (differential/3.0) / scale;
-                                                      if(motiondir == INPCURSORMOTION_DIR_DOWN) shift *= -1;
-                                                      
-                                                      property_scrolleable->Scroll_SetStep(UI_PROPERTY_SCROLLEABLE_TYPE_VERTICAL, shift);   
-                                                      GEN_USERINTERFACE.Elements_SetToRedraw(element);                                                                                                                 
-                                                                                                                                                                                                                                                                                          
-                                                      //XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, NL("[Input Motion]  motion %s points: %d"), (motiondir == INPCURSORMOTION_DIR_UP)?NL("up"):NL("down"), cursormotion->GetNPoints());
-
-                                                      return true;  
-                                                    }
-                                                    break;              
-
-              case INPCURSORMOTION_DIR_RIGHT      : 
-              case INPCURSORMOTION_DIR_LEFT       : break;                  
-
-                                      default     : break;
-            }             
-        } 
+      if(motiondir == INPCURSORMOTION_DIR_DOWN) shift *= -1;
+      property_scrolleable->Scroll_SetStep(UI_PROPERTY_SCROLLEABLE_TYPE_VERTICAL, shift);
+      GEN_USERINTERFACE.Elements_SetToRedraw(element);
+      return true;
     }
-                                                                                                                                             
-  if(element->GetComposeElements()->GetSize())
-    {                                                                      
-      for(XDWORD d=0; d<element->GetComposeElements()->GetSize(); d++)   
-        {
-          UI_ELEMENT* subelement = element->GetComposeElements()->Get(d);
-          if(subelement) 
-            { 
-              if(dynamic_cast<UI_PROPERTY_SELECTABLE*>(subelement))                                                                                                                                                                                                                                          
-                {                  
-                  if(UseMotionInElement(subelement, cursormotion)) 
-                    {
-                      return true;                  
-                    }
-                }
-            }
-        }
-    }                             
+
+  if(can_h && (motiondir == INPCURSORMOTION_DIR_LEFT || motiondir == INPCURSORMOTION_DIR_RIGHT))
+    {
+      if(motiondir == INPCURSORMOTION_DIR_RIGHT) shift *= -1;
+      property_scrolleable->Scroll_SetStep(UI_PROPERTY_SCROLLEABLE_TYPE_HORIZONTAL, shift);
+      GEN_USERINTERFACE.Elements_SetToRedraw(element);
+      return true;
+    }
 
   return false;
 }
@@ -9030,30 +9368,36 @@ bool UI_MANAGER::SelectScrollBarInElement(UI_ELEMENT* element, int x, int y)
   UI_PROPERTY_SCROLLEABLE* scrolleable = dynamic_cast<UI_PROPERTY_SCROLLEABLE*>(element);
   if(scrolleable && element->IsActive() && element->IsVisible())
     {
+      double box_left   = 0.0f;
+      double box_top    = 0.0f;
+      double box_right  = 0.0f;
+      double box_bottom = 0.0f;
       double box_w      = 0.0f;
       double box_h      = 0.0f;
-      UI_SKINCANVAS::GetScrollViewportSize(element, box_w, box_h);
-      double box_left   = element->GetXPositionWithScroll();
-      double box_bottom = element->GetYPositionWithScroll();
-      double box_right  = box_left   + box_w;
-      double box_top    = box_bottom - box_h;
-      double radius     = (double)element->GetRoundRect();
+      UI_SKINCANVAS::GetScrollContentBox(element, element->GetXPositionWithScroll(), element->GetYPositionWithScroll(), box_left, box_top, box_right, box_bottom, box_w, box_h);
+      (void)box_w; (void)box_h;
+
+      double radius      = (double)element->GetRoundRect();
+      double radius_vert = radius;
+      if(dynamic_cast<UI_ELEMENT_PROPERTYLIST*>(element)) radius_vert = 0.0f;
 
       double tl;
       double tt;
       double tr;
       double tb;
 
-      // vertical bar : right gutter
-      if(scrolleable->Scroll_GetTrackRect(UI_PROPERTY_SCROLLEABLE_TYPE_VERTICAL, box_left, box_top, box_right, box_bottom, radius, tl, tt, tr, tb))
+      // vertical bar : right gutter (PROPERTYLIST track starts under the sticky header)
+      if(scrolleable->Scroll_GetTrackRect(UI_PROPERTY_SCROLLEABLE_TYPE_VERTICAL, box_left, box_top, box_right, box_bottom, radius_vert, tl, tt, tr, tb))
         {
+          if((radius_vert == 0.0f) && (radius > 0.0f)) tb -= radius;
+
           UI_BOUNDARYLINE track;
           track.x      = tl;
           track.width  = tr - tl;
           track.y      = tb;
           track.height = tb - tt;
 
-          if(track.IsWithin(x, y))
+          if((track.height > 0.0f) && track.IsWithin(x, y))
             {
               double tracklen = tb - tt;
               double fraction = (tracklen != 0.0f) ? (((double)y - tt) / tracklen) : 0.0f;
@@ -9239,9 +9583,52 @@ void UI_MANAGER::HandleEvent_UI(UI_XEVENT* event)
                                                       }
                                                       break;
 
-      case UI_XEVENT_TYPE_INPUT_SELECCTION          : { int scrollbar_x = event->GetXPos();
-                                                        int scrollbar_y = event->GetYPos();
-                                                        if(SelectScrollBar(scrollbar_x, scrollbar_y)) break;   // consumed by an interactive scrollbar
+      case UI_XEVENT_TYPE_INPUT_SELECCTION          : { int screen_x = event->GetXPos();
+                                                        int screen_y = event->GetYPos();
+                                                        if(SelectScrollBar(screen_x, screen_y)) break;   // consumed by an interactive scrollbar
+
+                                                        // Rebuild hover at the click point. Needed when a prior click hid the
+                                                        // hovered control and showed another in the same rect (stop↔run) without
+                                                        // an intervening CURSOR_MOVE — otherwise SelectElement still requires
+                                                        // IsPreSelect on the newly visible twin and the click is a no-op.
+                                                        {
+                                                          UI_ELEMENT* _preselect_element = NULL;
+
+                                                          if(element_modal)
+                                                            {
+                                                              int design_x = screen_x;
+                                                              int design_y = screen_y;
+                                                              MapScreenToDesign(element_modal->GetLayout(), screen_x, screen_y, design_x, design_y);
+                                                              _preselect_element = PreSelectElement(element_modal, design_x, design_y);
+                                                            }
+                                                           else
+                                                            {
+                                                              for(int d=0; d<layouts.GetSize(); d++)
+                                                                {
+                                                                  UI_LAYOUT* layout = layouts.Get(d);
+                                                                  if(!layout) continue;
+
+                                                                  int design_x = screen_x;
+                                                                  int design_y = screen_y;
+                                                                  MapScreenToDesign(layout, screen_x, screen_y, design_x, design_y);
+
+                                                                  for(XDWORD c=0; c<layout->Elements_Get()->GetSize(); c++)
+                                                                    {
+                                                                      UI_ELEMENT* element = layout->Elements_Get()->Get(c);
+                                                                      if(!element) continue;
+
+                                                                      UI_ELEMENT* found = PreSelectElement(element, design_x, design_y);
+                                                                      if(found) _preselect_element = found;
+                                                                    }
+                                                                }
+                                                            }
+
+                                                          if(_preselect_element != preselect_element)
+                                                            {
+                                                              if(preselect_element) ResetPreselect();
+                                                              preselect_element = _preselect_element;
+                                                            }
+                                                        }
 
                                                         // Phase 4: :pressed mirrors pointer-down on the hovered selectable.
                                                         if(preselect_element) preselect_element->SetPressed(true);

@@ -400,6 +400,30 @@ double UI_PROPERTY_SCROLLEABLE::Scroll_GetDisplacement(UI_PROPERTY_SCROLLEABLE_T
 
 
 /**-------------------------------------------------------------------------------------------------------------------
+*
+* @fn         void UI_PROPERTY_SCROLLEABLE::Scroll_SetDisplacement(UI_PROPERTY_SCROLLEABLE_TYPE type, double displacement)
+* @brief      Writes the scroll displacement even when the axis is inactive (e.g. reset after Clear).
+* @ingroup    USERINTERFACE
+*
+* @param[in]  type : Axis to write.
+* @param[in]  displacement : Displacement value (typically <= 0 for vertical).
+*
+* --------------------------------------------------------------------------------------------------------------------*/
+void UI_PROPERTY_SCROLLEABLE::Scroll_SetDisplacement(UI_PROPERTY_SCROLLEABLE_TYPE type, double displacement)
+{
+  switch(type)
+    {
+      case  UI_PROPERTY_SCROLLEABLE_TYPE_HORIZONTAL   : horizontal.displacement = displacement;  break;
+      case  UI_PROPERTY_SCROLLEABLE_TYPE_VERTICAL     : vertical.displacement   = displacement;  break;
+      case  UI_PROPERTY_SCROLLEABLE_TYPE_ALL          : horizontal.displacement = displacement;
+                                                        vertical.displacement   = displacement;
+                                                        break;
+                                        default       : break;
+    }
+}
+
+
+/**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         double UI_PROPERTY_SCROLLEABLE::Scroll_GetStep(UI_PROPERTY_SCROLLEABLE_TYPE type)
 * @brief      Scroll get step

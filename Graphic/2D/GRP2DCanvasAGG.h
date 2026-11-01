@@ -1220,6 +1220,8 @@ class GRP2DCANVASAGG: public GRP2DCANVAS
                                                                                 {
                                                                                   if(!bitmap) return;
 
+                                                                                  // cover must be 255: AGG blend_pixel multiplies source alpha by cover, so passing
+                                                                                  // color->a as cover squares alpha and crushes soft edges (aqua PNG bubbles, SVG AA).
                                                                                   COLORTYPE* color;
 
                                                                                   for(XDWORD yb = 0; yb<bitmap->GetHeight(); yb++)
@@ -1227,7 +1229,8 @@ class GRP2DCANVASAGG: public GRP2DCANVAS
                                                                                       for(XDWORD xb = 0; xb<bitmap->GetWidth(); xb++)
                                                                                         {
                                                                                           color = (COLORTYPE*)bitmap->GetPixel(xb, yb);
-                                                                                          PutBlendPixel(x+xb, y+yb, color, color->a);
+                                                                                          if(!color->a) continue;
+                                                                                          PutBlendPixel(x+xb, y+yb, color, 255);
                                                                                         }
                                                                                     }
 
@@ -1240,14 +1243,29 @@ class GRP2DCANVASAGG: public GRP2DCANVAS
                                                                                 {
                                                                                   if(!bitmap) return;
 
+                                                                                  // Same cover=255 rule as PutBitmap. Scale the pixel's own alpha when the caller asks
+                                                                                  // for an overall fade (alpha < 100); never feed that product back as cover.
                                                                                   COLORTYPE* color;
+                                                                                  COLORTYPE  scaled;
 
                                                                                   for(XDWORD yb = 0; yb<bitmap->GetHeight(); yb++)
                                                                                     {
                                                                                       for(XDWORD xb = 0; xb<bitmap->GetWidth(); xb++)
                                                                                         {
                                                                                           color = (COLORTYPE*)bitmap->GetPixel(xb, yb);
-                                                                                          PutBlendPixel(x+xb, y+yb, color, ((alpha * color->a)/100));
+                                                                                          if(!color->a) continue;
+
+                                                                                          if(alpha >= 100.0)
+                                                                                            {
+                                                                                              PutBlendPixel(x+xb, y+yb, color, 255);
+                                                                                            }
+                                                                                           else
+                                                                                            {
+                                                                                              scaled   = *color;
+                                                                                              scaled.a = (agg::int8u)((alpha * (double)color->a) / 100.0);
+                                                                                              if(!scaled.a) continue;
+                                                                                              PutBlendPixel(x+xb, y+yb, &scaled, 255);
+                                                                                            }
                                                                                         }
                                                                                     }
 
@@ -1754,9 +1772,9 @@ class GRP2DCANVASAGG: public GRP2DCANVAS
                                                                                     }
                                                                                    else 
                                                                                     {
-                                                                                      if(x < 10)
+                                                                                      if(x < 5)
                                                                                         {         
-                                                                                          framerate_x = 10;
+                                                                                          framerate_x = 5;
                                                                                         }
                                                                                        else 
                                                                                         {

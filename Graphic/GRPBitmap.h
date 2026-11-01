@@ -149,12 +149,15 @@ class GRPBITMAPPIXELFORMATBUFFER : public GRPBITMAP
 
                                                             COLORTYPE* color;
 
+                                                            // PutPixel (not PutBlendPixel with cover=a): a pixel transfer must
+                                                            // keep straight alpha. cover=a squares alpha in AGG and premultiplies
+                                                            // RGB, which crushes PNG soft edges after RGBA→BGRA ForceModeOfBitmap.
                                                             for(XDWORD y=0; y<(XDWORD)h; y++)
                                                               {
                                                                 for(XDWORD x=0; x<(XDWORD)w; x++)
                                                                   {
                                                                     color = (COLORTYPE*)GetPixel(x+rect.x1, y+rect.y1);
-                                                                    bitmap->PutBlendPixel(x, y, color, color->a);                                                                    
+                                                                    bitmap->PutPixel(x, y, color);
                                                                   }
                                                               }
 
@@ -195,12 +198,15 @@ class GRPBITMAPPIXELFORMATBUFFER : public GRPBITMAP
 
                                                             COLORTYPE* color;
 
+                                                            // Straight copy: PutBlendPixel(..., cover=a) squares alpha (AGG multiplies
+                                                            // color.a by cover) and stores premultiplied RGB. That permanently destroys
+                                                            // PNG/TGA soft AA when ForceModeOfBitmap converts RGBA→screen BGRA.
                                                             for(XDWORD y=0; y<height; y++)
                                                               {
                                                                 for(XDWORD x=0; x<width; x++)
                                                                   {
                                                                     color = (COLORTYPE*)GetPixel(x, y);
-                                                                    bitmap->PutBlendPixel(x, y, color, color->a);                                                                    
+                                                                    bitmap->PutPixel(x, y, color);
                                                                   }
                                                               }
 
@@ -220,7 +226,7 @@ class GRPBITMAPPIXELFORMATBUFFER : public GRPBITMAP
                                                                 for(XDWORD x=0; x<width; x++)
                                                                   {
                                                                     color = (COLORTYPE*)GetPixel(x, y);
-                                                                    bitmap->PutBlendPixel(width-x-1, y, color, color->a);                                                                        
+                                                                    bitmap->PutPixel(width-x-1, y, color);
                                                                   }
                                                               }
 
@@ -243,7 +249,7 @@ class GRPBITMAPPIXELFORMATBUFFER : public GRPBITMAP
                                                                 for(XDWORD x=0; x<width; x++)
                                                                   {
                                                                     color = (COLORTYPE*)GetPixel(x, y);
-                                                                    bitmap->PutBlendPixel(x, height-y-1, color, color->a);
+                                                                    bitmap->PutPixel(x, height-y-1, color);
                                                                   }
                                                               }
 
@@ -285,7 +291,7 @@ class GRPBITMAPPIXELFORMATBUFFER : public GRPBITMAP
                                                                     if( (sx>=0) && (sx<(int)width) && (sy>=0) && (sy<(int)height) )
                                                                       {
                                                                         color = (COLORTYPE*)GetPixel(sx, sy);
-                                                                        bitmap->PutBlendPixel(x+w2, y+h2, color, color->a);
+                                                                        bitmap->PutPixel(x+w2, y+h2, color);
                                                                       }
                                                                   }
                                                               }
@@ -319,7 +325,7 @@ class GRPBITMAPPIXELFORMATBUFFER : public GRPBITMAP
                                                                 for(xstep=0,xcount=0;xcount<nwidth; xstep+=xratio,xcount++)
                                                                   {
                                                                     color = (COLORTYPE*)GetPixel((int)xstep, (int)ystep);
-                                                                    bitmap->PutBlendPixel(xcount, ycount, color, color->a);
+                                                                    bitmap->PutPixel(xcount, ycount, color);
                                                                   }
                                                               }
 

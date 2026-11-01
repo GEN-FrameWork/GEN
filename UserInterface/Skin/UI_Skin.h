@@ -161,7 +161,10 @@ class UI_SKIN
         
     virtual bool                      CalculateBoundaryLine_Scroll          (UI_ELEMENT* element, bool adjustsizemargin = false);    
 	  virtual bool                      CalculateBoundaryLine_Text		        (UI_ELEMENT* element, bool adjustsizemargin = false);
-    virtual bool                      CalculateBoundaryLine_TextBox	        (UI_ELEMENT* element, bool adjustsizemargin = false);	  
+    virtual bool                      CalculateBoundaryLine_TextBox	        (UI_ELEMENT* element, bool adjustsizemargin = false);
+    virtual bool                      CalculateBoundaryLine_Console         (UI_ELEMENT* element, bool adjustsizemargin = false);
+    virtual bool                      CalculateBoundaryLine_PropertyList    (UI_ELEMENT* element, bool adjustsizemargin = false);
+    virtual bool                      CalculateBoundaryLine_Tree            (UI_ELEMENT* element, bool adjustsizemargin = false);
 	  virtual bool                      CalculateBoundaryLine_Image   	      (UI_ELEMENT* element, bool adjustsizemargin = false);
     virtual bool                      CalculateBoundaryLine_Animation	      (UI_ELEMENT* element, bool adjustsizemargin = false);
     virtual bool                      CalculateBoundaryLine_Option		      (UI_ELEMENT* element, bool adjustsizemargin = false);
@@ -190,7 +193,10 @@ class UI_SKIN
 	  
     virtual bool                      Draw_Scroll                           (UI_ELEMENT* element);
 	  virtual bool                      Draw_Text		                          (UI_ELEMENT* element);	
-    virtual bool                      Draw_TextBox	                        (UI_ELEMENT* element); 
+    virtual bool                      Draw_TextBox	                        (UI_ELEMENT* element);
+    virtual bool                      Draw_Console                          (UI_ELEMENT* element); 
+    virtual bool                      Draw_PropertyList                     (UI_ELEMENT* element);
+    virtual bool                      Draw_Tree                             (UI_ELEMENT* element);
 	  virtual bool                      Draw_Image   	                        (UI_ELEMENT* element);
     virtual bool                      Draw_Animation   	                    (UI_ELEMENT* element);
     virtual bool                      Draw_Option                           (UI_ELEMENT* element);

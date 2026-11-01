@@ -108,6 +108,7 @@ class UI_PROPERTY_SCROLLEABLE
     void                                      Scroll_SetLimit                         (UI_PROPERTY_SCROLLEABLE_TYPE type, double limit);
 
     double                                    Scroll_GetDisplacement                  (UI_PROPERTY_SCROLLEABLE_TYPE type);
+    void                                      Scroll_SetDisplacement                  (UI_PROPERTY_SCROLLEABLE_TYPE type, double displacement);
 
     double                                    Scroll_GetStep                          (UI_PROPERTY_SCROLLEABLE_TYPE type);
     void                                      Scroll_SetStep                          (UI_PROPERTY_SCROLLEABLE_TYPE type, double h_step);

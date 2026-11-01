@@ -66,6 +66,9 @@
 #include "UI_Element_Scroll.h"
 #include "UI_Element_Text.h"
 #include "UI_Element_TextBox.h"
+#include "UI_Element_Console.h"
+#include "UI_Element_PropertyList.h"
+#include "UI_Element_Tree.h"
 #include "UI_Element_Image.h"
 #include "UI_Element_Animation.h"
 #include "UI_Element_Option.h"
@@ -2670,6 +2673,132 @@ bool UI_SKINCANVAS::CalculateBoundaryLine_TextBox(UI_ELEMENT* element, bool adju
 
 
 /**-------------------------------------------------------------------------------------------------------------------
+*
+* @fn         bool UI_SKINCANVAS::CalculateBoundaryLine_Console(UI_ELEMENT* element, bool adjustsizemargin)
+* @brief      Calculate boundary line console
+* @ingroup    USERINTERFACE
+*
+* @param[in]  element : Element to process.
+* @param[in]  adjustsizemargin : Adjustsizemargin value.
+*
+* @return     bool : true if the operation is successful; otherwise false.
+*
+* --------------------------------------------------------------------------------------------------------------------*/
+bool UI_SKINCANVAS::CalculateBoundaryLine_Console(UI_ELEMENT* element, bool adjustsizemargin)
+{
+  UI_ELEMENT_CONSOLE* element_console = (UI_ELEMENT_CONSOLE*)element;
+  if(!element_console) return false;
+
+  double fatherwidth  = 0.0f;
+  double fatherheight = 0.0f;
+
+  GetFatherSize(element, fatherwidth, fatherheight);
+
+  switch((int)element->GetBoundaryLine()->width)
+    {
+      case UI_ELEMENT_TYPE_ALIGN_AUTO   :
+      case                            0 :
+      case UI_ELEMENT_TYPE_ALIGN_MAX    : return false;
+                                          break;
+    }
+
+  switch((int)element->GetBoundaryLine()->height)
+    {
+      case UI_ELEMENT_TYPE_ALIGN_AUTO   :
+      case                            0 :
+      case UI_ELEMENT_TYPE_ALIGN_MAX    : return false;
+                                          break;
+    }
+
+  return CalculePosition(element, fatherwidth, fatherheight, adjustsizemargin);
+}
+
+
+/**-------------------------------------------------------------------------------------------------------------------
+*
+* @fn         bool UI_SKINCANVAS::CalculateBoundaryLine_PropertyList(UI_ELEMENT* element, bool adjustsizemargin)
+* @brief      Calculate boundary line property list (keeps XML width / height, like console)
+* @ingroup    USERINTERFACE
+*
+* @param[in]  element : Element to process.
+* @param[in]  adjustsizemargin : Adjustsizemargin value.
+*
+* @return     bool : true if the operation is successful; otherwise false.
+*
+* --------------------------------------------------------------------------------------------------------------------*/
+bool UI_SKINCANVAS::CalculateBoundaryLine_PropertyList(UI_ELEMENT* element, bool adjustsizemargin)
+{
+  UI_ELEMENT_PROPERTYLIST* element_propertylist = (UI_ELEMENT_PROPERTYLIST*)element;
+  if(!element_propertylist) return false;
+
+  double fatherwidth  = 0.0f;
+  double fatherheight = 0.0f;
+
+  GetFatherSize(element, fatherwidth, fatherheight);
+
+  switch((int)element->GetBoundaryLine()->width)
+    {
+      case UI_ELEMENT_TYPE_ALIGN_AUTO   :
+      case                            0 :
+      case UI_ELEMENT_TYPE_ALIGN_MAX    : return false;
+                                          break;
+    }
+
+  switch((int)element->GetBoundaryLine()->height)
+    {
+      case UI_ELEMENT_TYPE_ALIGN_AUTO   :
+      case                            0 :
+      case UI_ELEMENT_TYPE_ALIGN_MAX    : return false;
+                                          break;
+    }
+
+  return CalculePosition(element, fatherwidth, fatherheight, adjustsizemargin);
+}
+
+
+/**-------------------------------------------------------------------------------------------------------------------
+*
+* @fn         bool UI_SKINCANVAS::CalculateBoundaryLine_Tree(UI_ELEMENT* element, bool adjustsizemargin)
+* @brief      Calculate boundary line tree (keeps XML width / height, like console)
+* @ingroup    USERINTERFACE
+*
+* @param[in]  element : Element to process.
+* @param[in]  adjustsizemargin : Adjustsizemargin value.
+*
+* @return     bool : true if the operation is successful; otherwise false.
+*
+* --------------------------------------------------------------------------------------------------------------------*/
+bool UI_SKINCANVAS::CalculateBoundaryLine_Tree(UI_ELEMENT* element, bool adjustsizemargin)
+{
+  UI_ELEMENT_TREE* element_tree = (UI_ELEMENT_TREE*)element;
+  if(!element_tree) return false;
+
+  double fatherwidth  = 0.0f;
+  double fatherheight = 0.0f;
+
+  GetFatherSize(element, fatherwidth, fatherheight);
+
+  switch((int)element->GetBoundaryLine()->width)
+    {
+      case UI_ELEMENT_TYPE_ALIGN_AUTO   :
+      case                            0 :
+      case UI_ELEMENT_TYPE_ALIGN_MAX    : return false;
+                                          break;
+    }
+
+  switch((int)element->GetBoundaryLine()->height)
+    {
+      case UI_ELEMENT_TYPE_ALIGN_AUTO   :
+      case                            0 :
+      case UI_ELEMENT_TYPE_ALIGN_MAX    : return false;
+                                          break;
+    }
+
+  return CalculePosition(element, fatherwidth, fatherheight, adjustsizemargin);
+}
+
+
+/**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         bool UI_SKINCANVAS::CalculateBoundaryLine_Image(UI_ELEMENT* element, bool adjustsizemargin)
 * @brief      Calculate boundary line image
@@ -2857,7 +2986,10 @@ bool UI_SKINCANVAS::CalculateBoundaryLine_Option(UI_ELEMENT* element, bool adjus
                                                   {                                           
                                                     case UI_ELEMENT_OPTION_ALLOCATION_TEXT_TYPE_UP      : 
                                                     case UI_ELEMENT_OPTION_ALLOCATION_TEXT_TYPE_DOWN    : if(element_animation) maximgheight += element_animation->GetBoundaryLine()->height;  
-                                                                                                          if(element_text)      maximgheight += element_text->GetBoundaryLine()->height;  
+                                                                                                          if(element_text)      maximgheight += element_text->GetBoundaryLine()->height;
+                                                                                                          // Gap between face and caption so soft-alpha icon rims do not sit
+                                                                                                          // inside the text AABB (XTraceMonitorGEN legend gray bars).
+                                                                                                          if(element_animation && element_text) maximgheight += 4.0;
                                                                                                           break;
 
                                                     case UI_ELEMENT_OPTION_ALLOCATION_TEXT_TYPE_NONE    : 
@@ -2884,8 +3016,8 @@ bool UI_SKINCANVAS::CalculateBoundaryLine_Option(UI_ELEMENT* element, bool adjus
     {
       case UI_ELEMENT_OPTION_ALLOCATION_TEXT_TYPE_NONE    : break;
 
-      case UI_ELEMENT_OPTION_ALLOCATION_TEXT_TYPE_DOWN    : if(element_animation && element_text) element_animation->SetYPosition(element_animation->GetYPosition() - element_text->GetBoundaryLine()->height);     break;
-      case UI_ELEMENT_OPTION_ALLOCATION_TEXT_TYPE_UP      : if(element_animation && element_text) element_text->SetYPosition(element_text->GetYPosition() - element_animation->GetBoundaryLine()->height);          break;                                                           
+      case UI_ELEMENT_OPTION_ALLOCATION_TEXT_TYPE_DOWN    : if(element_animation && element_text) element_animation->SetYPosition(element_animation->GetYPosition() - element_text->GetBoundaryLine()->height - 4.0);     break;
+      case UI_ELEMENT_OPTION_ALLOCATION_TEXT_TYPE_UP      : if(element_animation && element_text) element_text->SetYPosition(element_text->GetYPosition() - element_animation->GetBoundaryLine()->height - 4.0);          break;                                                          
       case UI_ELEMENT_OPTION_ALLOCATION_TEXT_TYPE_RIGHT   : if(element_animation && element_text) element_text->SetXPosition(element_text->GetXPosition() + element_animation->GetBoundaryLine()->width);           break;
       case UI_ELEMENT_OPTION_ALLOCATION_TEXT_TYPE_LEFT    : if(element_animation && element_text) element_animation->SetXPosition(element_animation->GetXPosition() + element_text->GetBoundaryLine()->width);      break;
       case UI_ELEMENT_OPTION_ALLOCATION_TEXT_TYPE_CENTER  : break; 
@@ -4515,7 +4647,962 @@ bool UI_SKINCANVAS::Draw_TextBox(UI_ELEMENT* element)
   
   return true;
 }
-  
+
+
+static void UI_SkinCanvas_ConsolePalette(XBYTE colorindex, int& r, int& g, int& b, int& a)
+{
+  a = 255;
+  switch(colorindex)
+    {
+      case UI_ELEMENT_CONSOLE_COLOR_BLUE   : r =  64; g = 128; b = 255; break;
+      case UI_ELEMENT_CONSOLE_COLOR_GREEN  : r =  64; g = 200; b =  64; break;
+      case UI_ELEMENT_CONSOLE_COLOR_PURPLE : r = 180; g =  80; b = 200; break;
+      case UI_ELEMENT_CONSOLE_COLOR_RED    : r = 230; g =  64; b =  64; break;
+      case UI_ELEMENT_CONSOLE_COLOR_GRAY   : r = 160; g = 160; b = 160; break;
+      case UI_ELEMENT_CONSOLE_COLOR_BLACK  :
+                              default      : r = 220; g = 220; b = 220; break;  // light text on dark console
+    }
+}
+
+
+// Largest end > start such that text[start..end) fits in max_text_w (at least one char).
+static XDWORD UI_SkinCanvas_ConsoleWrapEnd(GRP2DCANVAS* canvas, XCHAR* text, XDWORD start, XDWORD n, double max_text_w)
+{
+  if(!canvas || !text || start >= n) return start;
+
+  XSTRING probe;
+  probe.Set(&text[start], n - start);
+  if(canvas->VectorFont_GetWidth(probe.Get()) <= max_text_w) return n;
+
+  XDWORD lo = 1;
+  XDWORD hi = n - start;
+  while(lo < hi)
+    {
+      XDWORD mid = lo + ((hi - lo + 1) / 2);
+      probe.Set(&text[start], mid);
+      if(canvas->VectorFont_GetWidth(probe.Get()) <= max_text_w) lo = mid;
+       else                                                      hi = mid - 1;
+    }
+
+  if(lo < 1) lo = 1;
+  return start + lo;
+}
+
+
+static XDWORD UI_SkinCanvas_ConsoleMeasureRows(GRP2DCANVAS* canvas, UI_ELEMENT_CONSOLE_LINE* line, bool wordwrap, double max_text_w)
+{
+  if(!line) return 0;
+  if(line->visualrows > 0) return line->visualrows;
+
+  if(!wordwrap || line->text.IsEmpty())
+    {
+      line->visualrows = 1;
+      return 1;
+    }
+
+  XCHAR* text = line->text.Get();
+  XDWORD n    = line->text.GetSize();
+  XDWORD rows = 0;
+  XDWORD start = 0;
+
+  while(start < n)
+    {
+      XDWORD end = UI_SkinCanvas_ConsoleWrapEnd(canvas, text, start, n, max_text_w);
+      if(end <= start) end = start + 1;
+      rows++;
+      start = end;
+    }
+
+  if(rows < 1) rows = 1;
+  line->visualrows = rows;
+  return rows;
+}
+
+
+/**-------------------------------------------------------------------------------------------------------------------
+*
+* @fn         bool UI_SKINCANVAS::Draw_Console(UI_ELEMENT* element)
+* @brief      Draw graphical console (visible lines only)
+* @ingroup    USERINTERFACE
+*
+* @param[in]  element : Element to process.
+*
+* @return     bool : true if the operation is successful; otherwise false.
+*
+* --------------------------------------------------------------------------------------------------------------------*/
+bool UI_SKINCANVAS::Draw_Console(UI_ELEMENT* element)
+{
+  if(!element) return false;
+
+  UI_ELEMENT_CONSOLE* element_console = (UI_ELEMENT_CONSOLE*)element;
+  GRP2DCANVAS*        canvas          = GetCanvas();
+  double              x_position      = 0.0f;
+  double              y_position      = 0.0f;
+  XRECT               clip_rect;
+
+  if(!canvas) return false;
+
+  PreDrawFunction(element, canvas, clip_rect, x_position, y_position);
+
+  if(element->MustReDraw())
+    {
+      const double pad_x = 8.0f;
+      const double pad_y = 6.0f;
+
+      double box_w = element_console->GetBoundaryLine()->width;
+      double box_h = element_console->GetBoundaryLine()->height;
+      double y_top = UI_BOUNDARYLINE_EdgeTop(y_position, box_h);
+      double y_bot = y_top + box_h;
+
+      // Own opaque backdrop + optional border (same contract as Draw_Form). Do NOT call RoundRect/Rectangle
+      // with isfill=false after setting fill=line: AGG's opaque RoundRect path paints a solid outer plate in
+      // the line colour and only punches the interior when isfill=true — that was wiping the console body
+      // to border-grey (XTraceMonitorGEN blank panel).
+      {
+        bool has_bg = element_console->IsBackgroundColorSet() && (element_console->GetBackgroundColor()->GetAlpha() > 0);
+        bool has_border = element_console->IsBorderColorSet() && (element_console->GetBorderWidth() > 0.0f);
+
+        if(has_bg || has_border)
+          {
+            GRP2DCOLOR_RGBA8 bkgcolor(0, 0, 0, 0);
+            if(has_bg)
+              {
+                UI_COLOR* bg = element_console->GetBackgroundColor();
+                bkgcolor = GRP2DCOLOR_RGBA8(bg->GetRed(), bg->GetGreen(), bg->GetBlue(), bg->GetAlpha());
+              }
+
+            if(has_border)
+              {
+                UI_COLOR* lc = element_console->GetBorderColor();
+                GRP2DCOLOR_RGBA8 linecolor(lc->GetRed(), lc->GetGreen(), lc->GetBlue(), lc->GetAlpha());
+                canvas->SetLineColor(&linecolor);
+                canvas->SetLineWidth((float)element_console->GetBorderWidth());
+              }
+             else
+              {
+                GRP2DCOLOR_RGBA8 linecolor_none(0, 0, 0, 0);
+                canvas->SetLineColor(&linecolor_none);
+                canvas->SetLineWidth(1.0f);
+              }
+
+            canvas->SetFillColor(&bkgcolor);
+
+            // Same edge order as Draw_Form: (left, bottom, right, top).
+            if(element_console->GetRoundRect())
+              {
+                canvas->RoundRect(x_position, y_position, x_position + box_w, y_top, element_console->GetRoundRect(), true);
+              }
+             else
+              {
+                canvas->Rectangle(x_position, y_position, x_position + box_w, y_top, true);
+              }
+          }
+      }
+
+      canvas->Vectorfont_GetConfig()->SetSize(element_console->GetSizeFont());
+
+      double fontheight = (double)canvas->VectorFont_GetHeight(NL("A"));
+      if(fontheight < 1.0f) fontheight = (double)element_console->GetSizeFont();
+      double lineheight = fontheight + (double)element_console->GetLineSpacing();
+      if(lineheight < 1.0f) lineheight = 1.0f;
+
+      // Reserve right gutter for the overlay scrollbar so wrapped text stays clear of the thumb.
+      double bar_gutter = UI_SKINCANVAS_SCROLLBAR_WIDTH + 4.0f;
+      double max_text_w = box_w - (pad_x * 2.0f) - bar_gutter;
+      if(max_text_w < 8.0f) max_text_w = 8.0f;
+
+      // Invalidate per-line wrap cache when measure width or font changes.
+      if((element_console->GetLayoutMaxTextWidth() != max_text_w) ||
+         (element_console->GetLayoutSizeFont() != element_console->GetSizeFont()))
+        {
+          element_console->InvalidateLayoutCache();
+          element_console->SetLayoutMaxTextWidth(max_text_w);
+          element_console->SetLayoutSizeFont(element_console->GetSizeFont());
+        }
+
+      bool   wordwrap   = element_console->IsWordWrap();
+      XDWORD visualrows = 0;
+      XDWORD linecount  = element_console->GetLineCount();
+      double max_line_w = 0.0f;
+
+      if(!wordwrap)
+        {
+          visualrows = linecount;   // O(1): one visual row per buffer line
+          for(XDWORD i=0; i<linecount; i++)
+            {
+              UI_ELEMENT_CONSOLE_LINE* line = element_console->GetLine(i);
+              if(!line || line->text.IsEmpty()) continue;
+              double w = (double)canvas->VectorFont_GetWidth(line->text.Get());
+              if(w > max_line_w) max_line_w = w;
+            }
+        }
+       else
+        {
+          // Only uncached (new) lines call the font measurer; older lines reuse visualrows.
+          for(XDWORD i=0; i<linecount; i++)
+            {
+              visualrows += UI_SkinCanvas_ConsoleMeasureRows(canvas, element_console->GetLine(i), true, max_text_w);
+            }
+        }
+
+      // Content height includes vertical padding so scroll can frame first/last lines.
+      element_console->SetContentHeight((double)visualrows * lineheight + (pad_y * 2.0f));
+
+      // Horizontal extent: only meaningful when word-wrap is off (long lines can exceed the box).
+      double content_w = box_w;
+      if(!wordwrap)
+        {
+          content_w = max_line_w + (pad_x * 2.0f) + bar_gutter;
+          if(content_w < box_w) content_w = box_w;
+        }
+      element_console->SetContentWidth(content_w);
+      element_console->SetLayoutMetrics(pad_x, pad_y, lineheight, fontheight);
+
+      UI_PROPERTY_SCROLLEABLE* scrolleable = dynamic_cast<UI_PROPERTY_SCROLLEABLE*>(element_console);
+      if(scrolleable)
+        {
+          // Resolve extent first so displacement/limit reads see an active axis.
+          ResolveScrollPolicy(element_console, scrolleable);
+
+          double lim = scrolleable->Scroll_GetLimit(UI_PROPERTY_SCROLLEABLE_TYPE_VERTICAL);
+
+          // ON  = pin to live tail (SetFraction 1).
+          // OFF = leave displacement where it is. As content grows, lim moves more negative while
+          //       disp stays put → the viewport freezes. Front-trims under maxlines_off are
+          //       compensated so the ring buffer does not slide under a fixed offset.
+          bool follow = element_console->GetAutoscroll();
+          double disp = scrolleable->Scroll_GetDisplacement(UI_PROPERTY_SCROLLEABLE_TYPE_VERTICAL);
+          XDWORD trimmed = element_console->ConsumeTrimmedRows();
+
+          if(!follow)
+            {
+              if(trimmed > 0)
+                {
+                  disp += (double)trimmed * lineheight;
+                  if(disp > 0.0f) disp = 0.0f;
+                  // Keep line-aligned after trim so a sliced glyph cannot stick under the top edge.
+                  if(lineheight > 0.0f)
+                    {
+                      double rows = -disp / lineheight;
+                      disp = -floor(rows + 1e-9) * lineheight;
+                      if(disp > 0.0f) disp = 0.0f;
+                    }
+                  if(lim < 0.0f && disp < lim) disp = lim;
+                  scrolleable->Scroll_SetDisplacement(UI_PROPERTY_SCROLLEABLE_TYPE_VERTICAL, disp);
+                }
+              element_console->ConsumeAutoscrollPending();
+            }
+           else if(lim < 0.0f)
+            {
+              element_console->ConsumeAutoscrollPending();
+              // Live tail, but line-aligned within [lim, 0]. Using raw SetFraction(1)=lim often
+              // leaves a fractional row at the top (half-glyphs that look like junk).
+              double rows = -lim / lineheight;
+              disp = -floor(rows + 1e-9) * lineheight;
+              if(disp > 0.0f) disp = 0.0f;
+              if(disp < lim) disp = lim;
+              scrolleable->Scroll_SetDisplacement(UI_PROPERTY_SCROLLEABLE_TYPE_VERTICAL, disp);
+            }
+           else
+            {
+              element_console->ConsumeAutoscrollPending();
+            }
+        }
+
+      double x_text = x_position + pad_x
+                      + element_console->Scroll_GetDisplacement(UI_PROPERTY_SCROLLEABLE_TYPE_HORIZONTAL);
+      double y_text = y_top + pad_y + fontheight
+                      + element_console->Scroll_GetDisplacement(UI_PROPERTY_SCROLLEABLE_TYPE_VERTICAL);
+
+      // Visible window: glyph ascenders often exceed GetHeight("A"), so use a taller
+      // estimate + pad wipe below. Loose y_vis_hi used to leave a sliced bottom row too.
+      double glyph_asc = (double)canvas->VectorFont_GetHeight(NL("Ay[]|M"));
+      if(glyph_asc < fontheight) glyph_asc = fontheight;
+      glyph_asc += 1.0; // AA bleed above the measured box
+      double y_vis_lo = y_top + pad_y;
+      double y_vis_hi = y_bot - pad_y;
+
+      XDWORD row = 0;
+      for(XDWORD i=0; i<linecount; i++)
+        {
+          UI_ELEMENT_CONSOLE_LINE* line = element_console->GetLine(i);
+          if(!line) continue;
+
+          XDWORD rows_here = wordwrap ? UI_SkinCanvas_ConsoleMeasureRows(canvas, line, true, max_text_w) : 1;
+          double y_block_lo = y_text + (double)row * lineheight;
+          double y_block_hi = y_text + (double)(row + rows_here - 1) * lineheight;
+
+          if(y_block_hi < y_vis_lo || y_block_lo > y_vis_hi)
+            {
+              row += rows_here;
+              continue;
+            }
+
+          if(element_console->Selection_IsLineSelected(i))
+            {
+              double sel_top = y_text + (double)row * lineheight - fontheight;
+              double sel_bot = sel_top + (double)rows_here * lineheight;
+              if(sel_top < y_top + pad_y) sel_top = y_top + pad_y;
+              if(sel_bot > y_bot - pad_y) sel_bot = y_bot - pad_y;
+              // Stay in the text band: full-width wash bled into the scrollbar gutter/border
+              // and left blue "marks" on the side when the overlay bar did not cover every pixel.
+              double sel_left  = x_position + pad_x;
+              double sel_right = x_position + box_w - bar_gutter;
+              if(sel_bot > sel_top && sel_right > sel_left)
+                {
+                  GRP2DCOLOR_RGBA8 selcolor(50, 90, 160, 110);
+                  canvas->SetLineWidth(0.0f);
+                  canvas->SetLineColor(&selcolor);
+                  canvas->SetFillColor(&selcolor);
+                  canvas->Rectangle(sel_left, sel_bot, sel_right, sel_top, true);
+                }
+            }
+
+          int r = 220, g = 220, b = 220, a = 255;
+          if(line->colorindex == UI_ELEMENT_CONSOLE_COLOR_RGB && line->rgb.IsValid())
+            {
+              r = line->rgb.GetRed();
+              g = line->rgb.GetGreen();
+              b = line->rgb.GetBlue();
+              a = line->rgb.GetAlpha();
+              if(a <= 0) a = 255;
+            }
+           else
+            {
+              UI_SkinCanvas_ConsolePalette(line->colorindex, r, g, b, a);
+            }
+
+          GRP2DCOLOR_RGBA8 color_line(r, g, b, a);
+          canvas->Vectorfont_GetConfig()->SetColor(&color_line);
+
+          if(!wordwrap || line->text.IsEmpty())
+            {
+              double y = y_text + (double)row * lineheight;
+              // Baseline must sit in the pad-framed band. Requiring (y - glyph_asc) >= y_vis_lo
+              // culled the first row whenever glyph_asc > fontheight (XTraceMonitorGEN lost the
+              // green ready line). Pad wipe still clears ascender crumbs in the top pad.
+              if(y >= y_vis_lo && y <= y_vis_hi)
+                {
+                  canvas->VectorFont_Printf(x_text, y, line->text.IsEmpty() ? NL("") : line->text.Get());
+                }
+              row++;
+              continue;
+            }
+
+          XDWORD start = 0;
+          XDWORD n     = line->text.GetSize();
+          XCHAR* text  = line->text.Get();
+          while(start < n)
+            {
+              XDWORD end = UI_SkinCanvas_ConsoleWrapEnd(canvas, text, start, n, max_text_w);
+              if(end <= start) end = start + 1;
+
+              double y = y_text + (double)row * lineheight;
+              if(y >= y_vis_lo && y <= y_vis_hi)
+                {
+                  XSTRING chunk;
+                  chunk.Set(&text[start], end - start);
+                  canvas->VectorFont_Printf(x_text, y, chunk.Get());
+                }
+
+              row++;
+              start = end;
+            }
+        }
+
+      // Cover any remaining ascender/AA crumbs in the vertical padding bands (inset so the
+      // already-painted border stroke is not erased — no second RoundRect after text).
+      if(element_console->IsBackgroundColorSet() && element_console->GetBackgroundColor()->GetAlpha() > 0)
+        {
+          UI_COLOR* bg = element_console->GetBackgroundColor();
+          GRP2DCOLOR_RGBA8 bkgcolor(bg->GetRed(), bg->GetGreen(), bg->GetBlue(), bg->GetAlpha());
+          canvas->SetLineWidth(0.0f);
+          canvas->SetLineColor(&bkgcolor);
+          canvas->SetFillColor(&bkgcolor);
+          if(pad_y > 0.0)
+            {
+              double bw_i = (element_console->IsBorderColorSet() && element_console->GetBorderWidth() > 0.0f)
+                            ? element_console->GetBorderWidth() : 0.0;
+              double x0 = x_position + bw_i;
+              double x1 = x_position + box_w - bw_i;
+              if(x1 > x0)
+                {
+                  canvas->Rectangle(x0, y_top + pad_y, x1, y_top + bw_i, true);
+                  canvas->Rectangle(x0, y_bot - bw_i, x1, y_bot - pad_y, true);
+                }
+            }
+        }
+    }
+
+  PostDrawFunction(element, canvas, clip_rect, x_position, y_position);
+
+  return true;
+}
+
+
+// Sets canvas clip box = parent clip INTERSECT (left, top, right, bottom) given in top-down design px.
+static void UI_SkinCanvas_PropertyListClip(GRP2DCANVAS* canvas, XRECT& parent, double left, double top, double right, double bottom)
+{
+  double p_minx = __MIN(parent.x1, parent.x2);
+  double p_maxx = __MAX(parent.x1, parent.x2);
+  double p_miny = __MIN(parent.y1, parent.y2);
+  double p_maxy = __MAX(parent.y1, parent.y2);
+
+  double l = __MAX(left  , p_minx);
+  double r = __MIN(right , p_maxx);
+  double t = __MAX(top   , p_miny);
+  double b = __MIN(bottom, p_maxy);
+
+  if(r < l) r = l;
+  if(b < t) b = t;
+
+  canvas->SetClipBox(l, b, r, t);                                              // (left, bottom, right, top)
+}
+
+
+// Filled 1px-granular rectangle (x1,y1 top-left; x2,y2 bottom-right, top-down design px) in the current fill colour.
+static void UI_SkinCanvas_TreeRect(GRP2DCANVAS* canvas, double x1, double y1, double x2, double y2)
+{
+  canvas->Rectangle(x1, y2, x2, y1, true);                                     // canvas wants (x1, bottom, x2, top)
+}
+
+
+// Dotted vertical guide at column x (1px dots every 2px, phase locked to the absolute y so rows join seamlessly).
+static void UI_SkinCanvas_TreeDotsV(GRP2DCANVAS* canvas, double x, double y1, double y2)
+{
+  int ya = (int)(y1 + 0.5f);
+  int yb = (int)(y2 + 0.5f);
+  if(ya & 1) ya++;
+
+  for(int y=ya; y<yb; y+=2) UI_SkinCanvas_TreeRect(canvas, x, (double)y, x + 1.0f, (double)(y + 1));
+}
+
+
+// Dotted horizontal guide at row y.
+static void UI_SkinCanvas_TreeDotsH(GRP2DCANVAS* canvas, double y, double x1, double x2)
+{
+  int xa = (int)(x1 + 0.5f);
+  int xb = (int)(x2 + 0.5f);
+  if(xa & 1) xa++;
+
+  for(int x=xa; x<xb; x+=2) UI_SkinCanvas_TreeRect(canvas, (double)x, y, (double)(x + 1), y + 1.0f);
+}
+
+
+/**-------------------------------------------------------------------------------------------------------------------
+*
+* @fn         bool UI_SKINCANVAS::Draw_Tree(UI_ELEMENT* element)
+* @brief      Draw tree (backdrop, dotted guides, [+]/[-] boxes, labels, selection, scroll)
+* @ingroup    USERINTERFACE
+*
+* @param[in]  element : Element to process.
+*
+* @return     bool : true if the operation is successful; otherwise false.
+*
+* --------------------------------------------------------------------------------------------------------------------*/
+bool UI_SKINCANVAS::Draw_Tree(UI_ELEMENT* element)
+{
+  if(!element) return false;
+
+  UI_ELEMENT_TREE* element_tree = (UI_ELEMENT_TREE*)element;
+  GRP2DCANVAS*     canvas       = GetCanvas();
+  double           x_position   = 0.0f;
+  double           y_position   = 0.0f;
+  XRECT            clip_rect;
+
+  if(!canvas) return false;
+
+  PreDrawFunction(element, canvas, clip_rect, x_position, y_position);
+
+  if(element->MustReDraw())
+    {
+      double box_w = element_tree->GetBoundaryLine()->width;
+      double box_h = element_tree->GetBoundaryLine()->height;
+      double y_top = UI_BOUNDARYLINE_EdgeTop(y_position, box_h);
+      double y_bot = y_top + box_h;
+
+      bool has_border = element_tree->IsBorderColorSet() && (element_tree->GetBorderWidth() > 0.0f);
+      double bw       = has_border ? element_tree->GetBorderWidth() : 0.0;
+
+      GRP2DCOLOR_RGBA8 color_back(12, 14, 18, 255);
+
+      // Own opaque backdrop + optional border. Same RoundRect isfill=true contract as Draw_Console / Draw_Form.
+      {
+        bool has_bg = element_tree->IsBackgroundColorSet() && (element_tree->GetBackgroundColor()->GetAlpha() > 0);
+
+        if(has_bg || has_border)
+          {
+            GRP2DCOLOR_RGBA8 bkgcolor(0, 0, 0, 0);
+            if(has_bg)
+              {
+                UI_COLOR* bg = element_tree->GetBackgroundColor();
+                bkgcolor   = GRP2DCOLOR_RGBA8(bg->GetRed(), bg->GetGreen(), bg->GetBlue(), bg->GetAlpha());
+                color_back = GRP2DCOLOR_RGBA8(bg->GetRed(), bg->GetGreen(), bg->GetBlue(), 255);
+              }
+
+            if(has_border)
+              {
+                UI_COLOR* lc = element_tree->GetBorderColor();
+                GRP2DCOLOR_RGBA8 linecolor(lc->GetRed(), lc->GetGreen(), lc->GetBlue(), lc->GetAlpha());
+                canvas->SetLineColor(&linecolor);
+                canvas->SetLineWidth((float)element_tree->GetBorderWidth());
+              }
+             else
+              {
+                GRP2DCOLOR_RGBA8 linecolor_none(0, 0, 0, 0);
+                canvas->SetLineColor(&linecolor_none);
+                canvas->SetLineWidth(1.0f);
+              }
+
+            canvas->SetFillColor(&bkgcolor);
+
+            if(element_tree->GetRoundRect())
+              {
+                canvas->RoundRect(x_position, y_position, x_position + box_w, y_top, element_tree->GetRoundRect(), true);
+              }
+             else
+              {
+                canvas->Rectangle(x_position, y_position, x_position + box_w, y_top, true);
+              }
+          }
+      }
+
+      canvas->Vectorfont_GetConfig()->SetSize(element_tree->GetSizeFont());
+
+      double fontheight = (double)canvas->VectorFont_GetHeight(NL("A"));
+      if(fontheight < 1.0f) fontheight = (double)element_tree->GetSizeFont();
+
+      double rowheight   = element_tree->GetRowHeight();
+      double indentwidth = element_tree->GetIndentWidth();
+      XDWORD rowcount    = element_tree->GetVisibleRowCount();
+
+      double bar_gutter  = UI_SKINCANVAS_SCROLLBAR_WIDTH + 4.0f;
+
+      element_tree->SetContentHeight((UI_ELEMENT_TREE_PADDING_Y * 2.0f) + ((double)rowcount * rowheight));
+
+      // Horizontal extent: deepest/longest visible label (pad + indent + text). Measured with the active font.
+      {
+        double max_right = UI_ELEMENT_TREE_PADDING_X;
+
+        for(XDWORD i=0; i<rowcount; i++)
+          {
+            UI_ELEMENT_TREE_NODE* node = element_tree->GetVisibleNode(i);
+            if(!node) continue;
+
+            double text_x = element_tree->GetTextX(element_tree->GetNodeDepth(node));
+            double text_w = node->text.IsEmpty() ? 0.0f : (double)canvas->VectorFont_GetWidth(node->text.Get());
+            double right  = text_x + text_w + UI_ELEMENT_TREE_PADDING_X;
+
+            if(right > max_right) max_right = right;
+          }
+
+        element_tree->SetContentWidth(max_right + bar_gutter);
+      }
+
+      UI_PROPERTY_SCROLLEABLE* scrolleable = dynamic_cast<UI_PROPERTY_SCROLLEABLE*>(element_tree);
+      if(scrolleable)
+        {
+          ResolveScrollPolicy(element_tree, scrolleable);
+
+          for(int axis=0; axis<2; axis++)
+            {
+              UI_PROPERTY_SCROLLEABLE_TYPE type = (axis == 0) ? UI_PROPERTY_SCROLLEABLE_TYPE_VERTICAL
+                                                             : UI_PROPERTY_SCROLLEABLE_TYPE_HORIZONTAL;
+              double lim  = scrolleable->Scroll_GetLimit(type);
+              double disp = scrolleable->Scroll_GetDisplacement(type);
+              if(lim >= 0.0f && disp != 0.0f)
+                {
+                  scrolleable->Scroll_SetDisplacement(type, 0.0f);
+                }
+               else if(lim < 0.0f && disp < lim)
+                {
+                  scrolleable->Scroll_SetDisplacement(type, lim);
+                }
+            }
+        }
+
+      double vdisp = (double)((int)element_tree->Scroll_GetDisplacement(UI_PROPERTY_SCROLLEABLE_TYPE_VERTICAL));
+      double hdisp = (double)((int)element_tree->Scroll_GetDisplacement(UI_PROPERTY_SCROLLEABLE_TYPE_HORIZONTAL));
+
+      // Ink / lines.
+      int ink_r = 200, ink_g = 208, ink_b = 220, ink_a = 255;
+      if(element_tree->IsColorSet() && element_tree->GetColor()->IsValid())
+        {
+          ink_r = element_tree->GetColor()->GetRed();
+          ink_g = element_tree->GetColor()->GetGreen();
+          ink_b = element_tree->GetColor()->GetBlue();
+          ink_a = element_tree->GetColor()->GetAlpha();
+          if(ink_a <= 0) ink_a = 255;
+        }
+
+      GRP2DCOLOR_RGBA8 color_ink(ink_r, ink_g, ink_b, ink_a);
+      GRP2DCOLOR_RGBA8 color_guide(104, 114, 130, 255);
+      GRP2DCOLOR_RGBA8 color_boxline(150, 160, 176, 255);
+      GRP2DCOLOR_RGBA8 color_boxsign(210, 218, 230, 255);
+      GRP2DCOLOR_RGBA8 color_select(40, 50, 70, 255);
+
+      double x_left  = x_position + bw;
+      double x_right = x_position + box_w - bw;
+
+      XRECT parentclip;
+      canvas->GetClipBox(parentclip);
+
+      double y_vis_top = y_top + bw;
+      double y_vis_bot = y_bot - bw;
+      double bar_bottom = UI_SKINCANVAS_SCROLLBAR_WIDTH + 4.0f;
+
+      UI_SkinCanvas_PropertyListClip(canvas, parentclip, x_left, y_vis_top, x_right - bar_gutter, y_vis_bot - bar_bottom);
+
+      canvas->SetLineWidth(0.0f);
+
+      UI_ELEMENT_TREE_NODE* selected = element_tree->GetSelected();
+
+      for(XDWORD i=0; i<rowcount; i++)
+        {
+          UI_ELEMENT_TREE_NODE* node = element_tree->GetVisibleNode(i);
+          if(!node) continue;
+
+          double row_top = (double)((int)(y_top + UI_ELEMENT_TREE_PADDING_Y + ((double)i * rowheight) + vdisp + 0.5f));
+          double row_bot = row_top + rowheight;
+
+          if(row_bot < y_vis_top || row_top > (y_vis_bot - bar_bottom)) continue;
+
+          XDWORD depth   = element_tree->GetNodeDepth(node);
+          double row_mid = (double)((int)(row_top + (rowheight / 2.0f)));
+          double text_x  = x_position + element_tree->GetTextX(depth) + hdisp;
+          double cx      = (double)((int)(x_position + element_tree->GetBoxCenterX(depth) + hdisp + 0.5f));
+          double half    = (double)((int)(UI_ELEMENT_TREE_BOXSIZE / 2.0f));
+
+          // Selection wash behind the label.
+          if(node == selected)
+            {
+              double text_w = canvas->VectorFont_GetWidth(node->text.Get());
+
+              canvas->SetLineColor(&color_select);
+              canvas->SetFillColor(&color_select);
+              UI_SkinCanvas_TreeRect(canvas, text_x - 3.0f, row_top + 1.0f, text_x + text_w + 4.0f, row_bot - 1.0f);
+            }
+
+          // Dotted guides.
+          canvas->SetLineColor(&color_guide);
+          canvas->SetFillColor(&color_guide);
+
+          if(depth > 0)
+            {
+              XVECTOR<UI_ELEMENT_TREE_NODE*>* siblings = node->father ? &node->father->children : element_tree->GetRoots();
+              bool                            haslater = (siblings->Find(node) < ((int)siblings->GetSize() - 1));
+              double                          px       = (double)((int)(x_position + element_tree->GetBoxCenterX(depth - 1) + hdisp + 0.5f));
+
+              // Own connector: from the parent's column, down to the middle, continuing if a later sibling exists.
+              UI_SkinCanvas_TreeDotsV(canvas, px, row_top, haslater ? row_bot : row_mid);
+              UI_SkinCanvas_TreeDotsH(canvas, row_mid, px, node->HasChildren() ? (cx - half) : (text_x - 3.0f));
+
+              // Ancestor columns whose branch continues below this row.
+              // An ancestor at depth a (>= 1) owns a connector column a-1.
+              UI_ELEMENT_TREE_NODE* ancestor = node->father;
+              XDWORD                a        = depth - 1;
+              while(ancestor && ancestor->father && (a >= 1))
+                {
+                  XVECTOR<UI_ELEMENT_TREE_NODE*>* asib = &ancestor->father->children;
+                  bool                            alat = (asib->Find(ancestor) < ((int)asib->GetSize() - 1));
+
+                  if(alat)
+                    {
+                      double ax = (double)((int)(x_position + element_tree->GetBoxCenterX(a - 1) + hdisp + 0.5f));
+                      UI_SkinCanvas_TreeDotsV(canvas, ax, row_top, row_bot);
+                    }
+
+                  ancestor = ancestor->father;
+                  a--;
+                }
+            }
+
+          if(node->HasChildren())
+            {
+              // Line from the box down to the children's connector.
+              if(node->expanded)
+                {
+                  canvas->SetLineColor(&color_guide);
+                  canvas->SetFillColor(&color_guide);
+                  UI_SkinCanvas_TreeDotsV(canvas, cx, row_mid + half + 1.0f, row_bot);
+                }
+
+              // [+] / [-] box (9x9).
+              double bx1 = cx - half;
+              double by1 = row_mid - half;
+              double bx2 = cx + half + 1.0f;
+              double by2 = row_mid + half + 1.0f;
+
+              canvas->SetLineColor(&color_boxline);
+              canvas->SetFillColor(&color_boxline);
+              UI_SkinCanvas_TreeRect(canvas, bx1, by1, bx2, by2);
+
+              canvas->SetLineColor(&color_back);
+              canvas->SetFillColor(&color_back);
+              UI_SkinCanvas_TreeRect(canvas, bx1 + 1.0f, by1 + 1.0f, bx2 - 1.0f, by2 - 1.0f);
+
+              canvas->SetLineColor(&color_boxsign);
+              canvas->SetFillColor(&color_boxsign);
+              UI_SkinCanvas_TreeRect(canvas, cx - 2.0f, row_mid, cx + 3.0f, row_mid + 1.0f);                        // '-'
+
+              if(!node->expanded)
+                {
+                  UI_SkinCanvas_TreeRect(canvas, cx, row_mid - 2.0f, cx + 1.0f, row_mid + 3.0f);                    // '|' of '+'
+                }
+            }
+
+          // Label.
+          if(!node->text.IsEmpty())
+            {
+              double baseline = row_top + ((rowheight + fontheight) / 2.0f) - 1.0f;
+
+              canvas->Vectorfont_GetConfig()->SetColor(&color_ink);
+              canvas->VectorFont_Print(text_x, baseline, node->text.Get());
+            }
+        }
+
+      canvas->SetClipBox(parentclip);
+    }
+
+  PostDrawFunction(element, canvas, clip_rect, x_position, y_position);
+
+  return true;
+}
+
+
+/**-------------------------------------------------------------------------------------------------------------------
+*
+* @fn         bool UI_SKINCANVAS::Draw_PropertyList(UI_ELEMENT* element)
+* @brief      Draw property list (header, scrollable Name/Value rows, column splitter)
+* @ingroup    USERINTERFACE
+*
+* @param[in]  element : Element to process.
+*
+* @return     bool : true if the operation is successful; otherwise false.
+*
+* --------------------------------------------------------------------------------------------------------------------*/
+bool UI_SKINCANVAS::Draw_PropertyList(UI_ELEMENT* element)
+{
+  if(!element) return false;
+
+  UI_ELEMENT_PROPERTYLIST* element_list = (UI_ELEMENT_PROPERTYLIST*)element;
+  GRP2DCANVAS*             canvas       = GetCanvas();
+  double                   x_position   = 0.0f;
+  double                   y_position   = 0.0f;
+  XRECT                    clip_rect;
+
+  if(!canvas) return false;
+
+  PreDrawFunction(element, canvas, clip_rect, x_position, y_position);
+
+  if(element->MustReDraw())
+    {
+      const double pad_x = 8.0f;
+
+      double box_w = element_list->GetBoundaryLine()->width;
+      double box_h = element_list->GetBoundaryLine()->height;
+      double y_top = UI_BOUNDARYLINE_EdgeTop(y_position, box_h);
+      double y_bot = y_top + box_h;
+
+      bool has_border = element_list->IsBorderColorSet() && (element_list->GetBorderWidth() > 0.0f);
+      double bw       = has_border ? element_list->GetBorderWidth() : 0.0;
+
+      // Own opaque backdrop + optional border. Same RoundRect isfill=true contract as Draw_Console / Draw_Form.
+      {
+        bool has_bg = element_list->IsBackgroundColorSet() && (element_list->GetBackgroundColor()->GetAlpha() > 0);
+
+        if(has_bg || has_border)
+          {
+            GRP2DCOLOR_RGBA8 bkgcolor(0, 0, 0, 0);
+            if(has_bg)
+              {
+                UI_COLOR* bg = element_list->GetBackgroundColor();
+                bkgcolor = GRP2DCOLOR_RGBA8(bg->GetRed(), bg->GetGreen(), bg->GetBlue(), bg->GetAlpha());
+              }
+
+            if(has_border)
+              {
+                UI_COLOR* lc = element_list->GetBorderColor();
+                GRP2DCOLOR_RGBA8 linecolor(lc->GetRed(), lc->GetGreen(), lc->GetBlue(), lc->GetAlpha());
+                canvas->SetLineColor(&linecolor);
+                canvas->SetLineWidth((float)element_list->GetBorderWidth());
+              }
+             else
+              {
+                GRP2DCOLOR_RGBA8 linecolor_none(0, 0, 0, 0);
+                canvas->SetLineColor(&linecolor_none);
+                canvas->SetLineWidth(1.0f);
+              }
+
+            canvas->SetFillColor(&bkgcolor);
+
+            if(element_list->GetRoundRect())
+              {
+                canvas->RoundRect(x_position, y_position, x_position + box_w, y_top, element_list->GetRoundRect(), true);
+              }
+             else
+              {
+                canvas->Rectangle(x_position, y_position, x_position + box_w, y_top, true);
+              }
+          }
+      }
+
+      canvas->Vectorfont_GetConfig()->SetSize(element_list->GetSizeFont());
+
+      double fontheight = (double)canvas->VectorFont_GetHeight(NL("A"));
+      if(fontheight < 1.0f) fontheight = (double)element_list->GetSizeFont();
+
+      double rowheight    = element_list->GetRowHeight();
+      double headerheight = element_list->GetHeaderHeight();
+      double namewidth    = element_list->GetNameColumnWidth();
+      XDWORD rowcount     = element_list->GetRowCount();
+
+      // Keep the stored splitter inside [min, box_w - min] once the real box width is known.
+      element_list->SetNameColumnWidth(namewidth);
+      namewidth = element_list->GetNameColumnWidth();
+
+      double bar_gutter = UI_SKINCANVAS_SCROLLBAR_WIDTH + 4.0f;
+
+      // Scroll extent is the variable rows only. The header band is sticky (drawn without vdisp) and is
+      // excluded from the vertical viewport / scrollbar track via GetScrollContentBox.
+      element_list->SetContentHeight(((double)rowcount * rowheight) + 4.0f);
+
+      UI_PROPERTY_SCROLLEABLE* scrolleable = dynamic_cast<UI_PROPERTY_SCROLLEABLE*>(element_list);
+      if(scrolleable)
+        {
+          ResolveScrollPolicy(element_list, scrolleable);
+
+          double lim  = scrolleable->Scroll_GetLimit(UI_PROPERTY_SCROLLEABLE_TYPE_VERTICAL);
+          double disp = scrolleable->Scroll_GetDisplacement(UI_PROPERTY_SCROLLEABLE_TYPE_VERTICAL);
+          if(lim >= 0.0f && disp != 0.0f)
+            {
+              scrolleable->Scroll_SetDisplacement(UI_PROPERTY_SCROLLEABLE_TYPE_VERTICAL, 0.0f);
+            }
+           else if(lim < 0.0f && disp < lim)
+            {
+              scrolleable->Scroll_SetDisplacement(UI_PROPERTY_SCROLLEABLE_TYPE_VERTICAL, lim);
+            }
+        }
+
+      double vdisp = element_list->Scroll_GetDisplacement(UI_PROPERTY_SCROLLEABLE_TYPE_VERTICAL);
+
+      // Ink / lines.
+      int ink_r = 200, ink_g = 208, ink_b = 220, ink_a = 255;
+      if(element_list->IsColorSet() && element_list->GetColor()->IsValid())
+        {
+          ink_r = element_list->GetColor()->GetRed();
+          ink_g = element_list->GetColor()->GetGreen();
+          ink_b = element_list->GetColor()->GetBlue();
+          ink_a = element_list->GetColor()->GetAlpha();
+          if(ink_a <= 0) ink_a = 255;
+        }
+
+      GRP2DCOLOR_RGBA8 color_ink(ink_r, ink_g, ink_b, ink_a);
+      GRP2DCOLOR_RGBA8 color_line(50, 58, 70, 255);
+      if(has_border)
+        {
+          UI_COLOR* lc = element_list->GetBorderColor();
+          color_line = GRP2DCOLOR_RGBA8(lc->GetRed(), lc->GetGreen(), lc->GetBlue(), 255);
+        }
+
+      GRP2DCOLOR_RGBA8 color_header(26, 30, 40, 255);
+      GRP2DCOLOR_RGBA8 color_rowline(34, 40, 50, 255);
+
+      double x_left   = x_position + bw;
+      double x_right  = x_position + box_w - bw;
+      double x_split  = x_position + namewidth;
+      double y_body   = y_top + headerheight;
+      double y_header_top = y_top + bw;
+
+      XRECT parentclip;
+      canvas->GetClipBox(parentclip);
+
+      // ---- Body rows (clipped under the header, inside the border, per column) ------------------------------------
+      {
+        double y_vis_top = y_body;
+        double y_vis_bot = y_bot - bw;
+
+        for(int pass=0; pass<2; pass++)
+          {
+            if(pass == 0) UI_SkinCanvas_PropertyListClip(canvas, parentclip, x_left , y_vis_top, x_split - 4.0f           , y_vis_bot);
+             else         UI_SkinCanvas_PropertyListClip(canvas, parentclip, x_split + 4.0f, y_vis_top, x_right - bar_gutter, y_vis_bot);
+
+            canvas->Vectorfont_GetConfig()->SetColor(&color_ink);
+
+            for(XDWORD i=0; i<rowcount; i++)
+              {
+                UI_ELEMENT_PROPERTYLIST_ROW* row = element_list->GetRow(i);
+                if(!row) continue;
+
+                double row_top = y_body + ((double)i * rowheight) + vdisp;
+                double row_bot = row_top + rowheight;
+
+                if(row_bot < y_vis_top || row_top > y_vis_bot) continue;
+
+                double baseline = row_top + ((rowheight + fontheight) / 2.0f) - 1.0f;
+                XSTRING* text   = (pass == 0) ? &row->name : &row->value;
+                double   tx     = (pass == 0) ? (x_left + pad_x) : (x_split + pad_x);
+
+                if(!text->IsEmpty()) canvas->VectorFont_Printf(tx, baseline, text->Get());
+              }
+          }
+
+        // Horizontal separators between rows (full width, under the splitter).
+        UI_SkinCanvas_PropertyListClip(canvas, parentclip, x_left, y_vis_top, x_right, y_vis_bot);
+
+        canvas->SetLineWidth(0.0f);
+        canvas->SetLineColor(&color_rowline);
+        canvas->SetFillColor(&color_rowline);
+
+        for(XDWORD i=0; i<rowcount; i++)
+          {
+            double line_y = y_body + ((double)(i + 1) * rowheight) + vdisp;
+            if(line_y < y_vis_top || line_y > y_vis_bot) continue;
+
+            canvas->Rectangle(x_left, line_y + 1.0f, x_right, line_y, true);
+          }
+      }
+
+      // ---- Header band (painted after rows; body clip already kept rows out of it) -----------------------------------
+      UI_SkinCanvas_PropertyListClip(canvas, parentclip, x_left, y_header_top, x_right, y_body);
+
+      canvas->SetLineWidth(0.0f);
+      canvas->SetLineColor(&color_header);
+      canvas->SetFillColor(&color_header);
+      canvas->Rectangle(x_left, y_body, x_right, y_header_top, true);
+
+      canvas->SetLineColor(&color_line);
+      canvas->SetFillColor(&color_line);
+      canvas->Rectangle(x_left, y_body + 1.0f, x_right, y_body, true);
+
+      {
+        UI_SkinCanvas_PropertyListClip(canvas, parentclip, x_left, y_header_top, x_split - 4.0f, y_body);
+        canvas->Vectorfont_GetConfig()->SetColor(&color_ink);
+
+        double baseline = y_top + ((headerheight + fontheight) / 2.0f) - 1.0f;
+
+        if(!element_list->GetHeaderName()->IsEmpty())  canvas->VectorFont_Printf(x_left + pad_x, baseline, element_list->GetHeaderName()->Get());
+
+        UI_SkinCanvas_PropertyListClip(canvas, parentclip, x_split + 4.0f, y_header_top, x_right - bar_gutter, y_body);
+        if(!element_list->GetHeaderValue()->IsEmpty()) canvas->VectorFont_Printf(x_split + pad_x, baseline, element_list->GetHeaderValue()->Get());
+      }
+
+      // ---- Column splitter (header + body, inside the border) ---------------------------------------------------------
+      UI_SkinCanvas_PropertyListClip(canvas, parentclip, x_left, y_header_top, x_right, y_bot - bw);
+
+      canvas->SetLineWidth(0.0f);
+      canvas->SetLineColor(&color_line);
+      canvas->SetFillColor(&color_line);
+      canvas->Rectangle(x_split - 1.0f, y_bot - bw, x_split + 1.0f, y_header_top, true);
+
+      canvas->SetClipBox(parentclip);
+    }
+
+  PostDrawFunction(element, canvas, clip_rect, x_position, y_position);
+
+  return true;
+}
+
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
@@ -4550,7 +5637,34 @@ bool UI_SKINCANVAS::Draw_Image(UI_ELEMENT* element)
       // is zero behaviour change for every existing image layout.
       DrawElementBoxShadow(canvas, element, x_position, y_position);
 
-      canvas->PutBitmapAlpha(x_position, y_position - element_image->GetImage()->GetHeight(), element_image->GetImage(), element_image->GetAlpha());
+      // Soft-edge PNGs (aqua bubble toolbars): do NOT use PutBitmapAlpha here. That helper feeds the pixel's
+      // alpha as AGG cover, which multiplies alpha again and crushes translucent glass to invisible. Same
+      // cover=255 rule as UI_SkinCanvas_CompositeSoftShadowBitmap.
+      GRPBITMAP* bm = element_image->GetImage();
+      double     dx = x_position;
+      double     dy = y_position - (double)bm->GetHeight();
+      double     fade = (double)element_image->GetAlpha();
+      if(fade > 0.0)
+        {
+          for(XDWORD yb = 0; yb < bm->GetHeight(); yb++)
+            {
+              for(XDWORD xb = 0; xb < bm->GetWidth(); xb++)
+                {
+                  GRP2DCOLOR* raw = bm->GetPixel((int)xb, (int)yb);
+                  if(!raw) continue;
+
+                  GRP2DCOLOR_RGBA8* px = (GRP2DCOLOR_RGBA8*)raw;
+                  if(!px->a) continue;
+
+                  XBYTE a = px->a;
+                  if(fade < 100.0) a = (XBYTE)((fade * (double)a) / 100.0);
+                  if(!a) continue;
+
+                  GRP2DCOLOR_RGBA8 c(px->r, px->g, px->b, a);
+                  canvas->PutBlendPixel(dx + (double)xb, dy + (double)yb, &c, 255.0);
+                }
+            }
+        }
     }
 
   PostDrawFunction(element, canvas, clip_rect, x_position, y_position);
@@ -4884,6 +5998,8 @@ bool UI_SKINCANVAS::Draw_Option(UI_ELEMENT* element)
       // Also skip empty hit overlays (UI_System nav-*-btn / disk-nav-hit): no compose children to repaint
       // over the white plate, so erase bleaches sibling icons/labels under the transparent root button.
       // UI_Options keeps white-erase — its nav/gal buttons own ic+tx children that redraw on top.
+      // Icon-only multioption faces (custom-chrome SVGs, aqua PNG toolbars): the white plate sits under the
+      // alpha bitmap and kills the transparent bubble. Father is MULTIOPTION (not a translucent form).
       if(element_option->GetBackgroundColor()->GetAlpha() == 0)
         {
           bool skip_white_erase = false;
@@ -4891,6 +6007,11 @@ bool UI_SKINCANVAS::Draw_Option(UI_ELEMENT* element)
           if(scr && scr->Style_Is(GRPSCREENSTYLE_TRANSPARENT)) skip_white_erase = true;
           if(!skip_white_erase && element_option->GetComposeElements()->IsEmpty() &&
              !element_option->Get_UIText() && !element_option->Get_UIAnimation())
+            {
+              skip_white_erase = true;
+            }
+          if(!skip_white_erase && element_option->Get_UIAnimation() && element_option->GetFather() &&
+             (element_option->GetFather()->GetType() == UI_ELEMENT_TYPE_MULTIOPTION))
             {
               skip_white_erase = true;
             }
@@ -7348,6 +8469,56 @@ void UI_SKINCANVAS::GetScrollViewportSize(UI_ELEMENT* element, double& width, do
 
 
 /**-------------------------------------------------------------------------------------------------------------------
+*
+* @fn         void UI_SKINCANVAS::GetScrollContentBox(UI_ELEMENT* element, double x_position, double y_position, double& box_left, double& box_top, double& box_right, double& box_bottom, double& viewport_w, double& viewport_h)
+* @brief      Scrollable content box used by ResolveScrollPolicy, DrawScrollBars and scrollbar hit-test. Matches the
+*             element viewport, except UI_ELEMENT_PROPERTYLIST keeps a sticky header outside the scroll region.
+* @ingroup    USERINTERFACE
+*
+* @param[in]  element : Element to process.
+* @param[in]  x_position : Resolved left edge (screen coords).
+* @param[in]  y_position : Resolved bottom edge (screen coords).
+* @param[out] box_left : Content box left.
+* @param[out] box_top : Content box top (below sticky header when applicable).
+* @param[out] box_right : Content box right.
+* @param[out] box_bottom : Content box bottom.
+* @param[out] viewport_w : Horizontal content viewport size.
+* @param[out] viewport_h : Vertical content viewport size.
+*
+* --------------------------------------------------------------------------------------------------------------------*/
+void UI_SKINCANVAS::GetScrollContentBox(UI_ELEMENT* element, double x_position, double y_position, double& box_left, double& box_top, double& box_right, double& box_bottom, double& viewport_w, double& viewport_h)
+{
+  box_left    = x_position;
+  box_top     = y_position;
+  box_right   = x_position;
+  box_bottom  = y_position;
+  viewport_w  = 0.0f;
+  viewport_h  = 0.0f;
+  if(!element) return;
+
+  double box_w = 0.0f;
+  double box_h = 0.0f;
+  GetScrollViewportSize(element, box_w, box_h);
+
+  double header_inset = 0.0f;
+  UI_ELEMENT_PROPERTYLIST* element_propertylist = dynamic_cast<UI_ELEMENT_PROPERTYLIST*>(element);
+  if(element_propertylist)
+    {
+      header_inset = element_propertylist->GetHeaderHeight();
+      if(header_inset < 0.0f)     header_inset = 0.0f;
+      if(header_inset > box_h)    header_inset = box_h;
+    }
+
+  viewport_w = box_w;
+  viewport_h = box_h - header_inset;
+  box_left   = x_position;
+  box_right  = x_position + box_w;
+  box_bottom = y_position;
+  box_top    = UI_BOUNDARYLINE_EdgeTop(y_position, box_h) + header_inset;
+}
+
+
+/**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         bool UI_SKINCANVAS::ResolveScrollPolicy(UI_ELEMENT* element, UI_PROPERTY_SCROLLEABLE* scrolleable)
 * @brief      Measures the content extent of a scrollable container and resolves its scroll policy (active/visible/limit).
@@ -7378,6 +8549,61 @@ bool UI_SKINCANVAS::ResolveScrollPolicy(UI_ELEMENT* element, UI_PROPERTY_SCROLLE
 
       scrolleable->Scroll_ResolvePolicy(UI_PROPERTY_SCROLLEABLE_TYPE_HORIZONTAL, vp_w, vp_w);
       scrolleable->Scroll_ResolvePolicy(UI_PROPERTY_SCROLLEABLE_TYPE_VERTICAL, vp_h, element_textbox->GetContentHeight());
+      return true;
+    }
+
+  UI_ELEMENT_CONSOLE* element_console = dynamic_cast<UI_ELEMENT_CONSOLE*>(element);
+  if(element_console)
+    {
+      double tb_w = 0.0f;
+      double tb_h = 0.0f;
+      GetScrollViewportSize(element, tb_w, tb_h);
+
+      double vp_w = scrolleable->Scroll_GetContentViewport(UI_PROPERTY_SCROLLEABLE_TYPE_HORIZONTAL, tb_w);
+      double vp_h = scrolleable->Scroll_GetContentViewport(UI_PROPERTY_SCROLLEABLE_TYPE_VERTICAL, tb_h);
+      double cw   = element_console->GetContentWidth();
+      if(cw < vp_w) cw = vp_w;
+
+      scrolleable->Scroll_ResolvePolicy(UI_PROPERTY_SCROLLEABLE_TYPE_HORIZONTAL, vp_w, cw);
+      scrolleable->Scroll_ResolvePolicy(UI_PROPERTY_SCROLLEABLE_TYPE_VERTICAL, vp_h, element_console->GetContentHeight());
+      return true;
+    }
+
+  UI_ELEMENT_TREE* element_tree = dynamic_cast<UI_ELEMENT_TREE*>(element);
+  if(element_tree)
+    {
+      double tr_w = 0.0f;
+      double tr_h = 0.0f;
+      GetScrollViewportSize(element, tr_w, tr_h);
+
+      double vp_w = scrolleable->Scroll_GetContentViewport(UI_PROPERTY_SCROLLEABLE_TYPE_HORIZONTAL, tr_w);
+      double vp_h = scrolleable->Scroll_GetContentViewport(UI_PROPERTY_SCROLLEABLE_TYPE_VERTICAL, tr_h);
+      double cw   = element_tree->GetContentWidth();
+      if(cw < vp_w) cw = vp_w;
+
+      scrolleable->Scroll_ResolvePolicy(UI_PROPERTY_SCROLLEABLE_TYPE_HORIZONTAL, vp_w, cw);
+      scrolleable->Scroll_ResolvePolicy(UI_PROPERTY_SCROLLEABLE_TYPE_VERTICAL, vp_h, element_tree->GetContentHeight());
+      return true;
+    }
+
+  UI_ELEMENT_PROPERTYLIST* element_propertylist = dynamic_cast<UI_ELEMENT_PROPERTYLIST*>(element);
+  if(element_propertylist)
+    {
+      // Body-only vertical viewport: sticky Name/Value header is outside the scroll region.
+      double box_left   = 0.0f;
+      double box_top    = 0.0f;
+      double box_right  = 0.0f;
+      double box_bottom = 0.0f;
+      double pl_w       = 0.0f;
+      double pl_h       = 0.0f;
+      GetScrollContentBox(element, element->GetXPositionWithScroll(), element->GetYPositionWithScroll(), box_left, box_top, box_right, box_bottom, pl_w, pl_h);
+      (void)box_left; (void)box_top; (void)box_right; (void)box_bottom;
+
+      double vp_w = scrolleable->Scroll_GetContentViewport(UI_PROPERTY_SCROLLEABLE_TYPE_HORIZONTAL, pl_w);
+      double vp_h = scrolleable->Scroll_GetContentViewport(UI_PROPERTY_SCROLLEABLE_TYPE_VERTICAL, pl_h);
+
+      scrolleable->Scroll_ResolvePolicy(UI_PROPERTY_SCROLLEABLE_TYPE_HORIZONTAL, vp_w, vp_w);
+      scrolleable->Scroll_ResolvePolicy(UI_PROPERTY_SCROLLEABLE_TYPE_VERTICAL, vp_h, element_propertylist->GetContentHeight());
       return true;
     }
 
@@ -7466,14 +8692,19 @@ bool UI_SKINCANVAS::DrawScrollBars(UI_ELEMENT* element, UI_PROPERTY_SCROLLEABLE*
 {
   if(!element || !scrolleable || !canvas) return false;
 
+  double box_left   = 0.0f;
+  double box_top    = 0.0f;
+  double box_right  = 0.0f;
+  double box_bottom = 0.0f;
   double box_w      = 0.0f;
   double box_h      = 0.0f;
-  GetScrollViewportSize(element, box_w, box_h);
-  double box_left   = x_position;
-  double box_right  = x_position + box_w;
-  double box_bottom = y_position;                                       // larger screen-y
-  double box_top    = UI_BOUNDARYLINE_EdgeTop(y_position, box_h);       // smaller screen-y
-  double radius     = (double)element->GetRoundRect();                  // shorten the bar to clear rounded corners
+  GetScrollContentBox(element, x_position, y_position, box_left, box_top, box_right, box_bottom, box_w, box_h);
+
+  // PROPERTYLIST sticky header: the content box top is mid-element (not a rounded corner), so only keep
+  // the radius inset at the bottom end of the vertical track.
+  double radius      = (double)element->GetRoundRect();
+  double radius_vert = radius;
+  if(dynamic_cast<UI_ELEMENT_PROPERTYLIST*>(element)) radius_vert = 0.0f;
 
   double track_left;
   double track_top;
@@ -7489,38 +8720,44 @@ bool UI_SKINCANVAS::DrawScrollBars(UI_ELEMENT* element, UI_PROPERTY_SCROLLEABLE*
   int    th_a;
 
   // ---- vertical bar (right gutter) ----
-  if(scrolleable->Scroll_GetTrackRect(UI_PROPERTY_SCROLLEABLE_TYPE_VERTICAL, box_left, box_top, box_right, box_bottom, radius, track_left, track_top, track_right, track_bottom))
+  if(scrolleable->Scroll_GetTrackRect(UI_PROPERTY_SCROLLEABLE_TYPE_VERTICAL, box_left, box_top, box_right, box_bottom, radius_vert, track_left, track_top, track_right, track_bottom))
     {
-      double tracklen  = track_bottom - track_top;
-      double viewport  = scrolleable->Scroll_GetContentViewport(UI_PROPERTY_SCROLLEABLE_TYPE_VERTICAL, box_h);
-      double limit     = scrolleable->Scroll_GetLimit(UI_PROPERTY_SCROLLEABLE_TYPE_VERTICAL);            // <= 0
-      double disp      = scrolleable->Scroll_GetDisplacement(UI_PROPERTY_SCROLLEABLE_TYPE_VERTICAL);
-      double content   = viewport - limit;                                                              // >= viewport
-      double fraction  = (limit != 0.0f) ? (disp / limit) : 0.0f;
+      // Restore bottom corner clearance when radius_vert was cleared for a sticky header.
+      if((radius_vert == 0.0f) && (radius > 0.0f)) track_bottom -= radius;
 
-      if(fraction < 0.0f) fraction = 0.0f;
-      if(fraction > 1.0f) fraction = 1.0f;
+      if((track_bottom - track_top) > 0.0f)
+        {
+          double tracklen  = track_bottom - track_top;
+          double viewport  = scrolleable->Scroll_GetContentViewport(UI_PROPERTY_SCROLLEABLE_TYPE_VERTICAL, box_h);
+          double limit     = scrolleable->Scroll_GetLimit(UI_PROPERTY_SCROLLEABLE_TYPE_VERTICAL);            // <= 0
+          double disp      = scrolleable->Scroll_GetDisplacement(UI_PROPERTY_SCROLLEABLE_TYPE_VERTICAL);
+          double content   = viewport - limit;                                                              // >= viewport
+          double fraction  = (limit != 0.0f) ? (disp / limit) : 0.0f;
 
-      double thumb     = (content > 0.0f) ? (tracklen * (viewport / content)) : tracklen;
-      if(thumb < UI_SKINCANVAS_SCROLLBAR_MINTHUMB) thumb = UI_SKINCANVAS_SCROLLBAR_MINTHUMB;
-      if(thumb > tracklen)                         thumb = tracklen;
+          if(fraction < 0.0f) fraction = 0.0f;
+          if(fraction > 1.0f) fraction = 1.0f;
 
-      double thumb_top = track_top + (fraction * (tracklen - thumb));
+          double thumb     = (content > 0.0f) ? (tracklen * (viewport / content)) : tracklen;
+          if(thumb < UI_SKINCANVAS_SCROLLBAR_MINTHUMB) thumb = UI_SKINCANVAS_SCROLLBAR_MINTHUMB;
+          if(thumb > tracklen)                         thumb = tracklen;
 
-      scrolleable->Scroll_GetBarTrackColor(UI_PROPERTY_SCROLLEABLE_TYPE_VERTICAL, tr_r, tr_g, tr_b, tr_a);
-      scrolleable->Scroll_GetBarThumbColor(UI_PROPERTY_SCROLLEABLE_TYPE_VERTICAL, th_r, th_g, th_b, th_a);
+          double thumb_top = track_top + (fraction * (tracklen - thumb));
 
-      GRP2DCOLOR_RGBA8 trackcolor(tr_r, tr_g, tr_b, tr_a);
-      GRP2DCOLOR_RGBA8 thumbcolor(th_r, th_g, th_b, th_a);
+          scrolleable->Scroll_GetBarTrackColor(UI_PROPERTY_SCROLLEABLE_TYPE_VERTICAL, tr_r, tr_g, tr_b, tr_a);
+          scrolleable->Scroll_GetBarThumbColor(UI_PROPERTY_SCROLLEABLE_TYPE_VERTICAL, th_r, th_g, th_b, th_a);
 
-      canvas->SetLineWidth(0.0f);
-      canvas->SetLineColor(&trackcolor);
-      canvas->SetFillColor(&trackcolor);
-      DrawScrollPill(canvas, track_left, track_bottom, track_right, track_top, radius);
+          GRP2DCOLOR_RGBA8 trackcolor(tr_r, tr_g, tr_b, tr_a);
+          GRP2DCOLOR_RGBA8 thumbcolor(th_r, th_g, th_b, th_a);
 
-      canvas->SetLineColor(&thumbcolor);
-      canvas->SetFillColor(&thumbcolor);
-      DrawScrollPill(canvas, track_left, thumb_top + thumb, track_right, thumb_top, radius);
+          canvas->SetLineWidth(0.0f);
+          canvas->SetLineColor(&trackcolor);
+          canvas->SetFillColor(&trackcolor);
+          DrawScrollPill(canvas, track_left, track_bottom, track_right, track_top, radius);
+
+          canvas->SetLineColor(&thumbcolor);
+          canvas->SetFillColor(&thumbcolor);
+          DrawScrollPill(canvas, track_left, thumb_top + thumb, track_right, thumb_top, radius);
+        }
     }
 
   // ---- horizontal bar (bottom gutter) ----

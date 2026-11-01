@@ -129,6 +129,9 @@ class UI_SKINCANVAS : public UI_SKIN, public UI_SKINCANVAS_REBUILDAREAS
     virtual													 ~UI_SKINCANVAS														();
 
 		static void												GetScrollViewportSize										(UI_ELEMENT* element, double& width, double& height);
+		// Scrollbar / scroll-policy box. Same as the element viewport, except PROPERTYLIST insets
+		// the sticky header so only the variable rows scroll and the bar starts under the titles.
+		static void												GetScrollContentBox											(UI_ELEMENT* element, double x_position, double y_position, double& box_left, double& box_top, double& box_right, double& box_bottom, double& viewport_w, double& viewport_h);
 
 		GRPSCREEN*                        GetScreen																(); 
 		GRP2DCANVAS*                      GetCanvas																();
@@ -151,6 +154,9 @@ class UI_SKINCANVAS : public UI_SKIN, public UI_SKINCANVAS_REBUILDAREAS
 	  virtual bool                      CalculateBoundaryLine_Scroll						(UI_ELEMENT* element, bool adjustsizemargin = false);
 	  virtual bool                      CalculateBoundaryLine_Text							(UI_ELEMENT* element, bool adjustsizemargin = false);
 	  virtual bool                      CalculateBoundaryLine_TextBox						(UI_ELEMENT* element, bool adjustsizemargin = false);
+	  virtual bool                      CalculateBoundaryLine_Console						(UI_ELEMENT* element, bool adjustsizemargin = false);
+	  virtual bool                      CalculateBoundaryLine_PropertyList			(UI_ELEMENT* element, bool adjustsizemargin = false);
+	  virtual bool                      CalculateBoundaryLine_Tree							(UI_ELEMENT* element, bool adjustsizemargin = false);
 	  virtual bool                      CalculateBoundaryLine_Image   					(UI_ELEMENT* element, bool adjustsizemargin = false);
 		virtual bool                      CalculateBoundaryLine_Animation					(UI_ELEMENT* element, bool adjustsizemargin = false);
 		virtual bool                      CalculateBoundaryLine_Option						(UI_ELEMENT* element, bool adjustsizemargin = false);
@@ -198,6 +204,9 @@ class UI_SKINCANVAS : public UI_SKIN, public UI_SKINCANVAS_REBUILDAREAS
 	  virtual bool                      Draw_Scroll															(UI_ELEMENT* element);
 	  virtual bool                      Draw_Text																(UI_ELEMENT* element);
 		virtual bool											Draw_TextBox														(UI_ELEMENT* element);
+		virtual bool											Draw_Console														(UI_ELEMENT* element);
+		virtual bool											Draw_PropertyList												(UI_ELEMENT* element);
+		virtual bool											Draw_Tree																(UI_ELEMENT* element);
 	  virtual bool                      Draw_Image  														(UI_ELEMENT* element);
 		virtual bool                      Draw_Animation													(UI_ELEMENT* element);
 		virtual bool                      Draw_Option															(UI_ELEMENT* element);
