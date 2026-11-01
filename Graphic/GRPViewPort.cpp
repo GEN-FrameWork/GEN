@@ -314,9 +314,9 @@ float GRPVIEWPORT::GetMinHeight()
 /**-------------------------------------------------------------------------------------------------------------------
 *
 * @fn         void GRPVIEWPORT::SetMinSize(float minwidth, float minheight)
-* @brief      Set minimum size. Below this size (either axis, independently) the native window
-*             hosting this viewport is expected to hide its rendered content instead of shrinking
-*             it to fit. Pass 0 to leave an axis unrestricted.
+* @brief      Set minimum size. Platforms that honour it (Windows WM_GETMINMAXINFO / X11 PMinSize /
+*             custom-chromes resize grip) refuse to shrink the native window below this client size.
+*             Below-min content hiding remains a secondary safety net. Pass 0 to leave an axis unrestricted.
 * @ingroup    GRAPHIC
 *
 * @param[in]  minwidth : Minimum width value.

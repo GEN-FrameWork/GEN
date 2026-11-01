@@ -1768,9 +1768,9 @@ void GRPLINUXSCREENX11::ResolveViewportMax(float& maxw, float& maxh)
 *             _NET_WM_STATE_MAXIMIZED_HORZ/VERT maximize requests -- Maximize() below is deliberately left
 *             untouched, it already sends the correct EWMH ClientMessage; setting this hint is what makes
 *             that existing maximize request respect the viewport's max instead of filling the whole monitor.
-* @note       No minimum is enforced here (no PMinSize set): the window is left free to shrink as usual; see
-*             GRPLINUXBLITGLESX11::ComputePresentationScale (GL path) and Update() (raster path) for how the
-*             rendered content is hidden (not the window itself) below the viewport's minimum.
+* @note       When GRPVIEWPORT::SetMinSize() has an explicit minimum on an axis, PMinSize is also set so
+*             cooperating WMs refuse to shrink below that client size. Content hiding below the min
+*             (ComputePresentationScale / Update raster path) remains as a secondary safety net.
 * @note       Called from Create_Window() for EVERY non-fullscreen window, custom-chromes ones included: a
 *             size hint only tells the window manager which sizes are ALLOWED, it never asks it to DRAW
 *             anything, so it cannot bring back native decoration (only _MOTIF_WM_HINTS' decorations field
@@ -1806,6 +1806,20 @@ void GRPLINUXSCREENX11::ApplyWMNormalHints()
   hints.flags      = PMaxSize;
   hints.max_width  = (int)maxw;
   hints.max_height = (int)maxh;
+
+  GRPVIEWPORT* mainviewport = GetViewport(GRPVIEWPORT_ID_MAIN);
+  if(mainviewport)
+    {
+      float minw = mainviewport->GetMinWidth();
+      float minh = mainviewport->GetMinHeight();
+
+      if(minw > 0.0f || minh > 0.0f)
+        {
+          hints.flags     |= PMinSize;
+          hints.min_width  = (minw > 0.0f) ? (int)minw : GRPLINUXSCREENX11_CUSTOMRESIZE_MINSIZE;
+          hints.min_height = (minh > 0.0f) ? (int)minh : GRPLINUXSCREENX11_CUSTOMRESIZE_MINSIZE;
+        }
+    }
 
   XSetWMNormalHints(display, window, &hints);
 }
@@ -1927,8 +1941,18 @@ void GRPLINUXSCREENX11::UpdateCustomChromesResize()
           if((maxw > 0.0f) && (neww > (int)maxw)) neww = (int)maxw;
           if((maxh > 0.0f) && (newh > (int)maxh)) newh = (int)maxh;
 
-          if(neww < GRPLINUXSCREENX11_CUSTOMRESIZE_MINSIZE) neww = GRPLINUXSCREENX11_CUSTOMRESIZE_MINSIZE;
-          if(newh < GRPLINUXSCREENX11_CUSTOMRESIZE_MINSIZE) newh = GRPLINUXSCREENX11_CUSTOMRESIZE_MINSIZE;
+          int minw = GRPLINUXSCREENX11_CUSTOMRESIZE_MINSIZE;
+          int minh = GRPLINUXSCREENX11_CUSTOMRESIZE_MINSIZE;
+
+          GRPVIEWPORT* mainviewport = GetViewport(GRPVIEWPORT_ID_MAIN);
+          if(mainviewport)
+            {
+              if(mainviewport->GetMinWidth()  > 0.0f) minw = (int)mainviewport->GetMinWidth();
+              if(mainviewport->GetMinHeight() > 0.0f) minh = (int)mainviewport->GetMinHeight();
+            }
+
+          if(neww < minw) neww = minw;
+          if(newh < minh) newh = minh;
 
           XWindowAttributes wattr;
 

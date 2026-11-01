@@ -62,8 +62,24 @@ UI_ELEMENT_TREE_NODE::~UI_ELEMENT_TREE_NODE()
 void UI_ELEMENT_TREE_NODE::Clean()
 {
   text.Empty();
+  icon.Empty();
   expanded = false;
   father   = NULL;
+}
+
+
+bool UI_ELEMENT_TREE_NODE::SetIcon(XCHAR* resource)
+{
+  if(resource && resource[0]) icon.Set(resource);
+   else                       icon.Empty();
+
+  return true;
+}
+
+
+XSTRING* UI_ELEMENT_TREE_NODE::GetIcon()
+{
+  return &icon;
 }
 
 
@@ -152,12 +168,19 @@ void UI_ELEMENT_TREE::SetContentWidth(double contentwidth)
 
 UI_ELEMENT_TREE_NODE* UI_ELEMENT_TREE::AddNode(UI_ELEMENT_TREE_NODE* father, XCHAR* text)
 {
+  return AddNode(father, text, NULL);
+}
+
+
+UI_ELEMENT_TREE_NODE* UI_ELEMENT_TREE::AddNode(UI_ELEMENT_TREE_NODE* father, XCHAR* text, XCHAR* icon)
+{
   if(father && !IsInTree(father)) return NULL;
 
   UI_ELEMENT_TREE_NODE* node = GEN_NEW UI_ELEMENT_TREE_NODE();
   if(!node) return NULL;
 
   if(text) node->text.Set(text);
+  if(icon) node->SetIcon(icon);
 
   node->father = father;
 
@@ -353,9 +376,33 @@ double UI_ELEMENT_TREE::GetBoxCenterX(XDWORD depth)
 }
 
 
-double UI_ELEMENT_TREE::GetTextX(XDWORD depth)
+double UI_ELEMENT_TREE::GetLabelX(XDWORD depth)
 {
   return UI_ELEMENT_TREE_PADDING_X + ((double)(depth + 1) * indentwidth) + 4.0f;
+}
+
+
+double UI_ELEMENT_TREE::GetTextX(XDWORD depth)
+{
+  return GetLabelX(depth);
+}
+
+
+double UI_ELEMENT_TREE::GetIconSize()
+{
+  double sz = (double)sizefont;
+  if(sz < 1.0f) sz = 1.0f;
+  return sz;
+}
+
+
+double UI_ELEMENT_TREE::GetTextX(UI_ELEMENT_TREE_NODE* node)
+{
+  double x = GetLabelX(node ? GetNodeDepth(node) : 0);
+
+  if(node && node->HasIcon()) x += GetIconSize() + UI_ELEMENT_TREE_ICON_GAP;
+
+  return x;
 }
 
 
@@ -402,7 +449,8 @@ UI_ELEMENT_TREE_NODE* UI_ELEMENT_TREE::HitTestNode(double local_x, double local_
 
   double hdisp = Scroll_GetDisplacement(UI_PROPERTY_SCROLLEABLE_TYPE_HORIZONTAL);
 
-  if(local_x < (GetTextX(GetNodeDepth(node)) + hdisp - 2.0f)) return NULL;
+  // Label hit includes the optional icon band in front of the text.
+  if(local_x < (GetLabelX(GetNodeDepth(node)) + hdisp - 2.0f)) return NULL;
 
   return node;
 }

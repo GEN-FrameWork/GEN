@@ -708,9 +708,10 @@ bool GRPWINDOWSSCREEN::IsAboveViewportMinimumSize()
 *             override it per axis via SetMaxSize().
 *             If the resulting max is bigger than the monitor the window is on, the monitor's own work
 *             area size is used instead (a window can never usefully be bigger than the screen it is on).
-*             No minimum is enforced here: the window is left free to shrink as usual; see
-*             IsAboveViewportMinimumSize() / GRPWINDOWSBLITGLES::ComputePresentationScale for how the
-*             rendered content is hidden (not the window itself) below the viewport's minimum.
+*             When GRPVIEWPORT::SetMinSize() has an explicit minimum on an axis, ptMinTrackSize is set
+*             so the OS will not let the user shrink the window below that client size. Below-min
+*             content hiding (IsAboveViewportMinimumSize / ComputePresentationScale) remains as a
+*             secondary safety net for paths that bypass WM_GETMINMAXINFO.
 * @note       INTERNAL
 * @ingroup    PLATFORM_WINDOWS
 *
@@ -780,6 +781,24 @@ void GRPWINDOWSSCREEN::ApplyResizeLimits(MINMAXINFO* minmaxinfo)
   // window past the viewport max, per axis.
   if(maxviewportwidth  > 0) minmaxinfo->ptMaxTrackSize.x = targetwindowwidth;
   if(maxviewportheight > 0) minmaxinfo->ptMaxTrackSize.y = targetwindowheight;
+
+  // Explicit SetMinSize(): OS-enforced floor for border-drag resize (and any other WM_GETMINMAXINFO
+  // consumer). Convert client min → window min with the same style as the max path above.
+  int minviewportwidth  = (int)mainviewport->GetMinWidth();
+  int minviewportheight = (int)mainviewport->GetMinHeight();
+
+  if(minviewportwidth > 0 || minviewportheight > 0)
+    {
+      int minclientwidth  = (minviewportwidth  > 0) ? minviewportwidth  : 1;
+      int minclientheight = (minviewportheight > 0) ? minviewportheight : 1;
+      int minwindowwidth  = 0;
+      int minwindowheight = 0;
+
+      ClientSizeToWindowSize(minclientwidth, minclientheight, style, minwindowwidth, minwindowheight);
+
+      if(minviewportwidth  > 0) minmaxinfo->ptMinTrackSize.x = minwindowwidth;
+      if(minviewportheight > 0) minmaxinfo->ptMinTrackSize.y = minwindowheight;
+    }
 
   // Native Maximize (button / double-click caption / SW_SHOWMAXIMIZED): lands at the viewport max,
   // clamped to the monitor, anchored at the monitor's work area origin (in virtual-screen coordinates,

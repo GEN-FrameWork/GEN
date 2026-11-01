@@ -43,6 +43,7 @@
 #define UI_ELEMENT_TREE_BOXSIZE                 9.0f
 #define UI_ELEMENT_TREE_PADDING_X               8.0f
 #define UI_ELEMENT_TREE_PADDING_Y               4.0f
+#define UI_ELEMENT_TREE_ICON_GAP                3.0f    // gap between optional node icon and label text
 
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
 
@@ -52,11 +53,15 @@ struct UI_ELEMENT_TREE_NODE
                                      ~UI_ELEMENT_TREE_NODE          ();
 
   XSTRING                             text;
+  XSTRING                             icon;              // optional graphics resource (empty = no icon)
   bool                                expanded;
   XVECTOR<UI_ELEMENT_TREE_NODE*>      children;
   UI_ELEMENT_TREE_NODE*               father;
 
   bool                                HasChildren                   ()    { return children.GetSize() ? true : false; }
+  bool                                HasIcon                       ()    { return !icon.IsEmpty(); }
+  bool                                SetIcon                       (XCHAR* resource);
+  XSTRING*                            GetIcon                       ();
 
   private:
 
@@ -86,7 +91,9 @@ class UI_ELEMENT_TREE : public UI_ELEMENT, public UI_PROPERTY_SCROLLEABLE
     void                              SetContentWidth               (double contentwidth);
 
     // Structure. father == NULL adds a top-level node.
+    // icon: optional PNG/SVG resource drawn before the label at height == sizefont (square box).
     UI_ELEMENT_TREE_NODE*             AddNode                       (UI_ELEMENT_TREE_NODE* father, XCHAR* text);
+    UI_ELEMENT_TREE_NODE*             AddNode                       (UI_ELEMENT_TREE_NODE* father, XCHAR* text, XCHAR* icon);
     bool                              RemoveNode                    (UI_ELEMENT_TREE_NODE* node);
     bool                              Clear                         ();
 
@@ -118,7 +125,10 @@ class UI_ELEMENT_TREE : public UI_ELEMENT, public UI_PROPERTY_SCROLLEABLE
 
     // Layout metrics (shared by draw and hit-test; local to the box, without scroll).
     double                            GetBoxCenterX                 (XDWORD depth);
-    double                            GetTextX                      (XDWORD depth);
+    double                            GetLabelX                     (XDWORD depth);                  // start of icon-or-text band
+    double                            GetTextX                      (XDWORD depth);                  // same as GetLabelX (legacy)
+    double                            GetTextX                      (UI_ELEMENT_TREE_NODE* node);    // after optional icon
+    double                            GetIconSize                   ();                              // == sizefont
     double                            GetRowTop                     (XDWORD row);                    // vertical scroll applied
 
     // Applies a click at local coordinates: expand box toggles; label selects. Returns true if something changed.

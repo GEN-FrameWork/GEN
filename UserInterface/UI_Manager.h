@@ -73,6 +73,7 @@ class UI_STYLE;
 class UI_STYLESHEET;
 class UI_COMPUTEDSTYLE;
 class UI_SKINCANVAS;
+class UI_PROPERTY_SCROLLEABLE;
 
 class UI_MANAGER : public XOBSERVER, public XSUBJECT
 {
@@ -189,6 +190,13 @@ class UI_MANAGER : public XOBSERVER, public XSUBJECT
     // Phase 3 / callers outside UI_MANAGER: true when mask is only #[TRANSLATE_N] (no live placeholders).
     bool                            MaskText_IsTranslateOnly                  (XSTRING* masktext);
 
+    // Overlay scrollbar thumb drag. Call each input tick with the pointer in screen px and the
+    // mouse/touch pressed state. Returns true while the pointer is captured by a scrollbar
+    // (press on track/thumb, drag, or the release that ends a drag) so the app can skip
+    // element selection / content swipe / other drags for that gesture.
+    bool                            ScrollBar_OnPointer                       (int screen_x, int screen_y, bool pressed);
+    bool                            ScrollBar_IsDragging                      ();
+
   private:
                                     UI_MANAGER                                ();
                                     UI_MANAGER                                (UI_MANAGER const&);
@@ -284,6 +292,12 @@ class UI_MANAGER : public XOBSERVER, public XSUBJECT
     bool                            SelectScrollBar                           (int x, int y);
     bool                            SelectScrollBarInElement                  (UI_ELEMENT* element, int x, int y);
 
+    bool                            ScrollBar_BeginDragInElement              (UI_ELEMENT* element, int design_x, int design_y);
+    bool                            ScrollBar_BeginDrag                       (int screen_x, int screen_y);
+    bool                            ScrollBar_ApplyDrag                       (int screen_x, int screen_y);
+    void                            ScrollBar_EndDrag                         ();
+    bool                            ScrollBar_AxisHit                         (UI_ELEMENT* element, UI_PROPERTY_SCROLLEABLE* scrolleable, int axis, int design_x, int design_y, bool begin_grab);
+
     void                            HandleEvent_UI                            (UI_XEVENT* event);
     void                            HandleEvent                               (XEVENT* xevent);
     
@@ -320,6 +334,13 @@ class UI_MANAGER : public XOBSERVER, public XSUBJECT
     int                             last_yposition;
 
     UI_ELEMENT*                     preselect_element;
+
+    UI_ELEMENT*                     scrollbar_drag_element;
+    int                             scrollbar_drag_axis;     // UI_PROPERTY_SCROLLEABLE_TYPE_VERTICAL / HORIZONTAL
+    bool                            scrollbar_drag_active;
+    bool                            scrollbar_drag_prevpressed;
+    double                          scrollbar_drag_grab;     // pointer offset inside the thumb along the axis
+    double                          scrollbar_drag_thumb;    // thumb length cached at grab time
 
     UI_VIRTUALKEYBOARD*             virtualkeyboard;
 

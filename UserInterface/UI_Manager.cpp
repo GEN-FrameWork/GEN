@@ -2858,12 +2858,14 @@ UI_ANIMATION* UI_MANAGER::GetOrAddAnimationCache(UI_SKIN_DRAWMODE drawmode, GRPP
   bool          status    = false; 
 
   bool isvectorsized = (referencecanvas && (width > 0.0) && (height > 0.0) && IsVectorResource(resource));
+  // Bitmap callers may also request an exact pixel size (e.g. TREE node icons at sizefont×sizefont).
+  bool isbitmapsized = (!isvectorsized && (width > 0.0) && (height > 0.0) && resource && resource[0]);
 
   XSTRING cachekey;
 
   cachekey = resource;
 
-  if(isvectorsized)
+  if(isvectorsized || isbitmapsized)
     {
       XSTRING sizepart;
 
@@ -2903,7 +2905,20 @@ UI_ANIMATION* UI_MANAGER::GetOrAddAnimationCache(UI_SKIN_DRAWMODE drawmode, GRPP
         {
           case UI_SKIN_DRAWMODE_UNKNOWN   : break;
 
-          case UI_SKIN_DRAWMODE_CANVAS    : status = animation->LoadFromFile(resourcename, grppropertymode);                                                                           
+          case UI_SKIN_DRAWMODE_CANVAS    : status = animation->LoadFromFile(resourcename, grppropertymode);
+                                            if(status && isbitmapsized && animation->GetBitmap())
+                                              {
+                                                XDWORD bw = animation->GetBitmap()->GetWidth();
+                                                XDWORD bh = animation->GetBitmap()->GetHeight();
+                                                XDWORD tw = (XDWORD)width;
+                                                XDWORD th = (XDWORD)height;
+                                                if(tw < 1) tw = 1;
+                                                if(th < 1) th = 1;
+                                                if((bw != tw) || (bh != th))
+                                                  {
+                                                    animation->GetBitmap()->Scale((int)tw, (int)th);
+                                                  }
+                                              }
                                             break;
 
           case UI_SKIN_DRAWMODE_CONTEXT   : break;
@@ -9363,72 +9378,14 @@ bool UI_MANAGER::UseMotion(INPCURSORMOTION* cursormotion)
 * --------------------------------------------------------------------------------------------------------------------*/
 bool UI_MANAGER::SelectScrollBarInElement(UI_ELEMENT* element, int x, int y)
 {
+  // Click-to-position (SELECTION / legacy): jump without keeping a drag capture.
   if(!element) return false;
 
   UI_PROPERTY_SCROLLEABLE* scrolleable = dynamic_cast<UI_PROPERTY_SCROLLEABLE*>(element);
   if(scrolleable && element->IsActive() && element->IsVisible())
     {
-      double box_left   = 0.0f;
-      double box_top    = 0.0f;
-      double box_right  = 0.0f;
-      double box_bottom = 0.0f;
-      double box_w      = 0.0f;
-      double box_h      = 0.0f;
-      UI_SKINCANVAS::GetScrollContentBox(element, element->GetXPositionWithScroll(), element->GetYPositionWithScroll(), box_left, box_top, box_right, box_bottom, box_w, box_h);
-      (void)box_w; (void)box_h;
-
-      double radius      = (double)element->GetRoundRect();
-      double radius_vert = radius;
-      if(dynamic_cast<UI_ELEMENT_PROPERTYLIST*>(element)) radius_vert = 0.0f;
-
-      double tl;
-      double tt;
-      double tr;
-      double tb;
-
-      // vertical bar : right gutter (PROPERTYLIST track starts under the sticky header)
-      if(scrolleable->Scroll_GetTrackRect(UI_PROPERTY_SCROLLEABLE_TYPE_VERTICAL, box_left, box_top, box_right, box_bottom, radius_vert, tl, tt, tr, tb))
-        {
-          if((radius_vert == 0.0f) && (radius > 0.0f)) tb -= radius;
-
-          UI_BOUNDARYLINE track;
-          track.x      = tl;
-          track.width  = tr - tl;
-          track.y      = tb;
-          track.height = tb - tt;
-
-          if((track.height > 0.0f) && track.IsWithin(x, y))
-            {
-              double tracklen = tb - tt;
-              double fraction = (tracklen != 0.0f) ? (((double)y - tt) / tracklen) : 0.0f;
-
-              scrolleable->Scroll_SetFraction(UI_PROPERTY_SCROLLEABLE_TYPE_VERTICAL, fraction);
-              Elements_SetToRedraw(element);
-
-              return true;
-            }
-        }
-
-      // horizontal bar : bottom gutter
-      if(scrolleable->Scroll_GetTrackRect(UI_PROPERTY_SCROLLEABLE_TYPE_HORIZONTAL, box_left, box_top, box_right, box_bottom, radius, tl, tt, tr, tb))
-        {
-          UI_BOUNDARYLINE track;
-          track.x      = tl;
-          track.width  = tr - tl;
-          track.y      = tb;
-          track.height = tb - tt;
-
-          if(track.IsWithin(x, y))
-            {
-              double tracklen = tr - tl;
-              double fraction = (tracklen != 0.0f) ? (((double)x - tl) / tracklen) : 0.0f;
-
-              scrolleable->Scroll_SetFraction(UI_PROPERTY_SCROLLEABLE_TYPE_HORIZONTAL, fraction);
-              Elements_SetToRedraw(element);
-
-              return true;
-            }
-        }
+      if(ScrollBar_AxisHit(element, scrolleable, UI_PROPERTY_SCROLLEABLE_TYPE_VERTICAL  , x, y, false)) return true;
+      if(ScrollBar_AxisHit(element, scrolleable, UI_PROPERTY_SCROLLEABLE_TYPE_HORIZONTAL, x, y, false)) return true;
     }
 
   for(XDWORD c=0; c<element->GetComposeElements()->GetSize(); c++)
@@ -9438,6 +9395,296 @@ bool UI_MANAGER::SelectScrollBarInElement(UI_ELEMENT* element, int x, int y)
     }
 
   return false;
+}
+
+
+/**-------------------------------------------------------------------------------------------------------------------
+*
+* @fn         bool UI_MANAGER::ScrollBar_AxisHit(UI_ELEMENT* element, UI_PROPERTY_SCROLLEABLE* scrolleable, int axis, int design_x, int design_y, bool begin_grab)
+* @brief      Hit-tests one overlay scrollbar axis; sets scroll fraction (thumb-aware). Optionally starts a drag grab.
+* @ingroup    USERINTERFACE
+*
+* @param[in]  element : Scrollable element.
+* @param[in]  scrolleable : Scrolleable property.
+* @param[in]  axis : VERTICAL or HORIZONTAL.
+* @param[in]  design_x : Pointer X in design px.
+* @param[in]  design_y : Pointer Y in design px.
+* @param[in]  begin_grab : true → capture drag state for follow-up moves.
+*
+* @return     bool : true if the track was hit.
+*
+*---------------------------------------------------------------------------------------------------------------------*/
+bool UI_MANAGER::ScrollBar_AxisHit(UI_ELEMENT* element, UI_PROPERTY_SCROLLEABLE* scrolleable, int axis, int design_x, int design_y, bool begin_grab)
+{
+  if(!element || !scrolleable) return false;
+
+  double box_left   = 0.0f;
+  double box_top    = 0.0f;
+  double box_right  = 0.0f;
+  double box_bottom = 0.0f;
+  double box_w      = 0.0f;
+  double box_h      = 0.0f;
+  UI_SKINCANVAS::GetScrollContentBox(element, element->GetXPositionWithScroll(), element->GetYPositionWithScroll(), box_left, box_top, box_right, box_bottom, box_w, box_h);
+
+  double radius      = (double)element->GetRoundRect();
+  double radius_axis = radius;
+  if((axis == UI_PROPERTY_SCROLLEABLE_TYPE_VERTICAL) && dynamic_cast<UI_ELEMENT_PROPERTYLIST*>(element)) radius_axis = 0.0f;
+
+  double tl = 0.0f;
+  double tt = 0.0f;
+  double tr = 0.0f;
+  double tb = 0.0f;
+  if(!scrolleable->Scroll_GetTrackRect((UI_PROPERTY_SCROLLEABLE_TYPE)axis, box_left, box_top, box_right, box_bottom, radius_axis, tl, tt, tr, tb)) return false;
+
+  if((axis == UI_PROPERTY_SCROLLEABLE_TYPE_VERTICAL) && (radius_axis == 0.0f) && (radius > 0.0f)) tb -= radius;
+
+  UI_BOUNDARYLINE track;
+  track.x      = tl;
+  track.width  = tr - tl;
+  track.y      = tb;
+  track.height = tb - tt;
+
+  if((track.width <= 0.0f) || (track.height <= 0.0f)) return false;
+  if(!track.IsWithin(design_x, design_y)) return false;
+
+  double tracklen = (axis == UI_PROPERTY_SCROLLEABLE_TYPE_VERTICAL) ? (tb - tt) : (tr - tl);
+  if(tracklen <= 0.0f) return false;
+
+  double box_extent = (axis == UI_PROPERTY_SCROLLEABLE_TYPE_VERTICAL) ? box_h : box_w;
+  double viewport   = scrolleable->Scroll_GetContentViewport((UI_PROPERTY_SCROLLEABLE_TYPE)axis, box_extent);
+  double limit      = scrolleable->Scroll_GetLimit((UI_PROPERTY_SCROLLEABLE_TYPE)axis);
+  double disp       = scrolleable->Scroll_GetDisplacement((UI_PROPERTY_SCROLLEABLE_TYPE)axis);
+  double content    = viewport - limit;
+  double fraction   = (limit != 0.0f) ? (disp / limit) : 0.0f;
+  if(fraction < 0.0f) fraction = 0.0f;
+  if(fraction > 1.0f) fraction = 1.0f;
+
+  // Keep in sync with UI_SKINCANVAS::DrawScrollBars min thumb.
+  const double minthumb = 16.0f;
+  double thumb = (content > 0.0f) ? (tracklen * (viewport / content)) : tracklen;
+  if(thumb < minthumb) thumb = minthumb;
+  if(thumb > tracklen) thumb = tracklen;
+
+  double travel = tracklen - thumb;
+  double thumb_pos = ((axis == UI_PROPERTY_SCROLLEABLE_TYPE_VERTICAL) ? tt : tl) + (fraction * travel);
+  double pointer   = (axis == UI_PROPERTY_SCROLLEABLE_TYPE_VERTICAL) ? (double)design_y : (double)design_x;
+
+  double grab = pointer - thumb_pos;
+  if((grab < 0.0f) || (grab > thumb))
+    {
+      // Click on the track outside the thumb: jump so the thumb centers on the pointer.
+      grab = thumb * 0.5f;
+    }
+
+  double new_fraction = (travel > 0.0f) ? ((pointer - grab - ((axis == UI_PROPERTY_SCROLLEABLE_TYPE_VERTICAL) ? tt : tl)) / travel) : 0.0f;
+  scrolleable->Scroll_SetFraction((UI_PROPERTY_SCROLLEABLE_TYPE)axis, new_fraction);
+  Elements_SetToRedraw(element);
+
+  if(begin_grab)
+    {
+      scrollbar_drag_element = element;
+      scrollbar_drag_axis    = axis;
+      scrollbar_drag_active  = true;
+      scrollbar_drag_grab    = grab;
+      scrollbar_drag_thumb   = thumb;
+    }
+
+  return true;
+}
+
+
+/**-------------------------------------------------------------------------------------------------------------------
+*
+* @fn         bool UI_MANAGER::ScrollBar_BeginDragInElement(UI_ELEMENT* element, int design_x, int design_y)
+* @brief      Tries to start a scrollbar thumb drag on element or a descendant.
+* @ingroup    USERINTERFACE
+*
+*---------------------------------------------------------------------------------------------------------------------*/
+bool UI_MANAGER::ScrollBar_BeginDragInElement(UI_ELEMENT* element, int design_x, int design_y)
+{
+  if(!element || !element->IsVisible() || !element->IsActive()) return false;
+
+  UI_PROPERTY_SCROLLEABLE* scrolleable = dynamic_cast<UI_PROPERTY_SCROLLEABLE*>(element);
+  if(scrolleable)
+    {
+      if(ScrollBar_AxisHit(element, scrolleable, UI_PROPERTY_SCROLLEABLE_TYPE_VERTICAL  , design_x, design_y, true)) return true;
+      if(ScrollBar_AxisHit(element, scrolleable, UI_PROPERTY_SCROLLEABLE_TYPE_HORIZONTAL, design_x, design_y, true)) return true;
+    }
+
+  for(XDWORD c=0; c<element->GetComposeElements()->GetSize(); c++)
+    {
+      UI_ELEMENT* subelement = element->GetComposeElements()->Get(c);
+      if(subelement && ScrollBar_BeginDragInElement(subelement, design_x, design_y)) return true;
+    }
+
+  return false;
+}
+
+
+/**-------------------------------------------------------------------------------------------------------------------
+*
+* @fn         bool UI_MANAGER::ScrollBar_BeginDrag(int screen_x, int screen_y)
+* @brief      Starts a scrollbar drag if the pointer is over any overlay scrollbar track.
+* @ingroup    USERINTERFACE
+*
+*---------------------------------------------------------------------------------------------------------------------*/
+bool UI_MANAGER::ScrollBar_BeginDrag(int screen_x, int screen_y)
+{
+  ScrollBar_EndDrag();
+
+  for(int d=0; d<layouts.GetSize(); d++)
+    {
+      UI_LAYOUT* layout = layouts.Get(d);
+      if(!layout) continue;
+
+      int design_x = screen_x;
+      int design_y = screen_y;
+      MapScreenToDesign(layout, screen_x, screen_y, design_x, design_y);
+
+      for(XDWORD c=0; c<layout->Elements_Get()->GetSize(); c++)
+        {
+          UI_ELEMENT* element = layout->Elements_Get()->Get(c);
+          if(element && ScrollBar_BeginDragInElement(element, design_x, design_y)) return true;
+        }
+    }
+
+  return false;
+}
+
+
+/**-------------------------------------------------------------------------------------------------------------------
+*
+* @fn         bool UI_MANAGER::ScrollBar_ApplyDrag(int screen_x, int screen_y)
+* @brief      Updates scroll position while a scrollbar thumb drag is active.
+* @ingroup    USERINTERFACE
+*
+*---------------------------------------------------------------------------------------------------------------------*/
+bool UI_MANAGER::ScrollBar_ApplyDrag(int screen_x, int screen_y)
+{
+  if(!scrollbar_drag_active || !scrollbar_drag_element) return false;
+
+  UI_ELEMENT* element = scrollbar_drag_element;
+  UI_PROPERTY_SCROLLEABLE* scrolleable = dynamic_cast<UI_PROPERTY_SCROLLEABLE*>(element);
+  if(!scrolleable || !element->IsVisible())
+    {
+      ScrollBar_EndDrag();
+      return false;
+    }
+
+  UI_LAYOUT* layout = element->GetLayout();
+  int design_x = screen_x;
+  int design_y = screen_y;
+  if(layout) MapScreenToDesign(layout, screen_x, screen_y, design_x, design_y);
+
+  double box_left   = 0.0f;
+  double box_top    = 0.0f;
+  double box_right  = 0.0f;
+  double box_bottom = 0.0f;
+  double box_w      = 0.0f;
+  double box_h      = 0.0f;
+  UI_SKINCANVAS::GetScrollContentBox(element, element->GetXPositionWithScroll(), element->GetYPositionWithScroll(), box_left, box_top, box_right, box_bottom, box_w, box_h);
+
+  double radius      = (double)element->GetRoundRect();
+  double radius_axis = radius;
+  if((scrollbar_drag_axis == UI_PROPERTY_SCROLLEABLE_TYPE_VERTICAL) && dynamic_cast<UI_ELEMENT_PROPERTYLIST*>(element)) radius_axis = 0.0f;
+
+  double tl = 0.0f;
+  double tt = 0.0f;
+  double tr = 0.0f;
+  double tb = 0.0f;
+  if(!scrolleable->Scroll_GetTrackRect((UI_PROPERTY_SCROLLEABLE_TYPE)scrollbar_drag_axis, box_left, box_top, box_right, box_bottom, radius_axis, tl, tt, tr, tb))
+    {
+      ScrollBar_EndDrag();
+      return false;
+    }
+
+  if((scrollbar_drag_axis == UI_PROPERTY_SCROLLEABLE_TYPE_VERTICAL) && (radius_axis == 0.0f) && (radius > 0.0f)) tb -= radius;
+
+  double tracklen = (scrollbar_drag_axis == UI_PROPERTY_SCROLLEABLE_TYPE_VERTICAL) ? (tb - tt) : (tr - tl);
+  double thumb    = scrollbar_drag_thumb;
+  if(thumb > tracklen) thumb = tracklen;
+  double travel   = tracklen - thumb;
+  double pointer  = (scrollbar_drag_axis == UI_PROPERTY_SCROLLEABLE_TYPE_VERTICAL) ? (double)design_y : (double)design_x;
+  double origin   = (scrollbar_drag_axis == UI_PROPERTY_SCROLLEABLE_TYPE_VERTICAL) ? tt : tl;
+
+  double fraction = (travel > 0.0f) ? ((pointer - scrollbar_drag_grab - origin) / travel) : 0.0f;
+  scrolleable->Scroll_SetFraction((UI_PROPERTY_SCROLLEABLE_TYPE)scrollbar_drag_axis, fraction);
+  Elements_SetToRedraw(element);
+
+  return true;
+}
+
+
+/**-------------------------------------------------------------------------------------------------------------------
+*
+* @fn         void UI_MANAGER::ScrollBar_EndDrag()
+* @brief      Clears scrollbar drag capture.
+* @ingroup    USERINTERFACE
+*
+*---------------------------------------------------------------------------------------------------------------------*/
+void UI_MANAGER::ScrollBar_EndDrag()
+{
+  scrollbar_drag_element = NULL;
+  scrollbar_drag_axis    = UI_PROPERTY_SCROLLEABLE_TYPE_UNKWOWN;
+  scrollbar_drag_active  = false;
+  scrollbar_drag_grab    = 0.0f;
+  scrollbar_drag_thumb   = 0.0f;
+}
+
+
+/**-------------------------------------------------------------------------------------------------------------------
+*
+* @fn         bool UI_MANAGER::ScrollBar_OnPointer(int screen_x, int screen_y, bool pressed)
+* @brief      Press/move/release driver for overlay scrollbar thumb dragging.
+* @ingroup    USERINTERFACE
+*
+* @param[in]  screen_x : Pointer X in screen (framebuffer) px.
+* @param[in]  screen_y : Pointer Y in screen (framebuffer) px.
+* @param[in]  pressed : true while the primary mouse/touch button is down.
+*
+* @return     bool : true if a scrollbar owns this gesture (including the release that ends it).
+*
+*---------------------------------------------------------------------------------------------------------------------*/
+bool UI_MANAGER::ScrollBar_OnPointer(int screen_x, int screen_y, bool pressed)
+{
+  if(!pressed)
+    {
+      bool was = scrollbar_drag_active;
+      scrollbar_drag_prevpressed = false;
+      if(was) ScrollBar_EndDrag();
+      return was;
+    }
+
+  if(scrollbar_drag_active)
+    {
+      scrollbar_drag_prevpressed = true;
+      return ScrollBar_ApplyDrag(screen_x, screen_y);
+    }
+
+  // Capture only on the press edge (same rule as the valor splitter): dragging into the
+  // gutter from content must not steal the gesture mid-swipe.
+  if(scrollbar_drag_prevpressed)
+    {
+      return false;
+    }
+
+  scrollbar_drag_prevpressed = true;
+  return ScrollBar_BeginDrag(screen_x, screen_y);
+}
+
+
+/**-------------------------------------------------------------------------------------------------------------------
+*
+* @fn         bool UI_MANAGER::ScrollBar_IsDragging()
+* @brief      True while an overlay scrollbar thumb drag is active.
+* @ingroup    USERINTERFACE
+*
+* @return     bool : true if dragging.
+*
+*---------------------------------------------------------------------------------------------------------------------*/
+bool UI_MANAGER::ScrollBar_IsDragging()
+{
+  return scrollbar_drag_active;
 }
 
 
@@ -9938,6 +10185,13 @@ void UI_MANAGER::Clean()
   last_yposition      = 0;
 
   preselect_element   = NULL;
+
+  scrollbar_drag_element     = NULL;
+  scrollbar_drag_axis        = UI_PROPERTY_SCROLLEABLE_TYPE_UNKWOWN;
+  scrollbar_drag_active      = false;
+  scrollbar_drag_prevpressed = false;
+  scrollbar_drag_grab        = 0.0f;
+  scrollbar_drag_thumb       = 0.0f;
 
   virtualkeyboard     = NULL;
 

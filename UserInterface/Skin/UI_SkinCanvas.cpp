@@ -545,6 +545,114 @@ static void UI_SkinCanvas_PunchRoundRectCornerTips(GRP2DCANVAS* canvas, GRP2DREB
 
 /**-------------------------------------------------------------------------------------------------------------------
 *
+* @fn         bool UI_SkinCanvas_DrawFramedPanelBackground
+* @brief      Fill + stroke a panel with the same rounded-corner contract as Draw_Form (page seed under the
+*             AABB, RoundRect isfill=true, PunchRoundRectCornerTips). Console / Tree / PropertyList used a bare
+*             RoundRect before — corners looked sharper or dirtier than FORM (e.g. XTraceMonitor opstatus foot).
+* @note       INTERNAL / FILE LOCAL.
+* @ingroup    USERINTERFACE
+*
+* --------------------------------------------------------------------------------------------------------------------*/
+static bool UI_SkinCanvas_DrawFramedPanelBackground(GRP2DCANVAS* canvas, GRPSCREEN* screen, UI_ELEMENT* element,
+                                                    double x_position, double y_position, double box_w, double box_h)
+{
+  if(!canvas || !element) return false;
+
+  double y_top = UI_BOUNDARYLINE_EdgeTop(y_position, box_h);
+
+  bool has_bg     = element->IsBackgroundColorSet() && (element->GetBackgroundColor()->GetAlpha() > 0);
+  bool has_border = element->IsBorderColorSet() && (element->GetBorderWidth() > 0.0);
+  if(!has_bg && !has_border) return false;
+
+  GRP2DCOLOR_RGBA8 fill(0, 0, 0, 0);
+  if(has_bg)
+    {
+      UI_COLOR* bg = element->GetBackgroundColor();
+      fill = GRP2DCOLOR_RGBA8(bg->GetRed(), bg->GetGreen(), bg->GetBlue(), bg->GetAlpha());
+    }
+
+  double           bw = element->GetBorderWidth();
+  GRP2DCOLOR_RGBA8 line(0, 0, 0, 0);
+  if(has_border)
+    {
+      UI_COLOR* lc = element->GetBorderColor();
+      line = GRP2DCOLOR_RGBA8(lc->GetRed(), lc->GetGreen(), lc->GetBlue(), lc->GetAlpha());
+    }
+
+  double minx = x_position;
+  double maxx = x_position + box_w;
+  double miny = y_top;
+  double maxy = y_position;
+  double rr   = (double)element->GetRoundRect();
+
+  // Same page-seed as Draw_Form's classic GetRoundRect path: father bg → neighbour sample → opaque page.
+  GRP2DCOLOR_RGBA8 seed_bg(0, 0, 0, 0);
+  {
+    UI_ELEMENT* father = element->GetFather();
+    UI_COLOR*   fbg    = NULL;
+    if(father)
+      {
+        if(father->IsBackgroundColorSet()) fbg = father->GetBackgroundColor();
+        else                               fbg = father->GetColor();
+      }
+    if(fbg && (fbg->GetAlpha() > 0) && ((fbg->GetRed() + fbg->GetGreen() + fbg->GetBlue()) > 8))
+      {
+        seed_bg = GRP2DCOLOR_RGBA8((XBYTE)fbg->GetRed(), (XBYTE)fbg->GetGreen(), (XBYTE)fbg->GetBlue(), (XBYTE)fbg->GetAlpha());
+      }
+     else if(screen && !screen->Style_Is(GRPSCREENSTYLE_TRANSPARENT))
+      {
+        const double sx[4] = { minx - 2.0, maxx + 1.0, maxx + 1.0, minx - 2.0 };
+        const double sy[4] = { miny - 2.0, miny - 2.0, maxy + 1.0, maxy + 1.0 };
+        bool have = false;
+        for(int i = 0; i < 4 && !have; i++)
+          {
+            GRP2DCOLOR* c = canvas->GetPixel(sx[i], sy[i]);
+            if(!c) continue;
+            GRP2DCOLOR_RGBA8 s = *(GRP2DCOLOR_RGBA8*)c;
+            if(s.a > 0 && (s.r + s.g + s.b) > 8) { seed_bg = s; have = true; }
+          }
+        if(!have) seed_bg = GRP2DCOLOR_RGBA8(0x19, 0x1E, 0x24, 255);
+      }
+  }
+
+  if(seed_bg.a > 0)
+    {
+      GRP2DCOLOR_RGBA8 line_none(0, 0, 0, 0);
+      canvas->SetFillColor(&seed_bg);
+      canvas->SetLineColor(&line_none);
+      canvas->SetLineWidth(1.0f);
+      canvas->Rectangle(minx - 1.0, maxy + 1.0, maxx + 1.0, miny - 1.0, true);
+    }
+
+  if(!has_border || (bw == 0.0))
+    {
+      GRP2DCOLOR_RGBA8 line_none(0, 0, 0, 0);
+      canvas->SetLineColor(&line_none);
+      canvas->SetLineWidth(1.0f);
+    }
+   else
+    {
+      canvas->SetLineColor(&line);
+      canvas->SetLineWidth((bw < 0.0) ? 1.0f : (float)bw);
+    }
+  canvas->SetFillColor(&fill);
+
+  if(rr > 0.0)
+    {
+      canvas->RoundRect(minx, maxy, maxx, miny, rr, true);
+      UI_SkinCanvas_PunchRoundRectCornerTips(canvas, NULL, minx, miny, maxx, maxy, rr, rr, rr, rr, &seed_bg);
+    }
+   else
+    {
+      canvas->Rectangle(minx, maxy, maxx, miny, true);
+    }
+
+  return true;
+}
+
+
+/**-------------------------------------------------------------------------------------------------------------------
+*
 * @fn         void UI_SkinCanvas_DrawSoftShadow(GRP2DCANVAS* canvas, double minx, double miny, double maxx, double maxy, double rTL, double rTR, double rBR, double rBL, UI_COLOR* shadow_color, int blur_radius)
 * @brief      Draw a soft-edged rounded-rect drop shadow. Rasterises the silhouette into an off-screen RGBA
 *             bitmap padded to hold the blur fade, runs agg::stack_blur_rgba32 on it, then composites via
@@ -4754,50 +4862,8 @@ bool UI_SKINCANVAS::Draw_Console(UI_ELEMENT* element)
       double y_top = UI_BOUNDARYLINE_EdgeTop(y_position, box_h);
       double y_bot = y_top + box_h;
 
-      // Own opaque backdrop + optional border (same contract as Draw_Form). Do NOT call RoundRect/Rectangle
-      // with isfill=false after setting fill=line: AGG's opaque RoundRect path paints a solid outer plate in
-      // the line colour and only punches the interior when isfill=true — that was wiping the console body
-      // to border-grey (XTraceMonitorGEN blank panel).
-      {
-        bool has_bg = element_console->IsBackgroundColorSet() && (element_console->GetBackgroundColor()->GetAlpha() > 0);
-        bool has_border = element_console->IsBorderColorSet() && (element_console->GetBorderWidth() > 0.0f);
-
-        if(has_bg || has_border)
-          {
-            GRP2DCOLOR_RGBA8 bkgcolor(0, 0, 0, 0);
-            if(has_bg)
-              {
-                UI_COLOR* bg = element_console->GetBackgroundColor();
-                bkgcolor = GRP2DCOLOR_RGBA8(bg->GetRed(), bg->GetGreen(), bg->GetBlue(), bg->GetAlpha());
-              }
-
-            if(has_border)
-              {
-                UI_COLOR* lc = element_console->GetBorderColor();
-                GRP2DCOLOR_RGBA8 linecolor(lc->GetRed(), lc->GetGreen(), lc->GetBlue(), lc->GetAlpha());
-                canvas->SetLineColor(&linecolor);
-                canvas->SetLineWidth((float)element_console->GetBorderWidth());
-              }
-             else
-              {
-                GRP2DCOLOR_RGBA8 linecolor_none(0, 0, 0, 0);
-                canvas->SetLineColor(&linecolor_none);
-                canvas->SetLineWidth(1.0f);
-              }
-
-            canvas->SetFillColor(&bkgcolor);
-
-            // Same edge order as Draw_Form: (left, bottom, right, top).
-            if(element_console->GetRoundRect())
-              {
-                canvas->RoundRect(x_position, y_position, x_position + box_w, y_top, element_console->GetRoundRect(), true);
-              }
-             else
-              {
-                canvas->Rectangle(x_position, y_position, x_position + box_w, y_top, true);
-              }
-          }
-      }
+      // Same framed-panel contract as Draw_Form (page seed + RoundRect isfill + corner punch).
+      UI_SkinCanvas_DrawFramedPanelBackground(canvas, GetScreen(), element_console, x_position, y_position, box_w, box_h);
 
       canvas->Vectorfont_GetConfig()->SetSize(element_console->GetSizeFont());
 
@@ -5010,8 +5076,10 @@ bool UI_SKINCANVAS::Draw_Console(UI_ELEMENT* element)
             }
         }
 
-      // Cover any remaining ascender/AA crumbs in the vertical padding bands (inset so the
-      // already-painted border stroke is not erased — no second RoundRect after text).
+      // Cover ascender/AA crumbs in the vertical padding bands. Stay strictly inside the RoundRect
+      // *inner* fill (lw inset + corner radius) — a sharp AABB wipe from x+bw/y+bw erases the border
+      // ring that AGG leaves in the corner AABB tips (same pixels Draw_Form keeps), and the bottom
+      // wipe used to include y_bot-bw which is the bottom border row itself.
       if(element_console->IsBackgroundColorSet() && element_console->GetBackgroundColor()->GetAlpha() > 0)
         {
           UI_COLOR* bg = element_console->GetBackgroundColor();
@@ -5023,12 +5091,21 @@ bool UI_SKINCANVAS::Draw_Console(UI_ELEMENT* element)
             {
               double bw_i = (element_console->IsBorderColorSet() && element_console->GetBorderWidth() > 0.0f)
                             ? element_console->GetBorderWidth() : 0.0;
-              double x0 = x_position + bw_i;
-              double x1 = x_position + box_w - bw_i;
+              double rr   = (double)element_console->GetRoundRect();
+              double r_in = (rr > bw_i) ? (rr - bw_i) : 0.0;
+              // Horizontal: clear of corner border tips. Vertical: leave the border row alone.
+              double x0 = x_position + bw_i + r_in;
+              double x1 = x_position + box_w - bw_i - r_in;
               if(x1 > x0)
                 {
-                  canvas->Rectangle(x0, y_top + pad_y, x1, y_top + bw_i, true);
-                  canvas->Rectangle(x0, y_bot - bw_i, x1, y_bot - pad_y, true);
+                  double y_top_wipe0 = y_top + bw_i;                 // first interior scanline
+                  double y_top_wipe1 = y_top + pad_y;
+                  double y_bot_wipe0 = y_bot - pad_y;
+                  double y_bot_wipe1 = y_bot - bw_i - ((bw_i > 0.0) ? 1.0 : 0.0); // exclude border row
+                  if(y_top_wipe1 > y_top_wipe0)
+                    canvas->Rectangle(x0, y_top_wipe1, x1, y_top_wipe0, true);
+                  if(y_bot_wipe1 > y_bot_wipe0)
+                    canvas->Rectangle(x0, y_bot_wipe1, x1, y_bot_wipe0, true);
                 }
             }
         }
@@ -5125,47 +5202,14 @@ bool UI_SKINCANVAS::Draw_Tree(UI_ELEMENT* element)
       double bw       = has_border ? element_tree->GetBorderWidth() : 0.0;
 
       GRP2DCOLOR_RGBA8 color_back(12, 14, 18, 255);
+      if(element_tree->IsBackgroundColorSet() && (element_tree->GetBackgroundColor()->GetAlpha() > 0))
+        {
+          UI_COLOR* bg = element_tree->GetBackgroundColor();
+          color_back = GRP2DCOLOR_RGBA8(bg->GetRed(), bg->GetGreen(), bg->GetBlue(), 255);
+        }
 
-      // Own opaque backdrop + optional border. Same RoundRect isfill=true contract as Draw_Console / Draw_Form.
-      {
-        bool has_bg = element_tree->IsBackgroundColorSet() && (element_tree->GetBackgroundColor()->GetAlpha() > 0);
-
-        if(has_bg || has_border)
-          {
-            GRP2DCOLOR_RGBA8 bkgcolor(0, 0, 0, 0);
-            if(has_bg)
-              {
-                UI_COLOR* bg = element_tree->GetBackgroundColor();
-                bkgcolor   = GRP2DCOLOR_RGBA8(bg->GetRed(), bg->GetGreen(), bg->GetBlue(), bg->GetAlpha());
-                color_back = GRP2DCOLOR_RGBA8(bg->GetRed(), bg->GetGreen(), bg->GetBlue(), 255);
-              }
-
-            if(has_border)
-              {
-                UI_COLOR* lc = element_tree->GetBorderColor();
-                GRP2DCOLOR_RGBA8 linecolor(lc->GetRed(), lc->GetGreen(), lc->GetBlue(), lc->GetAlpha());
-                canvas->SetLineColor(&linecolor);
-                canvas->SetLineWidth((float)element_tree->GetBorderWidth());
-              }
-             else
-              {
-                GRP2DCOLOR_RGBA8 linecolor_none(0, 0, 0, 0);
-                canvas->SetLineColor(&linecolor_none);
-                canvas->SetLineWidth(1.0f);
-              }
-
-            canvas->SetFillColor(&bkgcolor);
-
-            if(element_tree->GetRoundRect())
-              {
-                canvas->RoundRect(x_position, y_position, x_position + box_w, y_top, element_tree->GetRoundRect(), true);
-              }
-             else
-              {
-                canvas->Rectangle(x_position, y_position, x_position + box_w, y_top, true);
-              }
-          }
-      }
+      // Same framed-panel contract as Draw_Form (page seed + RoundRect isfill + corner punch).
+      UI_SkinCanvas_DrawFramedPanelBackground(canvas, GetScreen(), element_tree, x_position, y_position, box_w, box_h);
 
       canvas->Vectorfont_GetConfig()->SetSize(element_tree->GetSizeFont());
 
@@ -5180,7 +5224,7 @@ bool UI_SKINCANVAS::Draw_Tree(UI_ELEMENT* element)
 
       element_tree->SetContentHeight((UI_ELEMENT_TREE_PADDING_Y * 2.0f) + ((double)rowcount * rowheight));
 
-      // Horizontal extent: deepest/longest visible label (pad + indent + text). Measured with the active font.
+      // Horizontal extent: deepest/longest visible label (pad + indent + optional icon + text).
       {
         double max_right = UI_ELEMENT_TREE_PADDING_X;
 
@@ -5189,7 +5233,7 @@ bool UI_SKINCANVAS::Draw_Tree(UI_ELEMENT* element)
             UI_ELEMENT_TREE_NODE* node = element_tree->GetVisibleNode(i);
             if(!node) continue;
 
-            double text_x = element_tree->GetTextX(element_tree->GetNodeDepth(node));
+            double text_x = element_tree->GetTextX(node);
             double text_w = node->text.IsEmpty() ? 0.0f : (double)canvas->VectorFont_GetWidth(node->text.Get());
             double right  = text_x + text_w + UI_ELEMENT_TREE_PADDING_X;
 
@@ -5267,20 +5311,23 @@ bool UI_SKINCANVAS::Draw_Tree(UI_ELEMENT* element)
 
           if(row_bot < y_vis_top || row_top > (y_vis_bot - bar_bottom)) continue;
 
-          XDWORD depth   = element_tree->GetNodeDepth(node);
-          double row_mid = (double)((int)(row_top + (rowheight / 2.0f)));
-          double text_x  = x_position + element_tree->GetTextX(depth) + hdisp;
-          double cx      = (double)((int)(x_position + element_tree->GetBoxCenterX(depth) + hdisp + 0.5f));
-          double half    = (double)((int)(UI_ELEMENT_TREE_BOXSIZE / 2.0f));
+          XDWORD depth    = element_tree->GetNodeDepth(node);
+          double row_mid  = (double)((int)(row_top + (rowheight / 2.0f)));
+          double label_x  = x_position + element_tree->GetLabelX(depth) + hdisp;
+          double text_x   = x_position + element_tree->GetTextX(node) + hdisp;
+          double icon_sz  = element_tree->GetIconSize();
+          double cx       = (double)((int)(x_position + element_tree->GetBoxCenterX(depth) + hdisp + 0.5f));
+          double half     = (double)((int)(UI_ELEMENT_TREE_BOXSIZE / 2.0f));
 
-          // Selection wash behind the label.
+          // Selection wash behind icon + label.
           if(node == selected)
             {
-              double text_w = canvas->VectorFont_GetWidth(node->text.Get());
+              double text_w = node->text.IsEmpty() ? 0.0f : (double)canvas->VectorFont_GetWidth(node->text.Get());
+              double sel_r  = text_x + text_w + 4.0f;
 
               canvas->SetLineColor(&color_select);
               canvas->SetFillColor(&color_select);
-              UI_SkinCanvas_TreeRect(canvas, text_x - 3.0f, row_top + 1.0f, text_x + text_w + 4.0f, row_bot - 1.0f);
+              UI_SkinCanvas_TreeRect(canvas, label_x - 3.0f, row_top + 1.0f, sel_r, row_bot - 1.0f);
             }
 
           // Dotted guides.
@@ -5295,7 +5342,7 @@ bool UI_SKINCANVAS::Draw_Tree(UI_ELEMENT* element)
 
               // Own connector: from the parent's column, down to the middle, continuing if a later sibling exists.
               UI_SkinCanvas_TreeDotsV(canvas, px, row_top, haslater ? row_bot : row_mid);
-              UI_SkinCanvas_TreeDotsH(canvas, row_mid, px, node->HasChildren() ? (cx - half) : (text_x - 3.0f));
+              UI_SkinCanvas_TreeDotsH(canvas, row_mid, px, node->HasChildren() ? (cx - half) : (label_x - 3.0f));
 
               // Ancestor columns whose branch continues below this row.
               // An ancestor at depth a (>= 1) owns a connector column a-1.
@@ -5348,6 +5395,34 @@ bool UI_SKINCANVAS::Draw_Tree(UI_ELEMENT* element)
               if(!node->expanded)
                 {
                   UI_SkinCanvas_TreeRect(canvas, cx, row_mid - 2.0f, cx + 1.0f, row_mid + 3.0f);                    // '|' of '+'
+                }
+            }
+
+          // Optional node icon (height = sizefont, square). Drawn before the label text.
+          if(node->HasIcon())
+            {
+              GRPPROPERTYMODE mode = canvas->GetMode();
+              UI_ANIMATION*   anim = GEN_USERINTERFACE.GetOrAddAnimationCache(UI_SKIN_DRAWMODE_CANVAS, mode, NL(""), node->GetIcon()->Get(), canvas, icon_sz, icon_sz);
+              GRPBITMAP*      bmp  = anim ? anim->GetBitmap() : NULL;
+
+              if(bmp)
+                {
+                  double icon_top = row_mid - ((double)bmp->GetHeight() / 2.0f);
+                  // Soft-edge safe blit (cover=255), same rule as Draw_Image aqua PNGs.
+                  for(XDWORD yb = 0; yb < bmp->GetHeight(); yb++)
+                    {
+                      for(XDWORD xb = 0; xb < bmp->GetWidth(); xb++)
+                        {
+                          GRP2DCOLOR* raw = bmp->GetPixel((int)xb, (int)yb);
+                          if(!raw) continue;
+
+                          GRP2DCOLOR_RGBA8* px = (GRP2DCOLOR_RGBA8*)raw;
+                          if(!px->a) continue;
+
+                          GRP2DCOLOR_RGBA8 c(px->r, px->g, px->b, px->a);
+                          canvas->PutBlendPixel(label_x + (double)xb, icon_top + (double)yb, &c, 255.0);
+                        }
+                    }
                 }
             }
 
@@ -5407,45 +5482,8 @@ bool UI_SKINCANVAS::Draw_PropertyList(UI_ELEMENT* element)
       bool has_border = element_list->IsBorderColorSet() && (element_list->GetBorderWidth() > 0.0f);
       double bw       = has_border ? element_list->GetBorderWidth() : 0.0;
 
-      // Own opaque backdrop + optional border. Same RoundRect isfill=true contract as Draw_Console / Draw_Form.
-      {
-        bool has_bg = element_list->IsBackgroundColorSet() && (element_list->GetBackgroundColor()->GetAlpha() > 0);
-
-        if(has_bg || has_border)
-          {
-            GRP2DCOLOR_RGBA8 bkgcolor(0, 0, 0, 0);
-            if(has_bg)
-              {
-                UI_COLOR* bg = element_list->GetBackgroundColor();
-                bkgcolor = GRP2DCOLOR_RGBA8(bg->GetRed(), bg->GetGreen(), bg->GetBlue(), bg->GetAlpha());
-              }
-
-            if(has_border)
-              {
-                UI_COLOR* lc = element_list->GetBorderColor();
-                GRP2DCOLOR_RGBA8 linecolor(lc->GetRed(), lc->GetGreen(), lc->GetBlue(), lc->GetAlpha());
-                canvas->SetLineColor(&linecolor);
-                canvas->SetLineWidth((float)element_list->GetBorderWidth());
-              }
-             else
-              {
-                GRP2DCOLOR_RGBA8 linecolor_none(0, 0, 0, 0);
-                canvas->SetLineColor(&linecolor_none);
-                canvas->SetLineWidth(1.0f);
-              }
-
-            canvas->SetFillColor(&bkgcolor);
-
-            if(element_list->GetRoundRect())
-              {
-                canvas->RoundRect(x_position, y_position, x_position + box_w, y_top, element_list->GetRoundRect(), true);
-              }
-             else
-              {
-                canvas->Rectangle(x_position, y_position, x_position + box_w, y_top, true);
-              }
-          }
-      }
+      // Same framed-panel contract as Draw_Form (page seed + RoundRect isfill + corner punch).
+      UI_SkinCanvas_DrawFramedPanelBackground(canvas, GetScreen(), element_list, x_position, y_position, box_w, box_h);
 
       canvas->Vectorfont_GetConfig()->SetSize(element_list->GetSizeFont());
 
@@ -5510,6 +5548,10 @@ bool UI_SKINCANVAS::Draw_PropertyList(UI_ELEMENT* element)
 
       double x_left   = x_position + bw;
       double x_right  = x_position + box_w - bw;
+      // Inclusive Rectangle fills cover x2: keep the right border column (x_right when bw>0) unpainted so the
+      // frame line survives header / row / splitter plates (same visible right edge as TREE / FORM).
+      double x_fill_r = (bw > 0.0) ? (x_right - 1.0) : x_right;
+      if(x_fill_r < x_left) x_fill_r = x_left;
       double x_split  = x_position + namewidth;
       double y_body   = y_top + headerheight;
       double y_header_top = y_top + bw;
@@ -5548,7 +5590,7 @@ bool UI_SKINCANVAS::Draw_PropertyList(UI_ELEMENT* element)
           }
 
         // Horizontal separators between rows (full width, under the splitter).
-        UI_SkinCanvas_PropertyListClip(canvas, parentclip, x_left, y_vis_top, x_right, y_vis_bot);
+        UI_SkinCanvas_PropertyListClip(canvas, parentclip, x_left, y_vis_top, x_fill_r, y_vis_bot);
 
         canvas->SetLineWidth(0.0f);
         canvas->SetLineColor(&color_rowline);
@@ -5559,21 +5601,36 @@ bool UI_SKINCANVAS::Draw_PropertyList(UI_ELEMENT* element)
             double line_y = y_body + ((double)(i + 1) * rowheight) + vdisp;
             if(line_y < y_vis_top || line_y > y_vis_bot) continue;
 
-            canvas->Rectangle(x_left, line_y + 1.0f, x_right, line_y, true);
+            canvas->Rectangle(x_left, line_y + 1.0f, x_fill_r, line_y, true);
           }
       }
 
       // ---- Header band (painted after rows; body clip already kept rows out of it) -----------------------------------
-      UI_SkinCanvas_PropertyListClip(canvas, parentclip, x_left, y_header_top, x_right, y_body);
+      // Leave the top-left/right r_in×r_in AABB tips untouched so the panel RoundRect border-ring pixels
+      // survive (same stepped corner as FORM/opstatus). Never paint x_fill_r past the right border column.
+      UI_SkinCanvas_PropertyListClip(canvas, parentclip, x_left, y_header_top, x_fill_r, y_body);
 
       canvas->SetLineWidth(0.0f);
       canvas->SetLineColor(&color_header);
       canvas->SetFillColor(&color_header);
-      canvas->Rectangle(x_left, y_body, x_right, y_header_top, true);
+      {
+        double r_in = (double)element_list->GetRoundRect() - bw;
+        if(r_in < 0.0) r_in = 0.0;
+        double y_below = y_header_top + r_in;
+        if(y_below > y_body) y_below = y_body;
+
+        if(y_body > y_below)
+          canvas->Rectangle(x_left, y_body, x_fill_r, y_below, true);
+
+        if((r_in > 0.0) && (y_below > y_header_top) && ((x_fill_r - r_in) > (x_left + r_in)))
+          canvas->Rectangle(x_left + r_in, y_below, x_fill_r - r_in, y_header_top, true);
+         else if(r_in <= 0.0)
+          canvas->Rectangle(x_left, y_body, x_fill_r, y_header_top, true);
+      }
 
       canvas->SetLineColor(&color_line);
       canvas->SetFillColor(&color_line);
-      canvas->Rectangle(x_left, y_body + 1.0f, x_right, y_body, true);
+      canvas->Rectangle(x_left, y_body + 1.0f, x_fill_r, y_body, true);
 
       {
         UI_SkinCanvas_PropertyListClip(canvas, parentclip, x_left, y_header_top, x_split - 4.0f, y_body);
@@ -5588,7 +5645,7 @@ bool UI_SKINCANVAS::Draw_PropertyList(UI_ELEMENT* element)
       }
 
       // ---- Column splitter (header + body, inside the border) ---------------------------------------------------------
-      UI_SkinCanvas_PropertyListClip(canvas, parentclip, x_left, y_header_top, x_right, y_bot - bw);
+      UI_SkinCanvas_PropertyListClip(canvas, parentclip, x_left, y_header_top, x_fill_r, y_bot - bw);
 
       canvas->SetLineWidth(0.0f);
       canvas->SetLineColor(&color_line);
@@ -8534,6 +8591,18 @@ void UI_SKINCANVAS::GetScrollContentBox(UI_ELEMENT* element, double x_position, 
 bool UI_SKINCANVAS::ResolveScrollPolicy(UI_ELEMENT* element, UI_PROPERTY_SCROLLEABLE* scrolleable)
 {
   if(!element || !scrolleable) return false;
+
+  // One thickness for every overlay bar (vertical width / horizontal height): same as UI_ELEMENT_TREE.
+  // Dock the track inside the frame line (sepedge >= border-width) so the bar never erases the right/bottom edge.
+  scrolleable->Scroll_SetBarWidth(UI_PROPERTY_SCROLLEABLE_TYPE_ALL, (double)UI_PROPERTY_SCROLLEABLE_BARWIDTH);
+  {
+    double bw = 0.0;
+    if(element->IsBorderColorSet() && (element->GetBorderWidth() > 0.0)) bw = element->GetBorderWidth();
+    double sepedge  = 0.0;
+    double sepalong = 0.0;
+    scrolleable->Scroll_GetBarSeparation(UI_PROPERTY_SCROLLEABLE_TYPE_ALL, sepedge, sepalong);
+    if(bw > sepedge) scrolleable->Scroll_SetBarSeparation(UI_PROPERTY_SCROLLEABLE_TYPE_ALL, bw, sepalong);
+  }
 
   UI_ELEMENT_TEXTBOX* element_textbox = dynamic_cast<UI_ELEMENT_TEXTBOX*>(element);
   if(element_textbox)
