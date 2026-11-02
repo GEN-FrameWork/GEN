@@ -1436,10 +1436,6 @@ bool UI_SKINCANVAS_REBUILDAREAS::RebuildAllAreas()
         }
     }
 
-  #ifdef XTRACE_ACTIVE
-  //XTRACE_PRINTCOLOR(XTRACE_COLOR_INFO, NL("[DEBUGCAPTION] UI_SKINCANVAS_REBUILDAREAS::RebuildAllAreas: nareas=%d max_z_level=%d"), (int)nareas, (int)max_z_level);
-  #endif
-
   // Level zero is a real paint layer, not a sentinel. Every fatherless element keeps the default z_level=0,
   // including the cards and menu hit targets in UI_System. The old `level>0` loop never restored or deleted
   // those areas, so each redraw composited transparency and shadows over stale pixels indefinitely.
@@ -9177,24 +9173,10 @@ bool UI_SKINCANVAS::PreDrawFunction(UI_ELEMENT* element, GRP2DCANVAS* canvas, XR
           ancestor = ancestor->GetFather();
         }
 
-      #ifdef XTRACE_ACTIVE
-      /*
-      if(element->GetName() && (element->GetName()->Find(NL("chrome"), true) != XSTRING_NOTFOUND || !element->GetName()->Compare(NL("caption"), true)))
-        {
-          XTRACE_PRINTCOLOR(XTRACE_COLOR_INFO, NL("[DEBUGCAPTION] PreDrawFunction: element=[%s] zlevel=%d createarea=%d hadexistingarea=%d"),
-                                                                                element->GetName()->Get(),
-                                                                                (int)element->GetZLevel(),
-                                                                                createarea?1:0,
-                                                                                GetRebuildAreaByElement(element)?1:0);
-        }
-      */
-      #endif
     }
 
   if(createarea)
     {     
-      //XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, NL("Add area: level [%d] [%s] "), element->GetZLevel(), element->GetName()->Get());
-
       double area_left   = UI_BOUNDARYLINE_EdgeLeft  (x_position, element->GetBoundaryLine()->width);
       double area_right  = UI_BOUNDARYLINE_EdgeRight  (x_position, element->GetBoundaryLine()->width);
       double area_top    = UI_BOUNDARYLINE_EdgeTop    (y_position, element->GetBoundaryLine()->height);
