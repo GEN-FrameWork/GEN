@@ -40,9 +40,15 @@
 #include "GRPViewPort.h"
 #include "GRPFrameRate.h"
 
+#ifdef USERINTERFACE_ACTIVE
+#include "UI_Manager.h"
+#endif
+
 #ifdef GRP_SCREEN_CUSTOMCHROMES_ACTIVE
 #include "XPathsManager.h"
+#ifndef USERINTERFACE_ACTIVE
 #include "UI_Manager.h"
+#endif
 #include "UI_Layout.h"
 #include "UI_Element_Text.h"
 #include "UI_Element_Form.h"
@@ -1638,7 +1644,18 @@ static void GRPSCREEN_ShiftElementXRecursive(UI_ELEMENT* element, double dx)
 {
   if(!element) return;
 
+  // Shift the live absolute position used for paint/hit-test.
   element->SetXPosition(element->GetXPosition() + dx);
+
+  // boundaryline.x may still be an align sentinel (ALIGN_RIGHT = -999998, etc.) from XML xpos="right".
+  // NEVER do boundaryline.x += dx on a sentinel: that destroys xpos="right" and leaves rebuild-area /
+  // CalculePosition / paint geometry disagreeing with GetXPosition — gray rectangle ghosts under each
+  // chrome icon that look like a horizontal scroll while the window grows. Only mirror absolute X
+  // when boundaryline.x is already a resolved non-negative coordinate.
+  if(element->GetBoundaryLine() && (element->GetBoundaryLine()->x >= 0.0))
+    {
+      element->GetBoundaryLine()->x = element->GetXPosition();
+    }
 
   for(XDWORD c=0; c<element->GetComposeElements()->GetSize(); c++)
     {
@@ -1783,8 +1800,10 @@ bool GRPSCREEN::UpdateCFGChromesAutoHide()
 * @fn         bool GRPSCREEN::UpdateCFGChromesButtonsPosition()
 * @brief      Update CFG chromes buttons position
 * @note       Keeps the chrome caption + minimize/language/maximize/close buttons locked to the LIVE client size:
-*             the caption bar width tracks the client width, and those buttons shift by
-*             (client width - reference width) so they hug the live right edge (shrink and grow).
+*             the caption bar width tracks the client width, and right-aligned chrome controls are
+*             re-resolved with CalculeBoundaryLine_AllElements (xpos="right") so they hug the live edge.
+*             Incremental ShiftElementX alone used to desync GetXPosition from ALIGN_RIGHT / rebuild-area
+*             geometry and leave gray rectangle ghosts under each icon (looked like a horizontal scroll).
 *             Any client size change — including height-only (resize from the top/bottom edge) — also
 *             dirties the chrome layout: UpdateSize recreates empty canvases, and without a redraw the
 *             caption band disappears until something else happens to invalidate it.
@@ -1800,11 +1819,15 @@ bool GRPSCREEN::UpdateCFGChromesButtonsPosition()
   if(!cfgchromeslayout)                return false;
   if(!cfgchromesbuttonsrefwidth)       return false;
 
-  // LIVE native client size (platform virtual) -- NOT GetWidth()/GetHeight() alone in all backends.
-  int clientwidth  = 0;
-  int clientheight = 0;
-
-  if(!GetClientSize(clientwidth, clientheight)) return false;
+  // Align chrome buttons to the composed canvas (GetWidth/GetHeight). UpdateSize calls SetSize before
+  // this runs; using a larger live GetClientRect would park icons past the canvas edge (clipped), and
+  // PresentCanvasGDI already pins the caption strip to the HWND right edge when the window is ahead.
+  int clientwidth  = (int)GetWidth();
+  int clientheight = (int)GetHeight();
+  if(clientwidth <= 0 || clientheight <= 0)
+    {
+      if(!GetClientSize(clientwidth, clientheight)) return false;
+    }
 
   // Ignore a client size the window manager cannot have meant. During the first frames the native window may
   // still be unmapped / mid-creation and report a degenerate size (0 on X11 while the WM has not configured
@@ -1829,7 +1852,7 @@ bool GRPSCREEN::UpdateCFGChromesButtonsPosition()
         {
           captionelement->GetBoundaryLine()->width = (double)clientwidth;
           UI_ELEMENT_FORM* captionform = dynamic_cast<UI_ELEMENT_FORM*>(captionelement);
-          if(captionform && captionform->GetVisibleRect() && (captionform->GetVisibleRect()->width > 0.0))
+          if(captionform && captionform->GetVisibleRect())
             {
               captionform->GetVisibleRect()->width = (double)clientwidth;
             }
@@ -1837,32 +1860,56 @@ bool GRPSCREEN::UpdateCFGChromesButtonsPosition()
         }
     }
 
-  // Bidirectional: negative when narrower than ref, positive when wider (maximize / enlarge).
-  int shift = clientwidth - cfgchromesbuttonsrefwidth;
-
-  if(shift != cfgchromesbuttonsshift)
+  // Horizontal grow/shrink: re-resolve xpos="right" (language/min/max/close) against the live caption
+  // width. Incremental ShiftElementX used to look like a horizontal scroll under each chrome icon —
+  // GetXPosition moved while boundaryline kept ALIGN_RIGHT (or a corrupted sentinel), so rebuild-area /
+  // FormBackdrop / SVG plate geometry disagreed and left gray rectangle ghosts. Re-layout keeps the
+  // sentinel and absolute paint coords in the same CalculePosition pass.
+  bool buttons_relaid = false;
+  if(clientwidth != cfgchromesbuttonsrefwidth)
     {
-      double dx = (double)(shift - cfgchromesbuttonsshift);
-
-      UI_ELEMENT_CHROMEROLE roles[4] = { UI_ELEMENT_CHROMEROLE_MINIMIZE,
-                                         UI_ELEMENT_CHROMEROLE_LANGUAGE,
-                                         UI_ELEMENT_CHROMEROLE_MAXIMIZE,
-                                         UI_ELEMENT_CHROMEROLE_CLOSE    };
-
-      for(int c=0; c<4; c++)
+      UI_SKIN* skin = cfgchromeslayout->GetSkin();
+      if(skin && captionelement)
         {
-          UI_ELEMENT* buttonelement = cfgchromeslayout->Elements_Get(roles[c]);
-          if(buttonelement)
+          skin->CalculeBoundaryLine_AllElements(captionelement, false);
+
+          UI_ELEMENT_FORM* captionform = dynamic_cast<UI_ELEMENT_FORM*>(captionelement);
+          if(captionform && captionform->GetVisibleRect())
             {
-              GRPSCREEN_ShiftElementXRecursive(buttonelement, dx);
+              captionform->GetVisibleRect()->x      = captionelement->GetXPosition();
+              captionform->GetVisibleRect()->y      = captionelement->GetYPosition();
+              captionform->GetVisibleRect()->width  = (double)clientwidth;
+              captionform->GetVisibleRect()->height = captionelement->GetBoundaryLine()->height;
+            }
+
+          cfgchromesbuttonsrefwidth = clientwidth;
+          cfgchromesbuttonsshift    = 0;
+          buttons_relaid            = true;
+          size_changed              = true;
+        }
+       else
+        {
+          // Fallback when chrome has no skin/caption: keep the old incremental shift (sentinel-safe).
+          int shift = clientwidth - cfgchromesbuttonsrefwidth;
+          if(shift != cfgchromesbuttonsshift)
+            {
+              double dx = (double)(shift - cfgchromesbuttonsshift);
+              UI_ELEMENT_CHROMEROLE roles[4] = { UI_ELEMENT_CHROMEROLE_MINIMIZE,
+                                                 UI_ELEMENT_CHROMEROLE_LANGUAGE,
+                                                 UI_ELEMENT_CHROMEROLE_MAXIMIZE,
+                                                 UI_ELEMENT_CHROMEROLE_CLOSE    };
+              for(int c=0; c<4; c++)
+                {
+                  UI_ELEMENT* buttonelement = cfgchromeslayout->Elements_Get(roles[c]);
+                  if(buttonelement) GRPSCREEN_ShiftElementXRecursive(buttonelement, dx);
+                }
+              cfgchromesbuttonsshift = shift;
+              size_changed = true;
             }
         }
-
-      cfgchromesbuttonsshift = shift;
-      size_changed = true;   // buttons moved → must repaint
     }
 
-  if(!size_changed && !caption_resized) return true;
+  if(!size_changed && !caption_resized && !buttons_relaid) return true;
 
   // Height-only (or any) resize after UpdateSize wiped the live canvas: drop chrome FormBackdrops so the
   // next Draw_Form re-captures under the new size, and mark the whole chrome layout dirty.
@@ -1926,13 +1973,25 @@ bool GRPSCREEN::UpdateSize(int width, int height)
         }
 
       #ifdef GRP_SCREEN_CUSTOMCHROMES_ACTIVE
-      // BEFORE CHANGESIZE observers run Update(): recreate wiped the live canvas. Height-only
-      // resizes (drag top/bottom edge) never moved the chrome buttons, so the chrome layout used
-      // to stay clean and never repainted — caption vanished until a later width change. Sync
-      // caption/buttons and dirty chrome here so the imminent UI Update() redraws the bar.
+      // Sync caption/buttons to the live client BEFORE any paint. Canvas was just wiped.
       if(IsCFGChromesActive() && !cfgchromes.GetUseNativeChromes() && cfgchromeslayout)
         {
           UpdateCFGChromesButtonsPosition();
+        }
+      #endif
+    }
+
+  // LIVE RESIZE COMPOSE (framework-wide): wipe left an empty canvas. PutBackground MUST run before
+  // CHANGESIZE observers — several apps (UI_System, etc.) call Update() from CHANGESIZE. Painting
+  // chrome on the wiped black buffer captured FormBackdrop/AnimBackdrop as pure black (custom-chrome
+  // app icon black plate after maximize/restore). Clear the page colour first, then notify, then
+  // force a full dirty compose so geometry observers and the sizeable-drag path both stay correct.
+  if(changed)
+    {
+      #ifdef USERINTERFACE_ACTIVE
+      if(GEN_USERINTERFACE.Layouts_GetAll() && GEN_USERINTERFACE.Layouts_GetAll()->GetSize())
+        {
+          GEN_USERINTERFACE.Layout_PutBackground();
         }
       #endif
     }
@@ -1941,6 +2000,18 @@ bool GRPSCREEN::UpdateSize(int width, int height)
   grpevent.SetScreen(this);
 
   PostEvent(&grpevent);
+
+  if(changed)
+    {
+      #ifdef USERINTERFACE_ACTIVE
+      if(GEN_USERINTERFACE.Layouts_GetAll() && GEN_USERINTERFACE.Layouts_GetAll()->GetSize())
+        {
+          GEN_USERINTERFACE.Elements_SetToRedrawForScreen(this, false);
+          GEN_USERINTERFACE.Elements_RebuildDrawAreas();
+          GEN_USERINTERFACE.Update();
+        }
+      #endif
+    }
 
   return true;
 }

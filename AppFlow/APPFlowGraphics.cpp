@@ -281,7 +281,11 @@ bool APPFLOWGRAPHICS::CreateMainScreenProcess(bool show)
     }
     else
     {
-      //XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, NL("[App Graphics] Error to creating screen..."));
+      // OpenGL ES / ANGLE init failed (or SEH-caught GPU fault on Windows). Exit through the
+      // normal APPFLOW path instead of leaving ExitType unknown after Ini returns false.
+      XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, NL("[App Graphics] Main screen create failed (OpenGL ES / ANGLE unavailable). Application will exit."));
+      GEN_XLOG.AddEntry(XLOGLEVEL_ERROR, APPFLOW_CFG_LOG_SECTIONID_INITIATION, false, NL("Main screen create failed (OpenGL ES / ANGLE unavailable). Application will exit."));
+      SetExitType(APPFLOWBASE_EXITTYPE_BY_SERIOUSERROR);
     }
 
   if(!status) return false;

@@ -196,6 +196,13 @@ class UI_SKINCANVAS : public UI_SKIN, public UI_SKINCANVAS_REBUILDAREAS
 		// Same for AnimBackdrop: selection wash change must not restore a stale white icon plate into gray.
 		bool                               DiscardAnimBackdrop										(UI_ELEMENT* element);
 
+		// After shared-slot MultiOption peels / hidden-twin RestoreOnHide, compact under-icon legend
+		// forms (height<=28) can keep a gray plate until the next tick. Call once at end of layout
+		// Update (and again after chrome) to page-fill + redraw those legends in the same frame.
+		bool                               CompactLegendsNeedRepair								() const { return compact_legends_need_repair; }
+		void                               CompactLegendsMarkNeedRepair					()       { compact_legends_need_repair = true; }
+		bool                               RepaintCompactLegendForms							(UI_LAYOUT* layout);
+
 		// Language-change leaf erase: drop intersecting rebuild areas (no restore) then blit layout
 		// background into the element AABB. Avoids global RestoreRebuildAreas (chrome-suppressed menus).
 		bool                               EraseElementRebuildArea								(UI_ELEMENT* element);
@@ -310,6 +317,10 @@ class UI_SKINCANVAS : public UI_SKIN, public UI_SKINCANVAS_REBUILDAREAS
 		GRP2DREBUILDAREA*								OptionBackdrop_FindOverlapping							(double x, double y, double width, double height);
 
 		XVECTOR<GRP2DREBUILDAREA*>				optionbackdrops;
+
+		// Set when a MultiOption face peel or hidden shared-slot twin may have contaminated
+		// under-icon legend strips; cleared by RepaintCompactLegendForms().
+		bool													compact_legends_need_repair;
 };
 
 

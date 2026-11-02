@@ -1215,6 +1215,15 @@ bool UI_MANAGER::Update(UI_LAYOUT* layout)
 
   status = layout->Update();
 
+  // Compact under-icon legend forms (height<=28): always same-frame page-seed + text reprint.
+  // Gating on CompactLegendsNeedRepair alone left a permanent gray plate (57,59,61) under
+  // Demarrer/Arreter once MultiOptions went idle and the flag cleared — confirmed via canvas dump.
+  if(status && layout->GetSkin() && layout->GetSkin()->GetDrawMode() == UI_SKIN_DRAWMODE_CANVAS)
+    {
+      UI_SKINCANVAS* skin_canvas = (UI_SKINCANVAS*)layout->GetSkin();
+      if(skin_canvas) skin_canvas->RepaintCompactLegendForms(layout);
+    }
+
   if(scaled)
     {
       UIScale_Present(layout);
@@ -1316,6 +1325,16 @@ bool UI_MANAGER::Update()
       if(!status) return status;
       // Do NOT force Elements_SetToRedraw() every frame: that re-captured chrome over content ghosts and
       // burned FPS. Chrome is dirtied on auto-hide show/hide, button shift, and cross-skin overlap propagate.
+    }
+
+  // Chrome paints after content on the shared canvas — re-seal content legends after chrome.
+  for(XDWORD c=0; c<layouts.GetSize(); c++)
+    {
+      UI_LAYOUT* layout = layouts.Get(c);
+      if(!layout || IsCFGChromesLayout(layout)) continue;
+      if(!layout->GetSkin() || layout->GetSkin()->GetDrawMode() != UI_SKIN_DRAWMODE_CANVAS) continue;
+      UI_SKINCANVAS* skin_canvas = (UI_SKINCANVAS*)layout->GetSkin();
+      if(skin_canvas) skin_canvas->RepaintCompactLegendForms(layout);
     }
 
   // Modal layer (option B well-done): after content AND chrome — blit opaque offscreen cache so neither

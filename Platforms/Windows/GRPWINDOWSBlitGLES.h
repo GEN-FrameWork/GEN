@@ -49,15 +49,7 @@ class GRPWINDOWSBLITGLES : public GRPBLITGLES
     EGLNativeDisplayType                  GetNativeDisplay                  ();
     EGLNativeWindowType                   GetNativeWindow                   ();
 
-
-
-
-
-
-
-
-
-    void                                   ComputePresentationScale          (GLsizei surfacewidth, GLsizei surfaceheight, float& scalex, float& scaley, float& translatex, float& translatey, bool& visible);
+    void                                  ComputePresentationScale          (GLsizei surfacewidth, GLsizei surfaceheight, float& scalex, float& scaley, float& translatex, float& translatey, bool& visible);
 };
 
 

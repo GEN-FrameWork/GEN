@@ -79,6 +79,86 @@
 /*---- GENERAL VARIABLE ----------------------------------------------------------------------------------------------*/
 
 
+#ifdef GRP_OPENGL_ACTIVE
+#ifndef BUILDER
+// ---------------------------------------------------------------------------
+// ANGLE/D3D can ACCESS_VIOLATION on machines without a usable GPU instead of
+// returning EGL errors. Catch that locally so MainLoop's global filter never
+// prints "ACCESS VIOLATION" and the app can exit through the normal path.
+// Helpers stay free of C++ objects with destructors (MSVC SEH rule).
+// ---------------------------------------------------------------------------
+static int GRPWINDOWS_BlitGLES_SEHFilter(unsigned int code)
+{
+  switch(code)
+    {
+      case EXCEPTION_ACCESS_VIOLATION         :
+      case EXCEPTION_IN_PAGE_ERROR            :
+      case EXCEPTION_ILLEGAL_INSTRUCTION      :
+      case EXCEPTION_PRIV_INSTRUCTION         :
+      case EXCEPTION_INT_DIVIDE_BY_ZERO       :
+      case EXCEPTION_STACK_OVERFLOW           :
+        return EXCEPTION_EXECUTE_HANDLER;
+
+      default :
+        return EXCEPTION_CONTINUE_SEARCH;
+    }
+}
+
+static bool GRPWINDOWS_BlitGLES_CreateAndBlankSafe(GRPWINDOWSBLITGLES* blitgles, GRPWINDOWSSCREEN* screen, unsigned int* sehcode)
+{
+  if(sehcode) *sehcode = 0;
+  if(!blitgles || !screen) return false;
+
+  volatile int ok = 0;
+
+  __try
+    {
+      if(blitgles->Create(screen))
+        {
+          blitgles->PresentBlankFrame();
+          blitgles->PresentBlankFrame();
+          ok = 1;
+        }
+    }
+  __except(GRPWINDOWS_BlitGLES_SEHFilter(GetExceptionCode()))
+    {
+      if(sehcode) *sehcode = GetExceptionCode();
+      ok = 0;
+    }
+
+  return (ok != 0);
+}
+
+static void GRPWINDOWS_BlitGLES_DeleteSafe(GRPWINDOWSBLITGLES*& blitgles)
+{
+  if(!blitgles) return;
+
+  GRPWINDOWSBLITGLES* local = blitgles;
+  blitgles = NULL;
+
+  volatile int destroyed = 0;
+
+  __try
+    {
+      local->Destroy();
+      destroyed = 1;
+    }
+  __except(GRPWINDOWS_BlitGLES_SEHFilter(GetExceptionCode()))
+    {
+      destroyed = 0;
+    }
+
+  if(!destroyed)
+    {
+      local->AbandonWithoutDriver();
+    }
+
+  GEN_DELETE local;
+}
+#endif // BUILDER
+#endif // GRP_OPENGL_ACTIVE
+
+
 /*---- CLASS MEMBERS -------------------------------------------------------------------------------------------------*/
 
 
@@ -178,23 +258,18 @@ bool GRPWINDOWSSCREEN::Create(bool show)
 * --------------------------------------------------------------------------------------------------------------------*/
 bool GRPWINDOWSSCREEN::Update()
 {
-  #ifndef GRP_OPENGL_ACTIVE
-
-  if(!hdc) 
-    {
-      return false;
-    }
-
-  SwapBuffers(hdc);
-
-  #else
+  #ifdef GRP_OPENGL_ACTIVE
 
   if(!blitgles) return false;
   return blitgles->SwapBuffers();
 
-  #endif
+  #else
 
-  return true;
+  // Software / GDI present path: canvas pixels are pushed with PresentCanvasGDI via
+  // Update(GRP2DCANVAS*). There is no OpenGL swap chain — do not call WGL SwapBuffers.
+  return (hdc != NULL);
+
+  #endif
 }
 
 
@@ -211,17 +286,21 @@ bool GRPWINDOWSSCREEN::Update()
 * --------------------------------------------------------------------------------------------------------------------*/
 bool GRPWINDOWSSCREEN::Update(GRP2DCANVAS* canvas)
 {
+  if(!canvas) return false;
+
+  // Interactive SC_SIZE drag: ANGLE/DXGI HWND surfaces lag the client size and RecreateSurface
+  // mid-drag leaves a black window. Present the just-composed canvas via GDI for every WM_SIZE
+  // until WM_EXITSIZEMOVE restores the normal GLES path.
+  if(interactivesizing)
+    {
+      bool status = PresentCanvasGDI(canvas);
+      if(status) Uncloak();
+      return status;
+    }
+
   #ifndef GRP_OPENGL_ACTIVE
 
-  if(!hdc)
-    {
-      return false;
-    }
-
-  if(!canvas)
-    {
-      return false;
-    }
+  if(!hdc) return false;
 
   // No bitmap rescaling on Windows: the canvas is always blitted 1:1 (width/height below are the
   // canvas' own size, not the window's). If the window's client area is currently smaller than the
@@ -232,15 +311,12 @@ bool GRPWINDOWSSCREEN::Update(GRP2DCANVAS* canvas)
       return true;
     }
 
-  SetDIBitsToDevice(hdc, 0, 0, width, height, 0, 0, 0, height, canvas->Buffer_Get(), &hinfo, DIB_RGB_COLORS);
-
-  Uncloak();
-
-  return true;
+  bool status = PresentCanvasGDI(canvas);
+  if(status) Uncloak();
+  return status;
 
   #else
 
-  if(!canvas)   return false;
   if(!blitgles) return false;
 
   bool status = blitgles->Update(canvas);
@@ -250,6 +326,92 @@ bool GRPWINDOWSSCREEN::Update(GRP2DCANVAS* canvas)
   return status;
 
   #endif
+}
+
+
+/**-------------------------------------------------------------------------------------------------------------------
+*
+* @fn         bool GRPWINDOWSSCREEN::PresentCanvasGDI(GRP2DCANVAS* canvas)
+* @brief      Blits the canvas 1:1 into the HWND via SetDIBitsToDevice. Used as the sole present path
+*             without OpenGL, and as the live-resize present path with OpenGL (see Update()).
+* @note       INTERNAL
+* @ingroup    PLATFORM_WINDOWS
+*
+* --------------------------------------------------------------------------------------------------------------------*/
+bool GRPWINDOWSSCREEN::PresentCanvasGDI(GRP2DCANVAS* canvas)
+{
+  if(!hwnd || !canvas) return false;
+  if(!IsAboveViewportMinimumSize()) return true;
+
+  XBYTE* bits = canvas->Buffer_Get();
+  if(!bits) return false;
+
+  const int cw = (int)canvas->GetWidth();
+  const int ch = (int)canvas->GetHeight();
+  if(cw <= 0 || ch <= 0) return false;
+
+  // Fresh DC every present: a DC cached at Create_Window() can keep a stale clip/extent across
+  // interactive resizes, so newly exposed client pixels never receive the blit.
+  HDC presentdc = GetDC(hwnd);
+  if(!presentdc) return false;
+
+  RECT clientrect;
+  GetClientRect(hwnd, &clientrect);
+  const int client_w = (int)(clientrect.right  - clientrect.left);
+  const int client_h = (int)(clientrect.bottom - clientrect.top);
+  if(client_w <= 0 || client_h <= 0)
+    {
+      ReleaseDC(hwnd, presentdc);
+      return false;
+    }
+
+  // Keep BITMAPINFO in lockstep with the live canvas — UpdateSize grows/shrinks the buffer every
+  // WM_SIZE during a drag, and a stale biWidth produces scrambled chrome icon X positions.
+  memset(&hinfo, 0, sizeof(BITMAPINFO));
+  hinfo.bmiHeader.biSize        = sizeof(BITMAPINFOHEADER);
+  hinfo.bmiHeader.biWidth       = cw;
+  hinfo.bmiHeader.biHeight      = ch; // bottom-up DIB, same as Create_Window()
+  hinfo.bmiHeader.biPlanes      = 1;
+  hinfo.bmiHeader.biBitCount    = GetBitsperPixel();
+  hinfo.bmiHeader.biCompression = BI_RGB;
+  hinfo.bmiHeader.biSizeImage   = (DWORD)(cw * ch * hinfo.bmiHeader.biBitCount) / 8;
+
+  // Present 1:1 into the client. During SC_SIZE the HWND can sit a step ahead of the composed
+  // canvas: NEVER StretchDIBits / BitBlt-pin the caption band — both smear or duplicate chrome
+  // icons into gray rectangle ghosts that look like a horizontal scroll. Blit top-left and fill
+  // any newly exposed strip; UpdateSize compose catches the chrome up on the next WM_SIZE.
+  //
+  // Vertical contract (canvas taller than client, pre-UpdateSize WM_SIZE): the DIB is bottom-up, so
+  // ySrc=0 is the BOTTOM of the bitmap. Cropping with ySrc=0 showed the lower band of the previous
+  // frame, then UpdateSize composed top-aligned UI — toolbar/content jumped every step ("tembleque").
+  // Anchor the crop to the TOP of the logical image: ySrc = ch - blit_h in bottom-up DIB coords.
+  const int blit_w = (cw < client_w) ? cw : client_w;
+  const int blit_h = (ch < client_h) ? ch : client_h;
+  const int src_y  = (ch > blit_h) ? (ch - blit_h) : 0;
+
+  SetDIBitsToDevice(presentdc, 0, 0, blit_w, blit_h, 0, src_y, 0, ch, bits, &hinfo, DIB_RGB_COLORS);
+
+  if((client_w > blit_w) || (client_h > blit_h))
+    {
+      HBRUSH fillbrush = CreateSolidBrush(RGB(24, 28, 36));
+      if(fillbrush)
+        {
+          if(client_w > blit_w)
+            {
+              RECT rightstrip = { blit_w, 0, client_w, client_h };
+              FillRect(presentdc, &rightstrip, fillbrush);
+            }
+          if(client_h > blit_h)
+            {
+              RECT bottomstrip = { 0, blit_h, blit_w, client_h };
+              FillRect(presentdc, &bottomstrip, fillbrush);
+            }
+          DeleteObject(fillbrush);
+        }
+    }
+
+  ReleaseDC(hwnd, presentdc);
+  return true;
 }
 
 
@@ -1030,6 +1192,65 @@ bool GRPWINDOWSSCREEN::Minimize(bool active)
     }
 
   return ShowWindow(hwnd, active?SW_SHOWMINIMIZED:SW_NORMAL)?true:false; 
+}
+
+
+/**-------------------------------------------------------------------------------------------------------------------
+*
+* @fn         bool GRPWINDOWSSCREEN::IsClientSizeAtMaximum()
+* @brief      True when the live client already reached the effective maximize target on BOTH axes.
+* @note       Matches Maximize(true)'s target: min(viewport max, monitor work area). The base
+*             GRPSCREEN::IsClientSizeAtMaximum() only looks at the viewport cap (e.g. 3840×2160), so a
+*             chrome maximize that grew to the work area (e.g. 2560×1392) still reported "not at max"
+*             and the toggle called Maximize(true) again instead of Maximize(false) / restore.
+* @ingroup    PLATFORM_WINDOWS
+*
+* @return     bool : true if the client cannot grow further via Maximize(true).
+*
+* --------------------------------------------------------------------------------------------------------------------*/
+bool GRPWINDOWSSCREEN::IsClientSizeAtMaximum()
+{
+  GRPVIEWPORT* mainviewport = GetViewport(GRPVIEWPORT_ID_MAIN);
+  if(!mainviewport) return false;
+
+  int maxw = (int)mainviewport->GetMaxWidth();
+  int maxh = (int)mainviewport->GetMaxHeight();
+  if(maxw <= 0) maxw = (int)mainviewport->GetWidth();
+  if(maxh <= 0) maxh = (int)mainviewport->GetHeight();
+  if((maxw <= 0) || (maxh <= 0)) return false;
+
+  // Clamp to the monitor work area — same rule Maximize(true) uses when growing in place.
+  if(hwnd)
+    {
+      RECT        workarea = { 0, 0, 0, 0 };
+      HMONITOR    hmonitor = MonitorFromWindow(hwnd, MONITOR_DEFAULTTONEAREST);
+      MONITORINFO monitorinfo;
+      memset(&monitorinfo, 0, sizeof(MONITORINFO));
+      monitorinfo.cbSize = sizeof(MONITORINFO);
+
+      if(hmonitor && GetMonitorInfo(hmonitor, &monitorinfo))
+        {
+          workarea = monitorinfo.rcWork;
+        }
+       else
+        {
+          SystemParametersInfo(SPI_GETWORKAREA, 0, &workarea, 0);
+        }
+
+      int monitorwidth  = workarea.right  - workarea.left;
+      int monitorheight = workarea.bottom - workarea.top;
+      if(monitorwidth  > 0 && maxw > monitorwidth ) maxw = monitorwidth;
+      if(monitorheight > 0 && maxh > monitorheight) maxh = monitorheight;
+    }
+
+  int clientwidth  = 0;
+  int clientheight = 0;
+  if(!GetClientSize(clientwidth, clientheight)) return false;
+
+  // A few pixels of tolerance: DWM / non-client rounding can leave the live client 1–2 px under the
+  // work-area target after SetWindowPos, which would otherwise leave the chrome toggle stuck on grow.
+  const int tol = 4;
+  return ((clientwidth + tol) >= maxw) && ((clientheight + tol) >= maxh);
 }
 
 
@@ -1904,6 +2125,27 @@ bool GRPWINDOWSSCREEN::Create_Window(bool show)
               return false;
             }
 
+          // Create + PresentBlankFrame under SEH: ANGLE/D3D may AV on PCs without a usable GPU
+          // (Education / locked-down machines) instead of returning a clean EGL error.
+          #ifndef BUILDER
+          {
+            unsigned int sehcode = 0;
+            if(!GRPWINDOWS_BlitGLES_CreateAndBlankSafe(blitgles, this, &sehcode))
+              {
+                if(sehcode)
+                  {
+                    XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, NL("[Screen Windows] BlitGLES/ANGLE faulted during init (SEH 0x%08X). OpenGL ES unavailable — exiting without crash."), sehcode);
+                  }
+                 else
+                  {
+                    XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, NL("[Screen Windows] BlitGLES create failed (OpenGL ES / ANGLE unavailable)."));
+                  }
+
+                GRPWINDOWS_BlitGLES_DeleteSafe(blitgles);
+                return false;
+              }
+          }
+          #else
           if(!blitgles->Create(this))
             {
               XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, NL("[Screen Windows] BlitGLES create failed"));
@@ -1920,6 +2162,7 @@ bool GRPWINDOWSSCREEN::Create_Window(bool show)
           // -- twice, so neither buffer of the common double-buffered swap chain is left holding it.
           blitgles->PresentBlankFrame();
           blitgles->PresentBlankFrame();
+          #endif
         }
     }
   #endif
@@ -2029,6 +2272,62 @@ LRESULT CALLBACK GRPWINDOWSSCREEN::BaseWndProc(HWND hwnd, UINT msg, WPARAM wpara
                                       }
                                       break;
 
+      // Interactive resize: DefWindowProc's SC_SIZE modal loop erases with wndclass.hbrBackground
+      // (BLACK_BRUSH) between WM_SIZE paints. Returning 1 skips that erase so the last presented
+      // GEN frame stays visible instead of flashing black for the whole drag.
+      case WM_ERASEBKGND            : return 1;
+
+      // During SC_SIZE the HWND can expose new client pixels between WM_SIZE handlers. Stretch-blit
+      // the last composed canvas into the live client so those pixels never sit as BLACK_BRUSH.
+      case WM_PAINT                 : { GRPWINDOWSSCREEN* screen = (GRPWINDOWSSCREEN*)GRPSCREEN::GetListScreens()->Get((void*)hwnd);
+                                        PAINTSTRUCT ps;
+                                        BeginPaint(hwnd, &ps);
+                                        if(screen && screen->interactivesizing && !screen->windowcloaked)
+                                          {
+                                            GRP2DCANVAS* canvas = screen->GetScreenCanvas();
+                                            if(canvas) screen->PresentCanvasGDI(canvas);
+                                          }
+                                        EndPaint(hwnd, &ps);
+                                        return 0;
+                                      }
+
+      case WM_ENTERSIZEMOVE         : { GRPWINDOWSSCREEN* screen = (GRPWINDOWSSCREEN*)GRPSCREEN::GetListScreens()->Get((void*)hwnd);
+                                        if(screen) screen->interactivesizing = true;
+                                      }
+                                      break;
+
+      case WM_EXITSIZEMOVE          : { GRPWINDOWSSCREEN* screen = (GRPWINDOWSSCREEN*)GRPSCREEN::GetListScreens()->Get((void*)hwnd);
+                                        if(screen)
+                                          {
+                                            // Keep interactivesizing=true through the final compose. Clearing it
+                                            // first made Update()/UpdateViewports take the GLES path immediately:
+                                            // RecreateSurface + glClear flashed black (and sometimes garbage) on
+                                            // mouse-up after SC_SIZE — exactly the XTraceMonitor resize flicker.
+                                            // While the flag stays set, UpdateSize's compose presents via
+                                            // PresentCanvasGDI and WM_PAINT can still blit the last good frame.
+                                            int clientwidth  = 0;
+                                            int clientheight = 0;
+                                            if(screen->GetClientSize(clientwidth, clientheight) && clientwidth > 0 && clientheight > 0)
+                                              {
+                                                screen->UpdateSize(clientwidth, clientheight);
+                                              }
+
+                                            if(!screen->windowcloaked && screen->GetScreenCanvas())
+                                              {
+                                                screen->PresentCanvasGDI(screen->GetScreenCanvas());
+                                              }
+
+                                            screen->interactivesizing = false;
+
+                                            // Do NOT UpdateViewports() here. That would SwapBuffers an ANGLE
+                                            // surface that is about to RecreateSurface at the new size and
+                                            // overwrite the GDI frame with black. The main loop's next
+                                            // DrawFrame/UpdateViewports recreates GLES and uploads the
+                                            // already-composed canvas without a mouse-up flash.
+                                          }
+                                      }
+                                      break;
+
       // While the user interactively drags the resize border, Windows runs its OWN modal message
       // loop inside DispatchMessage() (see MAINPROCWINDOWS::MainLoop's PeekMessage/DispatchMessage
       // pump), which blocks the app's normal per-frame Update/UpdateViewports call until the mouse
@@ -2070,22 +2369,39 @@ LRESULT CALLBACK GRPWINDOWSSCREEN::BaseWndProc(HWND hwnd, UINT msg, WPARAM wpara
                                                 break;
                                               }
 
-                                            int clientwidth  = 0;
-                                            int clientheight = 0;
-                                            if(screen->GetClientSize(clientwidth, clientheight) && (clientwidth > 0) && (clientheight > 0))
+                                            // Prefer WM_SIZE's lParam (new client size) over GetClientRect: both
+                                            // should match, but lParam is what DefWindowProc just committed.
+                                            int clientwidth  = (int)LOWORD(lparam);
+                                            int clientheight = (int)HIWORD(lparam);
+                                            if(clientwidth <= 0 || clientheight <= 0)
+                                              {
+                                                screen->GetClientSize(clientwidth, clientheight);
+                                              }
+
+                                            if((clientwidth > 0) && (clientheight > 0))
                                               {
                                                 if(((XDWORD)clientwidth != screen->GetWidth()) || ((XDWORD)clientheight != screen->GetHeight()))
                                                   {
-                                                    screen->UpdateSize(clientwidth, clientheight);
-                                                    // CHANGESIZE → Update() already ran inside UpdateSize. A second pass
-                                                    // catches chrome dirtied by UIScale_Present in that first Update when
-                                                    // the modal resize loop will only UpdateViewports() next (no main-loop
-                                                    // tick until mouse-up) — without it the live canvas can stay blank
-                                                    // for the rest of the drag.
-                                                    #ifdef GRP_SCREEN_CUSTOMCHROMES_ACTIVE
-                                                    if(screen->IsCFGChromesActive())
+                                                    // BEFORE UpdateSize wipes the canvas: stretch the last good
+                                                    // frame into the already-grown client so the modal-loop gap
+                                                    // between "HWND grew" and "compose finished" is never black.
+                                                    if(screen->interactivesizing && !screen->windowcloaked && screen->GetScreenCanvas())
                                                       {
-                                                        GEN_USERINTERFACE.Update();
+                                                        screen->PresentCanvasGDI(screen->GetScreenCanvas());
+                                                      }
+
+                                                    screen->UpdateSize(clientwidth, clientheight);
+                                                    // UpdateSize already: CHANGESIZE observers + full UI compose
+                                                    // (background + all layouts including custom chrome). Keep
+                                                    // hinfo in sync for the non-GL SetDIBitsToDevice path so the
+                                                    // BITMAPINFO stride matches the new canvas during the drag.
+                                                    #ifndef GRP_OPENGL_ACTIVE
+                                                    BITMAPINFO* info = screen->GetHInfo();
+                                                    if(info)
+                                                      {
+                                                        info->bmiHeader.biWidth     = clientwidth;
+                                                        info->bmiHeader.biHeight    = clientheight;
+                                                        info->bmiHeader.biSizeImage = (DWORD)(clientwidth * clientheight * info->bmiHeader.biBitCount) / 8;
                                                       }
                                                     #endif
                                                   }
@@ -2151,9 +2467,7 @@ LRESULT CALLBACK GRPWINDOWSSCREEN::BaseWndProc(HWND hwnd, UINT msg, WPARAM wpara
                                               }
                                           }
                                       }
-                                      break;  
-
-      case WM_PAINT                 : break;
+                                      break;
 
       case WM_POWERBROADCAST        : //Computer is suspending
                                       if(wparam == PBT_APMSUSPEND)
@@ -2205,6 +2519,7 @@ void GRPWINDOWSSCREEN::Clean()
   hwnd                    = NULL;
   hdc                     = NULL;
   windowcloaked           = false;
+  interactivesizing       = false;
   maximize_restore_valid  = false;
   maximize_restore_x      = 0;
   maximize_restore_y      = 0;

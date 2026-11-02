@@ -85,6 +85,7 @@ class GRPWINDOWSSCREEN : public GRPSCREEN
 
     bool                                  Minimize                            (bool active);
     bool                                  Maximize                            (bool active);
+    bool                                  IsClientSizeAtMaximum               ();
 
     GRPBITMAP*                            CaptureContent                      (GRPRECTINT* rect = NULL, void* handle_window = NULL);
     
@@ -114,6 +115,7 @@ class GRPWINDOWSSCREEN : public GRPSCREEN
     void                                  ClientSizeToWindowSize              (int clientwidth, int clientheight, DWORD style, int& windowwidth, int& windowheight);
 
     void                                  Uncloak                             ();
+    bool                                  PresentCanvasGDI                    (GRP2DCANVAS* canvas);
 
     static  LRESULT CALLBACK              BaseWndProc                         (HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam);
 
@@ -127,13 +129,8 @@ class GRPWINDOWSSCREEN : public GRPSCREEN
     HWND                                  hwnd;
     HDC                                   hdc;
 
-
-
-
-
-
-
     bool                                   windowcloaked;
+    bool                                   interactivesizing;
     bool                                   maximize_restore_valid;
     int                                    maximize_restore_x;
     int                                    maximize_restore_y;
@@ -152,7 +149,6 @@ class GRPWINDOWSSCREEN : public GRPSCREEN
 
 
 /*---- INLINE FUNCTIONS + PROTOTYPES ---------------------------------------------------------------------------------*/
-
 
 
 

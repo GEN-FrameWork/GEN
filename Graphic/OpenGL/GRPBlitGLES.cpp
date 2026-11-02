@@ -525,8 +525,9 @@ bool GRPBLITGLES::Update(GRP2DCANVAS* canvas)
 
   // --- Resolve the real drawable size ----------------------------------------------------------
   // On Android the device can rotate AFTER the EGL surface was created; the surface keeps its
-  // creation-time size, so we must recreate it when the native window size changes. On Windows/
-  // Linux GetNativeWindowSize() returns false and we simply trust the EGL surface size.
+  // creation-time size, so we must recreate it when the native window size changes. On Windows
+  // interactive resize, presentation is handled by GRPWINDOWSSCREEN with a GDI blit while the
+  // SC_SIZE modal loop runs (EGL/DXGI HWND surfaces lag and must not be RecreateSurface'd mid-drag).
   GLsizei vpw = (GLsizei)screen->GetWidth();
   GLsizei vph = (GLsizei)screen->GetHeight();
   if(eglctx)
@@ -728,6 +729,32 @@ bool GRPBLITGLES::Destroy()
 
 
 /**-------------------------------------------------------------------------------------------------------------------
+*
+* @fn         void GRPBLITGLES::AbandonWithoutDriver()
+* @brief      Drop GL/EGL ownership without calling into the driver. Used after a Windows SEH
+*             fault during Create/Present when ANGLE/D3D has already faulted (no usable GPU).
+* @ingroup    GRAPHIC
+*
+* --------------------------------------------------------------------------------------------------------------------*/
+void GRPBLITGLES::AbandonWithoutDriver()
+{
+  // Intentional leak of GRPEGLCONTEXT / EGL / GL names: the driver may already be unusable and
+  // the process is about to exit cleanly. Prefer not to re-enter ANGLE after an AV.
+  eglctx   = NULL;
+  texid    = 0;
+  vbo      = 0;
+  vao      = 0;
+  program  = 0;
+  pbo[0]   = 0;
+  pbo[1]   = 0;
+  pbo_size = 0;
+  texw     = 0;
+  texh     = 0;
+  screen   = NULL;
+}
+
+
+/**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         bool GRPBLITGLES::SwapBuffers()
 * @brief      Swap front/back buffers of the underlying EGL surface. Wrapper kept here so callers (e.g. screens) need not know about GRPEGLCONTEXT.
@@ -782,7 +809,8 @@ bool GRPBLITGLES::GetUseVSync()
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         bool GRPBLITGLES::GetNativeWindowSize(int& width, int& height)
-* @brief      get native window size (Default: no native window-size reporting (Windows/Linux have no rotation/resize concern here)
+* @brief      get native window size (Default: false. Windows/X11/Wayland/Android overrides report the live
+*             client/window size so Update() can recreate the EGL surface when it lags a resize drag.)
 * @ingroup    GRAPHIC
 * 
 * @param[in]  width : Width value.

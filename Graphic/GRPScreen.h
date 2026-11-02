@@ -165,7 +165,7 @@ class GRPSCREEN : public GRPPROPERTIES, public XSUBJECT
     virtual bool                          Set_Position                  (int x, int y);
 
     virtual bool                          GetClientSize                 (int& width, int& height);
-    bool                                  IsClientSizeAtMaximum         ();
+    virtual bool                          IsClientSizeAtMaximum         ();
 
     virtual bool                          Resize                        (int width, int height);
     

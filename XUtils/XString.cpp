@@ -3775,22 +3775,31 @@ bool XSTRING::ConvertToBoolean()
 {
   bool result = false;
 
-  if(!Compare(GEN_TL(XTRANSLATION_GEN_ID_YES)    , true)  || 
-     !Compare(GEN_TL(XTRANSLATION_GEN_ID_TRUE)   , true))
+  // XML/config attributes are authored in English ("true"/"false") regardless of UI language.
+  // GEN_TL(TRUE/FALSE) becomes "vrai"/"faux" (etc.) when the app language is not English — without
+  // these literals, visible="false" fell through to the non-empty → true branch and left hidden
+  // multioptions painted (XTraceMonitor Stop+Run overlap with French UI).
+  if(!Compare(NL("true") , true) ||
+     !Compare(NL("yes")  , true) ||
+     !Compare(NL("1")    , true) ||
+     !Compare(GEN_TL(XTRANSLATION_GEN_ID_YES)  , true) ||
+     !Compare(GEN_TL(XTRANSLATION_GEN_ID_TRUE) , true))
     {
       result = true;
     }
    else
     {
-      if(!Compare(GEN_TL(XTRANSLATION_GEN_ID_NO)    , true) || 
-         !Compare(GEN_TL(XTRANSLATION_GEN_ID_FALSE) , true) || 
-         !Compare(NL("0")     , true))                   
+      if(!Compare(NL("false"), true) ||
+         !Compare(NL("no")   , true) ||
+         !Compare(NL("0")    , true) ||
+         !Compare(GEN_TL(XTRANSLATION_GEN_ID_NO)    , true) ||
+         !Compare(GEN_TL(XTRANSLATION_GEN_ID_FALSE) , true))
         {
           result = false;
         }
        else
         {
-          if(!IsEmpty()) 
+          if(!IsEmpty())
             {
               result = true;
             }

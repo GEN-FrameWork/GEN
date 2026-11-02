@@ -72,6 +72,10 @@ class GRPBLITGLES
     bool                                  SwapBuffers                       ();
     bool                                  Destroy                           ();
 
+    // After a SEH fault inside Create/Present (missing GPU / broken ANGLE), drop GL/EGL
+    // ownership without calling into the driver so the object can be deleted safely.
+    void                                  AbandonWithoutDriver              ();
+
     void                                  SetUseVSync                       (bool active);
     bool                                  GetUseVSync                       ();
 
