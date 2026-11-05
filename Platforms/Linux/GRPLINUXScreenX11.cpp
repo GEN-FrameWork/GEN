@@ -2094,7 +2094,12 @@ bool GRPLINUXSCREENX11::Create_Window(bool show)
 
   if(IsRunningOnWSL())
     {
+      #ifdef GRP_OPENGL_REQUIRED
+      XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, NL("[Screen X11] WSL detected; OpenGL ES required but EGL->X11 SHM unsupported — aborting"));
+      return false;
+      #else
       XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, NL("[Screen X11] WSL detected; using X11 software path (no GPU / EGL->X11 SHM unsupported)"));
+      #endif
     }
    else
     {
@@ -2123,9 +2128,14 @@ bool GRPLINUXSCREENX11::Create_Window(bool show)
 
           if(!opengl_visual_ok)
             {
-              XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, NL("[Screen X11] EGL visual failed; falling back to X11 software path"));
               GEN_DELETE blitgles;
               blitgles = NULL;
+              #ifdef GRP_OPENGL_REQUIRED
+              XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, NL("[Screen X11] EGL visual failed; OpenGL ES required — aborting"));
+              return false;
+              #else
+              XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, NL("[Screen X11] EGL visual failed; falling back to X11 software path"));
+              #endif
             }
         }
     }
@@ -2431,9 +2441,14 @@ bool GRPLINUXSCREENX11::Create_Window(bool show)
 
   if(blitgles && !blitgles->Create(this))
     {
-      XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, NL("[Screen X11] BlitGLES create failed; falling back to X11 software path"));
       GEN_DELETE blitgles;
       blitgles = NULL;
+      #ifdef GRP_OPENGL_REQUIRED
+      XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, NL("[Screen X11] BlitGLES create failed; OpenGL ES required — aborting"));
+      return false;
+      #else
+      XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, NL("[Screen X11] BlitGLES create failed; falling back to X11 software path"));
+      #endif
     }
 
   if(blitgles)

@@ -259,17 +259,15 @@ bool GRPWINDOWSSCREEN::Create(bool show)
 bool GRPWINDOWSSCREEN::Update()
 {
   #ifdef GRP_OPENGL_ACTIVE
-
-  if(!blitgles) return false;
-  return blitgles->SwapBuffers();
-
-  #else
+  if(blitgles)
+    {
+      return blitgles->SwapBuffers();
+    }
+  #endif
 
   // Software / GDI present path: canvas pixels are pushed with PresentCanvasGDI via
   // Update(GRP2DCANVAS*). There is no OpenGL swap chain — do not call WGL SwapBuffers.
   return (hdc != NULL);
-
-  #endif
 }
 
 
@@ -298,7 +296,14 @@ bool GRPWINDOWSSCREEN::Update(GRP2DCANVAS* canvas)
       return status;
     }
 
-  #ifndef GRP_OPENGL_ACTIVE
+  #ifdef GRP_OPENGL_ACTIVE
+  if(blitgles)
+    {
+      bool status = blitgles->Update(canvas);
+      if(status) Uncloak();
+      return status;
+    }
+  #endif
 
   if(!hdc) return false;
 
@@ -314,18 +319,6 @@ bool GRPWINDOWSSCREEN::Update(GRP2DCANVAS* canvas)
   bool status = PresentCanvasGDI(canvas);
   if(status) Uncloak();
   return status;
-
-  #else
-
-  if(!blitgles) return false;
-
-  bool status = blitgles->Update(canvas);
-
-  if(status) Uncloak();
-
-  return status;
-
-  #endif
 }
 
 
@@ -2084,9 +2077,26 @@ bool GRPWINDOWSSCREEN::Create_Window(bool show)
       SetPosition(point.x, point.y);
       Set_Position(point.x, point.y);
 
-      // NOTE: the screen size members stay at the CONTENT size (width/height), not the window size.
-      SetSize(width, height);
-      SetMaxSize(width, height);
+      // Content size must track the LIVE client after CreateWindowEx/SetWindowPos/Show (thick-frame
+      // chrome, DPI, DWM). WM_SIZE cannot UpdateSize yet: GetListScreens is only populated after
+      // Create_Window returns. Forcing the pre-create requested size here left PresentCanvasGDI
+      // cropping the right/bottom until the user resized. Capture the requested size for SetMaxSize
+      // before adopting the client (members width/height would otherwise become the client).
+      const XDWORD requested_w = width;
+      const XDWORD requested_h = height;
+      int          client_w    = 0;
+      int          client_h    = 0;
+
+      if(GetClientSize(client_w, client_h) && (client_w > 0) && (client_h > 0))
+        {
+          SetSize((XDWORD)client_w, (XDWORD)client_h);
+        }
+       else
+        {
+          SetSize(requested_w, requested_h);
+        }
+
+      SetMaxSize(requested_w, requested_h);
     }
 
   // XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, NL("[Screen Windows] Part 2 Ini: x=%04d, y=%04d (%04d,%04d)  Bitxpixel (%d)"), posx, posy, width, height, GetBitsperPixel());
@@ -2122,47 +2132,64 @@ bool GRPWINDOWSSCREEN::Create_Window(bool show)
           if(!blitgles)
             {
               XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, NL("[Screen Windows] Could not allocate GRPWINDOWSBLITGLES"));
+              #ifdef GRP_OPENGL_REQUIRED
               return false;
+              #else
+              XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, NL("[Screen Windows] Falling back to GDI software path"));
+              #endif
             }
-
-          // Create + PresentBlankFrame under SEH: ANGLE/D3D may AV on PCs without a usable GPU
-          // (Education / locked-down machines) instead of returning a clean EGL error.
-          #ifndef BUILDER
-          {
-            unsigned int sehcode = 0;
-            if(!GRPWINDOWS_BlitGLES_CreateAndBlankSafe(blitgles, this, &sehcode))
-              {
-                if(sehcode)
-                  {
-                    XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, NL("[Screen Windows] BlitGLES/ANGLE faulted during init (SEH 0x%08X). OpenGL ES unavailable — exiting without crash."), sehcode);
-                  }
-                 else
-                  {
-                    XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, NL("[Screen Windows] BlitGLES create failed (OpenGL ES / ANGLE unavailable)."));
-                  }
-
-                GRPWINDOWS_BlitGLES_DeleteSafe(blitgles);
-                return false;
-              }
-          }
-          #else
-          if(!blitgles->Create(this))
+           else
             {
-              XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, NL("[Screen Windows] BlitGLES create failed"));
-              GEN_DELETE blitgles;
-              blitgles = NULL;
-              return false;
-            }
+              // Create + PresentBlankFrame under SEH: ANGLE/D3D may AV on PCs without a usable GPU
+              // (Education / locked-down machines) instead of returning a clean EGL error.
+              #ifndef BUILDER
+              {
+                unsigned int sehcode = 0;
+                if(!GRPWINDOWS_BlitGLES_CreateAndBlankSafe(blitgles, this, &sehcode))
+                  {
+                    if(sehcode)
+                      {
+                        XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, NL("[Screen Windows] BlitGLES/ANGLE faulted during init (SEH 0x%08X). OpenGL ES unavailable."), sehcode);
+                      }
+                     else
+                      {
+                        XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, NL("[Screen Windows] BlitGLES create failed (OpenGL ES / ANGLE unavailable)."));
+                      }
 
-          // The EGL surface Create() just built has never been cleared or presented -- its initial content
-          // is whatever the driver leaves in a freshly allocated buffer, which is undefined and on several
-          // drivers visibly so (stray coloured pixels, not a clean colour). Show(show) below is what first
-          // makes this window visible to the desktop; clearing and presenting a blank frame BEFORE that
-          // call, rather than after, means the compositor never has a chance to grab that undefined content
-          // -- twice, so neither buffer of the common double-buffered swap chain is left holding it.
-          blitgles->PresentBlankFrame();
-          blitgles->PresentBlankFrame();
-          #endif
+                    GRPWINDOWS_BlitGLES_DeleteSafe(blitgles);
+
+                    #ifdef GRP_OPENGL_REQUIRED
+                    return false;
+                    #else
+                    XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, NL("[Screen Windows] Falling back to GDI software path"));
+                    #endif
+                  }
+              }
+              #else
+              if(!blitgles->Create(this))
+                {
+                  XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, NL("[Screen Windows] BlitGLES create failed"));
+                  GEN_DELETE blitgles;
+                  blitgles = NULL;
+                  #ifdef GRP_OPENGL_REQUIRED
+                  return false;
+                  #else
+                  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, NL("[Screen Windows] Falling back to GDI software path"));
+                  #endif
+                }
+               else
+                {
+                  // The EGL surface Create() just built has never been cleared or presented -- its initial content
+                  // is whatever the driver leaves in a freshly allocated buffer, which is undefined and on several
+                  // drivers visibly so (stray coloured pixels, not a clean colour). Show(show) below is what first
+                  // makes this window visible to the desktop; clearing and presenting a blank frame BEFORE that
+                  // call, rather than after, means the compositor never has a chance to grab that undefined content
+                  // -- twice, so neither buffer of the common double-buffered swap chain is left holding it.
+                  blitgles->PresentBlankFrame();
+                  blitgles->PresentBlankFrame();
+                }
+              #endif
+            }
         }
     }
   #endif
@@ -2221,9 +2248,17 @@ LRESULT CALLBACK GRPWINDOWSSCREEN::BaseWndProc(HWND hwnd, UINT msg, WPARAM wpara
       // while keeping the edges/corners resizable by hand-testing the cursor position ourselves.
       case WM_NCCALCSIZE            : { LONG stylebits = GetWindowLong(hwnd, GWL_STYLE);
 
-                                        if(wparam && (stylebits & WS_THICKFRAME) && !(stylebits & WS_CAPTION))
+                                        // Borderless-but-resizable (custom chromes): client MUST equal the
+                                        // window rect. Handle BOTH wParam forms — TRUE (NCCALCSIZE_PARAMS)
+                                        // and FALSE (RECT*). Returning 0 for TRUE leaves rgrc[0] as the
+                                        // full window; for FALSE it tells DefWindowProc not to shrink the
+                                        // RECT. The previous `wparam &&` guard fell through to DefWindowProc
+                                        // on FALSE, which re-applied the thick-frame inset and left the
+                                        // live client a few pixels smaller than CreateWindow's requested
+                                        // size (right/bottom crop until the user resized).
+                                        if((stylebits & WS_THICKFRAME) && !(stylebits & WS_CAPTION))
                                           {
-                                            return 0; // Client area = whole window (no non-client border).
+                                            return 0;
                                           }
                                       }
                                       break;
@@ -2299,12 +2334,9 @@ LRESULT CALLBACK GRPWINDOWSSCREEN::BaseWndProc(HWND hwnd, UINT msg, WPARAM wpara
       case WM_EXITSIZEMOVE          : { GRPWINDOWSSCREEN* screen = (GRPWINDOWSSCREEN*)GRPSCREEN::GetListScreens()->Get((void*)hwnd);
                                         if(screen)
                                           {
-                                            // Keep interactivesizing=true through the final compose. Clearing it
-                                            // first made Update()/UpdateViewports take the GLES path immediately:
-                                            // RecreateSurface + glClear flashed black (and sometimes garbage) on
-                                            // mouse-up after SC_SIZE — exactly the XTraceMonitor resize flicker.
-                                            // While the flag stays set, UpdateSize's compose presents via
-                                            // PresentCanvasGDI and WM_PAINT can still blit the last good frame.
+                                            // Keep interactivesizing=true through the final compose so UpdateSize
+                                            // still presents via PresentCanvasGDI (stable pixels while ANGLE's
+                                            // HWND surface is still at the pre-drag size).
                                             int clientwidth  = 0;
                                             int clientheight = 0;
                                             if(screen->GetClientSize(clientwidth, clientheight) && clientwidth > 0 && clientheight > 0)
@@ -2319,11 +2351,17 @@ LRESULT CALLBACK GRPWINDOWSSCREEN::BaseWndProc(HWND hwnd, UINT msg, WPARAM wpara
 
                                             screen->interactivesizing = false;
 
-                                            // Do NOT UpdateViewports() here. That would SwapBuffers an ANGLE
-                                            // surface that is about to RecreateSurface at the new size and
-                                            // overwrite the GDI frame with black. The main loop's next
-                                            // DrawFrame/UpdateViewports recreates GLES and uploads the
-                                            // already-composed canvas without a mouse-up flash.
+                                            // Re-enter GLES immediately with the already-composed canvas so the
+                                            // first RecreateSurface + texture upload happens before DWM composites
+                                            // the next frame. GRPBLITGLES now sync-uploads after PBO realloc and
+                                            // double-presents after RecreateSurface, so this no longer flashes
+                                            // black/garbage the way a bare UpdateViewports() used to.
+                                            #ifdef GRP_OPENGL_ACTIVE
+                                            if(!screen->windowcloaked && screen->GetBlitGLES() && screen->GetScreenCanvas())
+                                              {
+                                                screen->Update(screen->GetScreenCanvas());
+                                              }
+                                            #endif
                                           }
                                       }
                                       break;
@@ -2395,7 +2433,8 @@ LRESULT CALLBACK GRPWINDOWSSCREEN::BaseWndProc(HWND hwnd, UINT msg, WPARAM wpara
                                                     // (background + all layouts including custom chrome). Keep
                                                     // hinfo in sync for the non-GL SetDIBitsToDevice path so the
                                                     // BITMAPINFO stride matches the new canvas during the drag.
-                                                    #ifndef GRP_OPENGL_ACTIVE
+                                                    // Keep hinfo in sync for the GDI SetDIBitsToDevice path
+                                                    // (sole present without GLES, and live-resize / fallback with it).
                                                     BITMAPINFO* info = screen->GetHInfo();
                                                     if(info)
                                                       {
@@ -2403,7 +2442,6 @@ LRESULT CALLBACK GRPWINDOWSSCREEN::BaseWndProc(HWND hwnd, UINT msg, WPARAM wpara
                                                         info->bmiHeader.biHeight    = clientheight;
                                                         info->bmiHeader.biSizeImage = (DWORD)(clientwidth * clientheight * info->bmiHeader.biBitCount) / 8;
                                                       }
-                                                    #endif
                                                   }
                                               }
 

@@ -6724,9 +6724,20 @@ bool UI_SKINCANVAS::Draw_Option(UI_ELEMENT* element)
       // strip immediately below the AABB with the layout page colour. Shared-slot peels
       // (Stop/Run) leave a solid gray plate (57,59,61) in that band; sibling caption forms then
       // cannot fully erase it (text clip box). Horizontally padded so a wider legend form is covered.
+      // Skip inside the active modal tree: dialog buttons have no under-icon captions, and a
+      // 24px band below a bottom-padded control bleeds past the modal AABB (XTM config modal).
+      bool under_active_modal = false;
+      if(UI_ELEMENT* modal = GEN_USERINTERFACE.Element_GetModal())
+        {
+          for(UI_ELEMENT* walk = element_option; walk; walk = walk->GetFather())
+            {
+              if(walk == modal) { under_active_modal = true; break; }
+            }
+        }
       if(element->MustReDraw() && canvas && element_option->GetFather() &&
          (element_option->GetFather()->GetType() == UI_ELEMENT_TYPE_MULTIOPTION) &&
-         !GEN_USERINTERFACE.ModalLayer_IsCompositing())
+         !GEN_USERINTERFACE.ModalLayer_IsCompositing() &&
+         !under_active_modal)
         {
           XBYTE pr = 24, pg = 28, pb = 36;
           UI_LAYOUT* layout = element->GetLayout();

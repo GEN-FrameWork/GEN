@@ -220,6 +220,11 @@ class GRPSCREEN : public GRPPROPERTIES, public XSUBJECT
     
     bool                                  UpdateSize                    (int width, int height);
 
+    // Align GetWidth/GetHeight (and canvases, once created) to the live native client from GetClientSize().
+    // Call sites: GRPSCREEN::Create before allocating the screen canvas; safe no-op when already in sync
+    // or when GetClientSize falls back to content size.
+    bool                                  SyncContentSizeFromNativeClient ();
+
     XVECTOR<GRPVIEWPORT*>*                GetViewports                  ();
     GRPVIEWPORT*                          GetViewport                   (int index);
     GRPVIEWPORT*                          GetViewport                   (XCHAR* ID);

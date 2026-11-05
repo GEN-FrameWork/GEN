@@ -137,7 +137,7 @@ class UI_MANAGER : public XOBSERVER, public XSUBJECT
     bool                            ModalLayer_IsLayoutDrawDeferred           (UI_ELEMENT* element);
     bool                            ModalLayer_IsCompositing                  ();
     bool                            ModalLayer_IsRebuildProtected             (UI_ELEMENT* element);
-    bool                            ModalLayer_SuppressesContentDraw          (UI_ELEMENT* element);
+    bool                            ModalLayer_SuppressesContentDraw          (UI_ELEMENT* element);  // always false; modal paints last
     bool                            ChromeCaption_SuppressesContentDraw       (UI_ELEMENT* element);
     bool                            Overlay_SuppressesContentDraw             (UI_ELEMENT* element);
     void                            Overlay_ClearSuppressedContentDirt        ();

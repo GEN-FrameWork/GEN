@@ -485,6 +485,14 @@ XDWORD GRPSCREEN::GetPresentationHeight()
 * --------------------------------------------------------------------------------------------------------------------*/
 bool GRPSCREEN::Create(bool show)
 {
+  // Platform overrides create the native window first, then call this base Create() to allocate the
+  // screen canvas. During that native create, size notifications may not yet be able to find this
+  // screen (Windows registers the HWND in GetListScreens only AFTER Create_Window returns), so
+  // GetWidth/GetHeight can still hold the requested design size while the live client is already a
+  // few pixels smaller (WS_THICKFRAME / DPI / DWM). Present then crops the right/bottom until the
+  // user resizes. Sync once here — before Buffer_Create — so every GEN app inherits the fix.
+  SyncContentSizeFromNativeClient();
+
   screencanvas = GRPFACTORY::GetInstance().CreateCanvas(this);
   if(!screencanvas)
     {
@@ -510,6 +518,35 @@ bool GRPSCREEN::Create(bool show)
   #endif
 
   return true;
+}
+
+
+/**-------------------------------------------------------------------------------------------------------------------
+*
+* @fn         bool GRPSCREEN::SyncContentSizeFromNativeClient()
+* @brief      Align content size (GetWidth/GetHeight) to the live native client from GetClientSize().
+* @note       No-op when already in sync, when the client reports a degenerate size, or when the
+*             platform GetClientSize fallback simply echoes content size. Safe to call before the
+*             screen canvas exists (UpdateSize then only updates the size members).
+* @ingroup    GRAPHIC
+*
+* @return     bool : true if the operation is successful; otherwise false.
+*
+* --------------------------------------------------------------------------------------------------------------------*/
+bool GRPSCREEN::SyncContentSizeFromNativeClient()
+{
+  int clientwidth  = 0;
+  int clientheight = 0;
+
+  if(!GetClientSize(clientwidth, clientheight)) return false;
+  if((clientwidth <= 0) || (clientheight <= 0)) return false;
+
+  if(((XDWORD)clientwidth == GetWidth()) && ((XDWORD)clientheight == GetHeight()))
+    {
+      return true;
+    }
+
+  return UpdateSize(clientwidth, clientheight);
 }
 
 

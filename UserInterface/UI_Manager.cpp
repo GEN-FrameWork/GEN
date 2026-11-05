@@ -1905,45 +1905,23 @@ bool UI_MANAGER::ModalLayer_IsRebuildProtected(UI_ELEMENT* element)
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         bool UI_MANAGER::ModalLayer_SuppressesContentDraw(UI_ELEMENT* element)
-* @brief      True when a non-modal element must not paint: it intersects the composed modal AABB.
-* @note       ROOT CAUSE of ListBoxMenu / Edit punch-through (UI_Options video 2026-09-19): after the modal
+* @brief      Formerly skipped painting any content that intersected the modal AABB.
+* @note       That erased partially-overlapping chrome (e.g. XTM toolbar buttons whose box crosses the
+*             modal top edge) even though Element_DrawModalOnTop() already opaque-wipes and paints the
+*             modal last every frame — content may sit under the dialog; input stays modal-only via the
+*             element_modal PreSelect/Select paths. Caption band suppression is separate
+*             (ChromeCaption_SuppressesContentDraw).
 * @ingroup    USERINTERFACE
 * 
 * @param[in]  element : 
 * 
-* @return     bool : true if the operation is successful; otherwise false.
+* @return     bool : always false (modal no longer suppresses content draw).
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
 bool UI_MANAGER::ModalLayer_SuppressesContentDraw(UI_ELEMENT* element)
 {
-  if(!element) return false;
-  if(!element_modal || !element_modal->IsVisible()) return false;
-  if(!modal_layer_valid) return false;
-  if(modal_layer_compositing) return false;
-
-  UI_ELEMENT* walk = element;
-  while(walk)
-    {
-      if(walk == element_modal) return false;
-      walk = walk->GetFather();
-    }
-
-  if(!element->GetBoundaryLine()) return false;
-
-  double mx = 0.0;
-  double my = 0.0;
-  double mw = 0.0;
-  double mh = 0.0;
-  if(!ModalLayer_Rect(element_modal, mx, my, mw, mh)) return false;
-
-  double ew = element->GetBoundaryLine()->width;
-  double eh = element->GetBoundaryLine()->height;
-  if(ew <= 0.0 || eh <= 0.0) return false;
-
-  double ex = UI_BOUNDARYLINE_EdgeLeft(element->GetXPosition(), ew);
-  double ey = UI_BOUNDARYLINE_EdgeTop (element->GetYPosition(), eh);
-
-  return (ex < mx + mw) && (ex + ew > mx) && (ey < my + mh) && (ey + eh > my);
+  (void)element;
+  return false;
 }
 
 
@@ -5602,15 +5580,26 @@ UI_ELEMENT* UI_MANAGER::GetLayoutElement_TextBox(XFILEXMLELEMENT* node, UI_LAYOU
   // UI_ELEMENT::SetTextAlign() above -- UI_ELEMENT_TEXTBOX::SetTextAlignment() is a distinct, textbox-specific
   // setter (out of scope to unify here), but the property NAME and its CSS-natural alias are the same, so this
   // read goes through the same UI_PROPERTYREGISTRY lookup rather than a third hand-rolled copy of it.
-  XSTRING                textalignmentstr;
-  UI_ELEMENT_TYPE_ALIGN  textalignment;
+  //
+  // Only call SetTextAlignment when the attribute is present AND recognized. A previous revision always
+  // wrote an uninitialized local when the attribute was absent, which could leave ALIGN_CENTER (or any
+  // garbage) on the textbox — visible as horizontally centered foot/status text depending on stack
+  // leftovers from earlier center-aligned legend parses. Absent/unrecognized leaves the constructor
+  // default (NOTDETERMINED → left paint path in TextBox_GenerateLines).
+  XSTRING textalignmentstr;
   if(outstyle.GetAliased(NL("textalignment"), NL("text-align"), textalignmentstr))
     {
-      if(!textalignmentstr.Compare(NL("left"), true))  textalignment = UI_ELEMENT_TYPE_ALIGN_LEFT;
-        else if(!textalignmentstr.Compare(NL("right"), true))  textalignment = UI_ELEMENT_TYPE_ALIGN_RIGHT;
+      UI_ELEMENT_TYPE_ALIGN textalignment = UI_ELEMENT_TYPE_ALIGN_NOTDETERMINED;
+
+      if(!textalignmentstr.Compare(NL("left"), true))        textalignment = UI_ELEMENT_TYPE_ALIGN_LEFT;
+        else if(!textalignmentstr.Compare(NL("right"), true)) textalignment = UI_ELEMENT_TYPE_ALIGN_RIGHT;
           else if(!textalignmentstr.Compare(NL("center"), true)) textalignment = UI_ELEMENT_TYPE_ALIGN_CENTER;
+
+      if(textalignment != UI_ELEMENT_TYPE_ALIGN_NOTDETERMINED)
+        {
+          element_textbox->SetTextAlignment(textalignment);
+        }
     }
-  element_textbox->SetTextAlignment(textalignment);
 
 
   XSTRING wordclippingstr;

@@ -115,6 +115,9 @@ class GRPBLITGLES
     GLuint                                pbo[2];
     int                                   pbo_index;
     XDWORD                                pbo_size;
+    // After AllocPBOs the ring is empty: the async path uploads "prev" which has never been
+    // written. Force one synchronous TexSubImage (+ prime both PBOs) before resuming DMA.
+    bool                                  pbo_needsync;
     
     int                                   texw;
     int                                   texh;
@@ -128,11 +131,6 @@ class GRPBLITGLES
 
     float                                 lboxsx;
     float                                 lboxsy;
-
-
-
-
-
     float                                 lboxtx;
     float                                 lboxty;
 
@@ -144,6 +142,8 @@ class GRPBLITGLES
     bool                                  AllocPBOs                         (int width, int height);
 
     void                                  BuildModelMatrix                  (float* m4x4);
+    void                                  DrawTexturedQuad                  ();
+    bool                                  PresentTextureToSurface           (GLsizei vpw, GLsizei vph, bool visible);
 
     bool                                  DetectBGRAExtension               ();
     GLuint                                CompileShader                     (GLenum stage, const char* source);

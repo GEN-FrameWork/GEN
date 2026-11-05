@@ -552,9 +552,14 @@ bool GRPLINUXSCREENWAYLAND::Create_Surface(bool show)
     {
       if(!blitgles->Create(this))
         {
-          XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, NL("[Screen Wayland] BlitGLES create failed; falling back to Wayland SHM software path"));
           GEN_DELETE blitgles;
           blitgles = NULL;
+          #ifdef GRP_OPENGL_REQUIRED
+          XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, NL("[Screen Wayland] BlitGLES create failed; OpenGL ES required — aborting"));
+          return false;
+          #else
+          XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, NL("[Screen Wayland] BlitGLES create failed; falling back to Wayland SHM software path"));
+          #endif
         }
        else
         {

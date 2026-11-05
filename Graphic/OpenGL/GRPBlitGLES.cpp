@@ -494,7 +494,11 @@ bool GRPBLITGLES::Update(GRP2DCANVAS* canvas)
   glActiveTexture(GL_TEXTURE0);
   glBindTexture(GL_TEXTURE_2D, texid);
 
-  if(usepbo && IsES3() && pbo[0] && pbo[1])
+  // PBO ring is one frame behind: TexSubImage pulls from "prev", which is only valid after at
+  // least one frame has been written into the ring. Fresh AllocPBOs (Create, or every canvas
+  // Resize after SC_SIZE) leave both buffers empty — uploading prev then draws black/garbage for
+  // exactly one frame (the mouse-up flicker after interactive resize). Sync-upload + prime first.
+  if(usepbo && IsES3() && pbo[0] && pbo[1] && !pbo_needsync)
     {
       const int prev = pbo_index;
       const int next = pbo_index ^ 1;
@@ -520,7 +524,28 @@ bool GRPBLITGLES::Update(GRP2DCANVAS* canvas)
    else
     {
       glPixelStorei(GL_UNPACK_ALIGNMENT, 4);
+      glBindBuffer(GL_PIXEL_UNPACK_BUFFER, 0);
       glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, w, h, upload_fmt, GL_UNSIGNED_BYTE, src);
+
+      if(usepbo && IsES3() && pbo[0] && pbo[1] && pbo_needsync)
+        {
+          // Seed both ring slots with this frame so the next async Update's "prev" upload is real.
+          for(int i = 0; i < 2; i++)
+            {
+              glBindBuffer(GL_PIXEL_UNPACK_BUFFER, pbo[i]);
+              glBufferData(GL_PIXEL_UNPACK_BUFFER, (GLsizeiptr)pbo_size, NULL, GL_STREAM_DRAW);
+              void* dst = glMapBufferRange(GL_PIXEL_UNPACK_BUFFER, 0, (GLsizeiptr)pbo_size, GL_MAP_WRITE_BIT | GL_MAP_INVALIDATE_BUFFER_BIT);
+              if(dst)
+                {
+                  memcpy(dst, src, pbo_size);
+                  glUnmapBuffer(GL_PIXEL_UNPACK_BUFFER);
+                }
+            }
+
+          glBindBuffer(GL_PIXEL_UNPACK_BUFFER, 0);
+          pbo_index    = 0;
+          pbo_needsync = false;
+        }
     }
 
   // --- Resolve the real drawable size ----------------------------------------------------------
@@ -530,6 +555,7 @@ bool GRPBLITGLES::Update(GRP2DCANVAS* canvas)
   // SC_SIZE modal loop runs (EGL/DXGI HWND surfaces lag and must not be RecreateSurface'd mid-drag).
   GLsizei vpw = (GLsizei)screen->GetWidth();
   GLsizei vph = (GLsizei)screen->GetHeight();
+  bool    surface_recreated = false;
   if(eglctx)
     {
       EGLDisplay edisp = eglctx->GetEGLDisplay();
@@ -547,7 +573,10 @@ bool GRPBLITGLES::Update(GRP2DCANVAS* canvas)
           if(nw != (int)sw0 || nh != (int)sh0)
             {
               // Window resized/rotated: rebuild the surface to match.
-              eglctx->RecreateSurface(GetNativeWindow());
+              if(eglctx->RecreateSurface(GetNativeWindow()))
+                {
+                  surface_recreated = true;
+                }
             }
         }
 
@@ -573,36 +602,24 @@ bool GRPBLITGLES::Update(GRP2DCANVAS* canvas)
 
   ComputePresentationScale(vpw, vph, lboxsx, lboxsy, lboxtx, lboxty, presentationvisible);
 
-  glViewport(0, 0, vpw, vph);
-  glClear(GL_COLOR_BUFFER_BIT);
-
-  if(presentationvisible)
+  if(!PresentTextureToSurface(vpw, vph, presentationvisible))
     {
-      glUseProgram(program);
+      return false;
+    }
 
-      float mv[16];
-      BuildModelMatrix(mv);
-      glUniformMatrix4fv(u_modelview, 1, GL_FALSE, mv);
-      glUniform1i(u_tex, 0);
-
-      if(IsES3() && vao)
+  // RecreateSurface allocates a fresh (typically double-buffered) swap chain whose buffers are
+  // undefined. One SwapBuffers publishes the drawn frame to the front buffer but leaves the other
+  // buffer untouched — the next compositor tick / alt-tab / present can then flash garbage. Present
+  // the same texture a second time (same reason Create() calls PresentBlankFrame twice).
+  if(surface_recreated)
+    {
+      if(!PresentTextureToSurface(vpw, vph, presentationvisible))
         {
-          glBindVertexArray(vao);
-          glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
-          glBindVertexArray(0);
-        }
-       else
-        {
-          glBindBuffer(GL_ARRAY_BUFFER, vbo);
-          glEnableVertexAttribArray((GLuint)a_pos);
-          glEnableVertexAttribArray((GLuint)a_uv);
-          glVertexAttribPointer((GLuint)a_pos, 2, GL_FLOAT, GL_FALSE, sizeof(float)*4, (void*)0);
-          glVertexAttribPointer((GLuint)a_uv, 2, GL_FLOAT, GL_FALSE, sizeof(float)*4, (void*)(sizeof(float)*2));
-          glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+          return false;
         }
     }
 
-  return eglctx->SwapBuffers();
+  return true;
 }
 
 
@@ -740,16 +757,17 @@ void GRPBLITGLES::AbandonWithoutDriver()
 {
   // Intentional leak of GRPEGLCONTEXT / EGL / GL names: the driver may already be unusable and
   // the process is about to exit cleanly. Prefer not to re-enter ANGLE after an AV.
-  eglctx   = NULL;
-  texid    = 0;
-  vbo      = 0;
-  vao      = 0;
-  program  = 0;
-  pbo[0]   = 0;
-  pbo[1]   = 0;
-  pbo_size = 0;
-  texw     = 0;
-  texh     = 0;
+  eglctx         = NULL;
+  texid          = 0;
+  vbo            = 0;
+  vao            = 0;
+  program        = 0;
+  pbo[0]         = 0;
+  pbo[1]         = 0;
+  pbo_size       = 0;
+  pbo_needsync   = false;
+  texw           = 0;
+  texh           = 0;
   screen   = NULL;
 }
 
@@ -1301,9 +1319,75 @@ bool GRPBLITGLES::AllocPBOs(int width, int height)
     }
 
   glBindBuffer(GL_PIXEL_UNPACK_BUFFER, 0);
-  pbo_index = 0;
+  pbo_index    = 0;
+  pbo_needsync = true;
 
   return true;
+}
+
+
+/**-------------------------------------------------------------------------------------------------------------------
+*
+* @fn         void GRPBLITGLES::DrawTexturedQuad()
+* @brief      Issues the fullscreen textured-quad draw with the current model/UV state.
+* @note       INTERNAL
+* @ingroup    GRAPHIC
+*
+* --------------------------------------------------------------------------------------------------------------------*/
+void GRPBLITGLES::DrawTexturedQuad()
+{
+  glUseProgram(program);
+
+  float mv[16];
+  BuildModelMatrix(mv);
+  glUniformMatrix4fv(u_modelview, 1, GL_FALSE, mv);
+  glUniform1i(u_tex, 0);
+
+  if(IsES3() && vao)
+    {
+      glBindVertexArray(vao);
+      glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+      glBindVertexArray(0);
+    }
+   else
+    {
+      glBindBuffer(GL_ARRAY_BUFFER, vbo);
+      glEnableVertexAttribArray((GLuint)a_pos);
+      glEnableVertexAttribArray((GLuint)a_uv);
+      glVertexAttribPointer((GLuint)a_pos, 2, GL_FLOAT, GL_FALSE, sizeof(float)*4, (void*)0);
+      glVertexAttribPointer((GLuint)a_uv, 2, GL_FLOAT, GL_FALSE, sizeof(float)*4, (void*)(sizeof(float)*2));
+      glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+    }
+}
+
+
+/**-------------------------------------------------------------------------------------------------------------------
+*
+* @fn         bool GRPBLITGLES::PresentTextureToSurface(GLsizei vpw, GLsizei vph, bool visible)
+* @brief      Clears the drawable, optionally draws the canvas texture quad, and swaps.
+* @note       INTERNAL
+* @ingroup    GRAPHIC
+*
+* @param[in]  vpw : Drawable width in pixels.
+* @param[in]  vph : Drawable height in pixels.
+* @param[in]  visible : true to draw the textured quad; false leaves the clear colour.
+*
+* @return     bool : true if SwapBuffers succeeded.
+*
+* --------------------------------------------------------------------------------------------------------------------*/
+bool GRPBLITGLES::PresentTextureToSurface(GLsizei vpw, GLsizei vph, bool visible)
+{
+  if(!eglctx) return false;
+
+  glViewport(0, 0, vpw, vph);
+  glClear(GL_COLOR_BUFFER_BIT);
+
+  if(visible)
+    {
+      DrawTexturedQuad();
+    }
+
+  return eglctx->SwapBuffers();
 }
 
 
@@ -1381,14 +1465,15 @@ void GRPBLITGLES::Clean()
   u_tex       = -1;
   a_pos       = -1;
   a_uv        = -1;
-  pbo[0]      = 0;
-  pbo[1]      = 0;
-  pbo_index   = 0;
-  pbo_size    = 0;
-  texw        = 0;
-  texh        = 0;
-  usevsync    = true;
-  usepbo      = true;
+  pbo[0]         = 0;
+  pbo[1]         = 0;
+  pbo_index      = 0;
+  pbo_size       = 0;
+  pbo_needsync   = false;
+  texw           = 0;
+  texh           = 0;
+  usevsync       = true;
+  usepbo         = true;
   // Defaults: NO flip. The framework's canvas is stored bottom-up on Windows
   // (matching SetDIBitsToDevice positive biHeight = bottom-up DIB). With canonical
   // OpenGL UVs (V=0 at bottom, V=1 at top), this maps 1:1 to canvas BOTTOM and TOP.
