@@ -132,6 +132,12 @@ class UI_MANAGER : public XOBSERVER, public XSUBJECT
     
     bool                            Element_SetModal                          (UI_ELEMENT* element_modal);
     UI_ELEMENT*                     Element_GetModal                          ();
+    // True while a visible modal is active (Element_SetModal). Pointer hover/click must stay inside it.
+    bool                            Element_IsModalActive                     ();
+    // True if element is the active modal or a compose descendant (apps: gate custom hit-tests e.g. Tree_UpdateInput).
+    bool                            Element_IsInActiveModal                   (UI_ELEMENT* element);
+    // True when a visible modal is up AND element is outside that modal — block selection/scrollbar, not redraws.
+    bool                            Element_ModalBlocksInteraction            (UI_ELEMENT* element);
     bool                            Element_DrawModalOnTop                    ();
     void                            ModalLayer_Invalidate                     ();
     bool                            ModalLayer_IsLayoutDrawDeferred           (UI_ELEMENT* element);
@@ -244,6 +250,8 @@ class UI_MANAGER : public XOBSERVER, public XSUBJECT
     UI_ELEMENT*                     GetLayoutElement_MultiOption              (XFILEXMLELEMENT* node, UI_LAYOUT* layout, UI_ELEMENT* father, UI_ELEMENT* element_legacy = NULL);
     UI_ELEMENT*                     GetLayoutElement_Button                   (XFILEXMLELEMENT* node, UI_LAYOUT* layout, UI_ELEMENT* father, UI_ELEMENT* element_legacy = NULL);
     UI_ELEMENT*                     GetLayoutElement_CheckBox                 (XFILEXMLELEMENT* node, UI_LAYOUT* layout, UI_ELEMENT* father, UI_ELEMENT* element_legacy = NULL);
+    UI_ELEMENT*                     GetLayoutElement_RadioButton              (XFILEXMLELEMENT* node, UI_LAYOUT* layout, UI_ELEMENT* father, UI_ELEMENT* element_legacy = NULL);
+    UI_ELEMENT*                     GetLayoutElement_RadioGroup               (XFILEXMLELEMENT* node, UI_LAYOUT* layout, UI_ELEMENT* father, UI_ELEMENT* element_legacy = NULL);
     UI_ELEMENT*                     GetLayoutElement_EditText                 (XFILEXMLELEMENT* node, UI_LAYOUT* layout, UI_ELEMENT* father, UI_ELEMENT* element_legacy = NULL);
     UI_ELEMENT*                     GetLayoutElement_Form                     (XFILEXMLELEMENT* node, UI_LAYOUT* layout, UI_ELEMENT* father, UI_ELEMENT* element_legacy = NULL);
     UI_ELEMENT*                     GetLayoutElement_Menu                     (XFILEXMLELEMENT* node, UI_LAYOUT* layout, UI_ELEMENT* father, UI_ELEMENT* element_legacy = NULL);

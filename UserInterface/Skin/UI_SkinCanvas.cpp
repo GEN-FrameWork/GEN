@@ -75,6 +75,8 @@
 #include "UI_Element_MultiOption.h"
 #include "UI_Element_Button.h"
 #include "UI_Element_CheckBox.h"
+#include "UI_Element_RadioButton.h"
+#include "UI_Element_RadioGroup.h"
 #include "UI_Element_EditText.h"
 #include "UI_Element_Form.h"
 #include "UI_Element_Menu.h"
@@ -84,6 +86,7 @@
 #include "UI_Element_ProgressImage.h"
 #include "UI_Element_StatisticsChart.h"
 #include "UI_Layout.h"
+#include "UI_LayoutEngine.h"
 #include "UI_Manager.h"
 
 #include "APPFlowBase.h"
@@ -3319,6 +3322,492 @@ bool UI_SKINCANVAS::CalculateBoundaryLine_CheckBox(UI_ELEMENT* element, bool adj
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
+* @fn         bool UI_SKINCANVAS::CalculateBoundaryLine_RadioButton(UI_ELEMENT* element, bool adjustsizemargin)
+* @brief      Calculate boundary line radio button
+* @ingroup    USERINTERFACE
+* 
+* @param[in]  element : Element to process.
+* @param[in]  adjustsizemargin : Adjustsizemargin value.
+* 
+* @return     bool : true if the operation is successful; otherwise false.
+* 
+* --------------------------------------------------------------------------------------------------------------------*/
+/**-------------------------------------------------------------------------------------------------------------------
+*
+* @fn         void UI_SkinCanvas_AlignRadioButtonGlyphAndText
+* @brief      Vertically center the radio circle with its caption (shared by layout + paint).
+* @note       INTERNAL / FILE LOCAL. Draw_Image paints native bitmap pixels from the IMAGE child's
+*             absolute Y — not the animation wrapper — so every frame must be moved with the glyph.
+*             Text Y is the VectorFont baseline; mid of the em box is baseline − sizefont/2 (Y-up
+*             father: abs mid = father_y − text_y_rel − sizefont/2). Circle mid uses the same
+*             relative-from-bottom convention so both share the row midline.
+* @ingroup    USERINTERFACE
+*
+* --------------------------------------------------------------------------------------------------------------------*/
+/**-------------------------------------------------------------------------------------------------------------------
+*
+* @fn         void UI_SkinCanvas_GlueRadioButtonImages
+* @brief      Draw_Image uses the IMAGE child's absolute Y — keep frames glued to the animation box.
+* @note       INTERNAL / FILE LOCAL. Safe under CSS flex: does not move animation/text.
+* @ingroup    USERINTERFACE
+*
+* --------------------------------------------------------------------------------------------------------------------*/
+static void UI_SkinCanvas_GlueRadioButtonImages(UI_ELEMENT_ANIMATION* animation)
+{
+  if(!animation) return;
+  for(XDWORD c=0; c<animation->GetComposeElements()->GetSize(); c++)
+    {
+      UI_ELEMENT* img = animation->GetComposeElements()->Get(c);
+      if(!img || (img->GetType() != UI_ELEMENT_TYPE_IMAGE)) continue;
+      img->SetXPosition(animation->GetXPosition());
+      img->SetYPosition(animation->GetYPosition());
+    }
+}
+
+
+/**-------------------------------------------------------------------------------------------------------------------
+*
+* @fn         void UI_SkinCanvas_SyncChildBoundaryFromAbs
+* @brief      Mirror a child's absolute box into BoundaryLine x/y (GEN: abs_y = father_y − boundary.y).
+* @note       INTERNAL / FILE LOCAL. Keeps flex WriteBack positions alive across later CalculePosition.
+* @ingroup    USERINTERFACE
+*
+* --------------------------------------------------------------------------------------------------------------------*/
+static void UI_SkinCanvas_SyncChildBoundaryFromAbs(UI_ELEMENT* father, UI_ELEMENT* child)
+{
+  if(!father || !child || !child->GetBoundaryLine()) return;
+  child->GetBoundaryLine()->x = child->GetXPosition() - father->GetXPosition();
+  child->GetBoundaryLine()->y = father->GetYPosition() - child->GetYPosition();
+}
+
+
+/**-------------------------------------------------------------------------------------------------------------------
+*
+* @fn         void UI_SkinCanvas_SyncRadioFlexChildOffsets
+* @brief      After RunLayout, mirror absolute anim/text into BoundaryLine x/y.
+* @note       INTERNAL / FILE LOCAL.
+* @ingroup    USERINTERFACE
+*
+* --------------------------------------------------------------------------------------------------------------------*/
+static void UI_SkinCanvas_SyncRadioFlexChildOffsets(UI_ELEMENT* radio)
+{
+  if(!radio) return;
+  UI_ELEMENT_RADIOBUTTON* rb = (UI_ELEMENT_RADIOBUTTON*)radio;
+  UI_SkinCanvas_SyncChildBoundaryFromAbs(radio, (UI_ELEMENT*)rb->Get_UIAnimation());
+  UI_SkinCanvas_SyncChildBoundaryFromAbs(radio, (UI_ELEMENT*)rb->Get_UIText());
+}
+
+
+/**-------------------------------------------------------------------------------------------------------------------
+*
+* @fn         void UI_SkinCanvas_OpticalNudgeRadioGlyphToText
+* @brief      CSS align-items:center matches AABBs; VectorFont Y is the baseline (box bottom), so the
+*             visible caps sit above the AABB mid — nudge the glyph so ring mid ↔ optical mid.
+* @note       INTERNAL / FILE LOCAL. CSS Lite has no cap-height / baseline alignment.
+* @ingroup    USERINTERFACE
+*
+* --------------------------------------------------------------------------------------------------------------------*/
+static void UI_SkinCanvas_OpticalNudgeRadioGlyphToText(UI_ELEMENT* radio)
+{
+  if(!radio) return;
+  UI_ELEMENT_RADIOBUTTON* rb   = (UI_ELEMENT_RADIOBUTTON*)radio;
+  UI_ELEMENT_ANIMATION*   anim = rb->Get_UIAnimation();
+  UI_ELEMENT_TEXT*        text = rb->Get_UIText();
+  if(!anim || !text || !anim->GetBoundaryLine()) return;
+
+  double sizefont = (double)text->GetSizeFont();
+  if(sizefont < 1.0) sizefont = 12.0;
+
+  double circle_h = anim->GetBoundaryLine()->height;
+  if(circle_h < 1.0)
+    {
+      for(XDWORD c=0; c<anim->GetComposeElements()->GetSize(); c++)
+        {
+          UI_ELEMENT* child = anim->GetComposeElements()->Get(c);
+          if(!child || (child->GetType() != UI_ELEMENT_TYPE_IMAGE)) continue;
+          UI_ELEMENT_IMAGE* img = (UI_ELEMENT_IMAGE*)child;
+          if(img->GetImage() && (img->GetImage()->GetHeight() > 0))
+            {
+              circle_h = (double)img->GetImage()->GetHeight();
+              break;
+            }
+        }
+    }
+  if(circle_h < 1.0) circle_h = 16.0;
+
+  // Baseline at text bottom; optical mid ≈ 0.32×sizefont above baseline (Y-down bottom storage).
+  const double optical = sizefont * 0.32;
+  double desired_anim_y = text->GetYPosition() - optical + circle_h * 0.5 - 1.0;
+  anim->SetYPosition(desired_anim_y);
+  UI_SkinCanvas_GlueRadioButtonImages(anim);
+}
+
+
+/**-------------------------------------------------------------------------------------------------------------------
+*
+* @fn         void UI_SkinCanvas_ApplyRadioFlexChildAbs
+* @brief      Re-pin flex-placed anim/text (and PNG frames) after the radio row's absolute box moved.
+* @note       INTERNAL / FILE LOCAL.
+* @ingroup    USERINTERFACE
+*
+* --------------------------------------------------------------------------------------------------------------------*/
+static void UI_SkinCanvas_ApplyRadioFlexChildAbs(UI_SKINCANVAS* skin, UI_ELEMENT* radio)
+{
+  if(!skin || !radio || !radio->GetBoundaryLine()) return;
+  UI_ELEMENT_RADIOBUTTON* rb = (UI_ELEMENT_RADIOBUTTON*)radio;
+  UI_ELEMENT_ANIMATION*   anim = rb->Get_UIAnimation();
+  UI_ELEMENT_TEXT*        text = rb->Get_UIText();
+  if(!anim || !text) return;
+
+  double rw = radio->GetBoundaryLine()->width;
+  double rh = radio->GetBoundaryLine()->height;
+  skin->CalculePosition(anim, rw, rh, false);
+  skin->CalculePosition(text, rw, rh, false);
+  UI_SkinCanvas_GlueRadioButtonImages(anim);
+}
+
+
+static void UI_SkinCanvas_AlignRadioButtonGlyphAndText(UI_SKINCANVAS* skin, UI_ELEMENT* element, bool adjustsizemargin, bool write_boundary);
+
+
+/**-------------------------------------------------------------------------------------------------------------------
+*
+* @fn         void UI_SkinCanvas_LayoutRadioGroupFlex
+* @brief      CSS column + space-evenly for peers; nested radio flex row + optical glyph nudge.
+* @note       INTERNAL / FILE LOCAL. full_relayout runs RunLayout; otherwise only re-pins from BoundaryLine.
+* @ingroup    USERINTERFACE
+*
+* --------------------------------------------------------------------------------------------------------------------*/
+
+
+static void UI_SkinCanvas_AlignRadioButtonGlyphAndText(UI_SKINCANVAS* skin, UI_ELEMENT* element, bool adjustsizemargin, bool write_boundary)
+{
+  if(!skin || !element) return;
+
+  UI_ELEMENT_RADIOBUTTON* radiobutton = (UI_ELEMENT_RADIOBUTTON*)element;
+  UI_ELEMENT_ANIMATION*   animation   = radiobutton->Get_UIAnimation();
+  UI_ELEMENT_TEXT*        text        = radiobutton->Get_UIText();
+  if(!animation || !text || !element->GetBoundaryLine()) return;
+
+  XDWORD sizefont = text->GetSizeFont();
+  if(sizefont < 1) sizefont = 12;
+
+  // Prefer live PNG height: Draw_Image paints native pixels (opaque ring ~y1..14 in 16×16).
+  double circle_h = 0.0;
+  for(XDWORD c=0; c<animation->GetComposeElements()->GetSize(); c++)
+    {
+      UI_ELEMENT* child = animation->GetComposeElements()->Get(c);
+      if(!child || (child->GetType() != UI_ELEMENT_TYPE_IMAGE)) continue;
+      UI_ELEMENT_IMAGE* img = (UI_ELEMENT_IMAGE*)child;
+      if(img->GetImage() && (img->GetImage()->GetHeight() > 0))
+        {
+          circle_h = (double)img->GetImage()->GetHeight();
+          break;
+        }
+    }
+  if(circle_h < 1.0 && animation->GetBoundaryLine()) circle_h = animation->GetBoundaryLine()->height;
+  if(circle_h < 1.0) circle_h = 16.0;
+  circle_h = (double)((int)(circle_h + 0.5));
+  if(circle_h < 1.0) circle_h = 16.0;
+
+  // VectorFont_Print uses flip_y: Y is the baseline, ink grows toward EdgeTop.
+  // Latin ink sits low in the em box — optical mid ≈ 0.22×sizefont above baseline.
+  // CRITICAL: center the RING in the row first. Deriving anim from an AABB-centered text
+  // baseline made anim_y_rel≈0.4 → rounded to 0, pinning the circle to the row bottom and
+  // inflating the visual gap under the group title (top looked empty, bottom tight).
+  const double sf       = (double)sizefont;
+  const double optical  = sf * 0.22;
+  const double gap_x    = 8.0;
+
+  double row_h = circle_h;
+  if(row_h < sf) row_h = sf;
+  {
+    // Circle centered: anim=(row-ch)/2. Text baseline at circle_mid − optical must fit
+    // with glyphs (≈ +sf toward EdgeTop) inside the row → row ≥ ch and row ≥ 2·optical + sf.
+    double need = circle_h;
+    double need_txt = 2.0 * optical + sf;
+    if(need < need_txt) need = need_txt;
+    if(need < circle_h + 4.0) need = circle_h + 4.0;
+    if(row_h < need) row_h = need;
+  }
+  row_h = (double)((int)(row_h + 0.5));
+
+  // During paint keep the packer's slot height so peers stay on the same grid.
+  if(!write_boundary && (element->GetBoundaryLine()->height > row_h))
+    {
+      row_h = element->GetBoundaryLine()->height;
+    }
+  element->GetBoundaryLine()->height = row_h;
+
+  // Ring geometric center of the slot, then lock caption optical mid to that same mid.
+  double anim_y_rel = (row_h - circle_h) * 0.5;
+  double text_y_rel = anim_y_rel + circle_h * 0.5 - optical;
+  if(text_y_rel < 0.0) text_y_rel = 0.0;
+  if(text_y_rel + sf > row_h) text_y_rel = row_h - sf;
+  if(text_y_rel < 0.0) text_y_rel = 0.0;
+
+  // Round to integers WITHOUT collapsing a positive sub-pixel anim to 0 (that was the gap bug).
+  anim_y_rel = (double)((int)(anim_y_rel + 0.5));
+  text_y_rel = (double)((int)(text_y_rel + 0.5));
+  if(anim_y_rel < 0.0) anim_y_rel = 0.0;
+  if(anim_y_rel + circle_h > row_h) anim_y_rel = row_h - circle_h;
+
+  if(write_boundary)
+    {
+      animation->GetBoundaryLine()->width  = circle_h;
+      animation->GetBoundaryLine()->height = circle_h;
+      animation->GetBoundaryLine()->x      = 0.0;
+      animation->GetBoundaryLine()->y      = anim_y_rel;
+
+      text->GetBoundaryLine()->x      = circle_h + gap_x;
+      text->GetBoundaryLine()->y      = text_y_rel;
+      text->GetBoundaryLine()->width  = element->GetBoundaryLine()->width - circle_h - gap_x;
+      if(text->GetBoundaryLine()->width < 1.0) text->GetBoundaryLine()->width = 1.0;
+      text->GetBoundaryLine()->height = sf;
+
+      for(XDWORD c=0; c<animation->GetComposeElements()->GetSize(); c++)
+        {
+          UI_ELEMENT* img = animation->GetComposeElements()->Get(c);
+          if(!img || (img->GetType() != UI_ELEMENT_TYPE_IMAGE) || !img->GetBoundaryLine()) continue;
+          img->GetBoundaryLine()->x      = 0.0;
+          img->GetBoundaryLine()->y      = 0.0;
+          img->GetBoundaryLine()->width  = circle_h;
+          img->GetBoundaryLine()->height = circle_h;
+        }
+
+      // Keep CalculePosition for width/align side effects, then pin abs Y from the optical pack
+      // (CalculePosition alone cannot express baseline↔ring optical mid).
+      skin->CalculePosition(animation, element->GetBoundaryLine()->width, row_h, adjustsizemargin);
+      skin->CalculePosition(text,      element->GetBoundaryLine()->width, row_h, adjustsizemargin);
+
+      for(XDWORD c=0; c<animation->GetComposeElements()->GetSize(); c++)
+        {
+          UI_ELEMENT* img = animation->GetComposeElements()->Get(c);
+          if(img) skin->CalculePosition(img, circle_h, circle_h, adjustsizemargin);
+        }
+    }
+
+  double father_x = element->GetXPosition();
+  double father_y = element->GetYPosition();
+
+  animation->SetXPosition(father_x);
+  animation->SetYPosition(father_y - anim_y_rel);
+  text->SetXPosition(father_x + circle_h + gap_x);
+  text->SetYPosition(father_y - text_y_rel);
+
+  UI_SkinCanvas_GlueRadioButtonImages(animation);
+}
+
+
+/**-------------------------------------------------------------------------------------------------------------------
+* 
+* @fn         bool UI_SKINCANVAS::CalculateBoundaryLine_RadioButton(UI_ELEMENT* element, bool adjustsizemargin)
+* @brief      Calculate boundary line radio button
+* @ingroup    USERINTERFACE
+* 
+* @param[in]  element : Element to process.
+* @param[in]  adjustsizemargin : Adjustsizemargin value.
+* 
+* @return     bool : true if the operation is successful; otherwise false.
+* 
+* --------------------------------------------------------------------------------------------------------------------*/
+bool UI_SKINCANVAS::CalculateBoundaryLine_RadioButton(UI_ELEMENT* element, bool adjustsizemargin)
+{
+  if(!CalculateBoundaryLine_Option(element, adjustsizemargin)) return false;
+
+  UI_ELEMENT_RADIOBUTTON* radiobutton = (UI_ELEMENT_RADIOBUTTON*)element;
+  if(!radiobutton) return false;
+  if(!radiobutton->Get_UIAnimation() || !radiobutton->Get_UIText()) return true;
+
+  // Row: CSS may declare align-items:center (AABB), but VectorFont Y is the baseline — skin optical pack.
+  UI_SkinCanvas_AlignRadioButtonGlyphAndText(this, element, adjustsizemargin, true);
+  if(element->IsFlexContainer()) UI_SkinCanvas_SyncRadioFlexChildOffsets(element);
+  return true;
+}
+
+
+/**-------------------------------------------------------------------------------------------------------------------
+*
+* @fn         void UI_SkinCanvas_DistributeRadioGroupPeers
+* @brief      Pack radiobutton peers with equal top margin, inter-gap and bottom margin.
+* @note       INTERNAL / FILE LOCAL. free = box_h − Σ row_h; gap = free/(n+1). Compose order =
+*             top→bottom. Vertical CSS padding is ignored so margin_top ≡ margin_bottom ≡ gap;
+*             horizontal CSS padding still insets the rows. Writes absolute X/Y for PreSelect.
+* @ingroup    USERINTERFACE
+*
+* --------------------------------------------------------------------------------------------------------------------*/
+static void UI_SkinCanvas_DistributeRadioGroupPeers(UI_SKINCANVAS* skin, UI_ELEMENT* group)
+{
+  if(!skin || !group || !group->GetBoundaryLine() || !group->GetComposeElements()) return;
+
+  // Realizes CSS justify-content:space-evenly (equal top / inter / bottom free space).
+  // Prefer this packer over RunLayout: later Option/Draw passes were undoing flex WriteBack.
+  XVECTOR<UI_ELEMENT*> radios;
+  for(XDWORD c=0; c<group->GetComposeElements()->GetSize(); c++)
+    {
+      UI_ELEMENT* child = group->GetComposeElements()->Get(c);
+      if(child && (child->GetType() == UI_ELEMENT_TYPE_RADIOBUTTON)) radios.Add(child);
+    }
+
+  XDWORD n = radios.GetSize();
+  if(n < 1) return;
+
+  double pad_l = group->GetPadding(UI_ELEMENT_TYPE_ALIGN_LEFT);
+  double pad_r = group->GetPadding(UI_ELEMENT_TYPE_ALIGN_RIGHT);
+  if(pad_l < 1.0) pad_l = 12.0;
+  if(pad_r < 1.0) pad_r = 12.0;
+
+  double box_w = group->GetBoundaryLine()->width;
+  double box_h = group->GetBoundaryLine()->height;
+  double row_w = box_w - pad_l - pad_r;
+  if(row_w < 1.0) row_w = box_w;
+
+  // Measure each row (post-optical height), then force one shared slot height so Light/Dark
+  // cannot drift (different measured rh was producing unequal glyph↔caption offsets).
+  double max_rh = 0.0;
+  for(XDWORD i=0; i<n; i++)
+    {
+      UI_ELEMENT* radio = radios.Get(i);
+      if(!radio || !radio->GetBoundaryLine()) continue;
+      skin->CalculateBoundaryLine_RadioButton(radio, false);
+      double rh = radio->GetBoundaryLine()->height;
+      if(rh < 1.0) rh = 16.0;
+      if(rh > max_rh) max_rh = rh;
+    }
+  max_rh = (double)((int)(max_rh + 0.5));
+  if(max_rh < 1.0) max_rh = 16.0;
+
+  for(XDWORD i=0; i<n; i++)
+    {
+      UI_ELEMENT* radio = radios.Get(i);
+      if(radio && radio->GetBoundaryLine()) radio->GetBoundaryLine()->height = max_rh;
+    }
+
+  double total_rh = max_rh * (double)n;
+
+  // Title is painted ON the top stroke (mostly outside / straddling EdgeTop). Do NOT reserve a
+  // content band for it: any positive title_reserve made the first gap larger than the bottom
+  // gap (confirmed live). Space-evenly over the full box_h keeps top ≡ inter ≡ bottom.
+  const double title_reserve = 0.0;
+
+  double free_h = box_h - total_rh - title_reserve;
+  if(free_h < 0.0) free_h = 0.0;
+  double gap = free_h / (double)(n + 1);
+
+  double father_x = group->GetXPosition();
+  double father_y = group->GetYPosition();
+
+  // Equal visible gaps under the title band / between peers / above the bottom stroke.
+  double from_top = title_reserve + gap;
+  for(XDWORD i=0; i<n; i++)
+    {
+      UI_ELEMENT* radio = radios.Get(i);
+      if(!radio || !radio->GetBoundaryLine()) continue;
+
+      double rh = max_rh;
+
+      // Child bottom relative to group bottom (GEN: abs_y = father_y − boundary.y).
+      double y_rel = box_h - from_top - rh;
+      if(y_rel < 0.0) y_rel = 0.0;
+      y_rel = (double)((int)(y_rel + 0.5));
+
+      radio->GetBoundaryLine()->x = pad_l;
+      radio->GetBoundaryLine()->y = y_rel;
+      radio->GetBoundaryLine()->height = rh;
+      if((radio->GetBoundaryLine()->width <= 0.0) || (radio->GetBoundaryLine()->width > row_w))
+        {
+          radio->GetBoundaryLine()->width = row_w;
+        }
+
+      radio->SetXPosition(father_x + pad_l);
+      radio->SetYPosition(father_y - y_rel);
+
+      // Drop authored ypos from computed style so ApplyStyleLengthsFromBag cannot undo this pack.
+      if(radio->GetComputedStyle() && radio->GetComputedStyle()->Exists(NL("ypos")))
+        {
+          XSTRING ystr;
+          ystr.Format(NL("%.3f"), y_rel);
+          radio->GetComputedStyle()->Set(NL("ypos"), ystr.Get());
+        }
+
+      UI_SkinCanvas_AlignRadioButtonGlyphAndText(skin, radio, false, true);
+
+      from_top += rh + gap;
+    }
+}
+
+
+/**-------------------------------------------------------------------------------------------------------------------
+* 
+* @fn         bool UI_SKINCANVAS::CalculateBoundaryLine_RadioGroup(UI_ELEMENT* element, bool adjustsizemargin)
+* @brief      Calculate boundary line radio group (same compose shrink-wrap as MultiOption)
+* @ingroup    USERINTERFACE
+* 
+* @param[in]  element : Element to process.
+* @param[in]  adjustsizemargin : Adjustsizemargin value.
+* 
+* @return     bool : true if the operation is successful; otherwise false.
+* 
+* --------------------------------------------------------------------------------------------------------------------*/
+bool UI_SKINCANVAS::CalculateBoundaryLine_RadioGroup(UI_ELEMENT* element, bool adjustsizemargin)
+{
+  // Same compose shrink-wrap as MultiOption, but without casting through UI_ELEMENT_MULTIOPTION
+  // (RadioGroup shares the skeleton, not the inheritance).
+  if(!element) return false;
+
+  double fatherwidth  = 0.0f;
+  double fatherheight = 0.0f;
+
+  GetFatherSize(element, fatherwidth, fatherheight);
+
+  switch((int)element->GetBoundaryLine()->width)
+    {
+      case UI_ELEMENT_TYPE_ALIGN_AUTO   :
+      case                          0   : { double maximgwidth = 0.0f;
+
+                                            for(XDWORD c=0; c<element->GetComposeElements()->GetSize(); c++)
+                                              {
+                                               UI_ELEMENT* subelement = (UI_ELEMENT*)element->GetComposeElements()->Get(c);
+                                               if(subelement) maximgwidth = __MAX((GetPositionWithoutDefine(subelement->GetBoundaryLine()->x) + subelement->GetBoundaryLine()->width), maximgwidth);
+                                              }
+
+                                            element->GetBoundaryLine()->width = maximgwidth;
+                                          }
+                                          break;
+
+      case UI_ELEMENT_TYPE_ALIGN_MAX    : element->GetBoundaryLine()->width = UI_SKINCANVAS_ResolveMaxSize(element, fatherwidth);
+                                          break;
+    }
+
+  switch((int)element->GetBoundaryLine()->height)
+    {
+      case UI_ELEMENT_TYPE_ALIGN_AUTO   :
+      case                          0   : { double maximgheight = 0.0f;
+
+                                            for(XDWORD c=0; c<element->GetComposeElements()->GetSize(); c++)
+                                              {
+                                               UI_ELEMENT* subelement = (UI_ELEMENT*)element->GetComposeElements()->Get(c);
+                                               if(subelement) maximgheight = __MAX((GetPositionWithoutDefine(subelement->GetBoundaryLine()->y) + subelement->GetBoundaryLine()->height), maximgheight);
+                                              }
+
+                                            element->GetBoundaryLine()->height = maximgheight;
+                                          }
+                                          break;
+
+      case UI_ELEMENT_TYPE_ALIGN_MAX    : element->GetBoundaryLine()->height = UI_SKINCANVAS_ResolveMaxSize(element, fatherheight);
+                                          break;
+    }
+
+  CalculePosition(element, fatherwidth, fatherheight, adjustsizemargin);
+
+  UI_SkinCanvas_DistributeRadioGroupPeers(this, element);
+
+  return true;
+}
+
+
+/**-------------------------------------------------------------------------------------------------------------------
+* 
 * @fn         bool UI_SKINCANVAS::CalculateBoundaryLine_EditText(UI_ELEMENT* element, bool adjustsizemargin)
 * @brief      Calculate boundary line edit text
 * @ingroup    USERINTERFACE
@@ -5144,18 +5633,35 @@ bool UI_SKINCANVAS::Draw_TextBox(UI_ELEMENT* element)
 }
 
 
-static void UI_SkinCanvas_ConsolePalette(XBYTE colorindex, int& r, int& g, int& b, int& a)
+static void UI_SkinCanvas_ConsolePalette(XBYTE colorindex, int& r, int& g, int& b, int& a, bool light_panel)
 {
   a = 255;
-  switch(colorindex)
+  if(light_panel)
     {
-      case UI_ELEMENT_CONSOLE_COLOR_BLUE   : r =  64; g = 128; b = 255; break;
-      case UI_ELEMENT_CONSOLE_COLOR_GREEN  : r =  64; g = 200; b =  64; break;
-      case UI_ELEMENT_CONSOLE_COLOR_PURPLE : r = 180; g =  80; b = 200; break;
-      case UI_ELEMENT_CONSOLE_COLOR_RED    : r = 230; g =  64; b =  64; break;
-      case UI_ELEMENT_CONSOLE_COLOR_GRAY   : r = 160; g = 160; b = 160; break;
-      case UI_ELEMENT_CONSOLE_COLOR_BLACK  :
-                              default      : r = 220; g = 220; b = 220; break;  // light text on dark console
+      // Darker inks for light console backs (Readable on 250,250,252).
+      switch(colorindex)
+        {
+          case UI_ELEMENT_CONSOLE_COLOR_BLUE   : r =  30; g =  90; b = 200; break;
+          case UI_ELEMENT_CONSOLE_COLOR_GREEN  : r =  20; g = 140; b =  40; break;
+          case UI_ELEMENT_CONSOLE_COLOR_PURPLE : r = 140; g =  40; b = 160; break;
+          case UI_ELEMENT_CONSOLE_COLOR_RED    : r = 200; g =  40; b =  40; break;
+          case UI_ELEMENT_CONSOLE_COLOR_GRAY   : r = 100; g = 108; b = 120; break;
+          case UI_ELEMENT_CONSOLE_COLOR_BLACK  :
+                                  default      : r =  40; g =  44; b =  52; break;
+        }
+    }
+   else
+    {
+      switch(colorindex)
+        {
+          case UI_ELEMENT_CONSOLE_COLOR_BLUE   : r =  64; g = 128; b = 255; break;
+          case UI_ELEMENT_CONSOLE_COLOR_GREEN  : r =  64; g = 200; b =  64; break;
+          case UI_ELEMENT_CONSOLE_COLOR_PURPLE : r = 180; g =  80; b = 200; break;
+          case UI_ELEMENT_CONSOLE_COLOR_RED    : r = 230; g =  64; b =  64; break;
+          case UI_ELEMENT_CONSOLE_COLOR_GRAY   : r = 160; g = 160; b = 160; break;
+          case UI_ELEMENT_CONSOLE_COLOR_BLACK  :
+                                  default      : r = 220; g = 220; b = 220; break;  // light text on dark console
+        }
     }
 }
 
@@ -5422,7 +5928,14 @@ bool UI_SKINCANVAS::Draw_Console(UI_ELEMENT* element)
             }
            else
             {
-              UI_SkinCanvas_ConsolePalette(line->colorindex, r, g, b, a);
+              bool light_console = false;
+              if(element_console->IsBackgroundColorSet() && element_console->GetBackgroundColor() &&
+                 (element_console->GetBackgroundColor()->GetAlpha() > 0))
+                {
+                  UI_COLOR* cbg = element_console->GetBackgroundColor();
+                  light_console = (((int)cbg->GetRed() + (int)cbg->GetGreen() + (int)cbg->GetBlue()) > 500);
+                }
+              UI_SkinCanvas_ConsolePalette(line->colorindex, r, g, b, a, light_console);
             }
 
           GRP2DCOLOR_RGBA8 color_line(r, g, b, a);
@@ -5667,10 +6180,12 @@ bool UI_SKINCANVAS::Draw_Tree(UI_ELEMENT* element)
         }
 
       GRP2DCOLOR_RGBA8 color_ink(ink_r, ink_g, ink_b, ink_a);
-      GRP2DCOLOR_RGBA8 color_guide(104, 114, 130, 255);
-      GRP2DCOLOR_RGBA8 color_boxline(150, 160, 176, 255);
-      GRP2DCOLOR_RGBA8 color_boxsign(210, 218, 230, 255);
-      GRP2DCOLOR_RGBA8 color_select(40, 50, 70, 255);
+      // Tree chrome tracks panel luminance (Dark authored defaults vs Light remapped console_back).
+      const bool light_panel = ((int)color_back.r + (int)color_back.g + (int)color_back.b) > 500;
+      GRP2DCOLOR_RGBA8 color_guide   = light_panel ? GRP2DCOLOR_RGBA8(140, 150, 165, 255) : GRP2DCOLOR_RGBA8(104, 114, 130, 255);
+      GRP2DCOLOR_RGBA8 color_boxline = light_panel ? GRP2DCOLOR_RGBA8(120, 130, 145, 255) : GRP2DCOLOR_RGBA8(150, 160, 176, 255);
+      GRP2DCOLOR_RGBA8 color_boxsign = light_panel ? GRP2DCOLOR_RGBA8(60, 68, 80, 255)    : GRP2DCOLOR_RGBA8(210, 218, 230, 255);
+      GRP2DCOLOR_RGBA8 color_select  = light_panel ? GRP2DCOLOR_RGBA8(180, 198, 230, 255) : GRP2DCOLOR_RGBA8(40, 50, 70, 255);
 
       double x_left  = x_position + bw;
       double x_right = x_position + box_w - bw;
@@ -5930,8 +6445,17 @@ bool UI_SKINCANVAS::Draw_PropertyList(UI_ELEMENT* element)
           color_line = GRP2DCOLOR_RGBA8(lc->GetRed(), lc->GetGreen(), lc->GetBlue(), 255);
         }
 
-      GRP2DCOLOR_RGBA8 color_header(26, 30, 40, 255);
-      GRP2DCOLOR_RGBA8 color_rowline(34, 40, 50, 255);
+      // Derive header/row chrome from panel luminance so Light themes keep readable Name/Value headers.
+      bool light_panel = false;
+      if(element_list->IsBackgroundColorSet() && element_list->GetBackgroundColor() &&
+         (element_list->GetBackgroundColor()->GetAlpha() > 0))
+        {
+          UI_COLOR* bg = element_list->GetBackgroundColor();
+          light_panel = (((int)bg->GetRed() + (int)bg->GetGreen() + (int)bg->GetBlue()) > 500);
+        }
+
+      GRP2DCOLOR_RGBA8 color_header  = light_panel ? GRP2DCOLOR_RGBA8(210, 216, 226, 255) : GRP2DCOLOR_RGBA8(26, 30, 40, 255);
+      GRP2DCOLOR_RGBA8 color_rowline = light_panel ? GRP2DCOLOR_RGBA8(200, 208, 220, 255) : GRP2DCOLOR_RGBA8(34, 40, 50, 255);
 
       double x_left   = x_position + bw;
       double x_right  = x_position + box_w - bw;
@@ -6213,45 +6737,89 @@ bool UI_SKINCANVAS::Draw_Animation(UI_ELEMENT* element)
       // the gray selection bar (and vice versa on deselect). Drop without restore and re-capture
       // whatever the parent wash left under us.
       //
-      // CHROME APP ICON (role=icon): never keep an AnimBackdrop. After UpdateSize wipe, a backdrop
-      // captured on pure black (or a compounded caption fill) is PutBitmapNoAlpha'd under the PNG's
-      // translucent corners as a permanent black plate. Soft-blend the icon onto the live caption.
-      bool chrome_app_icon = (element->GetChromeRole() == UI_ELEMENT_CHROMEROLE_ICON);
-      for(UI_ELEMENT* walk = element->GetFather(); !chrome_app_icon && walk; walk = walk->GetFather())
+      // CHROME CONTROLS (icon / language / min / max / close): never keep an AnimBackdrop.
+      // After UpdateSize or Light theme page remaps, a backdrop captured on pure black (or a
+      // compounded caption fill) is PutBitmapNoAlpha'd under SVG/PNG translucent corners as a
+      // permanent black plate on the caption. Soft-blend onto the live caption instead.
+      bool chrome_control = false;
+      for(UI_ELEMENT* walk = element; walk; walk = walk->GetFather())
         {
-          if(walk->GetChromeRole() == UI_ELEMENT_CHROMEROLE_ICON)
+          switch(walk->GetChromeRole())
             {
-              chrome_app_icon = true;
-              break;
+              case UI_ELEMENT_CHROMEROLE_ICON     :
+              case UI_ELEMENT_CHROMEROLE_LANGUAGE :
+              case UI_ELEMENT_CHROMEROLE_MINIMIZE :
+              case UI_ELEMENT_CHROMEROLE_MAXIMIZE :
+              case UI_ELEMENT_CHROMEROLE_CLOSE    : chrome_control = true; break;
+                                        default  : break;
             }
+          if(chrome_control) break;
         }
 
       if(!GEN_USERINTERFACE.ModalLayer_IsCompositing())
         {
-          if(chrome_app_icon)
+          if(chrome_control)
             {
+              // Never keep AnimBackdrop under chrome SVGs (stale black plate). Do NOT recolor/scrub
+              // the glyphs — chrome icons are authored for any caption colour. Seed the AABB with the
+              // live caption/page fill so soft edges composite onto the app page, not leftover charcoal.
               AnimBackdrop_Delete(element);
 
-              // Soft-edge PNG must not blend onto wiped pure black after UpdateSize. Caption is already
-              // painted under us; only replace near-black pixels (stale plate) with the live caption
-              // sample so AA corners match the bar — do NOT opaque-fill the whole AABB (that erased
-              // the translucent caption wash and left a lighter square under the icon).
               if(canvas && element_image->GetImage())
                 {
                   double ih = (double)element_image->GetImage()->GetHeight();
                   double iw = (double)element_image->GetImage()->GetWidth();
                   double ix = x_position;
                   double iy = y_position - ih;
-                  XBYTE pr = 24, pg = 28, pb = 36;
+                  // Resolve live caption/page first. Never default to XML charcoal (24,28,36): that
+                  // sum (88) skipped the old "transparent caption" page fallback and left a solid
+                  // dark plate under chrome controls hanging past the caption AABB (Light strip).
+                  XBYTE pr = 0, pg = 0, pb = 0;
+                  UI_LAYOUT* chrome_lay = GEN_USERINTERFACE.Layouts_Get(NL("chrome"));
+                  if(chrome_lay)
+                    {
+                      UI_ELEMENT* caption = chrome_lay->Elements_Get(UI_ELEMENT_CHROMEROLE_CAPTION);
+                      UI_COLOR* cc = NULL;
+                      if(caption)
+                        {
+                          if(caption->IsBackgroundColorSet() && caption->GetBackgroundColor() &&
+                             (caption->GetBackgroundColor()->GetAlpha() > 0))
+                            cc = caption->GetBackgroundColor();
+                          else if(caption->GetColor() && (caption->GetColor()->GetAlpha() > 0))
+                            cc = caption->GetColor();
+                        }
+                      if(cc && cc->IsValid())
+                        {
+                          pr = cc->GetRed(); pg = cc->GetGreen(); pb = cc->GetBlue();
+                        }
+                    }
+                  if((pr + pg + pb) <= 8)
+                    {
+                      UI_LAYOUT* app = GEN_USERINTERFACE.Layouts_Get(NL("xtracemonitor"));
+                      if(app && app->GetBackground() && app->GetBackground()->GetColor() &&
+                         app->GetBackground()->GetColor()->IsValid())
+                        {
+                          UI_COLOR* page = app->GetBackground()->GetColor();
+                          pr = page->GetRed(); pg = page->GetGreen(); pb = page->GetBlue();
+                        }
+                    }
+                  // Only accept a live canvas sample when it already matches the caption/page
+                  // luminance. Sampling a neighbouring charcoal plate re-seeds the black strip.
                   GRP2DCOLOR* sample = canvas->GetPixel(ix - 2.0, iy + ih * 0.5);
                   if(!sample) sample = canvas->GetPixel(ix + iw + 2.0, iy + ih * 0.5);
                   if(sample)
                     {
                       GRP2DCOLOR_RGBA8* s = (GRP2DCOLOR_RGBA8*)sample;
-                      if(s->a > 0 && (s->r + s->g + s->b) > 8)
+                      const int ssum = (int)s->r + (int)s->g + (int)s->b;
+                      const int psum = (int)pr + (int)pg + (int)pb;
+                      if(s->a > 0 && ssum > 8 && abs(ssum - psum) <= 48)
                         {
                           pr = s->r; pg = s->g; pb = s->b;
                         }
+                    }
+                  if((pr + pg + pb) <= 8)
+                    {
+                      pr = 24; pg = 28; pb = 36; // last resort: XML dark page
                     }
                   GRP2DCOLOR_RGBA8 under(pr, pg, pb, 255);
                   int ih_i = (int)ih; if(ih_i < 1) ih_i = 1;
@@ -6260,13 +6828,7 @@ bool UI_SKINCANVAS::Draw_Animation(UI_ELEMENT* element)
                     {
                       for(int px = 0; px < iw_i; px++)
                         {
-                          GRP2DCOLOR* cur = canvas->GetPixel(ix + (double)px, iy + (double)py);
-                          if(!cur) continue;
-                          GRP2DCOLOR_RGBA8* c = (GRP2DCOLOR_RGBA8*)cur;
-                          if((c->r + c->g + c->b) < 24)
-                            {
-                              canvas->PutPixel(ix + (double)px, iy + (double)py, (const GRP2DCOLOR*)&under);
-                            }
+                          canvas->PutPixel(ix + (double)px, iy + (double)py, (const GRP2DCOLOR*)&under);
                         }
                     }
                 }
@@ -6281,7 +6843,7 @@ bool UI_SKINCANVAS::Draw_Animation(UI_ELEMENT* element)
               if(father)
                 {
                   XDWORD ft = father->GetType();
-                  if((ft == UI_ELEMENT_TYPE_OPTION) || (ft == UI_ELEMENT_TYPE_BUTTON) || (ft == UI_ELEMENT_TYPE_CHECKBOX))
+                  if((ft == UI_ELEMENT_TYPE_OPTION) || (ft == UI_ELEMENT_TYPE_BUTTON) || (ft == UI_ELEMENT_TYPE_CHECKBOX) || (ft == UI_ELEMENT_TYPE_RADIOBUTTON))
                     {
                       UI_ELEMENT_OPTION* father_opt = (UI_ELEMENT_OPTION*)father;
                       if(father_opt->GetBackgroundColor() && (father_opt->GetBackgroundColor()->GetAlpha() == 255))
@@ -6356,8 +6918,9 @@ bool UI_SKINCANVAS::Draw_Animation(UI_ELEMENT* element)
         }
 
       // Image child only paints when ITS MustReDraw is set — force it when the animation father redraws.
+      // Chrome SVG + app toolbar PNGs are left untouched (transparent assets; theme only remaps text ink).
       element_image->SetMustReDraw(true);
-      Draw(element_image);     
+      Draw(element_image);
     }
 
   switch(element_animation->GetState())
@@ -6470,22 +7033,27 @@ bool UI_SKINCANVAS::Draw_Option(UI_ELEMENT* element)
       // replaces prior pixels; keeping a permanent OptionBackdrop forced restore→force-dirty-children every
       // paint, which MarkOverlapping'd frame_records and wiped sibling gallery rows into a blank column.
       //
-      // CHROME APP ICON (role=icon): same rule as AnimBackdrop — never keep/restore an OptionBackdrop.
-      // After UpdateSize wipe a backdrop captured on pure black is PutBitmapNoAlpha'd under the PNG's
-      // translucent corners as a permanent black plate on the caption.
-      bool chrome_app_icon = (element_option->GetChromeRole() == UI_ELEMENT_CHROMEROLE_ICON);
-      for(UI_ELEMENT* walk = element_option->GetFather(); !chrome_app_icon && walk; walk = walk->GetFather())
+      // CHROME CONTROLS (icon / language / min / max / close): same rule as AnimBackdrop — never
+      // keep/restore an OptionBackdrop. A backdrop captured on pure black becomes a permanent black
+      // plate under SVG translucent corners on the caption (esp. Light themes).
+      bool chrome_control = false;
+      for(UI_ELEMENT* walk = element_option; walk; walk = walk->GetFather())
         {
-          if(walk->GetChromeRole() == UI_ELEMENT_CHROMEROLE_ICON)
+          switch(walk->GetChromeRole())
             {
-              chrome_app_icon = true;
-              break;
+              case UI_ELEMENT_CHROMEROLE_ICON     :
+              case UI_ELEMENT_CHROMEROLE_LANGUAGE :
+              case UI_ELEMENT_CHROMEROLE_MINIMIZE :
+              case UI_ELEMENT_CHROMEROLE_MAXIMIZE :
+              case UI_ELEMENT_CHROMEROLE_CLOSE    : chrome_control = true; break;
+                                        default  : break;
             }
+          if(chrome_control) break;
         }
 
       bool opaque_option_wash = (element_option->GetBackgroundColor()->GetAlpha() == 255);
       bool optionbackdrop_restored = false;
-      if(opaque_option_wash || chrome_app_icon)
+      if(opaque_option_wash || chrome_control)
         {
           OptionBackdrop_Delete(element_option);
         }
@@ -6533,7 +7101,15 @@ bool UI_SKINCANVAS::Draw_Option(UI_ELEMENT* element)
             {
               skip_white_erase = true;
             }
-          if(!skip_white_erase && chrome_app_icon)
+          // Radio rows sit on a framed radiogroup (modal/page fill). The classic white erase plate
+          // would bleach the caption and glyph over the dark dialog — never paint it for radios.
+          if(!skip_white_erase &&
+             ((element_option->GetType() == UI_ELEMENT_TYPE_RADIOBUTTON) ||
+              (element_option->GetFather() && (element_option->GetFather()->GetType() == UI_ELEMENT_TYPE_RADIOGROUP))))
+            {
+              skip_white_erase = true;
+            }
+          if(!skip_white_erase && chrome_control)
             {
               skip_white_erase = true;
             }
@@ -6563,7 +7139,11 @@ bool UI_SKINCANVAS::Draw_Option(UI_ELEMENT* element)
 
       DrawBackgroundColor(element_option, canvas, x_position, y_position);
 
-      if(isselected)
+      // Radiobutton selection is the concentric glyph (off/on frames), not Option chrome plates.
+      // The ACTIVE white outline / SELECT wash would paint a light box behind the caption on dark modals.
+      const bool skip_option_chrome = (element_option->GetType() == UI_ELEMENT_TYPE_RADIOBUTTON);
+
+      if(!skip_option_chrome && isselected)
         { 
           if(element_option->GetVisibleLimitType() & UI_ELEMENT_OPTION_VISIBLE_LIMIT_SELECT) 
             {     
@@ -6586,7 +7166,7 @@ bool UI_SKINCANVAS::Draw_Option(UI_ELEMENT* element)
                 } 
             }
         }
-       else
+       else if(!skip_option_chrome)
         {
           if(ispreselect)
             {       
@@ -6739,7 +7319,7 @@ bool UI_SKINCANVAS::Draw_Option(UI_ELEMENT* element)
          !GEN_USERINTERFACE.ModalLayer_IsCompositing() &&
          !under_active_modal)
         {
-          XBYTE pr = 24, pg = 28, pb = 36;
+          XBYTE pr = 0, pg = 0, pb = 0;
           UI_LAYOUT* layout = element->GetLayout();
           if(layout && layout->GetBackground() && layout->GetBackground()->GetColor() &&
              layout->GetBackground()->GetColor()->IsValid())
@@ -6749,8 +7329,23 @@ bool UI_SKINCANVAS::Draw_Option(UI_ELEMENT* element)
               pg = (XBYTE)page->GetGreen();
               pb = (XBYTE)page->GetBlue();
             }
+          if((pr + pg + pb) <= 8)
+            {
+              UI_LAYOUT* app = GEN_USERINTERFACE.Layouts_Get(NL("xtracemonitor"));
+              if(app && app->GetBackground() && app->GetBackground()->GetColor() &&
+                 app->GetBackground()->GetColor()->IsValid())
+                {
+                  UI_COLOR* page = app->GetBackground()->GetColor();
+                  pr = (XBYTE)page->GetRed();
+                  pg = (XBYTE)page->GetGreen();
+                  pb = (XBYTE)page->GetBlue();
+                }
+            }
+          if((pr + pg + pb) <= 8) { pr = 24; pg = 28; pb = 36; }
 
-          const double legend_band = 24.0;
+          // Legend forms are 14px tall; keep the wipe inside that strip so it cannot crush
+          // valor/tree tops that sit just below the toolbar captions.
+          const double legend_band = 16.0;
           const double hpad = 10.0;
           double band_x = x_position - hpad;
           double band_w = element->GetBoundaryLine()->width + (hpad * 2.0);
@@ -6932,18 +7527,17 @@ bool UI_SKINCANVAS::Draw_MultiOption(UI_ELEMENT* element)
             {
               if(element_option->GetSelectableState() == actual_state) 
                 {
-                  // On a real multioption dirty (any state→state), force this face to emit pixels.
-                  if(element->MustReDraw())
+                  // Face paint is ungated above, but Draw_Option / Draw_Animation / Draw_Image still
+                  // require MustReDraw on the face and its children. Always force them here so app
+                  // toolbar bubbles (and chrome controls) cannot stay blank after a page wipe.
+                  element_option->SetMustReDraw(true);
+                  for(XDWORD d=0; d<element_option->GetComposeElements()->GetSize(); d++)
                     {
-                      element_option->SetMustReDraw(true);
-                      for(XDWORD d=0; d<element_option->GetComposeElements()->GetSize(); d++)
-                        {
-                          UI_ELEMENT* facechild = (UI_ELEMENT*)element_option->GetComposeElements()->Get(d);
-                          if(facechild) facechild->SetMustReDraw(true);
-                        }
+                      UI_ELEMENT* facechild = (UI_ELEMENT*)element_option->GetComposeElements()->Get(d);
+                      if(facechild) facechild->SetMustReDraw(true);
                     }
-                  Draw(element_option);              
-                  break;              
+                  Draw(element_option);
+                  break;
                 }       
             }            
         }
@@ -7091,6 +7685,173 @@ bool UI_SKINCANVAS::Draw_CheckBox(UI_ELEMENT* element)
     }
 
   return Draw_Option(element);
+}
+
+
+/**-------------------------------------------------------------------------------------------------------------------
+* 
+* @fn         bool UI_SKINCANVAS::Draw_RadioButton(UI_ELEMENT* element)
+* @brief      Draw radio button
+* @ingroup    USERINTERFACE
+* 
+* @param[in]  element : Element to process.
+* 
+* @return     bool : true if the operation is successful; otherwise false.
+* 
+* --------------------------------------------------------------------------------------------------------------------*/
+bool UI_SKINCANVAS::Draw_RadioButton(UI_ELEMENT* element)  
+{
+  UI_ELEMENT_RADIOBUTTON* radiobutton = (UI_ELEMENT_RADIOBUTTON*)element;
+
+  if(radiobutton)
+    {
+      UI_ELEMENT_ANIMATION* animation = radiobutton->Get_UIAnimation();
+      if(animation) animation->IndexImage_Set(radiobutton->GetStatus()?1:0);
+
+      // Re-glue circle frames + caption to the row midline every paint (image Y ≠ animation Y otherwise).
+      if(animation && radiobutton->Get_UIText() && element->GetBoundaryLine())
+        {
+          UI_SkinCanvas_AlignRadioButtonGlyphAndText(this, element, false, false);
+        }
+    }
+
+  return Draw_Option(element);
+}
+
+
+/**-------------------------------------------------------------------------------------------------------------------
+* 
+* @fn         bool UI_SKINCANVAS::Draw_RadioGroup(UI_ELEMENT* element)
+* @brief      Draw radio group (framed panel + optional title + all compose children)
+* @ingroup    USERINTERFACE
+* 
+* @param[in]  element : Element to process.
+* 
+* @return     bool : true if the operation is successful; otherwise false.
+* 
+* --------------------------------------------------------------------------------------------------------------------*/
+bool UI_SKINCANVAS::Draw_RadioGroup(UI_ELEMENT* element)  
+{    
+  if(!screen)  return false;
+  if(!element) return false;
+
+  UI_ELEMENT_RADIOGROUP* element_radiogroup = (UI_ELEMENT_RADIOGROUP*)element;
+  double                 x_position         = 0.0f;
+  double                 y_position         = 0.0f;
+  GRP2DCANVAS*           canvas             = GetCanvas();
+  XRECT                  clip_rect;  
+  
+  if(!canvas) return false;
+  if(!element_radiogroup) return false;
+
+  // Title sits on the top stroke and overhangs EdgeTop — expand rebuild/edge so ascenders are
+  // not clipped on redraw (father overflow:hidden still covers the pixels inside the form AABB).
+  XDWORD title_edge = UI_SKINCANVAS_PRESELECT_MAXEDGE;
+  {
+    XDWORD sizefont_guess = 13;
+    if(element_radiogroup->GetComputedStyle())
+      {
+        double sf = 0.0;
+        if(element_radiogroup->GetComputedStyle()->Get(NL("font-size"), sf) && (sf > 0.0)) sizefont_guess = (XDWORD)sf;
+        else if(element_radiogroup->GetComputedStyle()->Get(NL("sizefont"), sf) && (sf > 0.0)) sizefont_guess = (XDWORD)sf;
+      }
+    XDWORD need = (XDWORD)((sizefont_guess * 3) / 4) + 2;
+    if(need > title_edge) title_edge = need;
+  }
+
+  PreDrawFunction(element, canvas, clip_rect, x_position, y_position, title_edge);
+
+  double box_w = element_radiogroup->GetBoundaryLine()->width;
+  double box_h = element_radiogroup->GetBoundaryLine()->height;
+  double y_top = UI_BOUNDARYLINE_EdgeTop(y_position, box_h);
+
+  UI_SkinCanvas_DrawFramedPanelBackground(canvas, GetScreen(), element_radiogroup, x_position, y_position, box_w, box_h);
+
+  // Classic groupbox caption on the top stroke. Father overflow:hidden clips at EdgeTop, so lift
+  // the canvas clip to the full viewport for the title pass only (then restore).
+  if(element_radiogroup->GetTitle() && !element_radiogroup->GetTitle()->IsEmpty())
+    {
+      XDWORD sizefont = 13;
+      if(element_radiogroup->GetComputedStyle())
+        {
+          double sf = 0.0;
+          if(element_radiogroup->GetComputedStyle()->Get(NL("font-size"), sf) && (sf > 0.0)) sizefont = (XDWORD)sf;
+          else if(element_radiogroup->GetComputedStyle()->Get(NL("sizefont"), sf) && (sf > 0.0)) sizefont = (XDWORD)sf;
+        }
+
+      canvas->Vectorfont_GetConfig()->SetSize(sizefont);
+
+      UI_COLOR* ink = element_radiogroup->IsColorSet() ? element_radiogroup->GetColor()
+                                                       : (element_radiogroup->IsBorderColorSet() ? element_radiogroup->GetBorderColor() : NULL);
+      if(ink)
+        {
+          GRP2DCOLOR_RGBA8 titlecol(ink->GetRed(), ink->GetGreen(), ink->GetBlue(), ink->GetAlpha());
+          canvas->Vectorfont_GetConfig()->SetColor(&titlecol);
+        }
+
+      double title_w = (double)canvas->VectorFont_GetWidth(element_radiogroup->GetTitle()->Get());
+      double title_h = (double)sizefont;
+
+      double pad_x   = 10.0;
+      double gap     = 4.0;
+      double title_x = x_position + pad_x;
+      double title_y = y_top + (title_h * 0.35);
+
+      XRECT clip_saved;
+      canvas->GetClipBox(clip_saved);
+      double cw = canvas->GetWidth();
+      double ch = canvas->GetHeight();
+      if(cw < 1.0) cw = 1.0;
+      if(ch < 1.0) ch = 1.0;
+      // Full viewport clip (left, bottom, right, top) — GEN Y-up / AGG convention.
+      canvas->SetClipBox(0.0, ch - 1.0, cw - 1.0, 0.0);
+
+      UI_COLOR* notch_src = NULL;
+      if(element_radiogroup->IsBackgroundColorSet() && (element_radiogroup->GetBackgroundColor()->GetAlpha() > 0))
+        notch_src = element_radiogroup->GetBackgroundColor();
+      else if(element_radiogroup->GetFather() && element_radiogroup->GetFather()->IsBackgroundColorSet() &&
+              (element_radiogroup->GetFather()->GetBackgroundColor()->GetAlpha() > 0))
+        notch_src = element_radiogroup->GetFather()->GetBackgroundColor();
+
+      XBYTE nr = 24, ng = 28, nb = 36, na = 255;
+      if(notch_src)
+        {
+          nr = (XBYTE)notch_src->GetRed();
+          ng = (XBYTE)notch_src->GetGreen();
+          nb = (XBYTE)notch_src->GetBlue();
+          na = (XBYTE)notch_src->GetAlpha();
+        }
+
+      GRP2DCOLOR_RGBA8 notch(nr, ng, nb, na);
+      canvas->SetLineWidth(0.0f);
+      canvas->SetLineColor(&notch);
+      canvas->SetFillColor(&notch);
+      // Clear a tall band through the top stroke so RoundRect AA cannot leave a hairline in the caption.
+      canvas->Rectangle(title_x - gap, y_top + title_h * 0.70, title_x + title_w + gap, y_top - title_h * 0.85, true);
+
+      canvas->VectorFont_Printf(title_x, title_y, element_radiogroup->GetTitle()->Get());
+
+      // Second notch+title pass: stroke AA from the frame can survive the first erase.
+      canvas->SetFillColor(&notch);
+      canvas->SetLineColor(&notch);
+      canvas->Rectangle(title_x - gap, y_top + title_h * 0.55, title_x + title_w + gap, y_top - title_h * 0.55, true);
+      canvas->VectorFont_Printf(title_x, title_y, element_radiogroup->GetTitle()->Get());
+
+      canvas->SetClipBox(clip_saved);
+    }
+
+  // Keep peers on equal-gap slots even if a later layout pass restored XML ypos.
+  UI_SkinCanvas_DistributeRadioGroupPeers(this, element_radiogroup);
+
+  for(XDWORD c=0; c<element_radiogroup->GetComposeElements()->GetSize(); c++)
+    {
+      UI_ELEMENT* subelement = (UI_ELEMENT*)element->GetComposeElements()->Get(c);
+      if(subelement) Draw(subelement);
+    }
+  
+  PostDrawFunction(element, canvas, clip_rect, x_position, y_position);
+
+  return true;
 }
 
 
@@ -7554,7 +8315,7 @@ bool UI_SKINCANVAS::Draw_Form(UI_ELEMENT* element)
          (element->GetBoundaryLine()->width  <= 120.0) &&
          (element->GetBoundaryLine()->height <= 28.0))
         {
-          XBYTE pr = 24, pg = 28, pb = 36;
+          XBYTE pr = 0, pg = 0, pb = 0;
           UI_LAYOUT* layout = element->GetLayout();
           if(layout && layout->GetBackground() && layout->GetBackground()->GetColor() &&
              layout->GetBackground()->GetColor()->IsValid())
@@ -7564,12 +8325,26 @@ bool UI_SKINCANVAS::Draw_Form(UI_ELEMENT* element)
               pg = (XBYTE)page->GetGreen();
               pb = (XBYTE)page->GetBlue();
             }
+          if((pr + pg + pb) <= 8)
+            {
+              UI_LAYOUT* app = GEN_USERINTERFACE.Layouts_Get(NL("xtracemonitor"));
+              if(app && app->GetBackground() && app->GetBackground()->GetColor() &&
+                 app->GetBackground()->GetColor()->IsValid())
+                {
+                  UI_COLOR* page = app->GetBackground()->GetColor();
+                  pr = (XBYTE)page->GetRed();
+                  pg = (XBYTE)page->GetGreen();
+                  pb = (XBYTE)page->GetBlue();
+                }
+            }
+          if((pr + pg + pb) <= 8) { pr = 24; pg = 28; pb = 36; }
           double fx = UI_BOUNDARYLINE_EdgeLeft(x_position, element->GetBoundaryLine()->width);
           double fw = element->GetBoundaryLine()->width;
           double fh = element->GetBoundaryLine()->height;
           if(fh < 14.0) fh = 14.0;
-          fh += 8.0;
-          double fy = y_position - (fh - 8.0);
+          // +2px pad only — old +8 reached past legends into valor/tree tops.
+          fh += 2.0;
+          double fy = y_position - (fh - 2.0);
           if(fw < 1.0) fw = 1.0;
           if(fh < 1.0) fh = 1.0;
 
@@ -7593,10 +8368,8 @@ bool UI_SKINCANVAS::Draw_Form(UI_ELEMENT* element)
           canvas->SetClipBox(form_clip_saved);
 
           // PreDraw may have snapshotted the neighbour-contaminated strip into the rebuild area
-          // BEFORE this page wipe. Rewrite the whole ownarea with page colour (do NOT require
-          // size match with the inflated fh wipe — CreateRebuildArea uses the authored height
-          // ±1 while the wipe uses height+8, so the old tolerance never fired and RebuildAllAreas
-          // kept resurrecting the gray plate under Demarrer/Arreter).
+          // BEFORE this page wipe. Rewrite the whole ownarea with page colour (authored height
+          // vs padded wipe size can differ; RebuildAllAreas must not resurrect a gray plate).
           if(ownarea && ownarea->GetBitmap())
             {
               GRP2DCOLOR_RGBA8 pagecol(pr, pg, pb, 255);
@@ -7966,6 +8739,128 @@ bool UI_SKINCANVAS::Draw_Form(UI_ELEMENT* element)
         {
           Draw(subelement);
         }  
+    }
+
+  // Custom chrome caption (= Windows chrome toolbar): after children, erase charcoal leftovers
+  // that sit OUTSIDE control AABBs (SVG soft-edge / stale plates). Never touch pixels inside
+  // language/min/max/close/icon boxes — those glyphs are authored for any page colour.
+  // Run even when only a chrome control is dirty (caption MustReDraw may be false).
+  if(canvas &&
+     (element->GetChromeRole() == UI_ELEMENT_CHROMEROLE_CAPTION) &&
+     element_form->GetVisibleRect())
+    {
+      UI_COLOR* fill = NULL;
+      if(element_form->IsBackgroundColorSet() && element_form->GetBackgroundColor() &&
+         (element_form->GetBackgroundColor()->GetAlpha() == 255))
+        fill = element_form->GetBackgroundColor();
+      else if(element_form->GetColor() && (element_form->GetColor()->GetAlpha() == 255))
+        fill = element_form->GetColor();
+
+      if(fill && fill->IsValid() &&
+         (((int)fill->GetRed() + (int)fill->GetGreen() + (int)fill->GetBlue()) > 400))
+        {
+          const double cl = element_form->GetVisibleRect()->x;
+          const double cb = element_form->GetVisibleRect()->y;
+          const double cw = element_form->GetVisibleRect()->width;
+          const double ch = element_form->GetVisibleRect()->height;
+          const double ct = cb + ch;
+
+          auto in_chrome_control = [&](double px, double py) -> bool
+            {
+              for(XDWORD c=0; c<element_form->GetComposeElements()->GetSize(); c++)
+                {
+                  UI_ELEMENT* kid = element_form->GetComposeElements()->Get(c);
+                  if(!kid || !kid->GetBoundaryLine()) continue;
+                  switch(kid->GetChromeRole())
+                    {
+                      case UI_ELEMENT_CHROMEROLE_ICON     :
+                      case UI_ELEMENT_CHROMEROLE_LANGUAGE :
+                      case UI_ELEMENT_CHROMEROLE_MINIMIZE :
+                      case UI_ELEMENT_CHROMEROLE_MAXIMIZE :
+                      case UI_ELEMENT_CHROMEROLE_CLOSE    : break;
+                                            default      : continue;
+                    }
+                  double kx = kid->GetXPosition();
+                  double ky = kid->GetYPosition();
+                  if(kid->GetFather()) GetAddPositionScrollSteps(kid->GetFather(), kx, ky);
+                  double kw = kid->GetBoundaryLine()->width;
+                  double kh = kid->GetBoundaryLine()->height;
+                  double kl = UI_BOUNDARYLINE_EdgeLeft(kx, kw) - 1.0;
+                  double kr = UI_BOUNDARYLINE_EdgeRight(kx, kw) + 1.0;
+                  double kbot = UI_BOUNDARYLINE_EdgeBottom(ky, kh) - 1.0;
+                  double ktop = UI_BOUNDARYLINE_EdgeTop(ky, kh) + 1.0;
+                  if(px >= kl && px < kr && py >= kbot && py < ktop) return true;
+                }
+              return false;
+            };
+
+          GRP2DCOLOR_RGBA8 under((XBYTE)fill->GetRed(), (XBYTE)fill->GetGreen(),
+                                 (XBYTE)fill->GetBlue(), 255);
+          int wi = (int)cw; if(wi < 1) wi = 1;
+          int hi = (int)ch; if(hi < 1) hi = 1;
+          for(int py = 0; py < hi; py++)
+            {
+              for(int px = 0; px < wi; px++)
+                {
+                  double sx = cl + (double)px;
+                  double sy = cb + (double)py;
+                  if(sy < cb || sy >= ct) continue;
+                  if(in_chrome_control(sx, sy)) continue;
+                  GRP2DCOLOR* cur = canvas->GetPixel(sx, sy);
+                  if(!cur) continue;
+                  GRP2DCOLOR_RGBA8* c = (GRP2DCOLOR_RGBA8*)cur;
+                  if((c->r + c->g + c->b) < 90)
+                    {
+                      canvas->PutPixel(sx, sy, (const GRP2DCOLOR*)&under);
+                    }
+                }
+            }
+
+          // Chrome control AABBs can hang past the caption bottom. Seed used to paint XML charcoal
+          // there; scrub that overhang only (never the in-caption glyph boxes) so Light does not
+          // keep a dark strip under language/min/max/close.
+          for(XDWORD c=0; c<element_form->GetComposeElements()->GetSize(); c++)
+            {
+              UI_ELEMENT* kid = element_form->GetComposeElements()->Get(c);
+              if(!kid || !kid->GetBoundaryLine()) continue;
+              switch(kid->GetChromeRole())
+                {
+                  case UI_ELEMENT_CHROMEROLE_ICON     :
+                  case UI_ELEMENT_CHROMEROLE_LANGUAGE :
+                  case UI_ELEMENT_CHROMEROLE_MINIMIZE :
+                  case UI_ELEMENT_CHROMEROLE_MAXIMIZE :
+                  case UI_ELEMENT_CHROMEROLE_CLOSE    : break;
+                                        default      : continue;
+                }
+              double kx = kid->GetXPosition();
+              double ky = kid->GetYPosition();
+              if(kid->GetFather()) GetAddPositionScrollSteps(kid->GetFather(), kx, ky);
+              double kw = kid->GetBoundaryLine()->width;
+              double kh = kid->GetBoundaryLine()->height;
+              double kl = UI_BOUNDARYLINE_EdgeLeft(kx, kw);
+              double kr = UI_BOUNDARYLINE_EdgeRight(kx, kw);
+              double kbot = UI_BOUNDARYLINE_EdgeBottom(ky, kh);
+              if(kbot <= ct) continue;
+              int ox0 = (int)kl; if(ox0 < (int)cl) ox0 = (int)cl;
+              int ox1 = (int)kr; if(ox1 > (int)(cl + cw)) ox1 = (int)(cl + cw);
+              int oy0 = (int)ct;
+              int oy1 = (int)kbot;
+              for(int oy = oy0; oy < oy1; oy++)
+                {
+                  for(int ox = ox0; ox < ox1; ox++)
+                    {
+                      GRP2DCOLOR* cur = canvas->GetPixel((double)ox, (double)oy);
+                      if(!cur) continue;
+                      GRP2DCOLOR_RGBA8* p = (GRP2DCOLOR_RGBA8*)cur;
+                      // Charcoal plate / near-black only — leave any non-page ink alone.
+                      if((p->r + p->g + p->b) < 90)
+                        {
+                          canvas->PutPixel((double)ox, (double)oy, (const GRP2DCOLOR*)&under);
+                        }
+                    }
+                }
+            }
+        }
     }
   
   PostDrawFunction(element, canvas, clip_rect, x_position, y_position);

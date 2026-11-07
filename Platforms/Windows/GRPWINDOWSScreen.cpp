@@ -289,10 +289,18 @@ bool GRPWINDOWSSCREEN::Update(GRP2DCANVAS* canvas)
   // Interactive SC_SIZE drag: ANGLE/DXGI HWND surfaces lag the client size and RecreateSurface
   // mid-drag leaves a black window. Present the just-composed canvas via GDI for every WM_SIZE
   // until WM_EXITSIZEMOVE restores the normal GLES path.
-  if(interactivesizing)
+  //
+  // Maximize / restore / SetWindowPos skip ENTERSIZEMOVE but hit the same EGL lag — without a
+  // post-resize GDI window the next UpdateViewports GLES present clears the client even though
+  // the viewport canvas already has the full UI (toolbar/panels "disappear").
+  if(interactivesizing || (postresize_gdi_frames > 0))
     {
       bool status = PresentCanvasGDI(canvas);
       if(status) Uncloak();
+      if(!interactivesizing && (postresize_gdi_frames > 0))
+        {
+          postresize_gdi_frames--;
+        }
       return status;
     }
 
@@ -2344,24 +2352,18 @@ LRESULT CALLBACK GRPWINDOWSSCREEN::BaseWndProc(HWND hwnd, UINT msg, WPARAM wpara
                                                 screen->UpdateSize(clientwidth, clientheight);
                                               }
 
+                                            // Hold GDI present for several frames after the drag ends. Jumping
+                                            // straight into blitgles->Update here used to RecreateSurface onto a
+                                            // lagging HWND and wipe the just-composed UI (controls vanish on
+                                            // mouse-up after a border resize).
+                                            screen->postresize_gdi_frames = 16;
+
                                             if(!screen->windowcloaked && screen->GetScreenCanvas())
                                               {
                                                 screen->PresentCanvasGDI(screen->GetScreenCanvas());
                                               }
 
                                             screen->interactivesizing = false;
-
-                                            // Re-enter GLES immediately with the already-composed canvas so the
-                                            // first RecreateSurface + texture upload happens before DWM composites
-                                            // the next frame. GRPBLITGLES now sync-uploads after PBO realloc and
-                                            // double-presents after RecreateSurface, so this no longer flashes
-                                            // black/garbage the way a bare UpdateViewports() used to.
-                                            #ifdef GRP_OPENGL_ACTIVE
-                                            if(!screen->windowcloaked && screen->GetBlitGLES() && screen->GetScreenCanvas())
-                                              {
-                                                screen->Update(screen->GetScreenCanvas());
-                                              }
-                                            #endif
                                           }
                                       }
                                       break;
@@ -2429,6 +2431,9 @@ LRESULT CALLBACK GRPWINDOWSSCREEN::BaseWndProc(HWND hwnd, UINT msg, WPARAM wpara
                                                       }
 
                                                     screen->UpdateSize(clientwidth, clientheight);
+                                                    // Maximize / restore / border-resize: keep GDI present for
+                                                    // upcoming UpdateViewports frames (see Update(GRP2DCANVAS*)).
+                                                    screen->postresize_gdi_frames = 16;
                                                     // UpdateSize already: CHANGESIZE observers + full UI compose
                                                     // (background + all layouts including custom chrome). Keep
                                                     // hinfo in sync for the non-GL SetDIBitsToDevice path so the
@@ -2558,6 +2563,7 @@ void GRPWINDOWSSCREEN::Clean()
   hdc                     = NULL;
   windowcloaked           = false;
   interactivesizing       = false;
+  postresize_gdi_frames   = 0;
   maximize_restore_valid  = false;
   maximize_restore_x      = 0;
   maximize_restore_y      = 0;

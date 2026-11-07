@@ -816,6 +816,8 @@ bool UI_SKIN::CalculateBoundaryLine(UI_ELEMENT* element, bool adjustsizemargin)
       case UI_ELEMENT_TYPE_MULTIOPTION		  : status = CalculateBoundaryLine_MultiOption(element, adjustsizemargin);        break;
 	    case UI_ELEMENT_TYPE_BUTTON					  : status = CalculateBoundaryLine_Button(element, adjustsizemargin);             break;
       case UI_ELEMENT_TYPE_CHECKBOX 			  : status = CalculateBoundaryLine_CheckBox(element, adjustsizemargin);           break;
+      case UI_ELEMENT_TYPE_RADIOBUTTON		  : status = CalculateBoundaryLine_RadioButton(element, adjustsizemargin);        break;
+      case UI_ELEMENT_TYPE_RADIOGROUP 		  : status = CalculateBoundaryLine_RadioGroup(element, adjustsizemargin);         break;
       case UI_ELEMENT_TYPE_EDITTEXT   		  : status = CalculateBoundaryLine_EditText(element, adjustsizemargin);           break;
       case UI_ELEMENT_TYPE_FORM						  : status = CalculateBoundaryLine_Form(element, adjustsizemargin);               break;
       case UI_ELEMENT_TYPE_MENU             : status = CalculateBoundaryLine_Menu(element, adjustsizemargin);               break;
@@ -1071,6 +1073,42 @@ bool UI_SKIN::CalculateBoundaryLine_Button(UI_ELEMENT* element, bool adjustsizem
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
 bool UI_SKIN::CalculateBoundaryLine_CheckBox(UI_ELEMENT* element, bool adjustsizemargin)
+{
+  return false;
+}
+
+
+/**-------------------------------------------------------------------------------------------------------------------
+* 
+* @fn         bool UI_SKIN::CalculateBoundaryLine_RadioButton(UI_ELEMENT* element, bool adjustsizemargin)
+* @brief      Calculate boundary line radio button
+* @ingroup    USERINTERFACE
+* 
+* @param[in]  element : Element to process.
+* @param[in]  adjustsizemargin : Adjustsizemargin value.
+* 
+* @return     bool : true if the operation is successful; otherwise false.
+* 
+* --------------------------------------------------------------------------------------------------------------------*/
+bool UI_SKIN::CalculateBoundaryLine_RadioButton(UI_ELEMENT* element, bool adjustsizemargin)
+{
+  return false;
+}
+
+
+/**-------------------------------------------------------------------------------------------------------------------
+* 
+* @fn         bool UI_SKIN::CalculateBoundaryLine_RadioGroup(UI_ELEMENT* element, bool adjustsizemargin)
+* @brief      Calculate boundary line radio group
+* @ingroup    USERINTERFACE
+* 
+* @param[in]  element : Element to process.
+* @param[in]  adjustsizemargin : Adjustsizemargin value.
+* 
+* @return     bool : true if the operation is successful; otherwise false.
+* 
+* --------------------------------------------------------------------------------------------------------------------*/
+bool UI_SKIN::CalculateBoundaryLine_RadioGroup(UI_ELEMENT* element, bool adjustsizemargin)
 {
   return false;
 }
@@ -1418,6 +1456,8 @@ bool UI_SKIN::Draw(UI_ELEMENT* element)
       case UI_ELEMENT_TYPE_MULTIOPTION		  : status = Draw_MultiOption(element);      break;
 	    case UI_ELEMENT_TYPE_BUTTON					  : status = Draw_Button(element);           break;	    	    
       case UI_ELEMENT_TYPE_CHECKBOX 			  : status = Draw_CheckBox(element);         break;	    	    
+      case UI_ELEMENT_TYPE_RADIOBUTTON		  : status = Draw_RadioButton(element);      break;	    	    
+      case UI_ELEMENT_TYPE_RADIOGROUP 		  : status = Draw_RadioGroup(element);       break;	    	    
       case UI_ELEMENT_TYPE_EDITTEXT         : status = Draw_EditText(element);         break;	      
       case UI_ELEMENT_TYPE_FORM						  : status = Draw_Form(element);             break;
       case UI_ELEMENT_TYPE_MENU             : status = Draw_Menu(element);             break;             
@@ -1653,6 +1693,40 @@ bool UI_SKIN::Draw_Button(UI_ELEMENT* element)
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
 bool UI_SKIN::Draw_CheckBox(UI_ELEMENT* element)  
+{
+  return false;
+}
+
+
+/**-------------------------------------------------------------------------------------------------------------------
+* 
+* @fn         bool UI_SKIN::Draw_RadioButton(UI_ELEMENT* element)
+* @brief      Draw radio button
+* @ingroup    USERINTERFACE
+* 
+* @param[in]  element : Element to process.
+* 
+* @return     bool : true if the operation is successful; otherwise false.
+* 
+* --------------------------------------------------------------------------------------------------------------------*/
+bool UI_SKIN::Draw_RadioButton(UI_ELEMENT* element)  
+{
+  return false;
+}
+
+
+/**-------------------------------------------------------------------------------------------------------------------
+* 
+* @fn         bool UI_SKIN::Draw_RadioGroup(UI_ELEMENT* element)
+* @brief      Draw radio group
+* @ingroup    USERINTERFACE
+* 
+* @param[in]  element : Element to process.
+* 
+* @return     bool : true if the operation is successful; otherwise false.
+* 
+* --------------------------------------------------------------------------------------------------------------------*/
+bool UI_SKIN::Draw_RadioGroup(UI_ELEMENT* element)  
 {
   return false;
 }

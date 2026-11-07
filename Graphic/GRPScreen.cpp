@@ -1908,7 +1908,14 @@ bool GRPSCREEN::UpdateCFGChromesButtonsPosition()
       UI_SKIN* skin = cfgchromeslayout->GetSkin();
       if(skin && captionelement)
         {
+          // Remember authored caption height — CalculeBoundaryLine must not AUTO-expand it to the
+          // canvas (that made ChromeCaption_SuppressesContentDraw swallow the whole client).
+          const double caption_h_locked = captionelement->GetBoundaryLine()->height;
+
           skin->CalculeBoundaryLine_AllElements(captionelement, false);
+
+          if(caption_h_locked > 0.0) captionelement->GetBoundaryLine()->height = caption_h_locked;
+          captionelement->GetBoundaryLine()->width = (double)clientwidth;
 
           UI_ELEMENT_FORM* captionform = dynamic_cast<UI_ELEMENT_FORM*>(captionelement);
           if(captionform && captionform->GetVisibleRect())
@@ -1993,11 +2000,18 @@ bool GRPSCREEN::UpdateSize(int width, int height)
           screencanvas->SetWidth((XDWORD)width);
           screencanvas->SetHeight((XDWORD)height);
           screencanvas->Buffer_Create();
+          // Stale framerate / canvas rebuild snapshots must not be PutBitmapNoAlpha'd onto the
+          // fresh buffer (DrawFrame canvas->RebuildAllAreas would stamp pre-resize plates).
+          screencanvas->DeleteAllRebuildAreas();
         }
 
-      GRPVIEWPORT* viewport = GetViewport(0);
-      if(viewport)
+      // Resize EVERY viewport canvas (not only index 0). Skin GetCanvas() follows viewportindex;
+      // leaving a sibling viewport at the old size desyncs CopyBufferRenderFromViewport after maximize.
+      for(XDWORD vi = 0; vi < viewports.GetSize(); vi++)
         {
+          GRPVIEWPORT* viewport = viewports.Get(vi);
+          if(!viewport) continue;
+
           viewport->SetSize((float)width, (float)height);
           GRP2DCANVAS* canvas = viewport->GetCanvas();
           if(canvas)
@@ -2006,6 +2020,7 @@ bool GRPSCREEN::UpdateSize(int width, int height)
               canvas->SetWidth((XDWORD)width);
               canvas->SetHeight((XDWORD)height);
               canvas->Buffer_Create();
+              canvas->DeleteAllRebuildAreas();
             }
         }
 
@@ -2043,8 +2058,12 @@ bool GRPSCREEN::UpdateSize(int width, int height)
       #ifdef USERINTERFACE_ACTIVE
       if(GEN_USERINTERFACE.Layouts_GetAll() && GEN_USERINTERFACE.Layouts_GetAll()->GetSize())
         {
-          GEN_USERINTERFACE.Elements_SetToRedrawForScreen(this, false);
+          // After a full PutBackground wipe the skin rebuild lists are empty: RebuildDrawAreas would
+          // only run Overlay_ClearSuppressedContentDirt and CLEAR MustReDraw on anything that kisses
+          // the caption AABB — toolbar icons then never paint until something else dirties them.
+          // Re-dirty AFTER that pass so the compose below always repaints the live client.
           GEN_USERINTERFACE.Elements_RebuildDrawAreas();
+          GEN_USERINTERFACE.Elements_SetToRedrawForScreen(this, false);
           GEN_USERINTERFACE.Update();
         }
       #endif

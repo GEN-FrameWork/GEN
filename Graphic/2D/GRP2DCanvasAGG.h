@@ -1703,10 +1703,24 @@ class GRP2DCANVASAGG: public GRP2DCANVAS
                                                                                       return false;
                                                                                     }
                                                                          
-                                                                                  viewportcanvasbuffer.attach(viewportcanvas->Buffer_Get(), viewportcanvas->GetWidth(), viewportcanvas->GetHeight(), (viewportcanvas->IsBufferInverse()?1:-1) * ((int)viewportcanvas->GetWidth() * viewportcanvas->GetBytesperPixel()));
+                                                                                  // Always copy by the LIVE canvas buffer size. Using viewport->GetWidth/Height alone
+                                                                                  // desynced after UpdateSize when the viewport float size lagged the recreated
+                                                                                  // buffer — only a left strip of the screen canvas was filled (rest stayed black
+                                                                                  // zeros) and toolbar/panels looked like they "disappeared" on maximize/extend.
+                                                                                  const int src_w = (int)viewportcanvas->GetWidth();
+                                                                                  const int src_h = (int)viewportcanvas->GetHeight();
+                                                                                  const int dst_w = (int)GetWidth();
+                                                                                  const int dst_h = (int)GetHeight();
+                                                                                  if(src_w < 1 || src_h < 1 || dst_w < 1 || dst_h < 1 || !viewportcanvas->Buffer_Get() || !Buffer_Get())
+                                                                                    {
+                                                                                      return false;
+                                                                                    }
 
-                                                                                  int sizeline    = (int)(viewport->GetWidth() * GetBytesperPixel());
-                                                                                  int nlines      = (int)(viewport->GetHeight()); 
+                                                                                  viewportcanvasbuffer.attach(viewportcanvas->Buffer_Get(), src_w, src_h, (viewportcanvas->IsBufferInverse()?1:-1) * (src_w * (int)viewportcanvas->GetBytesperPixel()));
+
+                                                                                  int copy_w = src_w; if(copy_w > dst_w) copy_w = dst_w;
+                                                                                  int copy_h = src_h; if(copy_h > dst_h) copy_h = dst_h;
+                                                                                  int sizeline    = copy_w * (int)GetBytesperPixel();
 
                                                                                   int originposx  = (int)(viewport->GetPositionX() * GetBytesperPixel());
                                                                                   int originposy  = (int)(viewport->GetPositionY());
@@ -1714,7 +1728,7 @@ class GRP2DCANVASAGG: public GRP2DCANVAS
                                                                                   int targetposx  = (int)(viewport->GetCanvasPositionX() * GetBytesperPixel());
                                                                                   int targetposy  = (int)(viewport->GetCanvasPositionY());
 
-                                                                                  for(int c=0; c<nlines; c++)
+                                                                                  for(int c=0; c<copy_h; c++)
                                                                                     {
                                                                                       memcpy( rbuffer.row_ptr(c + originposy) + originposx, viewportcanvasbuffer.row_ptr(c + targetposy) +  targetposx, sizeline);
                                                                                     }

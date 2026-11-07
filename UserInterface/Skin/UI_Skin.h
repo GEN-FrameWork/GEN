@@ -171,6 +171,8 @@ class UI_SKIN
     virtual bool                      CalculateBoundaryLine_MultiOption	    (UI_ELEMENT* element, bool adjustsizemargin = false);
 	  virtual bool                      CalculateBoundaryLine_Button		      (UI_ELEMENT* element, bool adjustsizemargin = false);	
     virtual bool                      CalculateBoundaryLine_CheckBox        (UI_ELEMENT* element, bool adjustsizemargin = false);	  
+    virtual bool                      CalculateBoundaryLine_RadioButton     (UI_ELEMENT* element, bool adjustsizemargin = false);	  
+    virtual bool                      CalculateBoundaryLine_RadioGroup      (UI_ELEMENT* element, bool adjustsizemargin = false);	  
     virtual bool                      CalculateBoundaryLine_EditText        (UI_ELEMENT* element, bool adjustsizemargin = false);	      
     virtual bool                      CalculateBoundaryLine_Form            (UI_ELEMENT* element, bool adjustsizemargin = false); 
     virtual bool                      CalculateBoundaryLine_Menu				    (UI_ELEMENT* element, bool adjustsizemargin = false); 
@@ -203,6 +205,8 @@ class UI_SKIN
     virtual bool                      Draw_MultiOption                      (UI_ELEMENT* element);
 	  virtual bool                      Draw_Button		                        (UI_ELEMENT* element);	 	  
     virtual bool                      Draw_CheckBox                         (UI_ELEMENT* element);	 	  
+    virtual bool                      Draw_RadioButton                      (UI_ELEMENT* element);	 	  
+    virtual bool                      Draw_RadioGroup                       (UI_ELEMENT* element);	 	  
     virtual bool                      Draw_EditText                         (UI_ELEMENT* element);	    
     virtual bool                      Draw_Form                             (UI_ELEMENT* element);
     virtual bool                      Draw_Menu				                      (UI_ELEMENT* element);

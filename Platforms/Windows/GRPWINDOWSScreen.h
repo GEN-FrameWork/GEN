@@ -131,6 +131,10 @@ class GRPWINDOWSSCREEN : public GRPSCREEN
 
     bool                                   windowcloaked;
     bool                                   interactivesizing;
+    // After maximize / restore / border-resize, ANGLE's HWND surface and blit texture lag the
+    // new client. Keep presenting via GDI for a few Update() frames so the composed canvas stays
+    // visible (same idea as interactivesizing) until GLES RecreateSurface can catch up.
+    int                                    postresize_gdi_frames;
     bool                                   maximize_restore_valid;
     int                                    maximize_restore_x;
     int                                    maximize_restore_y;

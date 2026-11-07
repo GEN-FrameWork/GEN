@@ -92,6 +92,8 @@
 #include "UI_Element_MultiOption.h"
 #include "UI_Element_Button.h"
 #include "UI_Element_CheckBox.h"
+#include "UI_Element_RadioButton.h"
+#include "UI_Element_RadioGroup.h"
 #include "UI_Element_EditText.h"
 #include "UI_Element_Form.h"
 #include "UI_Element_Menu.h"
@@ -1790,6 +1792,8 @@ bool UI_MANAGER::Element_SetModal(UI_ELEMENT* element_modal)
   if(this->element_modal != element_modal)
     {
       ModalLayer_Invalidate();
+      // Drop hover that may still sit on content under the new/cleared modal.
+      if(preselect_element) ResetPreselect();
     }
 
   if(element_modal) 
@@ -1820,6 +1824,66 @@ bool UI_MANAGER::Element_SetModal(UI_ELEMENT* element_modal)
 UI_ELEMENT* UI_MANAGER::Element_GetModal()
 {
   return element_modal;
+}
+
+
+/**-------------------------------------------------------------------------------------------------------------------
+*
+* @fn         bool UI_MANAGER::Element_IsModalActive()
+* @brief      True while Element_SetModal holds a visible modal form/menu (pointer exclusive to that subtree).
+* @ingroup    USERINTERFACE
+*
+* @return     bool : true if a visible modal is active.
+*
+* --------------------------------------------------------------------------------------------------------------------*/
+bool UI_MANAGER::Element_IsModalActive()
+{
+  return (element_modal && element_modal->IsVisible());
+}
+
+
+/**-------------------------------------------------------------------------------------------------------------------
+*
+* @fn         bool UI_MANAGER::Element_IsInActiveModal(UI_ELEMENT* element)
+* @brief      True if element is the active modal or a compose descendant. With no modal, returns true (all UI interactive).
+* @ingroup    USERINTERFACE
+*
+* @param[in]  element : Element to test.
+*
+* @return     bool : true if interaction with this element is allowed under the modal rules.
+*
+* --------------------------------------------------------------------------------------------------------------------*/
+bool UI_MANAGER::Element_IsInActiveModal(UI_ELEMENT* element)
+{
+  if(!Element_IsModalActive()) return true;
+  if(!element) return false;
+
+  UI_ELEMENT* walk = element;
+  while(walk)
+    {
+      if(walk == element_modal) return true;
+      walk = walk->GetFather();
+    }
+
+  return false;
+}
+
+
+/**-------------------------------------------------------------------------------------------------------------------
+*
+* @fn         bool UI_MANAGER::Element_ModalBlocksInteraction(UI_ELEMENT* element)
+* @brief      True when a visible modal is up and element lies outside it — block hover/click/scrollbar, not redraws.
+* @ingroup    USERINTERFACE
+*
+* @param[in]  element : Element to test.
+*
+* @return     bool : true if pointer interaction with this element must be ignored.
+*
+* --------------------------------------------------------------------------------------------------------------------*/
+bool UI_MANAGER::Element_ModalBlocksInteraction(UI_ELEMENT* element)
+{
+  if(!Element_IsModalActive()) return false;
+  return !Element_IsInActiveModal(element);
 }
 
 
@@ -1975,7 +2039,11 @@ bool UI_MANAGER::ChromeCaption_SuppressesContentDraw(UI_ELEMENT* element)
 
   double cx = UI_BOUNDARYLINE_EdgeLeft(caption->GetXPosition(), cw);
   double cy = UI_BOUNDARYLINE_EdgeTop (caption->GetYPosition(), ch);
-
+  // Content whose top edge is at or below the caption bottom is never under the bar
+  // (toolbar icons sit immediately under ypos=46). A 1px pad was too tight after resize/
+  // CalculeBoundaryLine rounding and Overlay_ClearSuppressedContentDirt then froze those
+  // controls until the next unrelated dirty.
+  double caption_bottom = cy + ch;
   double ew = element->GetBoundaryLine()->width;
   double eh = element->GetBoundaryLine()->height;
   if(ew <= 0.0 || eh <= 0.0) return false;
@@ -1983,7 +2051,9 @@ bool UI_MANAGER::ChromeCaption_SuppressesContentDraw(UI_ELEMENT* element)
   double ex = UI_BOUNDARYLINE_EdgeLeft(element->GetXPosition(), ew);
   double ey = UI_BOUNDARYLINE_EdgeTop (element->GetYPosition(), eh);
 
-  return (ex < cx + cw) && (ex + ew > cx) && (ey < cy + ch) && (ey + eh > cy);
+  if(ey >= caption_bottom) return false;
+
+  return (ex < cx + cw) && (ex + ew > cx) && (ey < caption_bottom) && (ey + eh > cy);
   #endif
 }
 
@@ -6502,6 +6572,97 @@ UI_ELEMENT* UI_MANAGER::GetLayoutElement_CheckBox(XFILEXMLELEMENT* node, UI_LAYO
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
+* @fn         UI_ELEMENT* UI_MANAGER::GetLayoutElement_RadioButton(XFILEXMLELEMENT* node, UI_LAYOUT* layout, UI_ELEMENT* father, UI_ELEMENT* element_legacy)
+* @brief      Get layout element radio button
+* @ingroup    USERINTERFACE
+* 
+* @param[in]  node : Node pointer to use.
+* @param[in]  layout : Layout pointer to use.
+* @param[in]  father : Father pointer to use.
+* @param[in]  element_legacy : Element legacy pointer to use.
+* 
+* @return     UI_ELEMENT* : Pointer to the requested object; NULL if it is not available.
+* 
+* --------------------------------------------------------------------------------------------------------------------*/
+UI_ELEMENT* UI_MANAGER::GetLayoutElement_RadioButton(XFILEXMLELEMENT* node, UI_LAYOUT* layout, UI_ELEMENT* father, UI_ELEMENT* element_legacy)
+{  
+  UI_ELEMENT_RADIOBUTTON* element_radiobutton = GEN_NEW UI_ELEMENT_RADIOBUTTON();
+  if(!element_radiobutton) return NULL;
+
+  return GetLayoutElement_Option(node, layout, father, element_radiobutton);
+}
+
+
+/**-------------------------------------------------------------------------------------------------------------------
+* 
+* @fn         UI_ELEMENT* UI_MANAGER::GetLayoutElement_RadioGroup(XFILEXMLELEMENT* node, UI_LAYOUT* layout, UI_ELEMENT* father, UI_ELEMENT* element_legacy)
+* @brief      Get layout element radio group (MultiOption-shaped compose container)
+* @ingroup    USERINTERFACE
+* 
+* @param[in]  node : Node pointer to use.
+* @param[in]  layout : Layout pointer to use.
+* @param[in]  father : Father pointer to use.
+* @param[in]  element_legacy : Element legacy pointer to use.
+* 
+* @return     UI_ELEMENT* : Pointer to the requested object; NULL if it is not available.
+* 
+* --------------------------------------------------------------------------------------------------------------------*/
+UI_ELEMENT* UI_MANAGER::GetLayoutElement_RadioGroup(XFILEXMLELEMENT* node, UI_LAYOUT* layout, UI_ELEMENT* father, UI_ELEMENT* element_legacy)
+{
+  UI_ELEMENT_RADIOGROUP* element_radiogroup = NULL;
+
+  if(element_legacy)
+    {
+      element_radiogroup = (UI_ELEMENT_RADIOGROUP*)element_legacy;
+    }
+   else
+    {
+      element_radiogroup = GEN_NEW UI_ELEMENT_RADIOGROUP();
+      if(!element_radiogroup) return NULL;     
+    }
+
+  element_radiogroup->SetFather(father);
+ 
+  if(!GetLayoutElement_Base(node, layout, element_radiogroup))
+    {
+      GEN_DELETE element_radiogroup;
+      return NULL;
+    }
+
+  XSTRING titlestr;
+  GetLayoutElementValue(node, NL("title"), titlestr);
+  if(!titlestr.IsEmpty()) element_radiogroup->SetTitle(titlestr);
+
+  SetLevelAuto(element_radiogroup, father);
+    
+  for(int c=0; c<node->GetNElements(); c++)
+    {
+      XFILEXMLELEMENT* nodeelement =  node->GetElement(c);
+      if(nodeelement)
+        {
+          UI_ELEMENT* element = CreatePartialLayout(nodeelement, layout, element_radiogroup);
+          if(element) 
+            {  
+              element->SetFather(element_radiogroup);                
+              element_radiogroup->GetComposeElements()->Add(element);                        
+            }       
+        }  
+    }
+  
+  GetLayoutElement_CalculateBoundaryLine(layout, element_radiogroup);
+
+  for(XDWORD c=0; c<element_radiogroup->GetComposeElements()->GetSize(); c++)
+    {
+      UI_ELEMENT* element = element_radiogroup->GetComposeElements()->Get(c);
+      if(element) GetLayoutElement_CalculateBoundaryLine(layout, element);
+    }
+ 
+  return element_radiogroup;  
+}
+
+
+/**-------------------------------------------------------------------------------------------------------------------
+* 
 * @fn         UI_ELEMENT* UI_MANAGER::GetLayoutElement_EditText(XFILEXMLELEMENT* node, UI_LAYOUT* layout, UI_ELEMENT* father, UI_ELEMENT* element_legacy)
 * @brief      Get layout element edit text
 * @ingroup    USERINTERFACE
@@ -7323,6 +7484,16 @@ UI_ELEMENT* UI_MANAGER::CreatePartialLayout(XFILEXMLELEMENT* nodeelement, UI_LAY
       if(!value.Compare(NL("checkbox")       , true))  
         {
           element = GetLayoutElement_CheckBox(nodeelement, layout, father);          
+        }
+
+      if(!value.Compare(NL("radiobutton")    , true))  
+        {
+          element = GetLayoutElement_RadioButton(nodeelement, layout, father);          
+        }
+
+      if(!value.Compare(NL("radiogroup")     , true))  
+        {
+          element = GetLayoutElement_RadioGroup(nodeelement, layout, father);          
         }
 
       if(!value.Compare(NL("edittext")       , true))  
@@ -8272,7 +8443,10 @@ UI_ELEMENT* UI_MANAGER::PreSelectElement(UI_ELEMENT* element, int x, int y)
                   allow_selected_hover = true;
                 }
 
-              if(element->IsSelected() && !allow_selected_hover)
+              // Radiobuttons latch :selected via SetStatus for CSS, but peers must stay hoverable/
+              // clickable — never treat a selected radio as "already consumed" for PreSelect.
+              if(element->IsSelected() && !allow_selected_hover &&
+                 (element->GetType() != UI_ELEMENT_TYPE_RADIOBUTTON))
                 {
                   preselect = false;
                 }
@@ -8423,6 +8597,15 @@ bool UI_MANAGER::SelectElement(UI_ELEMENT* element)
                       return true;                  
                     }
                 }
+               else
+                {
+                  // Non-selectable compose containers (FORM, RADIOGROUP, …) must still forward
+                  // the click to nested selectables — same recursion depth as PreSelectElement.
+                  if(SelectElement(subelement))
+                    {
+                      return true;
+                    }
+                }
             }
         }
     }                             
@@ -8485,6 +8668,30 @@ bool UI_MANAGER::SelectedElement(UI_ELEMENT* element)
           // Notify the app (same contract as buttons/options) so demos can react to the new status.
           SendEvent(UI_XEVENT_TYPE_OUTPUT_SELECTED, element);
       }
+    }
+  else if(element->GetType() == UI_ELEMENT_TYPE_RADIOBUTTON)
+    {
+      UI_ELEMENT_RADIOBUTTON* element_radiobutton = (UI_ELEMENT_RADIOBUTTON*)element;
+      if(element_radiobutton) 
+        {
+          UI_ELEMENT* father = element_radiobutton->GetFather();
+          if(father && (father->GetType() == UI_ELEMENT_TYPE_RADIOGROUP))
+            {
+              UI_ELEMENT_RADIOGROUP* group = (UI_ELEMENT_RADIOGROUP*)father;
+              group->SelectExclusive(element_radiobutton);
+              Elements_SetToRedraw(group);
+            }
+           else
+            {
+              element_radiobutton->SetStatus(true);
+              Elements_SetToRedraw(element_radiobutton);
+            }
+
+          // Modal option-B cache must drop so the next Element_DrawModalOnTop repaints the new glyph.
+          if(element_modal) ModalLayer_Invalidate();
+
+          SendEvent(UI_XEVENT_TYPE_OUTPUT_SELECTED, element);
+        }
     }
    else
     {
@@ -9540,6 +9747,18 @@ bool UI_MANAGER::ScrollBar_BeginDrag(int screen_x, int screen_y)
 {
   ScrollBar_EndDrag();
 
+  // Modal form owns the pointer: only its subtree may start a scrollbar drag (content under stays inert).
+  if(Element_IsModalActive())
+    {
+      UI_LAYOUT* layout = Element_GetLayout(element_modal);
+      if(!layout) return false;
+
+      int design_x = screen_x;
+      int design_y = screen_y;
+      MapScreenToDesign(layout, screen_x, screen_y, design_x, design_y);
+      return ScrollBar_BeginDragInElement(element_modal, design_x, design_y);
+    }
+
   for(int d=0; d<layouts.GetSize(); d++)
     {
       UI_LAYOUT* layout = layouts.Get(d);
@@ -9711,6 +9930,18 @@ bool UI_MANAGER::ScrollBar_IsDragging()
 bool UI_MANAGER::SelectScrollBar(int x, int y)
 {
   // x,y are screen (framebuffer) px from the input event.
+  // With a visible modal, only scrollbars inside that form are interactive.
+  if(Element_IsModalActive())
+    {
+      UI_LAYOUT* layout = Element_GetLayout(element_modal);
+      if(!layout) return false;
+
+      int design_x = x;
+      int design_y = y;
+      MapScreenToDesign(layout, x, y, design_x, design_y);
+      return SelectScrollBarInElement(element_modal, design_x, design_y);
+    }
+
   for(int d=0; d<layouts.GetSize(); d++)
     {
       UI_LAYOUT* layout = layouts.Get(d);
@@ -9895,7 +10126,16 @@ void UI_MANAGER::HandleEvent_UI(UI_XEVENT* event)
                                                                 xmutex_modal->Lock(); 
                                                               }
 
-                                                            SelectElement(element_modal);                                                                                   
+                                                            // Prefer the hover target resolved above — SelectElement only
+                                                            // walked one compose level and missed nested radios in a group.
+                                                            if(preselect_element)
+                                                              {
+                                                                SelectedElement(preselect_element);
+                                                              }
+                                                             else
+                                                              {
+                                                                SelectElement(element_modal);
+                                                              }
 
                                                             if(xmutex_modal) 
                                                               {

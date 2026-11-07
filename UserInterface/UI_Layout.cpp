@@ -386,7 +386,8 @@ bool UI_LAYOUT::GetUIScaleAutofit() const
 *
 * @fn         bool UI_LAYOUT::IsUIScaleActive() const
 * @brief      Whether this layout uses the design-canvas contract.
-* @note       Opt-in: stylesheet present OR explicit SetUIScaleEnabled(true). XML-only layouts stay legacy.
+* @note       Opt-in: SetUIScaleEnabled(true), SetUIScaleAutofit(true), or stylesheet with scale≠1.
+*             Stylesheet alone at scale 1.0 without autofit stays live 1:1 (CSS tokens still apply).
 * @ingroup    USERINTERFACE
 *
 * @return     bool : true when UIScale path applies.
@@ -395,7 +396,19 @@ bool UI_LAYOUT::GetUIScaleAutofit() const
 bool UI_LAYOUT::IsUIScaleActive() const
 {
   if(uiscale_enabled) return true;
-  if(stylesheet)      return true;
+  if(uiscale_autofit) return true;
+
+  // Stylesheet alone must not force the design-canvas / scaled-present path. Apps can use CSS
+  // tokens with absolute flexible resize at scale 1.0 (e.g. XTraceMonitor): if stylesheet opted
+  // into UIScale unconditionally, NeedsScaledPresent became true after maximize/extend and paint
+  // went to a stale design buffer while layout math used live client pixels — controls vanished.
+  if(!stylesheet) return false;
+
+  if(uiscale < (UI_LAYOUT_UISCALE_DEFAULT - UI_LAYOUT_UISCALE_EPSILON) ||
+     uiscale > (UI_LAYOUT_UISCALE_DEFAULT + UI_LAYOUT_UISCALE_EPSILON))
+    {
+      return true;
+    }
 
   return false;
 }
