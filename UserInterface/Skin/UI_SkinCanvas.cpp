@@ -3302,6 +3302,10 @@ bool UI_SKINCANVAS::CalculateBoundaryLine_Button(UI_ELEMENT* element, bool adjus
 }
 
 
+// Glyph+caption optical pack (defined with RadioButton helpers below; used by CheckBox too).
+static void UI_SkinCanvas_AlignRadioButtonGlyphAndText(UI_SKINCANVAS* skin, UI_ELEMENT* element, bool adjustsizemargin, bool write_boundary);
+
+
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         bool UI_SKINCANVAS::CalculateBoundaryLine_CheckBox(UI_ELEMENT* element, bool adjustsizemargin)
@@ -3316,7 +3320,15 @@ bool UI_SKINCANVAS::CalculateBoundaryLine_Button(UI_ELEMENT* element, bool adjus
 * --------------------------------------------------------------------------------------------------------------------*/
 bool UI_SKINCANVAS::CalculateBoundaryLine_CheckBox(UI_ELEMENT* element, bool adjustsizemargin)
 {
-  return CalculateBoundaryLine_Option(element, adjustsizemargin);
+  if(!CalculateBoundaryLine_Option(element, adjustsizemargin)) return false;
+
+  UI_ELEMENT_CHECKBOX* checkbox = (UI_ELEMENT_CHECKBOX*)element;
+  if(!checkbox) return false;
+  if(!checkbox->Get_UIAnimation() || !checkbox->Get_UIText()) return true;
+
+  // Same glyph+caption pack as radiobutton: box left, label to the right, optically mid-aligned.
+  UI_SkinCanvas_AlignRadioButtonGlyphAndText(this, element, adjustsizemargin, true);
+  return true;
 }
 
 
@@ -3484,9 +3496,10 @@ static void UI_SkinCanvas_AlignRadioButtonGlyphAndText(UI_SKINCANVAS* skin, UI_E
 {
   if(!skin || !element) return;
 
-  UI_ELEMENT_RADIOBUTTON* radiobutton = (UI_ELEMENT_RADIOBUTTON*)element;
-  UI_ELEMENT_ANIMATION*   animation   = radiobutton->Get_UIAnimation();
-  UI_ELEMENT_TEXT*        text        = radiobutton->Get_UIText();
+  // Shared by radiobutton and checkbox (both UI_ELEMENT_OPTION with glyph + caption).
+  UI_ELEMENT_OPTION*    option    = (UI_ELEMENT_OPTION*)element;
+  UI_ELEMENT_ANIMATION* animation = option->Get_UIAnimation();
+  UI_ELEMENT_TEXT*      text      = option->Get_UIText();
   if(!animation || !text || !element->GetBoundaryLine()) return;
 
   XDWORD sizefont = text->GetSizeFont();
@@ -7101,10 +7114,11 @@ bool UI_SKINCANVAS::Draw_Option(UI_ELEMENT* element)
             {
               skip_white_erase = true;
             }
-          // Radio rows sit on a framed radiogroup (modal/page fill). The classic white erase plate
-          // would bleach the caption and glyph over the dark dialog — never paint it for radios.
+          // Radio/checkbox rows on a dark modal/page fill: the classic white erase plate would
+          // bleach the caption and glyph — never paint it for those option types (or radiogroup kids).
           if(!skip_white_erase &&
              ((element_option->GetType() == UI_ELEMENT_TYPE_RADIOBUTTON) ||
+              (element_option->GetType() == UI_ELEMENT_TYPE_CHECKBOX) ||
               (element_option->GetFather() && (element_option->GetFather()->GetType() == UI_ELEMENT_TYPE_RADIOGROUP))))
             {
               skip_white_erase = true;
@@ -7139,9 +7153,10 @@ bool UI_SKINCANVAS::Draw_Option(UI_ELEMENT* element)
 
       DrawBackgroundColor(element_option, canvas, x_position, y_position);
 
-      // Radiobutton selection is the concentric glyph (off/on frames), not Option chrome plates.
+      // Radiobutton/checkbox selection is the glyph (off/on frames), not Option chrome plates.
       // The ACTIVE white outline / SELECT wash would paint a light box behind the caption on dark modals.
-      const bool skip_option_chrome = (element_option->GetType() == UI_ELEMENT_TYPE_RADIOBUTTON);
+      const bool skip_option_chrome = ((element_option->GetType() == UI_ELEMENT_TYPE_RADIOBUTTON) ||
+                                       (element_option->GetType() == UI_ELEMENT_TYPE_CHECKBOX));
 
       if(!skip_option_chrome && isselected)
         { 
@@ -7682,6 +7697,13 @@ bool UI_SKINCANVAS::Draw_CheckBox(UI_ELEMENT* element)
     {
       UI_ELEMENT_ANIMATION* animation = checkbox->Get_UIAnimation();
       if(animation) animation->IndexImage_Set(checkbox->GetStatus()?1:0);
+
+      // Re-glue box frames + caption every paint. write_boundary=true so BoundaryLine x/y
+      // stay in sync (CalculeBoundaryLine_AllElements child pass can otherwise leave locals at 0).
+      if(animation && checkbox->Get_UIText() && element->GetBoundaryLine())
+        {
+          UI_SkinCanvas_AlignRadioButtonGlyphAndText(this, element, false, true);
+        }
     }
 
   return Draw_Option(element);
@@ -8533,6 +8555,10 @@ bool UI_SKINCANVAS::Draw_Form(UI_ELEMENT* element)
           bool uniform = (rTL == rTR) && (rTR == rBR) && (rBR == rBL) && (rTL > 0.0);
 
           // Father's CSS background is the true parent ink for nested panels (datetime_box on card).
+          // Top-level CSS-rounded forms (config_modal) have no father. Neighbour GetPixel often fails
+          // under an active clip (ModalLayer / element clip) and used to fall through to Dark-only
+          // 0x191E24 — Light theme then shows black AABB "picos". Prefer the form's own opaque fill
+          // (same ink Element_DrawModalOnTop already wiped) before that hardcoded charcoal.
           GRP2DCOLOR_RGBA8 corner_parent(0, 0, 0, 255);
           const GRP2DCOLOR_RGBA8* corner_parent_ptr = NULL;
           {
@@ -8547,6 +8573,37 @@ bool UI_SKINCANVAS::Draw_Form(UI_ELEMENT* element)
               {
                 corner_parent = GRP2DCOLOR_RGBA8((XBYTE)fbg->GetRed(), (XBYTE)fbg->GetGreen(), (XBYTE)fbg->GetBlue(), (XBYTE)fbg->GetAlpha());
                 corner_parent_ptr = &corner_parent;
+              }
+            // Do not sample canvas neighbours on transparent screens: leftover/opaque junk would
+            // become an opaque seed under black,N and destroy the frosted alpha (same as 0x191E24).
+            // Also skip while ModalLayer compositing: clip + prior wipe make outside samples unreliable.
+            if(!corner_parent_ptr && !GEN_USERINTERFACE.ModalLayer_IsCompositing() &&
+               screen && !screen->Style_Is(GRPSCREENSTYLE_TRANSPARENT))
+              {
+                const double sx[4] = { vr_minx - 2.0, vr_maxx + 1.0, vr_maxx + 1.0, vr_minx - 2.0 };
+                const double sy[4] = { vr_miny - 2.0, vr_miny - 2.0, vr_maxy + 1.0, vr_maxy + 1.0 };
+                for(int i = 0; i < 4 && !corner_parent_ptr; i++)
+                  {
+                    GRP2DCOLOR* c = canvas->GetPixel(sx[i], sy[i]);
+                    if(!c) continue;
+                    GRP2DCOLOR_RGBA8 s = *(GRP2DCOLOR_RGBA8*)c;
+                    if(s.a > 0 && (s.r + s.g + s.b) > 8)
+                      {
+                        corner_parent = s;
+                        corner_parent_ptr = &corner_parent;
+                      }
+                  }
+              }
+            if(!corner_parent_ptr)
+              {
+                UI_COLOR* ownbg = element_form->IsBackgroundColorSet() ? element_form->GetBackgroundColor()
+                                                                        : element_form->GetColor();
+                if(ownbg && ownbg->GetAlpha() > 0 && (ownbg->GetRed() + ownbg->GetGreen() + ownbg->GetBlue()) > 8)
+                  {
+                    corner_parent = GRP2DCOLOR_RGBA8((XBYTE)ownbg->GetRed(), (XBYTE)ownbg->GetGreen(),
+                                                    (XBYTE)ownbg->GetBlue(), 255);
+                    corner_parent_ptr = &corner_parent;
+                  }
               }
           }
 
@@ -8625,7 +8682,8 @@ bool UI_SKINCANVAS::Draw_Form(UI_ELEMENT* element)
               }
             // Do not sample canvas neighbours on transparent screens: leftover/opaque junk would
             // become an opaque seed under black,N and destroy the frosted alpha (same as 0x191E24).
-            if(!corner_parent_ptr && screen && !screen->Style_Is(GRPSCREENSTYLE_TRANSPARENT))
+            if(!corner_parent_ptr && !GEN_USERINTERFACE.ModalLayer_IsCompositing() &&
+               screen && !screen->Style_Is(GRPSCREENSTYLE_TRANSPARENT))
               {
                 const double sx[4] = { vr_minx - 2.0, vr_maxx + 1.0, vr_maxx + 1.0, vr_minx - 2.0 };
                 const double sy[4] = { vr_miny - 2.0, vr_miny - 2.0, vr_maxy + 1.0, vr_maxy + 1.0 };
@@ -8639,6 +8697,17 @@ bool UI_SKINCANVAS::Draw_Form(UI_ELEMENT* element)
                         corner_parent = s;
                         corner_parent_ptr = &corner_parent;
                       }
+                  }
+              }
+            if(!corner_parent_ptr)
+              {
+                UI_COLOR* ownbg = element_form->IsBackgroundColorSet() ? element_form->GetBackgroundColor()
+                                                                        : element_form->GetColor();
+                if(ownbg && ownbg->GetAlpha() > 0 && (ownbg->GetRed() + ownbg->GetGreen() + ownbg->GetBlue()) > 8)
+                  {
+                    corner_parent = GRP2DCOLOR_RGBA8((XBYTE)ownbg->GetRed(), (XBYTE)ownbg->GetGreen(),
+                                                    (XBYTE)ownbg->GetBlue(), 255);
+                    corner_parent_ptr = &corner_parent;
                   }
               }
           }
