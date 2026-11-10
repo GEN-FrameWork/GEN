@@ -69,6 +69,7 @@ class UI_ANIMATION;
 class UI_ELEMENT_TEXT;
 class UI_ELEMENT_FORM;
 class UI_VIRTUALKEYBOARD;
+class UI_ELEMENT_EDITTEXT;
 class UI_STYLE;
 class UI_STYLESHEET;
 class UI_COMPUTEDSTYLE;
@@ -203,6 +204,11 @@ class UI_MANAGER : public XOBSERVER, public XSUBJECT
     bool                            ScrollBar_OnPointer                       (int screen_x, int screen_y, bool pressed);
     bool                            ScrollBar_IsDragging                      ();
 
+    // Hardware EditText focus (when no virtual keyboard is active).
+    bool                            EditText_HasFocus                         ();
+    UI_ELEMENT*                     EditText_GetFocus                         ();
+    bool                            EditText_ClearFocus                       (bool sanitize = true);
+
   private:
                                     UI_MANAGER                                ();
                                     UI_MANAGER                                (UI_MANAGER const&);
@@ -282,6 +288,11 @@ class UI_MANAGER : public XOBSERVER, public XSUBJECT
     bool                            UnSelectedElement                         (UI_ELEMENT* element);
     bool                            UnSelectedElement                         ();
 
+    bool                            EditText_SetFocus                         (UI_ELEMENT_EDITTEXT* edit);
+    bool                            EditText_UpdateHardwareInput              ();
+    bool                            EditText_InsertChar                       (UI_ELEMENT_EDITTEXT* edit, XCHAR character);
+    bool                            EditText_NotifyChanged                    (UI_ELEMENT_EDITTEXT* edit);
+
     bool                            UseMotionInElement                        (UI_ELEMENT* element, INPCURSORMOTION* cursormotion);
     bool                            UseMotion                                 (INPCURSORMOTION* cursormotion);
 
@@ -351,6 +362,7 @@ class UI_MANAGER : public XOBSERVER, public XSUBJECT
     double                          scrollbar_drag_thumb;    // thumb length cached at grab time
 
     UI_VIRTUALKEYBOARD*             virtualkeyboard;
+    UI_ELEMENT_EDITTEXT*            element_editfocus;
 
     XDWORD                          layout_translate_language;
 };

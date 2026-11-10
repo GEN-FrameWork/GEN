@@ -38,6 +38,14 @@
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
 
 #define UI_ELEMENT_EDITTEXT_DEFAULTCUSORTIMEBLINK  500
+#define UI_ELEMENT_EDITTEXT_SPIN_WIDTH             26.0
+
+enum UI_ELEMENT_EDITTEXT_INPUTMODE
+{
+  UI_ELEMENT_EDITTEXT_INPUTMODE_TEXT     = 0 ,
+  UI_ELEMENT_EDITTEXT_INPUTMODE_NUMERIC      ,
+  UI_ELEMENT_EDITTEXT_INPUTMODE_PASSWORD     ,
+};
 
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
 
@@ -58,6 +66,28 @@ class UI_ELEMENT_EDITTEXT : public UI_ELEMENT_TEXT, public UI_PROPERTY_SELECTABL
     bool                              Cursor_GetStateBlink        ();
     void                              Cursor_ChangeStateBlink     ();
 
+    UI_ELEMENT_EDITTEXT_INPUTMODE     GetInputMode                ();
+    void                              SetInputMode                (UI_ELEMENT_EDITTEXT_INPUTMODE mode);
+    bool                              SetInputModeFromString      (XCHAR* modestring);
+
+    int                               GetValueMin                 ();
+    void                              SetValueMin                 (int valuemin);
+    int                               GetValueMax                 ();
+    void                              SetValueMax                 (int valuemax);
+    int                               GetValueStep                ();
+    void                              SetValueStep                (int valuestep);
+
+    bool                              IsCharAllowed               (XCHAR character);
+    bool                              SanitizeTextToMode          ();
+    int                               GetNumericValue             ();
+    bool                              SetNumericValue             (int value);
+    bool                              StepNumericValue            (int direction);
+    bool                              BuildDisplayText            (XSTRING& display);
+
+    double                            GetSpinWidth                ();
+    // Returns 1 = up (+), -1 = down (-), 0 = not in spin zone. Coords are absolute design space.
+    int                               HitTestSpin                 (int design_x, int design_y);
+
     
   private:
 
@@ -67,13 +97,13 @@ class UI_ELEMENT_EDITTEXT : public UI_ELEMENT_TEXT, public UI_PROPERTY_SELECTABL
     XTIMER*                           cursor_xtimerblink;
     XDWORD                            cursor_timeblink;  
     bool                              cursor_stateblink;
+
+    UI_ELEMENT_EDITTEXT_INPUTMODE     inputmode;
+    int                               valuemin;
+    int                               valuemax;
+    int                               valuestep;
           
 };
 
 
 /*---- INLINE FUNCTIONS + PROTOTYPES ---------------------------------------------------------------------------------*/
-
-
-
-
-

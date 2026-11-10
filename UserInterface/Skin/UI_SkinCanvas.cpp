@@ -5526,6 +5526,92 @@ bool UI_SKINCANVAS::Draw_Text(UI_ELEMENT* element)
             }
         }
 
+      // Optional title/label plate: solid background-color, or L→R linear gradient when gradientcolor
+      // is set (same stop convention as ProgressBar). Drawn after TextBackdrop restore so glyphs sit on
+      // a fresh plate instead of compounding into the form page.
+      if(element->IsBackgroundColorSet() && element->GetBackgroundColor() &&
+         (element->GetBackgroundColor()->GetAlpha() > 0) && element->GetBoundaryLine())
+        {
+          double box_w = element->GetBoundaryLine()->width;
+          double box_h = element->GetBoundaryLine()->height;
+          if((box_w > 0.0) && (box_h > 0.0))
+            {
+              double x1 = x_position;
+              double y1 = y_position;
+              double x2 = x_position + box_w;
+              double y2 = UI_BOUNDARYLINE_EdgeTop(y_position, box_h);
+              double radius = (double)element->GetRoundRect();
+
+              UI_COLOR grad_end;
+              bool    has_grad = false;
+              if(element->GetComputedStyle())
+                {
+                  XSTRING gstr;
+                  if(element->GetComputedStyle()->Get(NL("gradientcolor"), gstr) && !gstr.IsEmpty())
+                    {
+                      // Alpha may be 0 (fade-to-transparent plates); still a valid L→R gradient.
+                      grad_end.SetFromString(gstr.Get());
+                      has_grad = true;
+                    }
+                }
+
+              double bw = element->GetBorderWidth();
+              if(element->IsBorderColorSet() && element->GetBorderColor() && (bw > 0.0))
+                {
+                  GRP2DCOLOR_RGBA8 linecol((XBYTE)element->GetBorderColor()->GetRed(),
+                                           (XBYTE)element->GetBorderColor()->GetGreen(),
+                                           (XBYTE)element->GetBorderColor()->GetBlue(),
+                                           (XBYTE)element->GetBorderColor()->GetAlpha());
+                  canvas->SetLineColor(&linecol);
+                  canvas->SetLineWidth(bw);
+                }
+               else
+                {
+                  GRP2DCOLOR_RGBA8 line_none(0, 0, 0, 0);
+                  canvas->SetLineColor(&line_none);
+                  canvas->SetLineWidth(1.0);
+                }
+
+              if(has_grad)
+                {
+                  UI_COLOR* c0 = element->GetBackgroundColor();
+                  GRP2DGRADIENTSTOP stops[2];
+                  stops[0].offset = 0.0;
+                  stops[0].color  = GRP2DCOLOR_RGBA8((XBYTE)c0->GetRed(), (XBYTE)c0->GetGreen(),
+                                                     (XBYTE)c0->GetBlue(), (XBYTE)c0->GetAlpha());
+                  stops[1].offset = 1.0;
+                  stops[1].color  = GRP2DCOLOR_RGBA8((XBYTE)grad_end.GetRed(), (XBYTE)grad_end.GetGreen(),
+                                                     (XBYTE)grad_end.GetBlue(), (XBYTE)grad_end.GetAlpha());
+                  // Left → right. Fade-to-transparent plates finish by ~1/3 of the box width
+                  // (pixels past gx2 clamp to the end stop = fully transparent).
+                  double gx2 = x2;
+                  if(grad_end.GetAlpha() == 0)
+                    {
+                      double fade = box_w / 3.0;
+                      if(fade < 1.0) fade = box_w;
+                      gx2 = x1 + fade;
+                    }
+                  UI_SkinCanvas_ProgressBar_DrawGradientRect(canvas, x1, y1, x2, y2, radius, stops, x1, y1, gx2, y1);
+                }
+               else
+                {
+                  GRP2DCOLOR_RGBA8 fill((XBYTE)element->GetBackgroundColor()->GetRed(),
+                                       (XBYTE)element->GetBackgroundColor()->GetGreen(),
+                                       (XBYTE)element->GetBackgroundColor()->GetBlue(),
+                                       (XBYTE)element->GetBackgroundColor()->GetAlpha());
+                  canvas->SetFillColor(&fill);
+                  UI_SkinCanvas_ProgressBar_DrawRect(canvas, x1, y1, x2, y2, radius);
+                  if(element->IsBorderColorSet() && element->GetBorderColor() && (bw > 0.0))
+                    {
+                      // DrawRect is fill-only; stroke the same outline for a solid plate with a border.
+                      GRP2DPATH path;
+                      UI_SkinCanvas_AppendRoundRectPath(path, __MIN(x1, x2), __MIN(y1, y2), __MAX(x1, x2), __MAX(y1, y2), radius);
+                      canvas->Path(path, false);
+                    }
+                }
+            }
+        }
+
       GRP2DCOLOR_RGBA8  color(element->GetColor()->GetRed(), element->GetColor()->GetGreen(), element->GetColor()->GetBlue(), element->GetColor()->GetAlpha());
 
       canvas->Vectorfont_GetConfig()->SetColor(&color);
@@ -5542,19 +5628,48 @@ bool UI_SKINCANVAS::Draw_Text(UI_ELEMENT* element)
       // (the default for every element created before this) reduces to offset 0.0: pixel-identical to before.
       double alignoffset = 0.0f;
       double textwidth   = canvas->VectorFont_GetWidthStack(faces, nfaces, element_text->GetText()->Get());
+      double pad_l       = element->GetPadding(UI_ELEMENT_TYPE_ALIGN_LEFT);
+      double pad_r       = element->GetPadding(UI_ELEMENT_TYPE_ALIGN_RIGHT);
+      double content_w   = element_text->GetBoundaryLine()->width - pad_l - pad_r;
+      if(content_w < 1.0) content_w = element_text->GetBoundaryLine()->width;
 
       switch(element_text->GetTextAlign())
         {
-          case UI_ELEMENT_TYPE_ALIGN_CENTER : alignoffset = (element_text->GetBoundaryLine()->width - textwidth) / 2.0;
+          case UI_ELEMENT_TYPE_ALIGN_CENTER : alignoffset = pad_l + (content_w - textwidth) / 2.0;
                                                break;
 
-          case UI_ELEMENT_TYPE_ALIGN_RIGHT  : alignoffset = element_text->GetBoundaryLine()->width - textwidth;
+          case UI_ELEMENT_TYPE_ALIGN_RIGHT  : alignoffset = pad_l + content_w - textwidth;
                                                break;
 
-          default                           : break; // LEFT (and any non-horizontal enum value): no offset.
+          default                           : alignoffset = pad_l; break; // LEFT (+ padding-left)
         }
 
-      canvas->VectorFont_PrintStack(x_position + alignoffset, y_position, faces, nfaces, element_text->GetText()->Get());
+      // Vertical center only inside an authored background plate (e.g. form-title). Plain captions
+      // (button labels, etc.) keep Y = EdgeBottom / baseline from layout — do not re-shift them here.
+      double print_y = y_position;
+      const bool has_plate = element->IsBackgroundColorSet() && element->GetBackgroundColor() &&
+                             (element->GetBackgroundColor()->GetAlpha() > 0);
+      if(has_plate)
+        {
+          double box_h = element_text->GetBoundaryLine()->height;
+          double sf    = (double)element_text->GetSizeFont();
+          double pad_t = element->GetPadding(UI_ELEMENT_TYPE_ALIGN_UP);
+          double pad_b = element->GetPadding(UI_ELEMENT_TYPE_ALIGN_DOWN);
+          double inner_h = box_h - pad_t - pad_b;
+          if(inner_h < 1.0) inner_h = box_h;
+          if((inner_h > 1.0) && (sf > 0.0))
+            {
+              const double optical = sf * 0.22;
+              // Mid of padded content band, then baseline so optical mid lands on that mid.
+              print_y = (y_position - pad_b) - (inner_h * 0.5) + optical;
+            }
+           else if(pad_b > 0.0)
+            {
+              print_y = y_position - pad_b;
+            }
+        }
+
+      canvas->VectorFont_PrintStack(x_position + alignoffset, print_y, faces, nfaces, element_text->GetText()->Get());
     }
 
   PostDrawFunction(element, canvas, clip_rect, x_position, y_position);
@@ -7896,47 +8011,163 @@ bool UI_SKINCANVAS::Draw_EditText(UI_ELEMENT* element)
   double                x_position        = 0.0f;
   double                y_position        = 0.0f;
   GRP2DCANVAS*            canvas            = GetCanvas();    
-  static bool           visible           = false;
   XRECT                 clip_rect;                       
   
   if(!canvas) return false;
 
   PreDrawFunction(element, canvas, clip_rect, x_position, y_position, UI_SKINCANVAS_EDIT_MAXEDGE);
   
-  GRP2DCOLOR_RGBA8  color(element->GetColor()->GetRed(), element->GetColor()->GetGreen(), element->GetColor()->GetBlue(), element->GetColor()->GetAlpha());
+  // Idle = authored/runtime fill (incl. UART error red). Editing fill only while the caret is live —
+  // do not treat IsSelected alone as editing; hover uses preselect and must keep the idle/error color.
+  const bool editing = element_edittext->Cursor_IsVisible();
+  XBYTE br = element->GetBackgroundColor()->GetRed();
+  XBYTE bgc = element->GetBackgroundColor()->GetGreen();
+  XBYTE bb = element->GetBackgroundColor()->GetBlue();
+  XBYTE ba = element->GetBackgroundColor()->GetAlpha();
+  // Error-red idle (shared Dark/Light): keep glyphs white even if CSS :hover re-asserts label-ink.
+  const bool error_red = ((br > 140) && (br < 185) && (bgc < 70) && (bb < 70));
 
-  GRP2DCOLOR_RGBA8  bkgcolor(element->GetBackgroundColor()->GetRed(), element->GetBackgroundColor()->GetGreen(), element->GetBackgroundColor()->GetBlue(), element_edittext->IsPreSelect()?element->GetBackgroundColor()->GetAlpha()/2:element->GetBackgroundColor()->GetAlpha());
+  XBYTE cr = element->GetColor()->GetRed();
+  XBYTE cg = element->GetColor()->GetGreen();
+  XBYTE cb = element->GetColor()->GetBlue();
+  XBYTE ca = element->GetColor()->GetAlpha();
 
-  GRP2DCOLOR_RGBA8  linecolor;
- 
-  if(element->MustReDraw()) 
+  if(editing)
     {
-      canvas->SetLineColor(&linecolor);
-      canvas->SetFillColor(&bkgcolor);
-
-      if(element->GetRoundRect())
+      // Bright idle tokens ⇒ light theme focus (white); otherwise pure black.
+      if((br > 180) || (bgc > 180) || (bb > 180))
         {
-          canvas->RoundRect(element->GetXPosition() - UI_SKINCANVAS_EDIT_MAXEDGE, element->GetYPosition() + UI_SKINCANVAS_EDIT_MAXEDGE, element->GetXPosition() + element->GetBoundaryLine()->width + UI_SKINCANVAS_EDIT_MAXEDGE, element->GetTopY() - UI_SKINCANVAS_EDIT_MAXEDGE, element->GetRoundRect(), true);        
+          br = 248; bgc = 250; bb = 252;
+          cr = 40; cg = 44; cb = 52;
         }
        else
         {
-          canvas->Rectangle(element->GetXPosition() - UI_SKINCANVAS_EDIT_MAXEDGE, element->GetYPosition() + UI_SKINCANVAS_EDIT_MAXEDGE, element->GetXPosition() + element->GetBoundaryLine()->width + UI_SKINCANVAS_EDIT_MAXEDGE, element->GetTopY() - UI_SKINCANVAS_EDIT_MAXEDGE, true);
+          br = 0; bgc = 0; bb = 0;
+          cr = 255; cg = 255; cb = 255;
         }
-   
-                                   
+      ba = 255; ca = 255;
+    }
+   else if(error_red)
+    {
+      cr = 255; cg = 255; cb = 255; ca = 255;
+    }
+  GRP2DCOLOR_RGBA8 color(cr, cg, cb, ca);
+  GRP2DCOLOR_RGBA8 bkgcolor(br, bgc, bb, ba);
+
+  // Stroke matches framed chrome (radiogroup / config modal), not an empty line colour.
+  bool has_border = element->IsBorderColorSet() && (element->GetBorderWidth() > 0.0);
+  GRP2DCOLOR_RGBA8 linecolor(0, 0, 0, 0);
+  double           border_w = 1.0;
+  if(has_border)
+    {
+      UI_COLOR* bc = element->GetBorderColor();
+      linecolor = GRP2DCOLOR_RGBA8(bc->GetRed(), bc->GetGreen(), bc->GetBlue(), bc->GetAlpha());
+      border_w  = element->GetBorderWidth();
+      if(border_w < 1.0) border_w = 1.0;
+    }
+ 
+  if(element->MustReDraw()) 
+    {
+      // Paint inside the element AABB (no MAXEDGE inflate) so the field reads as a framed
+      // inset next to Color Theme / checks — the old inflate looked like a dark halo.
+      double box_l = element->GetXPosition();
+      double box_b = element->GetYPosition();
+      double box_r = box_l + element->GetBoundaryLine()->width;
+      double box_t = element->GetTopY();
+      double rr    = (double)element->GetRoundRect();
+
+      canvas->SetFillColor(&bkgcolor);
+      if(has_border)
+        {
+          canvas->SetLineColor(&linecolor);
+          canvas->SetLineWidth((float)border_w);
+        }
+       else
+        {
+          GRP2DCOLOR_RGBA8 noline(0, 0, 0, 0);
+          canvas->SetLineColor(&noline);
+          canvas->SetLineWidth(1.0f);
+        }
+
+      if(rr > 0.0)
+        {
+          canvas->RoundRect(box_l, box_b, box_r, box_t, rr, true);
+        }
+       else
+        {
+          canvas->Rectangle(box_l, box_b, box_r, box_t, true);
+        }
+
+      double spin_w = element_edittext->GetSpinWidth();
+      double text_r = box_r;
+
+      // Numeric spin: divider + +/- centered in each half (no well fill).
+      double box_h = box_b - box_t;
+      if(spin_w > 0.0)
+        {
+          double spin_l = box_r - spin_w;
+          double mid_y  = box_b + ((box_t - box_b) * 0.5);
+          double pad    = border_w + 1.0;
+          if(pad < 1.5) pad = 1.5;
+          text_r = spin_l;
+
+          GRP2DCOLOR_RGBA8 divink = has_border ? linecolor : color;
+          if(divink.a < 180) divink.a = 220;
+          canvas->SetLineColor(&divink);
+          canvas->SetFillColor(&divink);
+          canvas->SetLineWidth(1.0f);
+          canvas->Line(spin_l, box_b - pad, spin_l, box_t + pad);
+          canvas->Line(spin_l + 2.0, mid_y, box_r - pad, mid_y);
+
+          GRP2DCOLOR_RGBA8 glyph = color;
+          if(glyph.a < 220) glyph.a = 255;
+          canvas->SetLineColor(&glyph);
+          canvas->SetFillColor(&glyph);
+          canvas->SetLineWidth(1.75f);
+
+          // Exact center of upper / lower halves.
+          double cx      = spin_l + ((box_r - spin_l) * 0.5);
+          double plus_y  = (box_t + mid_y) * 0.5;
+          double minus_y = (mid_y + box_b) * 0.5;
+          double half_h  = (mid_y - box_t) * 0.5;
+          double arm     = 3.5;
+          double max_arm = half_h - pad - 1.0;
+          if(max_arm < 2.0) max_arm = 2.0;
+          if(arm > max_arm) arm = max_arm;
+
+          canvas->Line(cx - arm, plus_y,  cx + arm, plus_y);
+          canvas->Line(cx, plus_y - arm,  cx, plus_y + arm);
+          canvas->Line(cx - arm, minus_y, cx + arm, minus_y);
+          canvas->SetLineWidth(1.0f);
+        }
+
+      XSTRING display;
+      element_edittext->BuildDisplayText(display);
+
+      // VectorFont Y = baseline; ink grows toward EdgeTop.
+      // Center a sizefont-tall band, then raise ~0.24×sizefont so digit ink (no
+      // descenders, shorter than the em box) sits on the visual mid. Caret = sizefont.
+      const double text_pad_x = 6.0;
+      double       sizefont   = (double)element_edittext->GetSizeFont();
+      if(sizefont < 1.0) sizefont = 13.0;
+
       canvas->Vectorfont_GetConfig()->SetColor(&color);
-      canvas->Vectorfont_GetConfig()->SetSize(element_edittext->GetSizeFont());  
-      canvas->VectorFont_Printf(element->GetXPosition(), element->GetYPosition(), element_edittext->GetText()->Get());
+      canvas->Vectorfont_GetConfig()->SetSize(element_edittext->GetSizeFont());
+
+      double text_y = box_b - ((box_h - sizefont) * 0.5) - (sizefont * 0.18);
+      if(text_y > (box_b - 2.0)) text_y = box_b - 2.0;
+      if(text_y < (box_t + sizefont)) text_y = box_t + sizefont;
+
+      canvas->VectorFont_Printf(box_l + text_pad_x, text_y, display.Get());
 
       if(element_edittext->Cursor_IsVisible())
         {
           XDWORD    cursor_xpos = 0;
           XSTRING   cursor_string;
 
-          element_edittext->GetText()->Copy(0, element_edittext->Cursor_GetPosition(), cursor_string);
-
+          display.Copy(0, element_edittext->Cursor_GetPosition(), cursor_string);
           cursor_xpos = (XDWORD)GetWidthString(cursor_string.Get(), element_edittext->GetSizeFont());
-       
+
           if(element_edittext->Cursor_GetXTimerBlink()->GetMeasureMilliSeconds() >= element_edittext->Cursor_GetTimeBlink())
             {
               element_edittext->Cursor_ChangeStateBlink();   
@@ -7946,15 +8177,28 @@ bool UI_SKINCANVAS::Draw_EditText(UI_ELEMENT* element)
           if(element_edittext->Cursor_GetStateBlink())
             {
               int cursor_size = 3;
-
-              // Cursor follows the edit text colour so it stays visible on both light (e.g. virtual-keyboard
-              // input on white) and dark edit backgrounds — never hard-code white.
-              canvas->SetLineColor(&color);
+              GRP2DCOLOR_RGBA8 noline(0, 0, 0, 0);
+              canvas->SetLineColor(&noline);
               canvas->SetFillColor(&color);
 
-              canvas->Rectangle(x_position + cursor_xpos, y_position + UI_SKINCANVAS_EDIT_MAXEDGE - 4, x_position + cursor_xpos + cursor_size, UI_BOUNDARYLINE_EdgeTop(y_position, element_edittext->GetBoundaryLine()->height) - UI_SKINCANVAS_EDIT_MAXEDGE + 4, true);                          
+              double cx1 = box_l + text_pad_x + (double)cursor_xpos;
+              if(cx1 > (text_r - 4.0)) cx1 = text_r - 4.0;
+              // Match VectorFont_Print's internal y+1 so caret and glyphs share one band.
+              double caret_y = text_y + 1.0;
+              canvas->Rectangle(cx1, caret_y, cx1 + cursor_size, caret_y - sizefont, true);
             }
         }
+
+      // Restamp straight frame edges so spin strokes cannot break the bottom/right border.
+      if(has_border)
+        {
+          double br = (rr > 2.0) ? rr : 2.0;
+          canvas->SetLineColor(&linecolor);
+          canvas->SetLineWidth((float)border_w);
+          canvas->Line(box_l + br, box_b, box_r - br, box_b);
+          canvas->Line(box_r, box_b - br, box_r, box_t + br);
+        }
+
     }
 
   PostDrawFunction(element, canvas, clip_rect, x_position, y_position);

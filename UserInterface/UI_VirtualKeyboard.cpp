@@ -357,6 +357,10 @@ bool UI_VIRTUALKEYBOARD::Show(bool on, UI_ELEMENT* element_editable)
               if(!maxsizetext) maxsizetext = (sizetext ? sizetext : 32);
 
               element_input->SetMaxSizeText(maxsizetext);
+              element_input->SetInputMode(src->GetInputMode());
+              element_input->SetValueMin(src->GetValueMin());
+              element_input->SetValueMax(src->GetValueMax());
+              element_input->SetValueStep(src->GetValueStep());
               element_input->GetText()->Set(src->GetText()->Get());
 
               if(element_input->GetText()->GetSize() > maxsizetext)
@@ -591,10 +595,23 @@ bool UI_VIRTUALKEYBOARD::SelectInput(UI_ELEMENT* key_select)
                   XDWORD position     = element_edittext->Cursor_GetPosition();
                   XDWORD textsizetext = element_edittext->GetText()->GetSize();
 
-                  if(!maxsizetext || (textsizetext + 1 <= maxsizetext))
+                  // Filter against the layout edit that opened the keyboard (modes live there).
+                  UI_ELEMENT_EDITTEXT* mode_src = element_edittext;
+                  if(element_editable && (element_editable->GetType() == UI_ELEMENT_TYPE_EDITTEXT))
+                    {
+                      mode_src = (UI_ELEMENT_EDITTEXT*)element_editable;
+                    }
+
+                  bool allowed = true;
+                  for(XDWORD c=0; mode_src && allowed && (c<keystr.GetSize()); c++)
+                    {
+                      if(!mode_src->IsCharAllowed(keystr.Get()[c])) allowed = false;
+                    }
+
+                  if(allowed && (!maxsizetext || (textsizetext + keystr.GetSize() <= maxsizetext)))
                     { 
                       element_edittext->GetText()->Insert(keystr, position);   
-                      element_edittext->Cursor_SetPosition(position+1);   
+                      element_edittext->Cursor_SetPosition(position + keystr.GetSize());   
 
                       contentchanged = true;
                     }
@@ -640,6 +657,7 @@ bool UI_VIRTUALKEYBOARD::CommitInputToEditable()
       dst->GetText()->AdjustSize(maxsizetext);
     }
 
+  dst->SanitizeTextToMode();
   dst->Cursor_SetPosition(dst->GetText()->GetSize());
   GEN_USERINTERFACE.Elements_SetToRedraw(dst);
 

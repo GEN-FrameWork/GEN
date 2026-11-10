@@ -52,6 +52,9 @@
 #include "XSleep.h"
 
 #include "INPCursorMotion.h"
+#include "INPManager.h"
+#include "INPDevice.h"
+#include "INPButton.h"
 
 #include "GRPProperties.h"
 #include "GRPScreen.h"
@@ -1293,6 +1296,9 @@ bool UI_MANAGER::Update()
 {
   bool status = false;
 
+  // Hardware EditText focus: route keys when no virtual keyboard owns the field.
+  EditText_UpdateHardwareInput();
+
   // Re-apply #[TRANSLATE_N] only when the active language changes (not every frame, not via the app).
   if(GEN_XTRANSLATION.IsInitialized())
     {
@@ -1794,6 +1800,8 @@ bool UI_MANAGER::Element_SetModal(UI_ELEMENT* element_modal)
       ModalLayer_Invalidate();
       // Drop hover that may still sit on content under the new/cleared modal.
       if(preselect_element) ResetPreselect();
+      // Closing / swapping the modal drops hardware EditText focus.
+      if(element_editfocus) EditText_ClearFocus(true);
     }
 
   if(element_modal) 
@@ -6680,7 +6688,35 @@ UI_ELEMENT* UI_MANAGER::GetLayoutElement_EditText(XFILEXMLELEMENT* node, UI_LAYO
   UI_ELEMENT_EDITTEXT* element_edittext = GEN_NEW UI_ELEMENT_EDITTEXT();
   if(!element_edittext) return NULL;
 
-  return GetLayoutElement_Text(node, layout, father, element_edittext);
+  UI_ELEMENT* created = GetLayoutElement_Text(node, layout, father, element_edittext);
+  if(!created) return NULL;
+
+  XSTRING modestr;
+  if(GetLayoutElementValue(node, NL("inputmode"), modestr) && !modestr.IsEmpty())
+    {
+      element_edittext->SetInputModeFromString(modestr.Get());
+    }
+
+  double dval = 0.0;
+  if(GetLayoutElementValue(node, NL("valuemin"), dval) || GetLayoutElementValue(node, NL("minvalue"), dval))
+    {
+      element_edittext->SetValueMin((int)dval);
+    }
+  if(GetLayoutElementValue(node, NL("valuemax"), dval) || GetLayoutElementValue(node, NL("maxvalue"), dval))
+    {
+      element_edittext->SetValueMax((int)dval);
+    }
+  if(GetLayoutElementValue(node, NL("valuestep"), dval) || GetLayoutElementValue(node, NL("stepvalue"), dval))
+    {
+      element_edittext->SetValueStep((int)dval);
+    }
+
+  if(element_edittext->GetInputMode() == UI_ELEMENT_EDITTEXT_INPUTMODE_NUMERIC)
+    {
+      element_edittext->SanitizeTextToMode();
+    }
+
+  return created;
 }
 
 
@@ -8445,8 +8481,11 @@ UI_ELEMENT* UI_MANAGER::PreSelectElement(UI_ELEMENT* element, int x, int y)
 
               // Radiobuttons latch :selected via SetStatus for CSS, but peers must stay hoverable/
               // clickable — never treat a selected radio as "already consumed" for PreSelect.
+              // EditText also stays re-preselectable: numeric spin (+/-) and re-edit must work after
+              // the first click (which may SetSelected when no virtual keyboard is wired).
               if(element->IsSelected() && !allow_selected_hover &&
-                 (element->GetType() != UI_ELEMENT_TYPE_RADIOBUTTON))
+                 (element->GetType() != UI_ELEMENT_TYPE_RADIOBUTTON) &&
+                 (element->GetType() != UI_ELEMENT_TYPE_EDITTEXT))
                 {
                   preselect = false;
                 }
@@ -8636,8 +8675,23 @@ bool UI_MANAGER::SelectedElement(UI_ELEMENT* element)
 
   // XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, NL("UI Element [%s]: Selected. "), element->GetName()->Get());
 
-  if(dynamic_cast<UI_PROPERTY_EDITABLE*>(element))        
+  if(element->GetType() == UI_ELEMENT_TYPE_EDITTEXT)
     {
+      UI_ELEMENT_EDITTEXT* edit = (UI_ELEMENT_EDITTEXT*)element;
+      int spin = edit->HitTestSpin(last_xposition, last_yposition);
+      if(spin != 0)
+        {
+          if(edit->StepNumericValue(spin))
+            {
+              Elements_SetToRedraw(edit);
+              if(element_modal) ModalLayer_Invalidate();
+              SendEvent(UI_XEVENT_TYPE_OUTPUT_CHANGECONTENTS, edit);
+            }
+          // Keep / acquire hardware focus so the cursor stays after spin clicks.
+          if(!virtualkeyboard) EditText_SetFocus(edit);
+          return true;
+        }
+
       if(virtualkeyboard)
         {
           // Do not reopen the keyboard when the user taps the in-keyboard input edit itself.
@@ -8646,6 +8700,14 @@ bool UI_MANAGER::SelectedElement(UI_ELEMENT* element)
               virtualkeyboard->Show(true, element);
             }
         }
+       else
+        {
+          EditText_SetFocus(edit);
+        }
+    }
+   else if(element_editfocus)
+    {
+      EditText_ClearFocus(true);
     }
 
   if(element->GetType() == UI_ELEMENT_TYPE_CHECKBOX)
@@ -8731,6 +8793,328 @@ bool UI_MANAGER::SelectedElement(UI_ELEMENT* element)
 
   return true;
 }                       
+
+
+/**-------------------------------------------------------------------------------------------------------------------
+*
+* @fn         bool UI_MANAGER::EditText_HasFocus()
+* @brief      True while a layout EditText has hardware keyboard focus (no virtual keyboard).
+* @ingroup    USERINTERFACE
+*
+* @return     bool : true if an EditText currently holds focus.
+*
+*---------------------------------------------------------------------------------------------------------------------*/
+bool UI_MANAGER::EditText_HasFocus()
+{
+  return (element_editfocus != NULL);
+}
+
+
+/**-------------------------------------------------------------------------------------------------------------------
+*
+* @fn         UI_ELEMENT* UI_MANAGER::EditText_GetFocus()
+* @brief      Focused EditText element, or NULL.
+* @ingroup    USERINTERFACE
+*
+* @return     UI_ELEMENT* : Focused edit, or NULL.
+*
+*---------------------------------------------------------------------------------------------------------------------*/
+UI_ELEMENT* UI_MANAGER::EditText_GetFocus()
+{
+  return element_editfocus;
+}
+
+
+/**-------------------------------------------------------------------------------------------------------------------
+*
+* @fn         bool UI_MANAGER::EditText_ClearFocus(bool sanitize)
+* @brief      Hide cursor and drop hardware EditText focus.
+* @ingroup    USERINTERFACE
+*
+* @param[in]  sanitize : When true, clamp/filter numeric text before leaving.
+*
+* @return     bool : true if focus was cleared.
+*
+*---------------------------------------------------------------------------------------------------------------------*/
+bool UI_MANAGER::EditText_ClearFocus(bool sanitize)
+{
+  if(!element_editfocus) return false;
+
+  UI_ELEMENT_EDITTEXT* edit = element_editfocus;
+  element_editfocus = NULL;
+
+  if(sanitize) edit->SanitizeTextToMode();
+
+  edit->Cursor_SetVisible(false);
+  edit->SetSelected(false);
+  Elements_SetToRedraw(edit);
+  if(element_modal) ModalLayer_Invalidate();
+  SendEvent(UI_XEVENT_TYPE_OUTPUT_CHANGECONTENTS, edit);
+
+  return true;
+}
+
+
+/**-------------------------------------------------------------------------------------------------------------------
+*
+* @fn         bool UI_MANAGER::EditText_SetFocus(UI_ELEMENT_EDITTEXT* edit)
+* @brief      Give hardware keyboard focus to an EditText (cursor visible, latched selection).
+* @ingroup    USERINTERFACE
+*
+* @param[in]  edit : EditText to focus.
+*
+* @return     bool : true if focus was applied.
+*
+*---------------------------------------------------------------------------------------------------------------------*/
+bool UI_MANAGER::EditText_SetFocus(UI_ELEMENT_EDITTEXT* edit)
+{
+  if(!edit) return false;
+
+  if(element_editfocus && (element_editfocus != edit))
+    {
+      EditText_ClearFocus(true);
+    }
+
+  element_editfocus = edit;
+
+  edit->SetTimeSelected(0);
+  edit->SetSelected(true);
+  edit->Cursor_SetVisible(true);
+  edit->Cursor_SetPosition(edit->GetText() ? edit->GetText()->GetSize() : 0);
+
+  if(edit->Cursor_GetXTimerBlink()) edit->Cursor_GetXTimerBlink()->Reset();
+  if(!edit->Cursor_GetStateBlink()) edit->Cursor_ChangeStateBlink();
+
+  Elements_SetToRedraw(edit);
+  if(element_modal) ModalLayer_Invalidate();
+
+  return true;
+}
+
+
+/**-------------------------------------------------------------------------------------------------------------------
+*
+* @fn         bool UI_MANAGER::EditText_NotifyChanged(UI_ELEMENT_EDITTEXT* edit)
+* @brief      Redraw and fire CHANGECONTENTS for a focused EditText mutation.
+* @ingroup    USERINTERFACE
+*
+* @param[in]  edit : EditText that changed.
+*
+* @return     bool : true if notified.
+*
+*---------------------------------------------------------------------------------------------------------------------*/
+bool UI_MANAGER::EditText_NotifyChanged(UI_ELEMENT_EDITTEXT* edit)
+{
+  if(!edit) return false;
+
+  Elements_SetToRedraw(edit);
+  if(element_modal) ModalLayer_Invalidate();
+  SendEvent(UI_XEVENT_TYPE_OUTPUT_CHANGECONTENTS, edit);
+
+  return true;
+}
+
+
+/**-------------------------------------------------------------------------------------------------------------------
+*
+* @fn         bool UI_MANAGER::EditText_InsertChar(UI_ELEMENT_EDITTEXT* edit, XCHAR character)
+* @brief      Insert one character at the cursor when allowed by inputmode / maxsizetext.
+* @ingroup    USERINTERFACE
+*
+* @param[in]  edit : Target EditText.
+* @param[in]  character : Character to insert.
+*
+* @return     bool : true if the text changed.
+*
+*---------------------------------------------------------------------------------------------------------------------*/
+bool UI_MANAGER::EditText_InsertChar(UI_ELEMENT_EDITTEXT* edit, XCHAR character)
+{
+  if(!edit || !edit->GetText()) return false;
+  if(!edit->IsCharAllowed(character)) return false;
+
+  XDWORD maxsizetext  = edit->GetMaxSizeText();
+  XDWORD position     = edit->Cursor_GetPosition();
+  XDWORD textsizetext = edit->GetText()->GetSize();
+
+  if(maxsizetext && (textsizetext >= maxsizetext)) return false;
+
+  XSTRING keystr;
+  keystr.Add(character);
+  edit->GetText()->Insert(keystr, position);
+  edit->Cursor_SetPosition(position + 1);
+
+  if(edit->Cursor_GetXTimerBlink()) edit->Cursor_GetXTimerBlink()->Reset();
+  if(!edit->Cursor_GetStateBlink()) edit->Cursor_ChangeStateBlink();
+
+  return true;
+}
+
+
+/**-------------------------------------------------------------------------------------------------------------------
+*
+* @fn         bool UI_MANAGER::EditText_UpdateHardwareInput()
+* @brief      Poll the keyboard into the focused EditText (digits / nav / edit keys).
+* @ingroup    USERINTERFACE
+*
+* @return     bool : true if any key was consumed.
+*
+*---------------------------------------------------------------------------------------------------------------------*/
+bool UI_MANAGER::EditText_UpdateHardwareInput()
+{
+  if(!element_editfocus) return false;
+  if(virtualkeyboard && virtualkeyboard->IsShow()) return false;
+
+  INPDEVICE* keyboard = GEN_INPMANAGER.GetDevice(INPDEVICE_TYPE_KEYBOARD);
+  if(!keyboard) return false;
+
+  UI_ELEMENT_EDITTEXT* edit = element_editfocus;
+  bool consumed = false;
+
+  INPBUTTON* btn_esc = keyboard->GetButton(INPBUTTON_ID_ESCAPE);
+  if(btn_esc && btn_esc->IsPressedWithRelease())
+    {
+      EditText_ClearFocus(true);
+      return true;
+    }
+
+  INPBUTTON* btn_return = keyboard->GetButton(INPBUTTON_ID_RETURN);
+  INPBUTTON* btn_intro  = keyboard->GetButton(INPBUTTON_ID_INTRO);
+  if((btn_return && btn_return->IsPressedWithRelease()) || (btn_intro && btn_intro->IsPressedWithRelease()))
+    {
+      EditText_ClearFocus(true);
+      return true;
+    }
+
+  INPBUTTON* btn_back = keyboard->GetButton(INPBUTTON_ID_BACK_SPACE);
+  if(btn_back && btn_back->IsPressedWithRelease())
+    {
+      XDWORD position = edit->Cursor_GetPosition();
+      if(position)
+        {
+          edit->GetText()->DeleteCharacters(position - 1, 1);
+          edit->Cursor_SetPosition(position - 1);
+          EditText_NotifyChanged(edit);
+        }
+      return true;
+    }
+
+  INPBUTTON* btn_del = keyboard->GetButton(INPBUTTON_ID_DELETE);
+  if(btn_del && btn_del->IsPressedWithRelease())
+    {
+      XDWORD position = edit->Cursor_GetPosition();
+      if(edit->GetText() && (position < edit->GetText()->GetSize()))
+        {
+          edit->GetText()->DeleteCharacters(position, 1);
+          EditText_NotifyChanged(edit);
+        }
+      return true;
+    }
+
+  INPBUTTON* btn_left = keyboard->GetButton(INPBUTTON_ID_LEFT);
+  if(btn_left && btn_left->IsPressedWithRelease())
+    {
+      XDWORD position = edit->Cursor_GetPosition();
+      if(position) position--;
+      edit->Cursor_SetPosition(position);
+      if(edit->Cursor_GetXTimerBlink()) edit->Cursor_GetXTimerBlink()->Reset();
+      if(!edit->Cursor_GetStateBlink()) edit->Cursor_ChangeStateBlink();
+      Elements_SetToRedraw(edit);
+      if(element_modal) ModalLayer_Invalidate();
+      return true;
+    }
+
+  INPBUTTON* btn_right = keyboard->GetButton(INPBUTTON_ID_RIGHT);
+  if(btn_right && btn_right->IsPressedWithRelease())
+    {
+      XDWORD position = edit->Cursor_GetPosition();
+      XDWORD size = edit->GetText() ? edit->GetText()->GetSize() : 0;
+      position++;
+      if(position > size) position = size;
+      edit->Cursor_SetPosition(position);
+      if(edit->Cursor_GetXTimerBlink()) edit->Cursor_GetXTimerBlink()->Reset();
+      if(!edit->Cursor_GetStateBlink()) edit->Cursor_ChangeStateBlink();
+      Elements_SetToRedraw(edit);
+      if(element_modal) ModalLayer_Invalidate();
+      return true;
+    }
+
+  INPBUTTON* btn_home = keyboard->GetButton(INPBUTTON_ID_HOME);
+  if(btn_home && btn_home->IsPressedWithRelease())
+    {
+      edit->Cursor_SetPosition(0);
+      Elements_SetToRedraw(edit);
+      if(element_modal) ModalLayer_Invalidate();
+      return true;
+    }
+
+  INPBUTTON* btn_end = keyboard->GetButton(INPBUTTON_ID_END);
+  if(btn_end && btn_end->IsPressedWithRelease())
+    {
+      edit->Cursor_SetPosition(edit->GetText() ? edit->GetText()->GetSize() : 0);
+      Elements_SetToRedraw(edit);
+      if(element_modal) ModalLayer_Invalidate();
+      return true;
+    }
+
+  // Character keys (layout-aware when available; fallback to button symbol / numpad map).
+  for(int id = (int)INPBUTTON_ID_NOBUTTON + 1; id < (int)INPBUTTON_ID_LAST; id++)
+    {
+      if((id == (int)INPBUTTON_ID_ESCAPE)     ||
+         (id == (int)INPBUTTON_ID_RETURN)     ||
+         (id == (int)INPBUTTON_ID_INTRO)      ||
+         (id == (int)INPBUTTON_ID_BACK_SPACE) ||
+         (id == (int)INPBUTTON_ID_DELETE)     ||
+         (id == (int)INPBUTTON_ID_LEFT)       ||
+         (id == (int)INPBUTTON_ID_RIGHT)      ||
+         (id == (int)INPBUTTON_ID_HOME)       ||
+         (id == (int)INPBUTTON_ID_END)        ||
+         (id == (int)INPBUTTON_ID_UP)         ||
+         (id == (int)INPBUTTON_ID_DOWN)       ||
+         (id == (int)INPBUTTON_ID_TAB)        ||
+         ((id >= (int)INPBUTTON_ID_F1) && (id <= (int)INPBUTTON_ID_F12)) ||
+         ((id >= (int)INPBUTTON_ID_MOUSE_RIGHT) && (id <= (int)INPBUTTON_ID_MOUSE_MIDDLE)))
+        {
+          continue;
+        }
+
+      INPBUTTON* button = keyboard->GetButton((INPBUTTON_ID)id);
+      if(!button || !button->IsPressedWithRelease()) continue;
+
+      XSTRING translated;
+      if(keyboard->TranslateButtonToUnicode(button, translated) && !translated.IsEmpty())
+        {
+          for(XDWORD c=0; c<translated.GetSize(); c++)
+            {
+              XCHAR ch = translated.Get()[c];
+              if(ch < 32) continue;
+              if(EditText_InsertChar(edit, ch)) consumed = true;
+            }
+        }
+       else
+        {
+          XCHAR ch = button->GetSymbol();
+          if(!ch)
+            {
+              if((id >= (int)INPBUTTON_ID_NUMPAD0) && (id <= (int)INPBUTTON_ID_NUMPAD9))
+                {
+                  ch = (XCHAR)(_C('0') + (id - (int)INPBUTTON_ID_NUMPAD0));
+                }
+            }
+          if(ch >= 32)
+            {
+              if(EditText_InsertChar(edit, ch)) consumed = true;
+            }
+        }
+
+      if(consumed)
+        {
+          EditText_NotifyChanged(edit);
+          return true;
+        }
+    }
+
+  return consumed;
+}
 
 
 /**-------------------------------------------------------------------------------------------------------------------
@@ -10442,6 +10826,7 @@ void UI_MANAGER::Clean()
   scrollbar_drag_thumb       = 0.0f;
 
   virtualkeyboard     = NULL;
+  element_editfocus   = NULL;
 
   layout_translate_language = XLANGUAGE_ISO_639_3_CODE_INVALID;
 }
