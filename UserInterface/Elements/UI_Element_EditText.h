@@ -84,9 +84,9 @@ class UI_ELEMENT_EDITTEXT : public UI_ELEMENT_TEXT, public UI_PROPERTY_SELECTABL
     bool                              StepNumericValue            (int direction);
     bool                              BuildDisplayText            (XSTRING& display);
 
-    double                            GetSpinWidth                ();
+    virtual double                    GetSpinWidth                ();
     // Returns 1 = up (+), -1 = down (-), 0 = not in spin zone. Coords are absolute design space.
-    int                               HitTestSpin                 (int design_x, int design_y);
+    virtual int                       HitTestSpin                 (int design_x, int design_y);
 
     
   private:

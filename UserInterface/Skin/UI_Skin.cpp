@@ -819,6 +819,7 @@ bool UI_SKIN::CalculateBoundaryLine(UI_ELEMENT* element, bool adjustsizemargin)
       case UI_ELEMENT_TYPE_RADIOBUTTON		  : status = CalculateBoundaryLine_RadioButton(element, adjustsizemargin);        break;
       case UI_ELEMENT_TYPE_RADIOGROUP 		  : status = CalculateBoundaryLine_RadioGroup(element, adjustsizemargin);         break;
       case UI_ELEMENT_TYPE_EDITTEXT   		  : status = CalculateBoundaryLine_EditText(element, adjustsizemargin);           break;
+      case UI_ELEMENT_TYPE_COMBO       		  : status = CalculateBoundaryLine_EditText(element, adjustsizemargin);           break;
       case UI_ELEMENT_TYPE_FORM						  : status = CalculateBoundaryLine_Form(element, adjustsizemargin);               break;
       case UI_ELEMENT_TYPE_MENU             : status = CalculateBoundaryLine_Menu(element, adjustsizemargin);               break;
       case UI_ELEMENT_TYPE_LISTBOX          : status = CalculateBoundaryLine_ListBox(element, adjustsizemargin);            break;
@@ -1411,7 +1412,17 @@ bool UI_SKIN::Draw(UI_ELEMENT* element)
       // so nothing changes for those -- this only activates the exact case that was silently broken.
       if(element->MustReDraw())
         {
-          RestoreOnHide(element);
+          // Modal DrawModalOnTop re-dirties the whole tree (including a just-closed combo
+          // MENU). RestoreOnHide would PutBitmapNoAlpha a stale plate (page black / old
+          // menu pixels) over the form. While compositing, the modal wipe+Draw owns that
+          // footprint — never restore hidden popups onto the live canvas. Same while a
+          // combo dismiss clear is pending (layout Update runs before DrawModalOnTop).
+          if(!GEN_USERINTERFACE.ModalLayer_IsCompositing() &&
+             !(element->GetType() == UI_ELEMENT_TYPE_MENU &&
+               GEN_USERINTERFACE.ModalLayer_IsComboMenuClearPending()))
+            {
+              RestoreOnHide(element);
+            }
           element->SetMustReDraw(false);
         }
 
@@ -1458,7 +1469,8 @@ bool UI_SKIN::Draw(UI_ELEMENT* element)
       case UI_ELEMENT_TYPE_CHECKBOX 			  : status = Draw_CheckBox(element);         break;	    	    
       case UI_ELEMENT_TYPE_RADIOBUTTON		  : status = Draw_RadioButton(element);      break;	    	    
       case UI_ELEMENT_TYPE_RADIOGROUP 		  : status = Draw_RadioGroup(element);       break;	    	    
-      case UI_ELEMENT_TYPE_EDITTEXT         : status = Draw_EditText(element);         break;	      
+      case UI_ELEMENT_TYPE_EDITTEXT         : status = Draw_EditText(element);         break;
+      case UI_ELEMENT_TYPE_COMBO            : status = Draw_EditText(element);         break;
       case UI_ELEMENT_TYPE_FORM						  : status = Draw_Form(element);             break;
       case UI_ELEMENT_TYPE_MENU             : status = Draw_Menu(element);             break;             
       case UI_ELEMENT_TYPE_LISTBOX          : status = Draw_ListBox(element);          break;             

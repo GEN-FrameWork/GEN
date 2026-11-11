@@ -98,6 +98,7 @@
 #include "UI_Element_RadioButton.h"
 #include "UI_Element_RadioGroup.h"
 #include "UI_Element_EditText.h"
+#include "UI_Element_Combo.h"
 #include "UI_Element_Form.h"
 #include "UI_Element_Menu.h"
 #include "UI_Element_ListBox.h"
@@ -1904,7 +1905,128 @@ bool UI_MANAGER::Element_ModalBlocksInteraction(UI_ELEMENT* element)
 * --------------------------------------------------------------------------------------------------------------------*/
 void UI_MANAGER::ModalLayer_Invalidate()
 {
-  ModalLayer_Release();
+  // Drop validity / offscreen cache, but KEEP the last painted AABB (modal_layer_x/y/w/h).
+  // Combo dropdowns expand that AABB past the form; on close the next DrawModalOnTop must
+  // still know the previous overhang so content under it can be restored (Release would zero it).
+  if(modal_layer_bitmap)
+    {
+      GEN_DELETE modal_layer_bitmap;
+      modal_layer_bitmap = NULL;
+    }
+
+  modal_layer_valid = false;
+}
+
+
+/**-------------------------------------------------------------------------------------------------------------------
+*
+* @fn         bool UI_MANAGER::ModalLayer_UnionRect(double rx, double ry, double rw, double rh)
+* @brief      Union (rx,ry,rw,rh) into the remembered modal paint AABB (left/top/w/h).
+* @ingroup    USERINTERFACE
+*
+*---------------------------------------------------------------------------------------------------------------------*/
+bool UI_MANAGER::ModalLayer_UnionRect(double rx, double ry, double rw, double rh)
+{
+  if(rw <= 0.5 || rh <= 0.5) return false;
+
+  if(modal_layer_w <= 0.5 || modal_layer_h <= 0.5)
+    {
+      modal_layer_x = rx;
+      modal_layer_y = ry;
+      modal_layer_w = rw;
+      modal_layer_h = rh;
+      return true;
+    }
+
+  const double left   = (rx < modal_layer_x) ? rx : modal_layer_x;
+  const double top    = (ry < modal_layer_y) ? ry : modal_layer_y;
+  const double right  = ((rx + rw) > (modal_layer_x + modal_layer_w)) ? (rx + rw) : (modal_layer_x + modal_layer_w);
+  const double bottom = ((ry + rh) > (modal_layer_y + modal_layer_h)) ? (ry + rh) : (modal_layer_y + modal_layer_h);
+  modal_layer_x = left;
+  modal_layer_y = top;
+  modal_layer_w = right - left;
+  modal_layer_h = bottom - top;
+  return true;
+}
+
+
+/**-------------------------------------------------------------------------------------------------------------------
+*
+* @fn         void UI_MANAGER::ModalLayer_SetComboMenuRect(double rx, double ry, double rw, double rh)
+* @brief      Sticky combo popup AABB merged into every DrawModalOnTop "new" rect while open.
+* @ingroup    USERINTERFACE
+*
+*---------------------------------------------------------------------------------------------------------------------*/
+void UI_MANAGER::ModalLayer_SetComboMenuRect(double rx, double ry, double rw, double rh)
+{
+  if(rw <= 0.5 || rh <= 0.5) return;
+  modal_combo_menu_active = true;
+  modal_combo_menu_x = rx;
+  modal_combo_menu_y = ry;
+  modal_combo_menu_w = rw;
+  modal_combo_menu_h = rh;
+  ModalLayer_UnionRect(rx, ry, rw, rh);
+
+  // Snapshot pixels under the popup BEFORE it paints (OpenMenu calls this while the
+  // menu is visible-flagged but not yet drawn). Dismiss restores this instead of a
+  // flat page-color fill that left a gray box below the form.
+  if(modal_combo_menu_backdrop)
+    {
+      GEN_DELETE modal_combo_menu_backdrop;
+      modal_combo_menu_backdrop = NULL;
+    }
+  if(element_modal)
+    {
+      UI_LAYOUT* layout = Element_GetLayout(element_modal);
+      if(layout && layout->GetSkin() && layout->GetSkin()->GetDrawMode() == UI_SKIN_DRAWMODE_CANVAS)
+        {
+          UI_SKINCANVAS* skin = (UI_SKINCANVAS*)layout->GetSkin();
+          GRP2DCANVAS* live = skin ? skin->GetCanvas() : NULL;
+          if(live) modal_combo_menu_backdrop = live->GetBitmap(rx, ry, rw, rh);
+        }
+    }
+}
+
+
+/**-------------------------------------------------------------------------------------------------------------------
+*
+* @fn         void UI_MANAGER::ModalLayer_ClearComboMenuRect()
+* @brief      Drop the sticky combo popup AABB (call from CloseMenu after unioning into modal_layer_*).
+* @ingroup    USERINTERFACE
+*
+*---------------------------------------------------------------------------------------------------------------------*/
+void UI_MANAGER::ModalLayer_ClearComboMenuRect()
+{
+  // Keep the last popup footprint in modal_layer_* so the next DrawModalOnTop shrink
+  // pass can restore content under the overhang after the menu is hidden. Stash the
+  // NARROW menu rect; the pre-open backdrop bitmap is restored on shrink (not a page fill).
+  if(modal_combo_menu_active)
+    {
+      ModalLayer_UnionRect(modal_combo_menu_x, modal_combo_menu_y, modal_combo_menu_w, modal_combo_menu_h);
+      modal_combo_menu_clear_pending = true;
+      modal_combo_menu_clear_x = modal_combo_menu_x;
+      modal_combo_menu_clear_y = modal_combo_menu_y;
+      modal_combo_menu_clear_w = modal_combo_menu_w;
+      modal_combo_menu_clear_h = modal_combo_menu_h;
+    }
+  modal_combo_menu_active = false;
+  modal_combo_menu_x = 0.0;
+  modal_combo_menu_y = 0.0;
+  modal_combo_menu_w = 0.0;
+  modal_combo_menu_h = 0.0;
+}
+
+
+/**-------------------------------------------------------------------------------------------------------------------
+*
+* @fn         bool UI_MANAGER::ModalLayer_IsComboMenuClearPending()
+* @brief      True after CloseMenu until DrawModalOnTop restores the popup footprint.
+* @ingroup    USERINTERFACE
+*
+*---------------------------------------------------------------------------------------------------------------------*/
+bool UI_MANAGER::ModalLayer_IsComboMenuClearPending()
+{
+  return modal_combo_menu_clear_pending;
 }
 
 
@@ -2048,7 +2170,7 @@ bool UI_MANAGER::ChromeCaption_SuppressesContentDraw(UI_ELEMENT* element)
   double cx = UI_BOUNDARYLINE_EdgeLeft(caption->GetXPosition(), cw);
   double cy = UI_BOUNDARYLINE_EdgeTop (caption->GetYPosition(), ch);
   // Content whose top edge is at or below the caption bottom is never under the bar
-  // (toolbar icons sit immediately under ypos=46). A 1px pad was too tight after resize/
+  // (toolbar icons sit immediately under the caption). A 1px pad was too tight after resize/
   // CalculeBoundaryLine rounding and Overlay_ClearSuppressedContentDirt then froze those
   // controls until the next unrelated dirty.
   double caption_bottom = cy + ch;
@@ -2167,6 +2289,15 @@ void UI_MANAGER::ModalLayer_Release()
   modal_layer_y     = 0.0;
   modal_layer_w     = 0.0;
   modal_layer_h     = 0.0;
+  ModalLayer_ClearComboMenuRect();
+  modal_combo_menu_clear_pending = false;
+  modal_combo_menu_clear_x = modal_combo_menu_clear_y = 0.0;
+  modal_combo_menu_clear_w = modal_combo_menu_clear_h = 0.0;
+  if(modal_combo_menu_backdrop)
+    {
+      GEN_DELETE modal_combo_menu_backdrop;
+      modal_combo_menu_backdrop = NULL;
+    }
 }
 
 
@@ -2185,7 +2316,7 @@ void UI_MANAGER::ModalLayer_Release()
 * @return     bool : true if the operation is successful; otherwise false.
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
-bool UI_MANAGER::ModalLayer_Rect(UI_ELEMENT* modal, double& x, double& y, double& w, double& h)
+bool UI_MANAGER::ModalLayer_Rect(UI_ELEMENT* modal, double& x, double& y, double& w, double& h, bool include_combo_menus)
 {
   if(!modal || !modal->GetBoundaryLine()) return false;
 
@@ -2201,17 +2332,86 @@ bool UI_MANAGER::ModalLayer_Rect(UI_ELEMENT* modal, double& x, double& y, double
           h = vis->height;
           x = UI_BOUNDARYLINE_EdgeLeft(vis->x, w);
           y = UI_BOUNDARYLINE_EdgeTop (vis->y, h);
-          return true;
+        }
+       else
+        {
+          w = modal->GetBoundaryLine()->width;
+          h = modal->GetBoundaryLine()->height;
+          if(w <= 0.0 || h <= 0.0) return false;
+          x = UI_BOUNDARYLINE_EdgeLeft(modal->GetXPosition(), w);
+          y = UI_BOUNDARYLINE_EdgeTop (modal->GetYPosition(), h);
         }
     }
+   else
+    {
+      w = modal->GetBoundaryLine()->width;
+      h = modal->GetBoundaryLine()->height;
+      if(w <= 0.0 || h <= 0.0) return false;
 
-  w = modal->GetBoundaryLine()->width;
-  h = modal->GetBoundaryLine()->height;
-  if(w <= 0.0 || h <= 0.0) return false;
+      x = UI_BOUNDARYLINE_EdgeLeft(modal->GetXPosition(), w);
+      y = UI_BOUNDARYLINE_EdgeTop (modal->GetYPosition(), h);
+    }
 
-  x = UI_BOUNDARYLINE_EdgeLeft(modal->GetXPosition(), w);
-  y = UI_BOUNDARYLINE_EdgeTop (modal->GetYPosition(), h);
-  return true;
+  // Optionally expand AABB with visible combo dropdown menus (may hang outside the form).
+  // Wipe path uses form-only + per-menu rects so the L-gap beside an overhanging menu is never
+  // filled with form chrome (that was the "ghost plate" to the right of the popup).
+  if(include_combo_menus && modal->GetComposeElements())
+    {
+      double left   = x;
+      double top    = y;
+      double right  = x + w;
+      double bottom = y + h;
+
+      // Direct MENU children (legacy / listbox) plus COMBO-owned popups (may be nested).
+      for(XDWORD i=0; i<modal->GetComposeElements()->GetSize(); i++)
+        {
+          UI_ELEMENT* child = modal->GetComposeElements()->Get(i);
+          if(!child) continue;
+
+          UI_ELEMENT* menus[2] = { NULL, NULL };
+          int nmenus = 0;
+          if(child->GetType() == UI_ELEMENT_TYPE_MENU)
+            {
+              menus[nmenus++] = child;
+            }
+          else if(child->GetType() == UI_ELEMENT_TYPE_COMBO)
+            {
+              UI_ELEMENT_MENU* cm = ((UI_ELEMENT_COMBO*)child)->Get_UIMenu();
+              if(cm) menus[nmenus++] = cm;
+            }
+
+          for(int m=0; m<nmenus; m++)
+            {
+              UI_ELEMENT* menu = menus[m];
+              if(!menu || !menu->IsVisible() || !menu->GetBoundaryLine()) continue;
+
+              double cw = menu->GetBoundaryLine()->width;
+              double ch = menu->GetBoundaryLine()->height;
+              UI_ELEMENT_FORM* mform = (UI_ELEMENT_FORM*)menu;
+              UI_BOUNDARYLINE* vis = mform->GetVisibleRect();
+              if(cw <= 0.0 && vis) cw = vis->width;
+              if(ch <= 0.0 && vis) ch = vis->height;
+              if(cw <= 0.0 || ch <= 0.0) continue;
+
+              // Match Draw_Form mini-modal clip: XPosition is left, YPosition is bottom.
+              double cl = menu->GetXPosition();
+              double cb = menu->GetYPosition();
+              double ct = cb - ch;
+              double cr = cl + cw;
+              if(cl < left)   left   = cl;
+              if(ct < top)    top    = ct;
+              if(cr > right)  right  = cr;
+              if(cb > bottom) bottom = cb;
+            }
+        }
+
+      x = left;
+      y = top;
+      w = right - left;
+      h = bottom - top;
+    }
+
+  return (w > 0.0 && h > 0.0);
 }
 
 
@@ -2337,19 +2537,55 @@ bool UI_MANAGER::Element_DrawModalOnTop()
 
   if(xmutex_modal) xmutex_modal->Lock();
 
-  double x = 0.0;
-  double y = 0.0;
-  double w = 0.0;
-  double h = 0.0;
-  if(ModalLayer_Rect(element_modal, x, y, w, h))
+  // Previous paint AABB (may include a combo menu overhang). Kept across Invalidate().
+  const double prev_x = modal_layer_x;
+  const double prev_y = modal_layer_y;
+  const double prev_w = modal_layer_w;
+  const double prev_h = modal_layer_h;
+  const bool   had_prev = (prev_w > 0.5 && prev_h > 0.5);
+
+  // Form-only rect for the opaque wipe (never the form∪menu union — that filled the L-gap
+  // beside an overhanging combo menu with form chrome).
+  double fx = 0.0;
+  double fy = 0.0;
+  double fw = 0.0;
+  double fh = 0.0;
+  const bool have_form = ModalLayer_Rect(element_modal, fx, fy, fw, fh, false);
+
+  // Expanded rect (form ∪ visible combo menus) for shrink detection / layer bookkeeping.
+  double x = fx;
+  double y = fy;
+  double w = fw;
+  double h = fh;
+  if(!ModalLayer_Rect(element_modal, x, y, w, h, true))
+    {
+      if(xmutex_modal) xmutex_modal->UnLock();
+      return false;
+    }
+
+  // Sticky combo popup (OpenMenu) — ModalLayer_Rect often misses programmatic menus.
+  if(modal_combo_menu_active && modal_combo_menu_w > 0.5 && modal_combo_menu_h > 0.5)
+    {
+      const double left   = (modal_combo_menu_x < x) ? modal_combo_menu_x : x;
+      const double top    = (modal_combo_menu_y < y) ? modal_combo_menu_y : y;
+      const double right  = ((modal_combo_menu_x + modal_combo_menu_w) > (x + w))
+                              ? (modal_combo_menu_x + modal_combo_menu_w) : (x + w);
+      const double bottom = ((modal_combo_menu_y + modal_combo_menu_h) > (y + h))
+                              ? (modal_combo_menu_y + modal_combo_menu_h) : (y + h);
+      x = left;
+      y = top;
+      w = right - left;
+      h = bottom - top;
+    }
+
+  if(have_form || (w > 0.5 && h > 0.5))
     {
       modal_layer_x = x;
       modal_layer_y = y;
       modal_layer_w = w;
       modal_layer_h = h;
 
-      // Opaque wipe of the modal AABB on the LIVE canvas before drawing keys/fill. Guarantees no sibling
-      // formbackdrop/chrome pixels remain in the intersection even if the form fill uses round-rect / alpha.
+      // Opaque wipe of the FORM AABB only (not the union) before drawing keys/fill.
       UI_COLOR* fillsrc = NULL;
       if(element_modal->GetType() == UI_ELEMENT_TYPE_FORM || element_modal->GetType() == UI_ELEMENT_TYPE_MENU)
         {
@@ -2363,19 +2599,184 @@ bool UI_MANAGER::Element_DrawModalOnTop()
       XBYTE fb = fillsrc ? fillsrc->GetBlue()  : 200;
       GRP2DCOLOR_RGBA8 solid(fr, fg, fb, 255);
       GRP2DCOLOR_RGBA8 noline(0, 0, 0, 0);
+
+      // Nested layout Update / scrolleable PreDraw can leave a tight clip; form wipe + modal Draw
+      // must see the full canvas or the former combo-menu footprint stays as main-UI black.
+      XRECT clip_saved;
+      live->GetClipBox(clip_saved);
+      double canvas_w = live->GetWidth();
+      double canvas_h = live->GetHeight();
+      if(canvas_w < 1.0) canvas_w = 1.0;
+      if(canvas_h < 1.0) canvas_h = 1.0;
+      live->SetClipBox(0.0, canvas_h - 1.0, canvas_w - 1.0, 0.0);
+
       live->SetFillColor(&solid);
       live->SetLineColor(&noline);
       live->SetLineWidth(1.0f);
-      // GEN Rectangle: (x1,y1 bottom-left) (x2,y2 top-right) — same as Draw_Form.
-      live->Rectangle(x, y + h, x + w, y, true);
-    }
 
-  // Paint modal last on the live canvas. Compositing flag skips formbackdrop/optionbackdrop restores that
-  // would re-introduce ListBoxMenu pixels under the keys.
-  modal_layer_compositing = true;
-  Elements_SetToRedraw(element_modal);
-  skin_canvas->Draw(element_modal);
-  modal_layer_compositing = false;
+      // Do NOT late-capture while the menu is on screen: GetBitmap would bake the popup
+      // plate into the backdrop and dismiss would put that plate back. OpenMenu captures
+      // before SetVisible so the bitmap (when present) is pre-menu content only.
+
+      // Combo menu closed: previous AABB still holds the popup plate. Restore content under the
+      // overhang (skip the modal layout — it is repainted below), then re-wipe the form AABB.
+      if(had_prev)
+        {
+          const double pr = prev_x + prev_w;
+          const double pb = prev_y + prev_h;
+          const double nr = x + w;
+          const double nb = y + h;
+          const bool shrunk = (prev_x < (x - 0.5)) || (prev_y < (y - 0.5)) ||
+                              (pr > (nr + 0.5)) || (pb > (nb + 0.5));
+          if(shrunk && prev_w > 0.5 && prev_h > 0.5)
+            {
+              // Combo dismiss (select or click-outside): blit the pre-open backdrop under
+              // the NARROW popup rect. Restores overhang content exactly; form∩menu is
+              // then covered by the form wipe + Draw below. Never fill form∪menu.
+              if(modal_combo_menu_clear_pending &&
+                 modal_combo_menu_clear_w > 0.5 && modal_combo_menu_clear_h > 0.5)
+                {
+                  const double cx = modal_combo_menu_clear_x;
+                  const double cy = modal_combo_menu_clear_y;
+                  const double cw = modal_combo_menu_clear_w;
+                  const double ch = modal_combo_menu_clear_h;
+                  double restored_h = 0.0;
+
+                  if(modal_combo_menu_backdrop)
+                    {
+                      restored_h = (double)modal_combo_menu_backdrop->GetHeight();
+                      live->PutBitmapNoAlpha(cx, cy, modal_combo_menu_backdrop);
+                      GEN_DELETE modal_combo_menu_backdrop;
+                      modal_combo_menu_backdrop = NULL;
+                    }
+
+                  // If capture was missing/short, fill only the overhang BELOW the form
+                  // (never the form∩menu band) so a gray menu plate cannot linger there.
+                  // Never GetPixel here: config_modal has no layout backgroundcolor, and
+                  // sampling live pixels picked chrome (pure lime #00FF00 flash on dismiss).
+                  if(have_form)
+                    {
+                      const double form_bottom = fy + fh;
+                      const double gap_top = (cy + restored_h > form_bottom) ? (cy + restored_h) : form_bottom;
+                      const double gap_bot = cy + ch;
+                      if(gap_bot > gap_top + 0.5 && cw > 0.5)
+                        {
+                          // Page charcoal (skin/XML default). Prefer layout bg, else the modal
+                          // form fill (CSS --page-bg on config-modal) — never sample live pixels.
+                          XBYTE pr = 24, pg = 28, pb = 36;
+                          UI_COLOR* bg = NULL;
+                          if(layout->GetBackground() && layout->GetBackground()->GetColor() &&
+                             layout->GetBackground()->GetColor()->IsValid())
+                            {
+                              bg = layout->GetBackground()->GetColor();
+                            }
+                          else if(element_modal &&
+                                  (element_modal->GetType() == UI_ELEMENT_TYPE_FORM ||
+                                   element_modal->GetType() == UI_ELEMENT_TYPE_MENU))
+                            {
+                              UI_ELEMENT_FORM* form = (UI_ELEMENT_FORM*)element_modal;
+                              UI_COLOR* fbg = form->IsBackgroundColorSet() ? form->GetBackgroundColor()
+                                                                          : form->GetColor();
+                              if(fbg && fbg->IsValid()) bg = fbg;
+                            }
+                          if(bg)
+                            {
+                              pr = (XBYTE)bg->GetRed();
+                              pg = (XBYTE)bg->GetGreen();
+                              pb = (XBYTE)bg->GetBlue();
+                            }
+                          GRP2DCOLOR_RGBA8 gapfill(pr, pg, pb, 255);
+                          live->SetFillColor(&gapfill);
+                          live->SetLineColor(&noline);
+                          live->SetLineWidth(1.0f);
+                          live->Rectangle(cx, gap_bot, cx + cw, gap_top, true);
+                        }
+                    }
+
+                  modal_combo_menu_clear_pending = false;
+                  modal_combo_menu_clear_x = modal_combo_menu_clear_y = 0.0;
+                  modal_combo_menu_clear_w = modal_combo_menu_clear_h = 0.0;
+                }
+
+              live->SetFillColor(&solid);
+              live->SetLineColor(&noline);
+              live->SetLineWidth(1.0f);
+            }
+        }
+
+      // GEN Rectangle: (x1,y1 bottom-left) (x2,y2 top-right) — same as Draw_Form.
+      if(have_form)
+        {
+          live->Rectangle(fx, fy + fh, fx + fw, fy, true);
+        }
+
+      // Wipe each visible combo menu with its OWN fill (tight to the menu AABB only).
+      if(element_modal->GetComposeElements())
+        {
+          for(XDWORD i=0; i<element_modal->GetComposeElements()->GetSize(); i++)
+            {
+              UI_ELEMENT* child = element_modal->GetComposeElements()->Get(i);
+              if(!child || !child->IsVisible() || !child->GetBoundaryLine()) continue;
+              if(child->GetType() != UI_ELEMENT_TYPE_MENU) continue;
+
+              double mw = child->GetBoundaryLine()->width;
+              double mh = child->GetBoundaryLine()->height;
+              if(mw <= 0.0 || mh <= 0.0) continue;
+
+              double cl = UI_BOUNDARYLINE_EdgeLeft(child->GetXPosition(), mw);
+              double ct = UI_BOUNDARYLINE_EdgeTop (child->GetYPosition(), mh);
+
+              UI_COLOR* mfill = NULL;
+              UI_ELEMENT_FORM* mform = (UI_ELEMENT_FORM*)child;
+              mfill = mform->IsBackgroundColorSet() ? mform->GetBackgroundColor() : mform->GetColor();
+              if(!mfill) mfill = fillsrc;
+
+              XBYTE mr = mfill ? mfill->GetRed()   : fr;
+              XBYTE mg = mfill ? mfill->GetGreen() : fg;
+              XBYTE mb = mfill ? mfill->GetBlue()  : fb;
+              GRP2DCOLOR_RGBA8 msolid(mr, mg, mb, 255);
+              live->SetFillColor(&msolid);
+              live->SetLineColor(&noline);
+              live->Rectangle(cl, ct + mh, cl + mw, ct, true);
+            }
+        }
+
+      // Paint modal last on the live canvas. Compositing flag skips formbackdrop/optionbackdrop restores that
+      // would re-introduce ListBoxMenu pixels under the keys.
+      modal_layer_compositing = true;
+      Elements_SetToRedraw(element_modal);
+      // Elements_SetToRedraw re-dirties hidden combo MENUs; clear them so Draw does not
+      // RestoreOnHide a stale popup plate over the form (see UI_SKIN::Draw invisible path).
+      if(element_modal->GetComposeElements())
+        {
+          for(XDWORD i=0; i<element_modal->GetComposeElements()->GetSize(); i++)
+            {
+              UI_ELEMENT* child = element_modal->GetComposeElements()->Get(i);
+              if(!child || child->IsVisible()) continue;
+              if(child->GetType() != UI_ELEMENT_TYPE_MENU) continue;
+              child->SetMustReDraw(false);
+              if(child->GetComposeElements())
+                {
+                  for(XDWORD j=0; j<child->GetComposeElements()->GetSize(); j++)
+                    {
+                      UI_ELEMENT* gc = child->GetComposeElements()->Get(j);
+                      if(gc) gc->SetMustReDraw(false);
+                    }
+                }
+            }
+        }
+      skin_canvas->Draw(element_modal);
+      modal_layer_compositing = false;
+
+      live->SetClipBox(clip_saved);
+    }
+  else
+    {
+      modal_layer_compositing = true;
+      Elements_SetToRedraw(element_modal);
+      skin_canvas->Draw(element_modal);
+      modal_layer_compositing = false;
+    }
 
   // Mark cache "valid" only so layout Update defers the modal root (avoids drawing it twice per frame).
   // The authoritative pixels are always those just painted on the live canvas above — no offscreen bitmap.
@@ -6721,6 +7122,51 @@ UI_ELEMENT* UI_MANAGER::GetLayoutElement_EditText(XFILEXMLELEMENT* node, UI_LAYO
 
 
 /**-------------------------------------------------------------------------------------------------------------------
+*
+* @fn         UI_ELEMENT* UI_MANAGER::GetLayoutElement_Combo(XFILEXMLELEMENT* node, UI_LAYOUT* layout, UI_ELEMENT* father, UI_ELEMENT* element_legacy)
+* @brief      Get layout element combo (edittext attrs + drop button).
+* @ingroup    USERINTERFACE
+*
+*---------------------------------------------------------------------------------------------------------------------*/
+UI_ELEMENT* UI_MANAGER::GetLayoutElement_Combo(XFILEXMLELEMENT* node, UI_LAYOUT* layout, UI_ELEMENT* father, UI_ELEMENT* element_legacy)
+{
+  UI_ELEMENT_COMBO* element_combo = GEN_NEW UI_ELEMENT_COMBO();
+  if(!element_combo) return NULL;
+
+  UI_ELEMENT* created = GetLayoutElement_Text(node, layout, father, element_combo);
+  if(!created) return NULL;
+
+  XSTRING modestr;
+  if(GetLayoutElementValue(node, NL("inputmode"), modestr) && !modestr.IsEmpty())
+    {
+      element_combo->SetInputModeFromString(modestr.Get());
+    }
+
+  double dval = 0.0;
+  if(GetLayoutElementValue(node, NL("valuemin"), dval) || GetLayoutElementValue(node, NL("minvalue"), dval))
+    {
+      element_combo->SetValueMin((int)dval);
+    }
+  if(GetLayoutElementValue(node, NL("valuemax"), dval) || GetLayoutElementValue(node, NL("maxvalue"), dval))
+    {
+      element_combo->SetValueMax((int)dval);
+    }
+  if(GetLayoutElementValue(node, NL("valuestep"), dval) || GetLayoutElementValue(node, NL("stepvalue"), dval))
+    {
+      element_combo->SetValueStep((int)dval);
+    }
+
+  if(element_combo->GetInputMode() == UI_ELEMENT_EDITTEXT_INPUTMODE_NUMERIC)
+    {
+      element_combo->SanitizeTextToMode();
+    }
+
+  element_combo->EnsureMenu(layout);
+  return created;
+}
+
+
+/**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         UI_ELEMENT* UI_MANAGER::GetLayoutElement_Form(XFILEXMLELEMENT* node, UI_LAYOUT* layout, UI_ELEMENT* father, UI_ELEMENT* element_legacy)
 * @brief      Get layout element form
@@ -6761,6 +7207,28 @@ UI_ELEMENT* UI_MANAGER::GetLayoutElement_Form(XFILEXMLELEMENT* node, UI_LAYOUT* 
   SetLevelAuto(element_form, father);
 
   outstyle.GetColor(NL("linecolor"), *element_form->GetLineColor());
+
+  // Forms are scrolleable; default overflow is AUTO. Honour authored overflow-x/y (config/filters
+  // modals use overflow:hidden) so a combo mini-modal hanging past the form never enables scrollbars.
+  {
+    XSTRING overflowy;
+    if(outstyle.Get(NL("overflow-y"), overflowy) || outstyle.Get(NL("overflow"), overflowy))
+      {
+        if(!overflowy.Compare(NL("hidden"), true))        element_form->Scroll_SetOverflow(UI_PROPERTY_SCROLLEABLE_TYPE_VERTICAL, UI_OVERFLOW_HIDDEN);
+         else if(!overflowy.Compare(NL("scroll"), true))  element_form->Scroll_SetOverflow(UI_PROPERTY_SCROLLEABLE_TYPE_VERTICAL, UI_OVERFLOW_SCROLL);
+           else if(!overflowy.Compare(NL("auto"), true))  element_form->Scroll_SetOverflow(UI_PROPERTY_SCROLLEABLE_TYPE_VERTICAL, UI_OVERFLOW_AUTO);
+             else if(!overflowy.Compare(NL("visible"), true)) element_form->Scroll_SetOverflow(UI_PROPERTY_SCROLLEABLE_TYPE_VERTICAL, UI_OVERFLOW_VISIBLE);
+      }
+
+    XSTRING overflowx;
+    if(outstyle.Get(NL("overflow-x"), overflowx))
+      {
+        if(!overflowx.Compare(NL("hidden"), true))        element_form->Scroll_SetOverflow(UI_PROPERTY_SCROLLEABLE_TYPE_HORIZONTAL, UI_OVERFLOW_HIDDEN);
+         else if(!overflowx.Compare(NL("scroll"), true))  element_form->Scroll_SetOverflow(UI_PROPERTY_SCROLLEABLE_TYPE_HORIZONTAL, UI_OVERFLOW_SCROLL);
+           else if(!overflowx.Compare(NL("auto"), true))  element_form->Scroll_SetOverflow(UI_PROPERTY_SCROLLEABLE_TYPE_HORIZONTAL, UI_OVERFLOW_AUTO);
+             else if(!overflowx.Compare(NL("visible"), true)) element_form->Scroll_SetOverflow(UI_PROPERTY_SCROLLEABLE_TYPE_HORIZONTAL, UI_OVERFLOW_VISIBLE);
+      }
+  }
 
   GetLayoutElement_CalculateBoundaryLine(layout, element_form);
 
@@ -7535,6 +8003,11 @@ UI_ELEMENT* UI_MANAGER::CreatePartialLayout(XFILEXMLELEMENT* nodeelement, UI_LAY
       if(!value.Compare(NL("edittext")       , true))  
         {
           element = GetLayoutElement_EditText(nodeelement, layout, father);          
+        }
+
+      if(!value.Compare(NL("combo")          , true))
+        {
+          element = GetLayoutElement_Combo(nodeelement, layout, father);
         }
 
       if(!value.Compare(NL("form")           , true))  
@@ -8485,7 +8958,8 @@ UI_ELEMENT* UI_MANAGER::PreSelectElement(UI_ELEMENT* element, int x, int y)
               // the first click (which may SetSelected when no virtual keyboard is wired).
               if(element->IsSelected() && !allow_selected_hover &&
                  (element->GetType() != UI_ELEMENT_TYPE_RADIOBUTTON) &&
-                 (element->GetType() != UI_ELEMENT_TYPE_EDITTEXT))
+                 (element->GetType() != UI_ELEMENT_TYPE_EDITTEXT) &&
+                 (element->GetType() != UI_ELEMENT_TYPE_COMBO))
                 {
                   preselect = false;
                 }
@@ -8494,7 +8968,9 @@ UI_ELEMENT* UI_MANAGER::PreSelectElement(UI_ELEMENT* element, int x, int y)
           // A partially-hidden option (clipped by a scrollable ancestor's viewport) must NOT be selectable. Require the
           // option box to be fully inside the viewport on every axis the ancestor clips (a VISIBLE axis is never clipped,
           // so it is not restricted there).
-          if(preselect)
+          // Exception: combo dropdown menus are mini-modals that may hang past the host form overflow:hidden —
+          // their options stay selectable even when outside the form AABB.
+          if(preselect && !UI_ELEMENT_COMBO::ElementIsInsideOpenComboMenu(element))
             {
               UI_ELEMENT* anc = element->GetFather();
               while(anc)
@@ -8594,6 +9070,18 @@ UI_ELEMENT* UI_MANAGER::PreSelectElement(UI_ELEMENT* element, int x, int y)
             }
         }
     }
+  else
+    {
+      // Outside this element's AABB: still hit-test open combo dropdowns that hang past the
+      // host form (config Puerto UDP/UART). Without this, PreSelect never reaches overhanging
+      // options because recursion is gated on intofather above.
+      UI_ELEMENT_MENU* overhang_menu = UI_ELEMENT_COMBO::FindOpenMenuUnderPoint(element, x, y);
+      if(overhang_menu)
+        {
+          UI_ELEMENT* found = PreSelectElement(overhang_menu, x, y);
+          if(found) preselect_element = found;
+        }
+    }
 
   return preselect_element;
 }
@@ -8675,10 +9163,28 @@ bool UI_MANAGER::SelectedElement(UI_ELEMENT* element)
 
   // XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, NL("UI Element [%s]: Selected. "), element->GetName()->Get());
 
-  if(element->GetType() == UI_ELEMENT_TYPE_EDITTEXT)
+  if((element->GetType() == UI_ELEMENT_TYPE_EDITTEXT) || (element->GetType() == UI_ELEMENT_TYPE_COMBO))
     {
       UI_ELEMENT_EDITTEXT* edit = (UI_ELEMENT_EDITTEXT*)element;
-      int spin = edit->HitTestSpin(last_xposition, last_yposition);
+
+      // Hit-tests must use design coords. last_* is design after PreSelectElement, but keep a
+      // local copy so a concurrent CURSOR_MOVE cannot race the drop/spin hit with screen px.
+      const int hx = last_xposition;
+      const int hy = last_yposition;
+
+      if(element->GetType() == UI_ELEMENT_TYPE_COMBO)
+        {
+          UI_ELEMENT_COMBO* combo = (UI_ELEMENT_COMBO*)element;
+          if(combo->HitTestDropButton(hx, hy))
+            {
+              combo->ToggleMenu();
+              Elements_SetToRedraw(combo);
+              if(element_modal) ModalLayer_Invalidate();
+              return true;
+            }
+        }
+
+      int spin = edit->HitTestSpin(hx, hy);
       if(spin != 0)
         {
           if(edit->StepNumericValue(spin))
@@ -8762,6 +9268,41 @@ bool UI_MANAGER::SelectedElement(UI_ELEMENT* element)
           if(virtualkeyboard->SelectInput(element)) 
             {
               return true;
+            }
+        }
+
+      // Combo dropdown option → write value into the owning combo edit.
+      if(element->GetType() == UI_ELEMENT_TYPE_OPTION)
+        {
+          UI_ELEMENT* menufather = element->GetFather();
+          if(menufather && (menufather->GetType() == UI_ELEMENT_TYPE_MENU))
+            {
+              UI_ELEMENT_COMBO* combo = NULL;
+              UI_ELEMENT* host = menufather->GetFather();
+              if(host && (host->GetType() == UI_ELEMENT_TYPE_COMBO) &&
+                 (((UI_ELEMENT_COMBO*)host)->Get_UIMenu() == (UI_ELEMENT_MENU*)menufather))
+                {
+                  combo = (UI_ELEMENT_COMBO*)host;
+                }
+               else if(host)
+                {
+                  // Menu is a sibling under the form: find the combo that owns it.
+                  for(XDWORD i=0; i<host->GetComposeElements()->GetSize(); i++)
+                    {
+                      UI_ELEMENT* sib = host->GetComposeElements()->Get(i);
+                      if(!sib || (sib->GetType() != UI_ELEMENT_TYPE_COMBO)) continue;
+                      UI_ELEMENT_COMBO* c = (UI_ELEMENT_COMBO*)sib;
+                      if(c->Get_UIMenu() == (UI_ELEMENT_MENU*)menufather) { combo = c; break; }
+                    }
+                }
+              if(combo && combo->ApplyMenuOption(element))
+                {
+                  Elements_SetToRedraw(combo);
+                  if(element_modal) ModalLayer_Invalidate();
+                  SendEvent(UI_XEVENT_TYPE_OUTPUT_CHANGECONTENTS, combo);
+                  SendEvent(UI_XEVENT_TYPE_OUTPUT_SELECTED, element);
+                  return true;
+                }
             }
         }
 
@@ -10469,6 +11010,10 @@ void UI_MANAGER::HandleEvent_UI(UI_XEVENT* event)
                                                               int design_x = screen_x;
                                                               int design_y = screen_y;
                                                               MapScreenToDesign(element_modal->GetLayout(), screen_x, screen_y, design_x, design_y);
+                                                              // Combo drop/spin hit-tests read last_*; keep them in design px for
+                                                              // this click even if a CURSOR_MOVE stored screen px moments earlier.
+                                                              last_xposition = design_x;
+                                                              last_yposition = design_y;
                                                               _preselect_element = PreSelectElement(element_modal, design_x, design_y);
                                                             }
                                                            else
@@ -10499,6 +11044,29 @@ void UI_MANAGER::HandleEvent_UI(UI_XEVENT* event)
                                                               preselect_element = _preselect_element;
                                                             }
                                                         }
+
+                                                        // Combo mini-modal: click outside an open dropdown closes it and
+                                                        // rebuilds the overlay zone. Selection inside the menu keeps it
+                                                        // for ApplyMenuOption; the owning combo drop button toggles itself.
+                                                        if(element_modal)
+                                                          {
+                                                            int design_x = screen_x;
+                                                            int design_y = screen_y;
+                                                            MapScreenToDesign(element_modal->GetLayout(), screen_x, screen_y, design_x, design_y);
+
+                                                            bool keep_for_toggle = false;
+                                                            if(preselect_element && (preselect_element->GetType() == UI_ELEMENT_TYPE_COMBO))
+                                                              {
+                                                                UI_ELEMENT_COMBO* c = (UI_ELEMENT_COMBO*)preselect_element;
+                                                                if(c->IsMenuVisible() && c->HitTestDropButton(design_x, design_y))
+                                                                  keep_for_toggle = true;
+                                                              }
+
+                                                            if(!UI_ELEMENT_COMBO::ElementIsInsideOpenComboMenu(preselect_element) && !keep_for_toggle)
+                                                              {
+                                                                UI_ELEMENT_COMBO::CloseAllVisibleMenus(element_modal, NULL);
+                                                              }
+                                                          }
 
                                                         // Phase 4: :pressed mirrors pointer-down on the hovered selectable.
                                                         if(preselect_element) preselect_element->SetPressed(true);
@@ -10810,6 +11378,17 @@ void UI_MANAGER::Clean()
   modal_layer_h            = 0.0;
   modal_layer_valid        = false;
   modal_layer_compositing  = false;
+  modal_combo_menu_active  = false;
+  modal_combo_menu_x       = 0.0;
+  modal_combo_menu_y       = 0.0;
+  modal_combo_menu_w       = 0.0;
+  modal_combo_menu_h       = 0.0;
+  modal_combo_menu_clear_pending = false;
+  modal_combo_menu_clear_x = 0.0;
+  modal_combo_menu_clear_y = 0.0;
+  modal_combo_menu_clear_w = 0.0;
+  modal_combo_menu_clear_h = 0.0;
+  modal_combo_menu_backdrop = NULL;
 
   xmutex_UIevent      = NULL;
 

@@ -64,6 +64,7 @@ enum UI_ELEMENT_TYPE
 	UI_ELEMENT_TYPE_RADIOBUTTON												,		
 	UI_ELEMENT_TYPE_RADIOGROUP												,		
 	UI_ELEMENT_TYPE_EDITTEXT													,		
+	UI_ELEMENT_TYPE_COMBO															,
 	UI_ELEMENT_TYPE_FORM															,
 	UI_ELEMENT_TYPE_MENU															,				
 	UI_ELEMENT_TYPE_LISTBOX														,			

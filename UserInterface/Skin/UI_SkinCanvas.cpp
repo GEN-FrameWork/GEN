@@ -78,6 +78,7 @@
 #include "UI_Element_RadioButton.h"
 #include "UI_Element_RadioGroup.h"
 #include "UI_Element_EditText.h"
+#include "UI_Element_Combo.h"
 #include "UI_Element_Form.h"
 #include "UI_Element_Menu.h"
 #include "UI_Element_ListBox.h"
@@ -3945,7 +3946,9 @@ bool UI_SKINCANVAS::CalculateBoundaryLine_Form(UI_ELEMENT* element, bool adjusts
                                             for(XDWORD c=0; c<element_form->GetComposeElements()->GetSize(); c++)
                                               {
                                                UI_ELEMENT* subelement = (UI_ELEMENT*)element->GetComposeElements()->Get(c);
-                                               if(subelement) maximgwidth = __MAX((GetPositionWithoutDefine(subelement->GetBoundaryLine()->x) + subelement->GetBoundaryLine()->width), maximgwidth);
+                                               // Combo dropdown menus hang outside as mini-modals — never grow the form.
+                                               if(!subelement || (subelement->GetType() == UI_ELEMENT_TYPE_MENU)) continue;
+                                               maximgwidth = __MAX((GetPositionWithoutDefine(subelement->GetBoundaryLine()->x) + subelement->GetBoundaryLine()->width), maximgwidth);
                                               }
 
                                             element->GetBoundaryLine()->width = maximgwidth;
@@ -3964,7 +3967,8 @@ bool UI_SKINCANVAS::CalculateBoundaryLine_Form(UI_ELEMENT* element, bool adjusts
                                             for(XDWORD c=0; c<element->GetComposeElements()->GetSize(); c++)
                                               {
                                                UI_ELEMENT* subelement = (UI_ELEMENT*)element->GetComposeElements()->Get(c);
-                                               if(subelement) maximgheight = __MAX((GetPositionWithoutDefine(subelement->GetBoundaryLine()->y) + subelement->GetBoundaryLine()->height), maximgheight);                                                    
+                                               if(!subelement || (subelement->GetType() == UI_ELEMENT_TYPE_MENU)) continue;
+                                               maximgheight = __MAX((GetPositionWithoutDefine(subelement->GetBoundaryLine()->y) + subelement->GetBoundaryLine()->height), maximgheight);                                                    
                                               }
 
                                             element->GetBoundaryLine()->height = maximgheight;
@@ -7417,8 +7421,35 @@ bool UI_SKINCANVAS::Draw_Option(UI_ELEMENT* element)
             }
         }
 
+      // Combo menu options: clip each column TEXT to its box so overflow cannot bleed into the next column.
+      const bool clip_combo_cols = (element_option->GetFather() &&
+                                    element_option->GetFather()->GetType() == UI_ELEMENT_TYPE_MENU);
+      auto draw_text_clipped = [&](UI_ELEMENT* te)
+        {
+          if(!te) return;
+          if(!clip_combo_cols || !te->GetBoundaryLine() || !GetCanvas())
+            {
+              Draw(te);
+              return;
+            }
+          GRP2DCANVAS* cv = GetCanvas();
+          XRECT saved;
+          cv->GetClipBox(saved);
+          double tl = UI_BOUNDARYLINE_EdgeLeft(te->GetXPosition(), te->GetBoundaryLine()->width);
+          double tt = UI_BOUNDARYLINE_EdgeTop(te->GetYPosition(), te->GetBoundaryLine()->height);
+          double tw = te->GetBoundaryLine()->width;
+          double th = te->GetBoundaryLine()->height;
+          if(tw > 1.0 && th > 1.0)
+            {
+              // SetClipBox(left, bottom, right, top)
+              cv->SetClipBox(tl, tt + th, tl + tw, tt);
+            }
+          Draw(te);
+          cv->SetClipBox(saved);
+        };
+
       if(element_animation)  Draw(element_animation);
-      if(element_text)       Draw(element_text);
+      if(element_text)       draw_text_clipped(element_text);
 
       // Extra compose TEXT siblings (e.g. UI_Options gallery row dates nested in the button) — not
       // returned by Get_UIText(), which only tracks the primary label.
@@ -7427,7 +7458,7 @@ bool UI_SKINCANVAS::Draw_Option(UI_ELEMENT* element)
           UI_ELEMENT* sub = element_option->GetComposeElements()->Get(c);
           if(!sub || (sub->GetType() != UI_ELEMENT_TYPE_TEXT)) continue;
           if(sub == (UI_ELEMENT*)element_text) continue;
-          Draw(sub);
+          draw_text_clipped(sub);
         }
 
       // MULTIOPTION under-icon legend band: after the bubble face is on screen, opaque-fill the
@@ -8098,26 +8129,60 @@ bool UI_SKINCANVAS::Draw_EditText(UI_ELEMENT* element)
           canvas->Rectangle(box_l, box_b, box_r, box_t, true);
         }
 
-      double spin_w = element_edittext->GetSpinWidth();
+      double trailing_w = element_edittext->GetSpinWidth();
       double text_r = box_r;
 
-      // Numeric spin: divider + +/- centered in each half (no well fill).
+      // Trailing strip: numeric +/- and/or combo drop chevron (combo numeric = +/- then drop).
       double box_h = box_b - box_t;
-      if(spin_w > 0.0)
+      if(trailing_w > 0.0)
         {
-          double spin_l = box_r - spin_w;
+          const bool is_combo = (element->GetType() == UI_ELEMENT_TYPE_COMBO);
+          double drop_w = 0.0;
+          if(is_combo)
+            {
+              UI_ELEMENT_COMBO* combo = (UI_ELEMENT_COMBO*)element_edittext;
+              drop_w = combo->GetDropWidth();
+            }
+          const bool has_spin = (element_edittext->GetInputMode() == UI_ELEMENT_EDITTEXT_INPUTMODE_NUMERIC);
+          double spin_only_w = has_spin ? UI_ELEMENT_EDITTEXT_SPIN_WIDTH : 0.0;
+
+          double trail_l = box_r - trailing_w;
+          double drop_l  = box_r - drop_w;
+          double spin_l  = has_spin ? (is_combo ? (drop_l - spin_only_w) : trail_l) : trail_l;
+          double spin_r  = is_combo ? drop_l : box_r;
+
           double mid_y  = box_b + ((box_t - box_b) * 0.5);
           double pad    = border_w + 1.0;
           if(pad < 1.5) pad = 1.5;
-          text_r = spin_l;
+          text_r = trail_l;
 
           GRP2DCOLOR_RGBA8 divink = has_border ? linecolor : color;
           if(divink.a < 180) divink.a = 220;
           canvas->SetLineColor(&divink);
           canvas->SetFillColor(&divink);
+          // All trail dividers (vertical + +/- mid) as 1px filled rects — same ink,
+          // same weight. Line() AA made the horizontal look unlike its neighbours.
+          canvas->SetLineWidth(0.0f);
+          {
+            const double v0 = (double)((int)(trail_l + 0.5));
+            canvas->Rectangle(v0, box_b - pad, v0 + 1.0, box_t + pad, true);
+            if(is_combo && has_spin && (drop_l > trail_l + 1.0))
+              {
+                const double v1 = (double)((int)(drop_l + 0.5));
+                canvas->Rectangle(v1, box_b - pad, v1 + 1.0, box_t + pad, true);
+              }
+            if(has_spin && (spin_only_w > 0.0) && (spin_r > spin_l + 1.0))
+              {
+                const double mid_line = (double)((int)(mid_y + 0.5));
+                const double hx0 = (double)((int)(spin_l + 0.5));
+                const double hx1 = (double)((int)(spin_r + 0.5));
+                if(hx1 > hx0)
+                  {
+                    canvas->Rectangle(hx0, mid_line + 1.0, hx1, mid_line, true);
+                  }
+              }
+          }
           canvas->SetLineWidth(1.0f);
-          canvas->Line(spin_l, box_b - pad, spin_l, box_t + pad);
-          canvas->Line(spin_l + 2.0, mid_y, box_r - pad, mid_y);
 
           GRP2DCOLOR_RGBA8 glyph = color;
           if(glyph.a < 220) glyph.a = 255;
@@ -8125,19 +8190,32 @@ bool UI_SKINCANVAS::Draw_EditText(UI_ELEMENT* element)
           canvas->SetFillColor(&glyph);
           canvas->SetLineWidth(1.75f);
 
-          // Exact center of upper / lower halves.
-          double cx      = spin_l + ((box_r - spin_l) * 0.5);
-          double plus_y  = (box_t + mid_y) * 0.5;
-          double minus_y = (mid_y + box_b) * 0.5;
-          double half_h  = (mid_y - box_t) * 0.5;
-          double arm     = 3.5;
-          double max_arm = half_h - pad - 1.0;
-          if(max_arm < 2.0) max_arm = 2.0;
-          if(arm > max_arm) arm = max_arm;
+          if(has_spin && (spin_only_w > 0.0))
+            {
+              double cx = spin_l + ((spin_r - spin_l) * 0.5);
 
-          canvas->Line(cx - arm, plus_y,  cx + arm, plus_y);
-          canvas->Line(cx, plus_y - arm,  cx, plus_y + arm);
-          canvas->Line(cx - arm, minus_y, cx + arm, minus_y);
+              double plus_y  = (box_t + mid_y) * 0.5;
+              double minus_y = (mid_y + box_b) * 0.5;
+              double half_h  = (mid_y - box_t) * 0.5;
+              double arm     = 3.5;
+              double max_arm = half_h - pad - 1.0;
+              if(max_arm < 2.0) max_arm = 2.0;
+              if(arm > max_arm) arm = max_arm;
+
+              canvas->Line(cx - arm, plus_y,  cx + arm, plus_y);
+              canvas->Line(cx, plus_y - arm,  cx, plus_y + arm);
+              canvas->Line(cx - arm, minus_y, cx + arm, minus_y);
+            }
+
+          if(is_combo && (drop_w > 0.0))
+            {
+              double cx   = drop_l + ((box_r - drop_l) * 0.5);
+              double cy   = mid_y;
+              double arm  = 4.0;
+              double drop = 3.5;
+              canvas->Line(cx - arm, cy - drop * 0.35, cx, cy + drop * 0.65);
+              canvas->Line(cx, cy + drop * 0.65, cx + arm, cy - drop * 0.35);
+            }
           canvas->SetLineWidth(1.0f);
         }
 
@@ -8803,20 +8881,35 @@ bool UI_SKINCANVAS::Draw_Form(UI_ELEMENT* element)
           // under an active clip (ModalLayer / element clip) and used to fall through to Dark-only
           // 0x191E24 — Light theme then shows black AABB "picos". Prefer the form's own opaque fill
           // (same ink Element_DrawModalOnTop already wiped) before that hardcoded charcoal.
+          // MENU popups (combo dropdown) hang past the host form: father chrome is darker than the
+          // menu plate, so AA seeded with father fill reads as a transparent right-edge gutter.
           GRP2DCOLOR_RGBA8 corner_parent(0, 0, 0, 255);
           const GRP2DCOLOR_RGBA8* corner_parent_ptr = NULL;
           {
-            UI_ELEMENT* father = element_form->GetFather();
-            UI_COLOR* fbg = NULL;
-            if(father)
+            UI_COLOR* ownbg = element_form->IsBackgroundColorSet() ? element_form->GetBackgroundColor()
+                                                                    : element_form->GetColor();
+            const bool menu_popup = (element_form->GetType() == UI_ELEMENT_TYPE_MENU);
+            if(menu_popup && ownbg && ownbg->GetAlpha() > 0 &&
+               (ownbg->GetRed() + ownbg->GetGreen() + ownbg->GetBlue()) > 8)
               {
-                if(father->IsBackgroundColorSet()) fbg = father->GetBackgroundColor();
-                else fbg = father->GetColor();
-              }
-            if(fbg && fbg->GetAlpha() > 0 && (fbg->GetRed() + fbg->GetGreen() + fbg->GetBlue()) > 8)
-              {
-                corner_parent = GRP2DCOLOR_RGBA8((XBYTE)fbg->GetRed(), (XBYTE)fbg->GetGreen(), (XBYTE)fbg->GetBlue(), (XBYTE)fbg->GetAlpha());
+                corner_parent = GRP2DCOLOR_RGBA8((XBYTE)ownbg->GetRed(), (XBYTE)ownbg->GetGreen(),
+                                                (XBYTE)ownbg->GetBlue(), 255);
                 corner_parent_ptr = &corner_parent;
+              }
+            if(!corner_parent_ptr)
+              {
+                UI_ELEMENT* father = element_form->GetFather();
+                UI_COLOR* fbg = NULL;
+                if(father)
+                  {
+                    if(father->IsBackgroundColorSet()) fbg = father->GetBackgroundColor();
+                    else fbg = father->GetColor();
+                  }
+                if(fbg && fbg->GetAlpha() > 0 && (fbg->GetRed() + fbg->GetGreen() + fbg->GetBlue()) > 8)
+                  {
+                    corner_parent = GRP2DCOLOR_RGBA8((XBYTE)fbg->GetRed(), (XBYTE)fbg->GetGreen(), (XBYTE)fbg->GetBlue(), (XBYTE)fbg->GetAlpha());
+                    corner_parent_ptr = &corner_parent;
+                  }
               }
             // Do not sample canvas neighbours on transparent screens: leftover/opaque junk would
             // become an opaque seed under black,N and destroy the frosted alpha (same as 0x191E24).
@@ -8838,16 +8931,12 @@ bool UI_SKINCANVAS::Draw_Form(UI_ELEMENT* element)
                       }
                   }
               }
-            if(!corner_parent_ptr)
+            if(!corner_parent_ptr && ownbg && ownbg->GetAlpha() > 0 &&
+               (ownbg->GetRed() + ownbg->GetGreen() + ownbg->GetBlue()) > 8)
               {
-                UI_COLOR* ownbg = element_form->IsBackgroundColorSet() ? element_form->GetBackgroundColor()
-                                                                        : element_form->GetColor();
-                if(ownbg && ownbg->GetAlpha() > 0 && (ownbg->GetRed() + ownbg->GetGreen() + ownbg->GetBlue()) > 8)
-                  {
-                    corner_parent = GRP2DCOLOR_RGBA8((XBYTE)ownbg->GetRed(), (XBYTE)ownbg->GetGreen(),
-                                                    (XBYTE)ownbg->GetBlue(), 255);
-                    corner_parent_ptr = &corner_parent;
-                  }
+                corner_parent = GRP2DCOLOR_RGBA8((XBYTE)ownbg->GetRed(), (XBYTE)ownbg->GetGreen(),
+                                                (XBYTE)ownbg->GetBlue(), 255);
+                corner_parent_ptr = &corner_parent;
               }
           }
 
@@ -8869,7 +8958,11 @@ bool UI_SKINCANVAS::Draw_Form(UI_ELEMENT* element)
             canvas->SetFillColor(&seed_bg);
             canvas->SetLineColor(&line_none);
             canvas->SetLineWidth(1.0f);
-            canvas->Rectangle(vr_minx - 1.0, vr_maxy + 1.0, vr_maxx + 1.0, vr_miny - 1.0, true);
+            // Combo MENU: keep seed inside the AABB so the plate matches the edit field
+            // width (the ±1 inflate painted 1px past each side of the combo frame).
+            const bool seed_menu = (element_form->GetType() == UI_ELEMENT_TYPE_MENU);
+            if(seed_menu) canvas->Rectangle(vr_minx, vr_maxy, vr_maxx, vr_miny, true);
+            else          canvas->Rectangle(vr_minx - 1.0, vr_maxy + 1.0, vr_maxx + 1.0, vr_miny - 1.0, true);
 
             UI_COLOR* fillsrc2 = element_form->IsBackgroundColorSet() ? element_form->GetBackgroundColor()
                                                                        : element_form->GetColor();
@@ -8909,20 +9002,34 @@ bool UI_SKINCANVAS::Draw_Form(UI_ELEMENT* element)
         {
           // Use the same padded content box (vr_*) as the per-corner branch so fill, stroke and tip-punch agree.
           // Sample TRUE backdrop BEFORE RoundRect paints -- after paint, outside GetPixel can still see AA tips.
+          // MENU popups: seed with own plate (not father chrome) — see per-corner branch comment.
           GRP2DCOLOR_RGBA8 corner_parent(0, 0, 0, 255);
           const GRP2DCOLOR_RGBA8* corner_parent_ptr = NULL;
           {
-            UI_ELEMENT* father = element_form->GetFather();
-            UI_COLOR* fbg = NULL;
-            if(father)
+            UI_COLOR* ownbg = element_form->IsBackgroundColorSet() ? element_form->GetBackgroundColor()
+                                                                    : element_form->GetColor();
+            const bool menu_popup = (element_form->GetType() == UI_ELEMENT_TYPE_MENU);
+            if(menu_popup && ownbg && ownbg->GetAlpha() > 0 &&
+               (ownbg->GetRed() + ownbg->GetGreen() + ownbg->GetBlue()) > 8)
               {
-                if(father->IsBackgroundColorSet()) fbg = father->GetBackgroundColor();
-                else fbg = father->GetColor();
-              }
-            if(fbg && fbg->GetAlpha() > 0 && (fbg->GetRed() + fbg->GetGreen() + fbg->GetBlue()) > 8)
-              {
-                corner_parent = GRP2DCOLOR_RGBA8((XBYTE)fbg->GetRed(), (XBYTE)fbg->GetGreen(), (XBYTE)fbg->GetBlue(), (XBYTE)fbg->GetAlpha());
+                corner_parent = GRP2DCOLOR_RGBA8((XBYTE)ownbg->GetRed(), (XBYTE)ownbg->GetGreen(),
+                                                (XBYTE)ownbg->GetBlue(), 255);
                 corner_parent_ptr = &corner_parent;
+              }
+            if(!corner_parent_ptr)
+              {
+                UI_ELEMENT* father = element_form->GetFather();
+                UI_COLOR* fbg = NULL;
+                if(father)
+                  {
+                    if(father->IsBackgroundColorSet()) fbg = father->GetBackgroundColor();
+                    else fbg = father->GetColor();
+                  }
+                if(fbg && fbg->GetAlpha() > 0 && (fbg->GetRed() + fbg->GetGreen() + fbg->GetBlue()) > 8)
+                  {
+                    corner_parent = GRP2DCOLOR_RGBA8((XBYTE)fbg->GetRed(), (XBYTE)fbg->GetGreen(), (XBYTE)fbg->GetBlue(), (XBYTE)fbg->GetAlpha());
+                    corner_parent_ptr = &corner_parent;
+                  }
               }
             // Do not sample canvas neighbours on transparent screens: leftover/opaque junk would
             // become an opaque seed under black,N and destroy the frosted alpha (same as 0x191E24).
@@ -8943,16 +9050,12 @@ bool UI_SKINCANVAS::Draw_Form(UI_ELEMENT* element)
                       }
                   }
               }
-            if(!corner_parent_ptr)
+            if(!corner_parent_ptr && ownbg && ownbg->GetAlpha() > 0 &&
+               (ownbg->GetRed() + ownbg->GetGreen() + ownbg->GetBlue()) > 8)
               {
-                UI_COLOR* ownbg = element_form->IsBackgroundColorSet() ? element_form->GetBackgroundColor()
-                                                                        : element_form->GetColor();
-                if(ownbg && ownbg->GetAlpha() > 0 && (ownbg->GetRed() + ownbg->GetGreen() + ownbg->GetBlue()) > 8)
-                  {
-                    corner_parent = GRP2DCOLOR_RGBA8((XBYTE)ownbg->GetRed(), (XBYTE)ownbg->GetGreen(),
-                                                    (XBYTE)ownbg->GetBlue(), 255);
-                    corner_parent_ptr = &corner_parent;
-                  }
+                corner_parent = GRP2DCOLOR_RGBA8((XBYTE)ownbg->GetRed(), (XBYTE)ownbg->GetGreen(),
+                                                (XBYTE)ownbg->GetBlue(), 255);
+                corner_parent_ptr = &corner_parent;
               }
           }
 
@@ -8976,7 +9079,11 @@ bool UI_SKINCANVAS::Draw_Form(UI_ELEMENT* element)
             canvas->SetFillColor(&seed_bg);
             canvas->SetLineColor(&line_none);
             canvas->SetLineWidth(1.0f);
-            canvas->Rectangle(vr_minx - 1.0, vr_maxy + 1.0, vr_maxx + 1.0, vr_miny - 1.0, true);
+            // Combo MENU: keep seed inside the AABB so the plate matches the edit field
+            // width (the ±1 inflate painted 1px past each side of the combo frame).
+            const bool seed_menu = (element_form->GetType() == UI_ELEMENT_TYPE_MENU);
+            if(seed_menu) canvas->Rectangle(vr_minx, vr_maxy, vr_maxx, vr_miny, true);
+            else          canvas->Rectangle(vr_minx - 1.0, vr_maxy + 1.0, vr_maxx + 1.0, vr_miny - 1.0, true);
           }
 
           // Re-apply the form's own fill/line colours for RoundRect (seed Rectangle may have overwritten them).
@@ -9048,10 +9155,54 @@ bool UI_SKINCANVAS::Draw_Form(UI_ELEMENT* element)
   for(XDWORD c=0; c<element_form->GetComposeElements()->GetSize(); c++)
     {
       UI_ELEMENT* subelement = (UI_ELEMENT*)element->GetComposeElements()->Get(c);
-      if(subelement) 
+      if(!subelement) continue;
+
+      // Combo dropdown menus are mini-modals: they may hang past the form's overflow:hidden
+      // clip. Temporarily open the clip to the menu AABB (intersected with the canvas) so the
+      // popup paints fully without resizing the host form.
+      if(canvas && subelement->IsVisible() && (subelement->GetType() == UI_ELEMENT_TYPE_MENU) &&
+         subelement->GetBoundaryLine())
+        {
+          XRECT clip_saved;
+          canvas->GetClipBox(clip_saved);
+
+          double mw = subelement->GetBoundaryLine()->width;
+          double mh = subelement->GetBoundaryLine()->height;
+          double ml = subelement->GetXPosition();
+          double mb = subelement->GetYPosition();
+          double mt = mb - mh;
+          double mr = ml + mw;
+
+          double cminx = __MIN(clip_saved.x1, clip_saved.x2);
+          double cmaxx = __MAX(clip_saved.x1, clip_saved.x2);
+          double cminy = __MIN(clip_saved.y1, clip_saved.y2);
+          double cmaxy = __MAX(clip_saved.y1, clip_saved.y2);
+
+          // Union parent clip with menu AABB (mini-modal space).
+          double uminx = __MIN(cminx, ml);
+          double umaxx = __MAX(cmaxx, mr);
+          double uminy = __MIN(cminy, mt);
+          double umaxy = __MAX(cmaxy, mb);
+
+          GRP2DCANVAS* cv = canvas;
+          if(cv)
+            {
+              double cw = (double)cv->GetWidth();
+              double ch = (double)cv->GetHeight();
+              if(uminx < 0.0) uminx = 0.0;
+              if(uminy < 0.0) uminy = 0.0;
+              if(umaxx > (cw - 1.0)) umaxx = cw - 1.0;
+              if(umaxy > (ch - 1.0)) umaxy = ch - 1.0;
+            }
+
+          canvas->SetClipBox(uminx, umaxy, umaxx, uminy);
+          Draw(subelement);
+          canvas->SetClipBox(clip_saved);
+        }
+       else
         {
           Draw(subelement);
-        }  
+        }
     }
 
   // Custom chrome caption (= Windows chrome toolbar): after children, erase charcoal leftovers
@@ -9195,7 +9346,92 @@ bool UI_SKINCANVAS::Draw_Form(UI_ELEMENT* element)
 * --------------------------------------------------------------------------------------------------------------------*/
 bool UI_SKINCANVAS::Draw_Menu(UI_ELEMENT* element)
 {
-  return Draw_Form(element);
+  // Programmatic combo menus never get XML visiblerect; keep plate+border in sync every paint.
+  // Also keep overlay scrollbars off unless content truly overflows (HIDDEN while height==content).
+  if(element && element->GetBoundaryLine())
+    {
+      UI_ELEMENT_FORM* menu_form = (UI_ELEMENT_FORM*)element;
+      if(menu_form->GetVisibleRect())
+        {
+          UI_BOUNDARYLINE* bl = element->GetBoundaryLine();
+          UI_BOUNDARYLINE* vr = menu_form->GetVisibleRect();
+          vr->x      = element->GetXPosition();
+          vr->y      = element->GetYPosition();
+          vr->width  = bl->width;
+          vr->height = bl->height;
+        }
+      UI_PROPERTY_SCROLLEABLE* sc = dynamic_cast<UI_PROPERTY_SCROLLEABLE*>(element);
+      if(sc)
+        {
+          sc->Scroll_SetOverflow(UI_PROPERTY_SCROLLEABLE_TYPE_HORIZONTAL, UI_OVERFLOW_HIDDEN);
+          sc->Scroll_SetOverflow(UI_PROPERTY_SCROLLEABLE_TYPE_VERTICAL  , UI_OVERFLOW_HIDDEN);
+          sc->Scroll_SetBarShown(UI_PROPERTY_SCROLLEABLE_TYPE_ALL, false);
+        }
+    }
+
+  if(!Draw_Form(element)) return false;
+
+  // Property-list style opaque row separators between options (no transparent gaps).
+  if(!element || !element->GetComposeElements()) return true;
+  GRP2DCANVAS* canvas = GetCanvas();
+  if(!canvas) return true;
+
+  UI_ELEMENT_FORM* form = (UI_ELEMENT_FORM*)element;
+  double menu_l = UI_BOUNDARYLINE_EdgeLeft(element->GetXPosition(), element->GetBoundaryLine()->width);
+  double menu_w = element->GetBoundaryLine()->width;
+  double menu_r = menu_l + menu_w;
+  double bw = element->GetBorderWidth();
+  if(bw < 0.0) bw = 0.0;
+
+  // Exact same rowline ink as Draw_PropertyList (not border chrome — that was nearly
+  // invisible on combo fill 64,72,84 and read as a "transparent" gap).
+  bool light_panel = false;
+  UI_COLOR* bg = form->IsBackgroundColorSet() ? form->GetBackgroundColor() : form->GetColor();
+  if(bg)
+    {
+      int lum = ((int)bg->GetRed() * 3 + (int)bg->GetGreen() * 6 + (int)bg->GetBlue()) / 10;
+      light_panel = (lum >= 160);
+    }
+  GRP2DCOLOR_RGBA8 color_rowline = light_panel ? GRP2DCOLOR_RGBA8(200, 208, 220, 255)
+                                               : GRP2DCOLOR_RGBA8(34, 40, 50, 255);
+
+  canvas->SetLineWidth(0.0f);
+  canvas->SetLineColor(&color_rowline);
+  canvas->SetFillColor(&color_rowline);
+
+  XVECTOR<UI_ELEMENT*>* kids = element->GetComposeElements();
+  for(XDWORD i=0; i<kids->GetSize(); i++)
+    {
+      UI_ELEMENT* child = kids->Get(i);
+      if(!child || !child->IsVisible() || !child->GetBoundaryLine()) continue;
+      if(child->GetType() != UI_ELEMENT_TYPE_OPTION) continue;
+
+      // Skip the last option (no separator under the final row).
+      bool has_later_option = false;
+      for(XDWORD j=i+1; j<kids->GetSize(); j++)
+        {
+          UI_ELEMENT* later = kids->Get(j);
+          if(later && later->IsVisible() && later->GetType() == UI_ELEMENT_TYPE_OPTION)
+            {
+              has_later_option = true;
+              break;
+            }
+        }
+      if(!has_later_option) break;
+
+      double ob = child->GetYPosition();             // EdgeBottom
+      // Fill the 1px option margin gap with the solid rowline (property-list style).
+      double sep_h = UI_ELEMENT_COMBO_OPTION_MARGIN_H;
+      if(sep_h < UI_ELEMENT_COMBO_OPTION_SEP_H) sep_h = UI_ELEMENT_COMBO_OPTION_SEP_H;
+      if(sep_h < 1.0) sep_h = 1.0;
+      double line_y = ob;
+      double x0 = menu_l + bw;
+      double x1 = menu_r - bw;
+      if(x1 <= x0) continue;
+      canvas->Rectangle(x0, line_y + sep_h, x1, line_y, true);
+    }
+
+  return true;
 }
 
 
@@ -10732,6 +10968,10 @@ bool UI_SKINCANVAS::ResolveScrollPolicy(UI_ELEMENT* element, UI_PROPERTY_SCROLLE
     {
       UI_ELEMENT* subelement = element->GetComposeElements()->Get(c);
       if(!subelement) continue;
+      // Combo dropdown menus are mini-modals that may hang past the host form — never
+      // count them in scroll content extent (would spuriously enable form scrollbars).
+      if(subelement->GetType() == UI_ELEMENT_TYPE_MENU) continue;
+      if(!subelement->GetBoundaryLine()) continue;
 
       double sx = GetPositionWithoutDefine(subelement->GetBoundaryLine()->x);
       double sy = GetPositionWithoutDefine(subelement->GetBoundaryLine()->y);

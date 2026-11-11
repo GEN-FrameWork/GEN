@@ -141,6 +141,17 @@ class UI_MANAGER : public XOBSERVER, public XSUBJECT
     bool                            Element_ModalBlocksInteraction            (UI_ELEMENT* element);
     bool                            Element_DrawModalOnTop                    ();
     void                            ModalLayer_Invalidate                     ();
+    // Expand the remembered modal paint AABB with a combo-dropdown rect (left, top, w, h).
+    // OpenMenu/CloseMenu call this so shrink restore still works when ModalLayer_Rect cannot
+    // see the popup (programmatic menus may sit outside the form VisibleRect bookkeeping).
+    bool                            ModalLayer_UnionRect                      (double rx, double ry, double rw, double rh);
+    // Sticky combo-popup AABB while the dropdown is open (merged into DrawModalOnTop's "new" rect).
+    // Also snapshots the live canvas under that rect so dismiss can restore exact pixels
+    // (avoids a flat gray page-fill box under the form when clicking outside).
+    void                            ModalLayer_SetComboMenuRect               (double rx, double ry, double rw, double rh);
+    void                            ModalLayer_ClearComboMenuRect             ();
+    // True after CloseMenu until DrawModalOnTop consumes the popup clear (skip MENU RestoreOnHide).
+    bool                            ModalLayer_IsComboMenuClearPending        ();
     bool                            ModalLayer_IsLayoutDrawDeferred           (UI_ELEMENT* element);
     bool                            ModalLayer_IsCompositing                  ();
     bool                            ModalLayer_IsRebuildProtected             (UI_ELEMENT* element);
@@ -259,6 +270,7 @@ class UI_MANAGER : public XOBSERVER, public XSUBJECT
     UI_ELEMENT*                     GetLayoutElement_RadioButton              (XFILEXMLELEMENT* node, UI_LAYOUT* layout, UI_ELEMENT* father, UI_ELEMENT* element_legacy = NULL);
     UI_ELEMENT*                     GetLayoutElement_RadioGroup               (XFILEXMLELEMENT* node, UI_LAYOUT* layout, UI_ELEMENT* father, UI_ELEMENT* element_legacy = NULL);
     UI_ELEMENT*                     GetLayoutElement_EditText                 (XFILEXMLELEMENT* node, UI_LAYOUT* layout, UI_ELEMENT* father, UI_ELEMENT* element_legacy = NULL);
+    UI_ELEMENT*                     GetLayoutElement_Combo                    (XFILEXMLELEMENT* node, UI_LAYOUT* layout, UI_ELEMENT* father, UI_ELEMENT* element_legacy = NULL);
     UI_ELEMENT*                     GetLayoutElement_Form                     (XFILEXMLELEMENT* node, UI_LAYOUT* layout, UI_ELEMENT* father, UI_ELEMENT* element_legacy = NULL);
     UI_ELEMENT*                     GetLayoutElement_Menu                     (XFILEXMLELEMENT* node, UI_LAYOUT* layout, UI_ELEMENT* father, UI_ELEMENT* element_legacy = NULL);
     UI_ELEMENT*                     GetLayoutElement_ListBox                  (XFILEXMLELEMENT* node, UI_LAYOUT* layout, UI_ELEMENT* father, UI_ELEMENT* element_legacy = NULL);
@@ -324,7 +336,7 @@ class UI_MANAGER : public XOBSERVER, public XSUBJECT
 
     void                            ModalLayer_Release                        ();
     bool                            ModalLayer_RebuildOffscreen               (UI_SKINCANVAS* skin_canvas, UI_ELEMENT* modal);
-    bool                            ModalLayer_Rect                           (UI_ELEMENT* modal, double& x, double& y, double& w, double& h);
+    bool                            ModalLayer_Rect                           (UI_ELEMENT* modal, double& x, double& y, double& w, double& h, bool include_combo_menus = true);
 
     static UI_MANAGER*              instance; 
 
@@ -346,6 +358,18 @@ class UI_MANAGER : public XOBSERVER, public XSUBJECT
     double                          modal_layer_h;
     bool                            modal_layer_valid;
     bool                            modal_layer_compositing;
+    bool                            modal_combo_menu_active;
+    double                          modal_combo_menu_x;
+    double                          modal_combo_menu_y;
+    double                          modal_combo_menu_w;
+    double                          modal_combo_menu_h;
+    // One-shot: after CloseMenu, restore this narrow popup backdrop (not form∪menu).
+    bool                            modal_combo_menu_clear_pending;
+    double                          modal_combo_menu_clear_x;
+    double                          modal_combo_menu_clear_y;
+    double                          modal_combo_menu_clear_w;
+    double                          modal_combo_menu_clear_h;
+    GRPBITMAP*                      modal_combo_menu_backdrop;
 
     XMUTEX*                         xmutex_UIevent;
     

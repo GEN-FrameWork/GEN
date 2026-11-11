@@ -3286,14 +3286,16 @@ bool XSTRING::ConvertFromBoolean(bool boolean, XBYTE mode)
 {
   Empty();
 
+  // Persist / serialize booleans in English only (CFG .ini, variants, etc.).
+  // Reading still accepts localized tokens via ConvertToBoolean (si/yes/true/…).
   if((mode & XSTRINGBOOLEANMODE_COMPUTER) == XSTRINGBOOLEANMODE_COMPUTER)
     {
-      Set(boolean?GEN_TL(XTRANSLATION_GEN_ID_TRUE):GEN_TL(XTRANSLATION_GEN_ID_FALSE));
+      Set(boolean ? NL("true") : NL("false"));
     }
     
   if((mode & XSTRINGBOOLEANMODE_HUMAN) == XSTRINGBOOLEANMODE_HUMAN)
     {
-      Set(boolean?GEN_TL(XTRANSLATION_GEN_ID_YES):GEN_TL(XTRANSLATION_GEN_ID_NO));
+      Set(boolean ? NL("yes") : NL("no"));
     }
 
   if((mode & XSTRINGBOOLEANMODE_UPPERCASE) == XSTRINGBOOLEANMODE_UPPERCASE)
@@ -3775,12 +3777,11 @@ bool XSTRING::ConvertToBoolean()
 {
   bool result = false;
 
-  // XML/config attributes are authored in English ("true"/"false") regardless of UI language.
-  // GEN_TL(TRUE/FALSE) becomes "vrai"/"faux" (etc.) when the app language is not English — without
-  // these literals, visible="false" fell through to the non-empty → true branch and left hidden
-  // multioptions painted (XTraceMonitor Stop+Run overlap with French UI).
+  // CFG/UI tokens: accept English + common localized yes/no (and GEN_TL for current UI language).
+  // Writers (ConvertFromBoolean / XFileCFG::Save) persist English only (yes/no, true/false).
   if(!Compare(NL("true") , true) ||
      !Compare(NL("yes")  , true) ||
+     !Compare(NL("si")   , true) ||
      !Compare(NL("1")    , true) ||
      !Compare(GEN_TL(XTRANSLATION_GEN_ID_YES)  , true) ||
      !Compare(GEN_TL(XTRANSLATION_GEN_ID_TRUE) , true))

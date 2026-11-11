@@ -571,9 +571,9 @@ int UI_ELEMENT_EDITTEXT::HitTestSpin(int design_x, int design_y)
   double spin_w = GetSpinWidth();
   if(spin_w < 1.0) return 0;
 
-  double left   = GetXPosition();
-  double bottom = GetYPosition();   // EdgeBottom (larger y)
   double width  = GetBoundaryLine()->width;
+  double left   = UI_BOUNDARYLINE_EdgeLeft(GetXPosition(), width);
+  double bottom = GetYPosition();   // EdgeBottom (larger y)
   double right  = left + width;
   double top    = GetTopY();        // EdgeTop (smaller y)
 
