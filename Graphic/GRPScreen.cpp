@@ -1267,6 +1267,21 @@ bool GRPSCREEN::UpdateCFGChromesDrag()
   if(cfgchromes.GetUseNativeChromes()) return false;
   if(!cfgchromeslayout)                return false;
 
+  #ifdef USERINTERFACE_ACTIVE
+  // Modal owns the shell: chrome buttons are inert (UI hit-test), resize is locked in the
+  // platform NC path — caption drag must not move the main window either.
+  if(UI_MANAGER::GetIsInstanced() && GEN_USERINTERFACE.Element_IsModalActive())
+    {
+      if(cfgchromesdragging)
+        {
+          EndCFGChromesDrag();
+          cfgchromesdragging   = false;
+          cfgchromesdragmoving = false;
+        }
+      return false;
+    }
+  #endif
+
   INPDEVICE* mousedevice = GEN_INPMANAGER.GetDevice(INPDEVICE_TYPE_MOUSE);
   if(!mousedevice) return false;
 

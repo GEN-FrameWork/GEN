@@ -38,9 +38,15 @@
 
 #include "UI_Skin.h"
 #include "UI_StyleSheet.h"
+#include "UI_Element.h"
 
 #include "GRPFactory.h"
 #include "GRP2DCanvas.h"
+
+#include <stdio.h>
+#ifdef WINDOWS
+#include <windows.h>
+#endif
 
 
 

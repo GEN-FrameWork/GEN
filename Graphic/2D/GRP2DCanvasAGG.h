@@ -63,6 +63,7 @@
 /*---- INCLUDES ------------------------------------------------------------------------------------------------------*/
 
 #include <stdio.h>
+#include <string.h>
 #include <cmath>
 
 #include "agg_basics.h"
@@ -1097,37 +1098,33 @@ class GRP2DCANVASAGG: public GRP2DCANVAS
 
     GRPBITMAP*                                                                  GetBitmap                         (double x, double y, double width, double height)
                                                                                 {
+                                                                                  // Clamp to the pixel buffer — NOT the AGG clip box. Clip-derived sizes + the old
+                                                                                  // "y<0 → skip dest rows without init" path invented phosphor-lime / blood-red poison
+                                                                                  // (combo underlay, TextBackdrop). Intersection shrink is the safe local-capture API.
+                                                                                  const int buf_w = (int)GetWidth();
+                                                                                  const int buf_h = (int)GetHeight();
+                                                                                  if(buf_w <= 0 || buf_h <= 0) return NULL;
+                                                                                  if(width <= 0.0 || height <= 0.0) return NULL;
 
-                                                                                  int clipwidth    = (renderer_base->xmax() - renderer_base->xmin());
-                                                                                  int clipheight   = (renderer_base->ymax() - renderer_base->ymin());
-                                                                                  int bitmapwidth  = (int)width;
-                                                                                  int bitmapheight = (int)height;
-                                                                                  int xpos         = (int)(x * GetBytesperPixel());
-                                                                                  int c            = 0;
+                                                                                  const int req_x = (int)x;
+                                                                                  const int req_y = (int)y;
+                                                                                  int       req_w = (int)width;
+                                                                                  int       req_h = (int)height;
+                                                                                  if(req_w <= 0 || req_h <= 0) return NULL;
 
-                                                                                  if(x < 0)
-                                                                                    {
-                                                                                      xpos         = 0;
-                                                                                      bitmapwidth  = (int)(bitmapwidth  + x);
-                                                                                    }
+                                                                                  int src_x0 = req_x;
+                                                                                  int src_y0 = req_y;
+                                                                                  int src_x1 = req_x + req_w;
+                                                                                  int src_y1 = req_y + req_h;
 
-                                                                                  if(y < 0)
-                                                                                    {
-                                                                                      c = abs((int)y);
-                                                                                    }
+                                                                                  if(src_x0 < 0)     src_x0 = 0;
+                                                                                  if(src_y0 < 0)     src_y0 = 0;
+                                                                                  if(src_x1 > buf_w) src_x1 = buf_w;
+                                                                                  if(src_y1 > buf_h) src_y1 = buf_h;
 
-                                                                                  if((x + width)  > (renderer_base->xmin() + clipwidth))
-                                                                                    {
-                                                                                      bitmapwidth  = (int)(((clipwidth + renderer_base->xmin()) - x) + 1);
-                                                                                    }
-
-                                                                                  if((y + height) > (renderer_base->ymin() + clipheight))
-                                                                                    {
-                                                                                      bitmapheight = ((clipheight + renderer_base->ymin()) - (int)y) + 1;
-                                                                                    }
-
-                                                                                  if(bitmapwidth  <= 0) return NULL;
-                                                                                  if(bitmapheight <= 0) return NULL;
+                                                                                  const int bitmapwidth  = src_x1 - src_x0;
+                                                                                  const int bitmapheight = src_y1 - src_y0;
+                                                                                  if(bitmapwidth <= 0 || bitmapheight <= 0) return NULL;
 
                                                                                   GRPBITMAP* bitmap = GRPFACTORY::GetInstance().CreateBitmap(bitmapwidth, bitmapheight, mode, isbufferinverse);
                                                                                   if(!bitmap) return NULL;
@@ -1135,12 +1132,16 @@ class GRP2DCANVASAGG: public GRP2DCANVAS
                                                                                   GRPBITMAPPIXELFORMATBUFFER<PIXELFORMATBUFFER, COLORTYPE>* bitmapfb = (GRPBITMAPPIXELFORMATBUFFER<PIXELFORMATBUFFER, COLORTYPE>*)bitmap;
                                                                                   agg::rendering_buffer* bitmapbuffer = bitmapfb->GetRenderBuffer();
 
-                                                                                  int sizeline = bitmapwidth *  GetBytesperPixel();
+                                                                                  const int bpp      = GetBytesperPixel();
+                                                                                  const int sizeline = bitmapwidth * bpp;
+                                                                                  const int src_byte = src_x0 * bpp;
 
-                                                                                  while(c < bitmapheight)
+                                                                                  for(int row = 0; row < bitmapheight; row++)
                                                                                     {
-                                                                                      memcpy(bitmapbuffer->row_ptr(c), (rbuffer.row_ptr(c + (int)y) + xpos), sizeline);
-                                                                                      c++;
+                                                                                      XBYTE* dst = (XBYTE*)bitmapbuffer->row_ptr(row);
+                                                                                      // Clear then copy so no uninitialised dest rows survive a partial blit.
+                                                                                      memset(dst, 0, (size_t)sizeline);
+                                                                                      memcpy(dst, (XBYTE*)rbuffer.row_ptr(src_y0 + row) + src_byte, (size_t)sizeline);
                                                                                     }
 
                                                                                   return bitmap;

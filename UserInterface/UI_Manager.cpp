@@ -40,6 +40,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdarg.h>
+#ifdef WINDOWS
+#include <windows.h>
+#endif
 
 #include "XFactory.h"
 #include "XThread.h"
@@ -337,11 +340,11 @@ bool UI_MANAGER::LoadLayout(XPATH& pathfile, GRPSCREEN* screen, int viewportinde
 
   if(xml.Open(pathfile, true))
     {
-      CreateLayouts(xml, pathfile, screen, viewportindex);
+      // Honor CreateLayouts failure (e.g. Skin_Create / LoadFonts). Returning true here used to
+      // leave layouts empty and crash callers that assume Layouts_Get(...) is non-null.
+      status = CreateLayouts(xml, pathfile, screen, viewportindex);
 
       xml.Close();
-
-      status = true;
     }
 
   return status;
@@ -1221,13 +1224,14 @@ bool UI_MANAGER::Update(UI_LAYOUT* layout)
 
   status = layout->Update();
 
-  // Compact under-icon legend forms (height<=28): always same-frame page-seed + text reprint.
-  // Gating on CompactLegendsNeedRepair alone left a permanent gray plate (57,59,61) under
-  // Demarrer/Arreter once MultiOptions went idle and the flag cleared — confirmed via canvas dump.
+  // Compact under-icon legend forms: only when a peel marked CompactLegendsNeedRepair.
+  // Running this every frame re-dirtied legend AABBs that kiss the tree rebuild pad and, via
+  // MarkOverlappingAreasDirty, forced a full tree+console+valor redraw (~40ms → ~24fps idle).
   if(status && layout->GetSkin() && layout->GetSkin()->GetDrawMode() == UI_SKIN_DRAWMODE_CANVAS)
     {
       UI_SKINCANVAS* skin_canvas = (UI_SKINCANVAS*)layout->GetSkin();
-      if(skin_canvas) skin_canvas->RepaintCompactLegendForms(layout);
+      if(skin_canvas && skin_canvas->CompactLegendsNeedRepair())
+        skin_canvas->RepaintCompactLegendForms(layout);
     }
 
   if(scaled)
@@ -1336,7 +1340,10 @@ bool UI_MANAGER::Update()
       // burned FPS. Chrome is dirtied on auto-hide show/hide, button shift, and cross-skin overlap propagate.
     }
 
-  // Chrome paints after content on the shared canvas — re-seal content legends after chrome.
+  // Chrome paints after content and its rebuild can blank abutting under-icon legend strips
+  // without ever setting CompactLegendsNeedRepair (flag was cleared by the content-pass seal).
+  // Always re-seal compact legends here. Wipe pad is +2 (not +8) so this does not re-kiss
+  // valor/tree tops the way the old every-frame content-pass repair did.
   for(XDWORD c=0; c<layouts.GetSize(); c++)
     {
       UI_LAYOUT* layout = layouts.Get(c);
@@ -1952,14 +1959,260 @@ bool UI_MANAGER::ModalLayer_UnionRect(double rx, double ry, double rw, double rh
 
 /**-------------------------------------------------------------------------------------------------------------------
 *
+* @fn         void UI_MANAGER::ModalLayer_FreeComboMenuBackdrop()
+* @brief      Release the live combo underlay bitmap if any.
+* @ingroup    USERINTERFACE
+*
+*---------------------------------------------------------------------------------------------------------------------*/
+void UI_MANAGER::ModalLayer_FreeComboMenuBackdrop()
+{
+  if(modal_combo_menu_backdrop)
+    {
+      GEN_DELETE modal_combo_menu_backdrop;
+      modal_combo_menu_backdrop = NULL;
+    }
+}
+
+
+/**-------------------------------------------------------------------------------------------------------------------
+*
+* @fn         bool UI_MANAGER::ModalLayer_PadComboMenuRect(GRP2DCANVAS* live, double& rx, double& ry, double& rw, double& rh)
+* @brief      Expand combo underlay rect by stroke AA pad and clamp to canvas.
+* @ingroup    USERINTERFACE
+*
+*---------------------------------------------------------------------------------------------------------------------*/
+bool UI_MANAGER::ModalLayer_PadComboMenuRect(GRP2DCANVAS* live, double& rx, double& ry, double& rw, double& rh)
+{
+  // RoundRect / border-width stroke AA extends ~1px past BoundaryLine; pad 2px each side.
+  const double pad = 2.0;
+  rx -= pad;
+  ry -= pad;
+  rw += pad * 2.0;
+  rh += pad * 2.0;
+
+  double canvas_w = live ? live->GetWidth()  : 0.0;
+  double canvas_h = live ? live->GetHeight() : 0.0;
+  if(canvas_w < 1.0) canvas_w = 1.0;
+  if(canvas_h < 1.0) canvas_h = 1.0;
+
+  if(rx < 0.0) { rw += rx; rx = 0.0; }
+  if(ry < 0.0) { rh += ry; ry = 0.0; }
+  if(rw < 1.0) rw = 1.0;
+  if(rh < 1.0) rh = 1.0;
+  if(rx + rw > canvas_w) rw = canvas_w - rx;
+  if(ry + rh > canvas_h) rh = canvas_h - ry;
+  if(rw < 1.0 || rh < 1.0) return false;
+  return true;
+}
+
+
+// Phosphor-lime / named-green poison signature (live GetBitmap was measured inventing ~18,255,12
+// while GetPixel still saw page charcoal). Used only to reject a bad underlay snapshot.
+static bool UI_Manager_IsComboPoisonLime(GRP2DCOLOR* px)
+{
+  if(!px) return false;
+  GRP2DCOLOR_RGBA8* c = (GRP2DCOLOR_RGBA8*)px;
+  return (c->r <= 40) && (c->g >= 200) && (c->b <= 40) && (c->g > (XBYTE)(c->r + 100));
+}
+
+
+static bool UI_Manager_BitmapHasComboPoisonLime(GRPBITMAP* bmp)
+{
+  if(!bmp) return false;
+  const int bw = (int)bmp->GetWidth();
+  const int bh = (int)bmp->GetHeight();
+  if(bw < 1 || bh < 1) return false;
+
+  const int samples[][2] =
+    {
+      { 0, 0 },
+      { bw - 1, 0 },
+      { 0, bh - 1 },
+      { bw - 1, bh - 1 },
+      { bw / 2, bh / 2 },
+      { bw / 2, 0 },
+      { 0, bh / 2 },
+      { bw / 2, bh - 1 },
+      { bw - 1, bh / 2 }
+    };
+
+  for(size_t i = 0; i < sizeof(samples) / sizeof(samples[0]); i++)
+    {
+      const int sx = samples[i][0];
+      const int sy = samples[i][1];
+      if(sx < 0 || sy < 0 || sx >= bw || sy >= bh) continue;
+      if(UI_Manager_IsComboPoisonLime(bmp->GetPixel(sx, sy))) return true;
+    }
+  return false;
+}
+
+
+// Scoped combo underlay capture via GetBitmap (row memcpy). GetBitmap used to invent phosphor-lime
+// for this overhang when sized from the AGG clip / with uninitialised dest rows — that primitive is
+// now buffer-clamped; keep the lime reject below as a safety net.
+static GRPBITMAP* UI_Manager_CaptureComboRect(GRP2DCANVAS* live, double rx, double ry, double rw, double rh)
+{
+  if(!live) return NULL;
+  if(rw < 1.0 || rh < 1.0) return NULL;
+
+  const int canvas_w = (int)live->GetWidth();
+  const int canvas_h = (int)live->GetHeight();
+  if(canvas_w < 1 || canvas_h < 1) return NULL;
+
+  double x = rx;
+  double y = ry;
+  double w = rw;
+  double h = rh;
+
+  if(x < 0.0) { w += x; x = 0.0; }
+  if(y < 0.0) { h += y; y = 0.0; }
+  if(w < 1.0 || h < 1.0) return NULL;
+  if(x + w > (double)canvas_w) w = (double)canvas_w - x;
+  if(y + h > (double)canvas_h) h = (double)canvas_h - y;
+  if(w < 1.0 || h < 1.0) return NULL;
+
+  return live->GetBitmap(x, y, w, h);
+}
+
+
+/**-------------------------------------------------------------------------------------------------------------------
+*
+* @fn         bool UI_MANAGER::ModalLayer_CaptureComboMenuBackdrop(GRP2DCANVAS* live, double rx, double ry, double rw, double rh)
+* @brief      Capture combo overhang underlay via GetBitmap into modal_combo_menu_backdrop.
+* @note       Must run while the menu plate is NOT on those pixels (OpenMenu seed, or after content
+*             repainted the overhang this frame). Rejects phosphor-lime poison snapshots so dismiss
+*             does not flash green. Full-canvas clip so form overflow:hidden cannot shrink overhang.
+* @ingroup    USERINTERFACE
+*
+*---------------------------------------------------------------------------------------------------------------------*/
+bool UI_MANAGER::ModalLayer_CaptureComboMenuBackdrop(GRP2DCANVAS* live, double rx, double ry, double rw, double rh)
+{
+  if(!live || rw <= 0.5 || rh <= 0.5) return false;
+
+  XRECT clip_saved;
+  live->GetClipBox(clip_saved);
+
+  double canvas_w = live->GetWidth();
+  double canvas_h = live->GetHeight();
+  if(canvas_w < 1.0) canvas_w = 1.0;
+  if(canvas_h < 1.0) canvas_h = 1.0;
+  // Full-canvas clip so form overflow:hidden cannot shrink the readable overhang.
+  live->SetClipBox(0.0, canvas_h - 1.0, canvas_w - 1.0, 0.0);
+
+  GRPBITMAP* snapped = UI_Manager_CaptureComboRect(live, rx, ry, rw, rh);
+  live->SetClipBox(clip_saved);
+
+  if(!snapped) return false;
+
+  // Belt-and-suspenders: never install a lime underlay (keep previous snapshot if any).
+  if(UI_Manager_BitmapHasComboPoisonLime(snapped))
+    {
+      GRPFACTORY::GetInstance().DeleteBitmap(snapped);
+      return false;
+    }
+
+  ModalLayer_FreeComboMenuBackdrop();
+  modal_combo_menu_backdrop = snapped;
+  return true;
+}
+
+
+/**-------------------------------------------------------------------------------------------------------------------
+*
+* @fn         void UI_MANAGER::ModalLayer_DirtyContentUnderCombo()
+* @brief      Dirty only non-modal elements whose AABB intersects the sticky combo popup rect.
+* @note       Full-layout Elements_SetToRedraw here collapsed FPS (~9) while the overhang menu was open.
+*             Local dirty keeps RebuildAllAreas / Update scoped to the underlay footprint.
+* @ingroup    USERINTERFACE
+*
+*---------------------------------------------------------------------------------------------------------------------*/
+void UI_MANAGER::ModalLayer_DirtyContentUnderCombo()
+{
+  if(!modal_combo_menu_active) return;
+  if(modal_combo_menu_w <= 0.5 || modal_combo_menu_h <= 0.5) return;
+
+  const double wipe_l = modal_combo_menu_x;
+  const double wipe_t = modal_combo_menu_y;
+  const double wipe_r = modal_combo_menu_x + modal_combo_menu_w;
+  const double wipe_b = modal_combo_menu_y + modal_combo_menu_h;
+
+  UI_LAYOUT* modal_layout = element_modal ? Element_GetLayout(element_modal) : NULL;
+
+  for(XDWORD c=0; c<layouts.GetSize(); c++)
+    {
+      UI_LAYOUT* layout = layouts.Get(c);
+      if(!layout) continue;
+      if(modal_layout && layout == modal_layout) continue;
+
+      XVECTOR<UI_ELEMENT*>* roots = layout->Elements_Get();
+      if(!roots) continue;
+
+      XVECTOR<UI_ELEMENT*> stack;
+      for(XDWORD i=0; i<roots->GetSize(); i++)
+        {
+          UI_ELEMENT* root = roots->Get(i);
+          if(root) stack.Add(root);
+        }
+
+      while(!stack.IsEmpty())
+        {
+          UI_ELEMENT* el = stack.Get(stack.GetSize() - 1);
+          stack.DeleteLast();
+          if(!el) continue;
+
+          XVECTOR<UI_ELEMENT*>* kids = el->GetComposeElements();
+          if(kids)
+            {
+              for(XDWORD k=0; k<kids->GetSize(); k++)
+                {
+                  UI_ELEMENT* kid = kids->Get(k);
+                  if(kid) stack.Add(kid);
+                }
+            }
+
+          if(!el->IsVisible()) continue;
+          UI_BOUNDARYLINE* bl = el->GetBoundaryLine();
+          if(!bl || bl->width <= 0.0 || bl->height <= 0.0) continue;
+
+          const double el_l = UI_BOUNDARYLINE_EdgeLeft(el->GetXPosition(), bl->width);
+          const double el_t = UI_BOUNDARYLINE_EdgeTop (el->GetYPosition(), bl->height);
+          const double el_r = el_l + bl->width;
+          const double el_b = el->GetYPosition();
+
+          const bool overlaps = (wipe_l < el_r) && (el_l < wipe_r) && (wipe_t < el_b) && (el_t < wipe_b);
+          if(!overlaps) continue;
+
+          el->SetMustReDraw(true);
+        }
+    }
+}
+
+
+/**-------------------------------------------------------------------------------------------------------------------
+*
 * @fn         void UI_MANAGER::ModalLayer_SetComboMenuRect(double rx, double ry, double rw, double rh)
-* @brief      Sticky combo popup AABB merged into every DrawModalOnTop "new" rect while open.
+* @brief      Sticky combo popup AABB + seed live underlay capture (menu still invisible).
 * @ingroup    USERINTERFACE
 *
 *---------------------------------------------------------------------------------------------------------------------*/
 void UI_MANAGER::ModalLayer_SetComboMenuRect(double rx, double ry, double rw, double rh)
 {
   if(rw <= 0.5 || rh <= 0.5) return;
+
+  GRP2DCANVAS* live = NULL;
+  if(element_modal)
+    {
+      UI_LAYOUT* layout = Element_GetLayout(element_modal);
+      if(layout && layout->GetSkin() && layout->GetSkin()->GetDrawMode() == UI_SKIN_DRAWMODE_CANVAS)
+        {
+          UI_SKINCANVAS* skin = (UI_SKINCANVAS*)layout->GetSkin();
+          live = skin ? skin->GetCanvas() : NULL;
+        }
+    }
+
+  // Pad for RoundRect/border AA so dismiss PutBitmap covers the 1px hairline ghost.
+  if(!ModalLayer_PadComboMenuRect(live, rx, ry, rw, rh)) return;
+
   modal_combo_menu_active = true;
   modal_combo_menu_x = rx;
   modal_combo_menu_y = ry;
@@ -1967,24 +2220,11 @@ void UI_MANAGER::ModalLayer_SetComboMenuRect(double rx, double ry, double rw, do
   modal_combo_menu_h = rh;
   ModalLayer_UnionRect(rx, ry, rw, rh);
 
-  // Snapshot pixels under the popup BEFORE it paints (OpenMenu calls this while the
-  // menu is visible-flagged but not yet drawn). Dismiss restores this instead of a
-  // flat page-color fill that left a gray box below the form.
-  if(modal_combo_menu_backdrop)
-    {
-      GEN_DELETE modal_combo_menu_backdrop;
-      modal_combo_menu_backdrop = NULL;
-    }
-  if(element_modal)
-    {
-      UI_LAYOUT* layout = Element_GetLayout(element_modal);
-      if(layout && layout->GetSkin() && layout->GetSkin()->GetDrawMode() == UI_SKIN_DRAWMODE_CANVAS)
-        {
-          UI_SKINCANVAS* skin = (UI_SKINCANVAS*)layout->GetSkin();
-          GRP2DCANVAS* live = skin ? skin->GetCanvas() : NULL;
-          if(live) modal_combo_menu_backdrop = live->GetBitmap(rx, ry, rw, rh);
-        }
-    }
+  // Seed underlay before the menu paints. Later frames refresh this after content redraws.
+  if(live) ModalLayer_CaptureComboMenuBackdrop(live, rx, ry, rw, rh);
+
+  // Next content pass must paint live pixels under the overhang before we re-capture.
+  ModalLayer_DirtyContentUnderCombo();
 }
 
 
@@ -1997,9 +2237,7 @@ void UI_MANAGER::ModalLayer_SetComboMenuRect(double rx, double ry, double rw, do
 *---------------------------------------------------------------------------------------------------------------------*/
 void UI_MANAGER::ModalLayer_ClearComboMenuRect()
 {
-  // Keep the last popup footprint in modal_layer_* so the next DrawModalOnTop shrink
-  // pass can restore content under the overhang after the menu is hidden. Stash the
-  // NARROW menu rect; the pre-open backdrop bitmap is restored on shrink (not a page fill).
+  // Keep last footprint + last live backdrop for DrawModalOnTop shrink PutBitmap.
   if(modal_combo_menu_active)
     {
       ModalLayer_UnionRect(modal_combo_menu_x, modal_combo_menu_y, modal_combo_menu_w, modal_combo_menu_h);
@@ -2020,7 +2258,7 @@ void UI_MANAGER::ModalLayer_ClearComboMenuRect()
 /**-------------------------------------------------------------------------------------------------------------------
 *
 * @fn         bool UI_MANAGER::ModalLayer_IsComboMenuClearPending()
-* @brief      True after CloseMenu until DrawModalOnTop restores the popup footprint.
+* @brief      True after CloseMenu until DrawModalOnTop consumes the popup clear.
 * @ingroup    USERINTERFACE
 *
 *---------------------------------------------------------------------------------------------------------------------*/
@@ -2293,11 +2531,7 @@ void UI_MANAGER::ModalLayer_Release()
   modal_combo_menu_clear_pending = false;
   modal_combo_menu_clear_x = modal_combo_menu_clear_y = 0.0;
   modal_combo_menu_clear_w = modal_combo_menu_clear_h = 0.0;
-  if(modal_combo_menu_backdrop)
-    {
-      GEN_DELETE modal_combo_menu_backdrop;
-      modal_combo_menu_backdrop = NULL;
-    }
+  ModalLayer_FreeComboMenuBackdrop();
 }
 
 
@@ -2614,12 +2848,39 @@ bool UI_MANAGER::Element_DrawModalOnTop()
       live->SetLineColor(&noline);
       live->SetLineWidth(1.0f);
 
-      // Do NOT late-capture while the menu is on screen: GetBitmap would bake the popup
-      // plate into the backdrop and dismiss would put that plate back. OpenMenu captures
-      // before SetVisible so the bitmap (when present) is pre-menu content only.
+      // Live underlay while combo open (order matters):
+      // 1) PutBitmap last good underlay — erases the previous frame's menu plate from the overhang.
+      // 2) Dirty + Update only content intersecting the popup rect (local; not full-layout redraw).
+      // 3) Re-GetBitmap the rect — fresh underlay for dismiss; must NOT run while menu pixels remain.
+      // Doing GetBitmap before (1)+(2) baked the menu plate into the backdrop (ghost on close).
+      if(modal_combo_menu_active && modal_combo_menu_w > 0.5 && modal_combo_menu_h > 0.5)
+        {
+          const double mx = modal_combo_menu_x;
+          const double my = modal_combo_menu_y;
+          const double mw = modal_combo_menu_w;
+          const double mh = modal_combo_menu_h;
 
-      // Combo menu closed: previous AABB still holds the popup plate. Restore content under the
-      // overhang (skip the modal layout — it is repainted below), then re-wipe the form AABB.
+          if(modal_combo_menu_backdrop)
+            {
+              live->PutBitmapNoAlpha(mx, my, modal_combo_menu_backdrop);
+            }
+
+          ModalLayer_DirtyContentUnderCombo();
+
+          UI_LAYOUT* modal_layout = Element_GetLayout(element_modal);
+          for(XDWORD lc=0; lc<layouts.GetSize(); lc++)
+            {
+              UI_LAYOUT* layout = layouts.Get(lc);
+              if(!layout) continue;
+              if(modal_layout && layout == modal_layout) continue;
+              Update(layout);
+            }
+
+          ModalLayer_CaptureComboMenuBackdrop(live, mx, my, mw, mh);
+        }
+
+      // Combo dismiss: one-shot PutBitmap of the last live capture into the narrow popup rect.
+      // Fills gaps content alone does not cover; form∩menu is then covered by form wipe + Draw.
       if(had_prev)
         {
           const double pr = prev_x + prev_w;
@@ -2630,67 +2891,16 @@ bool UI_MANAGER::Element_DrawModalOnTop()
                               (pr > (nr + 0.5)) || (pb > (nb + 0.5));
           if(shrunk && prev_w > 0.5 && prev_h > 0.5)
             {
-              // Combo dismiss (select or click-outside): blit the pre-open backdrop under
-              // the NARROW popup rect. Restores overhang content exactly; form∩menu is
-              // then covered by the form wipe + Draw below. Never fill form∪menu.
               if(modal_combo_menu_clear_pending &&
                  modal_combo_menu_clear_w > 0.5 && modal_combo_menu_clear_h > 0.5)
                 {
                   const double cx = modal_combo_menu_clear_x;
                   const double cy = modal_combo_menu_clear_y;
-                  const double cw = modal_combo_menu_clear_w;
-                  const double ch = modal_combo_menu_clear_h;
-                  double restored_h = 0.0;
 
                   if(modal_combo_menu_backdrop)
                     {
-                      restored_h = (double)modal_combo_menu_backdrop->GetHeight();
                       live->PutBitmapNoAlpha(cx, cy, modal_combo_menu_backdrop);
-                      GEN_DELETE modal_combo_menu_backdrop;
-                      modal_combo_menu_backdrop = NULL;
-                    }
-
-                  // If capture was missing/short, fill only the overhang BELOW the form
-                  // (never the form∩menu band) so a gray menu plate cannot linger there.
-                  // Never GetPixel here: config_modal has no layout backgroundcolor, and
-                  // sampling live pixels picked chrome (pure lime #00FF00 flash on dismiss).
-                  if(have_form)
-                    {
-                      const double form_bottom = fy + fh;
-                      const double gap_top = (cy + restored_h > form_bottom) ? (cy + restored_h) : form_bottom;
-                      const double gap_bot = cy + ch;
-                      if(gap_bot > gap_top + 0.5 && cw > 0.5)
-                        {
-                          // Page charcoal (skin/XML default). Prefer layout bg, else the modal
-                          // form fill (CSS --page-bg on config-modal) — never sample live pixels.
-                          XBYTE pr = 24, pg = 28, pb = 36;
-                          UI_COLOR* bg = NULL;
-                          if(layout->GetBackground() && layout->GetBackground()->GetColor() &&
-                             layout->GetBackground()->GetColor()->IsValid())
-                            {
-                              bg = layout->GetBackground()->GetColor();
-                            }
-                          else if(element_modal &&
-                                  (element_modal->GetType() == UI_ELEMENT_TYPE_FORM ||
-                                   element_modal->GetType() == UI_ELEMENT_TYPE_MENU))
-                            {
-                              UI_ELEMENT_FORM* form = (UI_ELEMENT_FORM*)element_modal;
-                              UI_COLOR* fbg = form->IsBackgroundColorSet() ? form->GetBackgroundColor()
-                                                                          : form->GetColor();
-                              if(fbg && fbg->IsValid()) bg = fbg;
-                            }
-                          if(bg)
-                            {
-                              pr = (XBYTE)bg->GetRed();
-                              pg = (XBYTE)bg->GetGreen();
-                              pb = (XBYTE)bg->GetBlue();
-                            }
-                          GRP2DCOLOR_RGBA8 gapfill(pr, pg, pb, 255);
-                          live->SetFillColor(&gapfill);
-                          live->SetLineColor(&noline);
-                          live->SetLineWidth(1.0f);
-                          live->Rectangle(cx, gap_bot, cx + cw, gap_top, true);
-                        }
+                      ModalLayer_FreeComboMenuBackdrop();
                     }
 
                   modal_combo_menu_clear_pending = false;
@@ -2786,6 +2996,9 @@ bool UI_MANAGER::Element_DrawModalOnTop()
       GEN_DELETE modal_layer_bitmap;
       modal_layer_bitmap = NULL;
     }
+
+  // One local dirty per frame is enough: the modal pass above already dirtied + Updated the overhang
+  // before re-capture. A second DirtyContentUnderCombo here forced a full next-frame rebuild cascade.
 
   if(xmutex_modal) xmutex_modal->UnLock();
 
@@ -2961,7 +3174,22 @@ void UI_MANAGER::PropagateRebuildOverlapDirtAcrossSharedCanvases()
                       double bx2 = bx1 + (double)area_b->GetBitmap()->GetWidth();
                       double by2 = by1 + (double)area_b->GetBitmap()->GetHeight();
 
-                      if(ax1 < bx2 && ax2 > bx1 && ay1 < by2 && ay2 > by1)
+                      // Same inset as MarkOverlappingAreasDirty / DirtyOverlappingLayoutSiblings.
+                      // Without it, PreDraw edge pads across the tree↔valor 6px gap (~5px rebuild
+                      // kiss) re-dirty the tree every frame via this cross-skin pass → ~17 FPS idle
+                      // (Draw_Tree dirty=180, ~32ms/frame). pad=4 drops that kiss.
+                      const double pad = 4.0;
+                      const double a0x = ax1 + pad;
+                      const double a0y = ay1 + pad;
+                      const double a1x = ax2 - pad;
+                      const double a1y = ay2 - pad;
+                      const double b0x = bx1 + pad;
+                      const double b0y = by1 + pad;
+                      const double b1x = bx2 - pad;
+                      const double b1y = by2 - pad;
+                      if((a1x <= a0x) || (a1y <= a0y) || (b1x <= b0x) || (b1y <= b0y)) continue;
+
+                      if(a0x < b1x && a1x > b0x && a0y < b1y && a1y > b0y)
                         {
                           Elements_SetToRedraw(elem_b);
                           changed = true;
@@ -3497,6 +3725,41 @@ bool UI_MANAGER::SetPreselectElement(UI_ELEMENT* element)
 
 
 /**-------------------------------------------------------------------------------------------------------------------
+*
+* @fn         bool UI_Element_HoverNeedsRedraw
+* @brief      True when entering/leaving preselect must invalidate the element.
+* @note       INTERNAL / FILE LOCAL. Classic Essential Desktop dock buttons (switch-off, chrome-btn, …)
+*             author no visiblelimit preselect/select chrome and no CSS :hover rules — a MustReDraw on
+*             hover only re-ran Draw_Option and could erase sibling taskbar icons (menu-app) sitting on
+*             the same full-width strip. Skip that redraw when hover has nothing visual to change.
+* @ingroup    USERINTERFACE
+*
+* --------------------------------------------------------------------------------------------------------------------*/
+static bool UI_Element_HoverNeedsRedraw(UI_ELEMENT* element)
+{
+  if(!element) return false;
+  if(element->GetStyleHasStateRules()) return true;
+  if(element->IsTransitioning())       return true;
+
+  UI_ELEMENT_OPTION* opt = dynamic_cast<UI_ELEMENT_OPTION*>(element);
+  if(opt)
+    {
+      XDWORD vl = opt->GetVisibleLimitType();
+      if(vl & (UI_ELEMENT_OPTION_VISIBLE_LIMIT_PRESELECT |
+               UI_ELEMENT_OPTION_VISIBLE_LIMIT_SELECT    |
+               UI_ELEMENT_OPTION_VISIBLE_LIMIT_ACTIVE))
+        {
+          return true;
+        }
+
+      if(opt->GetBackgroundColor() && (opt->GetBackgroundColor()->GetAlpha() > 0)) return true;
+    }
+
+  return false;
+}
+
+
+/**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         bool UI_MANAGER::ResetPreselect()
 * @brief      Reset preselect
@@ -3512,9 +3775,12 @@ bool UI_MANAGER::ResetPreselect()
       return false;
     }
 
-  preselect_element->SetPreSelect(false); 
-   
-  Elements_SetToRedraw(preselect_element);                                                                
+  UI_ELEMENT* leaving = preselect_element;
+  leaving->SetPreSelect(false);
+
+  // Same gate as PreSelectElement: Essential Desktop dock buttons have no hover chrome —
+  // redrawing them on pointer-leave wiped sibling taskbar icons (menu-app) for no benefit.
+  if(UI_Element_HoverNeedsRedraw(leaving)) Elements_SetToRedraw(leaving);
 
   preselect_element = NULL; 
 
@@ -7210,9 +7476,23 @@ UI_ELEMENT* UI_MANAGER::GetLayoutElement_Form(XFILEXMLELEMENT* node, UI_LAYOUT* 
 
   // Forms are scrolleable; default overflow is AUTO. Honour authored overflow-x/y (config/filters
   // modals use overflow:hidden) so a combo mini-modal hanging past the form never enables scrollbars.
+  // CSS "overflow" shorthand applies to BOTH axes (was Y-only and left X on AUTO, which clipped
+  // footer icon+label rows after mask reflow when VisibleRect briefly shrank).
   {
+    XSTRING overflow_shorthand;
+    if(outstyle.Get(NL("overflow"), overflow_shorthand))
+      {
+        UI_OVERFLOW_MODE ov = UI_OVERFLOW_AUTO;
+        if(!overflow_shorthand.Compare(NL("hidden"), true))        ov = UI_OVERFLOW_HIDDEN;
+         else if(!overflow_shorthand.Compare(NL("scroll"), true))  ov = UI_OVERFLOW_SCROLL;
+           else if(!overflow_shorthand.Compare(NL("auto"), true))  ov = UI_OVERFLOW_AUTO;
+             else if(!overflow_shorthand.Compare(NL("visible"), true)) ov = UI_OVERFLOW_VISIBLE;
+        element_form->Scroll_SetOverflow(UI_PROPERTY_SCROLLEABLE_TYPE_VERTICAL, ov);
+        element_form->Scroll_SetOverflow(UI_PROPERTY_SCROLLEABLE_TYPE_HORIZONTAL, ov);
+      }
+
     XSTRING overflowy;
-    if(outstyle.Get(NL("overflow-y"), overflowy) || outstyle.Get(NL("overflow"), overflowy))
+    if(outstyle.Get(NL("overflow-y"), overflowy))
       {
         if(!overflowy.Compare(NL("hidden"), true))        element_form->Scroll_SetOverflow(UI_PROPERTY_SCROLLEABLE_TYPE_VERTICAL, UI_OVERFLOW_HIDDEN);
          else if(!overflowy.Compare(NL("scroll"), true))  element_form->Scroll_SetOverflow(UI_PROPERTY_SCROLLEABLE_TYPE_VERTICAL, UI_OVERFLOW_SCROLL);
@@ -8285,6 +8565,8 @@ bool UI_MANAGER::CreateLayouts(XFILEXML& xml, XPATH& xmlpathfile, GRPSCREEN* scr
 
   if(!ui_skin->LoadFonts()) 
     {
+      XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, NL("[UI Load] ERROR: LoadFonts failed for skin (raster/vector font missing or unloadable)"));
+      GEN_DELETE ui_skin;
       return false;
     }
 
@@ -9026,7 +9308,9 @@ UI_ELEMENT* UI_MANAGER::PreSelectElement(UI_ELEMENT* element, int x, int y)
               // potentially a whole scrollable container -- dirty on EVERY tick produced a needless repaint
               // storm, especially costly with box-shadow/alpha cards, and was flagged as amplifying the
               // section-change blank-flash bug under investigation (see Informe_tecnico_GEN_UI_CSS_video.md).
-              if(preselectchanged) Elements_SetToRedraw(element);
+              // Also skip when hover has no visual (no CSS :hover / visiblelimit ring) — Essential Desktop
+              // dock icons must not redraw on preselect (that wiped menu-app siblings on the taskbar).
+              if(preselectchanged && UI_Element_HoverNeedsRedraw(element)) Elements_SetToRedraw(element);
 
               last_xposition = x;
               last_yposition = y;

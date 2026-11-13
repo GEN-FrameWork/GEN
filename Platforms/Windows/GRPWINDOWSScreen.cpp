@@ -45,7 +45,7 @@
 #include "MainProcWINDOWS.h"
 #include "APPFlowGraphics.h"
 
-#ifdef GRP_SCREEN_CUSTOMCHROMES_ACTIVE
+#if defined(USERINTERFACE_ACTIVE) || defined(GRP_SCREEN_CUSTOMCHROMES_ACTIVE)
 #include "UI_Manager.h"
 #endif
 
@@ -2240,12 +2240,23 @@ LRESULT CALLBACK GRPWINDOWSSCREEN::BaseWndProc(HWND hwnd, UINT msg, WPARAM wpara
 {
   switch(msg)
     {
-      case WM_SYSCOMMAND            :  switch(wparam)
-                                        {
-                                          case SC_CLOSE         : break;
-                                          case SC_SCREENSAVE    :
-                                          case SC_MONITORPOWER  : return 0;
-                                        }
+      case WM_SYSCOMMAND            : { // Modal owns the shell: same as chrome min/max/close (UI hit-test
+                                        // only reaches the modal subtree). Block native size/maximize too.
+                                        #ifdef USERINTERFACE_ACTIVE
+                                        if(UI_MANAGER::GetIsInstanced() && GEN_USERINTERFACE.Element_IsModalActive())
+                                          {
+                                            const WPARAM cmd = (wparam & 0xFFF0);
+                                            if((cmd == SC_SIZE) || (cmd == SC_MAXIMIZE)) return 0;
+                                          }
+                                        #endif
+
+                                        switch(wparam)
+                                          {
+                                            case SC_CLOSE         : break;
+                                            case SC_SCREENSAVE    :
+                                            case SC_MONITORPOWER  : return 0;
+                                          }
+                                      }
                                       break;
 
       case WM_ENDSESSION            : break;
@@ -2272,9 +2283,20 @@ LRESULT CALLBACK GRPWINDOWSSCREEN::BaseWndProc(HWND hwnd, UINT msg, WPARAM wpara
                                       break;
 
       case WM_NCHITTEST              : { LONG stylebits = GetWindowLong(hwnd, GWL_STYLE);
+                                        #ifdef USERINTERFACE_ACTIVE
+                                        // Visible modal ⇒ no main-window border resize (chrome buttons are
+                                        // already inert via HandleEvent_UI routing only to element_modal).
+                                        const bool modal_lock_resize =
+                                            UI_MANAGER::GetIsInstanced() && GEN_USERINTERFACE.Element_IsModalActive();
+                                        #else
+                                        const bool modal_lock_resize = false;
+                                        #endif
 
                                         if((stylebits & WS_THICKFRAME) && !(stylebits & WS_CAPTION))
                                           {
+                                            // Custom chromes: we own sizing hit-tests. Modal → client only.
+                                            if(modal_lock_resize) return HTCLIENT;
+
                                             RECT rect;
                                             GetWindowRect(hwnd, &rect);
 
@@ -2298,6 +2320,25 @@ LRESULT CALLBACK GRPWINDOWSSCREEN::BaseWndProc(HWND hwnd, UINT msg, WPARAM wpara
 
                                             return HTCLIENT;
                                           }
+
+                                        // Native caption + thickframe: DefWindowProc owns the borders;
+                                        // remap size hits to client while a modal is up.
+                                        if(modal_lock_resize && (stylebits & WS_THICKFRAME))
+                                          {
+                                            LRESULT hit = DefWindowProc(hwnd, msg, wparam, lparam);
+                                            switch(hit)
+                                              {
+                                                case HTLEFT        :
+                                                case HTRIGHT       :
+                                                case HTTOP         :
+                                                case HTBOTTOM      :
+                                                case HTTOPLEFT     :
+                                                case HTTOPRIGHT    :
+                                                case HTBOTTOMLEFT  :
+                                                case HTBOTTOMRIGHT : return HTCLIENT;
+                                                default            : return hit;
+                                              }
+                                          }
                                       }
                                       break;
 
@@ -2309,7 +2350,27 @@ LRESULT CALLBACK GRPWINDOWSSCREEN::BaseWndProc(HWND hwnd, UINT msg, WPARAM wpara
       case WM_GETMINMAXINFO         : { GRPWINDOWSSCREEN* screen = (GRPWINDOWSSCREEN*)GRPSCREEN::GetListScreens()->Get((void*)hwnd);
                                         if(screen)
                                           {
-                                            screen->ApplyResizeLimits((MINMAXINFO*)lparam);
+                                            MINMAXINFO* mmi = (MINMAXINFO*)lparam;
+                                            screen->ApplyResizeLimits(mmi);
+
+                                            // Hard-pin track size while a modal is up so no residual
+                                            // size path (Aero snap assist, leftover SC_SIZE, etc.) can grow/shrink.
+                                            #ifdef USERINTERFACE_ACTIVE
+                                            if(mmi && UI_MANAGER::GetIsInstanced() &&
+                                               GEN_USERINTERFACE.Element_IsModalActive())
+                                              {
+                                                RECT wr;
+                                                if(GetWindowRect(hwnd, &wr))
+                                                  {
+                                                    const int ww = wr.right  - wr.left;
+                                                    const int wh = wr.bottom - wr.top;
+                                                    mmi->ptMinTrackSize.x = ww;
+                                                    mmi->ptMinTrackSize.y = wh;
+                                                    mmi->ptMaxTrackSize.x = ww;
+                                                    mmi->ptMaxTrackSize.y = wh;
+                                                  }
+                                              }
+                                            #endif
                                             return 0;
                                           }
                                       }

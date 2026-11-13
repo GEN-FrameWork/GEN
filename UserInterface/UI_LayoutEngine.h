@@ -416,7 +416,10 @@ class UI_LAYOUTENGINE
 {
   public:
 
-    static UI_LAYOUTBOX*           BuildTree                    (UI_ELEMENT* root);
+    // prefer_intrinsic: true for descendants (flex-basis:auto uses authored/natural size). false for the
+    // RunLayout root so a reflow of a flex child (e.g. after mask text resolve) keeps the parent's live
+    // BoundaryLine instead of collapsing VisibleRect back to a stale shrink-wrap intrinsic.
+    static UI_LAYOUTBOX*           BuildTree                    (UI_ELEMENT* root, bool prefer_intrinsic = true);
 
     static void                    ApplyPositioning              (UI_LAYOUTBOX* root);
 

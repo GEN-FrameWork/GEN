@@ -51,17 +51,21 @@
 
 /**-------------------------------------------------------------------------------------------------------------------
 *
-* @fn         UI_LAYOUTBOX* UI_LAYOUTENGINE::BuildTree(UI_ELEMENT* root)
+* @fn         UI_LAYOUTBOX* UI_LAYOUTENGINE::BuildTree(UI_ELEMENT* root, bool prefer_intrinsic)
 * @brief      Build tree
 * @note       STATIC
 * @ingroup    USERINTERFACE
 *
 * @param[in]  root : Element to build a UI_LAYOUTBOX (sub)tree for; NULL returns NULL.
+* @param[in]  prefer_intrinsic : When true (default, descendants), prefer GetIntrinsicWidth/Height over the
+*             live boundary for flex-basis:auto. When false (RunLayout root), keep the live BoundaryLine so a
+*             partial reflow after mask text resolve cannot collapse a flex child's VisibleRect to its stale
+*             shrink-wrap intrinsic (UI_System footer_so_block clipped its icon to a gray bar).
 *
 * @return     UI_LAYOUTBOX* : Owned tree root, or NULL if "root" is NULL.
 *
 * --------------------------------------------------------------------------------------------------------------------*/
-UI_LAYOUTBOX* UI_LAYOUTENGINE::BuildTree(UI_ELEMENT* root)
+UI_LAYOUTBOX* UI_LAYOUTENGINE::BuildTree(UI_ELEMENT* root, bool prefer_intrinsic)
 {
   if(!root) return NULL;
 
@@ -70,20 +74,21 @@ UI_LAYOUTBOX* UI_LAYOUTENGINE::BuildTree(UI_ELEMENT* root)
   UI_CSSBOX cssbox = UI_CSSBox_Get(root);
 
   // Phase 4 ("migración del ejemplo" -- footer icon/text gap regression fix, see UI_SKIN::CalculateBoundaryLine()'s
-  // own SCOPE ADDENDUM for the full root-cause story): "root"'s CONTENT SIZE -- what ResolveFlexItemSizes() below
-  // reads as a flex-basis:auto item's "hypothetical main size" -- must come from its INTRINSIC size (its authored
-  // width/height for a fixed-size widget, or its freshly-measured natural size for auto-sized content), NOT from
-  // GetBoundaryLine()/UI_CSSBox_Get(), which WriteBackTree() overwrites with whatever this same engine last
-  // RESOLVED it to. Falling back to cssbox.width/height (the pre-fix behaviour) only when GetIntrinsicWidth()/
-  // Height() is still unset (-1) keeps this a no-op for any element CalculateBoundaryLine() has never touched.
+  // own SCOPE ADDENDUM for the full root-cause story): for FLEX ITEMS (prefer_intrinsic), CONTENT SIZE must come
+  // from INTRINSIC size, NOT from GetBoundaryLine()/UI_CSSBox_Get() which WriteBackTree() overwrites. The
+  // RunLayout ROOT must NOT prefer intrinsic: ChangeTextElementValue reflows only the flex father, and using a
+  // stale shrink-wrap intrinsic there collapses VisibleRect and clips siblings (SO footer icon).
   double contentwidth  = cssbox.width;
   double contentheight = cssbox.height;
 
-  double intrinsicwidth = root->GetIntrinsicWidth();
-  if(intrinsicwidth >= 0.0) contentwidth = intrinsicwidth;
+  if(prefer_intrinsic)
+    {
+      double intrinsicwidth = root->GetIntrinsicWidth();
+      if(intrinsicwidth >= 0.0) contentwidth = intrinsicwidth;
 
-  double intrinsicheight = root->GetIntrinsicHeight();
-  if(intrinsicheight >= 0.0) contentheight = intrinsicheight;
+      double intrinsicheight = root->GetIntrinsicHeight();
+      if(intrinsicheight >= 0.0) contentheight = intrinsicheight;
+    }
 
   box->SetContentBox(cssbox.left, cssbox.top, contentwidth, contentheight);
 
@@ -139,7 +144,7 @@ UI_LAYOUTBOX* UI_LAYOUTENGINE::BuildTree(UI_ELEMENT* root)
           // Phase 3: invisible children must not consume flex/grid slots (badge_ok/ko, etc.).
           if(!childelement->IsVisible()) continue;
 
-          UI_LAYOUTBOX* childbox = BuildTree(childelement);
+          UI_LAYOUTBOX* childbox = BuildTree(childelement, true);
           if(childbox) box->AddChild(childbox);
         }
     }
@@ -414,7 +419,7 @@ void UI_LAYOUTENGINE::RunLayout(UI_ELEMENT* root, UI_LAYOUTSTRATEGY strategy)
   // menu_horz / chrome sizes even though ArrangeFlex never ran.
   if(!SubtreeUsesCSSFlowLayout(root)) return;
 
-  UI_LAYOUTBOX* tree = BuildTree(root);
+  UI_LAYOUTBOX* tree = BuildTree(root, false);
   if(!tree) return;
 
   // Normal flow: ONE arrange-then-recurse walk for flex and grid together. A separate full-tree

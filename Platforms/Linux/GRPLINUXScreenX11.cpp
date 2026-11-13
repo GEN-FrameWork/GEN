@@ -56,6 +56,10 @@
 #include "MainProcLINUX.h"
 #include "APPFlowGraphics.h"
 
+#ifdef USERINTERFACE_ACTIVE
+#include "UI_Manager.h"
+#endif
+
 #include <unistd.h>
 #include <stdint.h>
 
@@ -1861,6 +1865,18 @@ void GRPLINUXSCREENX11::UpdateCustomChromesResize()
 
       return;
     }
+
+  #ifdef USERINTERFACE_ACTIVE
+  // Match Win32 WM_NCHITTEST modal lock: chrome buttons are inert under a modal, so the
+  // main-window resize grip must be too.
+  if(UI_MANAGER::GetIsInstanced() && GEN_USERINTERFACE.Element_IsModalActive())
+    {
+      customresizing          = false;
+      customresizeprevpressed = false;
+
+      return;
+    }
+  #endif
 
   Window        rootreturn  = 0;
   Window        childreturn = 0;

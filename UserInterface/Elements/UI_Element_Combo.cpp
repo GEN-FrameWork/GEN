@@ -957,8 +957,7 @@ bool UI_ELEMENT_COMBO::OpenMenu()
       host->GetComposeElements()->Add(UImenu);
     }
 
-  // Keep invisible until the under-menu backdrop is snapped — SetComboMenuRect GetBitmap
-  // must see pre-menu pixels or dismiss gap-fill flashes (or restores a baked-in plate).
+  // Keep invisible until sticky AABB + seed underlay capture (OpenMenu before menu paint).
   UImenu->SetVisible(false);
   UImenu->SetMustReDraw(false);
   if(GetLayout() && GetLayout()->GetSkin())
@@ -1005,7 +1004,7 @@ bool UI_ELEMENT_COMBO::OpenMenu()
 
   SnapshotRestoreHostFormSize(true);    // form AABB must stay fixed
 
-  // Sticky popup AABB + pre-menu backdrop BEFORE the menu becomes visible/drawn.
+  // Sticky popup AABB + seed live underlay BEFORE the menu becomes visible/drawn.
   if(GEN_USERINTERFACE.Element_GetModal() && UImenu->GetBoundaryLine())
     {
       const double mw = UImenu->GetBoundaryLine()->width;
@@ -1073,9 +1072,8 @@ bool UI_ELEMENT_COMBO::CloseMenu()
   host_size_locked = false;
 
   if(GetFather()) GEN_USERINTERFACE.Elements_SetToRedraw(GetFather());
-  // Dirty ALL layouts so content under the overhanging menu plate is restored.
-  // ModalLayer_Invalidate keeps the previous expanded AABB; DrawModalOnTop shrink
-  // re-paints content immediately when the overlay contracts.
+  // Dirty ALL layouts so content under the overhang repaints; DrawModalOnTop then
+  // PutBitmap's the last live underlay capture into the popup footprint.
   GEN_USERINTERFACE.Elements_SetToRedraw();
   // Elements_SetToRedraw re-dirties this hidden MENU. Clear again so layout Update
   // does not RestoreOnHide a stale formbackdrop plate before DrawModalOnTop runs

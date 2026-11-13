@@ -146,8 +146,9 @@ class UI_MANAGER : public XOBSERVER, public XSUBJECT
     // see the popup (programmatic menus may sit outside the form VisibleRect bookkeeping).
     bool                            ModalLayer_UnionRect                      (double rx, double ry, double rw, double rh);
     // Sticky combo-popup AABB while the dropdown is open (merged into DrawModalOnTop's "new" rect).
-    // Also snapshots the live canvas under that rect so dismiss can restore exact pixels
-    // (avoids a flat gray page-fill box under the form when clicking outside).
+    // Live underlay: content repaints under the overhang each frame; DrawModalOnTop re-captures
+    // that rect before painting the menu; dismiss PutBitmap's the last fresh capture once.
+    // Gated to the modal-combo path only (no change for apps without overhanging modal combos).
     void                            ModalLayer_SetComboMenuRect               (double rx, double ry, double rw, double rh);
     void                            ModalLayer_ClearComboMenuRect             ();
     // True after CloseMenu until DrawModalOnTop consumes the popup clear (skip MENU RestoreOnHide).
@@ -363,13 +364,21 @@ class UI_MANAGER : public XOBSERVER, public XSUBJECT
     double                          modal_combo_menu_y;
     double                          modal_combo_menu_w;
     double                          modal_combo_menu_h;
-    // One-shot: after CloseMenu, restore this narrow popup backdrop (not form∪menu).
+    // One-shot: after CloseMenu, PutBitmap last live underlay into this narrow rect.
     bool                            modal_combo_menu_clear_pending;
     double                          modal_combo_menu_clear_x;
     double                          modal_combo_menu_clear_y;
     double                          modal_combo_menu_clear_w;
     double                          modal_combo_menu_clear_h;
+    // Last pre-menu underlay (refreshed every frame while combo open after content paints).
     GRPBITMAP*                      modal_combo_menu_backdrop;
+
+    void                            ModalLayer_FreeComboMenuBackdrop          ();
+    bool                            ModalLayer_CaptureComboMenuBackdrop       (GRP2DCANVAS* live, double rx, double ry, double rw, double rh);
+    void                            ModalLayer_DirtyContentUnderCombo         ();
+    // Expand sticky/capture rect by border AA pad (clamped to canvas). Combo RoundRect stroke
+    // sits ~1px outside BoundaryLine; without this a hairline ghost remains on dismiss.
+    bool                            ModalLayer_PadComboMenuRect               (GRP2DCANVAS* live, double& rx, double& ry, double& rw, double& rh);
 
     XMUTEX*                         xmutex_UIevent;
     

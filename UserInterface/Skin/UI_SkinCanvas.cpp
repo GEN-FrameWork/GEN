@@ -60,6 +60,11 @@
 #include "agg_pixfmt_rgba.h"
 #include "agg_blur.h"
 
+#include <stdio.h>
+#ifdef WINDOWS
+#include <windows.h>
+#endif
+
 #include "UI_Animation.h"
 #include "UI_Element.h"
 #include "UI_Property_Scrolleable.h"
@@ -1090,6 +1095,137 @@ static void UI_SkinCanvas_MarkSubtreeDirty(UI_ELEMENT* element)
 }
 
 
+// Opaque axis-aligned fill (page/legend wipes). Prefer AGG Rectangle over per-pixel PutPixel —
+// RepaintCompactLegendForms runs every layout Update, and PutPixel loops there alone dropped
+// XTM idle FPS from ~60 to ~17 on the main window (no modal).
+static void UI_SkinCanvas_FillRectOpaque(GRP2DCANVAS* canvas, double x, double y, double w, double h,
+                                         XBYTE r, XBYTE g, XBYTE b)
+{
+  if(!canvas || w < 0.5 || h < 0.5) return;
+  GRP2DCOLOR_RGBA8 fill(r, g, b, 255);
+  GRP2DCOLOR_RGBA8 noline(0, 0, 0, 0);
+  canvas->SetFillColor(&fill);
+  canvas->SetLineColor(&noline);
+  canvas->SetLineWidth(1.0f);
+  // GEN Rectangle: (x1,y1 bottom-left) (x2,y2 top-right).
+  canvas->Rectangle(x, y + h, x + w, y, true);
+}
+
+
+// GetBitmap backdrop poison (footer vr-line dual-line): phosphor-lime (~23,255,13) or blood-red
+// (~129,37,43) invented while GetPixel still sees page charcoal. Reject those captures.
+static bool UI_SkinCanvas_IsBackdropPoisonPixel(GRP2DCOLOR* px)
+{
+  if(!px) return false;
+  GRP2DCOLOR_RGBA8* c = (GRP2DCOLOR_RGBA8*)px;
+  const bool lime = (c->r <= 40) && (c->g >= 200) && (c->b <= 40) && (c->g > (XBYTE)(c->r + 100));
+  const bool blood = (c->r >= 80) && (c->g <= 60) && (c->b <= 60) && (c->r > (XBYTE)(c->g + 40));
+  return lime || blood;
+}
+
+
+static bool UI_SkinCanvas_BitmapHasBackdropPoison(GRPBITMAP* bmp)
+{
+  if(!bmp) return false;
+  const int bw = (int)bmp->GetWidth();
+  const int bh = (int)bmp->GetHeight();
+  if(bw < 1 || bh < 1) return false;
+
+  const int samples[][2] =
+    {
+      { 0, 0 }, { bw - 1, 0 }, { 0, bh - 1 }, { bw - 1, bh - 1 },
+      { bw / 2, bh / 2 }, { bw / 2, 0 }, { 0, bh / 2 }, { bw / 2, bh - 1 }, { bw - 1, bh / 2 }
+    };
+  for(size_t i = 0; i < sizeof(samples) / sizeof(samples[0]); i++)
+    {
+      const int sx = samples[i][0];
+      const int sy = samples[i][1];
+      if(sx < 0 || sy < 0 || sx >= bw || sy >= bh) continue;
+      if(UI_SkinCanvas_IsBackdropPoisonPixel(bmp->GetPixel(sx, sy))) return true;
+    }
+  // Thin vertical strips (footer sep ownarea): sample every column of the mid row.
+  if(bw <= 16)
+    {
+      const int midy = bh / 2;
+      for(int sx = 0; sx < bw; sx++)
+        {
+          if(UI_SkinCanvas_IsBackdropPoisonPixel(bmp->GetPixel(sx, midy))) return true;
+        }
+    }
+  return false;
+}
+
+
+static void UI_SkinCanvas_FillBitmapOpaque(GRPBITMAP* bmp, XBYTE r, XBYTE g, XBYTE b)
+{
+  if(!bmp || !bmp->GetBuffer()) return;
+  const XDWORD w = bmp->GetWidth();
+  const XDWORD h = bmp->GetHeight();
+  if(!w || !h) return;
+
+  if(bmp->GetBytesperPixel() == 4)
+    {
+      XBYTE px[4];
+      switch(bmp->GetMode())
+        {
+          case GRPPROPERTYMODE_32_BGRA_8888 : px[0]=b; px[1]=g; px[2]=r; px[3]=255; break;
+          case GRPPROPERTYMODE_32_RGBA_8888 :
+          default                          : px[0]=r; px[1]=g; px[2]=b; px[3]=255; break;
+        }
+      XBYTE* buf = bmp->GetBuffer();
+      const XDWORD n = w * h;
+      for(XDWORD i = 0; i < n; i++)
+        {
+          buf[i*4+0] = px[0];
+          buf[i*4+1] = px[1];
+          buf[i*4+2] = px[2];
+          buf[i*4+3] = px[3];
+        }
+      return;
+    }
+
+  GRP2DCOLOR_RGBA8 c(r, g, b, 255);
+  for(XDWORD y = 0; y < h; y++)
+    for(XDWORD x = 0; x < w; x++)
+      bmp->PutPixel((int)x, (int)y, &c);
+}
+
+
+// Page RGB for compact-legend / chrome under-glyph seeds. Prefer the caller's layout, then any
+// non-chrome layout with a valid page colour. Never hard-code an app layout name (e.g.
+// "xtracemonitor"): that poisoned UI_System chrome/legend wipes with the wrong charcoal page.
+// Returns false when nothing usable was found (caller must NOT invent charcoal for other apps).
+static bool UI_SkinCanvas_ResolvePageRGB(UI_LAYOUT* prefer, XBYTE& r, XBYTE& g, XBYTE& b)
+{
+  auto try_layout = [&](UI_LAYOUT* layout) -> bool
+    {
+      if(!layout || !layout->GetBackground() || !layout->GetBackground()->GetColor()) return false;
+      UI_COLOR* page = layout->GetBackground()->GetColor();
+      if(!page->IsValid()) return false;
+      const int sum = (int)page->GetRed() + (int)page->GetGreen() + (int)page->GetBlue();
+      if(sum <= 8) return false;
+      r = (XBYTE)page->GetRed();
+      g = (XBYTE)page->GetGreen();
+      b = (XBYTE)page->GetBlue();
+      return true;
+    };
+
+  if(try_layout(prefer)) return true;
+
+  XVECTOR<UI_LAYOUT*>* all = GEN_USERINTERFACE.Layouts_GetAll();
+  if(!all) return false;
+  for(XDWORD i = 0; i < all->GetSize(); i++)
+    {
+      UI_LAYOUT* layout = all->Get(i);
+      if(!layout || layout == prefer) continue;
+      XSTRING* name = layout->GetNameID();
+      if(name && name->Compare(NL("chrome"), true) == 0) continue;
+      if(try_layout(layout)) return true;
+    }
+  return false;
+}
+
+
 static void UI_SkinCanvas_DirtyOverlappingLayoutSiblings(UI_ELEMENT* element, double x, double y, double w, double h)
 {
   if(!element) return;
@@ -1104,8 +1240,18 @@ static void UI_SkinCanvas_DirtyOverlappingLayoutSiblings(UI_ELEMENT* element, do
   UI_ELEMENT* selfroot = element;
   while(selfroot->GetFather()) selfroot = selfroot->GetFather();
 
-  double wipe_r = x + w;
-  double wipe_b = y + h;
+  // Same inset as MarkOverlappingAreasDirty for normal siblings (drops netstatus↔valor ≈5px
+  // kiss / tree cascade). Toolbar legends ABUT the bubble bottom (gap 0 on authored boxes) —
+  // pad=4 on those strips never fires and leaves Stop/Clear captions blank after a neighbour
+  // restore. Compact-legend siblings use pad=0 (same gate as RepaintCompactLegendForms).
+  const double pad = 4.0;
+  const double wipe_l = x + pad;
+  const double wipe_t = y + pad;
+  const double wipe_r = x + w - pad;
+  const double wipe_b = y + h - pad;
+  if((wipe_r <= wipe_l) || (wipe_b <= wipe_t)) return;
+
+  bool legend_hit = false;
 
   for(XDWORD c=0; c<roots->GetSize(); c++)
     {
@@ -1121,10 +1267,43 @@ static void UI_SkinCanvas_DirtyOverlappingLayoutSiblings(UI_ELEMENT* element, do
       double et = UI_BOUNDARYLINE_EdgeTop(eb, bl->height);
       double er = el + bl->width;
 
-      bool overlaps = (x < er) && (el < wipe_r) && (y < eb) && (et < wipe_b);
+      // Compact under-icon legend strip (transparent, short AND narrow).
+      double sib_pad = pad;
+      if(sib->GetType() == UI_ELEMENT_TYPE_FORM &&
+         bl->height > 1.0 && bl->height <= 28.0 && bl->width <= 120.0)
+        {
+          UI_ELEMENT_FORM* sf = (UI_ELEMENT_FORM*)sib;
+          UI_COLOR* sfill = sf->IsBackgroundColorSet() ? sf->GetBackgroundColor() : sf->GetColor();
+          const bool legend_paintable = (sfill && sfill->GetAlpha() > 0) ||
+                                        (sf->GetBorderWidth() > 0.0) ||
+                                        sf->IsBoxShadowSet();
+          if(!legend_paintable) sib_pad = 0.0;
+        }
+
+      const double sl = el + sib_pad;
+      const double st = et + sib_pad;
+      const double sr = er - sib_pad;
+      const double sb = eb - sib_pad;
+      if((sr <= sl) || (sb <= st)) continue;
+
+      // Legend strips ABUT the bubble bottom (EdgeTop legend == ypos bubble, gap 0). Strict <
+      // misses that kiss even with pad=0 — expand the wipe by 1px only for those siblings.
+      const double kiss = (sib_pad == 0.0) ? 1.0 : 0.0;
+      const double wl = (sib_pad == 0.0) ? (x - kiss) : wipe_l;
+      const double wt = (sib_pad == 0.0) ? (y - kiss) : wipe_t;
+      const double wr = (sib_pad == 0.0) ? (x + w + kiss) : wipe_r;
+      const double wb = (sib_pad == 0.0) ? (y + h + kiss) : wipe_b;
+
+      bool overlaps = (wl < sr) && (sl < wr) && (wt < sb) && (st < wb);
       if(!overlaps) continue;
 
+      if(sib_pad == 0.0) legend_hit = true;
       UI_SkinCanvas_MarkSubtreeDirty(sib);
+    }
+
+  if(legend_hit && layout->GetSkin() && layout->GetSkin()->GetDrawMode() == UI_SKIN_DRAWMODE_CANVAS)
+    {
+      ((UI_SKINCANVAS*)layout->GetSkin())->CompactLegendsMarkNeedRepair();
     }
 }
 
@@ -1475,6 +1654,16 @@ bool UI_SKINCANVAS_REBUILDAREAS::RebuildAllAreas()
                           GRPBITMAP* bitmap = area->GetBitmap();
                           if(bitmap) PutBitmapNoAlpha(area->GetXPos(), area->GetYPos(), bitmap);
 
+                          // MultiOption rebuild AABBs (PreDraw edge) spill into under-icon legend
+                          // strips. Orphan legends often have no rebuild area for MarkOverlapping
+                          // to dirty — ask for the end-of-Update compact-legend seal.
+                          if(element->GetType() == UI_ELEMENT_TYPE_MULTIOPTION)
+                            {
+                              UI_LAYOUT* lay = element->GetLayout();
+                              if(lay && lay->GetSkin() && lay->GetSkin()->GetDrawMode() == UI_SKIN_DRAWMODE_CANVAS)
+                                ((UI_SKINCANVAS*)lay->GetSkin())->CompactLegendsMarkNeedRepair();
+                            }
+
                           areas.Delete(area);
                           GEN_DELETE area;
                         }
@@ -1603,7 +1792,21 @@ void UI_SKINCANVAS_REBUILDAREAS::MarkOverlappingAreasDirty(GRP2DREBUILDAREA* are
       double w2 = (double)neighborbitmap->GetWidth();
       double h2 = (double)neighborbitmap->GetHeight();
 
-      bool overlaps = ((x1 < (x2+w2)) && (x2 < (x1+w1)) && (y1 < (y2+h2)) && (y2 < (y1+h1)));
+      // Require a real intersection, not shadow-pad / PreDraw kiss. pad=4 drops the
+      // netstatus↔valor ≈5px kiss (idle cascade) but keeps toolbar button↔legend ≈11px
+      // (pad=8 left permanent gray plates under the captions).
+      const double pad = 4.0;
+      const double ax1 = x1 + pad;
+      const double ay1 = y1 + pad;
+      const double ax2 = x1 + w1 - pad;
+      const double ay2 = y1 + h1 - pad;
+      const double bx1 = x2 + pad;
+      const double by1 = y2 + pad;
+      const double bx2 = x2 + w2 - pad;
+      const double by2 = y2 + h2 - pad;
+      if((ax2 <= ax1) || (ay2 <= ay1) || (bx2 <= bx1) || (by2 <= by1)) continue;
+
+      bool overlaps = ((ax1 < bx2) && (bx1 < ax2) && (ay1 < by2) && (by1 < ay2));
       if(!overlaps) continue;
 
       // Just flag it dirty -- do NOT touch its bitmap or delete its area here. The restore phase starts only
@@ -2009,11 +2212,19 @@ bool UI_SKINCANVAS::LoadFonts()
   bool   status = false; 
 
   GRP2DCANVAS* canvas = GetCanvas();
-  if(!canvas) return false;
+  if(!canvas)
+    {
+      XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, NL("[UI Skin] LoadFonts: canvas is NULL (viewport not ready?)"));
+      return false;
+    }
   
   if(!rasterfontname.IsEmpty())
     {
       status = canvas->RasterFont_Select(rasterfontname.Get());
+      if(!status)
+        {
+          XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, NL("[UI Skin] LoadFonts: RasterFont_Select failed for '%s'"), rasterfontname.Get());
+        }
 
     } else status = true;
 
@@ -2031,31 +2242,69 @@ bool UI_SKINCANVAS::LoadFonts()
               if(unzipfile)
                 {                  
                   XPATH pathnamefilecmp;
+                  XPATH unzippathfile_tmp;
 
                   pathnamefilecmp = APPFLOW_DEFAULT_DIRECTORY_FONTS;
                   pathnamefilecmp.Slash_Add();
                   pathnamefilecmp += vectorfontname;
+                  pathnamefilecmp.Slash_Normalize();
+
+                  unzippathfile_tmp  = GEN_USERINTERFACE.GetUnzipPathFile()->Get();
+                  unzippathfile_tmp.Slash_Add();
+                  unzippathfile_tmp += vectorfontname;
+                  unzippathfile_tmp.Slash_Normalize();
 
                   status = unzipfile->DecompressFile(pathnamefilecmp, (*GEN_USERINTERFACE.GetUnzipPathFile()), vectorfontname.Get());   
-                  if(status)
-                    {  
-                      XPATH unzippathfile_tmp;
-
-                      unzippathfile_tmp  = GEN_USERINTERFACE.GetUnzipPathFile()->Get();
-                      unzippathfile_tmp += vectorfontname;
-
-                      status = canvas->VectorFont_Load(unzippathfile_tmp);  
-
-                      //GEN_USERINTERFACE.DeleteTemporalUnZipFile(unzippathfile_tmp);  
-
-                      fontpathfile = unzippathfile_tmp;
+                  if(!status)
+                    {
+                      XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, NL("[UI Skin] LoadFonts: zip extract failed for entry [%s]"), pathnamefilecmp.Get());
                     }
-                    
+                   else
+                    {
+                      status = canvas->VectorFont_Load(unzippathfile_tmp);
+                      if(!status)
+                        {
+                          XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, NL("[UI Skin] LoadFonts: VectorFont_Load failed for [%s]"), unzippathfile_tmp.Get());
+                        }
+                       else
+                        {
+                          fontpathfile = unzippathfile_tmp;
+                        }
+                    }
+
+                  // Legacy/compat: if zip extract or FreeType load failed, try an already-extracted
+                  // copy beside the bundle (older runs / manual copy) before giving up.
+                  if(!status)
+                    {
+                      XFILE* check = GEN_XFACTORY.Create_File();
+                      if(check)
+                        {
+                          if(check->Exist(unzippathfile_tmp.Get()))
+                            {
+                              status = canvas->VectorFont_Load(unzippathfile_tmp);
+                              if(status)
+                                {
+                                  fontpathfile = unzippathfile_tmp;
+                                  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, NL("[UI Skin] LoadFonts: recovered vector font from existing file [%s]"), unzippathfile_tmp.Get());
+                                }
+                            }
+                          GEN_XFACTORY.Delete_File(check);
+                        }
+                    }
+                }
+               else
+                {
+                  XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, NL("[UI Skin] LoadFonts: IsZippedFile but unzip handle is NULL"));
+                  status = false;
                 }
             }
            else
             {                            
-              status = canvas->VectorFont_Load(xpath);    
+              status = canvas->VectorFont_Load(xpath);
+              if(!status)
+                {
+                  XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, NL("[UI Skin] LoadFonts: VectorFont_Load failed for disk font [%s]"), xpath.Get());
+                }
             }
 
           // Phase 0/1: skin@vectorfont is always the logical "default" face (compat).
@@ -2067,6 +2316,13 @@ bool UI_SKINCANVAS::LoadFonts()
                   canvas->VectorFont_Register(GRP2DCANVAS_VECTORFONT_DEFAULT, (*loaded));
                   canvas->VectorFont_Select(GRP2DCANVAS_VECTORFONT_DEFAULT);
                 }
+            }
+           else
+            {
+              // Legacy Essential Desktop XMLs declare vectorfont but must still open if only the
+              // raster face is available (FreeType/extract glitches). Keep going with verdana/etc.
+              XTRACE_PRINTCOLOR(XTRACE_COLOR_WARNING, NL("[UI Skin] LoadFonts: vector font '%s' unavailable; continuing with raster face only (legacy compat)"), vectorfontname.Get());
+              status = true;
             }
 
         } else status = true;
@@ -4638,6 +4894,56 @@ bool UI_SKINCANVAS::RestoreOnHide(UI_ELEMENT* element)
           // shown again, that any overlapping option's cached backdrop is unconditionally stale.
           if(formhiddentracked.Find(element) == NOTFOUND) formhiddentracked.Add(element);
 
+          // Shared-slot form twins (Essential Desktop menu-app ↔ menu-switch_off): same AABB at xpos=120.
+          // After the click swap, the HIDDEN twin stays MustReDraw (global Elements_SetToRedraw / sibling
+          // dirty). RestoreOnHide must NOT PutBitmapNoAlpha its FormBackdrop over the VISIBLE twin — that
+          // erased logout/reboot/shutdown (or the app icons on the way back) and left an empty taskbar strip.
+          // Same rule as MULTIOPTION Stop/Run twins below: visible twin owns the pixels; drop our cache only.
+          bool twin_visible = false;
+          if(element->GetBoundaryLine())
+            {
+              double sx = element->GetXPosition();
+              double sy = element->GetYPosition();
+              if(element->GetFather()) GetAddPositionScrollSteps(element->GetFather(), sx, sy);
+              double slot_l = UI_BOUNDARYLINE_EdgeLeft  (sx, element->GetBoundaryLine()->width);
+              double slot_r = UI_BOUNDARYLINE_EdgeRight (sx, element->GetBoundaryLine()->width);
+              double slot_t = UI_BOUNDARYLINE_EdgeTop   (sy, element->GetBoundaryLine()->height);
+              double slot_b = UI_BOUNDARYLINE_EdgeBottom(sy, element->GetBoundaryLine()->height);
+
+              UI_LAYOUT* layout = element->GetLayout();
+              XVECTOR<UI_ELEMENT*>* roots = layout ? layout->Elements_Get() : NULL;
+              if(roots)
+                {
+                  for(XDWORD i = 0; i < roots->GetSize(); i++)
+                    {
+                      UI_ELEMENT* sib = roots->Get(i);
+                      if(!sib || (sib == element)) continue;
+                      if((sib->GetType() != UI_ELEMENT_TYPE_FORM) && (sib->GetType() != UI_ELEMENT_TYPE_MENU)) continue;
+                      if(!sib->IsVisible() || !sib->GetBoundaryLine()) continue;
+
+                      double tx = sib->GetXPosition();
+                      double ty = sib->GetYPosition();
+                      if(sib->GetFather()) GetAddPositionScrollSteps(sib->GetFather(), tx, ty);
+                      double tl = UI_BOUNDARYLINE_EdgeLeft  (tx, sib->GetBoundaryLine()->width);
+                      double tr = UI_BOUNDARYLINE_EdgeRight (tx, sib->GetBoundaryLine()->width);
+                      double tt = UI_BOUNDARYLINE_EdgeTop   (ty, sib->GetBoundaryLine()->height);
+                      double tb = UI_BOUNDARYLINE_EdgeBottom(ty, sib->GetBoundaryLine()->height);
+                      if((fabs(tl - slot_l) <= 2.0) && (fabs(tr - slot_r) <= 2.0) &&
+                         (fabs(tt - slot_t) <= 2.0) && (fabs(tb - slot_b) <= 2.0))
+                        {
+                          twin_visible = true;
+                          break;
+                        }
+                    }
+                }
+            }
+
+          if(twin_visible)
+            {
+              FormBackdrop_Delete(element);
+              return true;
+            }
+
           GRP2DREBUILDAREA* formbackdrop = FormBackdrop_Find(element);
 
           if(formbackdrop)
@@ -5091,7 +5397,9 @@ bool UI_SKINCANVAS::RepaintCompactLegendForms(UI_LAYOUT* layout)
       if(sib->GetType() != UI_ELEMENT_TYPE_FORM) continue;
       if(!sib->GetBoundaryLine()) continue;
       // Under-icon caption strips only (e.g. 73×14). Full-width foots/status bars are excluded.
+      // height < 1 skips zero-height flex spacers (same as Draw_Form compact-legend wipe).
       if(sib->GetBoundaryLine()->height > 28.0) continue;
+      if(sib->GetBoundaryLine()->height <  1.0) continue;
       if(sib->GetBoundaryLine()->width  > 120.0) continue;
 
       UI_ELEMENT_FORM* sf = (UI_ELEMENT_FORM*)sib;
@@ -5111,28 +5419,17 @@ bool UI_SKINCANVAS::RepaintCompactLegendForms(UI_LAYOUT* layout)
       double sb = UI_BOUNDARYLINE_EdgeBottom(sy, sib->GetBoundaryLine()->height);
       double lw = sr - sl;
       double lh = sb - st;
-      // Guard band below the authored box: peel plates sat in y127-132 while height=14 ended at 133.
+      // Guard band below the authored box for peel-plate residue. Keep +2 (same as Draw_Form
+      // compact wipe) — old +8 reached valor/tree tops at y=134 and re-dirtied the idle cascade.
       if(lh < 14.0) lh = 14.0;
-      lh += 8.0;
+      lh += 2.0;
       if(lw < 1.0) lw = 1.0;
       if(lh < 1.0) lh = 1.0;
 
       XBYTE fr = pr, fg = pg, fb = pb;
 
-      GRP2DCOLOR_RGBA8 col(fr, fg, fb, 255);
-
-      // Pass 1: opaque page seed (PutPixel — copy_pixel, clip-safe).
-      {
-        int fh_i = (int)lh; if(fh_i < 1) fh_i = 1;
-        int fw_i = (int)lw; if(fw_i < 1) fw_i = 1;
-        for(int py = 0; py < fh_i; py++)
-          {
-            for(int px = 0; px < fw_i; px++)
-              {
-                canvas->PutPixel(sl + (double)px, st + (double)py, (const GRP2DCOLOR*)&col);
-              }
-          }
-      }
+      // Pass 1: opaque page seed (Rectangle — same every-frame repair, without PutPixel cost).
+      UI_SkinCanvas_FillRectOpaque(canvas, sl, st, lw, lh, fr, fg, fb);
 
       GEN_USERINTERFACE.Elements_SetToRedraw(sib, true);
       Draw(sib);
@@ -5140,17 +5437,7 @@ bool UI_SKINCANVAS::RepaintCompactLegendForms(UI_LAYOUT* layout)
       // Pass 2: Draw_Form/Draw_Text can still leave a gray plate in the lower strip (confirmed:
       // y127-132 = 57,59,61 after form+text). Wipe again, then reprint ONLY text children so
       // nothing after the form's PostDraw can keep the plate under the glyphs.
-      {
-        int fh_i = (int)lh; if(fh_i < 1) fh_i = 1;
-        int fw_i = (int)lw; if(fw_i < 1) fw_i = 1;
-        for(int py = 0; py < fh_i; py++)
-          {
-            for(int px = 0; px < fw_i; px++)
-              {
-                canvas->PutPixel(sl + (double)px, st + (double)py, (const GRP2DCOLOR*)&col);
-              }
-          }
-      }
+      UI_SkinCanvas_FillRectOpaque(canvas, sl, st, lw, lh, fr, fg, fb);
       for(XDWORD c = 0; c < sib->GetComposeElements()->GetSize(); c++)
         {
           UI_ELEMENT* child = sib->GetComposeElements()->Get(c);
@@ -5205,25 +5492,74 @@ bool UI_SKINCANVAS::PrepareTextContentChange(UI_ELEMENT* element)
       // then calls RestoreCompositionCaches, but FormBackdrop was deleted here so the wipe would stay on the
       // canvas, get re-captured as the new FormBackdrop/TextBackdrop, and show up as a black stub after the
       // chrome title. Drop the cache so the next Draw_Form re-captures from the restored under-content.
+      UI_ELEMENT_FORM* father_form = (father->GetType() == UI_ELEMENT_TYPE_FORM)
+                                       ? (UI_ELEMENT_FORM*)father : NULL;
+      UI_COLOR* fillsrc = NULL;
+      XBYTE father_alpha = 0;
+      if(father_form)
+        {
+          fillsrc = father_form->IsBackgroundColorSet() ? father_form->GetBackgroundColor()
+                                                        : father_form->GetColor();
+          if(fillsrc) father_alpha = (XBYTE)fillsrc->GetAlpha();
+        }
+      const bool chrome_caption_frost =
+          (father->GetChromeRole() == UI_ELEMENT_CHROMEROLE_CAPTION) &&
+          (father_alpha > 0) && (father_alpha < 255);
+      bool form_restored = false;
+
+      // Frost caption title change: drop per-element rebuild areas that intersect the caption
+      // WITHOUT restoring. A stale snapshot can still hold 系统监控器; RebuildAllAreas would
+      // PutBitmapNoAlpha it back after FormBackdrop restore and re-bake the CJK ghost.
+      if(chrome_caption_frost && father->GetBoundaryLine())
+        {
+          double fx = father->GetXPosition();
+          double fy = father->GetYPosition();
+          if(father->GetFather()) GetAddPositionScrollSteps(father->GetFather(), fx, fy);
+          double left   = UI_BOUNDARYLINE_EdgeLeft  (fx, father->GetBoundaryLine()->width);
+          double right  = UI_BOUNDARYLINE_EdgeRight (fx, father->GetBoundaryLine()->width);
+          double top    = UI_BOUNDARYLINE_EdgeTop   (fy, father->GetBoundaryLine()->height);
+          double bottom = UI_BOUNDARYLINE_EdgeBottom(fy, father->GetBoundaryLine()->height);
+          XVECTOR<GRP2DREBUILDAREA*>* areas = GetRebuildAreas();
+          if(areas)
+            {
+              for(int index = (int)areas->GetSize() - 1; index >= 0; index--)
+                {
+                  GRP2DREBUILDAREA* area = areas->Get((XDWORD)index);
+                  if(!area || !area->GetBitmap()) continue;
+                  double ax1 = area->GetXPos();
+                  double ay1 = area->GetYPos();
+                  double ax2 = ax1 + (double)area->GetBitmap()->GetWidth();
+                  double ay2 = ay1 + (double)area->GetBitmap()->GetHeight();
+                  if(ax2 <= left || ax1 >= right || ay2 <= top || ay1 >= bottom) continue;
+                  UI_ELEMENT* owner = (UI_ELEMENT*)area->GetExtraData();
+                  if(owner) owner->SetMustReDraw(true);
+                  areas->Delete(area);
+                  GEN_DELETE area;
+                }
+            }
+        }
+
       if(formbackdrop && formbackdrop->GetBitmap())
         {
           PutBitmapNoAlpha(formbackdrop->GetXPos(), formbackdrop->GetYPos(), formbackdrop->GetBitmap());
           FormBackdrop_Delete(father);
           erased = true;
+          form_restored = true;
         }
        else if(canvas && father->GetBoundaryLine())
         {
-          // No FormBackdrop: wipe only when the father paints ink (translucent chrome caption, etc.).
+          // No FormBackdrop: wipe only when the father paints ink.
           // Transparent toolbar legend forms must NOT get a hard-coded charcoal plate — that became a
           // permanent gray bar under Stop/Run captions once re-captured as TextBackdrop.
-          UI_ELEMENT_FORM* father_form = (UI_ELEMENT_FORM*)father;
-          UI_COLOR* fillsrc = father_form->IsBackgroundColorSet() ? father_form->GetBackgroundColor()
-                                                                  : father_form->GetColor();
+          //
+          // Translucent chrome caption (UI_System black,25): NEVER opaque-wipe the FULL caption bar.
+          // That painted page RGB under language/min/max/close and read as a dark "recuadro" around
+          // the controls. Clear only the title's expanded AABB (CJK overhang pad) instead.
           bool father_paintable = (fillsrc && fillsrc->GetAlpha() > 0) ||
-                                  (father_form->GetBorderWidth() > 0.0) ||
-                                  father_form->IsBoxShadowSet();
+                                  (father_form && father_form->GetBorderWidth() > 0.0) ||
+                                  (father_form && father_form->IsBoxShadowSet());
 
-          if(father_paintable)
+          if(father_paintable && !chrome_caption_frost)
             {
               double fx = father->GetXPosition();
               double fy = father->GetYPosition();
@@ -5255,6 +5591,49 @@ bool UI_SKINCANVAS::PrepareTextContentChange(UI_ELEMENT* element)
            else if(!erased)
             {
               erased = EraseElementWithLayoutBackground(element) || erased;
+            }
+        }
+
+      // Frost chrome caption: NEVER opaque-wipe the full bar (that made the control "recuadro").
+      // ALWAYS clear the title leaf with the CURRENT (pre-Set) AABB + pad — runs even after
+      // FormBackdrop restore. A dirty FormBackdrop that still held "Monitor del Sistema" left
+      // "...Sistema" visible beside 系统监控器 when we skipped this wipe (KEEP-FormBackdrop mistake).
+      if(chrome_caption_frost && canvas && element->GetBoundaryLine())
+        {
+          (void)form_restored;
+          double tx = element->GetXPosition();
+          double ty = element->GetYPosition();
+          if(element->GetFather()) GetAddPositionScrollSteps(element->GetFather(), tx, ty);
+          double tw = element->GetBoundaryLine()->width;
+          double th = element->GetBoundaryLine()->height;
+          const double cjk_pad = 48.0;
+          double left   = UI_BOUNDARYLINE_EdgeLeft  (tx, tw) - cjk_pad;
+          double right  = UI_BOUNDARYLINE_EdgeRight (tx, tw) + cjk_pad;
+          double top    = UI_BOUNDARYLINE_EdgeTop   (ty, th) - cjk_pad;
+          double bottom = UI_BOUNDARYLINE_EdgeBottom(ty, th) + cjk_pad;
+
+          double fx = father->GetXPosition();
+          double fy = father->GetYPosition();
+          if(father->GetFather()) GetAddPositionScrollSteps(father->GetFather(), fx, fy);
+          double cap_l = UI_BOUNDARYLINE_EdgeLeft  (fx, father->GetBoundaryLine()->width);
+          double cap_r = UI_BOUNDARYLINE_EdgeRight (fx, father->GetBoundaryLine()->width);
+          double cap_t = UI_BOUNDARYLINE_EdgeTop   (fy, father->GetBoundaryLine()->height);
+          double cap_b = UI_BOUNDARYLINE_EdgeBottom(fy, father->GetBoundaryLine()->height);
+          const double controls_guard = 130.0;
+          if((cap_r - controls_guard) > cap_l) cap_r -= controls_guard;
+          if(left   < cap_l) left   = cap_l;
+          if(right  > cap_r) right  = cap_r;
+          if(top    < cap_t) top    = cap_t;
+          if(bottom > cap_b) bottom = cap_b;
+
+          if((right > left) && (bottom > top))
+            {
+              XBYTE pr = 13, pg = 17, pb = 23;
+              UI_LAYOUT* prefer = father->GetLayout();
+              if(!prefer) prefer = element->GetLayout();
+              UI_SkinCanvas_ResolvePageRGB(prefer, pr, pg, pb);
+              UI_SkinCanvas_FillRectOpaque(canvas, left, top, right - left, bottom - top, pr, pg, pb);
+              erased = true;
             }
         }
 
@@ -5399,7 +5778,10 @@ bool UI_SKINCANVAS::Draw_Text(UI_ELEMENT* element)
           // TextBackdrop snapshot — Option/Anim peel bakes a solid gray plate that PutBitmapNoAlpha
           // would restore AFTER Draw_Form's page wipe (confirmed: form wipe then TextBackdrop
           // restore re-seeded 57,59,61 under Demarrer/Arreter). Walk fathers so a text nested in
-          // an option/button still finds the legend form. Height<=32 = under-icon caption strip.
+          // an option/button still finds the legend form.
+          // MUST match RepaintCompactLegendForms: height<=28 AND width<=120. Height-only (<=32)
+          // also matched UI_System caption slots (cpu-usage-caption-slot 232×24, ram/disk rows,
+          // footer-chip 32) and page-wiped them with charcoal under live labels.
           UI_ELEMENT* text_father = element->GetFather();
           bool legend_form_father = false;
           UI_COLOR* legend_fill = NULL;
@@ -5407,7 +5789,9 @@ bool UI_SKINCANVAS::Draw_Text(UI_ELEMENT* element)
             {
               if(walk->GetType() != UI_ELEMENT_TYPE_FORM) continue;
               if(!walk->GetBoundaryLine()) continue;
-              if(walk->GetBoundaryLine()->height > 32.0) continue;
+              if(walk->GetBoundaryLine()->height > 28.0) continue;
+              if(walk->GetBoundaryLine()->height <  1.0) continue;
+              if(walk->GetBoundaryLine()->width  > 120.0) continue;
               UI_ELEMENT_FORM* tf = (UI_ELEMENT_FORM*)walk;
               legend_fill = tf->IsBackgroundColorSet() ? tf->GetBackgroundColor() : tf->GetColor();
               text_father = walk;
@@ -5432,8 +5816,9 @@ bool UI_SKINCANVAS::Draw_Text(UI_ELEMENT* element)
               double fill_w = text_father->GetBoundaryLine()->width;
               double fill_h = text_father->GetBoundaryLine()->height;
               if(fill_h < 14.0) fill_h = 14.0;
-              fill_h += 8.0;
-              double fill_y = text_father->GetYPosition() - (fill_h - 8.0);
+              // +2 matches Draw_Form / RepaintCompactLegendForms — old +8 kissed valor/tree at y=134.
+              fill_h += 2.0;
+              double fill_y = text_father->GetYPosition() - (fill_h - 2.0);
               if(text_father->GetFather()) GetAddPositionScrollSteps(text_father->GetFather(), fill_x, fill_y);
               if(fill_w < 1.0) fill_w = 1.0;
               if(fill_h < 1.0) fill_h = 1.0;
@@ -5459,32 +5844,24 @@ bool UI_SKINCANVAS::Draw_Text(UI_ELEMENT* element)
                 }
               // PreDraw clipped this TEXT to a content-shrunk box; PutBitmapNoAlpha then only
               // updated ~8px and left the gray peel plate in the rest of the legend strip.
-              // Lift clip to the wipe rect (y-down: top < bottom) and write pixels directly.
+              // Lift clip to the wipe rect and fill opaquely (Rectangle, not PutPixel).
               XRECT legend_clip_saved;
               canvas->GetClipBox(legend_clip_saved);
               // GEN/AGG clip order: (left, bottom, right, top) — same as PreDrawFunction.
               canvas->SetClipBox(fill_x, fill_y + fill_h, fill_x + fill_w, fill_y);
-
-              GRP2DCOLOR_RGBA8 pagecol(pr, pg, pb, 255);
-              int fh_i = (int)fill_h;
-              int fw_i = (int)fill_w;
-              if(fh_i < 1) fh_i = 1;
-              if(fw_i < 1) fw_i = 1;
-              for(int py = 0; py < fh_i; py++)
-                {
-                  for(int px = 0; px < fw_i; px++)
-                    {
-                      canvas->PutPixel(fill_x + (double)px, fill_y + (double)py, (const GRP2DCOLOR*)&pagecol);
-                    }
-                }
-
+              UI_SkinCanvas_FillRectOpaque(canvas, fill_x, fill_y, fill_w, fill_h, pr, pg, pb);
               canvas->SetClipBox(legend_clip_saved);
             }
            else
             {
               if(textbackdrop && textbackdrop->GetBitmap())
                 {
-                  if(ownarea_text && ownarea_text->GetBitmap() && !TextBackdrop_MatchesArea(textbackdrop, ownarea_text))
+                  if(UI_SkinCanvas_BitmapHasBackdropPoison(textbackdrop->GetBitmap()))
+                    {
+                      TextBackdrop_Delete(element);
+                      textbackdrop = NULL;
+                    }
+                  else if(ownarea_text && ownarea_text->GetBitmap() && !TextBackdrop_MatchesArea(textbackdrop, ownarea_text))
                     {
                       PutBitmapNoAlpha(textbackdrop->GetXPos(), textbackdrop->GetYPos(), textbackdrop->GetBitmap());
                       TextBackdrop_Delete(element);
@@ -6442,19 +6819,19 @@ bool UI_SKINCANVAS::Draw_Tree(UI_ELEMENT* element)
               if(bmp)
                 {
                   double icon_top = row_mid - ((double)bmp->GetHeight() / 2.0f);
-                  // Soft-edge safe blit (cover=255), same rule as Draw_Image aqua PNGs.
+                  // Soft-edge safe blit (cover=255). PutBitmap() is also a pixel loop; keep cover=255
+                  // blend but the real idle cost is redrawing the whole tree every frame (see profiler).
+                  double icon_y = icon_top;
                   for(XDWORD yb = 0; yb < bmp->GetHeight(); yb++)
                     {
                       for(XDWORD xb = 0; xb < bmp->GetWidth(); xb++)
                         {
                           GRP2DCOLOR* raw = bmp->GetPixel((int)xb, (int)yb);
                           if(!raw) continue;
-
                           GRP2DCOLOR_RGBA8* px = (GRP2DCOLOR_RGBA8*)raw;
                           if(!px->a) continue;
-
                           GRP2DCOLOR_RGBA8 c(px->r, px->g, px->b, px->a);
-                          canvas->PutBlendPixel(label_x + (double)xb, icon_top + (double)yb, &c, 255.0);
+                          canvas->PutBlendPixel(label_x + (double)xb, icon_y + (double)yb, &c, 255.0);
                         }
                     }
                 }
@@ -6903,36 +7280,50 @@ bool UI_SKINCANVAS::Draw_Animation(UI_ELEMENT* element)
                   double iw = (double)element_image->GetImage()->GetWidth();
                   double ix = x_position;
                   double iy = y_position - ih;
-                  // Resolve live caption/page first. Never default to XML charcoal (24,28,36): that
-                  // sum (88) skipped the old "transparent caption" page fallback and left a solid
-                  // dark plate under chrome controls hanging past the caption AABB (Light strip).
+
+                  // Resolve seed colour. Opaque Light caption → caption RGB. Dark / translucent
+                  // caption (UI_System black,25) → page RGB so we wipe hover/preselect plates
+                  // without painting solid caption-black under the SVG.
                   XBYTE pr = 0, pg = 0, pb = 0;
+                  bool  caption_opaque_light = false;
+                  double cap_top = 0.0, cap_bot = 0.0;
+                  bool  have_cap = false;
                   UI_LAYOUT* chrome_lay = GEN_USERINTERFACE.Layouts_Get(NL("chrome"));
-                  if(chrome_lay)
+                  UI_ELEMENT* caption = chrome_lay ? chrome_lay->Elements_Get(UI_ELEMENT_CHROMEROLE_CAPTION) : NULL;
+                  if(caption)
                     {
-                      UI_ELEMENT* caption = chrome_lay->Elements_Get(UI_ELEMENT_CHROMEROLE_CAPTION);
                       UI_COLOR* cc = NULL;
-                      if(caption)
-                        {
-                          if(caption->IsBackgroundColorSet() && caption->GetBackgroundColor() &&
-                             (caption->GetBackgroundColor()->GetAlpha() > 0))
-                            cc = caption->GetBackgroundColor();
-                          else if(caption->GetColor() && (caption->GetColor()->GetAlpha() > 0))
-                            cc = caption->GetColor();
-                        }
+                      XBYTE cap_a = 0;
+                      if(caption->IsBackgroundColorSet() && caption->GetBackgroundColor() &&
+                         (caption->GetBackgroundColor()->GetAlpha() > 0))
+                        { cc = caption->GetBackgroundColor(); cap_a = (XBYTE)cc->GetAlpha(); }
+                      else if(caption->GetColor() && (caption->GetColor()->GetAlpha() > 0))
+                        { cc = caption->GetColor(); cap_a = (XBYTE)cc->GetAlpha(); }
                       if(cc && cc->IsValid())
                         {
-                          pr = cc->GetRed(); pg = cc->GetGreen(); pb = cc->GetBlue();
+                          pr = (XBYTE)cc->GetRed(); pg = (XBYTE)cc->GetGreen(); pb = (XBYTE)cc->GetBlue();
+                          const int csum = (int)pr + (int)pg + (int)pb;
+                          caption_opaque_light = (cap_a == 255) && (csum > 400);
+                        }
+                      if(caption->GetBoundaryLine())
+                        {
+                          double cx = caption->GetXPosition();
+                          double cy = caption->GetYPosition();
+                          double ch = caption->GetBoundaryLine()->height;
+                          if(caption->GetFather()) GetAddPositionScrollSteps(caption->GetFather(), cx, cy);
+                          cap_top = UI_BOUNDARYLINE_EdgeTop   (cy, ch);
+                          cap_bot = UI_BOUNDARYLINE_EdgeBottom(cy, ch);
+                          have_cap = (ch > 0.5);
                         }
                     }
-                  if((pr + pg + pb) <= 8)
+                  if(!caption_opaque_light)
                     {
-                      UI_LAYOUT* app = GEN_USERINTERFACE.Layouts_Get(NL("xtracemonitor"));
-                      if(app && app->GetBackground() && app->GetBackground()->GetColor() &&
-                         app->GetBackground()->GetColor()->IsValid())
+                      XBYTE rr = 0, gg = 0, bb = 0;
+                      UI_LAYOUT* prefer = element->GetLayout();
+                      if(!prefer) prefer = chrome_lay;
+                      if(UI_SkinCanvas_ResolvePageRGB(prefer, rr, gg, bb))
                         {
-                          UI_COLOR* page = app->GetBackground()->GetColor();
-                          pr = page->GetRed(); pg = page->GetGreen(); pb = page->GetBlue();
+                          pr = rr; pg = gg; pb = bb;
                         }
                     }
                   // Only accept a live canvas sample when it already matches the caption/page
@@ -6949,18 +7340,24 @@ bool UI_SKINCANVAS::Draw_Animation(UI_ELEMENT* element)
                           pr = s->r; pg = s->g; pb = s->b;
                         }
                     }
-                  if((pr + pg + pb) <= 8)
+                  // Opaque Light captions only: seed under the SVG so soft edges / face swaps do
+                  // not keep white/charcoal plates. Translucent Dark (UI_System black,25) must NOT
+                  // FillRectOpaque page RGB — that punched a solid stub left of language/min/max
+                  // into the frost. AnimBackdrop_Delete above is enough; SVG soft-blends onto live caption.
+                  if(caption_opaque_light && (pr + pg + pb) > 8)
                     {
-                      pr = 24; pg = 28; pb = 36; // last resort: XML dark page
-                    }
-                  GRP2DCOLOR_RGBA8 under(pr, pg, pb, 255);
-                  int ih_i = (int)ih; if(ih_i < 1) ih_i = 1;
-                  int iw_i = (int)iw; if(iw_i < 1) iw_i = 1;
-                  for(int py = 0; py < ih_i; py++)
-                    {
-                      for(int px = 0; px < iw_i; px++)
+                      double sx = ix, sy = iy, sw = iw, sh = ih;
+                      if(have_cap)
                         {
-                          canvas->PutPixel(ix + (double)px, iy + (double)py, (const GRP2DCOLOR*)&under);
+                          double top = sy;
+                          double bot = sy + sh;
+                          if(top < cap_top) { sh -= (cap_top - top); top = cap_top; }
+                          if(bot > cap_bot) { sh -= (bot - cap_bot); }
+                          sy = top;
+                        }
+                      if(sw >= 0.5 && sh >= 0.5)
+                        {
+                          UI_SkinCanvas_FillRectOpaque(canvas, sx, sy, sw, sh, pr, pg, pb);
                         }
                     }
                 }
@@ -7246,6 +7643,23 @@ bool UI_SKINCANVAS::Draw_Option(UI_ELEMENT* element)
             {
               skip_white_erase = true;
             }
+          // Icon/PNG buttons on an opaque dark FORM (Essential Desktop taskbar chrome/gmail/…):
+          // the classic white erase plate sits under PutBlendPixel'd PNGs and shows as solid
+          // white icon boxes (GDI and GLES). OptionBackdrop / the form fill already provide the
+          // true backdrop — never bleach alpha assets with an opaque white rectangle there.
+          if(!skip_white_erase && element_option->Get_UIAnimation())
+            {
+              UI_ELEMENT* f = element_option->GetFather();
+              if(f && (f->GetType() == UI_ELEMENT_TYPE_FORM))
+                {
+                  UI_COLOR* fc = f->IsBackgroundColorSet() ? f->GetBackgroundColor() : f->GetColor();
+                  if(fc && (fc->GetAlpha() >= 255))
+                    {
+                      const int lum = (int)fc->GetRed() + (int)fc->GetGreen() + (int)fc->GetBlue();
+                      if(lum < 600) skip_white_erase = true;
+                    }
+                }
+            }
           if(!skip_white_erase)
             {
               UI_ELEMENT* anc = element_option->GetFather();
@@ -7481,28 +7895,11 @@ bool UI_SKINCANVAS::Draw_Option(UI_ELEMENT* element)
          !under_active_modal)
         {
           XBYTE pr = 0, pg = 0, pb = 0;
-          UI_LAYOUT* layout = element->GetLayout();
-          if(layout && layout->GetBackground() && layout->GetBackground()->GetColor() &&
-             layout->GetBackground()->GetColor()->IsValid())
+          if(!UI_SkinCanvas_ResolvePageRGB(element->GetLayout(), pr, pg, pb))
             {
-              UI_COLOR* page = layout->GetBackground()->GetColor();
-              pr = (XBYTE)page->GetRed();
-              pg = (XBYTE)page->GetGreen();
-              pb = (XBYTE)page->GetBlue();
+              // XTM toolbar only: charcoal matches its dark page when no layout colour is ready.
+              pr = 24; pg = 28; pb = 36;
             }
-          if((pr + pg + pb) <= 8)
-            {
-              UI_LAYOUT* app = GEN_USERINTERFACE.Layouts_Get(NL("xtracemonitor"));
-              if(app && app->GetBackground() && app->GetBackground()->GetColor() &&
-                 app->GetBackground()->GetColor()->IsValid())
-                {
-                  UI_COLOR* page = app->GetBackground()->GetColor();
-                  pr = (XBYTE)page->GetRed();
-                  pg = (XBYTE)page->GetGreen();
-                  pb = (XBYTE)page->GetBlue();
-                }
-            }
-          if((pr + pg + pb) <= 8) { pr = 24; pg = 28; pb = 36; }
 
           // Legend forms are 14px tall; keep the wipe inside that strip so it cannot crush
           // valor/tree tops that sit just below the toolbar captions.
@@ -7516,20 +7913,7 @@ bool UI_SKINCANVAS::Draw_Option(UI_ELEMENT* element)
           XRECT band_clip_saved;
           canvas->GetClipBox(band_clip_saved);
           canvas->SetClipBox(band_x, band_y + band_h, band_x + band_w, band_y);
-
-          GRP2DCOLOR_RGBA8 pagecol(pr, pg, pb, 255);
-          int bh = (int)band_h;
-          int bw = (int)band_w;
-          if(bh < 1) bh = 1;
-          if(bw < 1) bw = 1;
-          for(int py = 0; py < bh; py++)
-            {
-              for(int px = 0; px < bw; px++)
-                {
-                  canvas->PutPixel(band_x + (double)px, band_y + (double)py, (const GRP2DCOLOR*)&pagecol);
-                }
-            }
-
+          UI_SkinCanvas_FillRectOpaque(canvas, band_x, band_y, band_w, band_h, pr, pg, pb);
           canvas->SetClipBox(band_clip_saved);
         }
     }
@@ -7592,6 +7976,61 @@ bool UI_SKINCANVAS::Draw_MultiOption(UI_ELEMENT* element)
           double top    = UI_BOUNDARYLINE_EdgeTop   (slot_y, slot_h) - pad;
           double width  = slot_w + (pad * 2.0);
           double height = slot_h + (pad * 2.0);
+
+          // Chrome language/min/max/close: OptionBackdrop is never kept, so face swaps left
+          // preselect/white rims. Opaque Light captions: page/caption-seed the slot (clipped) before
+          // the new face. Translucent Dark (black,25): never FillRectOpaque — the ±PRESELECT pad
+          // left of language painted a solid page stub into the frost (user screenshot).
+          switch(element->GetChromeRole())
+            {
+              case UI_ELEMENT_CHROMEROLE_ICON     :
+              case UI_ELEMENT_CHROMEROLE_LANGUAGE :
+              case UI_ELEMENT_CHROMEROLE_MINIMIZE :
+              case UI_ELEMENT_CHROMEROLE_MAXIMIZE :
+              case UI_ELEMENT_CHROMEROLE_CLOSE    :
+                {
+                  XBYTE pr = 0, pg = 0, pb = 0;
+                  UI_LAYOUT* chrome_lay = GEN_USERINTERFACE.Layouts_Get(NL("chrome"));
+                  UI_ELEMENT* caption = chrome_lay ? chrome_lay->Elements_Get(UI_ELEMENT_CHROMEROLE_CAPTION) : NULL;
+                  bool caption_opaque_light = false;
+                  if(caption)
+                    {
+                      UI_COLOR* cc = NULL;
+                      XBYTE cap_a = 0;
+                      if(caption->IsBackgroundColorSet() && caption->GetBackgroundColor() &&
+                         (caption->GetBackgroundColor()->GetAlpha() > 0))
+                        { cc = caption->GetBackgroundColor(); cap_a = (XBYTE)cc->GetAlpha(); }
+                      else if(caption->GetColor() && (caption->GetColor()->GetAlpha() > 0))
+                        { cc = caption->GetColor(); cap_a = (XBYTE)cc->GetAlpha(); }
+                      if(cc && cc->IsValid() && (cap_a == 255) &&
+                         ((int)cc->GetRed() + (int)cc->GetGreen() + (int)cc->GetBlue()) > 400)
+                        {
+                          pr = (XBYTE)cc->GetRed(); pg = (XBYTE)cc->GetGreen(); pb = (XBYTE)cc->GetBlue();
+                          caption_opaque_light = true;
+                        }
+                    }
+                  if(caption_opaque_light && (pr + pg + pb) > 8)
+                    {
+                      double sy = top;
+                      double sh = height;
+                      if(caption && caption->GetBoundaryLine())
+                        {
+                          double cx = caption->GetXPosition();
+                          double cy = caption->GetYPosition();
+                          double ch = caption->GetBoundaryLine()->height;
+                          if(caption->GetFather()) GetAddPositionScrollSteps(caption->GetFather(), cx, cy);
+                          double cap_top = UI_BOUNDARYLINE_EdgeTop   (cy, ch);
+                          double cap_bot = UI_BOUNDARYLINE_EdgeBottom(cy, ch);
+                          double bot = sy + sh;
+                          if(sy < cap_top) { sh -= (cap_top - sy); sy = cap_top; }
+                          if(bot > cap_bot) { sh -= (bot - cap_bot); }
+                        }
+                      if(sh >= 0.5) UI_SkinCanvas_FillRectOpaque(canvas, left, sy, width, sh, pr, pg, pb);
+                    }
+                }
+                break;
+              default: break;
+            }
 
           // Anim/Option only before the face paint. Sibling legends under the slot are refreshed
           // AFTER the new face is drawn (see post-paint TextBackdrop_Invalidate below) so their
@@ -7780,14 +8219,7 @@ bool UI_SKINCANVAS::Draw_MultiOption(UI_ELEMENT* element)
                           GRPBITMAP* legbmp = GetBitmap(sl, st, lw, lh);
                   if(legbmp)
                     {
-                      GRP2DCOLOR_RGBA8 col(fr, fg, fb, 255);
-                      for(XDWORD py = 0; py < legbmp->GetHeight(); py++)
-                        {
-                          for(XDWORD px = 0; px < legbmp->GetWidth(); px++)
-                            {
-                              legbmp->PutPixel((int)px, (int)py, (const GRP2DCOLOR*)&col);
-                            }
-                        }
+                      UI_SkinCanvas_FillBitmapOpaque(legbmp, fr, fg, fb);
                       PutBitmapNoAlpha(sl, st, legbmp);
                       GEN_DELETE legbmp;
                     }
@@ -8419,7 +8851,14 @@ bool UI_SKINCANVAS::Draw_Form(UI_ELEMENT* element)
       // restore true parent pixels into the AABB cutouts (datetime_box / inner-box "picos").
       GRP2DREBUILDAREA* formbackdrop_for_punch = NULL;
 
-      if(haspaintable && !GEN_USERINTERFACE.ModalLayer_IsCompositing())
+      // Opaque hairlines do not need FormBackdrop (no alpha compounding). Capture/restore of a padded
+      // ownarea bakes GetBitmap lime/red poison beside the 3px fill — footer Uptime sep dual-line.
+      const double hairline_w_early = vr_maxx - vr_minx;
+      const bool   thin_opaque_hairline_early = haspaintable && fillsrc_check &&
+                                                (fillsrc_check->GetAlpha() == 255) &&
+                                                (hairline_w_early > 0.0) && (hairline_w_early <= 4.0);
+
+      if(haspaintable && !thin_opaque_hairline_early && !GEN_USERINTERFACE.ModalLayer_IsCompositing())
         {
           // ACCENT-BAR TRAIL FIX (2026-09): root cause of "quedan rastros de la barra azul en la opcion
           // previamente seleccionada". Prefer "ownarea" (already expanded for the box-shadow/edge footprint)
@@ -8624,9 +9063,17 @@ bool UI_SKINCANVAS::Draw_Form(UI_ELEMENT* element)
       // as long as the row stays hovered/selected, i.e. essentially forever from the user's point of view. Pass
       // "force" only for this one-time case: a "busy" option can never have legitimately painted-over content
       // that predates an element which, by definition, has never painted anything before this exact call.
+      // Thin opaque hairlines (footer vr-line ≤4px): invalidate with the fill AABB only. ownarea is
+      // edge-padded (~+5) and would kiss neighbouring icon/text TextBackdrops; their GetBitmap
+      // poison then AA-fringes into the bar as a red/green dual-line (UI_System footer SO/Uptime).
+      const double hairline_w = vr_maxx - vr_minx;
+      const bool   thin_opaque_hairline = haspaintable && fillsrc_check &&
+                                          (fillsrc_check->GetAlpha() == 255) && (hairline_w > 0.0) &&
+                                          (hairline_w <= 4.0);
+
       if(haspaintable)
         {
-          if(ownarea)
+          if(ownarea && !thin_opaque_hairline)
             {
               OptionBackdrop_InvalidateOverlapping(ownarea->GetXPos(), ownarea->GetYPos(), (double)ownarea->GetBitmap()->GetWidth(), (double)ownarea->GetBitmap()->GetHeight(), formneverdrawnbefore);
 
@@ -8652,36 +9099,21 @@ bool UI_SKINCANVAS::Draw_Form(UI_ELEMENT* element)
       // neighbour multioption peels cannot leave a gray plate under the glyphs. Must NOT wipe:
       //   - chrome-role elements (UI_Options caption color="black,0" is drag-hit-test only — painting
       //     page ink 24,28,36 there made the "transparent" chrome a solid black/dark band);
-      //   - wide/tall transparent containers that intentionally show content underneath.
-      // Same size gate as RepaintCompactLegendForms (height<=28, width<=120).
+      //   - wide/tall transparent containers that intentionally show content underneath;
+      //   - zero-height flex spacers (UI_System conn_row_spacer: w≈8 after grow, h=0) — the old gate
+      //     matched them and inflated fh to ~16, painting a page-colored stub beside connection_net_icon.
+      // Same size gate as RepaintCompactLegendForms (1 < height <= 28, width <= 120).
       if(!haspaintable && canvas &&
          (element->GetChromeRole() == UI_ELEMENT_CHROMEROLE_NONE) &&
          (element->GetBoundaryLine()->width  <= 120.0) &&
-         (element->GetBoundaryLine()->height <= 28.0))
+         (element->GetBoundaryLine()->height <= 28.0) &&
+         (element->GetBoundaryLine()->height >= 1.0))
         {
           XBYTE pr = 0, pg = 0, pb = 0;
-          UI_LAYOUT* layout = element->GetLayout();
-          if(layout && layout->GetBackground() && layout->GetBackground()->GetColor() &&
-             layout->GetBackground()->GetColor()->IsValid())
+          if(!UI_SkinCanvas_ResolvePageRGB(element->GetLayout(), pr, pg, pb))
             {
-              UI_COLOR* page = layout->GetBackground()->GetColor();
-              pr = (XBYTE)page->GetRed();
-              pg = (XBYTE)page->GetGreen();
-              pb = (XBYTE)page->GetBlue();
+              pr = 24; pg = 28; pb = 36;
             }
-          if((pr + pg + pb) <= 8)
-            {
-              UI_LAYOUT* app = GEN_USERINTERFACE.Layouts_Get(NL("xtracemonitor"));
-              if(app && app->GetBackground() && app->GetBackground()->GetColor() &&
-                 app->GetBackground()->GetColor()->IsValid())
-                {
-                  UI_COLOR* page = app->GetBackground()->GetColor();
-                  pr = (XBYTE)page->GetRed();
-                  pg = (XBYTE)page->GetGreen();
-                  pb = (XBYTE)page->GetBlue();
-                }
-            }
-          if((pr + pg + pb) <= 8) { pr = 24; pg = 28; pb = 36; }
           double fx = UI_BOUNDARYLINE_EdgeLeft(x_position, element->GetBoundaryLine()->width);
           double fw = element->GetBoundaryLine()->width;
           double fh = element->GetBoundaryLine()->height;
@@ -8695,20 +9127,7 @@ bool UI_SKINCANVAS::Draw_Form(UI_ELEMENT* element)
           XRECT form_clip_saved;
           canvas->GetClipBox(form_clip_saved);
           canvas->SetClipBox(fx, fy + fh, fx + fw, fy);
-
-          GRP2DCOLOR_RGBA8 pagecol(pr, pg, pb, 255);
-          int fh_i = (int)fh;
-          int fw_i = (int)fw;
-          if(fh_i < 1) fh_i = 1;
-          if(fw_i < 1) fw_i = 1;
-          for(int py = 0; py < fh_i; py++)
-            {
-              for(int px = 0; px < fw_i; px++)
-                {
-                  canvas->PutPixel(fx + (double)px, fy + (double)py, (const GRP2DCOLOR*)&pagecol);
-                }
-            }
-
+          UI_SkinCanvas_FillRectOpaque(canvas, fx, fy, fw, fh, pr, pg, pb);
           canvas->SetClipBox(form_clip_saved);
 
           // PreDraw may have snapshotted the neighbour-contaminated strip into the rebuild area
@@ -8716,14 +9135,7 @@ bool UI_SKINCANVAS::Draw_Form(UI_ELEMENT* element)
           // vs padded wipe size can differ; RebuildAllAreas must not resurrect a gray plate).
           if(ownarea && ownarea->GetBitmap())
             {
-              GRP2DCOLOR_RGBA8 pagecol(pr, pg, pb, 255);
-              for(XDWORD py = 0; py < ownarea->GetBitmap()->GetHeight(); py++)
-                {
-                  for(XDWORD px = 0; px < ownarea->GetBitmap()->GetWidth(); px++)
-                    {
-                      ownarea->GetBitmap()->PutPixel((int)px, (int)py, (const GRP2DCOLOR*)&pagecol);
-                    }
-                }
+              UI_SkinCanvas_FillBitmapOpaque(ownarea->GetBitmap(), pr, pg, pb);
             }
         }
 
@@ -9118,7 +9530,45 @@ bool UI_SKINCANVAS::Draw_Form(UI_ELEMENT* element)
         }
        else
         {
-          canvas->Rectangle(element_form->GetVisibleRect()->x, element_form->GetVisibleRect()->y, element_form->GetVisibleRect()->x + element_form->GetVisibleRect()->width, element_form->GetVisibleRect()->GetTop(), true);
+          // Opaque thin bars (footer vr-line): AGG AA Rectangle blends against GetBitmap poison and
+          // leaves a 1px tinted fringe (red/green dual-line). Write solid integer pixels instead.
+          UI_COLOR* hair_fill = element_form->IsBackgroundColorSet() ? element_form->GetBackgroundColor()
+                                                                       : element_form->GetColor();
+          const double hair_w = vr_maxx - vr_minx;
+          if(canvas && hair_fill && (hair_fill->GetAlpha() == 255) && (hair_w > 0.0) && (hair_w <= 4.0))
+            {
+              GRP2DCOLOR_RGBA8 solid((XBYTE)hair_fill->GetRed(), (XBYTE)hair_fill->GetGreen(),
+                                     (XBYTE)hair_fill->GetBlue(), 255);
+              const int x0 = (int)floor(vr_minx + 0.5);
+              const int x1 = (int)floor(vr_maxx + 0.5);
+              const int y_lo = (int)floor(((vr_miny < vr_maxy) ? vr_miny : vr_maxy) + 0.5);
+              const int y_hi = (int)floor(((vr_miny < vr_maxy) ? vr_maxy : vr_miny) + 0.5);
+              for(int py = y_lo; py < y_hi; py++)
+                {
+                  for(int px = x0; px < x1; px++)
+                    {
+                      canvas->PutPixel((double)px, (double)py, (const GRP2DCOLOR*)&solid);
+                    }
+                }
+              // Neighbour TextBackdrop restore can still deposit a 1px poison column beside the bar
+              // later this frame; scrub any already-present fringe with page ink now.
+              XBYTE pr = 13, pg = 17, pb = 23;
+              UI_SkinCanvas_ResolvePageRGB(element_form->GetLayout(), pr, pg, pb);
+              GRP2DCOLOR_RGBA8 page(pr, pg, pb, 255);
+              for(int py = y_lo; py < y_hi; py++)
+                {
+                  GRP2DCOLOR* leftpx  = canvas->GetPixel((double)(x0 - 1), (double)py);
+                  GRP2DCOLOR* rightpx = canvas->GetPixel((double)x1, (double)py);
+                  if(UI_SkinCanvas_IsBackdropPoisonPixel(leftpx))
+                    canvas->PutPixel((double)(x0 - 1), (double)py, (const GRP2DCOLOR*)&page);
+                  if(UI_SkinCanvas_IsBackdropPoisonPixel(rightpx))
+                    canvas->PutPixel((double)x1, (double)py, (const GRP2DCOLOR*)&page);
+                }
+            }
+           else
+            {
+              canvas->Rectangle(element_form->GetVisibleRect()->x, element_form->GetVisibleRect()->y, element_form->GetVisibleRect()->x + element_form->GetVisibleRect()->width, element_form->GetVisibleRect()->GetTop(), true);
+            }
         }
 
       if(frame_clip_expanded)
@@ -9129,6 +9579,8 @@ bool UI_SKINCANVAS::Draw_Form(UI_ELEMENT* element)
       // Opaque fill just replaced neighbour peel residue on the canvas. PreDraw may still hold a
       // rebuild-area snapshot taken BEFORE that fill (gray plate under toolbar legends). Rewrite the
       // matching ownarea with the fill colour so RebuildAllAreas cannot resurrect the plate.
+      // Use FillBitmapOpaque (memcpy-style), never per-pixel PutPixel — that path alone dropped
+      // XTM idle from ~60 to ~17 when it ran on every opaque form redraw.
       if(ownarea && ownarea->GetBitmap() && fillsrc && (fillsrc->GetAlpha() == 255))
         {
           double fw = vr_maxx - vr_minx;
@@ -9136,17 +9588,14 @@ bool UI_SKINCANVAS::Draw_Form(UI_ELEMENT* element)
           double ow = (double)ownarea->GetBitmap()->GetWidth();
           double oh = (double)ownarea->GetBitmap()->GetHeight();
           // CreateRebuildArea pads +1 — tolerate so opaque legend forms rewrite too.
-          if((fabs(ow - fw) <= 2.0) && (fabs(oh - fh) <= 2.0))
+          // Thin hairlines: ownarea is edge-padded vs fill; always rewrite so poison cannot return.
+          const bool thin_hair = (fw > 0.0) && (fw <= 4.0);
+          if(thin_hair || ((fabs(ow - fw) <= 2.0) && (fabs(oh - fh) <= 2.0)))
             {
-              GRP2DCOLOR_RGBA8 fillcol((XBYTE)fillsrc->GetRed(), (XBYTE)fillsrc->GetGreen(),
-                                       (XBYTE)fillsrc->GetBlue(), 255);
-              for(XDWORD py = 0; py < ownarea->GetBitmap()->GetHeight(); py++)
-                {
-                  for(XDWORD px = 0; px < ownarea->GetBitmap()->GetWidth(); px++)
-                    {
-                      ownarea->GetBitmap()->PutPixel((int)px, (int)py, (const GRP2DCOLOR*)&fillcol);
-                    }
-                }
+              UI_SkinCanvas_FillBitmapOpaque(ownarea->GetBitmap(),
+                                             (XBYTE)fillsrc->GetRed(),
+                                             (XBYTE)fillsrc->GetGreen(),
+                                             (XBYTE)fillsrc->GetBlue());
             }
         }
       } // haspaintable: own ink (shadow/fill/stroke)
@@ -9208,26 +9657,63 @@ bool UI_SKINCANVAS::Draw_Form(UI_ELEMENT* element)
   // Custom chrome caption (= Windows chrome toolbar): after children, erase charcoal leftovers
   // that sit OUTSIDE control AABBs (SVG soft-edge / stale plates). Never touch pixels inside
   // language/min/max/close/icon boxes — those glyphs are authored for any page colour.
-  // Run even when only a chrome control is dirty (caption MustReDraw may be false).
+  // Opaque Light only. Translucent Dark (black,25): opaque page PutPixel punched frost stubs;
+  // AnimBackdrop/OptionBackdrop delete on chrome controls is the Dark cleanup path.
+  //
+  // Idle FPS: UI_LAYOUT::Update() Draw()s every root every frame. This scrub is O(caption W×H)
+  // GetPixel/PutPixel and MUST NOT run on clean idle ticks — that alone dropped XTM ~60→~17 on
+  // Light chrome. Gate on caption or a chrome-control child being dirty this visit.
   if(canvas &&
      (element->GetChromeRole() == UI_ELEMENT_CHROMEROLE_CAPTION) &&
      element_form->GetVisibleRect())
     {
+      bool chrome_scrub_needed = element->MustReDraw();
+      if(!chrome_scrub_needed)
+        {
+          for(XDWORD c=0; c<element_form->GetComposeElements()->GetSize(); c++)
+            {
+              UI_ELEMENT* kid = element_form->GetComposeElements()->Get(c);
+              if(!kid || !kid->MustReDraw()) continue;
+              switch(kid->GetChromeRole())
+                {
+                  case UI_ELEMENT_CHROMEROLE_ICON     :
+                  case UI_ELEMENT_CHROMEROLE_LANGUAGE :
+                  case UI_ELEMENT_CHROMEROLE_MINIMIZE :
+                  case UI_ELEMENT_CHROMEROLE_MAXIMIZE :
+                  case UI_ELEMENT_CHROMEROLE_CLOSE    :
+                    chrome_scrub_needed = true;
+                    break;
+                                      default        : break;
+                }
+              if(chrome_scrub_needed) break;
+            }
+        }
+
       UI_COLOR* fill = NULL;
-      if(element_form->IsBackgroundColorSet() && element_form->GetBackgroundColor() &&
+      if(chrome_scrub_needed && element_form->IsBackgroundColorSet() && element_form->GetBackgroundColor() &&
          (element_form->GetBackgroundColor()->GetAlpha() == 255))
         fill = element_form->GetBackgroundColor();
-      else if(element_form->GetColor() && (element_form->GetColor()->GetAlpha() == 255))
+      else if(chrome_scrub_needed && element_form->GetColor() && (element_form->GetColor()->GetAlpha() == 255))
         fill = element_form->GetColor();
 
+      XBYTE ur = 0, ug = 0, ub = 0;
+      bool  have_under = false;
       if(fill && fill->IsValid() &&
          (((int)fill->GetRed() + (int)fill->GetGreen() + (int)fill->GetBlue()) > 400))
         {
+          ur = (XBYTE)fill->GetRed(); ug = (XBYTE)fill->GetGreen(); ub = (XBYTE)fill->GetBlue();
+          have_under = true;
+        }
+
+      if(have_under)
+        {
+          // VisibleRect.y is the BOTTOM edge (y-down); GetTop() is the TOP. Prior scrub used
+          // ct = y + height and sy = y + py, which scanned BELOW the caption and never cleaned it.
           const double cl = element_form->GetVisibleRect()->x;
           const double cb = element_form->GetVisibleRect()->y;
           const double cw = element_form->GetVisibleRect()->width;
           const double ch = element_form->GetVisibleRect()->height;
-          const double ct = cb + ch;
+          const double ct = element_form->GetVisibleRect()->GetTop();
 
           auto in_chrome_control = [&](double px, double py) -> bool
             {
@@ -9251,15 +9737,15 @@ bool UI_SKINCANVAS::Draw_Form(UI_ELEMENT* element)
                   double kh = kid->GetBoundaryLine()->height;
                   double kl = UI_BOUNDARYLINE_EdgeLeft(kx, kw) - 1.0;
                   double kr = UI_BOUNDARYLINE_EdgeRight(kx, kw) + 1.0;
-                  double kbot = UI_BOUNDARYLINE_EdgeBottom(ky, kh) - 1.0;
-                  double ktop = UI_BOUNDARYLINE_EdgeTop(ky, kh) + 1.0;
-                  if(px >= kl && px < kr && py >= kbot && py < ktop) return true;
+                  // y-down: EdgeTop < EdgeBottom — previous kbot/ktop compare was inverted.
+                  double ktop = UI_BOUNDARYLINE_EdgeTop   (ky, kh) - 1.0;
+                  double kbot = UI_BOUNDARYLINE_EdgeBottom(ky, kh) + 1.0;
+                  if(px >= kl && px < kr && py >= ktop && py < kbot) return true;
                 }
               return false;
             };
 
-          GRP2DCOLOR_RGBA8 under((XBYTE)fill->GetRed(), (XBYTE)fill->GetGreen(),
-                                 (XBYTE)fill->GetBlue(), 255);
+          GRP2DCOLOR_RGBA8 under(ur, ug, ub, 255);
           int wi = (int)cw; if(wi < 1) wi = 1;
           int hi = (int)ch; if(hi < 1) hi = 1;
           for(int py = 0; py < hi; py++)
@@ -9267,8 +9753,8 @@ bool UI_SKINCANVAS::Draw_Form(UI_ELEMENT* element)
               for(int px = 0; px < wi; px++)
                 {
                   double sx = cl + (double)px;
-                  double sy = cb + (double)py;
-                  if(sy < cb || sy >= ct) continue;
+                  double sy = ct + (double)py;
+                  if(sy < ct || sy >= cb) continue;
                   if(in_chrome_control(sx, sy)) continue;
                   GRP2DCOLOR* cur = canvas->GetPixel(sx, sy);
                   if(!cur) continue;
@@ -9280,9 +9766,8 @@ bool UI_SKINCANVAS::Draw_Form(UI_ELEMENT* element)
                 }
             }
 
-          // Chrome control AABBs can hang past the caption bottom. Seed used to paint XML charcoal
-          // there; scrub that overhang only (never the in-caption glyph boxes) so Light does not
-          // keep a dark strip under language/min/max/close.
+          // Chrome control AABBs can hang past the caption bottom. Scrub charcoal / near-black
+          // overhang only (never the in-caption glyph boxes).
           for(XDWORD c=0; c<element_form->GetComposeElements()->GetSize(); c++)
             {
               UI_ELEMENT* kid = element_form->GetComposeElements()->Get(c);
@@ -9304,10 +9789,10 @@ bool UI_SKINCANVAS::Draw_Form(UI_ELEMENT* element)
               double kl = UI_BOUNDARYLINE_EdgeLeft(kx, kw);
               double kr = UI_BOUNDARYLINE_EdgeRight(kx, kw);
               double kbot = UI_BOUNDARYLINE_EdgeBottom(ky, kh);
-              if(kbot <= ct) continue;
+              if(kbot <= cb) continue;
               int ox0 = (int)kl; if(ox0 < (int)cl) ox0 = (int)cl;
               int ox1 = (int)kr; if(ox1 > (int)(cl + cw)) ox1 = (int)(cl + cw);
-              int oy0 = (int)ct;
+              int oy0 = (int)cb;
               int oy1 = (int)kbot;
               for(int oy = oy0; oy < oy1; oy++)
                 {
@@ -9316,7 +9801,6 @@ bool UI_SKINCANVAS::Draw_Form(UI_ELEMENT* element)
                       GRP2DCOLOR* cur = canvas->GetPixel((double)ox, (double)oy);
                       if(!cur) continue;
                       GRP2DCOLOR_RGBA8* p = (GRP2DCOLOR_RGBA8*)cur;
-                      // Charcoal plate / near-black only — leave any non-page ink alone.
                       if((p->r + p->g + p->b) < 90)
                         {
                           canvas->PutPixel((double)ox, (double)oy, (const GRP2DCOLOR*)&under);
@@ -12070,6 +12554,12 @@ bool UI_SKINCANVAS::FormBackdrop_Capture(UI_ELEMENT* element, double x, double y
 
   if(!bitmap) return false;
 
+  if(UI_SkinCanvas_BitmapHasBackdropPoison(bitmap))
+    {
+      GEN_DELETE bitmap;
+      return false;
+    }
+
   GRP2DREBUILDAREA* entry = GEN_NEW GRP2DREBUILDAREA();
   if(!entry)
     {
@@ -12440,6 +12930,14 @@ bool UI_SKINCANVAS::TextBackdrop_Capture(UI_ELEMENT* element, double x, double y
   GRPBITMAP* bitmap = GetBitmap(x, y, width, height);
   if(!bitmap) return false;
 
+  // Footer Uptime TextBackdrop GetBitmap was inventing a solid lime column that PutBitmapNoAlpha
+  // then painted beside footer_div_2 every second — dual-line separator.
+  if(UI_SkinCanvas_BitmapHasBackdropPoison(bitmap))
+    {
+      GEN_DELETE bitmap;
+      return false;
+    }
+
   GRP2DREBUILDAREA* entry = GEN_NEW GRP2DREBUILDAREA();
   if(!entry)
     {
@@ -12756,18 +13254,22 @@ bool UI_SKINCANVAS::TextBackdrop_InvalidateOverlapping(double x, double y, doubl
       bool overlaps = (left1 < right2) && (right1 > left2) && (top1 < bottom2) && (bottom1 > top2);
       if(overlaps)
         {
-          // Compact legend captions (form father height<=32): do NOT restore — the cache is often
-          // the gray peel plate. Drop and dirty; Draw_Text page-fills the father before reprinting.
+          // Compact legend captions (same gate as RepaintCompactLegendForms / Draw_Text): do NOT
+          // restore — the cache is often the gray peel plate. Drop and dirty; Draw_Text page-fills
+          // the father before reprinting. Width gate keeps UI_System flex-row caption slots out.
           bool legend_caption = false;
           for(UI_ELEMENT* walk = text_owner; walk; walk = walk->GetFather())
             {
               if(walk->GetType() != UI_ELEMENT_TYPE_FORM) continue;
-              if(walk->GetBoundaryLine() && walk->GetBoundaryLine()->height <= 32.0)
+              if(walk->GetBoundaryLine() &&
+                 (walk->GetBoundaryLine()->height >= 1.0) &&
+                 (walk->GetBoundaryLine()->height <= 28.0) &&
+                 (walk->GetBoundaryLine()->width  <= 120.0))
                 {
                   legend_caption = true;
                   break;
                 }
-              break; // stop at first form even if taller
+              break; // stop at first form even if taller / wider
             }
 
           if(!legend_caption)
