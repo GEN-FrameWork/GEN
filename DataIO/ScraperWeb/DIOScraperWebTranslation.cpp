@@ -520,8 +520,91 @@ DIOSCRAPERWEBTRANSLATION::~DIOSCRAPERWEBTRANSLATION()
 
 /**-------------------------------------------------------------------------------------------------------------------
 *
+* @fn         static int DIOSCRAPERWEBTRANSLATION_HexDigit(XCHAR character)
+* @brief      Hex digit value or -1.
+* @ingroup    DATAIO
+*
+* --------------------------------------------------------------------------------------------------------------------*/
+static int DIOSCRAPERWEBTRANSLATION_HexDigit(XCHAR character)
+{
+  if((character >= _C('0')) && (character <= _C('9'))) return (int)(character - _C('0'));
+  if((character >= _C('a')) && (character <= _C('f'))) return (int)(character - _C('a')) + 10;
+  if((character >= _C('A')) && (character <= _C('F'))) return (int)(character - _C('A')) + 10;
+  return -1;
+}
+
+
+/**-------------------------------------------------------------------------------------------------------------------
+*
+* @fn         static void DIOSCRAPERWEBTRANSLATION_UnescapeJSONString(XSTRING& text)
+* @brief      Decode JSON string escapes (\uXXXX, \n, \t, \", \\, \/) left by raw ExtractBetween scrapers.
+* @ingroup    DATAIO
+*
+* --------------------------------------------------------------------------------------------------------------------*/
+static void DIOSCRAPERWEBTRANSLATION_UnescapeJSONString(XSTRING& text)
+{
+  XSTRING out;
+  XCHAR*  source = text.Get();
+  int     size   = (int)text.GetSize();
+
+  out.Empty();
+  if(!source || (size <= 0)) return;
+
+  for(int c=0; c<size; c++)
+    {
+      if((source[c] != _C('\\')) || ((c + 1) >= size))
+        {
+          out.Add(source[c]);
+          continue;
+        }
+
+      XCHAR escaped = source[++c];
+
+      if(escaped == _C('n'))  { out.Add(_C('\n')); continue; }
+      if(escaped == _C('r'))  { out.Add(_C('\r')); continue; }
+      if(escaped == _C('t'))  { out.Add(_C('\t')); continue; }
+      if((escaped == _C('"')) || (escaped == _C('\\')) || (escaped == _C('/')))
+        {
+          out.Add(escaped);
+          continue;
+        }
+
+      if((escaped == _C('u')) && ((c + 4) < size))
+        {
+          int code  = 0;
+          int hexok = true;
+
+          for(int h=1; h<=4; h++)
+            {
+              int value = DIOSCRAPERWEBTRANSLATION_HexDigit(source[c + h]);
+              if(value < 0)
+                {
+                  hexok = false;
+                  break;
+                }
+              code = (code << 4) | value;
+            }
+
+          if(hexok)
+            {
+              out.Add((XCHAR)code);
+              c += 4;
+              continue;
+            }
+        }
+
+      out.Add(_C('\\'));
+      out.Add(escaped);
+    }
+
+  text = out;
+}
+
+
+/**-------------------------------------------------------------------------------------------------------------------
+*
 * @fn         bool DIOSCRAPERWEBTRANSLATION::DecodeTranslationText(XSTRING& text)
-* @brief      Decode URL percent-escapes in scraper text; keep C/C++ printf masks intact
+* @brief      Decode JSON escapes then URL percent-escapes; keep C/C++ printf masks intact
 * @ingroup    DATAIO
 *
 * --------------------------------------------------------------------------------------------------------------------*/
@@ -535,6 +618,9 @@ bool DIOSCRAPERWEBTRANSLATION::DecodeTranslationText(XSTRING& text)
   bool              status = true;
 
   if(text.IsEmpty()) return false;
+
+  // Google/MyMemory JSON often leaves \u003d for '=' and \" when ExtractBetween is used.
+  DIOSCRAPERWEBTRANSLATION_UnescapeJSONString(text);
 
   // Protect complete printf masks (%s, %d, %2d, %08X, %%...) before URL decode.
   // Ambiguous cases ("%20of" vs "%20o", "%2d" vs URL 0x2D) resolved by

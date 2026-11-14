@@ -44,7 +44,7 @@
 #include "XSystem.h"
 #include "XTranslation_GEN.h"
 #ifdef XFILE_ACTIVE
-#include "XFileJSON.h"
+#include "XFileXML.h"
 #endif
 
 
@@ -431,57 +431,61 @@ bool XTRANSLATION::LoadLanguageAvailable()
 {
   #ifdef XFILE_ACTIVE
 
-  XFILEJSON xfilejson;
+  XFILEXML xfilexml;
 
-  if(!xfilejson.Open(xpath))       return false;
-  if(!xfilejson.ReadAllFile())     return false;
-  if(!xfilejson.DecodeAllLines())  return false;
-
-  XFILEJSONARRAY* languages  = (XFILEJSONARRAY*)xfilejson.GetObj(NL("languages"));
-  if(languages)
+  if(!xfilexml.Open(xpath))            return false;
+  if(!xfilexml.ReadAndDecodeAllLines())
     {
-      for(XDWORD c=0; c<languages->GetValues()->GetSize(); c++)
+      xfilexml.Close();
+      return false;
+    }
+
+  XFILEXMLELEMENT* root = xfilexml.GetRoot();
+  if(!root || root->GetName().Compare(NL("lng")))
+    {
+      xfilexml.Close();
+      return false;
+    }
+
+  XFILEXMLELEMENT* languages = NULL;
+  for(int c=0; c<root->GetNElements(); c++)
+    {
+      XFILEXMLELEMENT* child = root->GetElement(c);
+      if(child && (child->GetType() == XFILEXMLELEMENTTYPE_NORMAL) && !child->GetName().Compare(NL("languages")))
         {
-          XFILEJSONVALUE* value = languages->GetValues()->Get(c);
-          if(value)
-            {
-              if(value->GetType() == XFILEJSONVALUETYPE_STRING)
-                {
-                  XSTRING strvalue = (XSTRING)(value->GetValueString());
-                  
-                  if(!strvalue.IsEmpty())
-                    {
-                      XDWORD code = ISO_639_3.Code_GetByCodeAlpha3(strvalue.Get());
-                      if(code != XLANGUAGE_ISO_639_3_CODE_INVALID)
-                        {
-                          languageavailables.Add(code);
-                        }
-                        else
-                        {
-                          XDWORD code = ISO_639_3.Code_GetByEnglishName(strvalue.Get());
-                          if(code != XLANGUAGE_ISO_639_3_CODE_INVALID)
-                            {
-                              languageavailables.Add(code);
-                            }
-                            else
-                            {
-                              XDWORD code = ISO_639_3.Code_GetByAlias(strvalue.Get());
-                              if(code != XLANGUAGE_ISO_639_3_CODE_INVALID)
-                                {
-                                  languageavailables.Add(code);
-                                }
-                            }
-                        }
-                    }
-                    
-                }
-            }
+          languages = child;
+          break;
         }
     }
 
-  xfilejson.Close();
+  if(languages)
+    {
+      for(int c=0; c<languages->GetNElements(); c++)
+        {
+          XFILEXMLELEMENT* language = languages->GetElement(c);
+          if(!language || (language->GetType() != XFILEXMLELEMENTTYPE_NORMAL)) continue;
+          if(language->GetName().Compare(NL("language"))) continue;
 
-  return true;
+          XSTRING strvalue;
+          // Standard element text: <language>English</language>. Also accept name="English".
+          if(!language->GetText(strvalue, true) || strvalue.IsEmpty())
+            {
+              language->GetValueAttribute(NL("name"), strvalue);
+              strvalue.DeleteNoCharacters(NL(" \t\r\n"), 0, XSTRINGCONTEXT_FROM_FIRST);
+              strvalue.DeleteNoCharacters(NL(" \t\r\n"), 0, XSTRINGCONTEXT_TO_END);
+            }
+          if(strvalue.IsEmpty()) continue;
+
+          XDWORD code = ISO_639_3.Code_GetByCodeAlpha3(strvalue.Get());
+          if(code == XLANGUAGE_ISO_639_3_CODE_INVALID) code = ISO_639_3.Code_GetByEnglishName(strvalue.Get());
+          if(code == XLANGUAGE_ISO_639_3_CODE_INVALID) code = ISO_639_3.Code_GetByAlias(strvalue.Get());
+          if(code != XLANGUAGE_ISO_639_3_CODE_INVALID) languageavailables.Add(code);
+        }
+    }
+
+  xfilexml.Close();
+
+  return (languageavailables.GetSize() > 0);
 
   #else
 
@@ -566,71 +570,96 @@ bool XTRANSLATION::Translate_Load()
 {
   #ifdef XFILE_ACTIVE
 
-  XFILEJSON xfilejson;
+  XFILEXML xfilexml;
 
-  if(!xfilejson.Open(xpath))       return false;
-  if(!xfilejson.ReadAllFile())     return false;
-  if(!xfilejson.DecodeAllLines())  return false;
+  if(!xfilexml.Open(xpath))            return false;
+  if(!xfilexml.ReadAndDecodeAllLines()) return false;
 
   int languageindex = GetIndexLanguageByCode(codelanguage);
-  if(languageindex == -1) return false;
-
-  XFILEJSONARRAY* translations  = (XFILEJSONARRAY*)xfilejson.GetObj(NL("translations"));
-  if(translations)
+  if(languageindex == -1)
     {
-      for(XDWORD c=0; c<translations->GetValues()->GetSize(); c++)
+      xfilexml.Close();
+      return false;
+    }
+
+  XSTRING currentlangname;
+  XSTRING englishlangname;
+  ISO_639_3.EnglishName_GetByCode(codelanguage, currentlangname);
+  ISO_639_3.EnglishName_GetByCode(XLANGUAGE_ISO_639_3_CODE_ENG, englishlangname);
+
+  XFILEXMLELEMENT* root = xfilexml.GetRoot();
+  if(!root || root->GetName().Compare(NL("lng")))
+    {
+      xfilexml.Close();
+      return false;
+    }
+
+  XFILEXMLELEMENT* translations = NULL;
+  for(int c=0; c<root->GetNElements(); c++)
+    {
+      XFILEXMLELEMENT* child = root->GetElement(c);
+      if(child && (child->GetType() == XFILEXMLELEMENTTYPE_NORMAL) && !child->GetName().Compare(NL("translations")))
         {
-          XFILEJSONVALUE* translation = translations->GetValues()->Get(c);
-          if(translation)
-            {
-              XSTRING IDstr = translation->GetName()->Get();
-              if(!IDstr.IsEmpty())
-                {
-                  XDWORD ID = IDstr.ConvertToDWord();
-                  if(ID < XTRANSLATION_MAXSENTENCES)
-                    {
-                      XFILEJSONARRAY* translationarray  = (XFILEJSONARRAY*)translation->GetValuePointer();
-                      if(translationarray)
-                        {
-                          XDWORD nvalues = translationarray->GetValues()->GetSize();
-                          XDWORD slot    = (XDWORD)(languageindex + 1);
-
-                          // languages[i] maps to translation array slot i+1 (slot 0 is fixed width).
-                          // If this language column is missing, fall back to English, then to the first string.
-                          if(slot >= nvalues)
-                            {
-                              int engindex = GetIndexLanguageByCode(XLANGUAGE_ISO_639_3_CODE_ENG);
-
-                              if((engindex >= 0) && ((XDWORD)(engindex + 1) < nvalues))
-                                {
-                                  slot = (XDWORD)(engindex + 1);
-                                }
-                               else if(nvalues >= 2)
-                                {
-                                  slot = 1;
-                                }
-                               else
-                                {
-                                  continue;
-                                }
-                            }
-
-                          XFILEJSONVALUE* fixedvalue = translationarray->GetValues()->Get(0);
-                          XFILEJSONVALUE* sentencevalue = translationarray->GetValues()->Get(slot);
-                          if(!fixedvalue || !sentencevalue) continue;
-
-                          XDWORD  sizesentencefixed = (XDWORD)fixedvalue->GetValueInteger();
-                          XSTRING sentence          = (XSTRING)sentencevalue->GetValueString();
-
-                          Translate_Add(ID, sentence.Get(), sizesentencefixed);
-                        }
-                    }
-                }
-            }
+          translations = child;
+          break;
         }
     }
 
-  xfilejson.Close();
+  if(translations)
+    {
+      for(int c=0; c<translations->GetNElements(); c++)
+        {
+          XFILEXMLELEMENT* sentence = translations->GetElement(c);
+          if(!sentence || (sentence->GetType() != XFILEXMLELEMENTTYPE_NORMAL)) continue;
+          if(sentence->GetName().Compare(NL("sentence"))) continue;
+
+          XSTRING IDstr;
+          sentence->GetValueAttribute(NL("id"), IDstr);
+          if(IDstr.IsEmpty()) continue;
+
+          XDWORD ID = IDstr.ConvertToDWord();
+          if(!ID || (ID >= XTRANSLATION_MAXSENTENCES)) continue;
+
+          XDWORD sizesentencefixed = (XDWORD)sentence->GetIntValueAttribute(NL("fixed"));
+
+          XFILEXMLELEMENT* chosen      = NULL;
+          XFILEXMLELEMENT* eng_text    = NULL;
+          XFILEXMLELEMENT* first_text  = NULL;
+
+          for(int t=0; t<sentence->GetNElements(); t++)
+            {
+              XFILEXMLELEMENT* text = sentence->GetElement(t);
+              if(!text || (text->GetType() != XFILEXMLELEMENTTYPE_NORMAL)) continue;
+              if(text->GetName().Compare(NL("text"))) continue;
+
+              if(!first_text) first_text = text;
+
+              XSTRING langname;
+              text->GetValueAttribute(NL("lang"), langname);
+              if(langname.IsEmpty()) continue;
+
+              if(!currentlangname.IsEmpty() && !langname.Compare(currentlangname.Get()))
+                {
+                  chosen = text;
+                  break;
+                }
+
+              if(!englishlangname.IsEmpty() && !langname.Compare(englishlangname.Get()))
+                {
+                  eng_text = text;
+                }
+            }
+
+          if(!chosen) chosen = eng_text ? eng_text : first_text;
+          if(!chosen) continue;
+
+          XSTRING sentence_text;
+          chosen->GetText(sentence_text, false);
+          Translate_Add(ID, sentence_text.Get(), sizesentencefixed);
+        }
+    }
+
+  xfilexml.Close();
 
   return true;
 

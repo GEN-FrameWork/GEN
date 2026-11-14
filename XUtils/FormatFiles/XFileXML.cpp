@@ -804,6 +804,48 @@ bool XFILEXMLELEMENT::SetValue(XCHAR* value)
 
 
 /**-------------------------------------------------------------------------------------------------------------------
+*
+* @fn         bool XFILEXMLELEMENT::GetText(XSTRING& out, bool trimspace)
+* @brief      Element character data (CDATA children preferred, else direct value). Optional end-trim.
+* @ingroup    XUTILS
+*
+* @param[out] out : Text collected from this element.
+* @param[in]  trimspace : If true, strip leading/trailing whitespace only.
+*
+* @return     bool : true if any character data was found.
+*
+* --------------------------------------------------------------------------------------------------------------------*/
+bool XFILEXMLELEMENT::GetText(XSTRING& out, bool trimspace)
+{
+  out.Empty();
+
+  bool have_cdata = false;
+
+  for(int c=0; c<GetNElements(); c++)
+    {
+      XFILEXMLELEMENT* child = GetElement(c);
+      if(!child) continue;
+
+      if(child->GetType() == XFILEXMLELEMENTTYPE_CDATA)
+        {
+          out += child->GetValue();
+          have_cdata = true;
+        }
+    }
+
+  if(!have_cdata) out = value;
+
+  if(trimspace && !out.IsEmpty())
+    {
+      out.DeleteNoCharacters(NL(" \t\r\n"), 0, XSTRINGCONTEXT_FROM_FIRST);
+      out.DeleteNoCharacters(NL(" \t\r\n"), 0, XSTRINGCONTEXT_TO_END);
+    }
+
+  return !out.IsEmpty();
+}
+
+
+/**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         XFILEXMLELEMENT* XFILEXMLELEMENT::AddElement()
 * @brief      Add element
@@ -1287,7 +1329,10 @@ bool XFILEXML::DecodeAllLines()
               continue;
             }
 
-          if((*stringml)[d]==_C('\"')) quote=!quote;
+          // Quotes inside CDATA (or comments) must not toggle the attribute-quote state:
+          // an odd number of " in a translation string would otherwise skip the closing
+          // '>' of ]]> and swallow the rest of the document into one broken element.
+          if((!cdata) && (!comment) && ((*stringml)[d]==_C('\"'))) quote=!quote;
 
           if((*stringml)[d]==_C('<')&&(!quote))
             {
@@ -1304,7 +1349,8 @@ bool XFILEXML::DecodeAllLines()
             }
            else
             {
-              if(((*stringml)[d]==_C('>'))&&(!quote))
+              // While inside CDATA, always honour '>' so ]]> can close even if a " was seen.
+              if(((*stringml)[d]==_C('>')) && ((!quote) || cdata))
                 {
                   if(string.Find(NL("]]"), false)!=XSTRING_NOTFOUND) cdata=false;
 
@@ -1313,9 +1359,15 @@ bool XFILEXML::DecodeAllLines()
                     {
                       DecodeLine(string, true);
                       string.Empty();
+                      quote = false;
                     }
                 }
-               else string += letter;
+               else
+                {
+                  string += letter;
+                  // Enter CDATA as soon as the open marker is complete (before content quotes).
+                  if((!cdata) && (string.Find(NL("[CDATA["), false)!=XSTRING_NOTFOUND)) cdata=true;
+                }
             }
 
           // A comment opens only outside CDATA. Checked after the append so the four delimiter characters are
@@ -1852,17 +1904,28 @@ bool XFILEXML::DecodeElement(XSTRING& string, XFILEXMLELEMENTTYPELINE typeline)
       case XFILEXMLELEMENTTYPELINE_STARTEND : { XSTRING values;
                                                 XSTRING name;
                                                 XSTRING value;
+                                                int     namestart = string.FindCharacter(_C('<'));
+                                                int     nameend;
+                                                int     size      = (int)string.GetSize();
 
-                                                if(string.Copy(NL("<"), NL(" "), false, 0, name)==XSTRING_NOTFOUND) return false;
+                                                // XML Name: characters after '<' until whitespace, '/' or '>'.
+                                                // Covers standard forms: <tag>, <tag/>, <tag attr="v">, <tag attr="v"/>.
+                                                if(namestart == XSTRING_NOTFOUND) return false;
+                                                namestart++;
+                                                if(namestart >= size) return false;
 
-                                                //name.Set(string);
-                                                name.DeleteCharacter(_C('<'), XSTRINGCONTEXT_ALLSTRING);
-                                                name.DeleteCharacter(_C('>'), XSTRINGCONTEXT_ALLSTRING);
+                                                nameend = namestart;
+                                                while(nameend < size)
+                                                  {
+                                                    XCHAR ch = string[nameend];
+                                                    if((ch == _C(' '))  || (ch == _C('\t')) ||
+                                                       (ch == _C('\r')) || (ch == _C('\n')) ||
+                                                       (ch == _C('/'))  || (ch == _C('>'))) break;
+                                                    nameend++;
+                                                  }
 
-                                                name.DeleteNoCharacters();
-                                                name.DeleteNoCharacters(NL("\20"), 0, XSTRINGCONTEXT_FROM_FIRST);
-                                                name.DeleteNoCharacters(NL("\20"), 0, XSTRINGCONTEXT_TO_END);
-
+                                                if(nameend <= namestart) return false;
+                                                if(string.Copy(namestart, nameend, name)==XSTRING_NOTFOUND) return false;
 
                                                 XFILEXMLELEMENT* element;
 
@@ -1880,8 +1943,12 @@ bool XFILEXML::DecodeElement(XSTRING& string, XFILEXMLELEMENTTYPELINE typeline)
                                                 element->SetType(XFILEXMLELEMENTTYPE_NORMAL);
                                                 element->SetName(name);
 
-                                                if(string.Copy(name.Get(), (const XCHAR*)NULL, false, 0, values)!=XSTRING_NOTFOUND)
+                                                // Attribute list is whatever remains after the Name (before '>').
+                                                if(string.Copy(nameend, size, values)!=XSTRING_NOTFOUND)
                                                   {
+                                                    values.DeleteCharacter(_C('>'), XSTRINGCONTEXT_TO_END);
+                                                    values.DeleteCharacter(_C('/'), XSTRINGCONTEXT_TO_END);
+
                                                     int indexname = 0;
 
                                                     while(1)
@@ -1889,7 +1956,10 @@ bool XFILEXML::DecodeElement(XSTRING& string, XFILEXMLELEMENTTYPELINE typeline)
                                                         indexname = values.Copy(indexname, NL("="), false, name);
                                                         if(indexname==XSTRING_NOTFOUND) break;
 
-                                                        name.DeleteNoCharacters(XSTRINGCONTEXT_ALLSTRING);
+                                                        // Trim attribute name ends only (do not collapse internal spaces wrongly).
+                                                        name.DeleteNoCharacters(NL(" \t\r\n"), 0, XSTRINGCONTEXT_FROM_FIRST);
+                                                        name.DeleteNoCharacters(NL(" \t\r\n"), 0, XSTRINGCONTEXT_TO_END);
+                                                        if(name.IsEmpty()) break;
 
                                                         indexname = values.Copy(NL("\""), NL("\""), false, indexname, value);
                                                         if(indexname==XSTRING_NOTFOUND) break;
@@ -1898,7 +1968,6 @@ bool XFILEXML::DecodeElement(XSTRING& string, XFILEXMLELEMENTTYPELINE typeline)
 
                                                         name.Empty();
                                                         value.Empty();
-
                                                       }
                                                   }
 

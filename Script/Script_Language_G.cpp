@@ -3493,7 +3493,7 @@ SCRIPT_LNG_G_TOKENTYPES SCRIPT_LNG_G::GetToken()
 
       while(((*ipprg) != _C('"')) && ((*ipprg) != _C('\r')) && ((*ipprg) != _C('\n')) && (*ipprg))
         {
-          // Check for escape sequences: \n \r \\ \"
+          // Check for escape sequences: \n \r \t \\ \"
           if((*ipprg) == _C('\\'))
             {
               if(*(ipprg+1) == _C('n'))
@@ -3519,6 +3519,20 @@ SCRIPT_LNG_G_TOKENTYPES SCRIPT_LNG_G::GetToken()
 
                   ipprg++;
                   (*temptoken++) = _C('\r');
+                }
+               else if(*(ipprg+1) == _C('t'))
+                {
+                  // TAB — must not fall through as unknown escape (that would keep letter 't'
+                  // and break scripts that ReplaceAllString("\t", ...), e.g. translation.g).
+                  if((temptoken - currenttoken) >= SCRIPT_LNG_G_MAXTOKENLEN)
+                    {
+                      (*temptoken) = _C('\0');
+                      HaveError(SCRIPT_LNG_G_ERRORCODE_TOKEN_TOO_LONG);
+                      return tokentype;
+                    }
+
+                  ipprg++;
+                  (*temptoken++) = _C('\t');
                 }
                else if(*(ipprg+1) == _C('\\'))
                 {

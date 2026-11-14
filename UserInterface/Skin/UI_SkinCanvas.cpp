@@ -2249,9 +2249,9 @@ bool UI_SKINCANVAS::LoadFonts()
                   pathnamefilecmp += vectorfontname;
                   pathnamefilecmp.Slash_Normalize();
 
-                  unzippathfile_tmp  = GEN_USERINTERFACE.GetUnzipPathFile()->Get();
+                      unzippathfile_tmp  = GEN_USERINTERFACE.GetUnzipPathFile()->Get();
                   unzippathfile_tmp.Slash_Add();
-                  unzippathfile_tmp += vectorfontname;
+                      unzippathfile_tmp += vectorfontname;
                   unzippathfile_tmp.Slash_Normalize();
 
                   status = unzipfile->DecompressFile(pathnamefilecmp, (*GEN_USERINTERFACE.GetUnzipPathFile()), vectorfontname.Get());   
@@ -2261,14 +2261,14 @@ bool UI_SKINCANVAS::LoadFonts()
                     }
                    else
                     {
-                      status = canvas->VectorFont_Load(unzippathfile_tmp);
+                      status = canvas->VectorFont_Load(unzippathfile_tmp);  
                       if(!status)
                         {
                           XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, NL("[UI Skin] LoadFonts: VectorFont_Load failed for [%s]"), unzippathfile_tmp.Get());
                         }
                        else
                         {
-                          fontpathfile = unzippathfile_tmp;
+                      fontpathfile = unzippathfile_tmp;
                         }
                     }
 
@@ -2300,7 +2300,7 @@ bool UI_SKINCANVAS::LoadFonts()
             }
            else
             {                            
-              status = canvas->VectorFont_Load(xpath);
+              status = canvas->VectorFont_Load(xpath);    
               if(!status)
                 {
                   XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, NL("[UI Skin] LoadFonts: VectorFont_Load failed for disk font [%s]"), xpath.Get());
@@ -2729,6 +2729,10 @@ bool UI_SKINCANVAS::CalculePosition(UI_ELEMENT* element, double fatherwidth, dou
 }
 
 
+// Forward: measure must use the same face stack as Draw_Text (Latin + CJK fallback).
+static XDWORD UI_SKINCANVAS_BuildTextFaceStack(UI_SKIN* skin, UI_ELEMENT_TEXT* element_text, XCHAR** outfaces, XDWORD maxfaces, XSTRING& langstorage);
+
+
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         double UI_SKINCANVAS::GetWidthString(XCHAR* string, XDWORD sizefont)
@@ -2743,12 +2747,28 @@ bool UI_SKINCANVAS::CalculePosition(UI_ELEMENT* element, double fatherwidth, dou
 * --------------------------------------------------------------------------------------------------------------------*/
 double UI_SKINCANVAS::GetWidthString(XCHAR* string, XDWORD sizefont)
 {
-  XDWORD width  = 0;
-  XDWORD height = 0;
+  if(!string) return 0.0;
 
   SetFontSize(sizefont);
-  GetFontSize(string, width, height);
 
+  // Same stack as Draw_Text: default Latin face + language/CJK fallback. Measuring with only the
+  // selected Latin face skips every unmapped CJK glyph (width 0) and under-sizes netstatus / legends.
+  GRP2DCANVAS* canvas = GetCanvas();
+  if(canvas)
+    {
+      XCHAR*  faces[GRP2DCANVAS_VECTORFONT_STACK_MAX];
+      XSTRING langface;
+      XDWORD  nfaces = UI_SKINCANVAS_BuildTextFaceStack(this, NULL, faces, GRP2DCANVAS_VECTORFONT_STACK_MAX, langface);
+      if(nfaces > 0)
+        {
+          double tw = canvas->VectorFont_GetWidthStack(faces, nfaces, string);
+          if(tw > 0.0) return tw;
+        }
+    }
+
+  XDWORD width  = 0;
+  XDWORD height = 0;
+  GetFontSize(string, width, height);
   return (double)width;
 }
 
@@ -2880,8 +2900,9 @@ static void UI_SKINCANVAS_SelectTextFace(UI_SKIN* skin, GRP2DCANVAS* canvas, UI_
 
 // Phase 5: build ordered face pointers for GetWidthStack/PrintStack.
 // Order: authored stack (or single face) → default → language face (CJK fallback, if mapped).
-// Default before language so ASCII digits, IPs, versions and symbols keep Nunito like other
-// languages; Noto/CJK only paints glyphs the Latin face does not have.
+// Default is listed before language so the stack contract stays "Latin primary, script fallback".
+// GetWidthStack/PrintStack probe Basic Latin front→back and other scripts back→front, so CJK
+// runs Select the language face first without leaving the Latin face on every glyph.
 static XDWORD UI_SKINCANVAS_BuildTextFaceStack(UI_SKIN* skin, UI_ELEMENT_TEXT* element_text, XCHAR** outfaces, XDWORD maxfaces, XSTRING& langstorage)
 {
   XDWORD n = 0;
@@ -3214,12 +3235,12 @@ bool UI_SKINCANVAS::CalculateBoundaryLine_Tree(UI_ELEMENT* element, bool adjusts
   switch((int)element->GetBoundaryLine()->height)
     {
       case UI_ELEMENT_TYPE_ALIGN_AUTO   :
-      case                            0 :
-      case UI_ELEMENT_TYPE_ALIGN_MAX    : return false;
+      case                            0 : 
+      case UI_ELEMENT_TYPE_ALIGN_MAX    : return false; 
                                           break;
     }
 
-  return CalculePosition(element, fatherwidth, fatherheight, adjustsizemargin);
+  return CalculePosition(element, fatherwidth, fatherheight, adjustsizemargin);  
 }
 
 
@@ -3411,7 +3432,7 @@ bool UI_SKINCANVAS::CalculateBoundaryLine_Option(UI_ELEMENT* element, bool adjus
                                                   {                                           
                                                     case UI_ELEMENT_OPTION_ALLOCATION_TEXT_TYPE_UP      : 
                                                     case UI_ELEMENT_OPTION_ALLOCATION_TEXT_TYPE_DOWN    : if(element_animation) maximgheight += element_animation->GetBoundaryLine()->height;  
-                                                                                                          if(element_text)      maximgheight += element_text->GetBoundaryLine()->height;
+                                                                                                          if(element_text)      maximgheight += element_text->GetBoundaryLine()->height;  
                                                                                                           // Gap between face and caption so soft-alpha icon rims do not sit
                                                                                                           // inside the text AABB (XTraceMonitorGEN legend gray bars).
                                                                                                           if(element_animation && element_text) maximgheight += 4.0;
@@ -5561,14 +5582,14 @@ bool UI_SKINCANVAS::PrepareTextContentChange(UI_ELEMENT* element)
 
           if(father_paintable && !chrome_caption_frost)
             {
-              double fx = father->GetXPosition();
-              double fy = father->GetYPosition();
-              if(father->GetFather()) GetAddPositionScrollSteps(father->GetFather(), fx, fy);
+          double fx = father->GetXPosition();
+          double fy = father->GetYPosition();
+          if(father->GetFather()) GetAddPositionScrollSteps(father->GetFather(), fx, fy);
 
-              double left   = UI_BOUNDARYLINE_EdgeLeft  (fx, father->GetBoundaryLine()->width);
-              double right  = UI_BOUNDARYLINE_EdgeRight (fx, father->GetBoundaryLine()->width);
-              double top    = UI_BOUNDARYLINE_EdgeTop   (fy, father->GetBoundaryLine()->height);
-              double bottom = UI_BOUNDARYLINE_EdgeBottom(fy, father->GetBoundaryLine()->height);
+          double left   = UI_BOUNDARYLINE_EdgeLeft  (fx, father->GetBoundaryLine()->width);
+          double right  = UI_BOUNDARYLINE_EdgeRight (fx, father->GetBoundaryLine()->width);
+          double top    = UI_BOUNDARYLINE_EdgeTop   (fy, father->GetBoundaryLine()->height);
+          double bottom = UI_BOUNDARYLINE_EdgeBottom(fy, father->GetBoundaryLine()->height);
 
               XBYTE pr = 13, pg = 17, pb = 23;
               UI_LAYOUT* layout = father->GetLayout();
@@ -5582,11 +5603,11 @@ bool UI_SKINCANVAS::PrepareTextContentChange(UI_ELEMENT* element)
                 }
 
               GRP2DCOLOR_RGBA8 solid(pr, pg, pb, 255);
-              GRP2DCOLOR_RGBA8 noline(0, 0, 0, 0);
-              canvas->SetFillColor(&solid);
-              canvas->SetLineColor(&noline);
-              canvas->Rectangle(left, bottom, right, top, true);
-              erased = true;
+          GRP2DCOLOR_RGBA8 noline(0, 0, 0, 0);
+          canvas->SetFillColor(&solid);
+          canvas->SetLineColor(&noline);
+          canvas->Rectangle(left, bottom, right, top, true);
+          erased = true;
             }
            else if(!erased)
             {
@@ -5805,7 +5826,7 @@ bool UI_SKINCANVAS::Draw_Text(UI_ELEMENT* element)
                 {
                   // NEVER restore a legend TextBackdrop — it routinely bakes the shared-slot peel
                   // gray plate (57,59,61). Father/page fill below is the only trusted backdrop.
-                  TextBackdrop_Delete(element);
+      TextBackdrop_Delete(element);
                   textbackdrop = NULL;
                 }
 
@@ -7076,10 +7097,10 @@ bool UI_SKINCANVAS::Draw_PropertyList(UI_ELEMENT* element)
     }
 
   PostDrawFunction(element, canvas, clip_rect, x_position, y_position);
-
+  
   return true;
 }
-
+  
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
@@ -7449,7 +7470,7 @@ bool UI_SKINCANVAS::Draw_Animation(UI_ELEMENT* element)
       // Image child only paints when ITS MustReDraw is set — force it when the animation father redraws.
       // Chrome SVG + app toolbar PNGs are left untouched (transparent assets; theme only remaps text ink).
       element_image->SetMustReDraw(true);
-      Draw(element_image);
+      Draw(element_image);     
     }
 
   switch(element_animation->GetState())
@@ -7588,18 +7609,18 @@ bool UI_SKINCANVAS::Draw_Option(UI_ELEMENT* element)
         }
        else
         {
-          GRP2DREBUILDAREA* ownarea_bg = GetRebuildAreaByElement(element_option);
-          if(ownarea_bg && !GEN_USERINTERFACE.ModalLayer_IsCompositing())
-            {
-              GRP2DREBUILDAREA* optionbackdrop = OptionBackdrop_Find(element_option);
+      GRP2DREBUILDAREA* ownarea_bg = GetRebuildAreaByElement(element_option);
+      if(ownarea_bg && !GEN_USERINTERFACE.ModalLayer_IsCompositing())
+        {
+          GRP2DREBUILDAREA* optionbackdrop = OptionBackdrop_Find(element_option);
 
-              if(!optionbackdrop)
-                {
-                  OptionBackdrop_Capture(element_option, ownarea_bg->GetXPos(), ownarea_bg->GetYPos(), (double)ownarea_bg->GetBitmap()->GetWidth(), (double)ownarea_bg->GetBitmap()->GetHeight());
-                }
-               else
-                {
-                  PutBitmapNoAlpha(optionbackdrop->GetXPos(), optionbackdrop->GetYPos(), optionbackdrop->GetBitmap());
+          if(!optionbackdrop)
+            {
+              OptionBackdrop_Capture(element_option, ownarea_bg->GetXPos(), ownarea_bg->GetYPos(), (double)ownarea_bg->GetBitmap()->GetWidth(), (double)ownarea_bg->GetBitmap()->GetHeight());
+            }
+           else
+            {
+              PutBitmapNoAlpha(optionbackdrop->GetXPos(), optionbackdrop->GetYPos(), optionbackdrop->GetBitmap());
                   optionbackdrop_restored = true;
                 }
             }
@@ -7758,22 +7779,22 @@ bool UI_SKINCANVAS::Draw_Option(UI_ELEMENT* element)
                   GRPSCREEN* scr_active = GetScreen();
                   bool skip_active_plate = (scr_active && scr_active->Style_Is(GRPSCREENSTYLE_TRANSPARENT));
                   if(!skip_active_plate)
-                    {
-                      GRP2DCOLOR_RGBA8  colorwhite(255, 255, 255);
-                      GRP2DCOLOR_RGBA8  colorhover(0x32, 0x33, 0x36, 0);
+                {
+                  GRP2DCOLOR_RGBA8  colorwhite(255, 255, 255);
+                  GRP2DCOLOR_RGBA8  colorhover(0x32, 0x33, 0x36, 0);
   
-                      canvas->SetLineColor(&colorwhite);
-                      canvas->SetFillColor(&colorhover);
+                  canvas->SetLineColor(&colorwhite);
+                  canvas->SetFillColor(&colorhover);
 
-                      canvas->SetLineWidth(1.0f);
+                  canvas->SetLineWidth(1.0f);
       
-                      if(element_option->GetRoundRect())
-                        {
-                          canvas->RoundRect(x_position - UI_SKINCANVAS_PRESELECT_MAXEDGE, y_position + UI_SKINCANVAS_PRESELECT_MAXEDGE, x_position + element->GetBoundaryLine()->width + UI_SKINCANVAS_PRESELECT_MAXEDGE, UI_BOUNDARYLINE_EdgeTop(y_position, element->GetBoundaryLine()->height) - UI_SKINCANVAS_PRESELECT_MAXEDGE, element_option->GetRoundRect(), true);      
-                        }
-                       else
-                        {
-                          canvas->Rectangle(x_position - UI_SKINCANVAS_PRESELECT_MAXEDGE, y_position + UI_SKINCANVAS_PRESELECT_MAXEDGE, x_position + element->GetBoundaryLine()->width + UI_SKINCANVAS_PRESELECT_MAXEDGE, UI_BOUNDARYLINE_EdgeTop(y_position, element->GetBoundaryLine()->height) - UI_SKINCANVAS_PRESELECT_MAXEDGE, true);      
+                  if(element_option->GetRoundRect())
+                    {
+                      canvas->RoundRect(x_position - UI_SKINCANVAS_PRESELECT_MAXEDGE, y_position + UI_SKINCANVAS_PRESELECT_MAXEDGE, x_position + element->GetBoundaryLine()->width + UI_SKINCANVAS_PRESELECT_MAXEDGE, UI_BOUNDARYLINE_EdgeTop(y_position, element->GetBoundaryLine()->height) - UI_SKINCANVAS_PRESELECT_MAXEDGE, element_option->GetRoundRect(), true);      
+                    }
+                   else
+                    {
+                      canvas->Rectangle(x_position - UI_SKINCANVAS_PRESELECT_MAXEDGE, y_position + UI_SKINCANVAS_PRESELECT_MAXEDGE, x_position + element->GetBoundaryLine()->width + UI_SKINCANVAS_PRESELECT_MAXEDGE, UI_BOUNDARYLINE_EdgeTop(y_position, element->GetBoundaryLine()->height) - UI_SKINCANVAS_PRESELECT_MAXEDGE, true);      
                         }
                     } 
                 }
@@ -8136,8 +8157,8 @@ bool UI_SKINCANVAS::Draw_MultiOption(UI_ELEMENT* element)
                       UI_ELEMENT* facechild = (UI_ELEMENT*)element_option->GetComposeElements()->Get(d);
                       if(facechild) facechild->SetMustReDraw(true);
                     }
-                  Draw(element_option);
-                  break;
+                  Draw(element_option);              
+                  break;              
                 }       
             }            
         }
@@ -8228,8 +8249,8 @@ bool UI_SKINCANVAS::Draw_MultiOption(UI_ELEMENT* element)
                   // later siblings that re-contaminate. Mark for end-of-layout same-frame repair.
                   GEN_USERINTERFACE.Elements_SetToRedraw(sib, true);
                   CompactLegendsMarkNeedRepair();
-                }
-            }
+                }       
+            }            
         }
     }
       
@@ -8660,9 +8681,9 @@ bool UI_SKINCANVAS::Draw_EditText(UI_ELEMENT* element)
       const double text_pad_x = 6.0;
       double       sizefont   = (double)element_edittext->GetSizeFont();
       if(sizefont < 1.0) sizefont = 13.0;
-
+                                   
       canvas->Vectorfont_GetConfig()->SetColor(&color);
-      canvas->Vectorfont_GetConfig()->SetSize(element_edittext->GetSizeFont());
+      canvas->Vectorfont_GetConfig()->SetSize(element_edittext->GetSizeFont());  
 
       double text_y = box_b - ((box_h - sizefont) * 0.5) - (sizefont * 0.18);
       if(text_y > (box_b - 2.0)) text_y = box_b - 2.0;
@@ -8677,7 +8698,7 @@ bool UI_SKINCANVAS::Draw_EditText(UI_ELEMENT* element)
 
           display.Copy(0, element_edittext->Cursor_GetPosition(), cursor_string);
           cursor_xpos = (XDWORD)GetWidthString(cursor_string.Get(), element_edittext->GetSizeFont());
-
+       
           if(element_edittext->Cursor_GetXTimerBlink()->GetMeasureMilliSeconds() >= element_edittext->Cursor_GetTimeBlink())
             {
               element_edittext->Cursor_ChangeStateBlink();   
@@ -9309,17 +9330,17 @@ bool UI_SKINCANVAS::Draw_Form(UI_ELEMENT* element)
                 corner_parent_ptr = &corner_parent;
               }
             if(!corner_parent_ptr)
+          {
+            UI_ELEMENT* father = element_form->GetFather();
+            UI_COLOR* fbg = NULL;
+            if(father)
               {
-                UI_ELEMENT* father = element_form->GetFather();
-                UI_COLOR* fbg = NULL;
-                if(father)
-                  {
-                    if(father->IsBackgroundColorSet()) fbg = father->GetBackgroundColor();
-                    else fbg = father->GetColor();
-                  }
-                if(fbg && fbg->GetAlpha() > 0 && (fbg->GetRed() + fbg->GetGreen() + fbg->GetBlue()) > 8)
-                  {
-                    corner_parent = GRP2DCOLOR_RGBA8((XBYTE)fbg->GetRed(), (XBYTE)fbg->GetGreen(), (XBYTE)fbg->GetBlue(), (XBYTE)fbg->GetAlpha());
+                if(father->IsBackgroundColorSet()) fbg = father->GetBackgroundColor();
+                else fbg = father->GetColor();
+              }
+            if(fbg && fbg->GetAlpha() > 0 && (fbg->GetRed() + fbg->GetGreen() + fbg->GetBlue()) > 8)
+              {
+                corner_parent = GRP2DCOLOR_RGBA8((XBYTE)fbg->GetRed(), (XBYTE)fbg->GetGreen(), (XBYTE)fbg->GetBlue(), (XBYTE)fbg->GetAlpha());
                     corner_parent_ptr = &corner_parent;
                   }
               }
@@ -9429,17 +9450,17 @@ bool UI_SKINCANVAS::Draw_Form(UI_ELEMENT* element)
                 corner_parent_ptr = &corner_parent;
               }
             if(!corner_parent_ptr)
+          {
+            UI_ELEMENT* father = element_form->GetFather();
+            UI_COLOR* fbg = NULL;
+            if(father)
               {
-                UI_ELEMENT* father = element_form->GetFather();
-                UI_COLOR* fbg = NULL;
-                if(father)
-                  {
-                    if(father->IsBackgroundColorSet()) fbg = father->GetBackgroundColor();
-                    else fbg = father->GetColor();
-                  }
-                if(fbg && fbg->GetAlpha() > 0 && (fbg->GetRed() + fbg->GetGreen() + fbg->GetBlue()) > 8)
-                  {
-                    corner_parent = GRP2DCOLOR_RGBA8((XBYTE)fbg->GetRed(), (XBYTE)fbg->GetGreen(), (XBYTE)fbg->GetBlue(), (XBYTE)fbg->GetAlpha());
+                if(father->IsBackgroundColorSet()) fbg = father->GetBackgroundColor();
+                else fbg = father->GetColor();
+              }
+            if(fbg && fbg->GetAlpha() > 0 && (fbg->GetRed() + fbg->GetGreen() + fbg->GetBlue()) > 8)
+              {
+                corner_parent = GRP2DCOLOR_RGBA8((XBYTE)fbg->GetRed(), (XBYTE)fbg->GetGreen(), (XBYTE)fbg->GetBlue(), (XBYTE)fbg->GetAlpha());
                     corner_parent_ptr = &corner_parent;
                   }
               }
@@ -9564,11 +9585,11 @@ bool UI_SKINCANVAS::Draw_Form(UI_ELEMENT* element)
                   if(UI_SkinCanvas_IsBackdropPoisonPixel(rightpx))
                     canvas->PutPixel((double)x1, (double)py, (const GRP2DCOLOR*)&page);
                 }
-            }
-           else
-            {
-              canvas->Rectangle(element_form->GetVisibleRect()->x, element_form->GetVisibleRect()->y, element_form->GetVisibleRect()->x + element_form->GetVisibleRect()->width, element_form->GetVisibleRect()->GetTop(), true);
-            }
+        }
+       else
+        {
+          canvas->Rectangle(element_form->GetVisibleRect()->x, element_form->GetVisibleRect()->y, element_form->GetVisibleRect()->x + element_form->GetVisibleRect()->width, element_form->GetVisibleRect()->GetTop(), true);
+        }
         }
 
       if(frame_clip_expanded)
@@ -9808,7 +9829,7 @@ bool UI_SKINCANVAS::Draw_Form(UI_ELEMENT* element)
                     }
                 }
             }
-        }
+        }  
     }
   
   PostDrawFunction(element, canvas, clip_rect, x_position, y_position);
@@ -11565,37 +11586,37 @@ bool UI_SKINCANVAS::DrawScrollBars(UI_ELEMENT* element, UI_PROPERTY_SCROLLEABLE*
       if((radius_vert == 0.0f) && (radius > 0.0f)) track_bottom -= radius;
 
       if((track_bottom - track_top) > 0.0f)
-        {
-          double tracklen  = track_bottom - track_top;
-          double viewport  = scrolleable->Scroll_GetContentViewport(UI_PROPERTY_SCROLLEABLE_TYPE_VERTICAL, box_h);
-          double limit     = scrolleable->Scroll_GetLimit(UI_PROPERTY_SCROLLEABLE_TYPE_VERTICAL);            // <= 0
-          double disp      = scrolleable->Scroll_GetDisplacement(UI_PROPERTY_SCROLLEABLE_TYPE_VERTICAL);
-          double content   = viewport - limit;                                                              // >= viewport
-          double fraction  = (limit != 0.0f) ? (disp / limit) : 0.0f;
+    {
+      double tracklen  = track_bottom - track_top;
+      double viewport  = scrolleable->Scroll_GetContentViewport(UI_PROPERTY_SCROLLEABLE_TYPE_VERTICAL, box_h);
+      double limit     = scrolleable->Scroll_GetLimit(UI_PROPERTY_SCROLLEABLE_TYPE_VERTICAL);            // <= 0
+      double disp      = scrolleable->Scroll_GetDisplacement(UI_PROPERTY_SCROLLEABLE_TYPE_VERTICAL);
+      double content   = viewport - limit;                                                              // >= viewport
+      double fraction  = (limit != 0.0f) ? (disp / limit) : 0.0f;
 
-          if(fraction < 0.0f) fraction = 0.0f;
-          if(fraction > 1.0f) fraction = 1.0f;
+      if(fraction < 0.0f) fraction = 0.0f;
+      if(fraction > 1.0f) fraction = 1.0f;
 
-          double thumb     = (content > 0.0f) ? (tracklen * (viewport / content)) : tracklen;
-          if(thumb < UI_SKINCANVAS_SCROLLBAR_MINTHUMB) thumb = UI_SKINCANVAS_SCROLLBAR_MINTHUMB;
-          if(thumb > tracklen)                         thumb = tracklen;
+      double thumb     = (content > 0.0f) ? (tracklen * (viewport / content)) : tracklen;
+      if(thumb < UI_SKINCANVAS_SCROLLBAR_MINTHUMB) thumb = UI_SKINCANVAS_SCROLLBAR_MINTHUMB;
+      if(thumb > tracklen)                         thumb = tracklen;
 
-          double thumb_top = track_top + (fraction * (tracklen - thumb));
+      double thumb_top = track_top + (fraction * (tracklen - thumb));
 
-          scrolleable->Scroll_GetBarTrackColor(UI_PROPERTY_SCROLLEABLE_TYPE_VERTICAL, tr_r, tr_g, tr_b, tr_a);
-          scrolleable->Scroll_GetBarThumbColor(UI_PROPERTY_SCROLLEABLE_TYPE_VERTICAL, th_r, th_g, th_b, th_a);
+      scrolleable->Scroll_GetBarTrackColor(UI_PROPERTY_SCROLLEABLE_TYPE_VERTICAL, tr_r, tr_g, tr_b, tr_a);
+      scrolleable->Scroll_GetBarThumbColor(UI_PROPERTY_SCROLLEABLE_TYPE_VERTICAL, th_r, th_g, th_b, th_a);
 
-          GRP2DCOLOR_RGBA8 trackcolor(tr_r, tr_g, tr_b, tr_a);
-          GRP2DCOLOR_RGBA8 thumbcolor(th_r, th_g, th_b, th_a);
+      GRP2DCOLOR_RGBA8 trackcolor(tr_r, tr_g, tr_b, tr_a);
+      GRP2DCOLOR_RGBA8 thumbcolor(th_r, th_g, th_b, th_a);
 
-          canvas->SetLineWidth(0.0f);
-          canvas->SetLineColor(&trackcolor);
-          canvas->SetFillColor(&trackcolor);
-          DrawScrollPill(canvas, track_left, track_bottom, track_right, track_top, radius);
+      canvas->SetLineWidth(0.0f);
+      canvas->SetLineColor(&trackcolor);
+      canvas->SetFillColor(&trackcolor);
+      DrawScrollPill(canvas, track_left, track_bottom, track_right, track_top, radius);
 
-          canvas->SetLineColor(&thumbcolor);
-          canvas->SetFillColor(&thumbcolor);
-          DrawScrollPill(canvas, track_left, thumb_top + thumb, track_right, thumb_top, radius);
+      canvas->SetLineColor(&thumbcolor);
+      canvas->SetFillColor(&thumbcolor);
+      DrawScrollPill(canvas, track_left, thumb_top + thumb, track_right, thumb_top, radius);
         }
     }
 
@@ -13281,7 +13302,7 @@ bool UI_SKINCANVAS::TextBackdrop_InvalidateOverlapping(double x, double y, doubl
               // blackening on every hover of the menu below. Full PutBitmapNoAlpha clears all glyph
               // ink before the owner redraws. (Intersection remains elsewhere for OptionBackdrop
               // peels that must not repaint a whole bubble into a legend strip.)
-              PutBitmapNoAlpha(entry->GetXPos(), entry->GetYPos(), entry->GetBitmap());
+          PutBitmapNoAlpha(entry->GetXPos(), entry->GetYPos(), entry->GetBitmap());
             }
 
           if(text_owner) text_owner->SetMustReDraw(true);

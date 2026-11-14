@@ -124,6 +124,10 @@ class XFILEXMLELEMENT
     bool                            SetValue                    (XSTRING& value);
     bool                            SetValue                    (XCHAR* value);
 
+    // Character data of this element: direct CDATA children if any, otherwise GetValue().
+    // trimspace removes leading/trailing whitespace only (keeps internal spaces).
+    bool                            GetText                     (XSTRING& out, bool trimspace = false);
+
     XFILEXMLELEMENT*                AddElement                  ();
     XFILEXMLELEMENT*                AddElement                  (XSTRING& name);
     XFILEXMLELEMENT*                AddElement                  (XCHAR* name);

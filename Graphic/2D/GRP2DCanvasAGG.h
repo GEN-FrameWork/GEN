@@ -1427,12 +1427,14 @@ class GRP2DCANVASAGG: public GRP2DCANVAS
                                                                                       return true;
                                                                                     }
 
-                                                                                  // Fast path: UI Latin faces always have Basic Latin. Avoid prepare_glyph per ASCII codepoint
-                                                                                  // on every Print/GetWidth (UI_Options textbox was paying this on every redraw).
+                                                                                  // Fast path: UI Latin faces always have Basic Latin. Avoid a FreeType round-trip
+                                                                                  // per ASCII codepoint on every Print/GetWidth.
                                                                                   if(codepoint >= 0x20 && codepoint <= 0x7E) return true;
 
-                                                                                  if(!vectorfont_engine.prepare_glyph((unsigned)codepoint)) return false;
-                                                                                  return (vectorfont_engine.glyph_index() != 0);
+                                                                                  // Presence only (FT_Get_Char_Index). prepare_glyph Load+Render belongs to
+                                                                                  // the glyph cache path used by Print/GetWidth — not to stack face probing.
+                                                                                  // Same contract as before: true iff glyph_index != 0 (.notdef => false).
+                                                                                  return vectorfont_engine.has_char((unsigned)codepoint);
                                                                                 }
                                               
     // Measure with Unicode codepoints (same as VectorFont_Print). ConvertToASCII + byte walk

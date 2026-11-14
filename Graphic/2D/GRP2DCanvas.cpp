@@ -1344,6 +1344,10 @@ bool GRP2DCANVAS::VectorFont_HasChar(XDWORD codepoint)
 *
 * @fn         double GRP2DCANVAS::VectorFont_GetWidthStack(XCHAR** faces, XDWORD nfaces, XCHAR* string)
 * @brief      Measure string width using a font-family stack (Phase 5)
+* @note       Basic Latin / whitespace: probe stack front→back (default/Nunito first).
+*             Other scripts: probe back→front (language/CJK face first) so long CJK runs
+*             do not Select the Latin face on every glyph. Semantics unchanged for mixed
+*             strings: ASCII keeps the primary Latin face; CJK uses the fallback face.
 * @ingroup    GRAPHIC
 *
 * --------------------------------------------------------------------------------------------------------------------*/
@@ -1367,9 +1371,12 @@ double GRP2DCANVAS::VectorFont_GetWidthStack(XCHAR** faces, XDWORD nfaces, XCHAR
       XCHAR  one[2] = { ch, 0 };
       bool   got   = false;
       bool   space = ((ch == _C(' ')) || (ch == _C('\t')) || (ch == _C('\n')) || (ch == _C('\r')));
+      // Prefer Latin face for Basic Latin so digits/symbols keep primary metrics across apps.
+      bool   latin = space || ((ch >= 0x20) && (ch <= 0x7E));
 
-      for(XDWORD f=0; f<nfaces; f++)
+      for(XDWORD step=0; step<nfaces; step++)
         {
+          XDWORD f = latin ? step : (nfaces - 1 - step);
           XCHAR* face = faces[f];
           if(!face || !face[0]) continue;
           if(!VectorFont_Select(face)) continue;
@@ -1399,6 +1406,7 @@ double GRP2DCANVAS::VectorFont_GetWidthStack(XCHAR** faces, XDWORD nfaces, XCHAR
 *
 * @fn         bool GRP2DCANVAS::VectorFont_PrintStack(double x, double y, XCHAR** faces, XDWORD nfaces, XCHAR* string)
 * @brief      Print string using a font-family stack (Phase 5)
+* @note       Same Latin-forward / other-script-backward probe order as GetWidthStack.
 * @ingroup    GRAPHIC
 *
 * --------------------------------------------------------------------------------------------------------------------*/
@@ -1422,9 +1430,11 @@ bool GRP2DCANVAS::VectorFont_PrintStack(double x, double y, XCHAR** faces, XDWOR
       XCHAR  one[2] = { ch, 0 };
       bool   got   = false;
       bool   space = ((ch == _C(' ')) || (ch == _C('\t')) || (ch == _C('\n')) || (ch == _C('\r')));
+      bool   latin = space || ((ch >= 0x20) && (ch <= 0x7E));
 
-      for(XDWORD f=0; f<nfaces; f++)
+      for(XDWORD step=0; step<nfaces; step++)
         {
+          XDWORD f = latin ? step : (nfaces - 1 - step);
           XCHAR* face = faces[f];
           if(!face || !face[0]) continue;
           if(!VectorFont_Select(face)) continue;
