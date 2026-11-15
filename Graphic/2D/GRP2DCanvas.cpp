@@ -1342,12 +1342,134 @@ bool GRP2DCANVAS::VectorFont_HasChar(XDWORD codepoint)
 
 /**-------------------------------------------------------------------------------------------------------------------
 *
+* @fn         static XDWORD GRP2DCanvas_HashXChars(XCHAR* s)
+* @brief      djb2 hash for cache keys (GEN-wide typography helpers).
+* @ingroup    GRAPHIC
+*
+*---------------------------------------------------------------------------------------------------------------------*/
+static XDWORD GRP2DCanvas_HashXChars(XCHAR* s)
+{
+  XDWORD h = 5381;
+  if(!s) return h;
+  while(*s) { h = ((h << 5) + h) + (XDWORD)(*s); s++; }
+  return h;
+}
+
+
+/**-------------------------------------------------------------------------------------------------------------------
+*
+* @fn         static XDWORD GRP2DCanvas_HashFaceStack(XCHAR** faces, XDWORD nfaces)
+* @brief      Hash ordered face-name stack for GetWidthStack cache keys.
+* @ingroup    GRAPHIC
+*
+*---------------------------------------------------------------------------------------------------------------------*/
+static XDWORD GRP2DCanvas_HashFaceStack(XCHAR** faces, XDWORD nfaces)
+{
+  XDWORD h = 5381;
+  if(!faces) return h;
+  for(XDWORD i=0; i<nfaces; i++)
+    {
+      h = ((h << 5) + h) + (XDWORD)i;
+      h ^= GRP2DCanvas_HashXChars(faces[i]);
+    }
+  return h;
+}
+
+
+/**-------------------------------------------------------------------------------------------------------------------
+*
+* @fn         void GRP2DCANVAS::VectorFont_WidthCache_Clear()
+* @brief      Invalidate GetWidthStack LRU slots.
+* @ingroup    GRAPHIC
+*
+*---------------------------------------------------------------------------------------------------------------------*/
+void GRP2DCANVAS::VectorFont_WidthCache_Clear()
+{
+  for(XDWORD i=0; i<GRP2DCANVAS_VECTORFONT_WIDTHCACHE_SLOTS; i++)
+    {
+      vectorfont_widthcache[i].valid = false;
+      vectorfont_widthcache[i].width = 0.0;
+    }
+  vectorfont_widthcache_cursor = 0;
+}
+
+
+/**-------------------------------------------------------------------------------------------------------------------
+*
+* @fn         bool GRP2DCANVAS::VectorFont_WidthCache_Lookup(...)
+* @brief      Lookup GetWidthStack result.
+* @ingroup    GRAPHIC
+*
+*---------------------------------------------------------------------------------------------------------------------*/
+bool GRP2DCANVAS::VectorFont_WidthCache_Lookup(XDWORD texthash, XDWORD faceshash, XDWORD sizehash, double& outwidth)
+{
+  for(XDWORD i=0; i<GRP2DCANVAS_VECTORFONT_WIDTHCACHE_SLOTS; i++)
+    {
+      GRP2DCANVAS_VECTORFONT_WIDTHCACHE& slot = vectorfont_widthcache[i];
+      if(!slot.valid) continue;
+      if(slot.texthash != texthash || slot.faceshash != faceshash || slot.sizehash != sizehash) continue;
+      outwidth = slot.width;
+      return true;
+    }
+  return false;
+}
+
+
+/**-------------------------------------------------------------------------------------------------------------------
+*
+* @fn         void GRP2DCANVAS::VectorFont_WidthCache_Store(...)
+* @brief      Store GetWidthStack result in the next LRU slot.
+* @ingroup    GRAPHIC
+*
+*---------------------------------------------------------------------------------------------------------------------*/
+void GRP2DCANVAS::VectorFont_WidthCache_Store(XDWORD texthash, XDWORD faceshash, XDWORD sizehash, double width)
+{
+  GRP2DCANVAS_VECTORFONT_WIDTHCACHE& slot = vectorfont_widthcache[vectorfont_widthcache_cursor % GRP2DCANVAS_VECTORFONT_WIDTHCACHE_SLOTS];
+  slot.texthash  = texthash;
+  slot.faceshash = faceshash;
+  slot.sizehash  = sizehash;
+  slot.width     = width;
+  slot.valid     = true;
+  vectorfont_widthcache_cursor = (vectorfont_widthcache_cursor + 1) % GRP2DCANVAS_VECTORFONT_WIDTHCACHE_SLOTS;
+}
+
+
+/**-------------------------------------------------------------------------------------------------------------------
+*
+* @fn         static int GRP2DCanvas_ResolveStackFace(...)
+* @brief      Pick stack face for one codepoint (Latin front→back, other scripts back→front).
+* @return     Face index, or -1 to use VECTORFONT_DEFAULT fallback.
+* @ingroup    GRAPHIC
+*
+*---------------------------------------------------------------------------------------------------------------------*/
+static int GRP2DCanvas_ResolveStackFace(GRP2DCANVAS* canvas, XCHAR** faces, XDWORD nfaces, XCHAR ch)
+{
+  if(!canvas || !faces || !nfaces) return -1;
+
+  bool space = ((ch == _C(' ')) || (ch == _C('\t')) || (ch == _C('\n')) || (ch == _C('\r')));
+  bool latin = space || ((ch >= 0x20) && (ch <= 0x7E));
+
+  for(XDWORD step=0; step<nfaces; step++)
+    {
+      XDWORD f = latin ? step : (nfaces - 1 - step);
+      XCHAR* face = faces[f];
+      if(!face || !face[0]) continue;
+      if(!canvas->VectorFont_Select(face)) continue;
+      if(!space && !canvas->VectorFont_HasChar((XDWORD)ch)) continue;
+      return (int)f;
+    }
+
+  return -1;
+}
+
+
+/**-------------------------------------------------------------------------------------------------------------------
+*
 * @fn         double GRP2DCANVAS::VectorFont_GetWidthStack(XCHAR** faces, XDWORD nfaces, XCHAR* string)
 * @brief      Measure string width using a font-family stack (Phase 5)
 * @note       Basic Latin / whitespace: probe stack front→back (default/Nunito first).
-*             Other scripts: probe back→front (language/CJK face first) so long CJK runs
-*             do not Select the Latin face on every glyph. Semantics unchanged for mixed
-*             strings: ASCII keeps the primary Latin face; CJK uses the fallback face.
+*             Other scripts: probe back→front (language/CJK face first). Same-face runs share
+*             one Select + one GetWidth. Optional LRU avoids remasuring identical strings.
 * @ingroup    GRAPHIC
 *
 * --------------------------------------------------------------------------------------------------------------------*/
@@ -1355,6 +1477,12 @@ double GRP2DCANVAS::VectorFont_GetWidthStack(XCHAR** faces, XDWORD nfaces, XCHAR
 {
   if(!string) return 0.0;
   if(!faces || !nfaces) return VectorFont_GetWidth(string);
+
+  XDWORD texthash  = GRP2DCanvas_HashXChars(string);
+  XDWORD faceshash = GRP2DCanvas_HashFaceStack(faces, nfaces);
+  XDWORD sizehash  = (XDWORD)(vectorfont_config.GetHeight() * 64.0) ^ ((XDWORD)(vectorfont_config.GetWidth() * 64.0) << 1);
+  double cached    = 0.0;
+  if(VectorFont_WidthCache_Lookup(texthash, faceshash, sizehash, cached)) return cached;
 
   XSTRING previous;
   XSTRING* selected = VectorFont_GetSelected();
@@ -1364,40 +1492,39 @@ double GRP2DCANVAS::VectorFont_GetWidthStack(XCHAR** faces, XDWORD nfaces, XCHAR
   text = string;
 
   double width = 0.0;
+  XDWORD n     = text.GetSize();
+  XDWORD i     = 0;
 
-  for(XDWORD i=0; i<text.GetSize(); i++)
+  while(i < n)
     {
-      XCHAR  ch    = text.Get()[i];
-      XCHAR  one[2] = { ch, 0 };
-      bool   got   = false;
-      bool   space = ((ch == _C(' ')) || (ch == _C('\t')) || (ch == _C('\n')) || (ch == _C('\r')));
-      // Prefer Latin face for Basic Latin so digits/symbols keep primary metrics across apps.
-      bool   latin = space || ((ch >= 0x20) && (ch <= 0x7E));
+      XCHAR ch = text.Get()[i];
+      int   face_i = GRP2DCanvas_ResolveStackFace(this, faces, nfaces, ch);
 
-      for(XDWORD step=0; step<nfaces; step++)
+      XDWORD j = i + 1;
+      while(j < n)
         {
-          XDWORD f = latin ? step : (nfaces - 1 - step);
-          XCHAR* face = faces[f];
-          if(!face || !face[0]) continue;
-          if(!VectorFont_Select(face)) continue;
-
-          if(!space && !VectorFont_HasChar((XDWORD)ch)) continue;
-
-          width += VectorFont_GetWidth(one);
-          got = true;
-          break;
+          if(GRP2DCanvas_ResolveStackFace(this, faces, nfaces, text.Get()[j]) != face_i) break;
+          j++;
         }
 
-      if(!got)
+      if(face_i >= 0) VectorFont_Select(faces[(XDWORD)face_i]);
+       else            VectorFont_Select(GRP2DCANVAS_VECTORFONT_DEFAULT);
+
+      XSTRING run;
+      run.Set(text.Get() + i, j - i);
+      if(face_i >= 0 || VectorFont_HasChar((XDWORD)ch) ||
+         (ch == _C(' ')) || (ch == _C('\t')) || (ch == _C('\n')) || (ch == _C('\r')))
         {
-          VectorFont_Select(GRP2DCANVAS_VECTORFONT_DEFAULT);
-          if(space || VectorFont_HasChar((XDWORD)ch)) width += VectorFont_GetWidth(one);
+          width += VectorFont_GetWidth(run.Get());
         }
+
+      i = j;
     }
 
   if(!previous.IsEmpty()) VectorFont_Select(previous.Get());
    else                    VectorFont_Select(GRP2DCANVAS_VECTORFONT_DEFAULT);
 
+  VectorFont_WidthCache_Store(texthash, faceshash, sizehash, width);
   return width;
 }
 
@@ -1406,7 +1533,7 @@ double GRP2DCANVAS::VectorFont_GetWidthStack(XCHAR** faces, XDWORD nfaces, XCHAR
 *
 * @fn         bool GRP2DCANVAS::VectorFont_PrintStack(double x, double y, XCHAR** faces, XDWORD nfaces, XCHAR* string)
 * @brief      Print string using a font-family stack (Phase 5)
-* @note       Same Latin-forward / other-script-backward probe order as GetWidthStack.
+* @note       Same probe order and same-face run grouping as GetWidthStack.
 * @ingroup    GRAPHIC
 *
 * --------------------------------------------------------------------------------------------------------------------*/
@@ -1423,41 +1550,35 @@ bool GRP2DCANVAS::VectorFont_PrintStack(double x, double y, XCHAR** faces, XDWOR
   text = string;
 
   double cursor = x;
+  XDWORD n      = text.GetSize();
+  XDWORD i      = 0;
 
-  for(XDWORD i=0; i<text.GetSize(); i++)
+  while(i < n)
     {
-      XCHAR  ch    = text.Get()[i];
-      XCHAR  one[2] = { ch, 0 };
-      bool   got   = false;
-      bool   space = ((ch == _C(' ')) || (ch == _C('\t')) || (ch == _C('\n')) || (ch == _C('\r')));
-      bool   latin = space || ((ch >= 0x20) && (ch <= 0x7E));
+      XCHAR ch = text.Get()[i];
+      int   face_i = GRP2DCanvas_ResolveStackFace(this, faces, nfaces, ch);
 
-      for(XDWORD step=0; step<nfaces; step++)
+      XDWORD j = i + 1;
+      while(j < n)
         {
-          XDWORD f = latin ? step : (nfaces - 1 - step);
-          XCHAR* face = faces[f];
-          if(!face || !face[0]) continue;
-          if(!VectorFont_Select(face)) continue;
+          if(GRP2DCanvas_ResolveStackFace(this, faces, nfaces, text.Get()[j]) != face_i) break;
+          j++;
+        }
 
-          if(!space && !VectorFont_HasChar((XDWORD)ch)) continue;
+      if(face_i >= 0) VectorFont_Select(faces[(XDWORD)face_i]);
+       else            VectorFont_Select(GRP2DCANVAS_VECTORFONT_DEFAULT);
 
-          double w = VectorFont_GetWidth(one);
-          VectorFont_Print(cursor, y, one);
+      XSTRING run;
+      run.Set(text.Get() + i, j - i);
+      if(face_i >= 0 || VectorFont_HasChar((XDWORD)ch) ||
+         (ch == _C(' ')) || (ch == _C('\t')) || (ch == _C('\n')) || (ch == _C('\r')))
+        {
+          double w = VectorFont_GetWidth(run.Get());
+          VectorFont_Print(cursor, y, run.Get());
           cursor += w;
-          got = true;
-          break;
         }
 
-      if(!got)
-        {
-          VectorFont_Select(GRP2DCANVAS_VECTORFONT_DEFAULT);
-          if(space || VectorFont_HasChar((XDWORD)ch))
-            {
-              double w = VectorFont_GetWidth(one);
-              VectorFont_Print(cursor, y, one);
-              cursor += w;
-            }
-        }
+      i = j;
     }
 
   if(!previous.IsEmpty()) VectorFont_Select(previous.Get());
@@ -1726,6 +1847,16 @@ void GRP2DCANVAS::Clean()
 
   linewidth     = 1.0f;
   dashlength    = 1.0f;
+
+  vectorfont_widthcache_cursor = 0;
+  for(XDWORD i=0; i<GRP2DCANVAS_VECTORFONT_WIDTHCACHE_SLOTS; i++)
+    {
+      vectorfont_widthcache[i].texthash  = 0;
+      vectorfont_widthcache[i].faceshash = 0;
+      vectorfont_widthcache[i].sizehash  = 0;
+      vectorfont_widthcache[i].width     = 0.0;
+      vectorfont_widthcache[i].valid     = false;
+    }
 }
 
 

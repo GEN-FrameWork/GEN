@@ -61,6 +61,9 @@ enum GRP2DCANVASTYPE
 // Phase 5: max faces walked per glyph in a font-family stack (plus language/default appended by UI).
 #define GRP2DCANVAS_VECTORFONT_STACK_MAX            6
 
+// Small LRU for VectorFont_GetWidthStack (Draw_Text measures then prints the same string).
+#define GRP2DCANVAS_VECTORFONT_WIDTHCACHE_SLOTS     8
+
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
 
 class GRPSCREEN;
@@ -233,10 +236,26 @@ class GRP2DCANVAS : public GRPPROPERTIES, public GRP2DREBUILDAREAS
     XSTRING                           vectorfont_selected;
     XVECTOR<GRP2DCANVAS_VECTORFONT_FACE*> vectorfont_faces;
 
+    // GetWidthStack LRU (generic — any GEN app that stacks Latin+script faces).
+    struct GRP2DCANVAS_VECTORFONT_WIDTHCACHE
+      {
+        XDWORD                          texthash;
+        XDWORD                          faceshash;
+        XDWORD                          sizehash;
+        double                          width;
+        bool                            valid;
+      };
+
+    GRP2DCANVAS_VECTORFONT_WIDTHCACHE vectorfont_widthcache[GRP2DCANVAS_VECTORFONT_WIDTHCACHE_SLOTS];
+    XDWORD                            vectorfont_widthcache_cursor;
+
   private:
 
     void                              Clean                               ();
     GRP2DCANVAS_VECTORFONT_FACE*      VectorFont_FindFace                 (XCHAR* logicalname);
+    void                              VectorFont_WidthCache_Clear         ();
+    bool                              VectorFont_WidthCache_Lookup        (XDWORD texthash, XDWORD faceshash, XDWORD sizehash, double& outwidth);
+    void                              VectorFont_WidthCache_Store         (XDWORD texthash, XDWORD faceshash, XDWORD sizehash, double width);
 };
 
 

@@ -2732,6 +2732,31 @@ bool UI_SKINCANVAS::CalculePosition(UI_ELEMENT* element, double fatherwidth, dou
 // Forward: measure must use the same face stack as Draw_Text (Latin + CJK fallback).
 static XDWORD UI_SKINCANVAS_BuildTextFaceStack(UI_SKIN* skin, UI_ELEMENT_TEXT* element_text, XCHAR** outfaces, XDWORD maxfaces, XSTRING& langstorage);
 
+// Generic stacked measure/print for widgets without UI_ELEMENT_TEXT (Console, TextBox, Edit, RadioGroup).
+static double UI_SKINCANVAS_GetWidthStacked(UI_SKIN* skin, GRP2DCANVAS* canvas, XCHAR* string)
+{
+  if(!canvas || !string) return 0.0;
+  XCHAR*  faces[GRP2DCANVAS_VECTORFONT_STACK_MAX];
+  XSTRING langface;
+  XDWORD  nfaces = UI_SKINCANVAS_BuildTextFaceStack(skin, NULL, faces, GRP2DCANVAS_VECTORFONT_STACK_MAX, langface);
+  if(nfaces > 0)
+    {
+      double tw = canvas->VectorFont_GetWidthStack(faces, nfaces, string);
+      if(tw > 0.0) return tw;
+    }
+  return canvas->VectorFont_GetWidth(string);
+}
+
+static bool UI_SKINCANVAS_PrintStacked(UI_SKIN* skin, GRP2DCANVAS* canvas, double x, double y, XCHAR* string)
+{
+  if(!canvas || !string) return false;
+  XCHAR*  faces[GRP2DCANVAS_VECTORFONT_STACK_MAX];
+  XSTRING langface;
+  XDWORD  nfaces = UI_SKINCANVAS_BuildTextFaceStack(skin, NULL, faces, GRP2DCANVAS_VECTORFONT_STACK_MAX, langface);
+  if(nfaces > 0) return canvas->VectorFont_PrintStack(x, y, faces, nfaces, string);
+  return canvas->VectorFont_Print(x, y, string);
+}
+
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
@@ -2756,14 +2781,8 @@ double UI_SKINCANVAS::GetWidthString(XCHAR* string, XDWORD sizefont)
   GRP2DCANVAS* canvas = GetCanvas();
   if(canvas)
     {
-      XCHAR*  faces[GRP2DCANVAS_VECTORFONT_STACK_MAX];
-      XSTRING langface;
-      XDWORD  nfaces = UI_SKINCANVAS_BuildTextFaceStack(this, NULL, faces, GRP2DCANVAS_VECTORFONT_STACK_MAX, langface);
-      if(nfaces > 0)
-        {
-          double tw = canvas->VectorFont_GetWidthStack(faces, nfaces, string);
-          if(tw > 0.0) return tw;
-        }
+      double tw = UI_SKINCANVAS_GetWidthStacked(this, canvas, string);
+      if(tw > 0.0) return tw;
     }
 
   XDWORD width  = 0;
@@ -2970,7 +2989,7 @@ static void UI_SKINCANVAS_SelectTextBoxFace(UI_SKIN* skin, GRP2DCANVAS* canvas, 
       if(element_textbox->GetName()) elementname = element_textbox->GetName()->Get();
     }
 
-  // TextBox has no Phase-2 fontface field yet; measure uses default (CJK via PrintStack fallback).
+  // TextBox draw uses PrintStacked (language/CJK fallback). Select still seeds default for height probes.
   UI_SKINCANVAS_SelectResolvedFace(skin, canvas, NULL, masktext, elementname, previous);
 }
 
@@ -6134,13 +6153,13 @@ bool UI_SKINCANVAS::Draw_TextBox(UI_ELEMENT* element)
 
                   canvas->Vectorfont_GetConfig()->SetColor(&color_part);
 
-                  canvas->VectorFont_Printf(textbox_part->GetXPos(), textbox_part->GetYPos(), textbox_part->GetText()->Get());   
+                  UI_SKINCANVAS_PrintStacked(this, canvas, textbox_part->GetXPos(), textbox_part->GetYPos(), textbox_part->GetText()->Get());
 
 
                   #ifdef USERINTERFACE_DEBUG 
                   GRP2DCOLOR_RGBA8  color_debug(255, 0, 255);
 
-                  int width   = (int)canvas->VectorFont_GetWidth(textbox_part->GetText()->Get());
+                  int width   = (int)UI_SKINCANVAS_GetWidthStacked(this, canvas, textbox_part->GetText()->Get());
                   int height  = (int)canvas->VectorFont_GetHeight(NL("A"));
 
                   canvas->SetLineWidth(1.0f);
@@ -6197,13 +6216,13 @@ static void UI_SkinCanvas_ConsolePalette(XBYTE colorindex, int& r, int& g, int& 
 
 
 // Largest end > start such that text[start..end) fits in max_text_w (at least one char).
-static XDWORD UI_SkinCanvas_ConsoleWrapEnd(GRP2DCANVAS* canvas, XCHAR* text, XDWORD start, XDWORD n, double max_text_w)
+static XDWORD UI_SkinCanvas_ConsoleWrapEnd(UI_SKIN* skin, GRP2DCANVAS* canvas, XCHAR* text, XDWORD start, XDWORD n, double max_text_w)
 {
   if(!canvas || !text || start >= n) return start;
 
   XSTRING probe;
   probe.Set(&text[start], n - start);
-  if(canvas->VectorFont_GetWidth(probe.Get()) <= max_text_w) return n;
+  if(UI_SKINCANVAS_GetWidthStacked(skin, canvas, probe.Get()) <= max_text_w) return n;
 
   XDWORD lo = 1;
   XDWORD hi = n - start;
@@ -6211,8 +6230,8 @@ static XDWORD UI_SkinCanvas_ConsoleWrapEnd(GRP2DCANVAS* canvas, XCHAR* text, XDW
     {
       XDWORD mid = lo + ((hi - lo + 1) / 2);
       probe.Set(&text[start], mid);
-      if(canvas->VectorFont_GetWidth(probe.Get()) <= max_text_w) lo = mid;
-       else                                                      hi = mid - 1;
+      if(UI_SKINCANVAS_GetWidthStacked(skin, canvas, probe.Get()) <= max_text_w) lo = mid;
+       else                                                                      hi = mid - 1;
     }
 
   if(lo < 1) lo = 1;
@@ -6220,7 +6239,7 @@ static XDWORD UI_SkinCanvas_ConsoleWrapEnd(GRP2DCANVAS* canvas, XCHAR* text, XDW
 }
 
 
-static XDWORD UI_SkinCanvas_ConsoleMeasureRows(GRP2DCANVAS* canvas, UI_ELEMENT_CONSOLE_LINE* line, bool wordwrap, double max_text_w)
+static XDWORD UI_SkinCanvas_ConsoleMeasureRows(UI_SKIN* skin, GRP2DCANVAS* canvas, UI_ELEMENT_CONSOLE_LINE* line, bool wordwrap, double max_text_w)
 {
   if(!line) return 0;
   if(line->visualrows > 0) return line->visualrows;
@@ -6238,7 +6257,7 @@ static XDWORD UI_SkinCanvas_ConsoleMeasureRows(GRP2DCANVAS* canvas, UI_ELEMENT_C
 
   while(start < n)
     {
-      XDWORD end = UI_SkinCanvas_ConsoleWrapEnd(canvas, text, start, n, max_text_w);
+      XDWORD end = UI_SkinCanvas_ConsoleWrapEnd(skin, canvas, text, start, n, max_text_w);
       if(end <= start) end = start + 1;
       rows++;
       start = end;
@@ -6321,7 +6340,7 @@ bool UI_SKINCANVAS::Draw_Console(UI_ELEMENT* element)
             {
               UI_ELEMENT_CONSOLE_LINE* line = element_console->GetLine(i);
               if(!line || line->text.IsEmpty()) continue;
-              double w = (double)canvas->VectorFont_GetWidth(line->text.Get());
+              double w = UI_SKINCANVAS_GetWidthStacked(this, canvas, line->text.Get());
               if(w > max_line_w) max_line_w = w;
             }
         }
@@ -6330,7 +6349,7 @@ bool UI_SKINCANVAS::Draw_Console(UI_ELEMENT* element)
           // Only uncached (new) lines call the font measurer; older lines reuse visualrows.
           for(XDWORD i=0; i<linecount; i++)
             {
-              visualrows += UI_SkinCanvas_ConsoleMeasureRows(canvas, element_console->GetLine(i), true, max_text_w);
+              visualrows += UI_SkinCanvas_ConsoleMeasureRows(this, canvas, element_console->GetLine(i), true, max_text_w);
             }
         }
 
@@ -6417,7 +6436,7 @@ bool UI_SKINCANVAS::Draw_Console(UI_ELEMENT* element)
           UI_ELEMENT_CONSOLE_LINE* line = element_console->GetLine(i);
           if(!line) continue;
 
-          XDWORD rows_here = wordwrap ? UI_SkinCanvas_ConsoleMeasureRows(canvas, line, true, max_text_w) : 1;
+          XDWORD rows_here = wordwrap ? UI_SkinCanvas_ConsoleMeasureRows(this, canvas, line, true, max_text_w) : 1;
           double y_block_lo = y_text + (double)row * lineheight;
           double y_block_hi = y_text + (double)(row + rows_here - 1) * lineheight;
 
@@ -6479,7 +6498,7 @@ bool UI_SKINCANVAS::Draw_Console(UI_ELEMENT* element)
               // green ready line). Pad wipe still clears ascender crumbs in the top pad.
               if(y >= y_vis_lo && y <= y_vis_hi)
                 {
-                  canvas->VectorFont_Printf(x_text, y, line->text.IsEmpty() ? NL("") : line->text.Get());
+                  UI_SKINCANVAS_PrintStacked(this, canvas, x_text, y, line->text.IsEmpty() ? NL("") : line->text.Get());
                 }
               row++;
               continue;
@@ -6490,7 +6509,7 @@ bool UI_SKINCANVAS::Draw_Console(UI_ELEMENT* element)
           XCHAR* text  = line->text.Get();
           while(start < n)
             {
-              XDWORD end = UI_SkinCanvas_ConsoleWrapEnd(canvas, text, start, n, max_text_w);
+              XDWORD end = UI_SkinCanvas_ConsoleWrapEnd(this, canvas, text, start, n, max_text_w);
               if(end <= start) end = start + 1;
 
               double y = y_text + (double)row * lineheight;
@@ -6498,7 +6517,7 @@ bool UI_SKINCANVAS::Draw_Console(UI_ELEMENT* element)
                 {
                   XSTRING chunk;
                   chunk.Set(&text[start], end - start);
-                  canvas->VectorFont_Printf(x_text, y, chunk.Get());
+                  UI_SKINCANVAS_PrintStacked(this, canvas, x_text, y, chunk.Get());
                 }
 
               row++;
@@ -8410,7 +8429,7 @@ bool UI_SKINCANVAS::Draw_RadioGroup(UI_ELEMENT* element)
           canvas->Vectorfont_GetConfig()->SetColor(&titlecol);
         }
 
-      double title_w = (double)canvas->VectorFont_GetWidth(element_radiogroup->GetTitle()->Get());
+      double title_w = UI_SKINCANVAS_GetWidthStacked(this, canvas, element_radiogroup->GetTitle()->Get());
       double title_h = (double)sizefont;
 
       double pad_x   = 10.0;
@@ -8450,13 +8469,13 @@ bool UI_SKINCANVAS::Draw_RadioGroup(UI_ELEMENT* element)
       // Clear a tall band through the top stroke so RoundRect AA cannot leave a hairline in the caption.
       canvas->Rectangle(title_x - gap, y_top + title_h * 0.70, title_x + title_w + gap, y_top - title_h * 0.85, true);
 
-      canvas->VectorFont_Printf(title_x, title_y, element_radiogroup->GetTitle()->Get());
+      UI_SKINCANVAS_PrintStacked(this, canvas, title_x, title_y, element_radiogroup->GetTitle()->Get());
 
       // Second notch+title pass: stroke AA from the frame can survive the first erase.
       canvas->SetFillColor(&notch);
       canvas->SetLineColor(&notch);
       canvas->Rectangle(title_x - gap, y_top + title_h * 0.55, title_x + title_w + gap, y_top - title_h * 0.55, true);
-      canvas->VectorFont_Printf(title_x, title_y, element_radiogroup->GetTitle()->Get());
+      UI_SKINCANVAS_PrintStacked(this, canvas, title_x, title_y, element_radiogroup->GetTitle()->Get());
 
       canvas->SetClipBox(clip_saved);
     }
@@ -8689,7 +8708,7 @@ bool UI_SKINCANVAS::Draw_EditText(UI_ELEMENT* element)
       if(text_y > (box_b - 2.0)) text_y = box_b - 2.0;
       if(text_y < (box_t + sizefont)) text_y = box_t + sizefont;
 
-      canvas->VectorFont_Printf(box_l + text_pad_x, text_y, display.Get());
+      UI_SKINCANVAS_PrintStacked(this, canvas, box_l + text_pad_x, text_y, display.Get());
 
       if(element_edittext->Cursor_IsVisible())
         {
@@ -10935,7 +10954,7 @@ bool UI_SKINCANVAS::GetFontSize(XCHAR* text, XDWORD& width, XDWORD& height)
   GRP2DCANVAS* canvas = GetCanvas();
   if(!canvas) return false;
 
-  width   = (XDWORD)canvas->VectorFont_GetWidth(text);
+  width   = (XDWORD)UI_SKINCANVAS_GetWidthStacked(this, canvas, text);
   height  = (XDWORD)canvas->VectorFont_GetHeight(text);
 
   return true;
@@ -11690,13 +11709,13 @@ double UI_SKINCANVAS::TextBox_SizeLine(UI_ELEMENT_TEXTBOX* element_textbox, GRP2
       UI_SKIN_TEXTBOX_PART* textbox_part = parts.Get(c);
       if(textbox_part->GetLineNumber() == nline)
         {
-          sizeline += canvas->VectorFont_GetWidth(textbox_part->GetText()->Get());    
+          sizeline += UI_SKINCANVAS_GetWidthStacked(this, canvas, textbox_part->GetText()->Get());    
           y_pos     = textbox_part->GetYPos();    
         }                                      
     }
 
   _characterstr.Add(element_textbox->GetText()->Get()[index_char]); 
-  sizeline += canvas->VectorFont_GetWidth(_characterstr.Get());  
+  sizeline += UI_SKINCANVAS_GetWidthStacked(this, canvas, _characterstr.Get());  
 
   return sizeline;
 }
@@ -11841,7 +11860,7 @@ bool UI_SKINCANVAS::TextBox_GenerateLines(UI_ELEMENT_TEXTBOX* element_textbox, G
             {
               if(!textbox_part->GetText()->IsEmpty())
                 {
-                  textbox_part->SetWidth((XDWORD)canvas->VectorFont_GetWidth(textbox_part->GetText()->Get()));
+                  textbox_part->SetWidth((XDWORD)UI_SKINCANVAS_GetWidthStacked(this, canvas, textbox_part->GetText()->Get()));
                   textbox_part->SetHeight((XDWORD)canvas->VectorFont_GetHeight(NL("A")));
                   parts.Add(textbox_part);
                   textbox_part = GEN_NEW UI_SKIN_TEXTBOX_PART();
@@ -11938,7 +11957,7 @@ bool UI_SKINCANVAS::TextBox_GenerateLines(UI_ELEMENT_TEXTBOX* element_textbox, G
                                                                   // close the current text run (the text that precedes the image)
                                                                   if(!textbox_part->GetText()->IsEmpty())
                                                                     {
-                                                                      textbox_part->SetWidth((XDWORD)canvas->VectorFont_GetWidth(textbox_part->GetText()->Get()));
+                                                                      textbox_part->SetWidth((XDWORD)UI_SKINCANVAS_GetWidthStacked(this, canvas, textbox_part->GetText()->Get()));
                                                                       textbox_part->SetHeight((XDWORD)canvas->VectorFont_GetHeight(NL("A")));
                                                                       parts.Add(textbox_part);
                                                                       textbox_part = GEN_NEW UI_SKIN_TEXTBOX_PART();
@@ -12029,7 +12048,7 @@ bool UI_SKINCANVAS::TextBox_GenerateLines(UI_ELEMENT_TEXTBOX* element_textbox, G
                   default : { XSTRING characterstr;                              
                               characterstr.Add(character);
                               
-                              double            charwidth = (double)canvas->VectorFont_GetWidth(characterstr.Get());
+                              double            charwidth = (double)UI_SKINCANVAS_GetWidthStacked(this, canvas, characterstr.Get());
                               double            xbefore   = x_text_position;
                               x_text_position += charwidth; 
 
@@ -12057,7 +12076,7 @@ bool UI_SKINCANVAS::TextBox_GenerateLines(UI_ELEMENT_TEXTBOX* element_textbox, G
                                         {
                                           if(!textbox_part->GetText()->IsEmpty())
                                             {
-                                              textbox_part->SetWidth((XDWORD)canvas->VectorFont_GetWidth(textbox_part->GetText()->Get()));
+                                              textbox_part->SetWidth((XDWORD)UI_SKINCANVAS_GetWidthStacked(this, canvas, textbox_part->GetText()->Get()));
                                               textbox_part->SetHeight((XDWORD)canvas->VectorFont_GetHeight(NL("A")));
                                               parts.Add(textbox_part);
                                               textbox_part = GEN_NEW UI_SKIN_TEXTBOX_PART();
@@ -12122,7 +12141,7 @@ bool UI_SKINCANVAS::TextBox_GenerateLines(UI_ELEMENT_TEXTBOX* element_textbox, G
         {
           if(!textbox_part->GetText()->IsEmpty())    
             {
-              textbox_part->SetWidth((XDWORD)canvas->VectorFont_GetWidth(textbox_part->GetText()->Get()));
+              textbox_part->SetWidth((XDWORD)UI_SKINCANVAS_GetWidthStacked(this, canvas, textbox_part->GetText()->Get()));
               textbox_part->SetHeight((XDWORD)canvas->VectorFont_GetHeight(NL("A")));
               parts.Add(textbox_part);  
 
