@@ -142,9 +142,32 @@ bool UI_ANIMATION::LoadFromFile(XSTRING& resourcename, GRPPROPERTYMODE mode)
           namefile.Insert(result.Get(), indexmask-masksize);
         }                                               
 
-      GEN_XPATHSMANAGER.GetPathOfSection(XPATHSMANAGERSECTIONTYPE_GRAPHICS, xpathimg);
-      xpathimg.Slash_Add();
-      xpathimg.Add(namefile);
+      // Absolute paths (drive letter / UNC / leading slash) load as-is; otherwise resolve under GRAPHICS.
+      {
+        XPATH   namecheck;
+        XSTRING drive;
+        bool    absolute = false;
+
+        namecheck = namefile.Get();
+        absolute  = namecheck.GetDrive(drive);
+
+        if(!absolute && namefile.GetSize())
+          {
+            XCHAR first = namefile.Get()[0];
+            if((first == _C('/')) || (first == _C('\\'))) absolute = true;
+          }
+
+        if(absolute)
+          {
+            xpathimg = namefile.Get();
+          }
+         else
+          {
+            GEN_XPATHSMANAGER.GetPathOfSection(XPATHSMANAGERSECTIONTYPE_GRAPHICS, xpathimg);
+            xpathimg.Slash_Add();
+            xpathimg.Add(namefile);
+          }
+      }
 
       if(GEN_USERINTERFACE.IsZippedFile())
         {

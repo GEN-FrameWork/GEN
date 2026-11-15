@@ -75,7 +75,8 @@ enum UI_ELEMENT_TYPE
   UI_ELEMENT_TYPE_STATISTICSCHART                       ,
   UI_ELEMENT_TYPE_CONSOLE                               ,
   UI_ELEMENT_TYPE_PROPERTYLIST                          ,
-  UI_ELEMENT_TYPE_TREE
+  UI_ELEMENT_TYPE_TREE                                  ,
+  UI_ELEMENT_TYPE_TOOLTIP
 };				
 
 

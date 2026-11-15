@@ -810,6 +810,7 @@ bool UI_SKIN::CalculateBoundaryLine(UI_ELEMENT* element, bool adjustsizemargin)
       case UI_ELEMENT_TYPE_CONSOLE			    : status = CalculateBoundaryLine_Console(element, adjustsizemargin);            break;
       case UI_ELEMENT_TYPE_PROPERTYLIST     : status = CalculateBoundaryLine_PropertyList(element, adjustsizemargin);       break;
       case UI_ELEMENT_TYPE_TREE             : status = CalculateBoundaryLine_Tree(element, adjustsizemargin);               break;
+      case UI_ELEMENT_TYPE_TOOLTIP          : status = CalculateBoundaryLine_Tooltip(element, adjustsizemargin);            break;
 	    case UI_ELEMENT_TYPE_IMAGE     			  : status = CalculateBoundaryLine_Image(element, adjustsizemargin);	            break;
       case UI_ELEMENT_TYPE_ANIMATION 			  : status = CalculateBoundaryLine_Animation(element, adjustsizemargin);	        break;
       case UI_ELEMENT_TYPE_OPTION					  : status = CalculateBoundaryLine_Option(element, adjustsizemargin);             break;
@@ -966,6 +967,24 @@ bool UI_SKIN::CalculateBoundaryLine_PropertyList(UI_ELEMENT* element, bool adjus
 *
 * --------------------------------------------------------------------------------------------------------------------*/
 bool UI_SKIN::CalculateBoundaryLine_Tree(UI_ELEMENT* element, bool adjustsizemargin)
+{
+  return false;
+}
+
+
+/**-------------------------------------------------------------------------------------------------------------------
+*
+* @fn         bool UI_SKIN::CalculateBoundaryLine_Tooltip(UI_ELEMENT* element, bool adjustsizemargin)
+* @brief      Calculate boundary line tooltip (base stub)
+* @ingroup    USERINTERFACE
+*
+* @param[in]  element : Element to process.
+* @param[in]  adjustsizemargin : Adjustsizemargin value.
+*
+* @return     bool : true if the operation is successful; otherwise false.
+*
+* --------------------------------------------------------------------------------------------------------------------*/
+bool UI_SKIN::CalculateBoundaryLine_Tooltip(UI_ELEMENT* element, bool adjustsizemargin)
 {
   return false;
 }
@@ -1461,6 +1480,7 @@ bool UI_SKIN::Draw(UI_ELEMENT* element)
       case UI_ELEMENT_TYPE_CONSOLE  			  : status = Draw_Console(element);          break;
       case UI_ELEMENT_TYPE_PROPERTYLIST     : status = Draw_PropertyList(element);     break;
       case UI_ELEMENT_TYPE_TREE             : status = Draw_Tree(element);             break;
+      case UI_ELEMENT_TYPE_TOOLTIP          : status = Draw_Tooltip(element);          break;
 	    case UI_ELEMENT_TYPE_IMAGE     			  : status = Draw_Image(element);            break;
       case UI_ELEMENT_TYPE_ANIMATION 			  : status = Draw_Animation(element);	       break;
       case UI_ELEMENT_TYPE_OPTION					  : status = Draw_Option(element);           break;
@@ -1603,6 +1623,23 @@ bool UI_SKIN::Draw_PropertyList(UI_ELEMENT* element)
 *
 * --------------------------------------------------------------------------------------------------------------------*/
 bool UI_SKIN::Draw_Tree(UI_ELEMENT* element)
+{
+  return false;
+}
+
+
+/**-------------------------------------------------------------------------------------------------------------------
+*
+* @fn         bool UI_SKIN::Draw_Tooltip(UI_ELEMENT* element)
+* @brief      Draw tooltip (base stub)
+* @ingroup    USERINTERFACE
+*
+* @param[in]  element : Element to process.
+*
+* @return     bool : true if the operation is successful; otherwise false.
+*
+* --------------------------------------------------------------------------------------------------------------------*/
+bool UI_SKIN::Draw_Tooltip(UI_ELEMENT* element)
 {
   return false;
 }

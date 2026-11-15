@@ -157,6 +157,7 @@ class UI_SKINCANVAS : public UI_SKIN, public UI_SKINCANVAS_REBUILDAREAS
 	  virtual bool                      CalculateBoundaryLine_Console						(UI_ELEMENT* element, bool adjustsizemargin = false);
 	  virtual bool                      CalculateBoundaryLine_PropertyList			(UI_ELEMENT* element, bool adjustsizemargin = false);
 	  virtual bool                      CalculateBoundaryLine_Tree							(UI_ELEMENT* element, bool adjustsizemargin = false);
+	  virtual bool                      CalculateBoundaryLine_Tooltip					(UI_ELEMENT* element, bool adjustsizemargin = false);
 	  virtual bool                      CalculateBoundaryLine_Image   					(UI_ELEMENT* element, bool adjustsizemargin = false);
 		virtual bool                      CalculateBoundaryLine_Animation					(UI_ELEMENT* element, bool adjustsizemargin = false);
 		virtual bool                      CalculateBoundaryLine_Option						(UI_ELEMENT* element, bool adjustsizemargin = false);
@@ -216,6 +217,7 @@ class UI_SKINCANVAS : public UI_SKIN, public UI_SKINCANVAS_REBUILDAREAS
 		virtual bool											Draw_Console														(UI_ELEMENT* element);
 		virtual bool											Draw_PropertyList												(UI_ELEMENT* element);
 		virtual bool											Draw_Tree																(UI_ELEMENT* element);
+		virtual bool											Draw_Tooltip														(UI_ELEMENT* element);
 	  virtual bool                      Draw_Image  														(UI_ELEMENT* element);
 		virtual bool                      Draw_Animation													(UI_ELEMENT* element);
 		virtual bool                      Draw_Option															(UI_ELEMENT* element);

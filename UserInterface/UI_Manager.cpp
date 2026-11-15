@@ -89,6 +89,7 @@
 #include "UI_LayoutEngine.h"
 #include "UI_Element_Text.h"
 #include "UI_Element_TextBox.h"
+#include "UI_Element_Tooltip.h"
 #include "UI_Element_Console.h"
 #include "UI_Element_PropertyList.h"
 #include "UI_Element_Tree.h"
@@ -1340,10 +1341,11 @@ bool UI_MANAGER::Update()
       // burned FPS. Chrome is dirtied on auto-hide show/hide, button shift, and cross-skin overlap propagate.
     }
 
-  // Chrome paints after content and its rebuild can blank abutting under-icon legend strips
-  // without ever setting CompactLegendsNeedRepair (flag was cleared by the content-pass seal).
-  // Always re-seal compact legends here. Wipe pad is +2 (not +8) so this does not re-kiss
-  // valor/tree tops the way the old every-frame content-pass repair did.
+  // Chrome paints after content and can blank abutting under-icon legend strips without arming
+  // CompactLegendsNeedRepair (content-pass seal may already have cleared the flag). Always re-seal
+  // here for glyph visibility. FPS-safe because RepaintCompactLegendForms clears MustReDraw on each
+  // legend after sealing — the idle cascade was Elements_SetToRedraw(legend) leaving dirt into the
+  // next frame's overlap propagate, not the reseal paint itself.
   for(XDWORD c=0; c<layouts.GetSize(); c++)
     {
       UI_LAYOUT* layout = layouts.Get(c);
@@ -4228,6 +4230,7 @@ bool UI_MANAGER::ChangeTextElementValue(UI_LAYOUT* layout, UI_ELEMENT* element)
                                         }
                                         break;
 
+      case UI_ELEMENT_TYPE_TOOLTIP    :
       case UI_ELEMENT_TYPE_TEXTBOX    : { UI_ELEMENT_TEXTBOX* element_textbox = (UI_ELEMENT_TEXTBOX*)element;
                                           XSTRING             resolve;
 
@@ -4538,6 +4541,7 @@ bool UI_MANAGER::ApplyTranslateMasksToElement(UI_LAYOUT* layout, UI_ELEMENT* ele
                                        }
                                        break;
 
+      case UI_ELEMENT_TYPE_TOOLTIP   :
       case UI_ELEMENT_TYPE_TEXTBOX   : { UI_ELEMENT_TEXTBOX* element_textbox = (UI_ELEMENT_TEXTBOX*)element;
                                          if(!element_textbox->GetMaskText()->IsEmpty() && MaskText_IsTranslateOnly(element_textbox->GetMaskText()))
                                            {
@@ -6413,6 +6417,62 @@ UI_ELEMENT* UI_MANAGER::GetLayoutElement_TextBox(XFILEXMLELEMENT* node, UI_LAYOU
 
 /**-------------------------------------------------------------------------------------------------------------------
 *
+* @fn         UI_ELEMENT* UI_MANAGER::GetLayoutElement_Tooltip(XFILEXMLELEMENT* node, UI_LAYOUT* layout, UI_ELEMENT* father, UI_ELEMENT* element_legacy)
+* @brief      Get layout element tooltip (TextBox markup + framed chrome; defaults hidden).
+* @ingroup    USERINTERFACE
+*
+* @param[in]  node : Node pointer to use.
+* @param[in]  layout : Layout pointer to use.
+* @param[in]  father : Father pointer to use.
+* @param[in]  element_legacy : Element legacy pointer to use.
+*
+* @return     UI_ELEMENT* : Pointer to the requested object; NULL if it is not available.
+*
+*---------------------------------------------------------------------------------------------------------------------*/
+UI_ELEMENT* UI_MANAGER::GetLayoutElement_Tooltip(XFILEXMLELEMENT* node, UI_LAYOUT* layout, UI_ELEMENT* father, UI_ELEMENT* element_legacy)
+{
+  UI_ELEMENT_TOOLTIP* element_tooltip = NULL;
+
+  if(element_legacy)
+    {
+      element_tooltip = (UI_ELEMENT_TOOLTIP*)element_legacy;
+    }
+   else
+    {
+      element_tooltip = GEN_NEW UI_ELEMENT_TOOLTIP();
+      if(!element_tooltip) return NULL;
+    }
+
+  // Reuse TextBox XML attributes / <text> body / translate — tip is a TextBox subclass.
+  UI_ELEMENT* built = GetLayoutElement_TextBox(node, layout, father, element_tooltip);
+  if(!built) return NULL;
+
+  // TextBox ctor path must not stick: keep tooltip type string for CSS selectors.
+  element_tooltip->SetType(UI_ELEMENT_TYPE_TOOLTIP);
+  element_tooltip->GetTypeString()->Set(NL("tooltip"));
+
+  // Optional hover delay hint for app timers (showdelay / show-delay, milliseconds).
+  {
+    XSTRING delaystr;
+    if(GetLayoutElementValue(node, NL("showdelay"), delaystr) || GetLayoutElementValue(node, NL("show-delay"), delaystr))
+      {
+        if(!delaystr.IsEmpty()) element_tooltip->SetShowDelayMs(delaystr.ConvertToDWord());
+      }
+  }
+
+  // Absent visible= in XML: stay hidden (floating overlay). Explicit visible= overrides via Base.
+  XSTRING visiblestr;
+  if(!GetLayoutElementValue(node, NL("visible"), visiblestr))
+    {
+      element_tooltip->SetVisible(false);
+    }
+
+  return element_tooltip;
+}
+
+
+/**-------------------------------------------------------------------------------------------------------------------
+*
 * @fn         UI_ELEMENT* UI_MANAGER::GetLayoutElement_Console(XFILEXMLELEMENT* node, UI_LAYOUT* layout, UI_ELEMENT* father, UI_ELEMENT* element_legacy)
 * @brief      Get layout element console
 * @ingroup    USERINTERFACE
@@ -8235,6 +8295,11 @@ UI_ELEMENT* UI_MANAGER::CreatePartialLayout(XFILEXMLELEMENT* nodeelement, UI_LAY
       if(!value.Compare(NL("textbox")        , true))  
         {
           element = GetLayoutElement_TextBox(nodeelement, layout, father);          
+        }
+
+      if(!value.Compare(NL("tooltip")        , true))
+        {
+          element = GetLayoutElement_Tooltip(nodeelement, layout, father);
         }
 
       if(!value.Compare(NL("console")        , true))

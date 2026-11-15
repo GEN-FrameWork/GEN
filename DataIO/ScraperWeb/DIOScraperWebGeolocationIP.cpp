@@ -201,9 +201,11 @@ float DIOGEOLOCATIONIP_RESULT::GetLongitude()
 * --------------------------------------------------------------------------------------------------------------------*/
 bool DIOGEOLOCATIONIP_RESULT::IsEmpty()
 {
-  if(country.IsEmpty() || state.IsEmpty() || city.IsEmpty()) return true;
+  // Region/state is often empty from providers; country+city (or any coordinates) is enough.
+  if(!country.IsEmpty() && !city.IsEmpty()) return false;
+  if((latitude != 0.0f) || (longitude != 0.0f)) return false;
 
-  return false;
+  return true;
 }
 
 

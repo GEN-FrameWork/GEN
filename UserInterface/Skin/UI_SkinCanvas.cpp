@@ -71,6 +71,7 @@
 #include "UI_Element_Scroll.h"
 #include "UI_Element_Text.h"
 #include "UI_Element_TextBox.h"
+#include "UI_Element_Tooltip.h"
 #include "UI_Element_Console.h"
 #include "UI_Element_PropertyList.h"
 #include "UI_Element_Tree.h"
@@ -607,50 +608,57 @@ static bool UI_SkinCanvas_DrawFramedPanelBackground(GRP2DCANVAS* canvas, GRPSCRE
   double maxy = y_position;
   double rr   = (double)element->GetRoundRect();
 
-  // Same page-seed as Draw_Form's classic GetRoundRect path: father bg → neighbour sample → opaque page.
+  // Page-seed under the AABB (father bg → neighbour sample → opaque page). Needed when a stroked
+  // RoundRect would leave dark AA tips; for *borderless* plates (tooltips) skip it entirely — the
+  // fill-only RoundRect paints the shape and real backdrop stays in the corner tips. Seeding with the
+  // dark fallback (0x191E24) was painting a visible black rim around pastel tips ("a veces").
   GRP2DCOLOR_RGBA8 seed_bg(0, 0, 0, 0);
-  {
-    UI_ELEMENT* father = element->GetFather();
-    UI_COLOR*   fbg    = NULL;
-    if(father)
-      {
-        if(father->IsBackgroundColorSet()) fbg = father->GetBackgroundColor();
-        else                               fbg = father->GetColor();
-      }
-    if(fbg && (fbg->GetAlpha() > 0) && ((fbg->GetRed() + fbg->GetGreen() + fbg->GetBlue()) > 8))
-      {
-        seed_bg = GRP2DCOLOR_RGBA8((XBYTE)fbg->GetRed(), (XBYTE)fbg->GetGreen(), (XBYTE)fbg->GetBlue(), (XBYTE)fbg->GetAlpha());
-      }
-     else if(screen && !screen->Style_Is(GRPSCREENSTYLE_TRANSPARENT))
-      {
-        const double sx[4] = { minx - 2.0, maxx + 1.0, maxx + 1.0, minx - 2.0 };
-        const double sy[4] = { miny - 2.0, miny - 2.0, maxy + 1.0, maxy + 1.0 };
-        bool have = false;
-        for(int i = 0; i < 4 && !have; i++)
-          {
-            GRP2DCOLOR* c = canvas->GetPixel(sx[i], sy[i]);
-            if(!c) continue;
-            GRP2DCOLOR_RGBA8 s = *(GRP2DCOLOR_RGBA8*)c;
-            if(s.a > 0 && (s.r + s.g + s.b) > 8) { seed_bg = s; have = true; }
-          }
-        if(!have) seed_bg = GRP2DCOLOR_RGBA8(0x19, 0x1E, 0x24, 255);
-      }
-  }
-
-  if(seed_bg.a > 0)
+  if(has_border)
     {
-      GRP2DCOLOR_RGBA8 line_none(0, 0, 0, 0);
-      canvas->SetFillColor(&seed_bg);
-      canvas->SetLineColor(&line_none);
-      canvas->SetLineWidth(1.0f);
-      canvas->Rectangle(minx - 1.0, maxy + 1.0, maxx + 1.0, miny - 1.0, true);
+      UI_ELEMENT* father = element->GetFather();
+      UI_COLOR*   fbg    = NULL;
+      if(father)
+        {
+          if(father->IsBackgroundColorSet()) fbg = father->GetBackgroundColor();
+          else                               fbg = father->GetColor();
+        }
+      if(fbg && (fbg->GetAlpha() > 0) && ((fbg->GetRed() + fbg->GetGreen() + fbg->GetBlue()) > 8))
+        {
+          seed_bg = GRP2DCOLOR_RGBA8((XBYTE)fbg->GetRed(), (XBYTE)fbg->GetGreen(), (XBYTE)fbg->GetBlue(), (XBYTE)fbg->GetAlpha());
+        }
+       else if(screen && !screen->Style_Is(GRPSCREENSTYLE_TRANSPARENT))
+        {
+          const double sx[4] = { minx - 2.0, maxx + 1.0, maxx + 1.0, minx - 2.0 };
+          const double sy[4] = { miny - 2.0, miny - 2.0, maxy + 1.0, maxy + 1.0 };
+          bool have = false;
+          for(int i = 0; i < 4 && !have; i++)
+            {
+              GRP2DCOLOR* c = canvas->GetPixel(sx[i], sy[i]);
+              if(!c) continue;
+              GRP2DCOLOR_RGBA8 s = *(GRP2DCOLOR_RGBA8*)c;
+              if(s.a > 0 && (s.r + s.g + s.b) > 8) { seed_bg = s; have = true; }
+            }
+          if(!have) seed_bg = GRP2DCOLOR_RGBA8(0x19, 0x1E, 0x24, 255);
+        }
+
+      if(seed_bg.a > 0)
+        {
+          GRP2DCOLOR_RGBA8 line_none(0, 0, 0, 0);
+          canvas->SetFillColor(&seed_bg);
+          canvas->SetLineColor(&line_none);
+          canvas->SetLineWidth(0.0f);
+          canvas->Rectangle(minx - 1.0, maxy + 1.0, maxx + 1.0, miny - 1.0, true);
+        }
     }
 
+  // No-border must use linewidth 0. RoundRect (AGG) treats lw>=1 as "underpaint outer in
+  // line colour, then punch fill inset by lw". With a transparent line that left a 1px dark
+  // rim ("borde negro") on tooltips / borderless plates — intermittent over dark backdrops.
   if(!has_border || (bw == 0.0))
     {
       GRP2DCOLOR_RGBA8 line_none(0, 0, 0, 0);
       canvas->SetLineColor(&line_none);
-      canvas->SetLineWidth(1.0f);
+      canvas->SetLineWidth(0.0f);
     }
    else
     {
@@ -3145,6 +3153,24 @@ bool UI_SKINCANVAS::CalculateBoundaryLine_TextBox(UI_ELEMENT* element, bool adju
 
 /**-------------------------------------------------------------------------------------------------------------------
 *
+* @fn         bool UI_SKINCANVAS::CalculateBoundaryLine_Tooltip(UI_ELEMENT* element, bool adjustsizemargin)
+* @brief      Calculate boundary line tooltip (same explicit box contract as TextBox).
+* @ingroup    USERINTERFACE
+*
+* @param[in]  element : Element to process.
+* @param[in]  adjustsizemargin : Adjustsizemargin value.
+*
+* @return     bool : true if the operation is successful; otherwise false.
+*
+*---------------------------------------------------------------------------------------------------------------------*/
+bool UI_SKINCANVAS::CalculateBoundaryLine_Tooltip(UI_ELEMENT* element, bool adjustsizemargin)
+{
+  return CalculateBoundaryLine_TextBox(element, adjustsizemargin);
+}
+
+
+/**-------------------------------------------------------------------------------------------------------------------
+*
 * @fn         bool UI_SKINCANVAS::CalculateBoundaryLine_Console(UI_ELEMENT* element, bool adjustsizemargin)
 * @brief      Calculate boundary line console
 * @ingroup    USERINTERFACE
@@ -5485,6 +5511,15 @@ bool UI_SKINCANVAS::RepaintCompactLegendForms(UI_LAYOUT* layout)
           Draw(child);
         }
 
+      // Seal must not leave the legend form dirty for the next frame's overlap propagate
+      // (XTM idle cascade: legends → toolbar buttons → caption → ~34fps).
+      sib->SetMustReDraw(false);
+      for(XDWORD c = 0; c < sib->GetComposeElements()->GetSize(); c++)
+        {
+          UI_ELEMENT* child = sib->GetComposeElements()->Get(c);
+          if(child) child->SetMustReDraw(false);
+        }
+
       any = true;
     }
 
@@ -6129,10 +6164,9 @@ bool UI_SKINCANVAS::Draw_TextBox(UI_ELEMENT* element)
       XVECTOR<UI_SKIN_TEXTBOX_PART*>  parts;
       XSTRING                         previousface;
 
-      UI_SKINCANVAS_SelectTextBoxFace(this, canvas, element_textbox, previousface);
-                                     
       canvas->Vectorfont_GetConfig()->SetColor(&color);
-      canvas->Vectorfont_GetConfig()->SetSize(element_textbox->GetSizeFont());  
+      canvas->Vectorfont_GetConfig()->SetSize(element_textbox->GetSizeFont());
+      UI_SKINCANVAS_SelectTextBoxFace(this, canvas, element_textbox, previousface);
 
       TextBox_GenerateLines(element_textbox, canvas, x_position, y_position, parts);
 
@@ -6177,6 +6211,106 @@ bool UI_SKINCANVAS::Draw_TextBox(UI_ELEMENT* element)
 
   PostDrawFunction(element, canvas, clip_rect, x_position, y_position);
   
+  return true;
+}
+
+
+/**-------------------------------------------------------------------------------------------------------------------
+*
+* @fn         bool UI_SKINCANVAS::Draw_Tooltip(UI_ELEMENT* element)
+* @brief      Draw tooltip: framed panel chrome then TextBox-rich content (![IMAGE]/![COLOR]).
+* @ingroup    USERINTERFACE
+*
+* @param[in]  element : Element to process.
+*
+* @return     bool : true if the operation is successful; otherwise false.
+*
+*---------------------------------------------------------------------------------------------------------------------*/
+bool UI_SKINCANVAS::Draw_Tooltip(UI_ELEMENT* element)
+{
+  if(!element) return false;
+
+  UI_ELEMENT_TOOLTIP* element_tooltip = (UI_ELEMENT_TOOLTIP*)element;
+  GRP2DCANVAS*        canvas          = GetCanvas();
+  double              x_position      = 0.0f;
+  double              y_position      = 0.0f;
+  XRECT               clip_rect;
+
+  if(!canvas) return false;
+
+  PreDrawFunction(element, canvas, clip_rect, x_position, y_position);
+
+  if(element->MustReDraw())
+    {
+      double box_w = element->GetBoundaryLine() ? element->GetBoundaryLine()->width  : 0.0;
+      double box_h = element->GetBoundaryLine() ? element->GetBoundaryLine()->height : 0.0;
+
+      // Borderless tip plate: never stroke. Paint a sharp fill AABB first so rebuild-pad / round
+      // corner tips cannot show a dark fringe, then RoundRect the same fill for soft corners.
+      const double tip_bw = element->GetBorderWidth();
+      if(tip_bw <= 0.0)
+        {
+          element->SetBorderWidth(0.0);
+          UI_COLOR* tip_bg = element->IsBackgroundColorSet() ? element->GetBackgroundColor() : NULL;
+          if(tip_bg && tip_bg->GetAlpha() > 0)
+            {
+              GRP2DCOLOR_RGBA8 fill((XBYTE)tip_bg->GetRed(), (XBYTE)tip_bg->GetGreen(),
+                                    (XBYTE)tip_bg->GetBlue(), (XBYTE)tip_bg->GetAlpha());
+              GRP2DCOLOR_RGBA8 line_none(0, 0, 0, 0);
+              double y_top = UI_BOUNDARYLINE_EdgeTop(y_position, box_h);
+              double rr    = (double)element->GetRoundRect();
+              canvas->SetFillColor(&fill);
+              canvas->SetLineColor(&line_none);
+              canvas->SetLineWidth(0.0f);
+              canvas->Rectangle(x_position, y_position, x_position + box_w, y_top, true);
+              if(rr > 0.0)
+                {
+                  canvas->SetLineWidth(0.0f);
+                  canvas->SetLineColor(&line_none);
+                  canvas->SetFillColor(&fill);
+                  canvas->RoundRect(x_position, y_position, x_position + box_w, y_top, rr, true);
+                }
+            }
+        }
+       else
+        {
+          UI_SkinCanvas_DrawFramedPanelBackground(canvas, GetScreen(), element, x_position, y_position, box_w, box_h);
+        }
+
+      GRP2DCOLOR_RGBA8               color(element->GetColor()->GetRed(), element->GetColor()->GetGreen(), element->GetColor()->GetBlue(), element->GetColor()->GetAlpha());
+      XVECTOR<UI_SKIN_TEXTBOX_PART*> parts;
+      XSTRING                        previousface;
+
+      canvas->Vectorfont_GetConfig()->SetColor(&color);
+      canvas->Vectorfont_GetConfig()->SetSize(element_tooltip->GetSizeFont());
+      UI_SKINCANVAS_SelectTextBoxFace(this, canvas, element_tooltip, previousface);
+
+      TextBox_GenerateLines(element_tooltip, canvas, x_position, y_position, parts);
+
+      for(XDWORD c=0; c<parts.GetSize(); c++)
+        {
+          UI_SKIN_TEXTBOX_PART* textbox_part = parts.Get(c);
+          if(!textbox_part) continue;
+
+          if(textbox_part->GetImage())
+            {
+              canvas->PutBitmapAlpha((double)textbox_part->GetXPos(), (double)textbox_part->GetYPos() - (double)textbox_part->GetHeight(), textbox_part->GetImage(), 100.0f);
+            }
+           else
+            {
+              GRP2DCOLOR_RGBA8 color_part(textbox_part->GetColor()->GetRed(), textbox_part->GetColor()->GetGreen(), textbox_part->GetColor()->GetBlue(), textbox_part->GetColor()->GetAlpha());
+              canvas->Vectorfont_GetConfig()->SetColor(&color_part);
+              UI_SKINCANVAS_PrintStacked(this, canvas, textbox_part->GetXPos(), textbox_part->GetYPos(), textbox_part->GetText()->Get());
+            }
+        }
+
+      parts.DeleteContents();
+      parts.DeleteAll();
+
+      UI_SKINCANVAS_RestoreTextFace(canvas, previousface);
+    }
+
+  PostDrawFunction(element, canvas, clip_rect, x_position, y_position);
   return true;
 }
 
@@ -6312,16 +6446,19 @@ bool UI_SKINCANVAS::Draw_Console(UI_ELEMENT* element)
           consoleface = element_console->GetFontFace()->Get();
         }
 
+      // Size before Select so load_font→update_char_size / config sync see the console em.
+      double em = (double)element_console->GetSizeFont();
+      if(em < 1.0f) em = 11.0f;
+      canvas->Vectorfont_GetConfig()->SetSize(em);
+
       XSTRING prevface;
       UI_SKINCANVAS_SelectResolvedFace(this, canvas, consoleface, NULL,
                                        element_console->GetName() ? element_console->GetName()->Get() : NL("console"),
                                        prevface);
 
-      canvas->Vectorfont_GetConfig()->SetSize(element_console->GetSizeFont());
-
-      double fontheight = (double)canvas->VectorFont_GetHeight(NL("A"));
-      if(fontheight < 1.0f) fontheight = (double)element_console->GetSizeFont();
-      double lineheight = fontheight + (double)element_console->GetLineSpacing();
+      // Line pitch from em (not cap-height of "A") so mono descenders (p/g/q/y) are not clipped.
+      double fontheight = em;
+      double lineheight = em + (double)element_console->GetLineSpacing();
       if(lineheight < 1.0f) lineheight = 1.0f;
 
       // Reserve right gutter for the overlay scrollbar so wrapped text stays clear of the thumb.
@@ -6681,7 +6818,12 @@ bool UI_SKINCANVAS::Draw_Tree(UI_ELEMENT* element)
       // Same framed-panel contract as Draw_Form (page seed + RoundRect isfill + corner punch).
       UI_SkinCanvas_DrawFramedPanelBackground(canvas, GetScreen(), element_tree, x_position, y_position, box_w, box_h);
 
+      // Explicit default face: without Select, tree inherited console "mono" and poisoned metrics.
       canvas->Vectorfont_GetConfig()->SetSize(element_tree->GetSizeFont());
+      XSTRING tree_prevface;
+      UI_SKINCANVAS_SelectResolvedFace(this, canvas, NULL, NULL,
+                                       element_tree->GetName() ? element_tree->GetName()->Get() : NL("tree"),
+                                       tree_prevface);
 
       double fontheight = (double)canvas->VectorFont_GetHeight(NL("A"));
       if(fontheight < 1.0f) fontheight = (double)element_tree->GetSizeFont();
@@ -6871,6 +7013,8 @@ bool UI_SKINCANVAS::Draw_Tree(UI_ELEMENT* element)
             }
 
           // Optional node icon (height = sizefont, square). Drawn before the label text.
+          // Tree PNGs are often authored on an opaque black matte; key that out so a failed/
+          // unscaled blit cannot paint a black plate over the label (truncated IP look).
           if(node->HasIcon())
             {
               GRPPROPERTYMODE mode = canvas->GetMode();
@@ -6879,20 +7023,28 @@ bool UI_SKINCANVAS::Draw_Tree(UI_ELEMENT* element)
 
               if(bmp)
                 {
-                  double icon_top = row_mid - ((double)bmp->GetHeight() / 2.0f);
-                  // Soft-edge safe blit (cover=255). PutBitmap() is also a pixel loop; keep cover=255
-                  // blend but the real idle cost is redrawing the whole tree every frame (see profiler).
-                  double icon_y = icon_top;
-                  for(XDWORD yb = 0; yb < bmp->GetHeight(); yb++)
+                  XDWORD bw = bmp->GetWidth();
+                  XDWORD bh = bmp->GetHeight();
+                  XDWORD dw = (XDWORD)icon_sz;
+                  XDWORD dh = (XDWORD)icon_sz;
+                  if(dw < 1) dw = 1;
+                  if(dh < 1) dh = 1;
+                  if(bw > dw) bw = dw;
+                  if(bh > dh) bh = dh;
+
+                  double icon_top = row_mid - ((double)bh / 2.0f);
+                  for(XDWORD yb = 0; yb < bh; yb++)
                     {
-                      for(XDWORD xb = 0; xb < bmp->GetWidth(); xb++)
+                      for(XDWORD xb = 0; xb < bw; xb++)
                         {
                           GRP2DCOLOR* raw = bmp->GetPixel((int)xb, (int)yb);
                           if(!raw) continue;
                           GRP2DCOLOR_RGBA8* px = (GRP2DCOLOR_RGBA8*)raw;
                           if(!px->a) continue;
+                          // Opaque near-black matte → treat as transparent.
+                          if((px->a >= 250) && (px->r < 18) && (px->g < 18) && (px->b < 18)) continue;
                           GRP2DCOLOR_RGBA8 c(px->r, px->g, px->b, px->a);
-                          canvas->PutBlendPixel(label_x + (double)xb, icon_y + (double)yb, &c, 255.0);
+                          canvas->PutBlendPixel(label_x + (double)xb, icon_top + (double)yb, &c, 255.0);
                         }
                     }
                 }
@@ -6909,6 +7061,8 @@ bool UI_SKINCANVAS::Draw_Tree(UI_ELEMENT* element)
         }
 
       canvas->SetClipBox(parentclip);
+
+      UI_SKINCANVAS_RestoreTextFace(canvas, tree_prevface);
     }
 
   PostDrawFunction(element, canvas, clip_rect, x_position, y_position);
@@ -6958,6 +7112,10 @@ bool UI_SKINCANVAS::Draw_PropertyList(UI_ELEMENT* element)
       UI_SkinCanvas_DrawFramedPanelBackground(canvas, GetScreen(), element_list, x_position, y_position, box_w, box_h);
 
       canvas->Vectorfont_GetConfig()->SetSize(element_list->GetSizeFont());
+      XSTRING list_prevface;
+      UI_SKINCANVAS_SelectResolvedFace(this, canvas, NULL, NULL,
+                                       element_list->GetName() ? element_list->GetName()->Get() : NL("propertylist"),
+                                       list_prevface);
 
       double fontheight = (double)canvas->VectorFont_GetHeight(NL("A"));
       if(fontheight < 1.0f) fontheight = (double)element_list->GetSizeFont();
@@ -7137,6 +7295,8 @@ bool UI_SKINCANVAS::Draw_PropertyList(UI_ELEMENT* element)
       canvas->Rectangle(x_split - 1.0f, y_bot - bw, x_split + 1.0f, y_header_top, true);
 
       canvas->SetClipBox(parentclip);
+
+      UI_SKINCANVAS_RestoreTextFace(canvas, list_prevface);
     }
 
   PostDrawFunction(element, canvas, clip_rect, x_position, y_position);
@@ -8288,9 +8448,10 @@ bool UI_SKINCANVAS::Draw_MultiOption(UI_ELEMENT* element)
                       GEN_DELETE legbmp;
                     }
 
-                  // Legend is authored after the bubble in XML — layout walk may still be before
-                  // later siblings that re-contaminate. Mark for end-of-layout same-frame repair.
-                  GEN_USERINTERFACE.Elements_SetToRedraw(sib, true);
+                  // Same-frame page fill above + end-of-pass RepaintCompactLegendForms is enough.
+                  // Do NOT Elements_SetToRedraw(sib): that left MustReDraw on the legend form into the
+                  // next frame; PropagateRebuildOverlapDirtAcrossSharedCanvases then expanded it to the
+                  // full toolbar+caption band (~20 dirty roots → ~27ms Update → ~34fps idle on XTM).
                   CompactLegendsMarkNeedRepair();
                 }       
             }            
@@ -9299,16 +9460,16 @@ bool UI_SKINCANVAS::Draw_Form(UI_ELEMENT* element)
       canvas->SetFillColor(&color);
 
       // Step 4: honour element-configured border-width. -1 = default (historical 1.0f for containers), 0 = no
-      // stroke drawn at all (fill-only), >0 = author-specified thickness. AGG's RoundRect / Rectangle draw a
-      // stroke along with the fill even when linewidth is 0, so the "no stroke" case is handled by pushing a
-      // fully transparent line color instead of relying on width 0.
+      // stroke (fill-only), >0 = author thickness. RoundRect AGG uses lw>=1 as outer-underpaint + inset fill;
+      // keep linewidth 0 for borderless plates so we take the fill-only path (transparent line + lw 1 used to
+      // leave a 1px dark rim). Also clear the line colour so Rectangle's always-on outline blend is invisible.
       double bw = element_form->GetBorderWidth();
 
       if(bw == 0.0)
         {
           GRP2DCOLOR_RGBA8  linecolor_none(0, 0, 0, 0);
           canvas->SetLineColor(&linecolor_none);
-          canvas->SetLineWidth(1.0f);
+          canvas->SetLineWidth(0.0f);
         }
        else
         {
@@ -11836,8 +11997,18 @@ static void UI_SkinCanvas_TextObstacle(double x, double ltop, double lbot, const
 * --------------------------------------------------------------------------------------------------------------------*/
 bool UI_SKINCANVAS::TextBox_GenerateLines(UI_ELEMENT_TEXTBOX* element_textbox, GRP2DCANVAS* canvas, double x_position, double y_position, XVECTOR<UI_SKIN_TEXTBOX_PART*>& parts)
 {
-  double                  x_text_position = x_position;
-  double                  y_text_position = UI_BOUNDARYLINE_EdgeTop(y_position, element_textbox->GetBoundaryLine()->height) + (double)canvas->VectorFont_GetHeight(NL("A")) + element_textbox->Scroll_GetDisplacement(UI_PROPERTY_SCROLLEABLE_TYPE_VERTICAL);  
+  // Inset ALL text (every line / wrap / hard newline) from the element frame via CSS padding.
+  const double            pad_l           = element_textbox->GetPadding(UI_ELEMENT_TYPE_ALIGN_LEFT);
+  const double            pad_r           = element_textbox->GetPadding(UI_ELEMENT_TYPE_ALIGN_RIGHT);
+  const double            pad_t           = element_textbox->GetPadding(UI_ELEMENT_TYPE_ALIGN_UP);
+  const double            pad_b           = element_textbox->GetPadding(UI_ELEMENT_TYPE_ALIGN_DOWN);
+  const double            text_left       = x_position + pad_l;
+  const double            box_w           = (double)element_textbox->GetBoundaryLine()->width;
+  const double            box_h           = (double)element_textbox->GetBoundaryLine()->height;
+  const double            content_w       = box_w - pad_l - pad_r;
+
+  double                  x_text_position = text_left;
+  double                  y_text_position = UI_BOUNDARYLINE_EdgeTop(y_position, box_h) + pad_t + (double)canvas->VectorFont_GetHeight(NL("A")) + element_textbox->Scroll_GetDisplacement(UI_PROPERTY_SCROLLEABLE_TYPE_VERTICAL);  
   XDWORD                  index_char      = 0;  
   UI_COLOR                actual_color;
   XDWORD                  nline           = 1;
@@ -11848,7 +12019,7 @@ bool UI_SKINCANVAS::TextBox_GenerateLines(UI_ELEMENT_TEXTBOX* element_textbox, G
   bool                    newpart         = false;  
 
   double                  fontheight      = (double)canvas->VectorFont_GetHeight(NL("A"));
-  double                  box_right       = (double)element_textbox->GetXPosition() + (double)element_textbox->GetBoundaryLine()->width;
+  double                  box_right       = x_position + box_w - pad_r;
 
   double                  obs_l[UI_SKINCANVAS_TEXTBOX_MAXINLINEIMAGES];   // active inline-image rectangles (text flows around them)
   double                  obs_r[UI_SKINCANVAS_TEXTBOX_MAXINLINEIMAGES];
@@ -11902,7 +12073,7 @@ bool UI_SKINCANVAS::TextBox_GenerateLines(UI_ELEMENT_TEXTBOX* element_textbox, G
 
       switch(character)
         {
-          case _C('\n')  : x_text_position  = x_position;      
+          case _C('\n')  : x_text_position  = text_left;      
                             y_text_position += lineheight;                
                             nline++;
                             newpart = true;     
@@ -11988,9 +12159,9 @@ bool UI_SKINCANVAS::TextBox_GenerateLines(UI_ELEMENT_TEXTBOX* element_textbox, G
                                                                     }
 
                                                                   // wrap to a new line if the image (plus its side margins) does not fit on the current one
-                                                                  if((x_text_position > x_position) && ((x_text_position + sep + imgwidth + sep) > box_right))
+                                                                  if((x_text_position > text_left) && ((x_text_position + sep + imgwidth + sep) > box_right))
                                                                     {
-                                                                      x_text_position  = x_position;
+                                                                      x_text_position  = text_left;
                                                                       y_text_position += lineheight;
                                                                       nline++;
                                                                     }
@@ -12027,7 +12198,18 @@ bool UI_SKINCANVAS::TextBox_GenerateLines(UI_ELEMENT_TEXTBOX* element_textbox, G
                                                                     }
                                                                   if((img_bot + sep) > max_obs_bottom) max_obs_bottom = img_bot + sep;
 
-                                                                  x_text_position = img_left + imgwidth;     // following text re-flows past the image (the right margin is applied by the obstacle jump)
+                                                                  // Full-width image (fills the padded content box): stack following text below it
+                                                                  // so the graphic keeps the same L/R inset as text and does not share the line.
+                                                                  if((img_left + imgwidth + sep) >= (box_right - 0.5))
+                                                                    {
+                                                                      x_text_position  = text_left;
+                                                                      y_text_position  = img_bot + sep + fontheight;
+                                                                      nline++;
+                                                                    }
+                                                                   else
+                                                                    {
+                                                                      x_text_position = img_left + imgwidth;     // side-by-side reflow past the image
+                                                                    }
 
                                                                   // re-anchor the (empty) current part for the text that follows the image on this line
                                                                   if(textbox_part)
@@ -12076,13 +12258,16 @@ bool UI_SKINCANVAS::TextBox_GenerateLines(UI_ELEMENT_TEXTBOX* element_textbox, G
                               double            xbefore   = x_text_position;
                               x_text_position += charwidth; 
 
+                              // Content AABB = element box inset by padding on all four sides (EdgeBottom Y).
                               UI_BOUNDARYLINE   boundaryline;
                               bool              isinbox    = false;
                                 
-                              boundaryline.x      = element_textbox->GetXPosition();
-                              boundaryline.y      = element_textbox->GetYPosition();
-                              boundaryline.width  = element_textbox->GetBoundaryLine()->width;
-                              boundaryline.height = element_textbox->GetBoundaryLine()->height;
+                              boundaryline.x      = x_position + pad_l;
+                              boundaryline.y      = y_position - pad_b;
+                              boundaryline.width  = content_w;
+                              boundaryline.height = box_h - pad_t - pad_b;
+                              if(boundaryline.height < 1.0) boundaryline.height = 1.0;
+                              if(boundaryline.width  < 1.0) boundaryline.width  = 1.0;
 
                               isinbox = boundaryline.IsWithin((XDWORD)(x_text_position), (XDWORD)(y_text_position));                                                                                        
 
@@ -12141,7 +12326,7 @@ bool UI_SKINCANVAS::TextBox_GenerateLines(UI_ELEMENT_TEXTBOX* element_textbox, G
                                         }          
                                     }
                                     
-                                  x_text_position  = x_position;      
+                                  x_text_position  = text_left;      
                                   y_text_position += lineheight; 
                                   nline++;
 
@@ -12247,7 +12432,7 @@ bool UI_SKINCANVAS::TextBox_GenerateLines(UI_ELEMENT_TEXTBOX* element_textbox, G
                                                             if(textbox_part) sizealltext += textbox_part->GetWidth();
                                                           }
                                           
-                                                        XDWORD shift = (XDWORD)(element_textbox->GetBoundaryLine()->width - sizealltext)/2;    
+                                                        XDWORD shift = (XDWORD)(content_w - (double)sizealltext)/2;    
 
                                                         for(XDWORD p=0; p<checkparts.GetSize(); p++)
                                                           {          
@@ -12266,7 +12451,8 @@ bool UI_SKINCANVAS::TextBox_GenerateLines(UI_ELEMENT_TEXTBOX* element_textbox, G
   {
     double textheight  = (double)maxnlines * lineheight;
     double imageextent = max_obs_bottom - firstline_top;                  // image bottom relative to the top of line 1 (scroll cancels out)
-    element_textbox->SetContentHeight(__MAX(textheight, imageextent));    // make sure scrolling can reach the bottom of an image too
+    // Include vertical padding so scroll / auto-size can frame the last line with the same inset.
+    element_textbox->SetContentHeight(__MAX(textheight, imageextent) + pad_t + pad_b);
   }
 
   return true;

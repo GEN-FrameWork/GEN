@@ -525,16 +525,21 @@ class GRP2DCANVASAGG: public GRP2DCANVAS
 
                                                                                       AGG_SOLIDFILL_END
                                                                                     }
+
+                                                                                  // Skip outline when line colour is fully transparent (border-width 0 path sets
+                                                                                  // rgba 0,0,0,0). blend_hline with a=0 still wrote a dark fringe on some buffers.
+                                                                                  COLORTYPE linec = renderer_primitives->line_color();
+                                                                                  if(linec.a == 0) return;
                                                                                     
                                                                                   if(linewidth <= 1.0)
                                                                                     {
 
                                                                                       AGG_SOLIDFILL_INI
                                                                                       
-                                                                                      renderer_base->blend_hline((int)x1, (int)y1, (int)x2, renderer_primitives->line_color(), 255);
-                                                                                      renderer_base->blend_vline((int)x2, (int)y1, (int)y2, renderer_primitives->line_color(), 255);
-                                                                                      renderer_base->blend_hline((int)x1, (int)y2, (int)x2, renderer_primitives->line_color(), 255);
-                                                                                      renderer_base->blend_vline((int)x1, (int)y1, (int)y2, renderer_primitives->line_color(), 255); 
+                                                                                      renderer_base->blend_hline((int)x1, (int)y1, (int)x2, linec, 255);
+                                                                                      renderer_base->blend_vline((int)x2, (int)y1, (int)y2, linec, 255);
+                                                                                      renderer_base->blend_hline((int)x1, (int)y2, (int)x2, linec, 255);
+                                                                                      renderer_base->blend_vline((int)x1, (int)y1, (int)y2, linec, 255); 
 
                                                                                       AGG_SOLIDFILL_END
                                                                                     }
@@ -542,7 +547,7 @@ class GRP2DCANVASAGG: public GRP2DCANVAS
                                                                                     {
                                                                                       AGG_OUTLINE_INI
 
-                                                                                      ren.color(renderer_primitives->line_color());
+                                                                                      ren.color(linec);
 
                                                                                       ras.move_to_d(x1, y1);
                                                                                       ras.line_to_d(x1, y2);
@@ -1411,7 +1416,18 @@ class GRP2DCANVASAGG: public GRP2DCANVAS
 
                                                                                   status = vectorfont_engine.load_font(charstr.GetPtrChar(), 0, gren);
 
-                                                                                  if(status) vectorfont_pathfile = fontnamefile;
+                                                                                  if(status)
+                                                                                    {
+                                                                                      vectorfont_pathfile = fontnamefile;
+
+                                                                                      // load_font applies engine m_height/m_width; canvas SetSize may have
+                                                                                      // updated config without touching the engine yet — sync so the new
+                                                                                      // face matches the widget size (console 11 / tree 12 / CJK stack).
+                                                                                      double h = vectorfont_config.GetHeight();
+                                                                                      double w = vectorfont_config.GetWidth();
+                                                                                      if(h > 0.0) vectorfont_engine.height(h);
+                                                                                      if(w > 0.0) vectorfont_engine.width(w);
+                                                                                    }
                                                                                   
                                                                                   return status;    
                                                                                 }
@@ -1785,7 +1801,7 @@ class GRP2DCANVASAGG: public GRP2DCANVAS
 
                                                                                   if(x == GRP2DCANVASTYPE_DRAWFRAMERATE_ADJUSTSCREEN)
                                                                                     {
-                                                                                      framerate_x = screen->GetWidth() - width - 10;          
+                                                                                      framerate_x = screen->GetWidth() - width - 6;
                                                                                     }
                                                                                    else 
                                                                                     {
