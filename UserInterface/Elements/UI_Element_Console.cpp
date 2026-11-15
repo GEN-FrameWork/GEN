@@ -101,6 +101,21 @@ void UI_ELEMENT_CONSOLE::SetSizeFont(XDWORD sizefont)
 }
 
 
+XSTRING* UI_ELEMENT_CONSOLE::GetFontFace()
+{
+  return &fontface;
+}
+
+
+void UI_ELEMENT_CONSOLE::SetFontFace(XCHAR* fontface)
+{
+  XSTRING next;
+  if(fontface && fontface[0]) next = fontface;
+  if(!this->fontface.Compare(next.Get(), true)) InvalidateLayoutCache();
+  this->fontface = next;
+}
+
+
 XDWORD UI_ELEMENT_CONSOLE::GetLineSpacing()
 {
   return linespacing;
@@ -212,6 +227,18 @@ void UI_ELEMENT_CONSOLE::SetLayoutMaxTextWidth(double maxtextwidth)
 }
 
 
+double UI_ELEMENT_CONSOLE::GetLayoutMaxLineWidth()
+{
+  return layout_max_line_w;
+}
+
+
+void UI_ELEMENT_CONSOLE::SetLayoutMaxLineWidth(double maxlinewidth)
+{
+  layout_max_line_w = maxlinewidth;
+}
+
+
 XDWORD UI_ELEMENT_CONSOLE::GetLayoutSizeFont()
 {
   return layout_sizefont;
@@ -261,6 +288,7 @@ void UI_ELEMENT_CONSOLE::InvalidateLayoutCache()
 {
   layout_maxtextwidth = -1.0f;
   layout_sizefont     = 0;
+  layout_max_line_w   = -1.0f;
 
   for(XDWORD i=0; i<lines.GetSize(); i++)
     {
@@ -701,6 +729,9 @@ bool UI_ELEMENT_CONSOLE::AddLine(XCHAR* string, XBYTE colorindex, UI_COLOR* rgb)
 
   TrimToMaxLines();
 
+  // New/trimmed lines can change the longest-line width used for horizontal scroll.
+  layout_max_line_w = -1.0f;
+
   if(autoscroll) autoscrollpending = true;
   SetMustReDraw(true);
 
@@ -750,6 +781,7 @@ void UI_ELEMENT_CONSOLE::TrimToMaxLines()
 void UI_ELEMENT_CONSOLE::Clean()
 {
   sizefont            = 0;
+  fontface.Empty();
   linespacing         = UI_ELEMENT_CONSOLE_DEFAULT_LINESPACING;
   wordwrap            = true;
   maxlines            = UI_ELEMENT_CONSOLE_DEFAULT_MAXLINES;
@@ -760,6 +792,7 @@ void UI_ELEMENT_CONSOLE::Clean()
   contentwidth        = 0.0f;
   layout_maxtextwidth = -1.0f;
   layout_sizefont     = 0;
+  layout_max_line_w   = -1.0f;
   layout_pad_x        = 8.0f;
   layout_pad_y        = 6.0f;
   layout_lineheight   = 0.0f;

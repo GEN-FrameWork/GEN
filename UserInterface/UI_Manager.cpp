@@ -6469,6 +6469,18 @@ UI_ELEMENT* UI_MANAGER::GetLayoutElement_Console(XFILEXMLELEMENT* node, UI_LAYOU
 
   element_console->SetSizeFont((XDWORD)sizefont);
 
+  // Optional catalog face (fontface / font-family), e.g. monospace console.
+  {
+    XSTRING facestr;
+    if(UI_PROPERTYREGISTRY::GetAliased(outstyle, NL("fontface"), NL("font-family"), facestr) && !facestr.IsEmpty())
+      {
+        XSTRING stack[UI_PROPERTYREGISTRY_FONTFACE_STACK_MAX];
+        XDWORD  n = UI_PROPERTYREGISTRY::ParseFontFamilyStack(facestr, stack, UI_PROPERTYREGISTRY_FONTFACE_STACK_MAX);
+        if(n > 0) element_console->SetFontFace(stack[0].Get());
+         else      element_console->SetFontFace(facestr.Get());
+      }
+  }
+
   double linespacing = UI_ELEMENT_CONSOLE_DEFAULT_LINESPACING;
   outstyle.Get(NL("linespacing"), linespacing);
   element_console->SetLineSpacing((XDWORD)linespacing);

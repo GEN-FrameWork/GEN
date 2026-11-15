@@ -2730,15 +2730,17 @@ bool UI_SKINCANVAS::CalculePosition(UI_ELEMENT* element, double fatherwidth, dou
 
 
 // Forward: measure must use the same face stack as Draw_Text (Latin + CJK fallback).
-static XDWORD UI_SKINCANVAS_BuildTextFaceStack(UI_SKIN* skin, UI_ELEMENT_TEXT* element_text, XCHAR** outfaces, XDWORD maxfaces, XSTRING& langstorage);
+// primaryface: optional catalog override when element_text is NULL (e.g. console mono).
+static XDWORD UI_SKINCANVAS_BuildTextFaceStack(UI_SKIN* skin, UI_ELEMENT_TEXT* element_text, XCHAR** outfaces, XDWORD maxfaces, XSTRING& langstorage, XCHAR* primaryface = NULL);
 
 // Generic stacked measure/print for widgets without UI_ELEMENT_TEXT (Console, TextBox, Edit, RadioGroup).
-static double UI_SKINCANVAS_GetWidthStacked(UI_SKIN* skin, GRP2DCANVAS* canvas, XCHAR* string)
+// primaryface: optional catalog name (e.g. console "mono") inserted before default/language.
+static double UI_SKINCANVAS_GetWidthStacked(UI_SKIN* skin, GRP2DCANVAS* canvas, XCHAR* string, XCHAR* primaryface = NULL)
 {
   if(!canvas || !string) return 0.0;
   XCHAR*  faces[GRP2DCANVAS_VECTORFONT_STACK_MAX];
   XSTRING langface;
-  XDWORD  nfaces = UI_SKINCANVAS_BuildTextFaceStack(skin, NULL, faces, GRP2DCANVAS_VECTORFONT_STACK_MAX, langface);
+  XDWORD  nfaces = UI_SKINCANVAS_BuildTextFaceStack(skin, NULL, faces, GRP2DCANVAS_VECTORFONT_STACK_MAX, langface, primaryface);
   if(nfaces > 0)
     {
       double tw = canvas->VectorFont_GetWidthStack(faces, nfaces, string);
@@ -2747,12 +2749,12 @@ static double UI_SKINCANVAS_GetWidthStacked(UI_SKIN* skin, GRP2DCANVAS* canvas, 
   return canvas->VectorFont_GetWidth(string);
 }
 
-static bool UI_SKINCANVAS_PrintStacked(UI_SKIN* skin, GRP2DCANVAS* canvas, double x, double y, XCHAR* string)
+static bool UI_SKINCANVAS_PrintStacked(UI_SKIN* skin, GRP2DCANVAS* canvas, double x, double y, XCHAR* string, XCHAR* primaryface = NULL)
 {
   if(!canvas || !string) return false;
   XCHAR*  faces[GRP2DCANVAS_VECTORFONT_STACK_MAX];
   XSTRING langface;
-  XDWORD  nfaces = UI_SKINCANVAS_BuildTextFaceStack(skin, NULL, faces, GRP2DCANVAS_VECTORFONT_STACK_MAX, langface);
+  XDWORD  nfaces = UI_SKINCANVAS_BuildTextFaceStack(skin, NULL, faces, GRP2DCANVAS_VECTORFONT_STACK_MAX, langface, primaryface);
   if(nfaces > 0) return canvas->VectorFont_PrintStack(x, y, faces, nfaces, string);
   return canvas->VectorFont_Print(x, y, string);
 }
@@ -2922,7 +2924,7 @@ static void UI_SKINCANVAS_SelectTextFace(UI_SKIN* skin, GRP2DCANVAS* canvas, UI_
 // Default is listed before language so the stack contract stays "Latin primary, script fallback".
 // GetWidthStack/PrintStack probe Basic Latin front→back and other scripts back→front, so CJK
 // runs Select the language face first without leaving the Latin face on every glyph.
-static XDWORD UI_SKINCANVAS_BuildTextFaceStack(UI_SKIN* skin, UI_ELEMENT_TEXT* element_text, XCHAR** outfaces, XDWORD maxfaces, XSTRING& langstorage)
+static XDWORD UI_SKINCANVAS_BuildTextFaceStack(UI_SKIN* skin, UI_ELEMENT_TEXT* element_text, XCHAR** outfaces, XDWORD maxfaces, XSTRING& langstorage, XCHAR* primaryface)
 {
   XDWORD n = 0;
   if(!outfaces || !maxfaces) return 0;
@@ -2944,6 +2946,10 @@ static XDWORD UI_SKINCANVAS_BuildTextFaceStack(UI_SKIN* skin, UI_ELEMENT_TEXT* e
         {
           outfaces[n++] = element_text->GetFontFace()->Get();
         }
+    }
+   else if(primaryface && primaryface[0] && n<maxfaces)
+    {
+      outfaces[n++] = primaryface;
     }
 
   bool hasdefault = false;
@@ -5401,11 +5407,11 @@ bool UI_SKINCANVAS::DiscardAnimBackdrop(UI_ELEMENT* element)
 * @brief      Same-frame repair for compact under-icon legend forms after MultiOption peels.
 * @note       Shared-slot Stop/Run peels and hidden-twin RestoreOnHide can leave a solid gray plate
 *             (57,59,61) under Demarrer/Arreter. SetToRedraw alone is too late when RebuildAllAreas
-*             already ran; page-fill + Draw here (end of layout / after chrome) reprints glyphs on a
-*             clean page colour.
+*             already ran; page-fill + text reprint here (end of layout / after chrome) restores glyphs.
 *             MUST stay narrow: height<=28 alone also matched XTraceMonitor's opstatus foot (h=22,
-*             w=972). The pass-2 wipe then only redrew type=text children and erased the textbox
-*             messages every frame. Limit to short AND narrow transparent under-icon caption strips.
+*             w=972). Limit to short AND narrow transparent under-icon caption strips.
+*             One wipe + text-only Draw (no intermediate Draw(sib)): the old pass-1 form+text Draw
+*             reintroduced the gray plate that pass-2 then fixed — double CJK cost every frame.
 * @ingroup    USERINTERFACE
 *
 * --------------------------------------------------------------------------------------------------------------------*/
@@ -5468,15 +5474,8 @@ bool UI_SKINCANVAS::RepaintCompactLegendForms(UI_LAYOUT* layout)
 
       XBYTE fr = pr, fg = pg, fb = pb;
 
-      // Pass 1: opaque page seed (Rectangle — same every-frame repair, without PutPixel cost).
-      UI_SkinCanvas_FillRectOpaque(canvas, sl, st, lw, lh, fr, fg, fb);
-
-      GEN_USERINTERFACE.Elements_SetToRedraw(sib, true);
-      Draw(sib);
-
-      // Pass 2: Draw_Form/Draw_Text can still leave a gray plate in the lower strip (confirmed:
-      // y127-132 = 57,59,61 after form+text). Wipe again, then reprint ONLY text children so
-      // nothing after the form's PostDraw can keep the plate under the glyphs.
+      // Authoritative seal: opaque page wipe, then ONLY text children (transparent legend form
+      // has no fill/border of its own — Draw(sib) was redundant and reintroduced the gray plate).
       UI_SkinCanvas_FillRectOpaque(canvas, sl, st, lw, lh, fr, fg, fb);
       for(XDWORD c = 0; c < sib->GetComposeElements()->GetSize(); c++)
         {
@@ -6216,13 +6215,13 @@ static void UI_SkinCanvas_ConsolePalette(XBYTE colorindex, int& r, int& g, int& 
 
 
 // Largest end > start such that text[start..end) fits in max_text_w (at least one char).
-static XDWORD UI_SkinCanvas_ConsoleWrapEnd(UI_SKIN* skin, GRP2DCANVAS* canvas, XCHAR* text, XDWORD start, XDWORD n, double max_text_w)
+static XDWORD UI_SkinCanvas_ConsoleWrapEnd(UI_SKIN* skin, GRP2DCANVAS* canvas, XCHAR* text, XDWORD start, XDWORD n, double max_text_w, XCHAR* primaryface = NULL)
 {
   if(!canvas || !text || start >= n) return start;
 
   XSTRING probe;
   probe.Set(&text[start], n - start);
-  if(UI_SKINCANVAS_GetWidthStacked(skin, canvas, probe.Get()) <= max_text_w) return n;
+  if(UI_SKINCANVAS_GetWidthStacked(skin, canvas, probe.Get(), primaryface) <= max_text_w) return n;
 
   XDWORD lo = 1;
   XDWORD hi = n - start;
@@ -6230,8 +6229,8 @@ static XDWORD UI_SkinCanvas_ConsoleWrapEnd(UI_SKIN* skin, GRP2DCANVAS* canvas, X
     {
       XDWORD mid = lo + ((hi - lo + 1) / 2);
       probe.Set(&text[start], mid);
-      if(UI_SKINCANVAS_GetWidthStacked(skin, canvas, probe.Get()) <= max_text_w) lo = mid;
-       else                                                                      hi = mid - 1;
+      if(UI_SKINCANVAS_GetWidthStacked(skin, canvas, probe.Get(), primaryface) <= max_text_w) lo = mid;
+       else                                                                                   hi = mid - 1;
     }
 
   if(lo < 1) lo = 1;
@@ -6239,7 +6238,7 @@ static XDWORD UI_SkinCanvas_ConsoleWrapEnd(UI_SKIN* skin, GRP2DCANVAS* canvas, X
 }
 
 
-static XDWORD UI_SkinCanvas_ConsoleMeasureRows(UI_SKIN* skin, GRP2DCANVAS* canvas, UI_ELEMENT_CONSOLE_LINE* line, bool wordwrap, double max_text_w)
+static XDWORD UI_SkinCanvas_ConsoleMeasureRows(UI_SKIN* skin, GRP2DCANVAS* canvas, UI_ELEMENT_CONSOLE_LINE* line, bool wordwrap, double max_text_w, XCHAR* primaryface = NULL)
 {
   if(!line) return 0;
   if(line->visualrows > 0) return line->visualrows;
@@ -6257,7 +6256,7 @@ static XDWORD UI_SkinCanvas_ConsoleMeasureRows(UI_SKIN* skin, GRP2DCANVAS* canva
 
   while(start < n)
     {
-      XDWORD end = UI_SkinCanvas_ConsoleWrapEnd(skin, canvas, text, start, n, max_text_w);
+      XDWORD end = UI_SkinCanvas_ConsoleWrapEnd(skin, canvas, text, start, n, max_text_w, primaryface);
       if(end <= start) end = start + 1;
       rows++;
       start = end;
@@ -6307,6 +6306,17 @@ bool UI_SKINCANVAS::Draw_Console(UI_ELEMENT* element)
       // Same framed-panel contract as Draw_Form (page seed + RoundRect isfill + corner punch).
       UI_SkinCanvas_DrawFramedPanelBackground(canvas, GetScreen(), element_console, x_position, y_position, box_w, box_h);
 
+      XCHAR* consoleface = NULL;
+      if(element_console->GetFontFace() && !element_console->GetFontFace()->IsEmpty())
+        {
+          consoleface = element_console->GetFontFace()->Get();
+        }
+
+      XSTRING prevface;
+      UI_SKINCANVAS_SelectResolvedFace(this, canvas, consoleface, NULL,
+                                       element_console->GetName() ? element_console->GetName()->Get() : NL("console"),
+                                       prevface);
+
       canvas->Vectorfont_GetConfig()->SetSize(element_console->GetSizeFont());
 
       double fontheight = (double)canvas->VectorFont_GetHeight(NL("A"));
@@ -6336,12 +6346,21 @@ bool UI_SKINCANVAS::Draw_Console(UI_ELEMENT* element)
       if(!wordwrap)
         {
           visualrows = linecount;   // O(1): one visual row per buffer line
-          for(XDWORD i=0; i<linecount; i++)
+          // Reuse cached max line width across redraws until AddLine/InvalidateLayoutCache.
+          if(element_console->GetLayoutMaxLineWidth() >= 0.0)
             {
-              UI_ELEMENT_CONSOLE_LINE* line = element_console->GetLine(i);
-              if(!line || line->text.IsEmpty()) continue;
-              double w = UI_SKINCANVAS_GetWidthStacked(this, canvas, line->text.Get());
-              if(w > max_line_w) max_line_w = w;
+              max_line_w = element_console->GetLayoutMaxLineWidth();
+            }
+           else
+            {
+              for(XDWORD i=0; i<linecount; i++)
+                {
+                  UI_ELEMENT_CONSOLE_LINE* line = element_console->GetLine(i);
+                  if(!line || line->text.IsEmpty()) continue;
+                  double w = UI_SKINCANVAS_GetWidthStacked(this, canvas, line->text.Get(), consoleface);
+                  if(w > max_line_w) max_line_w = w;
+                }
+              element_console->SetLayoutMaxLineWidth(max_line_w);
             }
         }
        else
@@ -6349,7 +6368,7 @@ bool UI_SKINCANVAS::Draw_Console(UI_ELEMENT* element)
           // Only uncached (new) lines call the font measurer; older lines reuse visualrows.
           for(XDWORD i=0; i<linecount; i++)
             {
-              visualrows += UI_SkinCanvas_ConsoleMeasureRows(this, canvas, element_console->GetLine(i), true, max_text_w);
+              visualrows += UI_SkinCanvas_ConsoleMeasureRows(this, canvas, element_console->GetLine(i), true, max_text_w, consoleface);
             }
         }
 
@@ -6436,7 +6455,7 @@ bool UI_SKINCANVAS::Draw_Console(UI_ELEMENT* element)
           UI_ELEMENT_CONSOLE_LINE* line = element_console->GetLine(i);
           if(!line) continue;
 
-          XDWORD rows_here = wordwrap ? UI_SkinCanvas_ConsoleMeasureRows(this, canvas, line, true, max_text_w) : 1;
+          XDWORD rows_here = wordwrap ? UI_SkinCanvas_ConsoleMeasureRows(this, canvas, line, true, max_text_w, consoleface) : 1;
           double y_block_lo = y_text + (double)row * lineheight;
           double y_block_hi = y_text + (double)(row + rows_here - 1) * lineheight;
 
@@ -6498,7 +6517,7 @@ bool UI_SKINCANVAS::Draw_Console(UI_ELEMENT* element)
               // green ready line). Pad wipe still clears ascender crumbs in the top pad.
               if(y >= y_vis_lo && y <= y_vis_hi)
                 {
-                  UI_SKINCANVAS_PrintStacked(this, canvas, x_text, y, line->text.IsEmpty() ? NL("") : line->text.Get());
+                  UI_SKINCANVAS_PrintStacked(this, canvas, x_text, y, line->text.IsEmpty() ? NL("") : line->text.Get(), consoleface);
                 }
               row++;
               continue;
@@ -6509,7 +6528,7 @@ bool UI_SKINCANVAS::Draw_Console(UI_ELEMENT* element)
           XCHAR* text  = line->text.Get();
           while(start < n)
             {
-              XDWORD end = UI_SkinCanvas_ConsoleWrapEnd(this, canvas, text, start, n, max_text_w);
+              XDWORD end = UI_SkinCanvas_ConsoleWrapEnd(this, canvas, text, start, n, max_text_w, consoleface);
               if(end <= start) end = start + 1;
 
               double y = y_text + (double)row * lineheight;
@@ -6517,7 +6536,7 @@ bool UI_SKINCANVAS::Draw_Console(UI_ELEMENT* element)
                 {
                   XSTRING chunk;
                   chunk.Set(&text[start], end - start);
-                  UI_SKINCANVAS_PrintStacked(this, canvas, x_text, y, chunk.Get());
+                  UI_SKINCANVAS_PrintStacked(this, canvas, x_text, y, chunk.Get(), consoleface);
                 }
 
               row++;
@@ -6558,6 +6577,8 @@ bool UI_SKINCANVAS::Draw_Console(UI_ELEMENT* element)
                 }
             }
         }
+
+      UI_SKINCANVAS_RestoreTextFace(canvas, prevface);
     }
 
   PostDrawFunction(element, canvas, clip_rect, x_position, y_position);
@@ -7029,8 +7050,6 @@ bool UI_SKINCANVAS::Draw_PropertyList(UI_ELEMENT* element)
             if(pass == 0) UI_SkinCanvas_PropertyListClip(canvas, parentclip, x_left , y_vis_top, x_split - 4.0f           , y_vis_bot);
              else         UI_SkinCanvas_PropertyListClip(canvas, parentclip, x_split + 4.0f, y_vis_top, x_right - bar_gutter, y_vis_bot);
 
-            canvas->Vectorfont_GetConfig()->SetColor(&color_ink);
-
             for(XDWORD i=0; i<rowcount; i++)
               {
                 UI_ELEMENT_PROPERTYLIST_ROW* row = element_list->GetRow(i);
@@ -7040,6 +7059,11 @@ bool UI_SKINCANVAS::Draw_PropertyList(UI_ELEMENT* element)
                 double row_bot = row_top + rowheight;
 
                 if(row_bot < y_vis_top || row_top > y_vis_bot) continue;
+
+                // Recently changed rows (Add/SetValue) stay red for the highlight window (XTIMER on the row).
+                const bool changed = row->IsChangedWithinSeconds(UI_ELEMENT_PROPERTYLIST_CHANGED_HIGHLIGHT_SECONDS);
+                GRP2DCOLOR_RGBA8 row_ink = changed ? GRP2DCOLOR_RGBA8(230, 64, 64, 255) : color_ink;
+                canvas->Vectorfont_GetConfig()->SetColor(&row_ink);
 
                 double baseline = row_top + ((rowheight + fontheight) / 2.0f) - 1.0f;
                 XSTRING* text   = (pass == 0) ? &row->name : &row->value;

@@ -36,6 +36,8 @@
 #include "UI_Property_Scrolleable.h"
 #include "UI_Element.h"
 
+class XTIMER;
+
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
 
 #define UI_ELEMENT_PROPERTYLIST_DEFAULT_NAMECOLUMNWIDTH     220.0f
@@ -43,6 +45,7 @@
 #define UI_ELEMENT_PROPERTYLIST_DEFAULT_ROWHEIGHT           22.0f
 #define UI_ELEMENT_PROPERTYLIST_DEFAULT_HEADERHEIGHT        26.0f
 #define UI_ELEMENT_PROPERTYLIST_SPLITTER_HITWIDTH           6.0f
+#define UI_ELEMENT_PROPERTYLIST_CHANGED_HIGHLIGHT_SECONDS   10
 
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
 
@@ -53,6 +56,10 @@ struct UI_ELEMENT_PROPERTYLIST_ROW
 
   XSTRING                             name;
   XSTRING                             value;
+  XTIMER*                             xtimer_changed;             // Reset on Add/SetValue; draw uses GetMeasureSeconds()
+
+  bool                                MarkChanged                   ();
+  bool                                IsChangedWithinSeconds        (XQWORD seconds);
 
   private:
 
@@ -83,8 +90,11 @@ class UI_ELEMENT_PROPERTYLIST : public UI_ELEMENT, public UI_PROPERTY_SCROLLEABL
     void                              SetHeaderCaptions             (XCHAR* headername, XCHAR* headervalue);
 
     bool                              Clear                         ();
-    bool                              Add                           (XCHAR* name, XCHAR* value);
-    bool                              SetValue                      (XCHAR* name, XCHAR* value);
+    bool                              Add                           (XCHAR* name, XCHAR* value, bool markchanged = true);
+    bool                              SetValue                      (XCHAR* name, XCHAR* value, bool markchanged = true);
+
+    // True while any row's change timer is still within the window (keeps redraw alive for red→normal).
+    bool                              HasChangedHighlight           (XQWORD seconds);
 
     XDWORD                            GetRowCount                   ();
     UI_ELEMENT_PROPERTYLIST_ROW*      GetRow                        (XDWORD index);

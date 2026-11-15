@@ -125,7 +125,14 @@ class XTRACESERVER
 
     bool                    WaitPop                         (XTRACESERVER_MSG& msg, int timeout_ms = -1);
 
+    // Parse-thread + DIO stream-thread priority (UDP/UART). Default REALTIME (legacy monitor behaviour).
+    XTHREADPRIORITY         GetPriority                     ();
+    void                    SetPriority                     (XTHREADPRIORITY priority);
+    void                    SetHighPriority                 (bool enable);   // true=HIGH, false=NORMAL
+
   private:
+
+    void                    ApplyPriorityToThreads          ();
 
   #if defined(DIO_STREAMUDP_ACTIVE)
     bool                    OpenUDP                         (XSTRING* config);
@@ -146,6 +153,7 @@ class XTRACESERVER
 
     XDWORD                  maxmessages;
     XDWORD                  droppedcount;
+    XTHREADPRIORITY         priority;
 
     XMUTEX*                 xmutexmessages;
     XVECTOR<XTRACESERVER_MSG*>  messages;

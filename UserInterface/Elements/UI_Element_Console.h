@@ -80,6 +80,10 @@ class UI_ELEMENT_CONSOLE : public UI_ELEMENT, public UI_PROPERTY_SCROLLEABLE
     XDWORD                        GetSizeFont                 ();
     void                          SetSizeFont                 (XDWORD sizefont);
 
+    // Optional catalog face (e.g. "mono"); empty = skin default + language stack.
+    XSTRING*                      GetFontFace                 ();
+    void                          SetFontFace                 (XCHAR* fontface);
+
     XDWORD                        GetLineSpacing              ();
     void                          SetLineSpacing              (XDWORD linespacing = UI_ELEMENT_CONSOLE_DEFAULT_LINESPACING);
 
@@ -106,6 +110,10 @@ class UI_ELEMENT_CONSOLE : public UI_ELEMENT, public UI_PROPERTY_SCROLLEABLE
 
     XDWORD                        GetLayoutSizeFont           ();
     void                          SetLayoutSizeFont           (XDWORD sizefont);
+
+    // Cached max line pixel width when wordwrap=false (-1 = needs remeasure).
+    double                        GetLayoutMaxLineWidth       ();
+    void                          SetLayoutMaxLineWidth       (double maxlinewidth);
 
     void                          SetLayoutMetrics            (double pad_x, double pad_y, double lineheight, double fontheight);
     double                        GetLayoutPadX               ();
@@ -156,6 +164,7 @@ class UI_ELEMENT_CONSOLE : public UI_ELEMENT, public UI_PROPERTY_SCROLLEABLE
     void                          Clean                       ();
 
     XDWORD                        sizefont;
+    XSTRING                       fontface;
     XDWORD                        linespacing;
     bool                          wordwrap;
     XDWORD                        maxlines;
@@ -166,6 +175,7 @@ class UI_ELEMENT_CONSOLE : public UI_ELEMENT, public UI_PROPERTY_SCROLLEABLE
     double                        contentwidth;
     double                        layout_maxtextwidth;        // width used for cached visualrows
     XDWORD                        layout_sizefont;            // font size used for cached visualrows
+    double                        layout_max_line_w;          // max line width (!wordwrap); -1 = dirty
     double                        layout_pad_x;
     double                        layout_pad_y;
     double                        layout_lineheight;

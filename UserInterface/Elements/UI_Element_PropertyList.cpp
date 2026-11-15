@@ -35,6 +35,9 @@
 #include "UI_Element_PropertyList.h"
 #include "UI_Layout.h"
 
+#include "XFactory.h"
+#include "XTimer.h"
+
 /*---- PRECOMPILATION INCLUDES ---------------------------------------------------------------------------------------*/
 
 #include "GEN_Control.h"
@@ -52,7 +55,33 @@ UI_ELEMENT_PROPERTYLIST_ROW::UI_ELEMENT_PROPERTYLIST_ROW()
 
 UI_ELEMENT_PROPERTYLIST_ROW::~UI_ELEMENT_PROPERTYLIST_ROW()
 {
+  if(xtimer_changed)
+    {
+      GEN_XFACTORY.DeleteTimer(xtimer_changed);
+      xtimer_changed = NULL;
+    }
+
   Clean();
+}
+
+
+bool UI_ELEMENT_PROPERTYLIST_ROW::MarkChanged()
+{
+  if(!xtimer_changed)
+    {
+      xtimer_changed = GEN_XFACTORY.CreateTimer();
+      if(!xtimer_changed) return false;
+    }
+
+  xtimer_changed->Reset();
+  return true;
+}
+
+
+bool UI_ELEMENT_PROPERTYLIST_ROW::IsChangedWithinSeconds(XQWORD seconds)
+{
+  if(!xtimer_changed) return false;
+  return (xtimer_changed->GetMeasureSeconds() <= seconds);
 }
 
 
@@ -60,6 +89,7 @@ void UI_ELEMENT_PROPERTYLIST_ROW::Clean()
 {
   name.Empty();
   value.Empty();
+  xtimer_changed = NULL;
 }
 
 
@@ -169,13 +199,14 @@ bool UI_ELEMENT_PROPERTYLIST::Clear()
 }
 
 
-bool UI_ELEMENT_PROPERTYLIST::Add(XCHAR* name, XCHAR* value)
+bool UI_ELEMENT_PROPERTYLIST::Add(XCHAR* name, XCHAR* value, bool markchanged)
 {
   UI_ELEMENT_PROPERTYLIST_ROW* row = GEN_NEW UI_ELEMENT_PROPERTYLIST_ROW();
   if(!row) return false;
 
   if(name)  row->name.Set(name);
   if(value) row->value.Set(value);
+  if(markchanged) row->MarkChanged();
 
   rows.Add(row);
 
@@ -185,7 +216,7 @@ bool UI_ELEMENT_PROPERTYLIST::Add(XCHAR* name, XCHAR* value)
 }
 
 
-bool UI_ELEMENT_PROPERTYLIST::SetValue(XCHAR* name, XCHAR* value)
+bool UI_ELEMENT_PROPERTYLIST::SetValue(XCHAR* name, XCHAR* value, bool markchanged)
 {
   if(!name) return false;
 
@@ -199,12 +230,26 @@ bool UI_ELEMENT_PROPERTYLIST::SetValue(XCHAR* name, XCHAR* value)
           if(value) row->value.Set(value);
            else     row->value.Empty();
 
+          if(markchanged) row->MarkChanged();
+
           SetMustReDraw(true);
           return true;
         }
     }
 
-  return Add(name, value);
+  return Add(name, value, markchanged);
+}
+
+
+bool UI_ELEMENT_PROPERTYLIST::HasChangedHighlight(XQWORD seconds)
+{
+  for(XDWORD c=0; c<rows.GetSize(); c++)
+    {
+      UI_ELEMENT_PROPERTYLIST_ROW* row = rows.Get(c);
+      if(row && row->IsChangedWithinSeconds(seconds)) return true;
+    }
+
+  return false;
 }
 
 

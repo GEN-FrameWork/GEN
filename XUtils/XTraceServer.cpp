@@ -191,6 +191,8 @@ XTRACESERVER::XTRACESERVER()
       xthreadreadUART->Ini(false);
     }
 #endif
+
+  ApplyPriorityToThreads();
 }
 
 
@@ -713,8 +715,8 @@ bool XTRACESERVER::OpenUDP(XSTRING* config)
   diostreamudpcfg->SetMode(DIOSTREAMMODE_SERVER);
   diostreamudpcfg->SetIsUsedDatagrams(true);
   diostreamudpcfg->SetSizeBufferSO(10000*1024);
-  diostreamudpcfg->SetThreadPriority(XTHREADPRIORITY_REALTIME);
-  diostreamudpcfg->SetThreadWaitYield(0);
+  diostreamudpcfg->SetThreadPriority(priority);
+  diostreamudpcfg->SetThreadWaitYield((priority >= XTHREADPRIORITY_HIGH) ? 0 : XTHREAD_DEFAULTWAITYIELD);
 
   diostreamudp = (DIOSTREAMUDP*)GEN_DIOFACTORY.CreateStreamIO(diostreamudpcfg);
   if(diostreamudp)
@@ -809,6 +811,9 @@ bool XTRACESERVER::OpenUART(XSTRING* config)
       CloseUART();
       return false;
     }
+
+  diostreamuartcfg->SetThreadPriority(priority);
+  diostreamuartcfg->SetThreadWaitYield((priority >= XTHREADPRIORITY_HIGH) ? 0 : XTHREAD_DEFAULTWAITYIELD);
 
   diostreamuart = (DIOSTREAMUART*)GEN_DIOFACTORY.CreateStreamIO(diostreamuartcfg);
   if(diostreamuart)
@@ -1079,10 +1084,71 @@ void XTRACESERVER::ThreadReadUARTFunction(void* param)
 * @ingroup    XUTILS
 * 
 * --------------------------------------------------------------------------------------------------------------------*/
+/**-------------------------------------------------------------------------------------------------------------------
+*
+* @fn         XTHREADPRIORITY XTRACESERVER::GetPriority()
+* @brief      Priority used for parse threads and DIO stream threads.
+* @ingroup    XUTILS
+*
+*---------------------------------------------------------------------------------------------------------------------*/
+XTHREADPRIORITY XTRACESERVER::GetPriority()
+{
+  return priority;
+}
+
+
+/**-------------------------------------------------------------------------------------------------------------------
+*
+* @fn         void XTRACESERVER::SetPriority(XTHREADPRIORITY priority)
+* @brief      Sets parse/stream thread priority (applied immediately to live threads; streams on next Open).
+* @ingroup    XUTILS
+*
+*---------------------------------------------------------------------------------------------------------------------*/
+void XTRACESERVER::SetPriority(XTHREADPRIORITY priority)
+{
+  if(priority == XTHREADPRIORITY_UNKNOWN) priority = XTHREADPRIORITY_NORMAL;
+  this->priority = priority;
+  ApplyPriorityToThreads();
+}
+
+
+/**-------------------------------------------------------------------------------------------------------------------
+*
+* @fn         void XTRACESERVER::SetHighPriority(bool enable)
+* @brief      Convenience: HIGH when enable, otherwise NORMAL.
+* @ingroup    XUTILS
+*
+*---------------------------------------------------------------------------------------------------------------------*/
+void XTRACESERVER::SetHighPriority(bool enable)
+{
+  SetPriority(enable ? XTHREADPRIORITY_HIGH : XTHREADPRIORITY_NORMAL);
+}
+
+
+/**-------------------------------------------------------------------------------------------------------------------
+*
+* @fn         void XTRACESERVER::ApplyPriorityToThreads()
+* @brief      Pushes stored priority onto the UDP/UART packet parse threads.
+* @ingroup    XUTILS
+*
+*---------------------------------------------------------------------------------------------------------------------*/
+void XTRACESERVER::ApplyPriorityToThreads()
+{
+#if defined(DIO_STREAMUDP_ACTIVE)
+  if(xthreadreadUDP) xthreadreadUDP->SetPriority(priority);
+#endif
+
+#if defined(DIO_STREAMUART_ACTIVE)
+  if(xthreadreadUART) xthreadreadUART->SetPriority(priority);
+#endif
+}
+
+
 void XTRACESERVER::Clean()
 {
   maxmessages       = XTRACESERVER_DEFAULT_MAXMESSAGES;
   droppedcount      = 0;
+  priority          = XTHREADPRIORITY_REALTIME;
   xmutexmessages    = NULL;
 
 #if defined(DIO_STREAMUDP_ACTIVE)
