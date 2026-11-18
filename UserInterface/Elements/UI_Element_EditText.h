@@ -39,6 +39,7 @@
 
 #define UI_ELEMENT_EDITTEXT_DEFAULTCUSORTIMEBLINK  500
 #define UI_ELEMENT_EDITTEXT_SPIN_WIDTH             26.0
+#define UI_ELEMENT_EDITTEXT_PASSWORD_MASK_LEN      8     // fixed '*' count so display does not leak length
 
 enum UI_ELEMENT_EDITTEXT_INPUTMODE
 {
@@ -84,6 +85,10 @@ class UI_ELEMENT_EDITTEXT : public UI_ELEMENT_TEXT, public UI_PROPERTY_SELECTABL
     bool                              StepNumericValue            (int direction);
     bool                              BuildDisplayText            (XSTRING& display);
 
+    // Horizontal view offset (typically <= 0): scrolls long text without a scrollbar UI.
+    double                            GetViewOffsetX              ();
+    void                              SetViewOffsetX              (double offset);
+
     virtual double                    GetSpinWidth                ();
     // Returns 1 = up (+), -1 = down (-), 0 = not in spin zone. Coords are absolute design space.
     virtual int                       HitTestSpin                 (int design_x, int design_y);
@@ -102,6 +107,7 @@ class UI_ELEMENT_EDITTEXT : public UI_ELEMENT_TEXT, public UI_PROPERTY_SELECTABL
     int                               valuemin;
     int                               valuemax;
     int                               valuestep;
+    double                            view_offset_x;
           
 };
 

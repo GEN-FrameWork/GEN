@@ -61,7 +61,9 @@ enum DIODYNDNS_STATUSCODE
   DIODYNDNS_STATUSCODE_911                ,   // "911"          There is a serious problem on our side, such as a database or DNS server failure. The client should stop updating until notified via the status page that the service is back up.
 };
 
-#define DIODYNDNS_DEFAULTTIMEOUT  10
+#define DIODYNDNS_DEFAULTTIMEOUT          10
+#define DIODYNDNS_UPDATE_MAX_ATTEMPTS     3     // connect retries on NOTCONNECT (DynDNS rate-limits / drops)
+#define DIODYNDNS_UPDATE_RETRY_DELAY_MS  750
 
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
 

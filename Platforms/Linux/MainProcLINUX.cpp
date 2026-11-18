@@ -76,6 +76,10 @@
 #include "XLINUXProcessManager.h"
 #endif
 
+#ifdef XCLIPBOARD_ACTIVE
+#include "XLINUXClipboard.h"
+#endif
+
 #ifdef XSHAREDMEMORYMANAGER_ACTIVE
 #include "XLINUXSharedMemoryManager.h"
 #endif
@@ -298,6 +302,13 @@ bool MAINPROCLINUX::Update()
   GEN_INPMANAGER.Update();
   #endif
 
+  #ifdef XCLIPBOARD_ACTIVE
+  if(XCLIPBOARD::GetIsInstanced())
+    {
+      GEN_XCLIPBOARD.Update();
+    }
+  #endif
+
   #if defined(GRP_ACTIVE) && defined(GRP_SCREEN_CUSTOMCHROMES_ACTIVE)
   // Custom-chrome caption drag, ticked HERE -- right after the input devices have been read -- and not only
   // from GRPSCREEN::UpdateViewports(), which the application calls after its own DrawFrame(). That ordering
@@ -430,6 +441,13 @@ bool MAINPROCLINUX::Factorys_Ini()
 
   #ifdef XSLEEP_ACTIVE
   if(!XSLEEP::SetInstance(GEN_NEW XLINUXSLEEP())) 
+    {
+      return false;
+    }
+  #endif
+
+  #ifdef XCLIPBOARD_ACTIVE
+  if(!XCLIPBOARD::SetInstance(GEN_NEW XLINUXCLIPBOARD()))
     {
       return false;
     }
@@ -644,6 +662,10 @@ bool MAINPROCLINUX::Factorys_End()
 
   XTRANSLATION::DelInstance();
   XTRANSLATION_GEN::DelInstance();
+
+  #ifdef XCLIPBOARD_ACTIVE
+  XCLIPBOARD::DelInstance();
+  #endif
 
   #ifdef XSLEEP_ACTIVE
   XSLEEP::DelInstance();

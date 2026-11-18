@@ -36,6 +36,9 @@
 
 #include "GRPBitmapFilePNG.h"
 
+#include <stdio.h>
+#include <string.h>
+
 #include "GRPFactory.h"
 #include "GRPBitmap.h"
 
@@ -117,6 +120,9 @@ GRPBITMAP* GRPBITMAPFILEPNG::CreateBitmapFromFile(XPATH& xpath, GRPPROPERTYMODE 
           png = png_create_read_struct(PNG_LIBPNG_VER_STRING, NULL, NULL, NULL);
           if(png)
             {
+              // Keep default fatal errors; filter noisy benign iCCP/sRGB profile warnings.
+              png_set_error_fn(png, NULL, NULL, GRPBITMAPFILEPNG::WarningHandler);
+
               info = png_create_info_struct(png);
               if(info)
                 {
@@ -252,6 +258,9 @@ GRPBITMAP* GRPBITMAPFILEPNG::CreateBitmapFromBuffer(XBYTE* buffer, XDWORD size, 
       png = png_create_read_struct(PNG_LIBPNG_VER_STRING, NULL, NULL, NULL);
       if(png)
         {
+          // Keep default fatal errors; filter noisy benign iCCP/sRGB profile warnings.
+          png_set_error_fn(png, NULL, NULL, GRPBITMAPFILEPNG::WarningHandler);
+
           info = png_create_info_struct(png);
           if(info)
             {
@@ -373,6 +382,9 @@ bool GRPBITMAPFILEPNG::CreateFileFromBitmap(XPATH& xpath, GRPBITMAP* bitmap, int
   png = png_create_write_struct(PNG_LIBPNG_VER_STRING, NULL, NULL, NULL);
   if(png)
     {
+      // Keep default fatal errors; filter noisy benign iCCP/sRGB profile warnings.
+      png_set_error_fn(png, NULL, NULL, GRPBITMAPFILEPNG::WarningHandler);
+
       info = png_create_info_struct(png);
       if(info)
         {
@@ -508,6 +520,32 @@ void GRPBITMAPFILEPNG::BufferData_SetIndex(XDWORD index)
 XDWORD GRPBITMAPFILEPNG::BufferData_GetSize()
 {
   return bufferdatasize;
+}
+
+
+/**-------------------------------------------------------------------------------------------------------------------
+*
+* @fn         void GRPBITMAPFILEPNG::WarningHandler(png_structp png, png_const_charp message)
+* @brief      libpng warning callback (silences known-benign iCCP/sRGB profile noise)
+* @note       STATIC
+* @ingroup    GRAPHIC
+*
+* @param[in]  png : libpng struct (unused).
+* @param[in]  message : Warning text from libpng.
+*
+* --------------------------------------------------------------------------------------------------------------------*/
+void GRPBITMAPFILEPNG::WarningHandler(png_structp png, png_const_charp message)
+{
+  (void)png;
+
+  if(message)
+    {
+      // libpng 1.6+: PNGs with the old HP/MS sRGB iCCP chunk are still readable.
+      if(strstr(message, "iCCP") && strstr(message, "sRGB")) return;
+      if(strstr(message, "known incorrect sRGB profile")) return;
+    }
+
+  fprintf(stderr, "libpng warning: %s\n", message ? message : "");
 }
 
 

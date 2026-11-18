@@ -58,6 +58,20 @@
 /** XML attr on text carriers: translate="false" keeps body literal (default/absent = true). */
 #define UI_MANAGER_LAYOUT_ATTR_TRANSLATE    NL("translate")
 
+// EditText hardware key-repeat (Windows-like): first fire immediate, then after delay, then interval.
+#define UI_MANAGER_EDITTEXT_REPEAT_DELAY_MS     400
+#define UI_MANAGER_EDITTEXT_REPEAT_INTERVAL_MS   40
+#define UI_MANAGER_EDITTEXT_MULTICLICK_MS       450
+#define UI_MANAGER_EDITTEXT_MULTICLICK_SLOP_PX   6
+#define UI_MANAGER_EDITTEXT_AUTOSCROLL_PX       10.0
+
+enum UI_MANAGER_EDITTEXT_SEL_GRANULARITY
+{
+  UI_MANAGER_EDITTEXT_SEL_GRANULARITY_CHAR = 0 ,
+  UI_MANAGER_EDITTEXT_SEL_GRANULARITY_WORD     ,
+  UI_MANAGER_EDITTEXT_SEL_GRANULARITY_ALL
+};
+
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
 
 class GRPSCREEN;
@@ -65,6 +79,9 @@ class GRPCONTEXT;
 class GRP2DCANVAS;
 class GRPBITMAP;
 class INPCURSORMOTION;
+class INPBUTTON;
+class XTIMER;
+class XSTRING;
 class UI_ANIMATION;
 class UI_ELEMENT_TEXT;
 class UI_ELEMENT_FORM;
@@ -215,6 +232,11 @@ class UI_MANAGER : public XOBSERVER, public XSUBJECT
     // element selection / content swipe / other drags for that gesture.
     bool                            ScrollBar_OnPointer                       (int screen_x, int screen_y, bool pressed);
     bool                            ScrollBar_IsDragging                      ();
+    UI_ELEMENT*                     ScrollBar_GetDragElement                  ();
+
+    // EditText caret/selection drag. Same contract as ScrollBar_OnPointer: call each input tick
+    // with framebuffer (top-down) pointer coords. Returns true while an EditText owns the gesture.
+    bool                            EditText_OnPointer                        (int screen_x, int screen_y, bool pressed);
 
     // Hardware EditText focus (when no virtual keyboard is active).
     bool                            EditText_HasFocus                         ();
@@ -304,8 +326,26 @@ class UI_MANAGER : public XOBSERVER, public XSUBJECT
 
     bool                            EditText_SetFocus                         (UI_ELEMENT_EDITTEXT* edit);
     bool                            EditText_UpdateHardwareInput              ();
+    bool                            EditText_UpdateMouseSelection             ();
+    XDWORD                          EditText_GetUIScreenHeight                ();
+    UI_LAYOUT*                      EditText_ResolveLayout                    (UI_ELEMENT* element);
     bool                            EditText_InsertChar                       (UI_ELEMENT_EDITTEXT* edit, XCHAR character);
+    bool                            EditText_DeleteSelection                  (UI_ELEMENT_EDITTEXT* edit);
+    bool                            EditText_ClipboardCopy                    (UI_ELEMENT_EDITTEXT* edit);
+    bool                            EditText_ClipboardPaste                   (UI_ELEMENT_EDITTEXT* edit);
+    bool                            EditText_ClipboardCut                     (UI_ELEMENT_EDITTEXT* edit);
+    XDWORD                          EditText_CaretIndexFromDesignX            (UI_ELEMENT_EDITTEXT* edit, int design_x);
+    bool                            EditText_IsWordChar                       (XCHAR ch);
+    XDWORD                          EditText_WordBoundaryLeft                 (XSTRING* text, XDWORD index);
+    XDWORD                          EditText_WordBoundaryRight                (XSTRING* text, XDWORD index);
+    XDWORD                          EditText_WordJumpLeft                     (XSTRING* text, XDWORD index);
+    XDWORD                          EditText_WordJumpRight                    (XSTRING* text, XDWORD index);
+    void                            EditText_SelectWordAt                     (UI_ELEMENT_EDITTEXT* edit, XDWORD index);
+    bool                            EditText_ApplyDragSelection               (UI_ELEMENT_EDITTEXT* edit, int design_x);
     bool                            EditText_NotifyChanged                    (UI_ELEMENT_EDITTEXT* edit);
+    bool                            EditText_RepeatShouldFire                 (INPBUTTON* button, int button_id);
+    void                            EditText_RepeatReset                      ();
+    void                            EditText_SelectionDragEnd                 ();
 
     bool                            UseMotionInElement                        (UI_ELEMENT* element, INPCURSORMOTION* cursormotion);
     bool                            UseMotion                                 (INPCURSORMOTION* cursormotion);
@@ -397,6 +437,19 @@ class UI_MANAGER : public XOBSERVER, public XSUBJECT
 
     UI_VIRTUALKEYBOARD*             virtualkeyboard;
     UI_ELEMENT_EDITTEXT*            element_editfocus;
+    int                             edittext_repeat_id;       // INPBUTTON_ID currently repeating (or NOBUTTON)
+    XQWORD                          edittext_repeat_next_ms;  // next fire threshold vs button GetTimePressed()
+    bool                            edittext_sel_dragging;
+    bool                            edittext_sel_drag_moved;
+    bool                            edittext_sel_prevpressed;
+    bool                            edittext_sel_click_owned;   // OnPointer already placed caret/selection this press
+    int                             edittext_sel_granularity;  // UI_MANAGER_EDITTEXT_SEL_GRANULARITY_*
+    XDWORD                          edittext_sel_drag_origin;  // caret index at press (word-drag base)
+    int                             edittext_click_count;
+    int                             edittext_click_x;
+    int                             edittext_click_y;
+    UI_ELEMENT_EDITTEXT*            edittext_click_edit;
+    XTIMER*                         edittext_click_timer;
 
     XDWORD                          layout_translate_language;
 };

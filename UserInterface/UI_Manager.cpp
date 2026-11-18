@@ -54,6 +54,10 @@
 #include "XLanguage_ISO_639_3.h"
 #include "XSleep.h"
 
+#ifdef XCLIPBOARD_ACTIVE
+#include "XClipboard.h"
+#endif
+
 #include "INPCursorMotion.h"
 #include "INPManager.h"
 #include "INPDevice.h"
@@ -1304,6 +1308,7 @@ bool UI_MANAGER::Update()
 
   // Hardware EditText focus: route keys when no virtual keyboard owns the field.
   EditText_UpdateHardwareInput();
+  EditText_UpdateMouseSelection();
 
   // Re-apply #[TRANSLATE_N] only when the active language changes (not every frame, not via the app).
   if(GEN_XTRANSLATION.IsInitialized())
@@ -4840,6 +4845,12 @@ UI_MANAGER::~UI_MANAGER()
     {
       GEN_XFACTORY.Delete_Mutex(xmutex_UIevent);
       xmutex_UIevent = NULL;
+    }
+
+  if(edittext_click_timer)
+    {
+      GEN_XFACTORY.DeleteTimer(edittext_click_timer);
+      edittext_click_timer = NULL;
     }
 
   Clean();
@@ -9569,7 +9580,24 @@ bool UI_MANAGER::SelectedElement(UI_ELEMENT* element)
         }
        else
         {
+          // Mouse OnPointer already owned this press (click and/or drag). Do not reset caret.
+          const bool gesture = edittext_sel_dragging || edittext_sel_drag_moved || edittext_sel_click_owned;
           EditText_SetFocus(edit);
+          if(gesture)
+            {
+              edittext_sel_drag_moved  = false;
+              edittext_sel_click_owned = false;
+            }
+           else
+            {
+              // Click without a prior OnPointer capture: place caret under the pointer.
+              XDWORD idx = EditText_CaretIndexFromDesignX(edit, hx);
+              edit->Cursor_SetPosition(idx);
+              edit->Selection_Clear();
+              if(edit->Cursor_GetXTimerBlink()) edit->Cursor_GetXTimerBlink()->Reset();
+              Elements_SetToRedraw(edit);
+              if(element_modal) ModalLayer_Invalidate();
+            }
         }
     }
    else if(element_editfocus)
@@ -9744,11 +9772,16 @@ bool UI_MANAGER::EditText_ClearFocus(bool sanitize)
 
   UI_ELEMENT_EDITTEXT* edit = element_editfocus;
   element_editfocus = NULL;
+  EditText_RepeatReset();
 
   if(sanitize) edit->SanitizeTextToMode();
 
+  EditText_SelectionDragEnd();
+
   edit->Cursor_SetVisible(false);
   edit->SetSelected(false);
+  edit->Selection_Clear();
+  edit->SetViewOffsetX(0.0);
   Elements_SetToRedraw(edit);
   if(element_modal) ModalLayer_Invalidate();
   SendEvent(UI_XEVENT_TYPE_OUTPUT_CHANGECONTENTS, edit);
@@ -9772,17 +9805,26 @@ bool UI_MANAGER::EditText_SetFocus(UI_ELEMENT_EDITTEXT* edit)
 {
   if(!edit) return false;
 
+  const bool already = (element_editfocus == edit);
+
   if(element_editfocus && (element_editfocus != edit))
     {
       EditText_ClearFocus(true);
     }
 
   element_editfocus = edit;
+  EditText_RepeatReset();
 
   edit->SetTimeSelected(0);
   edit->SetSelected(true);
   edit->Cursor_SetVisible(true);
-  edit->Cursor_SetPosition(edit->GetText() ? edit->GetText()->GetSize() : 0);
+
+  // First focus: caret at end. Re-focus / mouse gestures keep the caller's caret/selection.
+  if(!already)
+    {
+      edit->Cursor_SetPosition(edit->GetText() ? edit->GetText()->GetSize() : 0);
+      edit->Selection_Clear();
+    }
 
   if(edit->Cursor_GetXTimerBlink()) edit->Cursor_GetXTimerBlink()->Reset();
   if(!edit->Cursor_GetStateBlink()) edit->Cursor_ChangeStateBlink();
@@ -9791,6 +9833,70 @@ bool UI_MANAGER::EditText_SetFocus(UI_ELEMENT_EDITTEXT* edit)
   if(element_modal) ModalLayer_Invalidate();
 
   return true;
+}
+
+
+/**-------------------------------------------------------------------------------------------------------------------
+*
+* @fn         void UI_MANAGER::EditText_RepeatReset()
+* @brief      Clears EditText key-repeat tracking.
+* @ingroup    USERINTERFACE
+*
+*---------------------------------------------------------------------------------------------------------------------*/
+void UI_MANAGER::EditText_RepeatReset()
+{
+  edittext_repeat_id      = (int)INPBUTTON_ID_NOBUTTON;
+  edittext_repeat_next_ms = 0;
+}
+
+
+/**-------------------------------------------------------------------------------------------------------------------
+*
+* @fn         bool UI_MANAGER::EditText_RepeatShouldFire(INPBUTTON* button, int button_id)
+* @brief      True on initial key-down and on each subsequent repeat while held.
+* @ingroup    USERINTERFACE
+*
+*---------------------------------------------------------------------------------------------------------------------*/
+bool UI_MANAGER::EditText_RepeatShouldFire(INPBUTTON* button, int button_id)
+{
+  if(!button) return false;
+
+  if(button->GetState() == INPBUTTON_STATE_PRESSED)
+    {
+      edittext_repeat_id      = button_id;
+      edittext_repeat_next_ms = (XQWORD)UI_MANAGER_EDITTEXT_REPEAT_DELAY_MS;
+      return true;
+    }
+
+  if(button->IsPressed() && (button->GetState() == INPBUTTON_STATE_HOLD))
+    {
+      XQWORD held = button->GetTimePressed();
+
+      // Missed PRESSED (e.g. GetAsyncKeyState toggle already cleared): first fire while idle.
+      if(edittext_repeat_id == (int)INPBUTTON_ID_NOBUTTON)
+        {
+          edittext_repeat_id      = button_id;
+          edittext_repeat_next_ms = (XQWORD)UI_MANAGER_EDITTEXT_REPEAT_DELAY_MS;
+          return true;
+        }
+
+      if(edittext_repeat_id != button_id) return false;
+
+      if(held >= edittext_repeat_next_ms)
+        {
+          edittext_repeat_next_ms = held + (XQWORD)UI_MANAGER_EDITTEXT_REPEAT_INTERVAL_MS;
+          return true;
+        }
+
+      return false;
+    }
+
+  if(!button->IsPressed() && (edittext_repeat_id == button_id))
+    {
+      EditText_RepeatReset();
+    }
+
+  return false;
 }
 
 
@@ -9834,6 +9940,11 @@ bool UI_MANAGER::EditText_InsertChar(UI_ELEMENT_EDITTEXT* edit, XCHAR character)
   if(!edit || !edit->GetText()) return false;
   if(!edit->IsCharAllowed(character)) return false;
 
+  if(edit->Selection_Has())
+    {
+      EditText_DeleteSelection(edit);
+    }
+
   XDWORD maxsizetext  = edit->GetMaxSizeText();
   XDWORD position     = edit->Cursor_GetPosition();
   XDWORD textsizetext = edit->GetText()->GetSize();
@@ -9844,11 +9955,161 @@ bool UI_MANAGER::EditText_InsertChar(UI_ELEMENT_EDITTEXT* edit, XCHAR character)
   keystr.Add(character);
   edit->GetText()->Insert(keystr, position);
   edit->Cursor_SetPosition(position + 1);
+  edit->Selection_Clear();
 
   if(edit->Cursor_GetXTimerBlink()) edit->Cursor_GetXTimerBlink()->Reset();
   if(!edit->Cursor_GetStateBlink()) edit->Cursor_ChangeStateBlink();
 
   return true;
+}
+
+
+/**-------------------------------------------------------------------------------------------------------------------
+*
+* @fn         bool UI_MANAGER::EditText_DeleteSelection(UI_ELEMENT_EDITTEXT* edit)
+* @brief      Delete the current text selection (if any)
+* @ingroup    USERINTERFACE
+*
+* @param[in]  edit : Target EditText.
+*
+* @return     bool : true if characters were deleted.
+*
+*---------------------------------------------------------------------------------------------------------------------*/
+bool UI_MANAGER::EditText_DeleteSelection(UI_ELEMENT_EDITTEXT* edit)
+{
+  if(!edit || !edit->GetText()) return false;
+  if(!edit->Selection_Delete(edit->GetText())) return false;
+
+  if(edit->Cursor_GetXTimerBlink()) edit->Cursor_GetXTimerBlink()->Reset();
+  if(!edit->Cursor_GetStateBlink()) edit->Cursor_ChangeStateBlink();
+  return true;
+}
+
+
+/**-------------------------------------------------------------------------------------------------------------------
+*
+* @fn         bool UI_MANAGER::EditText_ClipboardCopy(UI_ELEMENT_EDITTEXT* edit)
+* @brief      Copy selection (or whole field if none) to the system clipboard
+* @ingroup    USERINTERFACE
+*
+* @param[in]  edit : Target EditText.
+*
+* @return     bool : true if the operation is successful; otherwise false.
+*
+*---------------------------------------------------------------------------------------------------------------------*/
+bool UI_MANAGER::EditText_ClipboardCopy(UI_ELEMENT_EDITTEXT* edit)
+{
+#ifndef XCLIPBOARD_ACTIVE
+  (void)edit;
+  return false;
+#else
+  if(!edit || !edit->GetText()) return false;
+  if(!XCLIPBOARD::GetIsInstanced()) return false;
+
+  XSTRING out;
+  if(edit->Selection_GetText(edit->GetText(), out))
+    {
+      return GEN_XCLIPBOARD.SetText(out);
+    }
+
+  return GEN_XCLIPBOARD.SetText(*edit->GetText());
+#endif
+}
+
+
+/**-------------------------------------------------------------------------------------------------------------------
+*
+* @fn         bool UI_MANAGER::EditText_ClipboardPaste(UI_ELEMENT_EDITTEXT* edit)
+* @brief      Paste system clipboard text at the EditText caret (replaces selection)
+* @ingroup    USERINTERFACE
+*
+* @param[in]  edit : Target EditText.
+*
+* @return     bool : true if at least one character was inserted; otherwise false.
+*
+*---------------------------------------------------------------------------------------------------------------------*/
+bool UI_MANAGER::EditText_ClipboardPaste(UI_ELEMENT_EDITTEXT* edit)
+{
+#ifndef XCLIPBOARD_ACTIVE
+  (void)edit;
+  return false;
+#else
+  if(!edit || !edit->GetText()) return false;
+  if(!XCLIPBOARD::GetIsInstanced()) return false;
+
+  XSTRING clip;
+  if(!GEN_XCLIPBOARD.GetText(clip)) return false;
+  if(clip.IsEmpty()) return false;
+
+  if(edit->Selection_Has())
+    {
+      EditText_DeleteSelection(edit);
+    }
+
+  bool changed = false;
+  for(XDWORD i=0; i<clip.GetSize(); i++)
+    {
+      XCHAR ch = clip.Get()[i];
+      if(ch < 32) continue;
+      if(EditText_InsertChar(edit, ch)) changed = true;
+    }
+
+  if(changed)
+    {
+      EditText_NotifyChanged(edit);
+    }
+
+  return changed;
+#endif
+}
+
+
+/**-------------------------------------------------------------------------------------------------------------------
+*
+* @fn         bool UI_MANAGER::EditText_ClipboardCut(UI_ELEMENT_EDITTEXT* edit)
+* @brief      Cut selection (or whole field if none)
+* @ingroup    USERINTERFACE
+*
+* @param[in]  edit : Target EditText.
+*
+* @return     bool : true if the text changed; otherwise false.
+*
+*---------------------------------------------------------------------------------------------------------------------*/
+bool UI_MANAGER::EditText_ClipboardCut(UI_ELEMENT_EDITTEXT* edit)
+{
+#ifndef XCLIPBOARD_ACTIVE
+  (void)edit;
+  return false;
+#else
+  if(!edit || !edit->GetText()) return false;
+  if(!XCLIPBOARD::GetIsInstanced()) return false;
+
+  if(!EditText_ClipboardCopy(edit)) return false;
+
+  if(edit->Selection_Has())
+    {
+      if(!EditText_DeleteSelection(edit)) return false;
+      EditText_NotifyChanged(edit);
+      return true;
+    }
+
+  if(edit->GetText()->IsEmpty())
+    {
+      edit->Cursor_SetPosition(0);
+      edit->Selection_Clear();
+      return true;
+    }
+
+  edit->GetText()->Empty();
+  edit->Cursor_SetPosition(0);
+  edit->Selection_Clear();
+
+  if(edit->Cursor_GetXTimerBlink()) edit->Cursor_GetXTimerBlink()->Reset();
+  if(!edit->Cursor_GetStateBlink()) edit->Cursor_ChangeStateBlink();
+
+  EditText_NotifyChanged(edit);
+  return true;
+#endif
 }
 
 
@@ -9887,37 +10148,126 @@ bool UI_MANAGER::EditText_UpdateHardwareInput()
       return true;
     }
 
-  INPBUTTON* btn_back = keyboard->GetButton(INPBUTTON_ID_BACK_SPACE);
-  if(btn_back && btn_back->IsPressedWithRelease())
+  INPBUTTON* ctrl_l  = keyboard->GetButton(INPBUTTON_ID_CONTROL_LEFT);
+  INPBUTTON* ctrl_r  = keyboard->GetButton(INPBUTTON_ID_CONTROL_RIGHT);
+  INPBUTTON* shift_l = keyboard->GetButton(INPBUTTON_ID_SHIFT_LEFT);
+  INPBUTTON* shift_r = keyboard->GetButton(INPBUTTON_ID_SHIFT_RIGHT);
+  const bool ctrl    = (ctrl_l && ctrl_l->IsPressed()) || (ctrl_r && ctrl_r->IsPressed());
+  const bool shift   = (shift_l && shift_l->IsPressed()) || (shift_r && shift_r->IsPressed());
+
+  if(ctrl)
     {
-      XDWORD position = edit->Cursor_GetPosition();
-      if(position)
+      INPBUTTON* btn_a = keyboard->GetButton(INPBUTTON_ID_A);
+      INPBUTTON* btn_c = keyboard->GetButton(INPBUTTON_ID_C);
+      INPBUTTON* btn_v = keyboard->GetButton(INPBUTTON_ID_V);
+      INPBUTTON* btn_x = keyboard->GetButton(INPBUTTON_ID_X);
+
+      if(btn_a && btn_a->IsPressedWithRelease())
         {
-          edit->GetText()->DeleteCharacters(position - 1, 1);
-          edit->Cursor_SetPosition(position - 1);
-          EditText_NotifyChanged(edit);
+          EditText_RepeatReset();
+          edit->Selection_SelectAll(edit->GetText() ? edit->GetText()->GetSize() : 0);
+          Elements_SetToRedraw(edit);
+          if(element_modal) ModalLayer_Invalidate();
+          return true;
+        }
+
+      if(btn_c && btn_c->IsPressedWithRelease())
+        {
+          EditText_RepeatReset();
+          EditText_ClipboardCopy(edit);
+          return true;
+        }
+
+      if(btn_v && btn_v->IsPressedWithRelease())
+        {
+          EditText_RepeatReset();
+          EditText_ClipboardPaste(edit);
+          return true;
+        }
+
+      if(btn_x && btn_x->IsPressedWithRelease())
+        {
+          EditText_RepeatReset();
+          EditText_ClipboardCut(edit);
+          return true;
+        }
+    }
+
+  INPBUTTON* btn_back = keyboard->GetButton(INPBUTTON_ID_BACK_SPACE);
+  if(btn_back && EditText_RepeatShouldFire(btn_back, (int)INPBUTTON_ID_BACK_SPACE))
+    {
+      if(edit->Selection_Has())
+        {
+          if(EditText_DeleteSelection(edit)) EditText_NotifyChanged(edit);
+        }
+       else
+        {
+          XDWORD position = edit->Cursor_GetPosition();
+          if(position)
+            {
+              edit->GetText()->DeleteCharacters(position - 1, 1);
+              edit->Cursor_SetPosition(position - 1);
+              edit->Selection_Clear();
+              EditText_NotifyChanged(edit);
+            }
         }
       return true;
     }
 
   INPBUTTON* btn_del = keyboard->GetButton(INPBUTTON_ID_DELETE);
-  if(btn_del && btn_del->IsPressedWithRelease())
+  if(btn_del && EditText_RepeatShouldFire(btn_del, (int)INPBUTTON_ID_DELETE))
     {
-      XDWORD position = edit->Cursor_GetPosition();
-      if(edit->GetText() && (position < edit->GetText()->GetSize()))
+      if(edit->Selection_Has())
         {
-          edit->GetText()->DeleteCharacters(position, 1);
-          EditText_NotifyChanged(edit);
+          if(EditText_DeleteSelection(edit)) EditText_NotifyChanged(edit);
+        }
+       else
+        {
+          XDWORD position = edit->Cursor_GetPosition();
+          if(edit->GetText() && (position < edit->GetText()->GetSize()))
+            {
+              edit->GetText()->DeleteCharacters(position, 1);
+              edit->Selection_Clear();
+              EditText_NotifyChanged(edit);
+            }
         }
       return true;
     }
 
   INPBUTTON* btn_left = keyboard->GetButton(INPBUTTON_ID_LEFT);
-  if(btn_left && btn_left->IsPressedWithRelease())
+  if(btn_left && EditText_RepeatShouldFire(btn_left, (int)INPBUTTON_ID_LEFT))
     {
       XDWORD position = edit->Cursor_GetPosition();
-      if(position) position--;
-      edit->Cursor_SetPosition(position);
+      if(ctrl)
+        {
+          // Without Shift, collapse first so the jump starts from the near edge.
+          if(!shift && edit->Selection_Has())
+            {
+              XDWORD start = 0;
+              XDWORD end   = 0;
+              edit->Selection_GetNormalized(start, end);
+              position = start;
+              edit->Selection_Clear();
+            }
+          position = EditText_WordJumpLeft(edit->GetText(), position);
+          edit->Cursor_SetPosition(position);
+          if(!shift) edit->Selection_Clear();
+        }
+       else if(!shift && edit->Selection_Has())
+        {
+          XDWORD start = 0;
+          XDWORD end   = 0;
+          edit->Selection_GetNormalized(start, end);
+          position = start;
+          edit->Cursor_SetPosition(position);
+          edit->Selection_Clear();
+        }
+       else
+        {
+          if(position) position--;
+          edit->Cursor_SetPosition(position);
+          if(!shift) edit->Selection_Clear();
+        }
       if(edit->Cursor_GetXTimerBlink()) edit->Cursor_GetXTimerBlink()->Reset();
       if(!edit->Cursor_GetStateBlink()) edit->Cursor_ChangeStateBlink();
       Elements_SetToRedraw(edit);
@@ -9926,13 +10276,40 @@ bool UI_MANAGER::EditText_UpdateHardwareInput()
     }
 
   INPBUTTON* btn_right = keyboard->GetButton(INPBUTTON_ID_RIGHT);
-  if(btn_right && btn_right->IsPressedWithRelease())
+  if(btn_right && EditText_RepeatShouldFire(btn_right, (int)INPBUTTON_ID_RIGHT))
     {
-      XDWORD position = edit->Cursor_GetPosition();
       XDWORD size = edit->GetText() ? edit->GetText()->GetSize() : 0;
-      position++;
-      if(position > size) position = size;
-      edit->Cursor_SetPosition(position);
+      XDWORD position = edit->Cursor_GetPosition();
+      if(ctrl)
+        {
+          if(!shift && edit->Selection_Has())
+            {
+              XDWORD start = 0;
+              XDWORD end   = 0;
+              edit->Selection_GetNormalized(start, end);
+              position = end;
+              edit->Selection_Clear();
+            }
+          position = EditText_WordJumpRight(edit->GetText(), position);
+          edit->Cursor_SetPosition(position);
+          if(!shift) edit->Selection_Clear();
+        }
+       else if(!shift && edit->Selection_Has())
+        {
+          XDWORD start = 0;
+          XDWORD end   = 0;
+          edit->Selection_GetNormalized(start, end);
+          position = end;
+          edit->Cursor_SetPosition(position);
+          edit->Selection_Clear();
+        }
+       else
+        {
+          position++;
+          if(position > size) position = size;
+          edit->Cursor_SetPosition(position);
+          if(!shift) edit->Selection_Clear();
+        }
       if(edit->Cursor_GetXTimerBlink()) edit->Cursor_GetXTimerBlink()->Reset();
       if(!edit->Cursor_GetStateBlink()) edit->Cursor_ChangeStateBlink();
       Elements_SetToRedraw(edit);
@@ -9941,38 +10318,53 @@ bool UI_MANAGER::EditText_UpdateHardwareInput()
     }
 
   INPBUTTON* btn_home = keyboard->GetButton(INPBUTTON_ID_HOME);
-  if(btn_home && btn_home->IsPressedWithRelease())
+  if(btn_home && (btn_home->GetState() == INPBUTTON_STATE_PRESSED))
     {
+      EditText_RepeatReset();
       edit->Cursor_SetPosition(0);
+      if(!shift) edit->Selection_Clear();
       Elements_SetToRedraw(edit);
       if(element_modal) ModalLayer_Invalidate();
       return true;
     }
 
   INPBUTTON* btn_end = keyboard->GetButton(INPBUTTON_ID_END);
-  if(btn_end && btn_end->IsPressedWithRelease())
+  if(btn_end && (btn_end->GetState() == INPBUTTON_STATE_PRESSED))
     {
+      EditText_RepeatReset();
       edit->Cursor_SetPosition(edit->GetText() ? edit->GetText()->GetSize() : 0);
+      if(!shift) edit->Selection_Clear();
       Elements_SetToRedraw(edit);
       if(element_modal) ModalLayer_Invalidate();
       return true;
     }
 
-  // Character keys (layout-aware when available; fallback to button symbol / numpad map).
+  // Character keys: fire on key-down + auto-repeat while held (Shift still down on PRESSED).
+  // While Ctrl is held, do not insert characters (Ctrl+A/C/V/X are handled above).
+  if(ctrl) return false;
+
   for(int id = (int)INPBUTTON_ID_NOBUTTON + 1; id < (int)INPBUTTON_ID_LAST; id++)
     {
-      if((id == (int)INPBUTTON_ID_ESCAPE)     ||
-         (id == (int)INPBUTTON_ID_RETURN)     ||
-         (id == (int)INPBUTTON_ID_INTRO)      ||
-         (id == (int)INPBUTTON_ID_BACK_SPACE) ||
-         (id == (int)INPBUTTON_ID_DELETE)     ||
-         (id == (int)INPBUTTON_ID_LEFT)       ||
-         (id == (int)INPBUTTON_ID_RIGHT)      ||
-         (id == (int)INPBUTTON_ID_HOME)       ||
-         (id == (int)INPBUTTON_ID_END)        ||
-         (id == (int)INPBUTTON_ID_UP)         ||
-         (id == (int)INPBUTTON_ID_DOWN)       ||
-         (id == (int)INPBUTTON_ID_TAB)        ||
+      if((id == (int)INPBUTTON_ID_ESCAPE)       ||
+         (id == (int)INPBUTTON_ID_RETURN)       ||
+         (id == (int)INPBUTTON_ID_INTRO)        ||
+         (id == (int)INPBUTTON_ID_BACK_SPACE)   ||
+         (id == (int)INPBUTTON_ID_DELETE)       ||
+         (id == (int)INPBUTTON_ID_LEFT)         ||
+         (id == (int)INPBUTTON_ID_RIGHT)        ||
+         (id == (int)INPBUTTON_ID_HOME)         ||
+         (id == (int)INPBUTTON_ID_END)          ||
+         (id == (int)INPBUTTON_ID_UP)           ||
+         (id == (int)INPBUTTON_ID_DOWN)         ||
+         (id == (int)INPBUTTON_ID_TAB)          ||
+         (id == (int)INPBUTTON_ID_CAPS_LOCK)    ||
+         (id == (int)INPBUTTON_ID_SHIFT_LEFT)   ||
+         (id == (int)INPBUTTON_ID_SHIFT_RIGHT)  ||
+         (id == (int)INPBUTTON_ID_CONTROL_LEFT) ||
+         (id == (int)INPBUTTON_ID_CONTROL_RIGHT)||
+         (id == (int)INPBUTTON_ID_ALT_LEFT)     ||
+         (id == (int)INPBUTTON_ID_ALT_RIGHT)    ||
+         (id == (int)INPBUTTON_ID_NUMLOCK)      ||
          ((id >= (int)INPBUTTON_ID_F1) && (id <= (int)INPBUTTON_ID_F12)) ||
          ((id >= (int)INPBUTTON_ID_MOUSE_RIGHT) && (id <= (int)INPBUTTON_ID_MOUSE_MIDDLE)))
         {
@@ -9980,7 +10372,7 @@ bool UI_MANAGER::EditText_UpdateHardwareInput()
         }
 
       INPBUTTON* button = keyboard->GetButton((INPBUTTON_ID)id);
-      if(!button || !button->IsPressedWithRelease()) continue;
+      if(!button || !EditText_RepeatShouldFire(button, id)) continue;
 
       XSTRING translated;
       if(keyboard->TranslateButtonToUnicode(button, translated) && !translated.IsEmpty())
@@ -9994,6 +10386,7 @@ bool UI_MANAGER::EditText_UpdateHardwareInput()
         }
        else
         {
+          // Fallback when ToUnicode is unavailable: honour Shift for letters and '_'.
           XCHAR ch = button->GetSymbol();
           if(!ch)
             {
@@ -10002,6 +10395,20 @@ bool UI_MANAGER::EditText_UpdateHardwareInput()
                   ch = (XCHAR)(_C('0') + (id - (int)INPBUTTON_ID_NUMPAD0));
                 }
             }
+
+          INPBUTTON* shift_l = keyboard->GetButton(INPBUTTON_ID_SHIFT_LEFT);
+          INPBUTTON* shift_r = keyboard->GetButton(INPBUTTON_ID_SHIFT_RIGHT);
+          const bool shift   = (shift_l && shift_l->IsPressed()) || (shift_r && shift_r->IsPressed());
+
+          if((ch >= _C('A')) && (ch <= _C('Z')))
+            {
+              if(!shift) ch = (XCHAR)(ch - _C('A') + _C('a'));
+            }
+           else if((id == (int)INPBUTTON_ID_MINUS) && shift)
+            {
+              ch = _C('_');
+            }
+
           if(ch >= 32)
             {
               if(EditText_InsertChar(edit, ch)) consumed = true;
@@ -10016,6 +10423,558 @@ bool UI_MANAGER::EditText_UpdateHardwareInput()
     }
 
   return consumed;
+}
+
+
+/**-------------------------------------------------------------------------------------------------------------------
+*
+* @fn         void UI_MANAGER::EditText_SelectionDragEnd()
+* @brief      End an in-progress EditText mouse selection drag
+* @ingroup    USERINTERFACE
+*
+*---------------------------------------------------------------------------------------------------------------------*/
+void UI_MANAGER::EditText_SelectionDragEnd()
+{
+  edittext_sel_dragging = false;
+  edittext_sel_drag_moved = false;
+  edittext_sel_granularity = UI_MANAGER_EDITTEXT_SEL_GRANULARITY_CHAR;
+}
+
+
+/**-------------------------------------------------------------------------------------------------------------------
+*
+* @fn         bool UI_MANAGER::EditText_IsWordChar(XCHAR ch)
+* @brief      True for characters that belong to a selectable "word"
+* @ingroup    USERINTERFACE
+*
+*---------------------------------------------------------------------------------------------------------------------*/
+bool UI_MANAGER::EditText_IsWordChar(XCHAR ch)
+{
+  XSTRING probe;
+  if(probe.Character_IsAlpha(ch)) return true;
+  if(probe.Character_IsNumber(ch, true)) return true;
+  if(ch == _C('_')) return true;
+  return false;
+}
+
+
+/**-------------------------------------------------------------------------------------------------------------------
+*
+* @fn         XDWORD UI_MANAGER::EditText_WordBoundaryLeft(XSTRING* text, XDWORD index)
+* @brief      Start index of the word that contains (or precedes) index
+* @ingroup    USERINTERFACE
+*
+*---------------------------------------------------------------------------------------------------------------------*/
+XDWORD UI_MANAGER::EditText_WordBoundaryLeft(XSTRING* text, XDWORD index)
+{
+  if(!text || text->IsEmpty()) return 0;
+  XDWORD size = text->GetSize();
+  if(index > size) index = size;
+  if(index == 0) return 0;
+
+  XCHAR* raw = text->Get();
+  if(!raw) return 0;
+
+  // If sitting on a separator (or at end), walk left onto a word first.
+  XDWORD i = index;
+  if((i >= size) || !EditText_IsWordChar(raw[i]))
+    {
+      while(i > 0 && !EditText_IsWordChar(raw[i - 1])) i--;
+      if(i == 0) return 0;
+    }
+
+  while(i > 0 && EditText_IsWordChar(raw[i - 1])) i--;
+  return i;
+}
+
+
+/**-------------------------------------------------------------------------------------------------------------------
+*
+* @fn         XDWORD UI_MANAGER::EditText_WordBoundaryRight(XSTRING* text, XDWORD index)
+* @brief      End index (exclusive) of the word that contains (or follows) index
+* @ingroup    USERINTERFACE
+*
+*---------------------------------------------------------------------------------------------------------------------*/
+XDWORD UI_MANAGER::EditText_WordBoundaryRight(XSTRING* text, XDWORD index)
+{
+  if(!text || text->IsEmpty()) return 0;
+  XDWORD size = text->GetSize();
+  if(index > size) index = size;
+
+  XCHAR* raw = text->Get();
+  if(!raw) return size;
+
+  XDWORD i = index;
+  if((i < size) && !EditText_IsWordChar(raw[i]))
+    {
+      while(i < size && !EditText_IsWordChar(raw[i])) i++;
+    }
+
+  while(i < size && EditText_IsWordChar(raw[i])) i++;
+  return i;
+}
+
+
+/**-------------------------------------------------------------------------------------------------------------------
+*
+* @fn         XDWORD UI_MANAGER::EditText_WordJumpLeft(XSTRING* text, XDWORD index)
+* @brief      Ctrl+Left landing index (start of previous/current word)
+* @ingroup    USERINTERFACE
+*
+*---------------------------------------------------------------------------------------------------------------------*/
+XDWORD UI_MANAGER::EditText_WordJumpLeft(XSTRING* text, XDWORD index)
+{
+  if(!text || text->IsEmpty() || index == 0) return 0;
+  XDWORD size = text->GetSize();
+  if(index > size) index = size;
+
+  XCHAR* raw = text->Get();
+  if(!raw) return 0;
+
+  XDWORD i = index;
+  // Skip separators left of caret.
+  while(i > 0 && !EditText_IsWordChar(raw[i - 1])) i--;
+  // Skip the word itself.
+  while(i > 0 && EditText_IsWordChar(raw[i - 1])) i--;
+  return i;
+}
+
+
+/**-------------------------------------------------------------------------------------------------------------------
+*
+* @fn         XDWORD UI_MANAGER::EditText_WordJumpRight(XSTRING* text, XDWORD index)
+* @brief      Ctrl+Right landing index (start of next word)
+* @ingroup    USERINTERFACE
+*
+*---------------------------------------------------------------------------------------------------------------------*/
+XDWORD UI_MANAGER::EditText_WordJumpRight(XSTRING* text, XDWORD index)
+{
+  if(!text || text->IsEmpty()) return 0;
+  XDWORD size = text->GetSize();
+  if(index >= size) return size;
+
+  XCHAR* raw = text->Get();
+  if(!raw) return size;
+
+  XDWORD i = index;
+  if(EditText_IsWordChar(raw[i]))
+    {
+      while(i < size && EditText_IsWordChar(raw[i])) i++;
+    }
+  while(i < size && !EditText_IsWordChar(raw[i])) i++;
+  return i;
+}
+
+
+/**-------------------------------------------------------------------------------------------------------------------
+*
+* @fn         void UI_MANAGER::EditText_SelectWordAt(UI_ELEMENT_EDITTEXT* edit, XDWORD index)
+* @brief      Select the word under index (or nearest word)
+* @ingroup    USERINTERFACE
+*
+*---------------------------------------------------------------------------------------------------------------------*/
+void UI_MANAGER::EditText_SelectWordAt(UI_ELEMENT_EDITTEXT* edit, XDWORD index)
+{
+  if(!edit || !edit->GetText()) return;
+
+  XSTRING* text = edit->GetText();
+  XDWORD start = EditText_WordBoundaryLeft(text, index);
+  XDWORD end   = EditText_WordBoundaryRight(text, index);
+  if(start >= end)
+    {
+      // Separators only: select the single separator under/near the caret.
+      XDWORD size = text->GetSize();
+      if(!size) return;
+      if(index >= size) index = size - 1;
+      start = index;
+      end   = index + 1;
+    }
+
+  edit->Selection_SetAnchor(start);
+  edit->Cursor_SetPosition(end);
+}
+
+
+/**-------------------------------------------------------------------------------------------------------------------
+*
+* @fn         bool UI_MANAGER::EditText_ApplyDragSelection(UI_ELEMENT_EDITTEXT* edit, int design_x)
+* @brief      Update caret/selection while dragging, with edge auto-scroll
+* @ingroup    USERINTERFACE
+*
+*---------------------------------------------------------------------------------------------------------------------*/
+bool UI_MANAGER::EditText_ApplyDragSelection(UI_ELEMENT_EDITTEXT* edit, int design_x)
+{
+  if(!edit || !edit->GetBoundaryLine()) return false;
+
+  const double text_pad_x = 6.0;
+  double box_l = edit->GetXPositionWithScroll();
+  double box_r = box_l + edit->GetBoundaryLine()->width;
+  double text_l = box_l + text_pad_x;
+  double text_r = box_r - edit->GetSpinWidth();
+  if(text_r <= text_l) text_r = text_l + 1.0;
+  double text_band_r = text_r - 4.0;
+  if(text_band_r <= text_l) text_band_r = text_l + 1.0;
+
+  double offset = edit->GetViewOffsetX();
+  bool   scrolled = false;
+
+  if((double)design_x < text_l)
+    {
+      offset += UI_MANAGER_EDITTEXT_AUTOSCROLL_PX;
+      if(offset > 0.0) offset = 0.0;
+      edit->SetViewOffsetX(offset);
+      design_x = (int)text_l;
+      scrolled = true;
+    }
+   else if((double)design_x > text_band_r)
+    {
+      offset -= UI_MANAGER_EDITTEXT_AUTOSCROLL_PX;
+      // Clamp against text width so we don't scroll forever past the end.
+      XSTRING display;
+      edit->BuildDisplayText(display);
+      UI_LAYOUT* layout = EditText_ResolveLayout(edit);
+      UI_SKIN*   skin   = layout ? layout->GetSkin() : NULL;
+      double text_w = 0.0;
+      if(!display.IsEmpty() && skin)
+        {
+          text_w = skin->GetWidthString(display.Get(), edit->GetSizeFont());
+        }
+      double viewable_w = text_band_r - text_l;
+      if(viewable_w < 1.0) viewable_w = 1.0;
+      double min_offset = viewable_w - text_w;
+      if(min_offset > 0.0) min_offset = 0.0;
+      if(offset < min_offset) offset = min_offset;
+      edit->SetViewOffsetX(offset);
+      design_x = (int)text_band_r;
+      scrolled = true;
+    }
+
+  XDWORD idx = EditText_CaretIndexFromDesignX(edit, design_x);
+  XDWORD old = edit->Cursor_GetPosition();
+
+  if(edittext_sel_granularity == UI_MANAGER_EDITTEXT_SEL_GRANULARITY_ALL)
+    {
+      edit->Selection_SelectAll(edit->GetText() ? edit->GetText()->GetSize() : 0);
+    }
+   else if(edittext_sel_granularity == UI_MANAGER_EDITTEXT_SEL_GRANULARITY_WORD && edit->GetText())
+    {
+      XDWORD o0 = EditText_WordBoundaryLeft(edit->GetText(), edittext_sel_drag_origin);
+      XDWORD o1 = EditText_WordBoundaryRight(edit->GetText(), edittext_sel_drag_origin);
+      XDWORD n0 = EditText_WordBoundaryLeft(edit->GetText(), idx);
+      XDWORD n1 = EditText_WordBoundaryRight(edit->GetText(), idx);
+      XDWORD start = (o0 < n0) ? o0 : n0;
+      XDWORD end   = (o1 > n1) ? o1 : n1;
+      if(idx >= edittext_sel_drag_origin)
+        {
+          edit->Selection_SetAnchor(start);
+          edit->Cursor_SetPosition(end);
+        }
+       else
+        {
+          edit->Selection_SetAnchor(end);
+          edit->Cursor_SetPosition(start);
+        }
+    }
+   else
+    {
+      edit->Cursor_SetPosition(idx);
+    }
+
+  if(scrolled || (edit->Cursor_GetPosition() != old) || edit->Selection_Has())
+    {
+      edittext_sel_drag_moved = edittext_sel_drag_moved || scrolled || (edit->Cursor_GetPosition() != old);
+      if(edit->Cursor_GetXTimerBlink()) edit->Cursor_GetXTimerBlink()->Reset();
+      Elements_SetToRedraw(edit);
+      if(element_modal) ModalLayer_Invalidate();
+      return true;
+    }
+
+  return false;
+}
+
+
+/**-------------------------------------------------------------------------------------------------------------------
+*
+* @fn         XDWORD UI_MANAGER::EditText_CaretIndexFromDesignX(UI_ELEMENT_EDITTEXT* edit, int design_x)
+* @brief      Map a design-space X coordinate to a caret index inside the EditText
+* @ingroup    USERINTERFACE
+*
+* @param[in]  edit : Target EditText.
+* @param[in]  design_x : Absolute design X.
+*
+* @return     XDWORD : Caret character index.
+*
+*---------------------------------------------------------------------------------------------------------------------*/
+XDWORD UI_MANAGER::EditText_CaretIndexFromDesignX(UI_ELEMENT_EDITTEXT* edit, int design_x)
+{
+  if(!edit || !edit->GetText() || !edit->GetBoundaryLine()) return 0;
+
+  UI_LAYOUT* layout = EditText_ResolveLayout(edit);
+  UI_SKIN*   skin   = layout ? layout->GetSkin() : NULL;
+
+  XSTRING display;
+  edit->BuildDisplayText(display);
+  XDWORD len = display.GetSize();
+  if(!len) return 0;
+
+  const double text_pad_x = 6.0;
+  double box_l = edit->GetXPositionWithScroll();
+  double box_r = box_l + edit->GetBoundaryLine()->width;
+  double text_l = box_l + text_pad_x;
+  double text_r = box_r - edit->GetSpinWidth();
+  if(text_r <= text_l) text_r = text_l + 1.0;
+
+  double local = (double)design_x - text_l - edit->GetViewOffsetX();
+  if(local <= 0.0) return 0;
+
+  XDWORD best = len;
+  double best_dist = 1e300;
+  for(XDWORD i=0; i<=len; i++)
+    {
+      XSTRING prefix;
+      if(i > 0) display.Copy(0, (int)i, prefix);
+      double w = 0.0;
+      if(!prefix.IsEmpty() && skin)
+        {
+          w = skin->GetWidthString(prefix.Get(), edit->GetSizeFont());
+        }
+      double dist = local - w;
+      if(dist < 0.0) dist = -dist;
+      if(dist < best_dist)
+        {
+          best_dist = dist;
+          best = i;
+        }
+      if(w > local) break;
+    }
+
+  return best;
+}
+
+
+/**-------------------------------------------------------------------------------------------------------------------
+*
+* @fn         bool UI_MANAGER::EditText_OnPointer(int screen_x, int screen_y, bool pressed)
+* @brief      Mouse/touch press-move-release driver for EditText text selection
+* @ingroup    USERINTERFACE
+*
+* @param[in]  screen_x : Pointer X in screen px.
+* @param[in]  screen_y : Pointer Y in screen px.
+* @param[in]  pressed : true while primary button is down.
+*
+* @return     bool : true if an EditText selection gesture owns the pointer.
+*
+*---------------------------------------------------------------------------------------------------------------------*/
+XDWORD UI_MANAGER::EditText_GetUIScreenHeight()
+{
+  for(XDWORD c=0; c<layouts.GetSize(); c++)
+    {
+      UI_LAYOUT* layout = layouts.Get(c);
+      if(!layout || !layout->GetSkin()) continue;
+      UI_SKINCANVAS* skincanvas = dynamic_cast<UI_SKINCANVAS*>(layout->GetSkin());
+      if(!skincanvas) continue;
+      if(skincanvas->GetScreen() && skincanvas->GetScreen()->GetHeight())
+        {
+          return skincanvas->GetScreen()->GetHeight();
+        }
+      if(skincanvas->GetCanvas() && skincanvas->GetCanvas()->GetHeight() > 0.0)
+        {
+          return (XDWORD)skincanvas->GetCanvas()->GetHeight();
+        }
+    }
+  return 0;
+}
+
+
+UI_LAYOUT* UI_MANAGER::EditText_ResolveLayout(UI_ELEMENT* element)
+{
+  if(element && element->GetLayout()) return element->GetLayout();
+  UI_LAYOUT* layout = Element_GetLayout(element);
+  if(layout) return layout;
+  if(element_modal && element_modal->GetLayout()) return element_modal->GetLayout();
+  if(layouts.GetSize()) return layouts.Get(0);
+  return NULL;
+}
+
+
+bool UI_MANAGER::EditText_OnPointer(int screen_x, int screen_y, bool pressed)
+{
+  if(scrollbar_drag_active) return false;
+  if(virtualkeyboard && virtualkeyboard->IsShow()) return false;
+
+  // Keep the shared UI pointer in sync (same space as CURSOR_MOVE / SelectedElement).
+  last_xposition = screen_x;
+  last_yposition = screen_y;
+
+  if(!pressed)
+    {
+      bool was = edittext_sel_dragging;
+      edittext_sel_prevpressed = false;
+      if(was) EditText_SelectionDragEnd();
+      return was;
+    }
+
+  if(edittext_sel_dragging && element_editfocus)
+    {
+      UI_LAYOUT* layout = EditText_ResolveLayout(element_editfocus);
+      int design_x = screen_x;
+      int design_y = screen_y;
+      if(layout) MapScreenToDesign(layout, screen_x, screen_y, design_x, design_y);
+
+      EditText_ApplyDragSelection(element_editfocus, design_x);
+
+      edittext_sel_prevpressed = true;
+      return true;
+    }
+
+  // Capture only on press edge (same rule as ScrollBar_OnPointer).
+  if(edittext_sel_prevpressed) return false;
+
+  UI_ELEMENT* target = preselect_element;
+  if((!target || ((target->GetType() != UI_ELEMENT_TYPE_EDITTEXT) && (target->GetType() != UI_ELEMENT_TYPE_COMBO))) &&
+     element_editfocus)
+    {
+      // Already editing: allow re-grab even if hover briefly left the field.
+      target = element_editfocus;
+    }
+  if(!target) return false;
+  if((target->GetType() != UI_ELEMENT_TYPE_EDITTEXT) && (target->GetType() != UI_ELEMENT_TYPE_COMBO)) return false;
+
+  UI_ELEMENT_EDITTEXT* edit = (UI_ELEMENT_EDITTEXT*)target;
+  UI_LAYOUT* layout = EditText_ResolveLayout(edit);
+  int design_x = screen_x;
+  int design_y = screen_y;
+  if(layout) MapScreenToDesign(layout, screen_x, screen_y, design_x, design_y);
+
+  if(target->GetType() == UI_ELEMENT_TYPE_COMBO)
+    {
+      UI_ELEMENT_COMBO* combo = (UI_ELEMENT_COMBO*)edit;
+      if(combo->HitTestDropButton(design_x, design_y)) return false;
+    }
+  if(edit->HitTestSpin(design_x, design_y) != 0) return false;
+
+  // Hit must be inside the text band (exclude trailing spin/drop strip).
+  // Use scrolled positions — same AABB basis as PreSelectElement.
+  if(!edit->GetBoundaryLine()) return false;
+  double box_l = edit->GetXPositionWithScroll();
+  double box_r = box_l + edit->GetBoundaryLine()->width;
+  double box_b = edit->GetYPositionWithScroll();
+  double box_t = box_b - edit->GetBoundaryLine()->height;
+  double text_r = box_r - edit->GetSpinWidth();
+  if((design_x < (int)box_l) || (design_x > (int)text_r)) return false;
+  if((design_y < (int)box_t) || (design_y > (int)box_b)) return false;
+
+  // Only consume the press edge after the hit succeeds (so a miss can still become a click).
+  edittext_sel_prevpressed = true;
+
+  const bool already_focused = (element_editfocus == edit);
+
+  INPDEVICE* keyboard = GEN_INPMANAGER.GetDevice(INPDEVICE_TYPE_KEYBOARD);
+  bool shift = false;
+  if(keyboard)
+    {
+      INPBUTTON* shift_l = keyboard->GetButton(INPBUTTON_ID_SHIFT_LEFT);
+      INPBUTTON* shift_r = keyboard->GetButton(INPBUTTON_ID_SHIFT_RIGHT);
+      shift = (shift_l && shift_l->IsPressed()) || (shift_r && shift_r->IsPressed());
+    }
+  const bool extend = shift && already_focused;
+
+  // Multi-click: 1 = caret, 2 = word, 3+ = select all (same field, near, within timeout).
+  if(!edittext_click_timer) edittext_click_timer = GEN_XFACTORY.CreateTimer();
+  XQWORD elapsed = edittext_click_timer ? edittext_click_timer->GetMeasureMilliSeconds() : (XQWORD)0xFFFFFFFFu;
+  const int dx_click = design_x - edittext_click_x;
+  const int dy_click = design_y - edittext_click_y;
+  const bool click_near = ((dx_click < 0 ? -dx_click : dx_click) <= UI_MANAGER_EDITTEXT_MULTICLICK_SLOP_PX) &&
+                          ((dy_click < 0 ? -dy_click : dy_click) <= UI_MANAGER_EDITTEXT_MULTICLICK_SLOP_PX);
+  const bool chain = already_focused && (edittext_click_edit == edit) && click_near &&
+                     (elapsed <= (XQWORD)UI_MANAGER_EDITTEXT_MULTICLICK_MS);
+  if(chain) edittext_click_count++;
+   else     edittext_click_count = 1;
+  if(edittext_click_count > 3) edittext_click_count = 3;
+  edittext_click_edit = edit;
+  edittext_click_x    = design_x;
+  edittext_click_y    = design_y;
+  if(edittext_click_timer) edittext_click_timer->Reset();
+
+  EditText_SetFocus(edit);
+  XDWORD idx = EditText_CaretIndexFromDesignX(edit, design_x);
+  edittext_sel_drag_origin = idx;
+
+  if(edittext_click_count >= 3)
+    {
+      edit->Selection_SelectAll(edit->GetText() ? edit->GetText()->GetSize() : 0);
+      edittext_sel_granularity = UI_MANAGER_EDITTEXT_SEL_GRANULARITY_ALL;
+    }
+   else if(edittext_click_count == 2)
+    {
+      EditText_SelectWordAt(edit, idx);
+      edittext_sel_granularity = UI_MANAGER_EDITTEXT_SEL_GRANULARITY_WORD;
+    }
+   else if(extend)
+    {
+      edit->Cursor_SetPosition(idx);
+      edittext_sel_granularity = UI_MANAGER_EDITTEXT_SEL_GRANULARITY_CHAR;
+    }
+   else
+    {
+      edit->Selection_SetAnchor(idx);
+      edit->Cursor_SetPosition(idx);
+      edit->Selection_Clear();
+      edittext_sel_granularity = UI_MANAGER_EDITTEXT_SEL_GRANULARITY_CHAR;
+    }
+
+  edittext_sel_dragging    = true;
+  edittext_sel_drag_moved  = false;
+  edittext_sel_click_owned = true;
+
+  if(edit->Cursor_GetXTimerBlink()) edit->Cursor_GetXTimerBlink()->Reset();
+  Elements_SetToRedraw(edit);
+  if(element_modal) ModalLayer_Invalidate();
+  return true;
+}
+
+
+/**-------------------------------------------------------------------------------------------------------------------
+*
+* @fn         bool UI_MANAGER::EditText_UpdateMouseSelection()
+* @brief      Poll the mouse/touch device to drive EditText selection gestures
+* @ingroup    USERINTERFACE
+*
+* @return     bool : true if a selection gesture is active.
+*
+*---------------------------------------------------------------------------------------------------------------------*/
+bool UI_MANAGER::EditText_UpdateMouseSelection()
+{
+  INPDEVICE* mouse = GEN_INPMANAGER.GetDevice(INPDEVICE_TYPE_MOUSE);
+  if(!mouse)
+    {
+      mouse = GEN_INPMANAGER.GetDevice(INPDEVICE_TYPE_TOUCHSCREEN);
+    }
+  if(!mouse) return false;
+
+  INPBUTTON* btn = mouse->GetButton(INPBUTTON_ID_MOUSE_LEFT);
+  if(!btn) btn = mouse->GetButton(INPBUTTON_ID_TOUCHSCREEN);
+  INPCURSOR* cursor = mouse->GetCursor(INPCURSOR_ID_MOUSE);
+  if(!cursor) cursor = mouse->GetCursor(0);
+  if(!btn || !cursor) return false;
+
+  // Prefer last UI pointer from CURSOR_MOVE (already top-down framebuffer, same as ScrollBar).
+  // While pressed, refresh from the device so drag keeps working when CURSOR_MOVE stalls
+  // (e.g. motion-gesture branch with >=50 points).
+  int screen_x = last_xposition;
+  int screen_y = last_yposition;
+
+  if(btn->IsPressed() || edittext_sel_dragging)
+    {
+      XDWORD height = EditText_GetUIScreenHeight();
+      if((height > 0) && (cursor->GetX() >= 0.0f) && (cursor->GetY() >= 0.0f))
+        {
+          screen_x = (int)cursor->GetX();
+          screen_y = (int)height - (int)cursor->GetY();
+        }
+    }
+
+  return EditText_OnPointer(screen_x, screen_y, btn->IsPressed());
 }
 
 
@@ -11202,6 +12161,21 @@ bool UI_MANAGER::ScrollBar_IsDragging()
 
 
 /**-------------------------------------------------------------------------------------------------------------------
+*
+* @fn         UI_ELEMENT* UI_MANAGER::ScrollBar_GetDragElement()
+* @brief      Element whose overlay scrollbar thumb is being dragged, or NULL.
+* @ingroup    USERINTERFACE
+*
+* @return     UI_ELEMENT* : Drag target element, or NULL if idle.
+*
+*---------------------------------------------------------------------------------------------------------------------*/
+UI_ELEMENT* UI_MANAGER::ScrollBar_GetDragElement()
+{
+  return scrollbar_drag_active ? scrollbar_drag_element : NULL;
+}
+
+
+/**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         bool UI_MANAGER::SelectScrollBar(int x, int y)
 * @brief      Hit-tests all layouts' scrollbars against a pointer; applies proportional scroll if hit.
@@ -11767,6 +12741,19 @@ void UI_MANAGER::Clean()
 
   virtualkeyboard     = NULL;
   element_editfocus   = NULL;
+  edittext_repeat_id      = 0;  // INPBUTTON_ID_NOBUTTON
+  edittext_repeat_next_ms = 0;
+  edittext_sel_dragging    = false;
+  edittext_sel_drag_moved  = false;
+  edittext_sel_prevpressed = false;
+  edittext_sel_click_owned = false;
+  edittext_sel_granularity = UI_MANAGER_EDITTEXT_SEL_GRANULARITY_CHAR;
+  edittext_sel_drag_origin = 0;
+  edittext_click_count     = 0;
+  edittext_click_x         = 0;
+  edittext_click_y         = 0;
+  edittext_click_edit      = NULL;
+  edittext_click_timer     = NULL;
 
   layout_translate_language = XLANGUAGE_ISO_639_3_CODE_INVALID;
 }

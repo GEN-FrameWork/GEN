@@ -66,6 +66,8 @@ class GRPBITMAPFILEPNG : public GRPBITMAPFILEBASE
 
   private:
 
+    static void                 WarningHandler            (png_structp png, png_const_charp message);
+
     static void                 ReadFileData              (png_structp png, png_bytep data, png_size_t length);
     static void                 ReadBufferData            (png_structp png, png_bytep data, png_size_t length);
 

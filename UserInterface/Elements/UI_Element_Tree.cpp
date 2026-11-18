@@ -503,7 +503,8 @@ void UI_ELEMENT_TREE::Flatten()
 
   visible_dirty = false;
 
-  contentheight = visible_nodes.GetSize() ? ((UI_ELEMENT_TREE_PADDING_Y * 2.0f) + ((double)visible_nodes.GetSize() * rowheight)) : 0.0f;
+  // Same bottom slack as Draw_Tree (overlay bar / last-row clearance).
+  contentheight = visible_nodes.GetSize() ? ((UI_ELEMENT_TREE_PADDING_Y * 2.0f) + ((double)visible_nodes.GetSize() * rowheight) + (double)UI_PROPERTY_SCROLLEABLE_BARWIDTH + 4.0f) : 0.0f;
 }
 
 

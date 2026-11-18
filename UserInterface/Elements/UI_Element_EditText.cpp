@@ -525,13 +525,47 @@ bool UI_ELEMENT_EDITTEXT::BuildDisplayText(XSTRING& display)
       return true;
     }
 
-  XDWORD n = GetText()->GetSize();
-  for(XDWORD c=0; c<n; c++)
+  if(GetText()->IsEmpty()) return true;
+
+  // While editing (cursor visible): one '*' per character so typing feedback is correct.
+  // When only displaying the field: fixed mask so the real length is not leaked.
+  XDWORD n = Cursor_IsVisible() ? GetText()->GetSize() : (XDWORD)UI_ELEMENT_EDITTEXT_PASSWORD_MASK_LEN;
+  for(XDWORD c = 0; c < n; c++)
     {
       display.Add(_C('*'));
     }
 
   return true;
+}
+
+
+/**-------------------------------------------------------------------------------------------------------------------
+*
+* @fn         double UI_ELEMENT_EDITTEXT::GetViewOffsetX()
+* @brief      Get horizontal view offset used to scroll long text inside the field
+* @ingroup    USERINTERFACE
+*
+* @return     double : Requested value (typically <= 0).
+*
+*---------------------------------------------------------------------------------------------------------------------*/
+double UI_ELEMENT_EDITTEXT::GetViewOffsetX()
+{
+  return view_offset_x;
+}
+
+
+/**-------------------------------------------------------------------------------------------------------------------
+*
+* @fn         void UI_ELEMENT_EDITTEXT::SetViewOffsetX(double offset)
+* @brief      Set horizontal view offset used to scroll long text inside the field
+* @ingroup    USERINTERFACE
+*
+* @param[in]  offset : Horizontal draw offset (typically <= 0).
+*
+*---------------------------------------------------------------------------------------------------------------------*/
+void UI_ELEMENT_EDITTEXT::SetViewOffsetX(double offset)
+{
+  view_offset_x = offset;
 }
 
 
@@ -605,4 +639,5 @@ void UI_ELEMENT_EDITTEXT::Clean()
   valuemin            = 0;
   valuemax            = 2147483647;
   valuestep           = 1;
+  view_offset_x       = 0.0;
 }

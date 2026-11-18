@@ -68,6 +68,10 @@
 #include "XWINDOWSProcessManager.h"
 #endif
 
+#ifdef XCLIPBOARD_ACTIVE
+#include "XWINDOWSClipboard.h"
+#endif
+
 #ifdef XSHAREDMEMORYMANAGER_ACTIVE
 #include "XWINDOWSSharedMemoryManager.h"
 #endif
@@ -468,6 +472,13 @@ bool MAINPROCWINDOWS::Factorys_Ini()
     }
   #endif
 
+  #ifdef XCLIPBOARD_ACTIVE
+  if(!XCLIPBOARD::SetInstance(GEN_NEW XWINDOWSCLIPBOARD()))
+    {
+      return false;
+    }
+  #endif
+
   if(!XRAND::SetInstance(GEN_NEW XWINDOWSRAND())) 
     {
       return false;
@@ -674,6 +685,10 @@ bool MAINPROCWINDOWS::Factorys_End()
   #endif  
 
   XRAND::DelInstance();
+
+  #ifdef XCLIPBOARD_ACTIVE
+  XCLIPBOARD::DelInstance();
+  #endif
 
   #ifdef XSLEEP_ACTIVE
   XSLEEP::DelInstance();

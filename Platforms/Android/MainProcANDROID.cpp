@@ -49,6 +49,14 @@
 #include "XANDROIDSystem.h"
 #endif
 
+#ifdef XCLIPBOARD_ACTIVE
+#include "XANDROIDClipboard.h"
+#endif
+
+#ifdef XPROCESSMANAGER_ACTIVE
+#include "XANDROIDProcessManager.h"
+#endif
+
 #ifdef XSHAREDMEMORYMANAGER_ACTIVE
 #include "XANDROIDSharedMemoryManager.h"
 #endif
@@ -74,6 +82,10 @@
 #ifdef DIO_ACTIVE
 #include "DIODNSResolver.h"
 #include "DIOANDROIDFactory.h"
+
+#ifdef DIO_PING_ACTIVE
+#include "DIOANDROIDPing.h"
+#endif
 
 #ifdef DIO_ALERTS_ACTIVE
 #include "DIOAlerts.h"
@@ -1165,6 +1177,30 @@ bool MAINPROCANDROID::Factorys_Ini()
     }
   #endif
 
+  #ifdef XCLIPBOARD_ACTIVE
+    {
+      XANDROIDCLIPBOARD* clipboard = GEN_NEW XANDROIDCLIPBOARD();
+      if(!clipboard) return false;
+      clipboard->SetAndroidApplication(androidapplication);
+      if(!XCLIPBOARD::SetInstance(clipboard))
+        {
+          return false;
+        }
+    }
+  #endif
+
+  #ifdef XPROCESSMANAGER_ACTIVE
+    {
+      XANDROIDPROCESSMANAGER* processmanager = GEN_NEW XANDROIDPROCESSMANAGER();
+      if(!processmanager) return false;
+      processmanager->SetAndroidApplication(androidapplication);
+      if(!XPROCESSMANAGER::SetInstance(processmanager))
+        {
+          return false;
+        }
+    }
+  #endif
+
   #ifdef XSHAREDMEMORYMANAGER_ACTIVE
   if(!XSHAREDMEMORYMANAGER::SetInstance(GEN_NEW XANDROIDSHAREDMEMORYMANAGER())) 
     {
@@ -1193,6 +1229,13 @@ bool MAINPROCANDROID::Factorys_Ini()
     {
       return false;
     }
+
+  #ifdef DIO_PING_ACTIVE
+  if(!DIOPING::SetInstance(GEN_NEW DIOANDROIDPING()))
+    {
+      return false;
+    }
+  #endif
   #endif
 
   #ifdef SND_ACTIVE  
@@ -1252,7 +1295,11 @@ bool MAINPROCANDROID::Factorys_End()
 	
 	#ifdef DIO_STREAMUDP_ACTIVE
 	DIODNSRESOLVER::DelInstance();
-	#endif 
+	#endif
+
+  #ifdef DIO_PING_ACTIVE
+  DIOPING::DelInstance();
+  #endif
 	
   DIOFACTORY::DelInstance();
   #endif
@@ -1289,6 +1336,10 @@ bool MAINPROCANDROID::Factorys_End()
 
   #ifdef XSHAREDMEMORYMANAGER_ACTIVE   
   XSHAREDMEMORYMANAGER::DelInstance();
+  #endif
+
+  #ifdef XCLIPBOARD_ACTIVE
+  XCLIPBOARD::DelInstance();
   #endif
 
   #ifdef XSLEEP_ACTIVE

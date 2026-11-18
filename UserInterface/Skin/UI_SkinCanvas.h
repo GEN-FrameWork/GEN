@@ -199,6 +199,10 @@ class UI_SKINCANVAS : public UI_SKIN, public UI_SKINCANVAS_REBUILDAREAS
 		// Same for AnimBackdrop: selection wash change must not restore a stale white icon plate into gray.
 		bool                               DiscardAnimBackdrop										(UI_ELEMENT* element);
 
+		// Drop FormBackdrop without restoring. Used after modal dismiss + Layout_PutBackground so a
+		// later invisible-path RestoreOnHide cannot stamp the stale plate over freshly painted content.
+		bool                               DiscardFormBackdrop										(UI_ELEMENT* element);
+
 		// After shared-slot MultiOption peels / hidden-twin RestoreOnHide, compact under-icon legend
 		// forms (height<=28) can keep a gray plate until the next tick. Call once at end of layout
 		// Update (and again after chrome) to page-fill + redraw those legends in the same frame.

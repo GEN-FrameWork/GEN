@@ -2932,7 +2932,11 @@ bool DIOWEBCLIENT::Stream_Create(bool isTLS)
 
   #endif
 
-  if(diostream && (isstreamTLS != isTLS))
+  // Always rebuild transport. Platform streams are not guaranteed to support Open()
+  // again on the same instance after Close() (same reason redirect teardown deletes
+  // the stream). Reusing a closed TCP/TLS object across sequential GETs causes
+  // intermittent connect failures — visible as DynDNS "notconnect" among OK hosts.
+  if(diostream)
     {
       diostream->Close();
       GEN_DIOFACTORY.DeleteStreamIO(diostream);
@@ -2956,11 +2960,8 @@ bool DIOWEBCLIENT::Stream_Create(bool isTLS)
 
   #endif
 
-  if(!diostream)
-    {
-      diostream = (DIOSTREAMTCPIP*)GEN_DIOFACTORY.CreateStreamIO(diostreamcfg);
-      if(!diostream) return false;
-    }
+  diostream = (DIOSTREAMTCPIP*)GEN_DIOFACTORY.CreateStreamIO(diostreamcfg);
+  if(!diostream) return false;
 
   isstreamTLS = isTLS;
 

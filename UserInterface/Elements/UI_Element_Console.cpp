@@ -38,6 +38,10 @@
 #include <windows.h>
 #endif
 
+#ifdef XCLIPBOARD_ACTIVE
+#include "XClipboard.h"
+#endif
+
 #include "UI_Element_Console.h"
 #include "UI_Layout.h"
 
@@ -539,7 +543,10 @@ bool UI_ELEMENT_CONSOLE::Selection_CopyToClipboard()
 
 bool UI_ELEMENT_CONSOLE::CopyTextToClipboard(XSTRING& text)
 {
-#ifdef WINDOWS
+#ifdef XCLIPBOARD_ACTIVE
+  if(!XCLIPBOARD::GetIsInstanced()) return false;
+  return GEN_XCLIPBOARD.SetText(text);
+#elif defined(WINDOWS)
   if(!OpenClipboard(NULL)) return false;
   EmptyClipboard();
 

@@ -139,7 +139,7 @@ bool DIOANDROIDSTREAMUARTLOCALENUMDEVICES::Search()
               XBUFFER charstr;
               
               devicedir.ConvertToASCII(charstr); 
-              bool result = (lstat(charstr.GetPtrChar(), &st)==0) && (S_ISLNK(st.st_mode));              s              
+              bool result = (lstat(charstr.GetPtrChar(), &st)==0) && (S_ISLNK(st.st_mode));
               if(result)
                 {
                   char buffer[1024];
@@ -151,7 +151,7 @@ bool DIOANDROIDSTREAMUARTLOCALENUMDEVICES::Search()
                   XBUFFER charstr;
                   
                   devicedir.ConvertToASCII(charstr);
-                  result = (readlink(charstr.GetPtrStr(), buffer, sizeof(buffer)) > 0);
+                  result = (readlink(charstr.GetPtrChar(), buffer, sizeof(buffer)) > 0);
                   
                   if(result)
                     {
@@ -179,7 +179,7 @@ bool DIOANDROIDSTREAMUARTLOCALENUMDEVICES::Search()
                            XBUFFER              charstr;
  
                            devicepath.ConvertToASCII(charstr);
-                           int fd = open(charstr.GetPtrStr(), O_RDWR | O_NONBLOCK | O_NOCTTY);                           
+                           int fd = open(charstr.GetPtrChar(), O_RDWR | O_NONBLOCK | O_NOCTTY);                           
                            if(fd >= 0)
                             {
                               // Get serial_info

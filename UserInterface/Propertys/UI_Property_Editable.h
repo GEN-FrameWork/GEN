@@ -50,14 +50,25 @@ class UI_PROPERTY_EDITABLE
     void                       Cursor_SetPosition             (XDWORD cursorposition);      	
 
     XDWORD                     GetMaxSize                     ();      	
-    void                       SetMaxSize                     (XDWORD maxsize);      	
+    void                       SetMaxSize                     (XDWORD maxsize);
+
+    // Text selection: sel_anchor is the fixed end; cursor_position is the active end.
+    XDWORD                     Selection_GetAnchor            ();
+    void                       Selection_SetAnchor            (XDWORD anchor);
+    bool                       Selection_Has                  ();
+    void                       Selection_Clear                ();
+    void                       Selection_SelectAll            (XDWORD textsize);
+    void                       Selection_GetNormalized        (XDWORD& start, XDWORD& end);
+    bool                       Selection_GetText              (class XSTRING* source, class XSTRING& out);
+    bool                       Selection_Delete               (class XSTRING* source);
 
   private:
 
 		void										   Clean										      ();
 
     XDWORD                     cursor_position;
-    XDWORD                     maxsize;      
+    XDWORD                     maxsize;
+    XDWORD                     sel_anchor;
 };
 
 

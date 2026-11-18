@@ -256,6 +256,8 @@ bool DIOANDROIDSTREAMUART::Config(XWORD mask)
           case DIOSTREAMUARTDATABIT_6           : cfg.c_cflag|= CS6; break;
           case DIOSTREAMUARTDATABIT_7           : cfg.c_cflag|= CS7; break;
           case DIOSTREAMUARTDATABIT_8           : cfg.c_cflag|= CS8; break;
+          case DIOSTREAMUARTDATABIT_9           : // termios has no CS9; keep 8 data bits.
+                                                 cfg.c_cflag|= CS8; break;
         }
     }
 

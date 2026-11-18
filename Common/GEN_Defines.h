@@ -234,6 +234,10 @@
 #define GEN_XSLEEP                        XSLEEP::GetInstance()
 #endif
 
+#ifndef GEN_XCLIPBOARD
+#define GEN_XCLIPBOARD                    XCLIPBOARD::GetInstance()
+#endif
+
 #ifndef GEN_XRAND
 #define GEN_XRAND                         XRAND::GetInstance()
 #endif

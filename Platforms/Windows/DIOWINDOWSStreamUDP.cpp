@@ -263,14 +263,15 @@ int DIOWINDOWSSTREAMUDP::IsReadyConnect(SOCKET socket)
   FD_ZERO(&fdw);
   FD_ZERO(&fds);
 
-  FD_SET((unsigned int)socket, &fdr);
-  FD_SET((unsigned int)socket, &fdw);
-  FD_SET((unsigned int)socket, &fds);
+  // SOCKET is UINT_PTR on Win64 — never truncate before FD_SET/FD_ISSET.
+  FD_SET(socket, &fdr);
+  FD_SET(socket, &fdw);
+  FD_SET(socket, &fds);
 
   tv.tv_sec  = 0;
   tv.tv_usec = 100;
 
-  rc = select((int)(socket)+1, &fdr, &fdw, &fds, &tv);
+  rc = select(0, &fdr, &fdw, &fds, &tv);
   if(rc == SOCKET_ERROR) return -1;
 
   int status1 = FD_ISSET(socket, &fdr) ? 1 : 0;
@@ -381,7 +382,8 @@ void DIOWINDOWSSTREAMUDP::ThreadConnection(void* data)
                                                                     }
                                                                 }
 
-                                                              int error = select((int)(diostream->handle)+1, &read_flags, &write_flags, (fd_set*)0, &waitd);
+                                                              // Windows ignores nfds; keep 0 so Win64 SOCKET handles are never cast through int.
+                                                              int error = select(0, &read_flags, &write_flags, (fd_set*)0, &waitd);
                                                               if(error == SOCKET_ERROR)
                                                                 {
                                                                   diostream->SetEvent(DIOWINDOWSUDPFSMEVENT_DISCONNECTING);

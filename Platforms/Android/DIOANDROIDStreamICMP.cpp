@@ -468,7 +468,13 @@ void DIOANDROIDSTREAMICMP::ThreadRunFunction(void* thread)
 
               case DIOANDROIDICMPFSMSTATE_GETTINGCONNECTION  : { struct sockaddr_in loc_addr = { 0 };
 
-                                                                diostream->handle = socket(AF_INET, SOCK_RAW, IPPROTO_ICMP);
+                                                                // Unprivileged Android apps cannot open SOCK_RAW (CAP_NET_RAW).
+                                                                // Prefer SOCK_DGRAM + IPPROTO_ICMP ("ping sockets"), then SOCK_RAW.
+                                                                diostream->handle = socket(AF_INET, SOCK_DGRAM, IPPROTO_ICMP);
+                                                                if(diostream->handle < 0)
+                                                                  {
+                                                                    diostream->handle = socket(AF_INET, SOCK_RAW, IPPROTO_ICMP);
+                                                                  }
                                                                 if(diostream->handle < 0)
                                                                   {
                                                                     diostream->SetEvent(DIOANDROIDICMPFSMEVENT_DISCONNECTING);

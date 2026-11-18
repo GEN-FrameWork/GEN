@@ -5427,6 +5427,13 @@ bool UI_SKINCANVAS::DiscardAnimBackdrop(UI_ELEMENT* element)
 }
 
 
+bool UI_SKINCANVAS::DiscardFormBackdrop(UI_ELEMENT* element)
+{
+  if(!element) return false;
+  return FormBackdrop_Delete(element);
+}
+
+
 /**-------------------------------------------------------------------------------------------------------------------
 *
 * @fn         bool UI_SKINCANVAS::RepaintCompactLegendForms(UI_LAYOUT* layout)
@@ -6534,7 +6541,14 @@ bool UI_SKINCANVAS::Draw_Console(UI_ELEMENT* element)
           // OFF = leave displacement where it is. As content grows, lim moves more negative while
           //       disp stays put → the viewport freezes. Front-trims under maxlines_off are
           //       compensated so the ring buffer does not slide under a fixed offset.
+          // While the user drags this console's scrollbar, do not fight the gesture (even if follow
+          // is on); release resumes pin-to-tail on the next paint when autoscroll is still true.
           bool follow = element_console->GetAutoscroll();
+          if(follow && GEN_USERINTERFACE.ScrollBar_IsDragging() &&
+             (GEN_USERINTERFACE.ScrollBar_GetDragElement() == (UI_ELEMENT*)element_console))
+            {
+              follow = false;
+            }
           double disp = scrolleable->Scroll_GetDisplacement(UI_PROPERTY_SCROLLEABLE_TYPE_VERTICAL);
           XDWORD trimmed = element_console->ConsumeTrimmedRows();
 
@@ -6834,9 +6848,12 @@ bool UI_SKINCANVAS::Draw_Tree(UI_ELEMENT* element)
 
       double bar_gutter  = UI_SKINCANVAS_SCROLLBAR_WIDTH + 4.0f;
 
-      element_tree->SetContentHeight((UI_ELEMENT_TREE_PADDING_Y * 2.0f) + ((double)rowcount * rowheight));
+      // Rows + bottom slack so max V-scroll clears the last glyphs (overlay H-bar / AA / pad).
+      const double bottom_slack = UI_SKINCANVAS_SCROLLBAR_WIDTH + 4.0f;
+      element_tree->SetContentHeight((UI_ELEMENT_TREE_PADDING_Y * 2.0f) + ((double)rowcount * rowheight) + bottom_slack);
 
-      // Horizontal extent: deepest/longest visible label (pad + indent + optional icon + text).
+      // Horizontal extent: label ink only (V-bar is overlay — do not inflate width or H-scroll
+      // turns on for every tall tree and steals a bottom strip from the row clip).
       {
         double max_right = UI_ELEMENT_TREE_PADDING_X;
 
@@ -6846,13 +6863,14 @@ bool UI_SKINCANVAS::Draw_Tree(UI_ELEMENT* element)
             if(!node) continue;
 
             double text_x = element_tree->GetTextX(node);
-            double text_w = node->text.IsEmpty() ? 0.0f : (double)canvas->VectorFont_GetWidth(node->text.Get());
+            // Latin primary + language/CJK fallback (same stack as Draw_Text / TextBox).
+            double text_w = node->text.IsEmpty() ? 0.0f : UI_SKINCANVAS_GetWidthStacked(this, canvas, node->text.Get());
             double right  = text_x + text_w + UI_ELEMENT_TREE_PADDING_X;
 
             if(right > max_right) max_right = right;
           }
 
-        element_tree->SetContentWidth(max_right + bar_gutter);
+        element_tree->SetContentWidth(max_right);
       }
 
       UI_PROPERTY_SCROLLEABLE* scrolleable = dynamic_cast<UI_PROPERTY_SCROLLEABLE*>(element_tree);
@@ -6871,6 +6889,10 @@ bool UI_SKINCANVAS::Draw_Tree(UI_ELEMENT* element)
                   scrolleable->Scroll_SetDisplacement(type, 0.0f);
                 }
                else if(lim < 0.0f && disp < lim)
+                {
+                  scrolleable->Scroll_SetDisplacement(type, lim);
+                }
+               else if((type == UI_PROPERTY_SCROLLEABLE_TYPE_VERTICAL) && (lim < 0.0f) && (disp <= (lim + rowheight)))
                 {
                   scrolleable->Scroll_SetDisplacement(type, lim);
                 }
@@ -6907,9 +6929,9 @@ bool UI_SKINCANVAS::Draw_Tree(UI_ELEMENT* element)
 
       double y_vis_top = y_top + bw;
       double y_vis_bot = y_bot - bw;
-      double bar_bottom = UI_SKINCANVAS_SCROLLBAR_WIDTH + 4.0f;
 
-      UI_SkinCanvas_PropertyListClip(canvas, parentclip, x_left, y_vis_top, x_right - bar_gutter, y_vis_bot - bar_bottom);
+      // Full bordered content band (overlay bars paint in PostDraw on top).
+      UI_SkinCanvas_PropertyListClip(canvas, parentclip, x_left, y_vis_top, x_right - bar_gutter, y_vis_bot);
 
       canvas->SetLineWidth(0.0f);
 
@@ -6923,7 +6945,7 @@ bool UI_SKINCANVAS::Draw_Tree(UI_ELEMENT* element)
           double row_top = (double)((int)(y_top + UI_ELEMENT_TREE_PADDING_Y + ((double)i * rowheight) + vdisp + 0.5f));
           double row_bot = row_top + rowheight;
 
-          if(row_bot < y_vis_top || row_top > (y_vis_bot - bar_bottom)) continue;
+          if(row_bot < y_vis_top || row_top > y_vis_bot) continue;
 
           XDWORD depth    = element_tree->GetNodeDepth(node);
           double row_mid  = (double)((int)(row_top + (rowheight / 2.0f)));
@@ -6936,7 +6958,7 @@ bool UI_SKINCANVAS::Draw_Tree(UI_ELEMENT* element)
           // Selection wash behind icon + label.
           if(node == selected)
             {
-              double text_w = node->text.IsEmpty() ? 0.0f : (double)canvas->VectorFont_GetWidth(node->text.Get());
+              double text_w = node->text.IsEmpty() ? 0.0f : UI_SKINCANVAS_GetWidthStacked(this, canvas, node->text.Get());
               double sel_r  = text_x + text_w + 4.0f;
 
               canvas->SetLineColor(&color_select);
@@ -7050,13 +7072,13 @@ bool UI_SKINCANVAS::Draw_Tree(UI_ELEMENT* element)
                 }
             }
 
-          // Label.
+          // Label (PrintStacked: Nunito + Noto SC fallback for chi / mixed Home+CJK rows).
           if(!node->text.IsEmpty())
             {
               double baseline = row_top + ((rowheight + fontheight) / 2.0f) - 1.0f;
 
               canvas->Vectorfont_GetConfig()->SetColor(&color_ink);
-              canvas->VectorFont_Print(text_x, baseline, node->text.Get());
+              UI_SKINCANVAS_PrintStacked(this, canvas, text_x, baseline, node->text.Get());
             }
         }
 
@@ -7227,7 +7249,7 @@ bool UI_SKINCANVAS::Draw_PropertyList(UI_ELEMENT* element)
                 XSTRING* text   = (pass == 0) ? &row->name : &row->value;
                 double   tx     = (pass == 0) ? (x_left + pad_x) : (x_split + pad_x);
 
-                if(!text->IsEmpty()) canvas->VectorFont_Printf(tx, baseline, text->Get());
+                if(!text->IsEmpty()) UI_SKINCANVAS_PrintStacked(this, canvas, tx, baseline, text->Get());
               }
           }
 
@@ -7280,10 +7302,12 @@ bool UI_SKINCANVAS::Draw_PropertyList(UI_ELEMENT* element)
 
         double baseline = y_top + ((headerheight + fontheight) / 2.0f) - 1.0f;
 
-        if(!element_list->GetHeaderName()->IsEmpty())  canvas->VectorFont_Printf(x_left + pad_x, baseline, element_list->GetHeaderName()->Get());
+        if(!element_list->GetHeaderName()->IsEmpty())
+          UI_SKINCANVAS_PrintStacked(this, canvas, x_left + pad_x, baseline, element_list->GetHeaderName()->Get());
 
         UI_SkinCanvas_PropertyListClip(canvas, parentclip, x_split + 4.0f, y_header_top, x_right - bar_gutter, y_body);
-        if(!element_list->GetHeaderValue()->IsEmpty()) canvas->VectorFont_Printf(x_split + pad_x, baseline, element_list->GetHeaderValue()->Get());
+        if(!element_list->GetHeaderValue()->IsEmpty())
+          UI_SKINCANVAS_PrintStacked(this, canvas, x_split + pad_x, baseline, element_list->GetHeaderValue()->Get());
       }
 
       // ---- Column splitter (header + body, inside the border) ---------------------------------------------------------
@@ -8893,36 +8917,116 @@ bool UI_SKINCANVAS::Draw_EditText(UI_ELEMENT* element)
       if(text_y > (box_b - 2.0)) text_y = box_b - 2.0;
       if(text_y < (box_t + sizefont)) text_y = box_t + sizefont;
 
-      UI_SKINCANVAS_PrintStacked(this, canvas, box_l + text_pad_x, text_y, display.Get());
+      // Horizontal scroll-without-bar: keep caret in the text band; no scrollbar UI.
+      const double text_l     = box_l + text_pad_x;
+      const double text_band_r = text_r - 4.0;
+      double       viewable_w = text_band_r - text_l;
+      if(viewable_w < 1.0) viewable_w = 1.0;
+
+      double text_w = display.IsEmpty() ? 0.0 : GetWidthString(display.Get(), element_edittext->GetSizeFont());
+
+      XDWORD  cursor_pos = element_edittext->Cursor_GetPosition();
+      if(cursor_pos > display.GetSize()) cursor_pos = display.GetSize();
+
+      XSTRING cursor_string;
+      display.Copy(0, cursor_pos, cursor_string);
+      double caret_w = cursor_string.IsEmpty() ? 0.0 : GetWidthString(cursor_string.Get(), element_edittext->GetSizeFont());
+
+      double offset = element_edittext->GetViewOffsetX();
+      if(element_edittext->Cursor_IsVisible())
+        {
+          double caret_screen = text_l + offset + caret_w;
+          if(caret_screen > text_band_r) offset -= (caret_screen - text_band_r);
+          caret_screen = text_l + offset + caret_w;
+          if(caret_screen < text_l) offset += (text_l - caret_screen);
+        }
+       else
+        {
+          offset = 0.0;
+        }
+
+      if(offset > 0.0) offset = 0.0;
+      double min_offset = viewable_w - text_w;
+      if(min_offset > 0.0) min_offset = 0.0;
+      if(offset < min_offset) offset = min_offset;
+      element_edittext->SetViewOffsetX(offset);
+
+      XRECT text_clip_saved;
+      canvas->GetClipBox(text_clip_saved);
+      // Clip glyphs/caret to the text band (left, bottom, right, top).
+      double clip_l = text_l;
+      double clip_r = text_r;
+      if(clip_r > clip_l)
+        {
+          canvas->SetClipBox(clip_l, box_b, clip_r, box_t);
+        }
+
+      // Selection highlight behind glyphs (anchor…caret).
+      if(element_edittext->Cursor_IsVisible() && element_edittext->Selection_Has() && !display.IsEmpty())
+        {
+          XDWORD sel_start = 0;
+          XDWORD sel_end   = 0;
+          element_edittext->Selection_GetNormalized(sel_start, sel_end);
+          if(sel_end > display.GetSize()) sel_end = display.GetSize();
+          if(sel_start < sel_end)
+            {
+              XSTRING s_start;
+              XSTRING s_end;
+              if(sel_start > 0) display.Copy(0, (int)sel_start, s_start);
+              display.Copy(0, (int)sel_end, s_end);
+
+              double w0 = s_start.IsEmpty() ? 0.0 : GetWidthString(s_start.Get(), element_edittext->GetSizeFont());
+              double w1 = s_end.IsEmpty()   ? 0.0 : GetWidthString(s_end.Get(),   element_edittext->GetSizeFont());
+
+              double hx0 = text_l + offset + w0;
+              double hx1 = text_l + offset + w1;
+              if(hx1 < hx0)
+                {
+                  double tmp = hx0; hx0 = hx1; hx1 = tmp;
+                }
+              if(hx0 < text_l) hx0 = text_l;
+              if(hx1 > text_band_r) hx1 = text_band_r;
+              if(hx1 > hx0)
+                {
+                  // Soft blue over black/white focus fills; readable on both themes.
+                  GRP2DCOLOR_RGBA8 sel(64, 128, 220, editing ? (XBYTE)160 : (XBYTE)120);
+                  GRP2DCOLOR_RGBA8 noline(0, 0, 0, 0);
+                  canvas->SetLineColor(&noline);
+                  canvas->SetFillColor(&sel);
+                  double sel_y = text_y + 1.0;
+                  canvas->Rectangle(hx0, sel_y, hx1, sel_y - sizefont, true);
+                }
+            }
+        }
+
+      UI_SKINCANVAS_PrintStacked(this, canvas, text_l + offset, text_y, display.Get());
 
       if(element_edittext->Cursor_IsVisible())
         {
-          XDWORD    cursor_xpos = 0;
-          XSTRING   cursor_string;
-
-          display.Copy(0, element_edittext->Cursor_GetPosition(), cursor_string);
-          cursor_xpos = (XDWORD)GetWidthString(cursor_string.Get(), element_edittext->GetSizeFont());
-       
           if(element_edittext->Cursor_GetXTimerBlink()->GetMeasureMilliSeconds() >= element_edittext->Cursor_GetTimeBlink())
             {
               element_edittext->Cursor_ChangeStateBlink();   
               element_edittext->Cursor_GetXTimerBlink()->Reset();
             } 
  
-          if(element_edittext->Cursor_GetStateBlink())
+          // Hide the caret while a range is selected (standard edit-field behaviour).
+          if(element_edittext->Cursor_GetStateBlink() && !element_edittext->Selection_Has())
             {
               int cursor_size = 3;
               GRP2DCOLOR_RGBA8 noline(0, 0, 0, 0);
               canvas->SetLineColor(&noline);
               canvas->SetFillColor(&color);
 
-              double cx1 = box_l + text_pad_x + (double)cursor_xpos;
-              if(cx1 > (text_r - 4.0)) cx1 = text_r - 4.0;
+              double cx1 = text_l + offset + caret_w;
+              if(cx1 < text_l) cx1 = text_l;
+              if(cx1 > (text_band_r)) cx1 = text_band_r;
               // Match VectorFont_Print's internal y+1 so caret and glyphs share one band.
               double caret_y = text_y + 1.0;
               canvas->Rectangle(cx1, caret_y, cx1 + cursor_size, caret_y - sizefont, true);
             }
         }
+
+      canvas->SetClipBox(text_clip_saved);
 
       // Restamp straight frame edges so spin strokes cannot break the bottom/right border.
       if(has_border)
@@ -11642,6 +11746,7 @@ bool UI_SKINCANVAS::ResolveScrollPolicy(UI_ELEMENT* element, UI_PROPERTY_SCROLLE
       if(cw < vp_w) cw = vp_w;
 
       scrolleable->Scroll_ResolvePolicy(UI_PROPERTY_SCROLLEABLE_TYPE_HORIZONTAL, vp_w, cw);
+      // ContentHeight already includes border + bottom-gutter slack (set in Draw_Tree / Flatten).
       scrolleable->Scroll_ResolvePolicy(UI_PROPERTY_SCROLLEABLE_TYPE_VERTICAL, vp_h, element_tree->GetContentHeight());
       return true;
     }

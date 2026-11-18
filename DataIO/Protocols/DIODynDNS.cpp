@@ -38,6 +38,7 @@
 
 #include "DIOFactory.h"
 #include "DIOWebClient.h"
+#include "XSleep.h"
 #ifdef DIO_PUBLICINTERNETIP_ACTIVE
 #include "DIOPublicInternetIP.h"
 #endif
@@ -137,7 +138,12 @@ bool DIODYNDNS::GetPublicIP(DIOIP& publicIP, int timeout, XSTRING* IPlocal)
   XBUFFER   xbuffer;
   bool      status;
 
-  status = webclient->Get(NL("checkip.dyndns.com"), xbuffer, DIOWEBCLIENT_DEFAULTUSERAGENT, timeout, IPlocal);
+  // Prefer HTTPS when TLS is compiled in (DynDNS checkip supports both).
+  #ifdef DIO_STREAMTLS_ACTIVE
+  status = webclient->Get(NL("https://checkip.dyndns.com"), xbuffer, DIOWEBCLIENT_DEFAULTUSERAGENT, timeout, IPlocal);
+  #else
+  status = webclient->Get(NL("http://checkip.dyndns.com"), xbuffer, DIOWEBCLIENT_DEFAULTUSERAGENT, timeout, IPlocal);
+  #endif
   if(status)
     {
       XSTRING startstring;
@@ -254,10 +260,33 @@ DIODYNDNS_STATUSCODE DIODYNDNS::Update(DIOURL& url, DIOIP& newpublicip, int time
 
   newpublicip.GetXString(IPstring);
 
-  askurl.Format(NL("%s:%s@members.dyndns.org/nic/update?hostname=%s&myip=%s&wildcard=NOCHG&mx=NOCHG&backmx=NOCHG"), login.Get(), password.Get(), url.Get(), IPstring.Get());
+  // Credentials go on the webclient (Basic auth header), never in the URL.
+  // Passwords with '#', '@', ':' etc. would break userinfo / fragment parsing and yield badauth.
+  if(webclient->GetLogin())    webclient->GetLogin()->Set(login.Get());
+  if(webclient->GetPassword()) webclient->GetPassword()->Set(password.Get());
 
-  status = webclient->Get(askurl.Get(), xbuffer, DIOWEBCLIENT_DEFAULTUSERAGENT, timeout, IPlocal);
-  if(!status)  return DIODYNDNS_STATUSCODE_NOTCONNECT;
+  // Official DynDNS RA-API: HTTPS on 443 preferred; HTTP (80/8245) only when TLS is unavailable.
+  #ifdef DIO_STREAMTLS_ACTIVE
+  askurl.Format(NL("%smembers.dyndns.org/nic/update?hostname=%s&myip=%s&wildcard=NOCHG&mx=NOCHG&backmx=NOCHG"),
+                DIOURL_WEBURLID_SECURE, url.Get(), IPstring.Get());
+  #else
+  askurl.Format(NL("%smembers.dyndns.org/nic/update?hostname=%s&myip=%s&wildcard=NOCHG&mx=NOCHG&backmx=NOCHG"),
+                DIOURL_WEBURLID, url.Get(), IPstring.Get());
+  #endif
+
+  // members.dyndns.org intermittently drops / stalls rapid sequential updates (reproduced with curl).
+  // Retry NOTCONNECT with a short pause; do not retry DynDNS protocol errors (badauth, nochg, ...).
+  status = false;
+  for(int attempt = 0; attempt < DIODYNDNS_UPDATE_MAX_ATTEMPTS; attempt++)
+    {
+      if(attempt > 0) GEN_XSLEEP.MilliSeconds(DIODYNDNS_UPDATE_RETRY_DELAY_MS);
+
+      xbuffer.Empty();
+      status = webclient->Get(askurl.Get(), xbuffer, DIOWEBCLIENT_DEFAULTUSERAGENT, timeout, IPlocal);
+      if(status) break;
+    }
+
+  if(!status) return DIODYNDNS_STATUSCODE_NOTCONNECT;
 
   result.Set(xbuffer.Get(), xbuffer.GetSize());
 
