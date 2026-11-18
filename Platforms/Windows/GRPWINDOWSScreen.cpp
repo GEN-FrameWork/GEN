@@ -49,6 +49,10 @@
 #include "UI_Manager.h"
 #endif
 
+#if defined(DIO_ACTIVE) && (defined(DIO_STREAMUDP_ACTIVE) || defined(DIO_STREAMUART_ACTIVE))
+#include "XTraceServer.h"
+#endif
+
 #include "GRPXEvent.h"
 #include "GRP2DCanvas.h"
 #include "GRPBitmap.h"
@@ -2240,6 +2244,23 @@ LRESULT CALLBACK GRPWINDOWSSCREEN::BaseWndProc(HWND hwnd, UINT msg, WPARAM wpara
 {
   switch(msg)
     {
+      // Local XTRACE IPC (XWINDOWSTRACE::PrintSpecial → FindWindow + WM_COPYDATA).
+      // Queued into XTRACESERVER as Local (no internet); return TRUE so the sender
+      // treats delivery as acknowledged (legacy VCL CheckCopyData behaviour).
+      case WM_COPYDATA              : {
+                                        #if defined(DIO_ACTIVE) && (defined(DIO_STREAMUDP_ACTIVE) || defined(DIO_STREAMUART_ACTIVE))
+                                        COPYDATASTRUCT* cs = (COPYDATASTRUCT*)lparam;
+                                        if(cs && cs->lpData && cs->cbData)
+                                          {
+                                            if(XTRACESERVER::HandleCopyData(cs->lpData, (XDWORD)cs->cbData))
+                                              {
+                                                return TRUE;
+                                              }
+                                          }
+                                        #endif
+                                      }
+                                      break;
+
       case WM_SYSCOMMAND            : { // Modal owns the shell: same as chrome min/max/close (UI hit-test
                                         // only reaches the modal subtree). Block native size/maximize too.
                                         #ifdef USERINTERFACE_ACTIVE

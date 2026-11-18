@@ -5427,6 +5427,13 @@ bool UI_SKINCANVAS::DiscardAnimBackdrop(UI_ELEMENT* element)
 }
 
 
+bool UI_SKINCANVAS::DiscardOptionBackdrop(UI_ELEMENT* element)
+{
+  if(!element) return false;
+  return OptionBackdrop_Delete(element);
+}
+
+
 bool UI_SKINCANVAS::DiscardFormBackdrop(UI_ELEMENT* element)
 {
   if(!element) return false;
@@ -8129,6 +8136,8 @@ bool UI_SKINCANVAS::Draw_Option(UI_ELEMENT* element)
       // cannot fully erase it (text clip box). Horizontally padded so a wider legend form is covered.
       // Skip inside the active modal tree: dialog buttons have no under-icon captions, and a
       // 24px band below a bottom-padded control bleeds past the modal AABB (XTM config modal).
+      // Also skip when no compact legend FORM sits under the bubble (icon-only overlays such as
+      // XTM console follow): stamping page colour there paints a visible empty caption plate.
       bool under_active_modal = false;
       if(UI_ELEMENT* modal = GEN_USERINTERFACE.Element_GetModal())
         {
@@ -8137,10 +8146,52 @@ bool UI_SKINCANVAS::Draw_Option(UI_ELEMENT* element)
               if(walk == modal) { under_active_modal = true; break; }
             }
         }
+      bool has_under_legend = false;
+      UI_ELEMENT* mo_legend = element_option->GetFather();
+      UI_LAYOUT*  mo_layout = (mo_legend && (mo_legend->GetType() == UI_ELEMENT_TYPE_MULTIOPTION))
+                              ? mo_legend->GetLayout() : NULL;
+      if(mo_layout && mo_legend->GetBoundaryLine())
+        {
+          double mx = mo_legend->GetXPosition();
+          double my = mo_legend->GetYPosition();
+          double mw = mo_legend->GetBoundaryLine()->width;
+          double mh = mo_legend->GetBoundaryLine()->height;
+          if(mo_legend->GetFather()) GetAddPositionScrollSteps(mo_legend->GetFather(), mx, my);
+
+          const double legend_probe = 20.0;
+          double left   = UI_BOUNDARYLINE_EdgeLeft (mx, mw);
+          double top    = UI_BOUNDARYLINE_EdgeTop  (my, mh);
+          double right  = left + mw;
+          double bottom = top + mh + legend_probe;
+
+          for(XDWORD ei = 0; ei < mo_layout->Elements_Get()->GetSize(); ei++)
+            {
+              UI_ELEMENT* sib = mo_layout->Elements_Get()->Get(ei);
+              if(!sib || sib == mo_legend) continue;
+              if(sib->GetType() != UI_ELEMENT_TYPE_FORM) continue;
+              if(!sib->IsVisible() || !sib->GetBoundaryLine()) continue;
+              if(sib->GetBoundaryLine()->height > 28.0) continue;
+              if(sib->GetBoundaryLine()->width  > 120.0) continue;
+
+              double sx = sib->GetXPosition();
+              double sy = sib->GetYPosition();
+              if(sib->GetFather()) GetAddPositionScrollSteps(sib->GetFather(), sx, sy);
+              double sl = UI_BOUNDARYLINE_EdgeLeft (sx, sib->GetBoundaryLine()->width);
+              double sr = UI_BOUNDARYLINE_EdgeRight(sx, sib->GetBoundaryLine()->width);
+              double st = UI_BOUNDARYLINE_EdgeTop  (sy, sib->GetBoundaryLine()->height);
+              double sb = UI_BOUNDARYLINE_EdgeBottom(sy, sib->GetBoundaryLine()->height);
+              if(sl < right && sr > left && st < bottom && sb > top)
+                {
+                  has_under_legend = true;
+                  break;
+                }
+            }
+        }
       if(element->MustReDraw() && canvas && element_option->GetFather() &&
          (element_option->GetFather()->GetType() == UI_ELEMENT_TYPE_MULTIOPTION) &&
          !GEN_USERINTERFACE.ModalLayer_IsCompositing() &&
-         !under_active_modal)
+         !under_active_modal &&
+         has_under_legend)
         {
           XBYTE pr = 0, pg = 0, pb = 0;
           if(!UI_SkinCanvas_ResolvePageRGB(element->GetLayout(), pr, pg, pb))
@@ -8205,18 +8256,49 @@ bool UI_SKINCANVAS::Draw_MultiOption(UI_ELEMENT* element)
   
   if(!canvas) return false;
 
+  double slot_x = element_multioption->GetXPosition();
+  double slot_y = element_multioption->GetYPosition();
+  double slot_w = element_multioption->GetBoundaryLine() ? element_multioption->GetBoundaryLine()->width  : 0.0;
+  double slot_h = element_multioption->GetBoundaryLine() ? element_multioption->GetBoundaryLine()->height : 0.0;
+  if(element_multioption->GetFather()) GetAddPositionScrollSteps(element_multioption->GetFather(), slot_x, slot_y);
+
+  // Icon overlays parked on a console (XTM follow btn): never restore Option/Anim plates —
+  // those captures bake the overlay scrollbar thumb and re-stamp a second "ghost" bar after
+  // Draw_Console + DrawScrollBars already painted the live thumb.
+  bool over_console = false;
+  UI_LAYOUT* slot_layout = element_multioption->GetLayout();
+  if(slot_layout && (slot_w > 0.0) && (slot_h > 0.0))
+    {
+      double sl = UI_BOUNDARYLINE_EdgeLeft (slot_x, slot_w);
+      double st = UI_BOUNDARYLINE_EdgeTop  (slot_y, slot_h);
+      double sr = sl + slot_w;
+      double sb = st + slot_h;
+      XVECTOR<UI_ELEMENT*>* roots = slot_layout->Elements_Get();
+      if(roots)
+        {
+          for(XDWORD ri = 0; ri < roots->GetSize(); ri++)
+            {
+              UI_ELEMENT* cand = roots->Get(ri);
+              if(!cand || !cand->IsVisible() || !cand->GetBoundaryLine()) continue;
+              if(cand->GetType() != UI_ELEMENT_TYPE_CONSOLE) continue;
+              double cx = cand->GetXPosition();
+              double cy = cand->GetYPosition();
+              if(cand->GetFather()) GetAddPositionScrollSteps(cand->GetFather(), cx, cy);
+              double cl = UI_BOUNDARYLINE_EdgeLeft (cx, cand->GetBoundaryLine()->width);
+              double ct = UI_BOUNDARYLINE_EdgeTop  (cy, cand->GetBoundaryLine()->height);
+              double cr = cl + cand->GetBoundaryLine()->width;
+              double cb = ct + cand->GetBoundaryLine()->height;
+              if(sl < cr && sr > cl && st < cb && sb > ct) { over_console = true; break; }
+            }
+        }
+    }
+
   // SAME-BUTTON FACE SWITCH + SHARED-SLOT TWINS (Stop/Run at the same AABB): before PreDraw,
   // (1) peel any OTHER element's Anim/Option backdrop that overlaps this slot (invisible twin ink),
   // (2) restore this multioption's own face backdrops so active/preselect/selected/deactive swaps
   // do not stack. RebuildAllAreas orphan-discard makes both ghosts common after maximize/restore.
   if(element->MustReDraw() && !GEN_USERINTERFACE.ModalLayer_IsCompositing())
     {
-      double slot_x = element_multioption->GetXPosition();
-      double slot_y = element_multioption->GetYPosition();
-      double slot_w = element_multioption->GetBoundaryLine() ? element_multioption->GetBoundaryLine()->width  : 0.0;
-      double slot_h = element_multioption->GetBoundaryLine() ? element_multioption->GetBoundaryLine()->height : 0.0;
-      if(element_multioption->GetFather()) GetAddPositionScrollSteps(element_multioption->GetFather(), slot_x, slot_y);
-
       if((slot_w > 0.0) && (slot_h > 0.0))
         {
           double pad = (double)UI_SKINCANVAS_PRESELECT_MAXEDGE;
@@ -8289,6 +8371,7 @@ bool UI_SKINCANVAS::Draw_MultiOption(UI_ELEMENT* element)
 
       // Clip face-cache restores to the slot AABB (+preselect pad). A full-box blit of a padded
       // Option/Anim backdrop spilled into the under-icon legend and left a gray plate there.
+      // Over-console overlays: delete only — restoring would re-seed a previous scrollbar thumb.
       double peel_l = UI_BOUNDARYLINE_EdgeLeft  (slot_x, slot_w) - (double)UI_SKINCANVAS_PRESELECT_MAXEDGE;
       double peel_t = UI_BOUNDARYLINE_EdgeTop   (slot_y, slot_h) - (double)UI_SKINCANVAS_PRESELECT_MAXEDGE;
       double peel_r = UI_BOUNDARYLINE_EdgeRight (slot_x, slot_w) + (double)UI_SKINCANVAS_PRESELECT_MAXEDGE;
@@ -8300,7 +8383,7 @@ bool UI_SKINCANVAS::Draw_MultiOption(UI_ELEMENT* element)
           if(!face) continue;
 
           GRP2DREBUILDAREA* optionbackdrop = OptionBackdrop_Find(face);
-          if(optionbackdrop && optionbackdrop->GetBitmap())
+          if(optionbackdrop && optionbackdrop->GetBitmap() && !over_console)
             {
               UI_SkinCanvas_RestoreBackdropIntersection(this, optionbackdrop, peel_l, peel_t, peel_r, peel_b);
             }
@@ -8314,7 +8397,7 @@ bool UI_SKINCANVAS::Draw_MultiOption(UI_ELEMENT* element)
               if(facechild->GetType() == UI_ELEMENT_TYPE_ANIMATION)
                 {
                   GRP2DREBUILDAREA* animbackdrop = AnimBackdrop_Find(facechild);
-                  if(animbackdrop && animbackdrop->GetBitmap())
+                  if(animbackdrop && animbackdrop->GetBitmap() && !over_console)
                     {
                       UI_SkinCanvas_RestoreBackdropIntersection(this, animbackdrop, peel_l, peel_t, peel_r, peel_b);
                     }
@@ -8323,7 +8406,7 @@ bool UI_SKINCANVAS::Draw_MultiOption(UI_ELEMENT* element)
                else if(facechild->GetType() == UI_ELEMENT_TYPE_TEXT)
                 {
                   GRP2DREBUILDAREA* textbackdrop = TextBackdrop_Find(facechild);
-                  if(textbackdrop && textbackdrop->GetBitmap())
+                  if(textbackdrop && textbackdrop->GetBitmap() && !over_console)
                     {
                       UI_SkinCanvas_RestoreBackdropIntersection(this, textbackdrop, peel_l, peel_t, peel_r, peel_b);
                     }
@@ -8332,7 +8415,7 @@ bool UI_SKINCANVAS::Draw_MultiOption(UI_ELEMENT* element)
             }
         }
 
-      CompactLegendsMarkNeedRepair();
+      if(!over_console) CompactLegendsMarkNeedRepair();
     }
 
   // Remember whether this tick is a real face/slot redraw so we can refresh sibling legends after paint.
@@ -8394,14 +8477,9 @@ bool UI_SKINCANVAS::Draw_MultiOption(UI_ELEMENT* element)
   // After the bubble face is on screen: restore+dirty any sibling TEXT whose plate overlaps the slot
   // or the legend strip just below it (shared Stop/Run caption). Draw_Text then page-seeds a clean
   // TextBackdrop (transparent-father path) and reprints glyphs on top — no gray bar, no double caption.
-  if(multioption_face_redraw && element_multioption->GetBoundaryLine())
+  // Icon-only overlays on a console have no caption strip — do not extend a probe down the scrollbar.
+  if(multioption_face_redraw && element_multioption->GetBoundaryLine() && !over_console)
     {
-      double slot_x = element_multioption->GetXPosition();
-      double slot_y = element_multioption->GetYPosition();
-      double slot_w = element_multioption->GetBoundaryLine()->width;
-      double slot_h = element_multioption->GetBoundaryLine()->height;
-      if(element_multioption->GetFather()) GetAddPositionScrollSteps(element_multioption->GetFather(), slot_x, slot_y);
-
       const double legend_pad = 20.0;
       double left   = UI_BOUNDARYLINE_EdgeLeft  (slot_x, slot_w) - (double)UI_SKINCANVAS_PRESELECT_MAXEDGE;
       double top    = UI_BOUNDARYLINE_EdgeTop   (slot_y, slot_h) - (double)UI_SKINCANVAS_PRESELECT_MAXEDGE;

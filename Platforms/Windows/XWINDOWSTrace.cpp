@@ -122,7 +122,13 @@ void XWINDOWSTRACE::PrintSpecial(XTRACE_TARGET* target, XBYTE level, XCHAR* stri
   HWND           hwnd;
   COPYDATASTRUCT cs;
 
+  // GEN custom-chrome screens register class "GEN_Windows_Screen" (WS_POPUP). FindWindow(NULL, title)
+  // often fails for those HWNDs; class+title succeeds. Keep NULL-class first for legacy monitors.
   hwnd = FindWindow(NULL, target->GetAim());
+  if(hwnd == NULL)
+    {
+      hwnd = FindWindow(NL("GEN_Windows_Screen"), target->GetAim());
+    }
 
   if(hwnd == NULL)
     {

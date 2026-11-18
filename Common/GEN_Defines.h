@@ -158,6 +158,11 @@
 * 
 * @}
 *
+* @defgroup UTILITIES Utilities
+* @{
+* 
+* @}
+*
 */
 
 

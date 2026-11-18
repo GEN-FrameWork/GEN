@@ -43,6 +43,10 @@
 #define XTRACESERVER_DEFAULT_MAXMESSAGES      4096
 #define XTRACESERVER_DEFAULT_PORT             10001
 
+// Local IPC (WM_COPYDATA) traces: same local IP XWINDOWSTRACE::PrintSpecial packs.
+// XTM BelongsTo(LOCAL_NO_INTERNET) is (!publicIP && localIP).
+#define XTRACESERVER_COPYDATA_LOCALIP         0x01010101u
+
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
 
 class XMUTEX;
@@ -117,6 +121,7 @@ class XTRACESERVER
 
     XDWORD                  GetCount                        ();
     XDWORD                  GetDroppedCount                 ();
+    XDWORD                  GetPushedCount                  ();
 
     bool                    Clear                           ();
 
@@ -129,6 +134,15 @@ class XTRACESERVER
     XTHREADPRIORITY         GetPriority                     ();
     void                    SetPriority                     (XTHREADPRIORITY priority);
     void                    SetHighPriority                 (bool enable);   // true=HIGH, false=NORMAL
+
+    // Windows local IPC: parse an XTRACE WM_COPYDATA payload and queue it under Local (no internet)
+    // (publicIP forced 0; localIP from packet or XTRACESERVER_COPYDATA_LOCALIP).
+    bool                    FeedCopyData                    (const void* data, XDWORD size);
+
+    // Active receiver for GRPWINDOWSSCREEN::BaseWndProc WM_COPYDATA (one monitor process).
+    static void             SetCopyDataReceiver             (XTRACESERVER* server);
+    static XTRACESERVER*    GetCopyDataReceiver             ();
+    static bool             HandleCopyData                  (const void* data, XDWORD size);
 
   private:
 
@@ -151,8 +165,11 @@ class XTRACESERVER
 
     void                    Clean                           ();
 
+    static XTRACESERVER*    copydata_receiver;
+
     XDWORD                  maxmessages;
     XDWORD                  droppedcount;
+    XDWORD                  pushedcount;
     XTHREADPRIORITY         priority;
 
     XMUTEX*                 xmutexmessages;

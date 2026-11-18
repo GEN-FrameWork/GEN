@@ -69,6 +69,7 @@
 
 /*---- GENERAL VARIABLE ----------------------------------------------------------------------------------------------*/
 
+XTRACESERVER* XTRACESERVER::copydata_receiver = NULL;
 
 
 /*---- CLASS MEMBERS -------------------------------------------------------------------------------------------------*/
@@ -385,6 +386,8 @@ bool XTRACESERVER::IniUART(XSTRING* config)
 * --------------------------------------------------------------------------------------------------------------------*/
 bool XTRACESERVER::End()
 {
+  if(copydata_receiver == this) copydata_receiver = NULL;
+
 #if defined(DIO_STREAMUDP_ACTIVE)
   CloseUDP();
 #endif
@@ -533,6 +536,29 @@ XDWORD XTRACESERVER::GetDroppedCount()
   if(xmutexmessages) xmutexmessages->Lock();
 
   count = droppedcount;
+
+  if(xmutexmessages) xmutexmessages->UnLock();
+
+  return count;
+}
+
+
+/**-------------------------------------------------------------------------------------------------------------------
+* 
+* @fn         XDWORD XTRACESERVER::GetPushedCount()
+* @brief      Get pushed count
+* @ingroup    XUTILS
+* 
+* @return     XDWORD : Total messages accepted into the queue (including those later dropped).
+* 
+* --------------------------------------------------------------------------------------------------------------------*/
+XDWORD XTRACESERVER::GetPushedCount()
+{
+  XDWORD count = 0;
+
+  if(xmutexmessages) xmutexmessages->Lock();
+
+  count = pushedcount;
 
   if(xmutexmessages) xmutexmessages->UnLock();
 
@@ -951,10 +977,101 @@ bool XTRACESERVER::PushMessage(XDWORD publicIP, XDWORD localIP, XBYTE level, XDW
     }
 
   messages.Add(msg);
+  pushedcount++;
 
   if(xmutexmessages) xmutexmessages->UnLock();
 
   return true;
+}
+
+
+/**-------------------------------------------------------------------------------------------------------------------
+*
+* @fn         bool XTRACESERVER::FeedCopyData(const void* data, XDWORD size)
+* @brief      Parses a WM_COPYDATA XTRACE payload and queues it for Local (no internet).
+* @ingroup    XUTILS
+*
+* @param[in]  data : COPYDATASTRUCT::lpData bytes.
+* @param[in]  size : COPYDATASTRUCT::cbData size.
+*
+* @return     bool : true if a message was queued; otherwise false.
+*
+*---------------------------------------------------------------------------------------------------------------------*/
+bool XTRACESERVER::FeedCopyData(const void* data, XDWORD size)
+{
+  if(!data || !size || !XTRACE::instance) return false;
+
+  XBUFFER packet;
+  packet.Add((XBYTE*)data, size);
+
+  XDWORD     publicIP = 0;
+  XDWORD     localIP  = 0;
+  XBYTE      level    = 0;
+  XDWORD     sequence = 0;
+  XDATETIME  xtime;
+  XBUFFER    payload;
+  XSTRING    string;
+
+  xtime.SetToZero();
+
+  if(XTRACE::instance->GetTraceFromXBuffer(packet, publicIP, localIP, level, sequence, &xtime, payload))
+    {
+      return false;
+    }
+
+  XTRACE::instance->SetTraceDataToText(payload, string);
+
+  // Always route IPC traces under Local (no internet): publicIP=0, local child IP from packet
+  // (XWINDOWSTRACE packs 1.1.1.1) or the canonical CopyData local IP.
+  publicIP = 0;
+  if(!localIP) localIP = XTRACESERVER_COPYDATA_LOCALIP;
+
+  return PushMessage(publicIP, localIP, level, sequence, xtime, string);
+}
+
+
+/**-------------------------------------------------------------------------------------------------------------------
+*
+* @fn         void XTRACESERVER::SetCopyDataReceiver(XTRACESERVER* server)
+* @brief      Registers the active WM_COPYDATA receiver (or NULL to clear).
+* @ingroup    XUTILS
+*
+*---------------------------------------------------------------------------------------------------------------------*/
+void XTRACESERVER::SetCopyDataReceiver(XTRACESERVER* server)
+{
+  copydata_receiver = server;
+}
+
+
+/**-------------------------------------------------------------------------------------------------------------------
+*
+* @fn         XTRACESERVER* XTRACESERVER::GetCopyDataReceiver()
+* @brief      Active WM_COPYDATA receiver, or NULL.
+* @ingroup    XUTILS
+*
+*---------------------------------------------------------------------------------------------------------------------*/
+XTRACESERVER* XTRACESERVER::GetCopyDataReceiver()
+{
+  return copydata_receiver;
+}
+
+
+/**-------------------------------------------------------------------------------------------------------------------
+*
+* @fn         bool XTRACESERVER::HandleCopyData(const void* data, XDWORD size)
+* @brief      Forwards a raw CopyData payload to the registered receiver.
+* @ingroup    XUTILS
+*
+* @param[in]  data : Payload bytes.
+* @param[in]  size : Payload size.
+*
+* @return     bool : true if queued; otherwise false.
+*
+*---------------------------------------------------------------------------------------------------------------------*/
+bool XTRACESERVER::HandleCopyData(const void* data, XDWORD size)
+{
+  if(!copydata_receiver) return false;
+  return copydata_receiver->FeedCopyData(data, size);
 }
 
 
@@ -1148,6 +1265,7 @@ void XTRACESERVER::Clean()
 {
   maxmessages       = XTRACESERVER_DEFAULT_MAXMESSAGES;
   droppedcount      = 0;
+  pushedcount       = 0;
   priority          = XTHREADPRIORITY_REALTIME;
   xmutexmessages    = NULL;
 
