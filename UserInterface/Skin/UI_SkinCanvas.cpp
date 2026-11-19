@@ -6891,15 +6891,13 @@ bool UI_SKINCANVAS::Draw_Tree(UI_ELEMENT* element)
                                                              : UI_PROPERTY_SCROLLEABLE_TYPE_HORIZONTAL;
               double lim  = scrolleable->Scroll_GetLimit(type);
               double disp = scrolleable->Scroll_GetDisplacement(type);
+              // Stay put when rows are added. Pinning a near-bottom offset to the
+              // limit followed every new node and scrolled All off the top at startup.
               if(lim >= 0.0f && disp != 0.0f)
                 {
                   scrolleable->Scroll_SetDisplacement(type, 0.0f);
                 }
                else if(lim < 0.0f && disp < lim)
-                {
-                  scrolleable->Scroll_SetDisplacement(type, lim);
-                }
-               else if((type == UI_PROPERTY_SCROLLEABLE_TYPE_VERTICAL) && (lim < 0.0f) && (disp <= (lim + rowheight)))
                 {
                   scrolleable->Scroll_SetDisplacement(type, lim);
                 }
