@@ -38,6 +38,7 @@
 
 #include "XFactory.h"
 #include "XDir.h"
+#include "XFile.h"
 
 #include "Script.h"
 
@@ -143,28 +144,37 @@ void SCRIPT_LIB_DIR::Clean()
 * --------------------------------------------------------------------------------------------------------------------*/
 void Call_IsItExists(SCRIPT_LIB* library, SCRIPT* script, XVECTOR<XVARIANT*>* params, XVARIANT* returnvalue)
 {
-  XDIR* dir     = NULL;
-  bool  status  = false;
-  
-  dir = GEN_XFACTORY.Create_Dir();
-  if(dir)
-    {     
-      if(!params->GetSize())
+  // Path may be a file or a directory. XDIR::Exist is not portable here: Windows
+  // FindFirstFile succeeds for files, while Linux opendir() only succeeds for
+  // directories (staticmap scrapers call IsItExists on the downloaded PNG path).
+  bool status = false;
+
+  if(!params->GetSize())
+    {
+      script->HaveError(SCRIPT_ERRORCODE_INSUF_PARAMS);
+      (*returnvalue) = false;
+      return;
+    }
+
+  XSTRING* string = (XSTRING*)params->Get(0)->GetData();
+  if(string && !string->IsEmpty())
+    {
+      XFILE* file = GEN_XFACTORY.Create_File();
+      if(file)
         {
-          script->HaveError(SCRIPT_ERRORCODE_INSUF_PARAMS);
-          return;
+          status = file->Exist(string->Get());
+          GEN_XFACTORY.Delete_File(file);
         }
 
-      XSTRING* string = (XSTRING*)params->Get(0)->GetData();  
-      if(string)
+      if(!status)
         {
-          if(!string->IsEmpty())
+          XDIR* dir = GEN_XFACTORY.Create_Dir();
+          if(dir)
             {
               status = dir->Exist(string->Get());
-            }        
+              GEN_XFACTORY.Delete_Dir(dir);
+            }
         }
-    
-      GEN_XFACTORY.Delete_Dir(dir);
     }
 
   (*returnvalue) = status;
