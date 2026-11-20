@@ -63,6 +63,7 @@ struct UI_ELEMENT_CONSOLE_LINE
   XBYTE                           colorindex;                 // 0..5 or UI_ELEMENT_CONSOLE_COLOR_RGB
   UI_COLOR                        rgb;
   XDWORD                          visualrows;                 // cached wrap rows (0 = needs measure)
+  double                          measured_w;                 // pixel width when word-wrap is off (-1 = not measured)
   XDWORD                          id;                         // monotonic id assigned on AddLine (never 0)
 
   private:
@@ -125,6 +126,23 @@ class UI_ELEMENT_CONSOLE : public UI_ELEMENT, public UI_PROPERTY_SCROLLEABLE
 
     XDWORD                        ConsumeTrimmedRows          ();
 
+    // Replay clears the console and would leave the viewport at the top.
+    // The fraction (0 = start, 1 = end) is applied on the next paint when follow is off.
+    void                          ArmScrollRestore            (double fraction);
+    bool                          ConsumeScrollRestore        (double& fraction);
+
+    // While autoscroll is off, the viewport stays on this line instead of sliding
+    // with front-trims or snapping to the live tail.
+    // offset_from_top is that line's viewport row in line units (0 = its baseline
+    // on the top padding). Line units, not pixels: a resize that changes the
+    // pitch must not turn the saved target into a position past the tail.
+    void                          FollowAnchor_Clear          ();
+    bool                          FollowAnchor_IsValid        ();
+    void                          FollowAnchor_Set            (XDWORD id, double offset_from_top);
+    bool                          FollowAnchor_Find           (XDWORD& index, double& offset_from_top);
+    void                          FollowAnchor_RememberDisp   (double disp);
+    bool                          FollowAnchor_UserMoved      (double disp);
+
     XDWORD                        GetLineCount                ();
     UI_ELEMENT_CONSOLE_LINE*      GetLine                     (XDWORD index);
 
@@ -160,7 +178,10 @@ class UI_ELEMENT_CONSOLE : public UI_ELEMENT, public UI_PROPERTY_SCROLLEABLE
 
     bool                          AddLine                     (XCHAR* string, XBYTE colorindex, UI_COLOR* rgb);
     void                          TrimToMaxLines              ();
+    bool                          ViewportLineSpan            (XDWORD& first, XDWORD& last);
+    void                          DropLineAt                  (XDWORD index, bool count_front);
     void                          Selection_AdjustFrontTrim   (XDWORD trimmed_lines);
+    void                          Selection_NoteRemoved       (XDWORD index);
     void                          Clean                       ();
 
     XDWORD                        sizefont;
@@ -181,6 +202,13 @@ class UI_ELEMENT_CONSOLE : public UI_ELEMENT, public UI_PROPERTY_SCROLLEABLE
     double                        layout_lineheight;
     double                        layout_fontheight;
     XDWORD                        trimmedrows_pending;        // front-trim rows to compensate when OFF
+    bool                          scroll_restore_valid;
+    double                        scroll_restore_fraction;
+    bool                          follow_anchor_valid;
+    XDWORD                        follow_anchor_id;
+    double                        follow_anchor_offset;
+    bool                          follow_anchor_disp_valid;
+    double                        follow_anchor_disp;
     XDWORD                        next_line_id;               // next id to assign on AddLine
     bool                          selection_active;
     XDWORD                        selection_first;

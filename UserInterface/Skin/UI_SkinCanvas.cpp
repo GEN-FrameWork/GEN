@@ -6416,6 +6416,95 @@ static XDWORD UI_SkinCanvas_ConsoleMeasureRows(UI_SKIN* skin, GRP2DCANVAS* canva
 }
 
 
+// Visual rows before index. Same walk Draw_Console uses to place lines, so the
+// follow anchor and the glyphs stay on the same row (word-wrap included).
+static double UI_SkinCanvas_ConsoleRowBefore(UI_SKIN* skin, GRP2DCANVAS* canvas, UI_ELEMENT_CONSOLE* console, XDWORD index, bool wordwrap, double max_text_w, XCHAR* face)
+{
+  double row = 0.0;
+  if(!console) return 0.0;
+
+  XDWORD n = console->GetLineCount();
+  if(index > n) index = n;
+
+  for(XDWORD i=0; i<index; i++)
+    {
+      UI_ELEMENT_CONSOLE_LINE* line = console->GetLine(i);
+      if(!line) continue;
+
+      if(wordwrap) row += (double)UI_SkinCanvas_ConsoleMeasureRows(skin, canvas, line, true, max_text_w, face);
+      else         row += 1.0;
+    }
+
+  return row;
+}
+
+
+// Console-overlay icons (the XTM follow button) used to paste a frozen plate under the
+// PNG on every frame. That plate covers the live console and stays black after a restore.
+// The overlay blends onto the console instead, and only on a real repaint.
+static XDWORD s_console_paint_serial = 0;
+static bool   s_over_console_face    = false;
+
+struct UI_SKINCANVAS_OVERLAYSEEN
+{
+  UI_ELEMENT* element;
+  XDWORD      serial;
+};
+
+static UI_SKINCANVAS_OVERLAYSEEN s_overlay_seen[8];
+
+static XDWORD& UI_SkinCanvas_OverlaySeen(UI_ELEMENT* element)
+{
+  int free_slot = -1;
+
+  for(int i = 0; i < 8; i++)
+    {
+      if(s_overlay_seen[i].element == element) return s_overlay_seen[i].serial;
+      if(!s_overlay_seen[i].element && (free_slot < 0)) free_slot = i;
+    }
+
+  if(free_slot < 0) free_slot = 0;
+  s_overlay_seen[free_slot].element = element;
+  s_overlay_seen[free_slot].serial  = 0;
+  return s_overlay_seen[free_slot].serial;
+}
+
+static void UI_SkinCanvas_DirtyConsoleOverlays(UI_ELEMENT* console)
+{
+  if(!console || !console->GetBoundaryLine()) return;
+
+  UI_LAYOUT* layout = console->GetLayout();
+  XVECTOR<UI_ELEMENT*>* roots = layout ? layout->Elements_Get() : NULL;
+  if(!roots) return;
+
+  double cx = console->GetXPosition();
+  double cy = console->GetYPosition();
+  double cw = console->GetBoundaryLine()->width;
+  double ch = console->GetBoundaryLine()->height;
+  double cl = UI_BOUNDARYLINE_EdgeLeft(cx, cw);
+  double ct = UI_BOUNDARYLINE_EdgeTop(cy, ch);
+  double cr = cl + cw;
+  double cb = ct + ch;
+
+  for(XDWORD i = 0; i < roots->GetSize(); i++)
+    {
+      UI_ELEMENT* other = roots->Get(i);
+      if(!other || (other == console) || !other->IsVisible() || !other->GetBoundaryLine()) continue;
+      if(other->GetType() != UI_ELEMENT_TYPE_MULTIOPTION) continue;
+
+      double ex = other->GetXPosition();
+      double ey = other->GetYPosition();
+      double ew = other->GetBoundaryLine()->width;
+      double eh = other->GetBoundaryLine()->height;
+      double el = UI_BOUNDARYLINE_EdgeLeft(ex, ew);
+      double et = UI_BOUNDARYLINE_EdgeTop(ey, eh);
+      double er = el + ew;
+      double eb = et + eh;
+      if((el < cr) && (er > cl) && (et < cb) && (eb > ct)) other->SetMustReDraw(true);
+    }
+}
+
+
 /**-------------------------------------------------------------------------------------------------------------------
 *
 * @fn         bool UI_SKINCANVAS::Draw_Console(UI_ELEMENT* element)
@@ -6497,22 +6586,27 @@ bool UI_SKINCANVAS::Draw_Console(UI_ELEMENT* element)
       if(!wordwrap)
         {
           visualrows = linecount;   // O(1): one visual row per buffer line
-          // Reuse cached max line width across redraws until AddLine/InvalidateLayoutCache.
-          if(element_console->GetLayoutMaxLineWidth() >= 0.0)
+          // Width is cached on each line. Only lines added since the last paint
+          // (or the whole buffer after the longest line was trimmed) hit the font.
+          bool   recompute = (element_console->GetLayoutMaxLineWidth() < 0.0);
+          double cached    = recompute ? 0.0 : element_console->GetLayoutMaxLineWidth();
+          max_line_w = cached;
+          for(XDWORD i=0; i<linecount; i++)
             {
-              max_line_w = element_console->GetLayoutMaxLineWidth();
-            }
-           else
-            {
-              for(XDWORD i=0; i<linecount; i++)
+              UI_ELEMENT_CONSOLE_LINE* line = element_console->GetLine(i);
+              if(!line) continue;
+              if(recompute || (line->measured_w < 0.0))
                 {
-                  UI_ELEMENT_CONSOLE_LINE* line = element_console->GetLine(i);
-                  if(!line || line->text.IsEmpty()) continue;
-                  double w = UI_SKINCANVAS_GetWidthStacked(this, canvas, line->text.Get(), consoleface);
-                  if(w > max_line_w) max_line_w = w;
+                  double w = 0.0;
+                  if(!line->text.IsEmpty())
+                    {
+                      w = UI_SKINCANVAS_GetWidthStacked(this, canvas, line->text.Get(), consoleface);
+                    }
+                  line->measured_w = w;
                 }
-              element_console->SetLayoutMaxLineWidth(max_line_w);
+              if(line->measured_w > max_line_w) max_line_w = line->measured_w;
             }
+          element_console->SetLayoutMaxLineWidth(max_line_w);
         }
        else
         {
@@ -6544,37 +6638,121 @@ bool UI_SKINCANVAS::Draw_Console(UI_ELEMENT* element)
 
           double lim = scrolleable->Scroll_GetLimit(UI_PROPERTY_SCROLLEABLE_TYPE_VERTICAL);
 
-          // ON  = pin to live tail (SetFraction 1).
-          // OFF = leave displacement where it is. As content grows, lim moves more negative while
-          //       disp stays put → the viewport freezes. Front-trims under maxlines_off are
-          //       compensated so the ring buffer does not slide under a fixed offset.
+          // ON  = pin to the live tail (line-aligned).
+          // OFF = keep one line on a fixed viewport row. Appending lines must not move it,
+          //       and a front-trim only changes that line's index. Never keep writing disp = lim:
+          //       after a resize the old target can sit past the new end, and pinning there
+          //       makes the ring buffer slide new lines into view while the control stays off.
           // While the user drags this console's scrollbar, do not fight the gesture (even if follow
           // is on); release resumes pin-to-tail on the next paint when autoscroll is still true.
-          bool follow = element_console->GetAutoscroll();
-          if(follow && GEN_USERINTERFACE.ScrollBar_IsDragging() &&
-             (GEN_USERINTERFACE.ScrollBar_GetDragElement() == (UI_ELEMENT*)element_console))
-            {
-              follow = false;
-            }
+          bool dragging = GEN_USERINTERFACE.ScrollBar_IsDragging() &&
+                          (GEN_USERINTERFACE.ScrollBar_GetDragElement() == (UI_ELEMENT*)element_console);
+          bool follow = element_console->GetAutoscroll() && !dragging;
           double disp = scrolleable->Scroll_GetDisplacement(UI_PROPERTY_SCROLLEABLE_TYPE_VERTICAL);
           XDWORD trimmed = element_console->ConsumeTrimmedRows();
 
-          if(!follow)
+          if(follow)
             {
-              if(trimmed > 0)
+              // Follow owns the tail. Drop any parked anchor so the next OFF
+              // recaptures whatever the user is looking at then.
+              double ignored = 0.0;
+              element_console->ConsumeScrollRestore(ignored);
+              element_console->FollowAnchor_Clear();
+            }
+           else if(dragging)
+            {
+              // The thumb owns displacement until release. Recapture afterwards.
+              element_console->FollowAnchor_Clear();
+            }
+           else
+            {
+              // Overflow auto reports displacement 0 while the axis is inactive.
+              // That 0 is not a scroll gesture. Treating it as one drops the anchor,
+              // and the stored tail comes back on the next active frame.
+              bool vactive    = scrolleable->Scroll_GetActive(UI_PROPERTY_SCROLLEABLE_TYPE_VERTICAL);
+              double restored = 0.0;
+              if(element_console->ConsumeScrollRestore(restored))
+                {
+                  if(lim < 0.0)
+                    {
+                      disp = restored * lim;
+                      if(disp > 0.0) disp = 0.0;
+                      if(disp < lim) disp = lim;
+                      scrolleable->Scroll_SetDisplacement(UI_PROPERTY_SCROLLEABLE_TYPE_VERTICAL, disp);
+                    }
+                  element_console->FollowAnchor_Clear();
+                }
+
+              bool user_moved = vactive && element_console->FollowAnchor_UserMoved(disp);
+              if(user_moved) element_console->FollowAnchor_Clear();
+
+              XDWORD anchor_index = 0;
+              double anchor_row   = 0.0;
+              bool   anchored = vactive && !user_moved && element_console->FollowAnchor_Find(anchor_index, anchor_row);
+              bool   retarget = !anchored;
+
+              if(anchored)
+                {
+                  double content_row = UI_SkinCanvas_ConsoleRowBefore(this, canvas, element_console, anchor_index, wordwrap, max_text_w, consoleface);
+                  disp = (anchor_row - content_row) * lineheight;
+
+                  bool clamped = false;
+                  if(disp > 0.0f)                 { disp = 0.0f; clamped = true; }
+                  if(lim >= 0.0f)                 { disp = 0.0f; clamped = true; }
+                  else if(lim < 0.0f && disp < lim) { disp = lim;  clamped = true; }
+
+                  scrolleable->Scroll_SetDisplacement(UI_PROPERTY_SCROLLEABLE_TYPE_VERTICAL, disp);
+
+                  // Past the end means the viewport grew (or the pitch changed) and the
+                  // saved row no longer fits. Lock onto the line now on screen. Keeping
+                  // the old target would assign disp = lim on every later paint, so each
+                  // front-trim slides a new line into the tail while follow stays off.
+                  if(clamped) retarget = true;
+                  else        retarget = false;
+                }
+               else if(vactive && !user_moved && (trimmed > 0))
                 {
                   disp += (double)trimmed * lineheight;
                   if(disp > 0.0f) disp = 0.0f;
-                  // Keep line-aligned after trim so a sliced glyph cannot stick under the top edge.
-                  if(lineheight > 0.0f)
-                    {
-                      double rows = -disp / lineheight;
-                      disp = -floor(rows + 1e-9) * lineheight;
-                      if(disp > 0.0f) disp = 0.0f;
-                    }
-                  if(lim < 0.0f && disp < lim) disp = lim;
+                  if(lim >= 0.0f) disp = 0.0f;
+                  else if(lim < 0.0f && disp < lim) disp = lim;
                   scrolleable->Scroll_SetDisplacement(UI_PROPERTY_SCROLLEABLE_TYPE_VERTICAL, disp);
                 }
+
+              if(retarget && vactive)
+                {
+                  double base   = y_top + pad_y + fontheight + disp;
+                  double vis_lo = y_top + pad_y;
+                  double vis_hi = y_bot - pad_y;
+                  double row    = 0.0;
+                  bool   found  = false;
+
+                  for(XDWORD i=0; i<linecount; i++)
+                    {
+                      UI_ELEMENT_CONSOLE_LINE* ln = element_console->GetLine(i);
+                      if(!ln || (ln->id == 0)) continue;
+
+                      XDWORD rows_here = wordwrap ? UI_SkinCanvas_ConsoleMeasureRows(this, canvas, ln, true, max_text_w, consoleface) : 1;
+                      double yb = base + (row * lineheight);
+                      if((yb >= vis_lo) && (yb <= vis_hi))
+                        {
+                          double view_row = row + (disp / lineheight);
+                          element_console->FollowAnchor_Set(ln->id, view_row);
+                          found = true;
+                          break;
+                        }
+
+                      row += (double)rows_here;
+                    }
+
+                  if(!found) element_console->FollowAnchor_Clear();
+                }
+
+              if(vactive) element_console->FollowAnchor_RememberDisp(disp);
+            }
+
+          if(!follow)
+            {
               element_console->ConsumeAutoscrollPending();
             }
            else if(lim < 0.0f)
@@ -6606,6 +6784,40 @@ bool UI_SKINCANVAS::Draw_Console(UI_ELEMENT* element)
       glyph_asc += 1.0; // AA bleed above the measured box
       double y_vis_lo = y_top + pad_y;
       double y_vis_hi = y_bot - pad_y;
+
+      // PreDraw clips to the element box plus a 2px stroke pad so the rounded border can antialias.
+      // Console lines are not widgets: with word-wrap off they rasterize to that pad, so glyphs land
+      // on the frame and in the scrollbar gutter (the bar is painted after the clip is restored).
+      // Hold the text to the inner frame, and clear of a visible bar.
+      double frame_bw = 0.0;
+      if(element_console->IsBorderColorSet() && (element_console->GetBorderWidth() > 0.0))
+        frame_bw = element_console->GetBorderWidth();
+      double text_clip_l = x_position + frame_bw;
+      double text_clip_r = x_position + box_w - frame_bw;
+      double text_clip_t = y_top + frame_bw;
+      double text_clip_b = y_bot - frame_bw;
+      if(scrolleable && scrolleable->Scroll_GetVisible(UI_PROPERTY_SCROLLEABLE_TYPE_VERTICAL))
+        text_clip_r = x_position + box_w - bar_gutter;
+      if(scrolleable && scrolleable->Scroll_GetVisible(UI_PROPERTY_SCROLLEABLE_TYPE_HORIZONTAL))
+        text_clip_b = y_bot - bar_gutter;
+      if(text_clip_r < text_clip_l) text_clip_r = text_clip_l;
+      if(text_clip_b < text_clip_t) text_clip_b = text_clip_t;
+
+      XRECT text_clip_saved;
+      canvas->GetClipBox(text_clip_saved);
+      {
+        double pminx = __MIN(text_clip_saved.x1, text_clip_saved.x2);
+        double pmaxx = __MAX(text_clip_saved.x1, text_clip_saved.x2);
+        double pminy = __MIN(text_clip_saved.y1, text_clip_saved.y2);
+        double pmaxy = __MAX(text_clip_saved.y1, text_clip_saved.y2);
+        double l = __MAX(text_clip_l, pminx);
+        double r = __MIN(text_clip_r, pmaxx);
+        double t = __MAX(text_clip_t, pminy);
+        double b = __MIN(text_clip_b, pmaxy);
+        if(r < l) r = l;
+        if(b < t) b = t;
+        canvas->SetClipBox(l, b, r, t);
+      }
 
       XDWORD row = 0;
       for(XDWORD i=0; i<linecount; i++)
@@ -6675,7 +6887,30 @@ bool UI_SKINCANVAS::Draw_Console(UI_ELEMENT* element)
               // green ready line). Pad wipe still clears ascender crumbs in the top pad.
               if(y >= y_vis_lo && y <= y_vis_hi)
                 {
-                  UI_SKINCANVAS_PrintStacked(this, canvas, x_text, y, line->text.IsEmpty() ? NL("") : line->text.Get(), consoleface);
+                  // Unwrapped traces can be thousands of glyphs. Rasterizing past the
+                  // clip is what drops FPS once the viewport is on those lines.
+                  XCHAR* src = line->text.IsEmpty() ? NL("") : line->text.Get();
+                  XDWORD nch = line->text.GetSize();
+                  if((x_text < text_clip_r) && (nch > 0))
+                    {
+                      double room = text_clip_r - x_text;
+                      double cw   = (em > 1.0) ? (em * 0.45) : 5.0;
+                      XDWORD budget = (XDWORD)(room / cw) + 8;
+                      if(budget < nch)
+                        {
+                          XSTRING prefix;
+                          prefix.Set(src, budget);
+                          UI_SKINCANVAS_PrintStacked(this, canvas, x_text, y, prefix.Get(), consoleface);
+                        }
+                       else
+                        {
+                          UI_SKINCANVAS_PrintStacked(this, canvas, x_text, y, src, consoleface);
+                        }
+                    }
+                   else if(nch == 0)
+                    {
+                      UI_SKINCANVAS_PrintStacked(this, canvas, x_text, y, NL(""), consoleface);
+                    }
                 }
               row++;
               continue;
@@ -6701,6 +6936,8 @@ bool UI_SKINCANVAS::Draw_Console(UI_ELEMENT* element)
               start = end;
             }
         }
+
+      canvas->SetClipBox(text_clip_saved);
 
       // Cover ascender/AA crumbs in the vertical padding bands. Stay strictly inside the RoundRect
       // *inner* fill (lw inset + corner radius) — a sharp AABB wipe from x+bw/y+bw erases the border
@@ -6737,6 +6974,11 @@ bool UI_SKINCANVAS::Draw_Console(UI_ELEMENT* element)
         }
 
       UI_SKINCANVAS_RestoreTextFace(canvas, prevface);
+
+      // One console paint. Overlapping icon overlays recomposite once onto this
+      // frame instead of pasting a stored plate every idle frame.
+      s_console_paint_serial++;
+      UI_SkinCanvas_DirtyConsoleOverlays(element_console);
     }
 
   PostDrawFunction(element, canvas, clip_rect, x_position, y_position);
@@ -7520,7 +7762,39 @@ bool UI_SKINCANVAS::Draw_Animation(UI_ELEMENT* element)
 
       if(!GEN_USERINTERFACE.ModalLayer_IsCompositing())
         {
-          if(chrome_control)
+          if(s_over_console_face)
+            {
+              // Blend onto the console. A plate captured on the cleared framebuffer
+              // would be pasted back here and hide the text under a black square.
+              UI_ELEMENT* slot = element->GetFather();
+              while(slot && (slot->GetType() != UI_ELEMENT_TYPE_MULTIOPTION)) slot = slot->GetFather();
+              if(slot)
+                {
+                  XDWORD&    seen  = UI_SkinCanvas_OverlaySeen(slot);
+                  const bool fresh = (s_console_paint_serial != seen);
+                  seen = s_console_paint_serial;
+
+                  if(fresh)
+                    {
+                      AnimBackdrop_Delete(slot);
+                      if(element_image->GetImage())
+                        {
+                          double ih = (double)element_image->GetImage()->GetHeight();
+                          double iw = (double)element_image->GetImage()->GetWidth();
+                          if(iw < 1.0) iw = 1.0;
+                          if(ih < 1.0) ih = 1.0;
+                          AnimBackdrop_Capture(slot, x_position, y_position - ih, iw, ih);
+                        }
+                    }
+                   else
+                    {
+                      GRP2DREBUILDAREA* bd = AnimBackdrop_Find(slot);
+                      if(bd && bd->GetBitmap())
+                        PutBitmapNoAlpha(bd->GetXPos(), bd->GetYPos(), bd->GetBitmap());
+                    }
+                }
+            }
+           else if(chrome_control)
             {
               // Never keep AnimBackdrop under chrome SVGs (stale black plate). Do NOT recolor/scrub
               // the glyphs — chrome icons are authored for any caption colour. Seed the AABB with the
@@ -7835,7 +8109,8 @@ bool UI_SKINCANVAS::Draw_Option(UI_ELEMENT* element)
 
       bool opaque_option_wash = (element_option->GetBackgroundColor()->GetAlpha() == 255);
       bool optionbackdrop_restored = false;
-      if(opaque_option_wash || chrome_control)
+      // Over a console the option plate is the same frozen rectangle as the anim plate.
+      if(s_over_console_face || opaque_option_wash || chrome_control)
         {
           OptionBackdrop_Delete(element_option);
         }
@@ -8363,8 +8638,12 @@ bool UI_SKINCANVAS::Draw_MultiOption(UI_ELEMENT* element)
           // Anim/Option only before the face paint. Sibling legends under the slot are refreshed
           // AFTER the new face is drawn (see post-paint TextBackdrop_Invalidate below) so their
           // TextBackdrop re-capture cannot bake the bubble rim / gray plate under Demarrer/Arreter.
-          OptionBackdrop_InvalidateOverlapping(left, top, width, height, true);
-          AnimBackdrop_InvalidateOverlapping(left, top, width, height, element_multioption);
+          // Console overlays must not paste that plate: it covers the text the console just drew.
+          if(!over_console)
+            {
+              OptionBackdrop_InvalidateOverlapping(left, top, width, height, true);
+              AnimBackdrop_InvalidateOverlapping(left, top, width, height, element_multioption);
+            }
         }
 
       // Clip face-cache restores to the slot AABB (+preselect pad). A full-box blit of a padded
@@ -8445,7 +8724,9 @@ bool UI_SKINCANVAS::Draw_MultiOption(UI_ELEMENT* element)
   // Ungated paint (historical): a MustReDraw gate here left chrome buttons blank when a sibling
   // caption/form wiped their pixels while the multioption flag stayed clean. Face-switch erase above
   // remains gated on MustReDraw so only real redraws peel prior faces.
-  //if(element->MustReDraw()) 
+  // Console overlays are the exception: blending the PNG every idle frame stacks it, and the
+  // console dirties the overlay when it repaints that slot.
+  if(!over_console || element->MustReDraw())
     {
       DrawBackgroundColor(element_multioption, canvas, x_position, y_position);
  
@@ -8465,7 +8746,9 @@ bool UI_SKINCANVAS::Draw_MultiOption(UI_ELEMENT* element)
                       UI_ELEMENT* facechild = (UI_ELEMENT*)element_option->GetComposeElements()->Get(d);
                       if(facechild) facechild->SetMustReDraw(true);
                     }
-                  Draw(element_option);              
+                  if(over_console) s_over_console_face = true;
+                  Draw(element_option);
+                  s_over_console_face = false;
                   break;              
                 }       
             }            

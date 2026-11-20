@@ -741,9 +741,15 @@ XTRACE_STATUS_MSG* XTRACE_STATUS_MSGS::StatusMsg_Add(XSTRING* line)
 
   line->Copy(indexstatus, string);
 
-  ID.AdjustSize(_MAXSTR);
-  name.AdjustSize(_MAXSTR);
-  valuestr.AdjustSize(_MAXSTR);
+  // UnFormat("%s") writes the field and a terminator through the raw pointer.
+  // The slot has to cover the whole line: a fixed _MAXSTR buffer is overrun
+  // when a status value is longer than 256 characters.
+  XDWORD fieldcap = string.GetSize() + 1;
+  if(fieldcap < (XDWORD)_MAXSTR) fieldcap = (XDWORD)_MAXSTR;
+
+  ID.AdjustSize(fieldcap);
+  name.AdjustSize(fieldcap);
+  valuestr.AdjustSize(fieldcap);
 
   string.UnFormat(NL("%s,%s,%c,%s"), ID.Get(), name.Get(), &typechar, valuestr.Get());
 

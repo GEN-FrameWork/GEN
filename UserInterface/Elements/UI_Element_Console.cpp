@@ -72,6 +72,7 @@ void UI_ELEMENT_CONSOLE_LINE::Clean()
   colorindex = UI_ELEMENT_CONSOLE_COLOR_BLACK;
   rgb.SetInvalid();
   visualrows = 0;
+  measured_w = -1.0;
   id         = 0;
 }
 
@@ -184,6 +185,8 @@ bool UI_ELEMENT_CONSOLE::GetAutoscroll()
 void UI_ELEMENT_CONSOLE::SetAutoscroll(bool autoscroll)
 {
   this->autoscroll = autoscroll;
+  // Recapture on the next paint so OFF holds the lines the user is looking at.
+  follow_anchor_valid = false;
   if(!autoscroll)
     {
       autoscrollpending = false;
@@ -297,7 +300,11 @@ void UI_ELEMENT_CONSOLE::InvalidateLayoutCache()
   for(XDWORD i=0; i<lines.GetSize(); i++)
     {
       UI_ELEMENT_CONSOLE_LINE* line = lines.Get(i);
-      if(line) line->visualrows = 0;
+      if(line)
+        {
+          line->visualrows = 0;
+          line->measured_w = -1.0;
+        }
     }
 }
 
@@ -307,6 +314,68 @@ XDWORD UI_ELEMENT_CONSOLE::ConsumeTrimmedRows()
   XDWORD n = trimmedrows_pending;
   trimmedrows_pending = 0;
   return n;
+}
+
+
+void UI_ELEMENT_CONSOLE::FollowAnchor_Clear()
+{
+  follow_anchor_valid      = false;
+  follow_anchor_id         = 0;
+  follow_anchor_offset     = 0.0;
+  follow_anchor_disp_valid = false;
+  follow_anchor_disp       = 0.0;
+}
+
+
+bool UI_ELEMENT_CONSOLE::FollowAnchor_IsValid()
+{
+  return follow_anchor_valid && (follow_anchor_id != 0);
+}
+
+
+void UI_ELEMENT_CONSOLE::FollowAnchor_Set(XDWORD id, double offset_from_top)
+{
+  if(id == 0) return;
+  follow_anchor_valid  = true;
+  follow_anchor_id     = id;
+  follow_anchor_offset = offset_from_top;
+}
+
+
+bool UI_ELEMENT_CONSOLE::FollowAnchor_Find(XDWORD& index, double& offset_from_top)
+{
+  index            = 0;
+  offset_from_top  = follow_anchor_offset;
+  if(!follow_anchor_valid || (follow_anchor_id == 0)) return false;
+
+  for(XDWORD i=0; i<lines.GetSize(); i++)
+    {
+      UI_ELEMENT_CONSOLE_LINE* line = lines.Get(i);
+      if(line && (line->id == follow_anchor_id))
+        {
+          index = i;
+          return true;
+        }
+    }
+
+  return false;
+}
+
+
+void UI_ELEMENT_CONSOLE::FollowAnchor_RememberDisp(double disp)
+{
+  follow_anchor_disp_valid = true;
+  follow_anchor_disp       = disp;
+}
+
+
+bool UI_ELEMENT_CONSOLE::FollowAnchor_UserMoved(double disp)
+{
+  if(!follow_anchor_disp_valid) return false;
+  double delta = disp - follow_anchor_disp;
+  if(delta < 0.0) delta = -delta;
+  // Wheel, track click and thumb drag write displacement between paints.
+  return (delta > 0.5);
 }
 
 
@@ -661,6 +730,8 @@ bool UI_ELEMENT_CONSOLE::Clear()
   contentwidth        = 0.0f;
   trimmedrows_pending = 0;
   autoscrollpending   = false;
+  scroll_restore_valid = false;
+  FollowAnchor_Clear();
   Selection_Clear();
   Scroll_SetDisplacement(UI_PROPERTY_SCROLLEABLE_TYPE_VERTICAL, 0.0f);
   Scroll_SetDisplacement(UI_PROPERTY_SCROLLEABLE_TYPE_HORIZONTAL, 0.0f);
@@ -674,6 +745,24 @@ bool UI_ELEMENT_CONSOLE::ConsumeAutoscrollPending()
 {
   if(!autoscrollpending) return false;
   autoscrollpending = false;
+  return true;
+}
+
+
+void UI_ELEMENT_CONSOLE::ArmScrollRestore(double fraction)
+{
+  if(fraction < 0.0) fraction = 0.0;
+  if(fraction > 1.0) fraction = 1.0;
+  scroll_restore_fraction = fraction;
+  scroll_restore_valid    = true;
+}
+
+
+bool UI_ELEMENT_CONSOLE::ConsumeScrollRestore(double& fraction)
+{
+  if(!scroll_restore_valid) return false;
+  fraction = scroll_restore_fraction;
+  scroll_restore_valid = false;
   return true;
 }
 
@@ -736,9 +825,9 @@ bool UI_ELEMENT_CONSOLE::AddLine(XCHAR* string, XBYTE colorindex, UI_COLOR* rgb)
 
   TrimToMaxLines();
 
-  // New/trimmed lines can change the longest-line width used for horizontal scroll.
-  layout_max_line_w = -1.0f;
-
+  // Width is cached per line. A new line is measured on the next paint; do not
+  // throw away every other line's width (that remeasure is what collapses FPS
+  // once the follow-off buffer grows to maxlines_off).
   if(autoscroll) autoscrollpending = true;
   SetMustReDraw(true);
 
@@ -763,25 +852,186 @@ void UI_ELEMENT_CONSOLE::Selection_AdjustFrontTrim(XDWORD trimmed_lines)
 }
 
 
+void UI_ELEMENT_CONSOLE::Selection_NoteRemoved(XDWORD index)
+{
+  if(!selection_active) return;
+
+  if(index < selection_first)
+    {
+      selection_first--;
+      selection_last--;
+      return;
+    }
+
+  if(index > selection_last) return;
+
+  if(selection_first >= selection_last)
+    {
+      Selection_Clear();
+      return;
+    }
+
+  selection_last--;
+}
+
+
+bool UI_ELEMENT_CONSOLE::ViewportLineSpan(XDWORD& first, XDWORD& last)
+{
+  if(layout_lineheight < 1.0) return false;
+  if(!Scroll_GetActive(UI_PROPERTY_SCROLLEABLE_TYPE_VERTICAL)) return false;
+  if(!GetBoundaryLine()) return false;
+
+  double box_h = GetBoundaryLine()->height;
+  if(box_h < 1.0) return false;
+
+  double lh   = layout_lineheight;
+  double pad  = layout_pad_y;
+  double fh   = layout_fontheight;
+  double disp = Scroll_GetDisplacement(UI_PROPERTY_SCROLLEABLE_TYPE_VERTICAL);
+  if(fh < 1.0) fh = lh;
+
+  XDWORD n = lines.GetSize();
+  if(n == 0) return false;
+
+  // Word-wrap: a line can occupy several rows, so the index span is a walk.
+  if(wordwrap)
+    {
+      double vis_lo = pad;
+      double vis_hi = box_h - pad;
+      double row    = 0.0;
+      bool   any    = false;
+      XDWORD first_i = 0;
+      XDWORD last_i  = 0;
+
+      for(XDWORD i=0; i<n; i++)
+        {
+          UI_ELEMENT_CONSOLE_LINE* line = lines.Get(i);
+          XDWORD rows = 1;
+          if(line && (line->visualrows > 0)) rows = line->visualrows;
+
+          double y0 = pad + fh + disp + (row * lh);
+          double y1 = y0 + ((double)(rows - 1) * lh);
+          if((y1 >= vis_lo) && (y0 <= vis_hi))
+            {
+              if(!any)
+                {
+                  first_i = i;
+                  any     = true;
+                }
+              last_i = i;
+            }
+           else if(any)
+            {
+              break;
+            }
+
+          row += (double)rows;
+        }
+
+      if(!any) return false;
+      if(first_i > 0) first_i--;
+      if((last_i + 1) < n) last_i++;
+      first = first_i;
+      last  = last_i;
+      return true;
+    }
+
+  // Baseline of line i sits at pad + fontheight + disp + i*lineheight.
+  // Keep one extra line on each side so a glyph that straddles the pad is not deleted.
+  double top_numer = -fh - disp;
+  int    ifirst    = 0;
+  if(top_numer > 0.0)
+    {
+      ifirst = (int)(top_numer / lh);
+      if(((double)ifirst * lh) < top_numer) ifirst++;
+    }
+  if(ifirst > 0) ifirst--;
+
+  double bot_numer = (box_h - pad) - pad - fh - disp;
+  int    ilast     = -1;
+  if(bot_numer >= 0.0) ilast = (int)(bot_numer / lh);
+  ilast++;
+
+  if(ifirst < 0) ifirst = 0;
+  if((XDWORD)ifirst >= n) return false;
+  if(ilast < ifirst) ilast = ifirst;
+  if((XDWORD)ilast >= n) ilast = (int)n - 1;
+
+  first = (XDWORD)ifirst;
+  last  = (XDWORD)ilast;
+  return true;
+}
+
+
+void UI_ELEMENT_CONSOLE::DropLineAt(XDWORD index, bool count_front)
+{
+  UI_ELEMENT_CONSOLE_LINE* line = lines.Get(index);
+  if(!line) return;
+
+  XDWORD rows = 1;
+  if(line->visualrows > 0) rows = line->visualrows;
+
+  lines.DeleteIndex(index);
+  if((line->measured_w >= 0.0) && (layout_max_line_w >= 0.0) &&
+     (line->measured_w >= (layout_max_line_w - 0.01)))
+    {
+      layout_max_line_w = -1.0;
+    }
+  GEN_DELETE line;
+
+  Selection_NoteRemoved(index);
+  if(count_front) trimmedrows_pending += rows;
+}
+
+
 void UI_ELEMENT_CONSOLE::TrimToMaxLines()
 {
   XDWORD limit = autoscroll ? maxlines : maxlines_off;
-  XDWORD trimmed_lines = 0;
 
-  while(lines.GetSize() > limit)
+  // Follow owns the tail: drop the oldest lines and let the next paint pin to the end.
+  if(autoscroll)
     {
-      UI_ELEMENT_CONSOLE_LINE* oldest = lines.Get(0);
-      XDWORD rows = 1;
-      if(oldest && oldest->visualrows > 0) rows = oldest->visualrows;
-
-      lines.DeleteIndex(0);
-      GEN_DELETE oldest;
-
-      if(!autoscroll) trimmedrows_pending += rows;
-      trimmed_lines++;
+      XDWORD trimmed_lines = 0;
+      while(lines.GetSize() > limit)
+        {
+          UI_ELEMENT_CONSOLE_LINE* oldest = lines.Get(0);
+          lines.DeleteIndex(0);
+          if(oldest && (oldest->measured_w >= 0.0) && (layout_max_line_w >= 0.0) &&
+             (oldest->measured_w >= (layout_max_line_w - 0.01)))
+            {
+              layout_max_line_w = -1.0;
+            }
+          GEN_DELETE oldest;
+          trimmed_lines++;
+        }
+      if(trimmed_lines > 0) Selection_AdjustFrontTrim(trimmed_lines);
+      return;
     }
 
-  if(trimmed_lines > 0) Selection_AdjustFrontTrim(trimmed_lines);
+  // A history reprint arms a scroll restore and then appends the whole log.
+  // Keep the newest lines; the next paint puts the viewport back. Using the
+  // cleared displacement (0) here would keep the oldest lines and drop the tail.
+  if(scroll_restore_valid)
+    {
+      while(lines.GetSize() > limit) DropLineAt(0, false);
+      return;
+    }
+
+  // Follow is off. Lines the user is looking at stay. Prefer dropping history
+  // above the viewport (the anchor shifts by those rows). If the viewport is
+  // already at the start, drop lines below it. Deleting the first visible line
+  // and clamping the scroll back to 0 is what makes the text crawl.
+  while(lines.GetSize() > limit)
+    {
+      XDWORD first = 0;
+      XDWORD last  = 0;
+      XDWORD n     = lines.GetSize();
+      bool   known = ViewportLineSpan(first, last);
+
+      if(known && (first > 0))              DropLineAt(0, true);
+      else if(known && ((last + 1) < n))    DropLineAt(n - 1, false);
+      else                                  DropLineAt(0, true);
+    }
 }
 
 
@@ -805,6 +1055,13 @@ void UI_ELEMENT_CONSOLE::Clean()
   layout_lineheight   = 0.0f;
   layout_fontheight   = 0.0f;
   trimmedrows_pending = 0;
+  scroll_restore_valid     = false;
+  scroll_restore_fraction  = 0.0;
+  follow_anchor_valid      = false;
+  follow_anchor_id         = 0;
+  follow_anchor_offset     = 0.0;
+  follow_anchor_disp_valid = false;
+  follow_anchor_disp       = 0.0;
   next_line_id        = 0;
   selection_active    = false;
   selection_first     = 0;
