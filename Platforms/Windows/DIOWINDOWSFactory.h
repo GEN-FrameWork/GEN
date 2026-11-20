@@ -69,10 +69,8 @@ class DIOWINDOWSFACTORY : public DIOFACTORY
     bool                      DeleteWFP                     (DIOWINDOWSWFP* wfp);
     #endif
 
-    #ifndef BUILDER
     DIONOTIFICATIONSMANAGER*  CreateNotificationsManager    ();
     bool                      DeleteNotificationsManager    (DIONOTIFICATIONSMANAGER* notificationsmanager);
-    #endif
 };
 
 

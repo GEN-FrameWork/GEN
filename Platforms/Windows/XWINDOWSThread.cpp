@@ -42,9 +42,7 @@
 #include "XTimer.h"
 #include "XTrace.h"
 
-#ifndef BUILDER
 #include "MainProcWINDOWS.h"
-#endif
 
 
 
@@ -318,9 +316,7 @@ DWORD WINAPI XWINDOWSTHREAD::Callback(LPVOID thread)
   th = (XWINDOWSTHREAD*)thread;
   if(!th) return 0;
 
-  #ifndef BUILDER
   __try
-  #endif
     {
       th = (XWINDOWSTHREAD*)thread;
       if(!th) return 0;
@@ -358,7 +354,6 @@ DWORD WINAPI XWINDOWSTHREAD::Callback(LPVOID thread)
       if(th) th->statusfunc = XTHREADSTATUS_END;
     }
 
-  #ifndef BUILDER
   __except(Exception_Filter(GetExceptionCode(), GetExceptionInformation()))
   {
     if(th)
@@ -370,7 +365,6 @@ DWORD WINAPI XWINDOWSTHREAD::Callback(LPVOID thread)
           }
       }
   }
-  #endif
 
   return 0;
 }

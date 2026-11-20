@@ -57,280 +57,276 @@
 
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
 
-#ifndef BUILDER
-
 #pragma pack(push,8)
 template <class T>
 class XWINDOWSSYSTEM_PERFCOUNTERS
 {
-	public:
-																								XWINDOWSSYSTEM_PERFCOUNTERS												()
-																								{
-																
-																								}
+  public:
+                                                XWINDOWSSYSTEM_PERFCOUNTERS												()
+                                                {
 
-																							 ~XWINDOWSSYSTEM_PERFCOUNTERS												()
-																								{
+                                                }
 
-																								}
+                                               ~XWINDOWSSYSTEM_PERFCOUNTERS												()
+                                                {
 
-		T																						GetCounterValue																		(PERF_DATA_BLOCK** perfdata, DWORD objectindex, DWORD counterindex, LPCTSTR instancename = NULL)
-																								{
-																									QueryPerformanceData(perfdata, objectindex, counterindex);
+                                                }
 
-																									PPERF_OBJECT_TYPE perfobj = NULL;
-																									T									value		= { 0 };
+    T																						GetCounterValue																		(PERF_DATA_BLOCK** perfdata, DWORD objectindex, DWORD counterindex, LPCTSTR instancename = NULL)
+                                                {
+                                                  QueryPerformanceData(perfdata, objectindex, counterindex);
 
-																									perfobj = FirstObject(*perfdata);
+                                                  PPERF_OBJECT_TYPE perfobj = NULL;
+                                                  T									value		= { 0 };
 
-																									for(DWORD i=0; i<(*perfdata)->NumObjectTypes; i++ )
-																										{
+                                                  perfobj = FirstObject(*perfdata);
 
-																											if(perfobj->ObjectNameTitleIndex == objectindex)
-																												{
-																													value = GetCounterValue(perfobj, counterindex, instancename);
-																													break;
-																												}
+                                                  for(DWORD i=0; i<(*perfdata)->NumObjectTypes; i++ )
+                                                    {
 
-																											perfobj = NextObject( perfobj );
-																										}
+                                                      if(perfobj->ObjectNameTitleIndex == objectindex)
+                                                        {
+                                                          value = GetCounterValue(perfobj, counterindex, instancename);
+                                                          break;
+                                                        }
 
-																									return value;
-																								}
+                                                      perfobj = NextObject( perfobj );
+                                                    }
 
-		T																						GetCounterValueForProcessID											(PERF_DATA_BLOCK** perfdata, DWORD objectindex, DWORD counterindex, DWORD processID)
-																								{
-																									QueryPerformanceData(perfdata, objectindex, counterindex);
+                                                  return value;
+                                                }
 
-																									PPERF_OBJECT_TYPE perfobj		= NULL;
-																									T									value			= { 0 };
+    T																						GetCounterValueForProcessID											(PERF_DATA_BLOCK** perfdata, DWORD objectindex, DWORD counterindex, DWORD processID)
+                                                {
+                                                  QueryPerformanceData(perfdata, objectindex, counterindex);
 
-																									perfobj = FirstObject(*perfdata);
+                                                  PPERF_OBJECT_TYPE perfobj		= NULL;
+                                                  T									value			= { 0 };
 
-																									for(DWORD i=0; i<(*perfdata)->NumObjectTypes; i++ )
-																										{
+                                                  perfobj = FirstObject(*perfdata);
 
-																											if(perfobj->ObjectNameTitleIndex == objectindex)
-																												{
-																													value = GetCounterValueForProcessID(perfobj, counterindex, processID);
-																													break;
-																												}
+                                                  for(DWORD i=0; i<(*perfdata)->NumObjectTypes; i++ )
+                                                    {
 
-																											perfobj = NextObject( perfobj );
-																										}
+                                                      if(perfobj->ObjectNameTitleIndex == objectindex)
+                                                        {
+                                                          value = GetCounterValueForProcessID(perfobj, counterindex, processID);
+                                                          break;
+                                                        }
 
-																									return value;
-																								}
+                                                      perfobj = NextObject( perfobj );
+                                                    }
 
-	protected:
+                                                  return value;
+                                                }
 
-		class CBUFFER
-		{
-				public:
-																								CBUFFER																						(UINT size)
-																								{
-																									_size  = size;
-																									buffer = (LPBYTE) malloc(size * sizeof(BYTE));
-																								}
+  protected:
 
-																							 ~CBUFFER																						()
-																								{
-																									free(buffer);
-																								}
+    class CBUFFER
+    {
+        public:
+                                                CBUFFER																						(UINT size)
+                                                {
+                                                  _size  = size;
+                                                  buffer = (LPBYTE) malloc(size * sizeof(BYTE));
+                                                }
 
-					void*																	Realloc																						(UINT size)
-																								{
-																									_size = size;
-																									buffer = (LPBYTE) realloc(buffer, size);
+                                               ~CBUFFER																						()
+                                                {
+                                                  free(buffer);
+                                                }
 
-																									return buffer;
-																								}
+          void*																	Realloc																						(UINT size)
+                                                {
+                                                  _size = size;
+                                                  buffer = (LPBYTE) realloc(buffer, size);
 
-					void																	Reset																							()
-																								{
-																									memset(buffer, NULL, _size);
-																								}
+                                                  return buffer;
+                                                }
 
-					operator															LPBYTE																						()
-																								{
-																									return buffer;
-																								}
+          void																	Reset																							()
+                                                {
+                                                  memset(buffer, NULL, _size);
+                                                }
 
-					UINT																	GetSize																						()
-																								{
-																									return _size;
-																								}
-				
-					LPBYTE																buffer;
+          operator															LPBYTE																						()
+                                                {
+                                                  return buffer;
+                                                }
 
-			private:
+          UINT																	GetSize																						()
+                                                {
+                                                  return _size;
+                                                }
 
-					UINT																	_size;
-		};
+          LPBYTE																buffer;
 
-		void																				QueryPerformanceData															(PERF_DATA_BLOCK** perfdata, DWORD objectindex, DWORD counterindex)
-																								{
+      private:
 
-																									static CBUFFER		buffer(XWINDOWSSYSTEM_TOTALBYTES);
-																									DWORD							buffersize = buffer.GetSize();
-																									LONG							result;
+          UINT																	_size;
+    };
 
-																									XSTRING keyname;
-																									keyname.Format(NL("%d"), objectindex);
+    void																				QueryPerformanceData															(PERF_DATA_BLOCK** perfdata, DWORD objectindex, DWORD counterindex)
+                                                {
 
-																									buffer.Reset();
-																									while((result = RegQueryValueEx( HKEY_PERFORMANCE_DATA	,	keyname.Get()
-																																																					, NULL
-																																																					, NULL
-																																																					, buffer
-																																																					, &buffersize )) == ERROR_MORE_DATA )
-																										{
+                                                  static CBUFFER		buffer(XWINDOWSSYSTEM_TOTALBYTES);
+                                                  DWORD							buffersize = buffer.GetSize();
+                                                  LONG							result;
 
-																											buffersize += XWINDOWSSYSTEM_BYTEINCREMENT;
-																											buffer.Realloc(buffersize);
-																										}
+                                                  XSTRING keyname;
+                                                  keyname.Format(NL("%d"), objectindex);
 
-																									*perfdata = (PPERF_DATA_BLOCK) buffer.buffer;
-																								}
+                                                  buffer.Reset();
+                                                  while((result = RegQueryValueEx( HKEY_PERFORMANCE_DATA	,	keyname.Get()
+                                                                                                          , NULL
+                                                                                                          , NULL
+                                                                                                          , buffer
+                                                                                                          , &buffersize )) == ERROR_MORE_DATA )
+                                                    {
 
-		T																						GetCounterValue																		(PPERF_OBJECT_TYPE perfobj, DWORD counterindex, LPCTSTR instancename)
-																								{
-																									PPERF_COUNTER_DEFINITION		perfcntr			= NULL;
-																									PPERF_INSTANCE_DEFINITION		perfinst			= NULL;
-																									PPERF_COUNTER_BLOCK					counterblock	= NULL;
+                                                      buffersize += XWINDOWSSYSTEM_BYTEINCREMENT;
+                                                      buffer.Realloc(buffersize);
+                                                    }
 
-																									perfcntr = FirstCounter( perfobj );
+                                                  *perfdata = (PPERF_DATA_BLOCK) buffer.buffer;
+                                                }
 
-																									for(DWORD j=0; j<perfobj->NumCounters; j++ )
-																										{
-																											if (perfcntr->CounterNameTitleIndex == counterindex)  break;
+    T																						GetCounterValue																		(PPERF_OBJECT_TYPE perfobj, DWORD counterindex, LPCTSTR instancename)
+                                                {
+                                                  PPERF_COUNTER_DEFINITION		perfcntr			= NULL;
+                                                  PPERF_INSTANCE_DEFINITION		perfinst			= NULL;
+                                                  PPERF_COUNTER_BLOCK					counterblock	= NULL;
 
-																											perfcntr = NextCounter( perfcntr );
-																										}
+                                                  perfcntr = FirstCounter( perfobj );
 
-																									if(perfobj->NumInstances == PERF_NO_INSTANCES)		
-																										{
-																											counterblock = (PPERF_COUNTER_BLOCK) ((LPBYTE) perfobj + perfobj->DefinitionLength);
-																										}
-																									 else
-																										{
-																											perfinst = FirstInstance( perfobj );
-		
-																											XSTRING instancenamestr;
-																											XSTRING instancenamestr2;
+                                                  for(DWORD j=0; j<perfobj->NumCounters; j++ )
+                                                    {
+                                                      if (perfcntr->CounterNameTitleIndex == counterindex)  break;
 
-																											instancenamestr = instancename;
+                                                      perfcntr = NextCounter( perfcntr );
+                                                    }
 
-																											for(int k=0; k<perfobj->NumInstances; k++)
-																												{
-																													instancenamestr2 = (XCHAR*)((PBYTE)perfinst + perfinst->NameOffset);
+                                                  if(perfobj->NumInstances == PERF_NO_INSTANCES)		
+                                                    {
+                                                      counterblock = (PPERF_COUNTER_BLOCK) ((LPBYTE) perfobj + perfobj->DefinitionLength);
+                                                    }
+                                                   else
+                                                    {
+                                                      perfinst = FirstInstance( perfobj );
 
-																													if(!instancenamestr.Compare(instancenamestr2))
-																														{
-																															counterblock = (PPERF_COUNTER_BLOCK) ((LPBYTE) perfinst + perfinst->ByteLength);
-																															break;
-																														}
-				
-																													perfinst = NextInstance( perfinst );
-																												}
-																										}
+                                                      XSTRING instancenamestr;
+                                                      XSTRING instancenamestr2;
 
-																									if(counterblock)
-																										{
-																											T* value = NULL;
+                                                      instancenamestr = instancename;
 
-																											value = (T*)((LPBYTE) counterblock + perfcntr->CounterOffset);
-																											return *value;
-																										}
+                                                      for(int k=0; k<perfobj->NumInstances; k++)
+                                                        {
+                                                          instancenamestr2 = (XCHAR*)((PBYTE)perfinst + perfinst->NameOffset);
 
-																									return -1;
-																								}
+                                                          if(!instancenamestr.Compare(instancenamestr2))
+                                                            {
+                                                              counterblock = (PPERF_COUNTER_BLOCK) ((LPBYTE) perfinst + perfinst->ByteLength);
+                                                              break;
+                                                            }
 
-		T																						GetCounterValueForProcessID												(PPERF_OBJECT_TYPE perfobj, DWORD counterindex, DWORD processID)
-																								{
-																									int													PROC_ID_COUNTER				= 784;
-																									BOOL												processIDexist				= FALSE;
-																									PPERF_COUNTER_DEFINITION		perfcntr							= NULL;
-																									PPERF_COUNTER_DEFINITION		therequestedperfcntr  = NULL;
-																									PPERF_COUNTER_DEFINITION		procIDperfcntr				= NULL;
-																									PPERF_INSTANCE_DEFINITION		perfinst							= NULL;
-																									PPERF_COUNTER_BLOCK					counterblock					= NULL;
+                                                          perfinst = NextInstance( perfinst );
+                                                        }
+                                                    }
 
-																									perfcntr = FirstCounter(perfobj);
+                                                  if(counterblock)
+                                                    {
+                                                      T* value = NULL;
 
-																									for(DWORD j=0; j<perfobj->NumCounters; j++)
-																										{
-																											if(perfcntr->CounterNameTitleIndex == PROC_ID_COUNTER)
-																												{
-																													procIDperfcntr = perfcntr;
-																													if(therequestedperfcntr) break;
-																												}
+                                                      value = (T*)((LPBYTE) counterblock + perfcntr->CounterOffset);
+                                                      return *value;
+                                                    }
 
-																											if(perfcntr->CounterNameTitleIndex == counterindex)
-																												{
-																													therequestedperfcntr = perfcntr;
-																													if(procIDperfcntr) break;
-																												}
+                                                  return -1;
+                                                }
 
-																											perfcntr = NextCounter( perfcntr );
-																										}
+    T																						GetCounterValueForProcessID												(PPERF_OBJECT_TYPE perfobj, DWORD counterindex, DWORD processID)
+                                                {
+                                                  int													PROC_ID_COUNTER				= 784;
+                                                  BOOL												processIDexist				= FALSE;
+                                                  PPERF_COUNTER_DEFINITION		perfcntr							= NULL;
+                                                  PPERF_COUNTER_DEFINITION		therequestedperfcntr  = NULL;
+                                                  PPERF_COUNTER_DEFINITION		procIDperfcntr				= NULL;
+                                                  PPERF_INSTANCE_DEFINITION		perfinst							= NULL;
+                                                  PPERF_COUNTER_BLOCK					counterblock					= NULL;
 
-																									if(perfobj->NumInstances == PERF_NO_INSTANCES)		
-																										{
-																											counterblock = (PPERF_COUNTER_BLOCK) ((LPBYTE) perfobj + perfobj->DefinitionLength);
-																										}
-																									 else
-																										{
-																											perfinst = FirstInstance( perfobj );
-		
-																											for(int k=0; k<perfobj->NumInstances; k++)
-																												{
-																													counterblock = (PPERF_COUNTER_BLOCK) ((LPBYTE) perfinst + perfinst->ByteLength);
-																													if(counterblock)
-																														{
-																															T _processID  = 0;
+                                                  perfcntr = FirstCounter(perfobj);
 
-																															_processID = *(T*)((LPBYTE) counterblock + procIDperfcntr->CounterOffset);
-																															if((XDWORD)(_processID) == processID)
-																																{
-																																	processIDexist = TRUE;
-																																	break;
-																																}
-																														}
-				
-																													perfinst = NextInstance( perfinst );
-																												}
-																										}
+                                                  for(DWORD j=0; j<perfobj->NumCounters; j++)
+                                                    {
+                                                      if(perfcntr->CounterNameTitleIndex == PROC_ID_COUNTER)
+                                                        {
+                                                          procIDperfcntr = perfcntr;
+                                                          if(therequestedperfcntr) break;
+                                                        }
 
-																									if(processIDexist && counterblock)
-																										{
-																											T *value = NULL;
-																											value = (T*)((LPBYTE) counterblock + therequestedperfcntr->CounterOffset);
-																											return *value;
-																										}
+                                                      if(perfcntr->CounterNameTitleIndex == counterindex)
+                                                        {
+                                                          therequestedperfcntr = perfcntr;
+                                                          if(procIDperfcntr) break;
+                                                        }
 
-																									return -1;
-																								}
+                                                      perfcntr = NextCounter( perfcntr );
+                                                    }
+
+                                                  if(perfobj->NumInstances == PERF_NO_INSTANCES)		
+                                                    {
+                                                      counterblock = (PPERF_COUNTER_BLOCK) ((LPBYTE) perfobj + perfobj->DefinitionLength);
+                                                    }
+                                                   else
+                                                    {
+                                                      perfinst = FirstInstance( perfobj );
+
+                                                      for(int k=0; k<perfobj->NumInstances; k++)
+                                                        {
+                                                          counterblock = (PPERF_COUNTER_BLOCK) ((LPBYTE) perfinst + perfinst->ByteLength);
+                                                          if(counterblock)
+                                                            {
+                                                              T _processID  = 0;
+
+                                                              _processID = *(T*)((LPBYTE) counterblock + procIDperfcntr->CounterOffset);
+                                                              if((XDWORD)(_processID) == processID)
+                                                                {
+                                                                  processIDexist = TRUE;
+                                                                  break;
+                                                                }
+                                                            }
+
+                                                          perfinst = NextInstance( perfinst );
+                                                        }
+                                                    }
+
+                                                  if(processIDexist && counterblock)
+                                                    {
+                                                      T *value = NULL;
+                                                      value = (T*)((LPBYTE) counterblock + therequestedperfcntr->CounterOffset);
+                                                      return *value;
+                                                    }
+
+                                                  return -1;
+                                                }
 
 
-		PPERF_OBJECT_TYPE														FirstObject																				(PPERF_DATA_BLOCK perfdata)						{	return( (PPERF_OBJECT_TYPE)((PBYTE)perfdata + perfdata->HeaderLength));												}
-		PPERF_OBJECT_TYPE														NextObject																				(PPERF_OBJECT_TYPE perfobj)						{	return( (PPERF_OBJECT_TYPE)((PBYTE)perfobj + perfobj->TotalByteLength));											}
-		PPERF_COUNTER_DEFINITION										FirstCounter																			(PPERF_OBJECT_TYPE perfobj)						{	return( (PPERF_COUNTER_DEFINITION) ((PBYTE)perfobj + perfobj->HeaderLength));									}
-		PPERF_COUNTER_DEFINITION										NextCounter																				(PPERF_COUNTER_DEFINITION perfcntr)		{	return( (PPERF_COUNTER_DEFINITION)((PBYTE)perfcntr + perfcntr->ByteLength));									}
-		PPERF_INSTANCE_DEFINITION										FirstInstance																			(PPERF_OBJECT_TYPE perfobj)						{ return( (PPERF_INSTANCE_DEFINITION)((PBYTE)perfobj + perfobj->DefinitionLength));							}
+    PPERF_OBJECT_TYPE														FirstObject																				(PPERF_DATA_BLOCK perfdata)						{	return( (PPERF_OBJECT_TYPE)((PBYTE)perfdata + perfdata->HeaderLength));												}
+    PPERF_OBJECT_TYPE														NextObject																				(PPERF_OBJECT_TYPE perfobj)						{	return( (PPERF_OBJECT_TYPE)((PBYTE)perfobj + perfobj->TotalByteLength));											}
+    PPERF_COUNTER_DEFINITION										FirstCounter																			(PPERF_OBJECT_TYPE perfobj)						{	return( (PPERF_COUNTER_DEFINITION) ((PBYTE)perfobj + perfobj->HeaderLength));									}
+    PPERF_COUNTER_DEFINITION										NextCounter																				(PPERF_COUNTER_DEFINITION perfcntr)		{	return( (PPERF_COUNTER_DEFINITION)((PBYTE)perfcntr + perfcntr->ByteLength));									}
+    PPERF_INSTANCE_DEFINITION										FirstInstance																			(PPERF_OBJECT_TYPE perfobj)						{ return( (PPERF_INSTANCE_DEFINITION)((PBYTE)perfobj + perfobj->DefinitionLength));							}
 
-		PPERF_INSTANCE_DEFINITION										NextInstance																			(PPERF_INSTANCE_DEFINITION PerfInst)
-																								{
-																									PPERF_COUNTER_BLOCK perfcntrblk;
+    PPERF_INSTANCE_DEFINITION										NextInstance																			(PPERF_INSTANCE_DEFINITION PerfInst)
+                                                {
+                                                  PPERF_COUNTER_BLOCK perfcntrblk;
 
-																									perfcntrblk = (PPERF_COUNTER_BLOCK)((PBYTE)PerfInst + PerfInst->ByteLength);
+                                                  perfcntrblk = (PPERF_COUNTER_BLOCK)((PBYTE)PerfInst + PerfInst->ByteLength);
 
-																									return( (PPERF_INSTANCE_DEFINITION)((PBYTE)perfcntrblk + perfcntrblk->ByteLength));
-																								}
+                                                  return( (PPERF_INSTANCE_DEFINITION)((PBYTE)perfcntrblk + perfcntrblk->ByteLength));
+                                                }
 };
 #pragma pack(pop)
-
-#endif
 
 class XWINDOWSSYSTEM_CPUUSAGESTATUS
 {

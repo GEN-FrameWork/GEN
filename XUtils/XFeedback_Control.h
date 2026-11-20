@@ -36,9 +36,6 @@
 #include <string.h>
 #include <stdarg.h>
 
-#ifdef BUILDER
-#include <cstdarg>
-#endif
 
 #include "XVector.h"
 #include "XMap.h"
@@ -151,33 +148,16 @@ extern XFEEDBACK_CONTROL* XFeedback_Control;
 
 #else
 
-#ifdef BUILDER
-
-  #define XFEEDBACK_CONTROL_ACTIVATED               
-  #define XFEEDBACK_CONTROL_DEACTIVATED            
-  #define XFEEDBACK_ADD  
-  #define XFEEDBACK_CONTROL_DISPLAYFEEDBACK
-  #define XFEEDBACK_CONTROL_DELETERESOURCES
-  #define XFEEDBACK_CONTROL_CREATE
-  #define XFEEDBACK_CONTROL_DELETE
-  #define XFEEDBACK_CODE_REFTEXT  
-  #define XFEEDBACK_CODE_TEXT                
-  #define XFEEDBACK_CODE_CREATETEXT
-                                                    
-#else
-
-  #define XFEEDBACK_CONTROL_ACTIVATED               
-  #define XFEEDBACK_CONTROL_DEACTIVATED            
-  #define XFEEDBACK_ADD(code, ...)                  
-  #define XFEEDBACK_CONTROL_DISPLAYFEEDBACK    
-  #define XFEEDBACK_CONTROL_DELETERESOURCES
-  #define XFEEDBACK_CONTROL_CREATE
-  #define XFEEDBACK_CONTROL_DELETE
-  #define XFEEDBACK_CODE_REFTEXT                
-  #define XFEEDBACK_CODE_TEXT                
-  #define XFEEDBACK_CODE_CREATETEXT(text, ...)
-
-#endif
+#define XFEEDBACK_CONTROL_ACTIVATED               
+#define XFEEDBACK_CONTROL_DEACTIVATED            
+#define XFEEDBACK_ADD(code, ...)                  
+#define XFEEDBACK_CONTROL_DISPLAYFEEDBACK    
+#define XFEEDBACK_CONTROL_DELETERESOURCES
+#define XFEEDBACK_CONTROL_CREATE
+#define XFEEDBACK_CONTROL_DELETE
+#define XFEEDBACK_CODE_REFTEXT                
+#define XFEEDBACK_CODE_TEXT                
+#define XFEEDBACK_CODE_CREATETEXT(text, ...)
 
 #endif
 

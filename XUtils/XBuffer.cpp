@@ -1237,8 +1237,6 @@ bool XBUFFER::Extract(XSTRING& string, XDWORD ppos, XDWORD psize)
 * --------------------------------------------------------------------------------------------------------------------*/
 bool XBUFFER::ExtractWithMaskArg(XCHAR* mask, int frompos, va_list& arg)
 {
-  #ifndef BUILDER
-
   if(!mask)                         return false;
   if(frompos<0)                     return false;
   if((XDWORD)frompos >= GetSize())  return false;
@@ -1261,9 +1259,6 @@ bool XBUFFER::ExtractWithMaskArg(XCHAR* mask, int frompos, va_list& arg)
   if(status) Extract(NULL, frompos, sizearg);
 
   return status;
-  #else
-  return false;
-  #endif
 }
 
 

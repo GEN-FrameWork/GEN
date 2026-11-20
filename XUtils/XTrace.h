@@ -34,9 +34,6 @@
 #include <string.h>
 #include <stdarg.h>
 
-#ifdef BUILDER
-#include <cstdarg>
-#endif
 
 #include "Common_DefaultXTraceCFG.h"
 
@@ -182,37 +179,17 @@ enum XTRACE_TYPE_STATUS_MSG
   #define XTRACE_CLEARMSGSSTATUS                                                                          XTRACE::instance->ClearMsgsStatus(0)
   #define XTRACE_CLEARALLMSGSSTATUS                                                                       XTRACE::instance->ClearMsgsStatus(1)
 
-  #ifdef BUILDER
+  #define XTRACE_PRINT(mask, ...)                                                                         XTRACE::instance->Print(XTRACE_LEVEL_STATUS                      , mask , ## __VA_ARGS__)
+  #define XTRACE_PRINTLEVEL(level, mask, ...)                                                             XTRACE::instance->Print(level                                    , mask , ## __VA_ARGS__)
+  #define XTRACE_PRINTCOLOR(level, mask, ...)                                                             XTRACE::instance->Print((level|XTRACE_LEVEL_WITHCOLOR)           , mask , ## __VA_ARGS__)
+  #define XTRACE_PRINTTAB(level, mask, ...)                                                               XTRACE::instance->Print((level|XTRACE_LEVEL_WITHTAB)             , mask , ## __VA_ARGS__)
+  #define XTRACE_PRINTCODE(level, mask, ...)                                                              XTRACE::instance->Print((level|XTRACE_LEVEL_WITHCODE)            , mask , ## __VA_ARGS__)
 
-    // Builder C ++ does not allow variable parameters in macros, a parameter must always be present in these macros. (only in Builder C ++ because it is not C99)
-
-    #define XTRACE_PRINT(mask, params)                                                                    XTRACE::instance->Print(0                                        , mask ,params)
-    #define XTRACE_PRINTLEVEL(level, mask, params)                                                        XTRACE::instance->Print(level                                    , mask ,params)
-    #define XTRACE_PRINTCOLOR(level, mask, params)                                                        XTRACE::instance->Print((level|XTRACE_LEVEL_WITHCOLOR)           , mask ,params)
-    #define XTRACE_PRINTTAB(level, mask, params)                                                          XTRACE::instance->Print((level|XTRACE_LEVEL_WITHTAB)             , mask ,params)
-    #define XTRACE_PRINTCODE(level, mask, params)                                                         XTRACE::instance->Print((level|XTRACE_LEVEL_WITHCODE)            , mask ,params)
-
-    #define XTRACE_PRINTDATABLOCK(data, params)                                                           XTRACE::instance->PrintDataBlock(0                               , data ,params)
-    #define XTRACE_PRINTDATABLOCKLEVEL(level, data, params)                                               XTRACE::instance->PrintDataBlock(level                           , data ,params)
-    #define XTRACE_PRINTDATABLOCKCOLOR(level, data, params)                                               XTRACE::instance->PrintDataBlock((level|XTRACE_LEVEL_WITHCOLOR)  , data ,params)
-    #define XTRACE_PRINTDATABLOCKTAB(level, data, params)                                                 XTRACE::instance->PrintDataBlock((level|XTRACE_LEVEL_WITHTAB)    , data ,params)
-    #define XTRACE_PRINTDATABLOCKCODE(level, data, params)                                                XTRACE::instance->PrintDataBlock((level|XTRACE_LEVEL_WITHCODE)   , data ,params)
-
-  #else
-    
-    #define XTRACE_PRINT(mask, ...)                                                                       XTRACE::instance->Print(XTRACE_LEVEL_STATUS                      , mask , ## __VA_ARGS__)
-    #define XTRACE_PRINTLEVEL(level, mask, ...)                                                           XTRACE::instance->Print(level                                    , mask , ## __VA_ARGS__)
-    #define XTRACE_PRINTCOLOR(level, mask, ...)                                                           XTRACE::instance->Print((level|XTRACE_LEVEL_WITHCOLOR)           , mask , ## __VA_ARGS__)
-    #define XTRACE_PRINTTAB(level, mask, ...)                                                             XTRACE::instance->Print((level|XTRACE_LEVEL_WITHTAB)             , mask , ## __VA_ARGS__)
-    #define XTRACE_PRINTCODE(level, mask, ...)                                                            XTRACE::instance->Print((level|XTRACE_LEVEL_WITHCODE)            , mask , ## __VA_ARGS__)
-
-    #define XTRACE_PRINTDATABLOCK(data, ...)                                                              XTRACE::instance->PrintDataBlock(0                               , data , ## __VA_ARGS__)
-    #define XTRACE_PRINTDATABLOCKLEVEL(level, data, ...)                                                  XTRACE::instance->PrintDataBlock(level                           , data , ## __VA_ARGS__)
-    #define XTRACE_PRINTDATABLOCKCOLOR(level, data, ...)                                                  XTRACE::instance->PrintDataBlock((level|XTRACE_LEVEL_WITHCOLOR)  , data , ## __VA_ARGS__)
-    #define XTRACE_PRINTDATABLOCKTAB(level, data, ...)                                                    XTRACE::instance->PrintDataBlock((level|XTRACE_LEVEL_WITHTAB)    , data , ## __VA_ARGS__)
-    #define XTRACE_PRINTDATABLOCKCODE(level, data, ...)                                                   XTRACE::instance->PrintDataBlock((level|XTRACE_LEVEL_WITHCODE)   , data , ## __VA_ARGS__)
-
-  #endif
+  #define XTRACE_PRINTDATABLOCK(data, ...)                                                                XTRACE::instance->PrintDataBlock(0                               , data , ## __VA_ARGS__)
+  #define XTRACE_PRINTDATABLOCKLEVEL(level, data, ...)                                                    XTRACE::instance->PrintDataBlock(level                           , data , ## __VA_ARGS__)
+  #define XTRACE_PRINTDATABLOCKCOLOR(level, data, ...)                                                    XTRACE::instance->PrintDataBlock((level|XTRACE_LEVEL_WITHCOLOR)  , data , ## __VA_ARGS__)
+  #define XTRACE_PRINTDATABLOCKTAB(level, data, ...)                                                      XTRACE::instance->PrintDataBlock((level|XTRACE_LEVEL_WITHTAB)    , data , ## __VA_ARGS__)
+  #define XTRACE_PRINTDATABLOCKCODE(level, data, ...)                                                     XTRACE::instance->PrintDataBlock((level|XTRACE_LEVEL_WITHCODE)   , data , ## __VA_ARGS__)
 
 #else
 
@@ -235,57 +212,28 @@ enum XTRACE_TYPE_STATUS_MSG
   #define XTRACE_CLEARMSGSSTATUS
   #define XTRACE_CLEARALLMSGSSTATUS
   
-  #ifdef BUILDER
+  #define XTRACE_PRINT(level, mask, ...)
+  #define XTRACE_PRINTLEVEL(level, mask, ...)
+  #define XTRACE_PRINTCOLOR(level, mask, ...)  {}
+  #define XTRACE_PRINTTAB(level, mask, ...)
+  #define XTRACE_PRINTCODE(level, mask, ...)
 
-    #define XTRACE_PRINT
-    #define XTRACE_PRINTLEVEL
-    #define XTRACE_PRINTCOLOR
-    #define XTRACE_PRINTTAB
-    #define XTRACE_PRINTCODE
+  #define XTRACE_PRINTDATABLOCK(data, ...)
+  #define XTRACE_PRINTDATABLOCKLEVEL(level, data, ...)
+  #define XTRACE_PRINTDATABLOCKCOLOR(level, data, ...)
+  #define XTRACE_PRINTDATABLOCKTAB(level, data, ...)
+  #define XTRACE_PRINTDATABLOCKCODE(level, data, ...)
 
-    #define XTRACE_PRINTDATABLOCK
-    #define XTRACE_PRINTDATABLOCKLEVEL
-    #define XTRACE_PRINTDATABLOCKCOLOR
-    #define XTRACE_PRINTDATABLOCKTAB
-    #define XTRACE_PRINTDATABLOCKCODE
+  #define XTRACE_PRINTMSGSTATUS(name, value)
+  #define XTRACE_PRINTMSGSTATUSCOLOR(level, name, value)
+  #define XTRACE_PRINTMSGSTATUSTAB(level, name, value)
+  #define XTRACE_PRINTMSGSTATUSCODE(level, name, value)
 
-    #define XTRACE_PRINTMSGSTATUS
-    #define XTRACE_PRINTMSGSTATUSCOLOR(level, name, value)
-    #define XTRACE_PRINTMSGSTATUSTAB(level, name, value)
-    #define XTRACE_PRINTMSGSTATUSCODE(level, name, value)
-
-    #define XTRACE_PRINTMSGTESTS(ID, error)
-    #define XTRACE_TESTS_LOAD(path)                      (false)
-    #define XTRACE_TESTS_EXISTS(ID)                      (false)
-    #define XTRACE_TESTS_GETDESCRIPTION(ID, description) (false)
-    #define XTRACE_TESTS_DELETEALL
-    
-  #else
-
-    #define XTRACE_PRINT(level, mask, ...)
-    #define XTRACE_PRINTLEVEL(level, mask, ...)
-    #define XTRACE_PRINTCOLOR(level, mask, ...)  {}
-    #define XTRACE_PRINTTAB(level, mask, ...)
-    #define XTRACE_PRINTCODE(level, mask, ...)
-
-    #define XTRACE_PRINTDATABLOCK(data, ...)
-    #define XTRACE_PRINTDATABLOCKLEVEL(level, data, ...)
-    #define XTRACE_PRINTDATABLOCKCOLOR(level, data, ...)
-    #define XTRACE_PRINTDATABLOCKTAB(level, data, ...)
-    #define XTRACE_PRINTDATABLOCKCODE(level, data, ...)
-
-    #define XTRACE_PRINTMSGSTATUS(name, value)
-    #define XTRACE_PRINTMSGSTATUSCOLOR(level, name, value)
-    #define XTRACE_PRINTMSGSTATUSTAB(level, name, value)
-    #define XTRACE_PRINTMSGSTATUSCODE(level, name, value)
-
-    #define XTRACE_PRINTMSGTESTS(ID, error)
-    #define XTRACE_TESTS_LOAD(path)                      (false)
-    #define XTRACE_TESTS_EXISTS(ID)                      (false)
-    #define XTRACE_TESTS_GETDESCRIPTION(ID, description) (false)
-    #define XTRACE_TESTS_DELETEALL
-
-  #endif
+  #define XTRACE_PRINTMSGTESTS(ID, error)
+  #define XTRACE_TESTS_LOAD(path)                      (false)
+  #define XTRACE_TESTS_EXISTS(ID)                      (false)
+  #define XTRACE_TESTS_GETDESCRIPTION(ID, description) (false)
+  #define XTRACE_TESTS_DELETEALL
 
 #endif
 

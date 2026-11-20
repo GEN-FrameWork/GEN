@@ -84,7 +84,6 @@
 
 
 #ifdef GRP_OPENGL_ACTIVE
-#ifndef BUILDER
 // ---------------------------------------------------------------------------
 // ANGLE/D3D can ACCESS_VIOLATION on machines without a usable GPU instead of
 // returning EGL errors. Catch that locally so MainLoop's global filter never
@@ -159,7 +158,6 @@ static void GRPWINDOWS_BlitGLES_DeleteSafe(GRPWINDOWSBLITGLES*& blitgles)
 
   GEN_DELETE local;
 }
-#endif // BUILDER
 #endif // GRP_OPENGL_ACTIVE
 
 
@@ -2154,7 +2152,6 @@ bool GRPWINDOWSSCREEN::Create_Window(bool show)
             {
               // Create + PresentBlankFrame under SEH: ANGLE/D3D may AV on PCs without a usable GPU
               // (Education / locked-down machines) instead of returning a clean EGL error.
-              #ifndef BUILDER
               {
                 unsigned int sehcode = 0;
                 if(!GRPWINDOWS_BlitGLES_CreateAndBlankSafe(blitgles, this, &sehcode))
@@ -2177,30 +2174,6 @@ bool GRPWINDOWSSCREEN::Create_Window(bool show)
                     #endif
                   }
               }
-              #else
-              if(!blitgles->Create(this))
-                {
-                  XTRACE_PRINTCOLOR(XTRACE_COLOR_RED, NL("[Screen Windows] BlitGLES create failed"));
-                  GEN_DELETE blitgles;
-                  blitgles = NULL;
-                  #ifdef GRP_OPENGL_REQUIRED
-                  return false;
-                  #else
-                  XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, NL("[Screen Windows] Falling back to GDI software path"));
-                  #endif
-                }
-               else
-                {
-                  // The EGL surface Create() just built has never been cleared or presented -- its initial content
-                  // is whatever the driver leaves in a freshly allocated buffer, which is undefined and on several
-                  // drivers visibly so (stray coloured pixels, not a clean colour). Show(show) below is what first
-                  // makes this window visible to the desktop; clearing and presenting a blank frame BEFORE that
-                  // call, rather than after, means the compositor never has a chance to grab that undefined content
-                  // -- twice, so neither buffer of the common double-buffered swap chain is left holding it.
-                  blitgles->PresentBlankFrame();
-                  blitgles->PresentBlankFrame();
-                }
-              #endif
             }
         }
     }

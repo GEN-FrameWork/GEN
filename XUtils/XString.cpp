@@ -5244,7 +5244,6 @@ bool XSTRING::ConvertFromDoubleToSpanishText(double value, bool withintegerpart,
 {
   Empty();
 
-  #ifndef BUILDER
   integerpart = Truncate(value);
   decimalpart = Fraction(value);
 
@@ -5401,10 +5400,6 @@ bool XSTRING::ConvertFromDoubleToSpanishText(double value, bool withintegerpart,
     }
 
   return true;
-
-  #else
-  return false;
-  #endif
 }
 
 

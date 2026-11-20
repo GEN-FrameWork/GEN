@@ -729,9 +729,7 @@ int MAINPROCWINDOWS::MainLoop()
 {
   int status = 0;
 
-  #ifndef BUILDER
   __try  {
-  #endif
           #ifdef APPFLOW_ACTIVE
           if(!mainprocwindows.Ini(&GEN_appmain, APPFLOWBASE_MODE_TYPE_APPLICATION))
           #else
@@ -752,10 +750,8 @@ int MAINPROCWINDOWS::MainLoop()
           mainprocwindows.GetXPathExec()->Empty();
           if(!mainprocwindows.End()) status = 1;
 
-  #ifndef BUILDER
-        }
-        __except(Exception_Filter(GetExceptionCode(), GetExceptionInformation())) {  }
-  #endif
+  }
+  __except(Exception_Filter(GetExceptionCode(), GetExceptionInformation())) {  }
 
   return status;
 }

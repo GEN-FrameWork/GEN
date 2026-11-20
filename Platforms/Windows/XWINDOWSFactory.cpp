@@ -42,11 +42,7 @@
 #include "XWINDOWSDateTime.h"
 #include "XWINDOWSRand.h"
 
-#ifdef BUILDER
-#include "XWINDOWSFileBorland.h"
-#else
 #include "XWINDOWSFile.h"
-#endif
 
 #include "XWINDOWSDir.h"
 #include "XWINDOWSSystem.h"
@@ -82,13 +78,8 @@ DELETEFUNC(XWINDOWSFACTORY, XDATETIME , XWINDOWSDATETIME          , DeleteDateTi
 CREATEFUNC(XWINDOWSFACTORY, XRAND     , XWINDOWSRAND              , CreateRand)
 DELETEFUNC(XWINDOWSFACTORY, XRAND     , XWINDOWSRAND              , DeleteRand)
 
-#ifdef BUILDER
-CREATEFUNC(XWINDOWSFACTORY, XFILE     , XWINDOWSFILEBORLAND       , Create_File)
-DELETEFUNC(XWINDOWSFACTORY, XFILE     , XWINDOWSFILEBORLAND       , Delete_File)
-#else
 CREATEFUNC(XWINDOWSFACTORY, XFILE     , XWINDOWSFILE              , Create_File)
 DELETEFUNC(XWINDOWSFACTORY, XFILE     , XWINDOWSFILE              , Delete_File)
-#endif
 
 
 CREATEFUNC(XWINDOWSFACTORY, XDIR      , XWINDOWSDIR               , Create_Dir)

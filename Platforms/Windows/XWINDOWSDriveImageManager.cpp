@@ -587,8 +587,6 @@ bool XWINDOWSDRIVEIMAGEMANAGER::CheckDriveType(XPATH& path, XQWORD& ID)
 {
   bool                              status = false;
 
-  #ifndef BUILDER
-
   HANDLE                            hdevice;
   PSTORAGE_DEVICE_DESCRIPTOR        pdevdesc;
   XWINDOWSDRIVEIMAGE_DEVICE_NUMBER  deviceinfo;
@@ -693,8 +691,6 @@ bool XWINDOWSDRIVEIMAGEMANAGER::CheckDriveType(XPATH& path, XQWORD& ID)
              default       :  break;
 
     }
-
-  #endif
 
   return status;
 }

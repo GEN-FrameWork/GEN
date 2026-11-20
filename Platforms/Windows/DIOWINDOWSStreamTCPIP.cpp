@@ -456,11 +456,7 @@ bool DIOWINDOWSSTREAMTCPIP::GetHandleServer()
           
           IPstring.ConvertToASCII(charstr);
                     
-          #ifndef BUILDER
           inet_pton(loc_addr.sin_family, charstr.GetPtrChar(), &loc_addr.sin_addr.s_addr);
-          #else
-          loc_addr.sin_addr.s_addr  = inet_addr(charstr.GetPtrChar());
-          #endif
           
         } else loc_addr.sin_addr.s_addr = htonl(INADDR_ANY);
 
@@ -527,13 +523,9 @@ bool DIOWINDOWSSTREAMTCPIP::GetHandleServer()
       DWORD nonblock = 1;
       ioctlsocket(handlesocket, FIONBIO, &nonblock);
 
-      #ifndef BUILDER
       char IPcharstring[_MAXSTR];
       inet_ntop(AF_INET, &(rem_addr.sin_addr), IPcharstring, _MAXSTR);
       clientIP.Set(IPcharstring);
-      #else
-      clientIP.Set(inet_ntoa(rem_addr.sin_addr));
-      #endif
     }
    else
     {
@@ -592,11 +584,7 @@ bool DIOWINDOWSSTREAMTCPIP::GetHandleClient()
       
       IPstring.ConvertToASCII(charstr);
  
-      #ifndef BUILDER
       inet_pton(loc_addr.sin_family, charstr.GetPtrChar(), &loc_addr.sin_addr.s_addr);
-      #else
-      loc_addr.sin_addr.s_addr = inet_addr(charstr.GetPtrChar());
-      #endif
       
       loc_addr.sin_port        = 0; //htons(diostream->config->GetRemotePort());
 
@@ -630,13 +618,8 @@ bool DIOWINDOWSSTREAMTCPIP::GetHandleClient()
 
   IPstring.ConvertToASCII(charstr);
   
-  #ifndef BUILDER
   inet_pton(rem_addr.sin_family, charstr.GetPtrChar(), &rem_addr.sin_addr.s_addr);
   clientIP.Set(charstr.GetPtrChar());
-  #else
-  rem_addr.sin_addr.s_addr  = inet_addr(charstr.GetPtrChar());
-  clientIP.Set(charstr.GetPtrChar());
-  #endif
   
   rem_addr.sin_port         = htons(config->GetConnectionPort());
 

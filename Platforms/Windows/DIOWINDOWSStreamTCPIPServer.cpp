@@ -512,11 +512,7 @@ bool DIOWINDOWSSTREAMTCPIPSERVER::GetHandleServer(DIOSTREAMTCPIP* diostream)
           
           IPstring.ConvertToASCII(charstr);
                     
-          #ifndef BUILDER
           inet_pton(loc_addr.sin_family, charstr.GetPtrChar(), &loc_addr.sin_addr.s_addr);
-          #else
-          loc_addr.sin_addr.s_addr  = inet_addr(charstr.GetPtrChar());
-          #endif
           
         } else loc_addr.sin_addr.s_addr = htonl(INADDR_ANY);
 
@@ -586,13 +582,9 @@ bool DIOWINDOWSSTREAMTCPIPSERVER::GetHandleServer(DIOSTREAMTCPIP* diostream)
       DWORD nonblock = 1;
       ioctlsocket(handlesocket, FIONBIO, &nonblock);
 
-      #ifndef BUILDER
       char IPcharstring[_MAXSTR];
       inet_ntop(AF_INET, &(rem_addr.sin_addr), IPcharstring, _MAXSTR);
       clientIP.Set(IPcharstring);
-      #else
-      clientIP.Set(inet_ntoa(rem_addr.sin_addr));
-      #endif
     }
    else
     {

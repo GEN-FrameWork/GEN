@@ -146,17 +146,8 @@ typedef struct
 
   #if (defined(WINDOWS) || defined(_WINDOWS))
 
-    #if defined(BUILDER)
-
-      #define SPRINTF             sprintf
-      #define SSCANF              sscanf
-
-    #else
-
-      #define SPRINTF(str, ...)   sprintf_s(str, XSTRING_MAXTEMPOSTR-1, ## __VA_ARGS__)
-      #define SSCANF(str, ...)    sscanf_s(str, ## __VA_ARGS__)
-
-    #endif
+    #define SPRINTF(str, ...)   sprintf_s(str, XSTRING_MAXTEMPOSTR-1, ## __VA_ARGS__)
+    #define SSCANF(str, ...)    sscanf_s(str, ## __VA_ARGS__)
 
   #endif
 

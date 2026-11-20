@@ -37,11 +37,7 @@
 
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
 
-#ifdef BUILDER
-enum XEVENT_TYPE
-#else
 enum XEVENT_TYPE : XDWORD
-#endif
 {
   XEVENT_TYPE_NONE                                  = 0x00000000 ,
   XEVENT_TYPE_USERINTERFACE                         = 0x00001000 ,

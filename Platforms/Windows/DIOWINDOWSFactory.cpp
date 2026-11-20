@@ -37,7 +37,6 @@
 
 /*---- INCLUDES ------------------------------------------------------------------------------------------------------*/
 
-#ifndef BUILDER
 #if(_MSC_VER >= 1700) && defined(_USING_V110_SDK71_)
 #else
 
@@ -50,7 +49,6 @@
   #include <propkey.h>
   #include <wrl.h>
 
-#endif
 #endif
 
 #include <winsock2.h>
@@ -90,10 +88,8 @@
 #include "DIOStreamTCPIPConfig.h"
 #include "DIOWINDOWSStreamTCPIP.h"
 #include "DIOWINDOWSStreamTCPIPServer.h"
-#ifndef BUILDER
 #include "DIOStreamTLSConfig.h"
 #include "DIOStreamTLS.h"
-#endif
 #endif
 
 #if (defined(DIO_STREAMBLUETOOTH_ACTIVE) || defined(DIO_STREAMBLUETOOTHLE_ACTIVE))
@@ -140,9 +136,7 @@
 #include "DIOWINDOWSWFP.h"
 #endif
 
-#ifndef BUILDER
 #include "DIOWINDOWSNotificationsManager.h"
-#endif
 
 
 
@@ -395,12 +389,8 @@ DELETEFUNC(DIOWINDOWSFACTORY, DIOWINDOWSWFP   , DIOWINDOWSWFP    , DeleteWFP)
 #endif
 
 
-#ifndef BUILDER
-
 CREATEFUNC(DIOWINDOWSFACTORY, DIONOTIFICATIONSMANAGER   , DIOWINDOWSNOTIFICATIONSMANAGER    , CreateNotificationsManager)
 DELETEFUNC(DIOWINDOWSFACTORY, DIONOTIFICATIONSMANAGER   , DIOWINDOWSNOTIFICATIONSMANAGER    , DeleteNotificationsManager)
-
-#endif
 
 
 

@@ -88,82 +88,6 @@ DIOWINDOWSSTREAMIPLOCALENUMDEVICES::~DIOWINDOWSSTREAMIPLOCALENUMDEVICES()
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
-* @fn         ifdef BUILDER bool DIOWINDOWSSTREAMIPLOCALENUMDEVICES::Search()
-* @brief      Search
-* @ingroup    PLATFORM_WINDOWS
-* 
-* @return     \#ifdef BUILDER bool : Requested value.
-* 
-* --------------------------------------------------------------------------------------------------------------------*/
-#ifdef BUILDER
-/**-------------------------------------------------------------------------------------------------------------------
-* 
-* @fn         bool DIOWINDOWSSTREAMIPLOCALENUMDEVICES::Search()
-* @brief      Search
-* @ingroup    PLATFORM_WINDOWS
-* 
-* @return     bool : true if the operation is successful; otherwise false.
-* 
-* --------------------------------------------------------------------------------------------------------------------*/
-bool DIOWINDOWSSTREAMIPLOCALENUMDEVICES::Search()
-{
-  DelAllDevices();
-
-  IP_ADAPTER_INFO adapterinfo[16];
-  DWORD           size        = sizeof(adapterinfo);
-  ULONG           status      = GetAdaptersInfo(adapterinfo, &size);
-  int             index       = 0;
-
-  if(status != ERROR_SUCCESS) return false;
-
-  PIP_ADAPTER_INFO padapterinfo = adapterinfo;
-  do {  // Eliminate the virtual Wifi Adapter
-        if(strcmp(padapterinfo->Description, "Microsoft Virtual WiFi Miniport Adapter"))
-          {
-            DIOSTREAMDEVICEIP* device = GEN_NEW DIOSTREAMDEVICEIP();
-            if(device)
-              {
-                device->SetIndex(index++);
-
-                device->SetType(DIOSTREAMDEVICE_TYPE_IP);
-
-                switch(padapterinfo->Type)
-                  {
-                    case MIB_IF_TYPE_LOOPBACK : device->SetIPType(DIOSTREAMIPDEVICE_TYPE_LOOPBACK);   break;
-                    case IF_TYPE_IEEE80211    : device->SetIPType(DIOSTREAMIPDEVICE_TYPE_WIFI);       break;
-                    case MIB_IF_TYPE_ETHERNET : device->SetIPType(DIOSTREAMIPDEVICE_TYPE_ETHERNET);   break;
-                                  default     : device->SetIPType(DIOSTREAMIPDEVICE_TYPE_UNKNOWN);    break;
-                  }
-
-                device->GetName()->Set(padapterinfo->AdapterName);
-                device->GetDescription()->Set(padapterinfo->Description);
-                device->GetMAC()->Set((XBYTE*)padapterinfo->Address);
-
-                XSTRING IP;
-                XSTRING mask;
-                XSTRING gateway;
-
-                IP.Set(padapterinfo->IpAddressList.IpAddress.String);
-                mask.Set(padapterinfo->IpAddressList.IpMask.String);
-
-                gateway.Set(padapterinfo->GatewayList.IpAddress.String);
-
-                device->GetIP()->Set(IP);
-                device->GetIP()->GetMask()->Set(mask);
-
-                devices.Add(device);
-              }
-          }
-
-       padapterinfo = padapterinfo->Next;
-
-     } while(padapterinfo);
-
-  return true;
-}
-#else
-/**-------------------------------------------------------------------------------------------------------------------
-* 
 * @fn         bool DIOWINDOWSSTREAMIPLOCALENUMDEVICES::Search()
 * @brief      Search
 * @ingroup    PLATFORM_WINDOWS
@@ -175,34 +99,34 @@ bool DIOWINDOWSSTREAMIPLOCALENUMDEVICES::Search()
 {
   PIP_ADAPTER_ADDRESSES               adapter_addresses;
   PIP_ADAPTER_ADDRESSES               aa;
-	PIP_ADAPTER_UNICAST_ADDRESS         ua;
+  PIP_ADAPTER_UNICAST_ADDRESS         ua;
   PIP_ADAPTER_DNS_SERVER_ADDRESS_XP   dnsa;
   XDWORD                              index = 0;      
   DWORD                               size;
   DWORD                               status; 
-  
-	status = GetAdaptersAddresses(AF_UNSPEC, GAA_FLAG_INCLUDE_PREFIX, NULL, NULL, &size);
-	if(status != ERROR_BUFFER_OVERFLOW) 
+
+  status = GetAdaptersAddresses(AF_UNSPEC, GAA_FLAG_INCLUDE_PREFIX, NULL, NULL, &size);
+  if(status != ERROR_BUFFER_OVERFLOW) 
     {
-		  return false;
-	  }
+      return false;
+    }
 
-	adapter_addresses = (PIP_ADAPTER_ADDRESSES)malloc(size);
+  adapter_addresses = (PIP_ADAPTER_ADDRESSES)malloc(size);
 
-	status = GetAdaptersAddresses(AF_UNSPEC, GAA_FLAG_INCLUDE_PREFIX, NULL, adapter_addresses, &size);
-	if(status != ERROR_SUCCESS) 
+  status = GetAdaptersAddresses(AF_UNSPEC, GAA_FLAG_INCLUDE_PREFIX, NULL, adapter_addresses, &size);
+  if(status != ERROR_SUCCESS) 
     {
-		  free(adapter_addresses);
-  		return false;
-	  }
+      free(adapter_addresses);
+      return false;
+    }
 
-	for(aa = adapter_addresses; aa != NULL; aa = aa->Next) 
+  for(aa = adapter_addresses; aa != NULL; aa = aa->Next) 
     {       
       DIOSTREAMDEVICEIP* device = GEN_NEW DIOSTREAMDEVICEIP();
       if(device)
         {
           device->SetIsActive((aa->OperStatus == IfOperStatusUp?true:false));
-                
+
           char buffer[BUFSIZ];
 
           device->SetIndex(index++);
@@ -222,27 +146,27 @@ bool DIOWINDOWSSTREAMIPLOCALENUMDEVICES::Search()
                                   default     : device->SetIPType(DIOSTREAMIPDEVICE_TYPE_UNKNOWN);
                                                 break;
             }
-		      
-    	    memset(buffer, 0, BUFSIZ);
-	        WideCharToMultiByte(CP_ACP, 0, aa->FriendlyName, (int)wcslen(aa->FriendlyName), buffer, BUFSIZ, NULL, NULL);    
+
+          memset(buffer, 0, BUFSIZ);
+          WideCharToMultiByte(CP_ACP, 0, aa->FriendlyName, (int)wcslen(aa->FriendlyName), buffer, BUFSIZ, NULL, NULL);    
           device->GetName()->Set(buffer);
 
           memset(buffer, 0, BUFSIZ);
-	        WideCharToMultiByte(CP_ACP, 0, aa->Description, (int)wcslen(aa->Description), buffer, BUFSIZ, NULL, NULL);    
+          WideCharToMultiByte(CP_ACP, 0, aa->Description, (int)wcslen(aa->Description), buffer, BUFSIZ, NULL, NULL);    
           device->GetDescription()->Set(buffer);
 
           device->GetMAC()->Set((XBYTE*)aa->PhysicalAddress);
-         
-		      for(ua = aa->FirstUnicastAddress; ua != NULL; ua = ua->Next)
+
+          for(ua = aa->FirstUnicastAddress; ua != NULL; ua = ua->Next)
             {
-			        int family = ua->Address.lpSockaddr->sa_family;
-	            if(family == AF_INET)
+              int family = ua->Address.lpSockaddr->sa_family;
+              if(family == AF_INET)
                 {
                   XDWORD  mask;
 
                   memset(buffer, 0, BUFSIZ);
 
-	                if(!getnameinfo(ua->Address.lpSockaddr, ua->Address.iSockaddrLength, buffer, sizeof(buffer), NULL, 0, NI_NUMERICHOST))
+                  if(!getnameinfo(ua->Address.lpSockaddr, ua->Address.iSockaddrLength, buffer, sizeof(buffer), NULL, 0, NI_NUMERICHOST))
                     {
                       ConvertLengthToIpv4Mask(ua->OnLinkPrefixLength, (ULONG*)&mask);                  
 
@@ -252,15 +176,15 @@ bool DIOWINDOWSSTREAMIPLOCALENUMDEVICES::Search()
                       break;
                     }
                 }
-		        }          
+            }          
 
           for(dnsa = aa->FirstDnsServerAddress; dnsa != NULL; dnsa = dnsa->Next)
             {
               int family = dnsa->Address.lpSockaddr->sa_family;
-	            if(family == AF_INET)
+              if(family == AF_INET)
                 {
                   memset(buffer, 0, BUFSIZ);
-	                if(!getnameinfo(dnsa->Address.lpSockaddr, dnsa->Address.iSockaddrLength, buffer, sizeof(buffer), NULL, 0, NI_NUMERICHOST))
+                  if(!getnameinfo(dnsa->Address.lpSockaddr, dnsa->Address.iSockaddrLength, buffer, sizeof(buffer), NULL, 0, NI_NUMERICHOST))
                     {
                       XSTRING* DNSserver = GEN_NEW XSTRING();
                       if(DNSserver)
@@ -277,18 +201,17 @@ bool DIOWINDOWSSTREAMIPLOCALENUMDEVICES::Search()
                         }
                     }
                 }
-			      }
+            }
 
           devices.Add(device);
         }
-        
-	  }
 
-	free(adapter_addresses);
+    }
+
+  free(adapter_addresses);
 
   return true;
 }
-#endif
 
 
 /**-------------------------------------------------------------------------------------------------------------------

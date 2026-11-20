@@ -721,7 +721,6 @@ bool XWINDOWSCONSOLE::Generate()
 {
   //#ifndef APPFLOW_GRAPHICS_NOTCONSOLE_ACTIVE
 
-  #ifndef BUILDER
   if(!AttachConsole(ATTACH_PARENT_PROCESS))
     {
       // allocate a console for this app
@@ -730,7 +729,6 @@ bool XWINDOWSCONSOLE::Generate()
           return false;
         }
     }
-  #endif
 
   freopen("CON", "w", stdout);
   freopen("CON", "w", stderr);

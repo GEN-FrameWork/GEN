@@ -47,22 +47,16 @@
 #include <powrprof.h>
 
 
-#ifndef BUILDER
 #include <wlanapi.h>
 #include <mmdeviceapi.h>
 #include <endpointvolume.h>
-#endif
 
 
-#ifndef BUILDER
 #if(_MSC_PLATFORM_TOOLSET == 'v140')
 #include <versionhelpers.h>
 #endif
-#endif
 
-#ifndef BUILDER
 #include "XWINDOWSWMIInterface.h"
-#endif
 
 #include "XWINDOWSRegistryManager.h"
 
@@ -74,9 +68,7 @@
 #include "XTrace.h"
 #include "XLanguage_ISO_639_3.h"
 
-#ifndef BUILDER
 //#pragma comment(lib, "wlanapi.lib")
-#endif
 
 
 
@@ -134,7 +126,6 @@ XWINDOWSSYSTEM_CPUUSAGE::~XWINDOWSSYSTEM_CPUUSAGE()
 * --------------------------------------------------------------------------------------------------------------------*/
 double XWINDOWSSYSTEM_CPUUSAGE::GetTotalCpuUsage() 
 {
-  #ifndef BUILDER
   FILETIME idletime;
   FILETIME kerneltime;
   FILETIME usertime;
@@ -161,10 +152,6 @@ double XWINDOWSSYSTEM_CPUUSAGE::GetTotalCpuUsage()
     }
 
   return (systotal * 100.0) / totalsystime;
-  
-  #else
-  return 0.0f;
-  #endif
 }
 
 
@@ -181,7 +168,6 @@ double XWINDOWSSYSTEM_CPUUSAGE::GetTotalCpuUsage()
 * --------------------------------------------------------------------------------------------------------------------*/
 double XWINDOWSSYSTEM_CPUUSAGE::GetProcessCpuUsage(DWORD processID) 
 {
-  #ifndef BUILDER
   HANDLE hprocess = OpenProcess(PROCESS_QUERY_INFORMATION | PROCESS_VM_READ, FALSE, processID);
   if(hprocess == NULL) 
     {
@@ -224,9 +210,6 @@ double XWINDOWSSYSTEM_CPUUSAGE::GetProcessCpuUsage(DWORD processID)
   lastprocesstime = processtime;
 
   return (processtimediff * 100.0) / (timediff * GetNumberOfProcessors());
-  #else
-  return 0.0f;
-  #endif
 }
 
 
@@ -427,10 +410,9 @@ bool XWINDOWSSYSTEM::GetOperativeSystemID(XSTRING& ID)
 {
   ID.Empty();
 
-  #ifndef BUILDER
   XWINDOWSWMIINTERFACE wmiinterface;
   XSTRING              wmianswer[4];
-  
+
   if(!wmiinterface.Ini())
     {
       return false;
@@ -444,7 +426,6 @@ bool XWINDOWSSYSTEM::GetOperativeSystemID(XSTRING& ID)
   ID.Format(NL("%s Build(%s) %s %s"), wmianswer[0].Get(), wmianswer[1].Get(), wmianswer[2].Get(), wmianswer[3].Get());
 
   wmiinterface.End();          
-  #endif
 
   return true;
 }
@@ -486,7 +467,6 @@ XDWORD XWINDOWSSYSTEM::GetLanguageSO()
 * --------------------------------------------------------------------------------------------------------------------*/
 XSTRING* XWINDOWSSYSTEM::GetBIOSSerialNumber()
 {
-  #ifndef BUILDER
   XWINDOWSWMIINTERFACE wmiinterface;
 
   if(wmiinterface.Ini())
@@ -495,7 +475,6 @@ XSTRING* XWINDOWSSYSTEM::GetBIOSSerialNumber()
 
       wmiinterface.End();
     }
-  #endif
 
   return &BIOSserialnumber;
 }
@@ -512,14 +491,12 @@ XSTRING* XWINDOWSSYSTEM::GetBIOSSerialNumber()
 * --------------------------------------------------------------------------------------------------------------------*/
 XSTRING* XWINDOWSSYSTEM::GetCPUSerialNumber()
 {
-  #ifndef BUILDER
   XWINDOWSWMIINTERFACE wmiinterface;
   if(wmiinterface.Ini())
     { 
       wmiinterface.DoQuery(NL("Win32_Processor"), NL("ProcessorId"), CPUserialnumber);
       wmiinterface.End();     
     }
-  #endif
 
   return &CPUserialnumber;
 }
@@ -538,7 +515,6 @@ float XWINDOWSSYSTEM::GetCPUTemperature()
 {
   XSTRING CPUtemperaturestr;
 
-  #ifndef BUILDER
   XWINDOWSWMIINTERFACE wmiinterface;
   if(wmiinterface.Ini())
     { 
@@ -546,7 +522,6 @@ float XWINDOWSSYSTEM::GetCPUTemperature()
 
       wmiinterface.End();       
     }
-  #endif
 
   int   CPUtemperature = 0;
   float CPUtemperaturefloat = 0.0f;
@@ -586,7 +561,6 @@ bool XWINDOWSSYSTEM::GetMemoryInfo(XDWORD& total, XDWORD& free)
   total = 0;
   free  = 0;
 
-  #ifndef BUILDER
   XWINDOWSWMIINTERFACE wmiinterface;
   XSTRING              wmianswer;
 
@@ -601,10 +575,9 @@ bool XWINDOWSSYSTEM::GetMemoryInfo(XDWORD& total, XDWORD& free)
         {
           free = wmianswer.ConvertToInt();      
         }
-     
+
       wmiinterface.End();
     } 
-  #endif
 
   return true;
 }
@@ -727,13 +700,12 @@ int XWINDOWSSYSTEM::GetCPUUsageTotal()
 {
   int				                              cpuusage            = 0;
   
-  #ifndef BUILDER
   XWINDOWSSYSTEM_PERFCOUNTERS<LONGLONG>   perfcounters;
-	DWORD                                   objectindex;
-	DWORD                                   cpuusageindex;	
-	LONGLONG		                            newvalue            = 0;
-	PPERF_DATA_BLOCK                        perfdata            = NULL;
-	LARGE_INTEGER	                          newperftime100nsec;
+  DWORD                                   objectindex;
+  DWORD                                   cpuusageindex;	
+  LONGLONG		                            newvalue            = 0;
+  PPERF_DATA_BLOCK                        perfdata            = NULL;
+  LARGE_INTEGER	                          newperftime100nsec;
   XSTRING                                 processstr;
   XWINDOWSSYSTEM_CPUUSAGESTATUS*          cus                 = NULL;
 
@@ -750,30 +722,29 @@ int XWINDOWSSYSTEM::GetCPUUsageTotal()
 
   newvalue = perfcounters.GetCounterValue(&perfdata, objectindex, cpuusageindex, (LPCTSTR)processstr.Get());
 
-	newperftime100nsec = perfdata->PerfTime100nSec;
+  newperftime100nsec = perfdata->PerfTime100nSec;
 
-	if(cus->firsttime)
-	  {
-		  cus->firsttime           = false;
-		  cus->oldvalue            = newvalue;
-		  cus->oldperftime100nsec  = newperftime100nsec;
+  if(cus->firsttime)
+    {
+      cus->firsttime           = false;
+      cus->oldvalue            = newvalue;
+      cus->oldperftime100nsec  = newperftime100nsec;
 
-		  return 0;
-	  }
+      return 0;
+    }
 
-	LONGLONG  lnValueDelta         = newvalue - cus->oldvalue;
-	double    DeltaPerfTime100nSec = (double)newperftime100nsec.QuadPart - (double)cus->oldperftime100nsec.QuadPart;
+  LONGLONG  lnValueDelta         = newvalue - cus->oldvalue;
+  double    DeltaPerfTime100nSec = (double)newperftime100nsec.QuadPart - (double)cus->oldperftime100nsec.QuadPart;
 
-	cus->oldvalue            = newvalue;
-	cus->oldperftime100nsec  = newperftime100nsec;
+  cus->oldvalue            = newvalue;
+  cus->oldperftime100nsec  = newperftime100nsec;
 
-	double a = (double)lnValueDelta / DeltaPerfTime100nSec;
+  double a = (double)lnValueDelta / DeltaPerfTime100nSec;
 
   double f = (1.0 - a) * 100.0;
   cpuusage = (int)(f + 0.5);	// rounding the result
 
   if(cpuusage < 0)  return 0;
-  #endif
 
 	return cpuusage;
 }
@@ -794,7 +765,6 @@ int XWINDOWSSYSTEM::GetCPUUsageForProcessName(XCHAR* processname)
 {
   int	             cpuusage = 0;
 
-  #ifndef BUILDER
   HANDLE           hprocesssnap;
   PROCESSENTRY32   pe32;  
 
@@ -827,8 +797,6 @@ int XWINDOWSSYSTEM::GetCPUUsageForProcessName(XCHAR* processname)
 
   CloseHandle(hprocesssnap);
 
-  #endif
-
   return cpuusage;
 }
 
@@ -848,13 +816,12 @@ int XWINDOWSSYSTEM::GetCPUUsageForProcessID(XDWORD processID)
 { 
   int				                              cpuusage            = 0;
 
-  #ifndef BUILDER
   XWINDOWSSYSTEM_PERFCOUNTERS<LONGLONG>   perfcounters;
-	DWORD                                   objectindex;
-	DWORD                                   cpuusageindex;
-	LONGLONG		                            newvalue            = 0;
-	PPERF_DATA_BLOCK                        perfdata            = NULL;
-	LARGE_INTEGER	                          newperftime100nsec;
+  DWORD                                   objectindex;
+  DWORD                                   cpuusageindex;
+  LONGLONG		                            newvalue            = 0;
+  PPERF_DATA_BLOCK                        perfdata            = NULL;
+  LARGE_INTEGER	                          newperftime100nsec;
   XWINDOWSSYSTEM_CPUUSAGESTATUS*          cus                 = NULL;
 
   newperftime100nsec.HighPart = 0;
@@ -863,34 +830,32 @@ int XWINDOWSSYSTEM::GetCPUUsageForProcessID(XDWORD processID)
   cus = AddCPUUsageStatus(processID);
   if(!cus) return 0;
 
-	objectindex     = XWINDOWSSYSTEM_PROCESS_OBJECT_INDEX;
-	cpuusageindex   = XWINDOWSSYSTEM_PROCESSOR_TIME_COUNTER_INDEX;
+  objectindex     = XWINDOWSSYSTEM_PROCESS_OBJECT_INDEX;
+  cpuusageindex   = XWINDOWSSYSTEM_PROCESSOR_TIME_COUNTER_INDEX;
 
-	newvalue = perfcounters.GetCounterValueForProcessID(&perfdata, objectindex, cpuusageindex, (DWORD)processID);
-	newperftime100nsec = perfdata->PerfTime100nSec;
+  newvalue = perfcounters.GetCounterValueForProcessID(&perfdata, objectindex, cpuusageindex, (DWORD)processID);
+  newperftime100nsec = perfdata->PerfTime100nSec;
 
-	if(cus->firsttime)
-	  {
-		  cus->firsttime           = false;
-		  cus->oldvalue            = newvalue;
-		  cus->oldperftime100nsec  = newperftime100nsec;
+  if(cus->firsttime)
+    {
+      cus->firsttime           = false;
+      cus->oldvalue            = newvalue;
+      cus->oldperftime100nsec  = newperftime100nsec;
 
-		  return 0;
-	  }
+      return 0;
+    }
 
-	LONGLONG  lnValueDelta         = newvalue - cus->oldvalue;
-	double    DeltaPerfTime100nSec = (double)newperftime100nsec.QuadPart - (double)cus->oldperftime100nsec.QuadPart;
+  LONGLONG  lnValueDelta         = newvalue - cus->oldvalue;
+  double    DeltaPerfTime100nSec = (double)newperftime100nsec.QuadPart - (double)cus->oldperftime100nsec.QuadPart;
 
-	cus->oldvalue            = newvalue;
-	cus->oldperftime100nsec  = newperftime100nsec;
+  cus->oldvalue            = newvalue;
+  cus->oldperftime100nsec  = newperftime100nsec;
 
-	double a = (double)lnValueDelta / DeltaPerfTime100nSec;
+  double a = (double)lnValueDelta / DeltaPerfTime100nSec;
 
   cpuusage = (int) (a*100);
 
   if(cpuusage < 0)  return 0;
-
-  #endif
 
   return cpuusage;
 }
@@ -1027,13 +992,11 @@ bool XWINDOWSSYSTEM::GetUserAndDomain(XSTRING& user, XSTRING& domain)
 
   XSTRING       userextend;
     
-  #ifndef BUILDER
   ULONG         size     = 1024;
-   
+
   userextend.AdjustSize(size);  
   GetUserNameEx(NameUserPrincipal, userextend.Get(), &size);
   userextend.AdjustSize();  
-  #endif
     
   if(!OpenThreadToken(GetCurrentThread(), TOKEN_QUERY, TRUE, &htoken)) 
     {
@@ -1123,9 +1086,7 @@ bool XWINDOWSSYSTEM::ShutDown(XSYSTEM_CHANGESTATUSTYPE type)
                                                         break;
 
       case XSYSTEM_CHANGESTATUSTYPE_SUSPEND          :    
-                                                        #ifndef BUILDER
                                                         if(!SetSuspendState(TRUE, FALSE, FALSE)) return false; 
-                                                        #endif    
                                                         break;
 
                                           default    :  return false;
@@ -1150,12 +1111,11 @@ int XWINDOWSSYSTEM::Sound_GetLevel()
 {
   float                   currentvolume     = 0.0f;
 
-  #ifndef BUILDER
   IMMDeviceEnumerator*    deviceenumerator  = NULL;
   IAudioEndpointVolume*   endpointvolume    = NULL;
   IMMDevice*              defaultdevice     = NULL;
   HRESULT                 hresult;
- 
+
   //-------------------------------------------------------------------------------------------------------------------
 
   CoInitialize(NULL);
@@ -1191,7 +1151,6 @@ int XWINDOWSSYSTEM::Sound_GetLevel()
     }
 
   CoUninitialize();
-  #endif
 
   return (int)(currentvolume*100);
 }
@@ -1212,13 +1171,12 @@ bool XWINDOWSSYSTEM::Sound_SetLevel(int level)
 {
   bool                    status            = false;
 
-  #ifndef BUILDER
   float                   currentvolume     = 0.0f;
   IMMDeviceEnumerator*    deviceenumerator  = NULL;
   IAudioEndpointVolume*   endpointvolume    = NULL;
   IMMDevice*              defaultdevice     = NULL;
   HRESULT                 hresult;
- 
+
   //-------------------------------------------------------------------------------------------------------------------
 
   CoInitialize(NULL);
@@ -1261,7 +1219,6 @@ bool XWINDOWSSYSTEM::Sound_SetLevel(int level)
     }
 
   CoUninitialize();
-  #endif
 
   return status;
 }
@@ -1281,13 +1238,12 @@ bool XWINDOWSSYSTEM::Sound_SetLevel(int level)
 bool XWINDOWSSYSTEM::Sound_SetMutex(bool on)
 {
   bool                    status            = false;
-  #ifndef BUILDER
   float                   currentvolume     = 0.0f;
   IMMDeviceEnumerator*    deviceenumerator  = NULL;
   IAudioEndpointVolume*   endpointvolume    = NULL;
   IMMDevice*              defaultdevice     = NULL;
   HRESULT                 hresult;
- 
+
   CoInitialize(NULL);
 
   hresult = CoCreateInstance(__uuidof(MMDeviceEnumerator), NULL, CLSCTX_INPROC_SERVER, __uuidof(IMMDeviceEnumerator), (LPVOID *)&deviceenumerator);
@@ -1296,7 +1252,7 @@ bool XWINDOWSSYSTEM::Sound_SetMutex(bool on)
 
   hresult = deviceenumerator->GetDefaultAudioEndpoint(eRender, eConsole, &defaultdevice);
   if(hresult != S_OK) return false;
- 
+
   deviceenumerator->Release();
   deviceenumerator = NULL; 
 
@@ -1319,7 +1275,6 @@ bool XWINDOWSSYSTEM::Sound_SetMutex(bool on)
     }
 
   CoUninitialize();
-  #endif
 
   return status;
 }
@@ -1371,7 +1326,6 @@ int XWINDOWSSYSTEM::GetWifiRSSILevel()
 {
   int                         index_status        = 0;
 
-  #ifndef BUILDER
   HANDLE                      handleclient        = NULL;
   DWORD                       max_client          = 2;
   DWORD                       current_version     = 0;
@@ -1407,7 +1361,7 @@ int XWINDOWSSYSTEM::GetWifiRSSILevel()
               if(ptr_rssi)
                 {               
                   int rssi = (int)(*(int*)(ptr_rssi));
-                         
+
                   if(rssi < -67) index_status = 3; 
                   if(rssi < -70) index_status = 2; 
                   if(rssi < -80) index_status = 1;                     
@@ -1415,7 +1369,7 @@ int XWINDOWSSYSTEM::GetWifiRSSILevel()
             }
         }
     }
-  
+
   if(interfacelist != NULL)
     {
       WlanFreeMemory(interfacelist);
@@ -1423,7 +1377,6 @@ int XWINDOWSSYSTEM::GetWifiRSSILevel()
     }
 
   WlanCloseHandle(handleclient, NULL);
-  #endif
 
   return index_status;
 }

@@ -186,16 +186,7 @@ void XWINDOWSTRACE::PrintFile(XTRACE_TARGET* target, XBYTE level, XCHAR* string)
 
   int error = 0;
 
-  #ifdef BUILDER
-  file = _wfopen(target->GetAim(), NL("at"));
-  if(!file)
-    {
-      UnLock();
-      return;
-    }
-  #else
   error = _wfopen_s(&file, target->GetAim(), NL("at"));
-  #endif
 
   if(error)
     {
@@ -220,16 +211,7 @@ void XWINDOWSTRACE::PrintFile(XTRACE_TARGET* target, XBYTE level, XCHAR* string)
 
       DeleteFile(target->GetAim());
 
-      #ifdef BUILDER
-      file = _wfopen(target->GetAim(), NL("at"));
-      if(!file)
-        {
-          UnLock();
-          return;
-        }
-      #else
       error = _wfopen_s(&file, target->GetAim(), NL("at"));
-      #endif
 
       if(error)
         {
@@ -335,11 +317,7 @@ bool XWINDOWSTRACE::GetHandleNet(XTRACE_TARGET* target)
     }
    else
     {  
-      #ifndef BUILDER
       inet_pton(addr.sin_family, target->GetIP(), &addr.sin_addr.s_addr);
-      #else
-      addr.sin_addr.s_addr  = inet_addr(target->GetIP());
-      #endif
     }
 
   connect(handle, (LPSOCKADDR)&addr, sizeof(SOCKADDR_IN));

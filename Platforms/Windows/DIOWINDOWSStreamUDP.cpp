@@ -476,11 +476,7 @@ void DIOWINDOWSSTREAMUDP::ThreadConnection(void* data)
                                                                                   
                                                                                   diostream->config->GetResolvedRemoteURL()->ConvertToASCII(charstr);
                                                                                   
-                                                                                  #ifndef BUILDER
                                                                                   inet_pton(target_addr.sin_family, charstr.GetPtrChar(), &target_addr.sin_addr.s_addr);
-                                                                                  #else
-                                                                                  target_addr.sin_addr.s_addr   = inet_addr(charstr.GetPtrChar());
-                                                                                  #endif                                                                                  
                                                                                 }
 
                                                                               target_addr.sin_port  = htons(datagram->GetPort()?datagram->GetPort():diostream->config->GetRemotePort());
@@ -538,11 +534,7 @@ void DIOWINDOWSSTREAMUDP::ThreadConnection(void* data)
                                                                               
                                                                                   diostream->config->GetResolvedRemoteURL()->ConvertToASCII(charstr);
                                                                                                                                                             
-                                                                                  #ifndef BUILDER
                                                                                   inet_pton(target_addr.sin_family, charstr.GetPtrChar(), &target_addr.sin_addr.s_addr);
-                                                                                  #else
-                                                                                  target_addr.sin_addr.s_addr   = inet_addr(charstr.GetPtrChar());
-                                                                                  #endif                                                                              
 
                                                                                   target_addr.sin_port  = htons(diostream->config->GetRemotePort());
 
@@ -616,11 +608,7 @@ void DIOWINDOWSSTREAMUDP::ThreadConnection(void* data)
  
                                                                         IPstring.ConvertToASCII(charstr);
                                                                                                                                                
-                                                                        #ifndef BUILDER
                                                                         inet_pton(loc_addr.sin_family, charstr.GetPtrChar(), &loc_addr.sin_addr.s_addr);
-                                                                        #else
-                                                                        loc_addr.sin_addr.s_addr  = inet_addr(charstr.GetPtrChar());
-                                                                        #endif                                                                        
                                                                       }
                                                                      else
                                                                       {
