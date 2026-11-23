@@ -678,16 +678,20 @@ bool XWINDOWSPROCESSMANAGER::Application_FindWindowAtPoint(int screenx, int scre
 bool XWINDOWSPROCESSMANAGER::Application_GetRunningList(XVECTOR<XPROCESS*>& applist, bool onlywithvalidwindow)
 {
   PROCESSENTRY32 processentry;
-  HANDLE         snapshot = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, NULL);
+  if(xmutexgetsrunninglist)
+    {
+      xmutexgetsrunninglist->Lock();
+    }
+
+  HANDLE snapshot = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, NULL);
   
   if(snapshot == INVALID_HANDLE_VALUE) 
     {
+      if(xmutexgetsrunninglist)
+        {
+          xmutexgetsrunninglist->UnLock();
+        }
       return false;
-    }
-
-  if(xmutexgetsrunninglist)
-    {   
-      xmutexgetsrunninglist->Lock();
     }
   
   applist.DeleteContents();
@@ -1355,35 +1359,19 @@ int XWINDOWSPROCESSMANAGER::GetWindowBorderWidth(HWND hwnd)
 * --------------------------------------------------------------------------------------------------------------------*/
 bool XWINDOWSPROCESSMANAGER::GetChildProcesses(XVECTOR<XPROCESS*>& applist) 
 {
-  HANDLE threadSnapshot = CreateToolhelp32Snapshot(TH32CS_SNAPTHREAD, 0);
-  if(threadSnapshot == INVALID_HANDLE_VALUE) 
+  // Ensure each process entry lists its own PID for HWND→process matching.
+  // (Older code walked TH32CS_SNAPTHREAD and stored thread IDs here, which bloated
+  // the list and could false-match unrelated PIDs.)
+  for(XDWORD c=0; c<applist.GetSize(); c++)
     {
-      return false;
+      XPROCESS* process = applist.Get(c);
+      if(!process) continue;
+
+      if(process->GetProcessIDs()->IsEmpty())
+        {
+          process->GetProcessIDs()->Add(process->GetID());
+        }
     }
-
-  THREADENTRY32 threadEntry;
-  threadEntry.dwSize = sizeof(THREADENTRY32);
-
-  if(!Thread32First(threadSnapshot, &threadEntry)) 
-    {
-      CloseHandle(threadSnapshot);
-      return false;
-    }
-
-  do { XPROCESS* mainprocess = Application_GetProcessByID(threadEntry.th32OwnerProcessID, applist);
-       if(mainprocess) 
-         {
-           if(mainprocess->GetProcessIDs()->IsEmpty())
-             {
-               mainprocess->GetProcessIDs()->Add(threadEntry.th32OwnerProcessID); 
-             }
-
-           mainprocess->GetProcessIDs()->Add(threadEntry.th32ThreadID);
-         }
-
-      } while (Thread32Next(threadSnapshot, &threadEntry));
-
-  CloseHandle(threadSnapshot);
 
   return true;
 }

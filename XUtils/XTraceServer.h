@@ -3,7 +3,7 @@
 * @file       XTraceServer.h
 * 
 * @class      XTRACESERVER
-* @brief      XTRACE receive server (UDP/UART) with bounded thread-safe queue
+* @brief      XTRACE receive server (UDP / UART / Windows WM_COPYDATA) with bounded thread-safe queue
 * @ingroup    XUTILS
 * 
 * @copyright  EndoraSoft. All rights reserved.
@@ -38,26 +38,28 @@
 
 /*---- DEFINES & ENUMS  ----------------------------------------------------------------------------------------------*/
 
-#if defined(DIO_ACTIVE) && (defined(DIO_STREAMUDP_ACTIVE) || defined(DIO_STREAMUART_ACTIVE))
+#ifdef XTRACE_SERVER_ACTIVE
 
 #define XTRACESERVER_DEFAULT_MAXMESSAGES      4096
 #define XTRACESERVER_DEFAULT_PORT             10001
 
+#if defined(XTRACE_SERVER_WINDOWSMSG_ACTIVE)
 // Local IPC (WM_COPYDATA) traces: same local IP XWINDOWSTRACE::PrintSpecial packs.
 // XTM BelongsTo(LOCAL_NO_INTERNET) is (!publicIP && localIP).
 #define XTRACESERVER_COPYDATA_LOCALIP         0x01010101u
+#endif
 
 /*---- CLASS ---------------------------------------------------------------------------------------------------------*/
 
 class XMUTEX;
 class XBUFFER;
 
-#if defined(DIO_STREAMUDP_ACTIVE)
+#if defined(XTRACE_SERVER_UDP_ACTIVE)
 class DIOSTREAMUDPCONFIG;
 class DIOSTREAMUDP;
 #endif
 
-#if defined(DIO_STREAMUART_ACTIVE)
+#if defined(XTRACE_SERVER_UART_ACTIVE)
 class DIOSTREAMUARTCONFIG;
 class DIOSTREAMUART;
 #endif
@@ -93,14 +95,14 @@ class XTRACESERVER
                             XTRACESERVER                    ();
     virtual                ~XTRACESERVER                    ();
 
-  #if defined(DIO_STREAMUDP_ACTIVE)
+  #if defined(XTRACE_SERVER_UDP_ACTIVE)
     bool                    Ini                             (XWORD port = XTRACESERVER_DEFAULT_PORT);
     bool                    Ini                             (XCHAR* config);
     bool                    Ini                             (XSTRING& config);
     bool                    Ini                             (XSTRING* config);
   #endif
 
-  #if defined(DIO_STREAMUART_ACTIVE)
+  #if defined(XTRACE_SERVER_UART_ACTIVE)
     bool                    IniUART                         (XCHAR* config);
     bool                    IniUART                         (XSTRING& config);
     bool                    IniUART                         (XSTRING* config);
@@ -109,10 +111,10 @@ class XTRACESERVER
     bool                    End                             ();
 
     bool                    IsOpen                          ();
-  #if defined(DIO_STREAMUDP_ACTIVE)
+  #if defined(XTRACE_SERVER_UDP_ACTIVE)
     bool                    IsOpenUDP                       ();
   #endif
-  #if defined(DIO_STREAMUART_ACTIVE)
+  #if defined(XTRACE_SERVER_UART_ACTIVE)
     bool                    IsOpenUART                      ();
   #endif
 
@@ -135,6 +137,7 @@ class XTRACESERVER
     void                    SetPriority                     (XTHREADPRIORITY priority);
     void                    SetHighPriority                 (bool enable);   // true=HIGH, false=NORMAL
 
+  #if defined(XTRACE_SERVER_WINDOWSMSG_ACTIVE)
     // Windows local IPC: parse an XTRACE WM_COPYDATA payload and queue it under Local (no internet)
     // (publicIP forced 0; localIP from packet or XTRACESERVER_COPYDATA_LOCALIP).
     bool                    FeedCopyData                    (const void* data, XDWORD size);
@@ -143,18 +146,19 @@ class XTRACESERVER
     static void             SetCopyDataReceiver             (XTRACESERVER* server);
     static XTRACESERVER*    GetCopyDataReceiver             ();
     static bool             HandleCopyData                  (const void* data, XDWORD size);
+  #endif
 
   private:
 
     void                    ApplyPriorityToThreads          ();
 
-  #if defined(DIO_STREAMUDP_ACTIVE)
+  #if defined(XTRACE_SERVER_UDP_ACTIVE)
     bool                    OpenUDP                         (XSTRING* config);
     bool                    CloseUDP                        ();
     static void             ThreadReadUDPFunction           (void* param);
   #endif
 
-  #if defined(DIO_STREAMUART_ACTIVE)
+  #if defined(XTRACE_SERVER_UART_ACTIVE)
     bool                    OpenUART                        (XSTRING* config);
     bool                    CloseUART                       ();
     static void             ThreadReadUARTFunction          (void* param);
@@ -165,7 +169,9 @@ class XTRACESERVER
 
     void                    Clean                           ();
 
+  #if defined(XTRACE_SERVER_WINDOWSMSG_ACTIVE)
     static XTRACESERVER*    copydata_receiver;
+  #endif
 
     XDWORD                  maxmessages;
     XDWORD                  droppedcount;
@@ -175,14 +181,14 @@ class XTRACESERVER
     XMUTEX*                 xmutexmessages;
     XVECTOR<XTRACESERVER_MSG*>  messages;
 
-  #if defined(DIO_STREAMUDP_ACTIVE)
+  #if defined(XTRACE_SERVER_UDP_ACTIVE)
     bool                    isopenudp;
     DIOSTREAMUDPCONFIG*     diostreamudpcfg;
     DIOSTREAMUDP*           diostreamudp;
     XTHREADCOLLECTED*       xthreadreadUDP;
   #endif
 
-  #if defined(DIO_STREAMUART_ACTIVE)
+  #if defined(XTRACE_SERVER_UART_ACTIVE)
     bool                    isopenuart;
     DIOSTREAMUARTCONFIG*    diostreamuartcfg;
     DIOSTREAMUART*          diostreamuart;

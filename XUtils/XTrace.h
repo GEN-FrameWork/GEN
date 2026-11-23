@@ -214,7 +214,7 @@ enum XTRACE_TYPE_STATUS_MSG
   
   #define XTRACE_PRINT(level, mask, ...)
   #define XTRACE_PRINTLEVEL(level, mask, ...)
-  #define XTRACE_PRINTCOLOR(level, mask, ...)  {}
+  #define XTRACE_PRINTCOLOR(level, mask, ...)
   #define XTRACE_PRINTTAB(level, mask, ...)
   #define XTRACE_PRINTCODE(level, mask, ...)
 
@@ -414,9 +414,10 @@ class XTRACE
     virtual bool                    GetHandleNet                      (XTRACE_TARGET* target);
     virtual bool                    CloseHandleNet                    (XTRACE_TARGET* target);
 
-    XDWORD                          GetTraceFromXBuffer               (XBUFFER& xbufferpacket, XDWORD& publicIP, XDWORD& localIP, XBYTE& level, XDWORD& sequence, XDATETIME* xtime, XBUFFER& data);
-    XDWORD                          GetTraceFromDIOStream             (DIOSTREAM* DIOstream, XDWORD& publicIP, XDWORD& localIP, XBYTE& level, XDWORD& sequence, XDATETIME* xtime, XBUFFER& data);
-    bool                            SetTraceDataToText                (XBUFFER& data, XSTRING& string);
+    // Packet parse helpers (static): usable by XTRACESERVER without an XTRACE send instance.
+    static XDWORD                   GetTraceFromXBuffer               (XBUFFER& xbufferpacket, XDWORD& publicIP, XDWORD& localIP, XBYTE& level, XDWORD& sequence, XDATETIME* xtime, XBUFFER& data);
+    static XDWORD                   GetTraceFromDIOStream             (DIOSTREAM* DIOstream, XDWORD& publicIP, XDWORD& localIP, XBYTE& level, XDWORD& sequence, XDATETIME* xtime, XBUFFER& data);
+    static bool                     SetTraceDataToText                (XBUFFER& data, XSTRING& string);
 
     bool                            SetTraceToXBuffer                 (XDWORD publicIP, XDWORD localIP, XBYTE level, XDWORD sequence, XDATETIME* xtime, XDWORD& sizepacket, XBUFFER& xbufferpacket);
     bool                            SetTraceTextToXBuffer             (XDWORD publicIP, XDWORD localIP, XBYTE level, XDWORD sequence, XDATETIME* xtime, XCHAR* string, XBUFFER& xbufferpacket);

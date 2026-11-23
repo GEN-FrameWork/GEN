@@ -1444,9 +1444,13 @@ bool UI_CSSPARSER::ResolveAndParseImport(XSTRING& importurl, UI_STYLESHEET& out)
   importdepth--;
 
   if(status)
-    XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, NL("[CSS Parse] @import [%s] merged"), importpath.Get());
-   else
-    XTRACE_PRINTCOLOR(XTRACE_COLOR_WARNING, NL("[CSS Parse] @import [%s] not applied (missing, empty, or cyclic)"), importpath.Get());
+    {
+      XTRACE_PRINTCOLOR(XTRACE_COLOR_BLUE, NL("[CSS Parse] @import [%s] merged"), importpath.Get());
+    }
+  else
+    {
+      XTRACE_PRINTCOLOR(XTRACE_COLOR_WARNING, NL("[CSS Parse] @import [%s] not applied (missing, empty, or cyclic)"), importpath.Get());
+    }
 
   return status;
 }

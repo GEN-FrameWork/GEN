@@ -655,7 +655,10 @@ void SCRIPT_LNG_JAVASCRIPT::Clean()
 }
 
 
-#if !defined(COMPILER_CLANG_CL) && !defined(COMPILER_CLANG) && !defined(COMPILER_GCC)
+// Duktape may call __builtin_inf(). Clang/GCC already provide it as a builtin
+// (clang-cl too — even when COMPILER_CLANG_CL was not set by CMake). MSVC needs
+// this polyfill; defining it under Clang errors: "definition of builtin function".
+#if defined(_MSC_VER) && !defined(__clang__) && !defined(__GNUC__)
 /**-------------------------------------------------------------------------------------------------------------------
 * 
 * @fn         double __builtin_inf(void)

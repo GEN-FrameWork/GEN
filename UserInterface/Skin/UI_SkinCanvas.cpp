@@ -3662,30 +3662,6 @@ bool UI_SKINCANVAS::CalculateBoundaryLine_CheckBox(UI_ELEMENT* element, bool adj
 
 
 /**-------------------------------------------------------------------------------------------------------------------
-* 
-* @fn         bool UI_SKINCANVAS::CalculateBoundaryLine_RadioButton(UI_ELEMENT* element, bool adjustsizemargin)
-* @brief      Calculate boundary line radio button
-* @ingroup    USERINTERFACE
-* 
-* @param[in]  element : Element to process.
-* @param[in]  adjustsizemargin : Adjustsizemargin value.
-* 
-* @return     bool : true if the operation is successful; otherwise false.
-* 
-* --------------------------------------------------------------------------------------------------------------------*/
-/**-------------------------------------------------------------------------------------------------------------------
-*
-* @fn         void UI_SkinCanvas_AlignRadioButtonGlyphAndText
-* @brief      Vertically center the radio circle with its caption (shared by layout + paint).
-* @note       INTERNAL / FILE LOCAL. Draw_Image paints native bitmap pixels from the IMAGE child's
-*             absolute Y — not the animation wrapper — so every frame must be moved with the glyph.
-*             Text Y is the VectorFont baseline; mid of the em box is baseline − sizefont/2 (Y-up
-*             father: abs mid = father_y − text_y_rel − sizefont/2). Circle mid uses the same
-*             relative-from-bottom convention so both share the row midline.
-* @ingroup    USERINTERFACE
-*
-* --------------------------------------------------------------------------------------------------------------------*/
-/**-------------------------------------------------------------------------------------------------------------------
 *
 * @fn         void UI_SkinCanvas_GlueRadioButtonImages
 * @brief      Draw_Image uses the IMAGE child's absolute Y — keep frames glued to the animation box.
@@ -3808,19 +3784,18 @@ static void UI_SkinCanvas_ApplyRadioFlexChildAbs(UI_SKINCANVAS* skin, UI_ELEMENT
 }
 
 
-static void UI_SkinCanvas_AlignRadioButtonGlyphAndText(UI_SKINCANVAS* skin, UI_ELEMENT* element, bool adjustsizemargin, bool write_boundary);
-
-
 /**-------------------------------------------------------------------------------------------------------------------
 *
-* @fn         void UI_SkinCanvas_LayoutRadioGroupFlex
-* @brief      CSS column + space-evenly for peers; nested radio flex row + optical glyph nudge.
-* @note       INTERNAL / FILE LOCAL. full_relayout runs RunLayout; otherwise only re-pins from BoundaryLine.
+* @fn         void UI_SkinCanvas_AlignRadioButtonGlyphAndText
+* @brief      Vertically center the radio circle with its caption (shared by layout + paint).
+* @note       INTERNAL / FILE LOCAL. Draw_Image paints native bitmap pixels from the IMAGE child's
+*             absolute Y — not the animation wrapper — so every frame must be moved with the glyph.
+*             Text Y is the VectorFont baseline; mid of the em box is baseline − sizefont/2 (Y-up
+*             father: abs mid = father_y − text_y_rel − sizefont/2). Circle mid uses the same
+*             relative-from-bottom convention so both share the row midline.
 * @ingroup    USERINTERFACE
 *
 * --------------------------------------------------------------------------------------------------------------------*/
-
-
 static void UI_SkinCanvas_AlignRadioButtonGlyphAndText(UI_SKINCANVAS* skin, UI_ELEMENT* element, bool adjustsizemargin, bool write_boundary)
 {
   if(!skin || !element) return;

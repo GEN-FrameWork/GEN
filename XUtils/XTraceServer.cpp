@@ -36,7 +36,7 @@
 
 #include "XTraceServer.h"
 
-#if defined(DIO_ACTIVE) && (defined(DIO_STREAMUDP_ACTIVE) || defined(DIO_STREAMUART_ACTIVE))
+#ifdef XTRACE_SERVER_ACTIVE
 
 #include "XFactory.h"
 #include "XSleep.h"
@@ -45,15 +45,17 @@
 #include "XTrace.h"
 #include "XBuffer.h"
 
+#if defined(XTRACE_SERVER_UDP_ACTIVE) || defined(XTRACE_SERVER_UART_ACTIVE)
 #include "DIOFactory.h"
+#endif
 
-#if defined(DIO_STREAMUDP_ACTIVE)
+#if defined(XTRACE_SERVER_UDP_ACTIVE)
 #include "DIOIP.h"
 #include "DIOStreamUDPConfig.h"
 #include "DIOStreamUDP.h"
 #endif
 
-#if defined(DIO_STREAMUART_ACTIVE)
+#if defined(XTRACE_SERVER_UART_ACTIVE)
 #include "DIOStreamUARTConfig.h"
 #include "DIOStreamUART.h"
 #endif
@@ -69,7 +71,9 @@
 
 /*---- GENERAL VARIABLE ----------------------------------------------------------------------------------------------*/
 
+#if defined(XTRACE_SERVER_WINDOWSMSG_ACTIVE)
 XTRACESERVER* XTRACESERVER::copydata_receiver = NULL;
+#endif
 
 
 /*---- CLASS MEMBERS -------------------------------------------------------------------------------------------------*/
@@ -177,7 +181,7 @@ XTRACESERVER::XTRACESERVER()
 
   xmutexmessages = GEN_XFACTORY.Create_Mutex();
 
-#if defined(DIO_STREAMUDP_ACTIVE)
+#if defined(XTRACE_SERVER_UDP_ACTIVE)
   xthreadreadUDP = CREATEXTHREAD(XTHREADGROUPID_DIOSTREAM, NL("XTRACESERVER::ReadUDP"), ThreadReadUDPFunction, (void*)this);
   if(xthreadreadUDP)
     {
@@ -185,7 +189,7 @@ XTRACESERVER::XTRACESERVER()
     }
 #endif
 
-#if defined(DIO_STREAMUART_ACTIVE)
+#if defined(XTRACE_SERVER_UART_ACTIVE)
   xthreadreadUART = CREATEXTHREAD(XTHREADGROUPID_DIOSTREAM, NL("XTRACESERVER::ReadUART"), ThreadReadUARTFunction, (void*)this);
   if(xthreadreadUART)
     {
@@ -208,7 +212,7 @@ XTRACESERVER::~XTRACESERVER()
 {
   End();
 
-#if defined(DIO_STREAMUDP_ACTIVE)
+#if defined(XTRACE_SERVER_UDP_ACTIVE)
   if(xthreadreadUDP)
     {
       xthreadreadUDP->End();
@@ -217,7 +221,7 @@ XTRACESERVER::~XTRACESERVER()
     }
 #endif
 
-#if defined(DIO_STREAMUART_ACTIVE)
+#if defined(XTRACE_SERVER_UART_ACTIVE)
   if(xthreadreadUART)
     {
       xthreadreadUART->End();
@@ -236,7 +240,7 @@ XTRACESERVER::~XTRACESERVER()
 }
 
 
-#if defined(DIO_STREAMUDP_ACTIVE)
+#if defined(XTRACE_SERVER_UDP_ACTIVE)
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
@@ -316,7 +320,7 @@ bool XTRACESERVER::Ini(XSTRING* config)
 #endif
 
 
-#if defined(DIO_STREAMUART_ACTIVE)
+#if defined(XTRACE_SERVER_UART_ACTIVE)
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
@@ -386,13 +390,15 @@ bool XTRACESERVER::IniUART(XSTRING* config)
 * --------------------------------------------------------------------------------------------------------------------*/
 bool XTRACESERVER::End()
 {
+#if defined(XTRACE_SERVER_WINDOWSMSG_ACTIVE)
   if(copydata_receiver == this) copydata_receiver = NULL;
+#endif
 
-#if defined(DIO_STREAMUDP_ACTIVE)
+#if defined(XTRACE_SERVER_UDP_ACTIVE)
   CloseUDP();
 #endif
 
-#if defined(DIO_STREAMUART_ACTIVE)
+#if defined(XTRACE_SERVER_UART_ACTIVE)
   CloseUART();
 #endif
 
@@ -415,11 +421,11 @@ bool XTRACESERVER::IsOpen()
 {
   bool open = false;
 
-#if defined(DIO_STREAMUDP_ACTIVE)
+#if defined(XTRACE_SERVER_UDP_ACTIVE)
   if(isopenudp) open = true;
 #endif
 
-#if defined(DIO_STREAMUART_ACTIVE)
+#if defined(XTRACE_SERVER_UART_ACTIVE)
   if(isopenuart) open = true;
 #endif
 
@@ -427,7 +433,7 @@ bool XTRACESERVER::IsOpen()
 }
 
 
-#if defined(DIO_STREAMUDP_ACTIVE)
+#if defined(XTRACE_SERVER_UDP_ACTIVE)
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
@@ -446,7 +452,7 @@ bool XTRACESERVER::IsOpenUDP()
 #endif
 
 
-#if defined(DIO_STREAMUART_ACTIVE)
+#if defined(XTRACE_SERVER_UART_ACTIVE)
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
@@ -709,7 +715,7 @@ bool XTRACESERVER::WaitPop(XTRACESERVER_MSG& msg, int timeout_ms)
 }
 
 
-#if defined(DIO_STREAMUDP_ACTIVE)
+#if defined(XTRACE_SERVER_UDP_ACTIVE)
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
@@ -804,7 +810,7 @@ bool XTRACESERVER::CloseUDP()
 #endif
 
 
-#if defined(DIO_STREAMUART_ACTIVE)
+#if defined(XTRACE_SERVER_UART_ACTIVE)
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
@@ -914,8 +920,6 @@ bool XTRACESERVER::CloseUART()
 * --------------------------------------------------------------------------------------------------------------------*/
 bool XTRACESERVER::PushParsedPacket(XBUFFER& packet, XDWORD publicIP, XDWORD localIP)
 {
-  if(!XTRACE::instance) return false;
-
   XDWORD     packetpublicIP = 0;
   XDWORD     packetlocalIP  = 0;
   XBYTE      level          = 0;
@@ -926,12 +930,12 @@ bool XTRACESERVER::PushParsedPacket(XBUFFER& packet, XDWORD publicIP, XDWORD loc
 
   xtime.SetToZero();
 
-  if(XTRACE::instance->GetTraceFromXBuffer(packet, packetpublicIP, packetlocalIP, level, sequence, &xtime, data))
+  if(XTRACE::GetTraceFromXBuffer(packet, packetpublicIP, packetlocalIP, level, sequence, &xtime, data))
     {
       return false;
     }
 
-  XTRACE::instance->SetTraceDataToText(data, string);
+  XTRACE::SetTraceDataToText(data, string);
 
   return PushMessage(publicIP, localIP, level, sequence, xtime, string);
 }
@@ -985,6 +989,8 @@ bool XTRACESERVER::PushMessage(XDWORD publicIP, XDWORD localIP, XBYTE level, XDW
 }
 
 
+#if defined(XTRACE_SERVER_WINDOWSMSG_ACTIVE)
+
 /**-------------------------------------------------------------------------------------------------------------------
 *
 * @fn         bool XTRACESERVER::FeedCopyData(const void* data, XDWORD size)
@@ -999,7 +1005,7 @@ bool XTRACESERVER::PushMessage(XDWORD publicIP, XDWORD localIP, XBYTE level, XDW
 *---------------------------------------------------------------------------------------------------------------------*/
 bool XTRACESERVER::FeedCopyData(const void* data, XDWORD size)
 {
-  if(!data || !size || !XTRACE::instance) return false;
+  if(!data || !size) return false;
 
   XBUFFER packet;
   packet.Add((XBYTE*)data, size);
@@ -1014,12 +1020,12 @@ bool XTRACESERVER::FeedCopyData(const void* data, XDWORD size)
 
   xtime.SetToZero();
 
-  if(XTRACE::instance->GetTraceFromXBuffer(packet, publicIP, localIP, level, sequence, &xtime, payload))
+  if(XTRACE::GetTraceFromXBuffer(packet, publicIP, localIP, level, sequence, &xtime, payload))
     {
       return false;
     }
 
-  XTRACE::instance->SetTraceDataToText(payload, string);
+  XTRACE::SetTraceDataToText(payload, string);
 
   // Always route IPC traces under Local (no internet): publicIP=0, local child IP from packet
   // (XWINDOWSTRACE packs 1.1.1.1) or the canonical CopyData local IP.
@@ -1074,8 +1080,10 @@ bool XTRACESERVER::HandleCopyData(const void* data, XDWORD size)
   return copydata_receiver->FeedCopyData(data, size);
 }
 
+#endif // XTRACE_SERVER_WINDOWSMSG_ACTIVE
 
-#if defined(DIO_STREAMUDP_ACTIVE)
+
+#if defined(XTRACE_SERVER_UDP_ACTIVE)
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
@@ -1092,7 +1100,6 @@ void XTRACESERVER::ThreadReadUDPFunction(void* param)
   if(!server) return;
   if(!server->isopenudp) return;
   if(!server->diostreamudp) return;
-  if(!XTRACE::instance) return;
 
   bool addmessage = true;
 
@@ -1118,7 +1125,7 @@ void XTRACESERVER::ThreadReadUDPFunction(void* param)
 
       server->diostreamudp->ReadDatagram(address, port, data);
 
-      XDWORD error = XTRACE::instance->GetTraceFromXBuffer(data, publicIP, localIP, level, sequence, &xtime, data);
+      XDWORD error = XTRACE::GetTraceFromXBuffer(data, publicIP, localIP, level, sequence, &xtime, data);
       if(!error)
         {
           if((!publicIP) && (!address.IsEmpty()))
@@ -1137,7 +1144,7 @@ void XTRACESERVER::ThreadReadUDPFunction(void* param)
                 }
             }
 
-          XTRACE::instance->SetTraceDataToText(data, string);
+          XTRACE::SetTraceDataToText(data, string);
           server->PushMessage(publicIP, localIP, level, sequence, xtime, string);
         }
        else
@@ -1150,7 +1157,7 @@ void XTRACESERVER::ThreadReadUDPFunction(void* param)
 #endif
 
 
-#if defined(DIO_STREAMUART_ACTIVE)
+#if defined(XTRACE_SERVER_UART_ACTIVE)
 
 /**-------------------------------------------------------------------------------------------------------------------
 * 
@@ -1167,7 +1174,6 @@ void XTRACESERVER::ThreadReadUARTFunction(void* param)
   if(!server) return;
   if(!server->isopenuart) return;
   if(!server->diostreamuart) return;
-  if(!XTRACE::instance) return;
 
   bool addmessage = true;
 
@@ -1251,11 +1257,11 @@ void XTRACESERVER::SetHighPriority(bool enable)
 *---------------------------------------------------------------------------------------------------------------------*/
 void XTRACESERVER::ApplyPriorityToThreads()
 {
-#if defined(DIO_STREAMUDP_ACTIVE)
+#if defined(XTRACE_SERVER_UDP_ACTIVE)
   if(xthreadreadUDP) xthreadreadUDP->SetPriority(priority);
 #endif
 
-#if defined(DIO_STREAMUART_ACTIVE)
+#if defined(XTRACE_SERVER_UART_ACTIVE)
   if(xthreadreadUART) xthreadreadUART->SetPriority(priority);
 #endif
 }
@@ -1269,14 +1275,14 @@ void XTRACESERVER::Clean()
   priority          = XTHREADPRIORITY_REALTIME;
   xmutexmessages    = NULL;
 
-#if defined(DIO_STREAMUDP_ACTIVE)
+#if defined(XTRACE_SERVER_UDP_ACTIVE)
   isopenudp         = false;
   diostreamudpcfg   = NULL;
   diostreamudp      = NULL;
   xthreadreadUDP    = NULL;
 #endif
 
-#if defined(DIO_STREAMUART_ACTIVE)
+#if defined(XTRACE_SERVER_UART_ACTIVE)
   isopenuart        = false;
   diostreamuartcfg  = NULL;
   diostreamuart     = NULL;

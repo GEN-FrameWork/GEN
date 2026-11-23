@@ -49,7 +49,7 @@
 #include "UI_Manager.h"
 #endif
 
-#if defined(DIO_ACTIVE) && (defined(DIO_STREAMUDP_ACTIVE) || defined(DIO_STREAMUART_ACTIVE))
+#if defined(XTRACE_SERVER_WINDOWSMSG_ACTIVE)
 #include "XTraceServer.h"
 #endif
 
@@ -2221,7 +2221,7 @@ LRESULT CALLBACK GRPWINDOWSSCREEN::BaseWndProc(HWND hwnd, UINT msg, WPARAM wpara
       // Queued into XTRACESERVER as Local (no internet); return TRUE so the sender
       // treats delivery as acknowledged (legacy VCL CheckCopyData behaviour).
       case WM_COPYDATA              : {
-                                        #if defined(DIO_ACTIVE) && (defined(DIO_STREAMUDP_ACTIVE) || defined(DIO_STREAMUART_ACTIVE))
+                                        #if defined(XTRACE_SERVER_WINDOWSMSG_ACTIVE)
                                         COPYDATASTRUCT* cs = (COPYDATASTRUCT*)lparam;
                                         if(cs && cs->lpData && cs->cbData)
                                           {

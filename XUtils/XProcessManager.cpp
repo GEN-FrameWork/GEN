@@ -297,6 +297,7 @@ bool XPROCESS::CopyTo(XPROCESS& xprocess)
   xprocess.SetID(ID);
   xprocess.GetPath()->Set(path);  
   xprocess.GetName()->Set(name);    
+  xprocess.SetWindowHandle(windowhandle);
   xprocess.GetWindowTitle()->Set(windowtitle); 
 
   xprocess.GetWindowRect()->CopyFrom(&windowrect);
@@ -324,6 +325,7 @@ bool XPROCESS::CopyFrom(XPROCESS& xprocess)
   ID                = xprocess.GetID();
   path              = xprocess.GetPath()->Get();  
   name              = xprocess.GetName()->Get();  
+  windowhandle      = xprocess.GetWindowHandle();
   windowtitle       = xprocess.GetWindowTitle()->Get(); 
 
   GetWindowRect()->CopyFrom(xprocess.GetWindowRect());
