@@ -297,8 +297,8 @@ bool APPFLOWCFG::DoVariableMapping()
 
   #ifdef APPFLOW_CFG_SCRIPTS_ACTIVE
 
-  AddRemark(APPFLOW_CFG_SECTION_LOG, NL("--------------------------------------------------------------------------------------------------------------------------------------------"), 0, 1);
-  AddRemark(APPFLOW_CFG_SECTION_LOG, NL(" Scripts list"), 0, 2);
+  AddRemark(APPFLOW_CFG_SECTION_SCRIPTS, NL("--------------------------------------------------------------------------------------------------------------------------------------------"), 0, 1);
+  AddRemark(APPFLOW_CFG_SECTION_SCRIPTS, NL(" Scripts list"), 0, 2);
 
   AddValueSecuence<XSTRING>(XFILECFG_VALUETYPE_STRING, APPFLOW_CFG_SECTION_SCRIPTS    , APPFLOW_CFG_SCRIPTS_SCRIPT                , NL("%03d"), 1, 999 
                                                                                                                                   , scripts_list
