@@ -841,6 +841,10 @@ bool XFILETXT::WriteAllFile()
 
   if(lines.IsEmpty()) return false;
 
+  // Truncate first so a stale cachesize cannot block SetPosition(0), then write line-by-line
+  // (avoids one contiguous 5MB allocation that fails in 32-bit ASQ and left Tests_Recorded.js empty).
+  if(!file->SetSize(0)) return false;
+
   XBYTE   BOM[3]  = { 0,0,0 };
   XDWORD  sizeBOM = 0;
 
@@ -848,95 +852,98 @@ bool XFILETXT::WriteAllFile()
   XDWORD  sizeLF  = 0;
 
   CreateBOMFormatChar(formatchar, BOM, sizeBOM);
-
   CreateTypeLF(formatchar, typeLF, LF, sizeLF);
 
-  file->SetPosition(0);
+  // If Create() left formatchar/typeLF unset, force text defaults so we actually emit bytes.
+  if(formatchar == XFILETXTFORMATCHAR_UNKNOWN)
+    {
+      formatchar = XFILETXTFORMATCHAR_ASCII;
+    }
+  if(typeLF == XFILETXTTYPELF_UNKNOWN)
+    {
+      typeLF = XFILETXTTYPELF_DEFAULT;
+      CreateTypeLF(formatchar, typeLF, LF, sizeLF);
+    }
+
   if(sizeBOM)
     {
       if(!file->Write(BOM, sizeBOM)) return false;
     }
 
-  XBUFFER xbuffer;
-  XBYTE*  buffer;
-  bool    status    = true;
+  XDWORD byteswritten = sizeBOM;
 
-  buffer  = GEN_NEW XBYTE[XFILETXT_MAXBUFFER];
-  if(buffer)
+  for(int c=0;c<(int)lines.GetSize();c++)
     {
-      int bw;
-      
-      for(int c=0;c<(int)lines.GetSize();c++)
+      XSTRING* string = (XSTRING*)lines.Get(c);
+      if(!string) continue;
+
+      XBUFFER linebytes;
+      int     bw = 0;
+
+      switch(formatchar)
         {
-          XSTRING* string = (XSTRING*)lines.Get(c);
-          bw = 0;
+          case XFILETXTFORMATCHAR_ASCII     :
+          case XFILETXTFORMATCHAR_UNKNOWN   : { string->ConvertToASCII(linebytes);
+                                                  // ConvertToASCII appends a trailing NUL — do not write it.
+                                                  bw = (int)string->GetSize();
+                                                  if(bw > 0)
+                                                    {
+                                                      if((XDWORD)bw > linebytes.GetSize()) bw = (int)linebytes.GetSize();
+                                                      if(bw > 0 && !file->Write(linebytes.Get(), (XDWORD)bw)) return false;
+                                                      byteswritten += (XDWORD)bw;
+                                                    }
+                                                }
+                                                break;
 
-          memset(buffer, 0, XFILETXT_MAXBUFFER);
+          case XFILETXTFORMATCHAR_UTF8      : { XBYTE* tmp = GEN_NEW XBYTE[string->GetSize()*4 + 8];
+                                                  if(!tmp) return false;
+                                                  string->ConvertToUTF8(tmp, bw);
+                                                  if(bw > 0 && !file->Write(tmp, (XDWORD)bw)) { GEN_DELETE_ARRAY tmp; return false; }
+                                                  byteswritten += (XDWORD)bw;
+                                                  GEN_DELETE_ARRAY tmp;
+                                                }
+                                                break;
 
-          if(string)
-            {
-              switch(formatchar)
-                {
-                  case XFILETXTFORMATCHAR_UNKNOWN   : break;
+          case XFILETXTFORMATCHAR_UTF16_LE  :
+          case XFILETXTFORMATCHAR_UTF16_BE  : { XDWORD nbytes = string->GetSize()*2;
+                                                  XBYTE* tmp = GEN_NEW XBYTE[nbytes + 4];
+                                                  if(!tmp) return false;
+                                                  XWORD* bufferw = (XWORD*)tmp;
+                                                  for(int d=0;d<(int)string->GetSize();d++)
+                                                    {
+                                                      bufferw[d] = (XWORD)string->Get()[d];
+                                                      if(formatchar == XFILETXTFORMATCHAR_UTF16_BE)
+                                                        {
+                                                          bufferw[d] = (XWORD)((bufferw[d]<<8) | (bufferw[d]>>8));
+                                                        }
+                                                    }
+                                                  if(nbytes && !file->Write(tmp, nbytes)) { GEN_DELETE_ARRAY tmp; return false; }
+                                                  byteswritten += nbytes;
+                                                  GEN_DELETE_ARRAY tmp;
+                                                }
+                                                break;
 
-                  case XFILETXTFORMATCHAR_ASCII     : { bw = string->GetSize();
-
-                                                        XBUFFER charstr;
-                                                        
-                                                        (*string).ConvertToASCII(charstr); 
-                                                        memcpy(buffer, (XBYTE*)charstr.Get(), bw);
-                                                        
-                                                      }
-                                                      break;
-
-                  case XFILETXTFORMATCHAR_UTF8      : string->ConvertToUTF8(buffer, bw);
-                                                      break;
-
-                  case XFILETXTFORMATCHAR_UTF16_BE  : { XWORD* bufferw = (XWORD*)buffer;
-
-                                                        bw = (string->GetSize()*2);
-
-                                                        for(int d=0;d<(int)string->GetSize();d++)
-                                                          {
-                                                            bufferw[d] = (XWORD)string->Get()[d];
-                                                            bufferw[d] = (bufferw[d]<<8) | (bufferw[d]>>8);
-                                                          }
-                                                      }
-                                                      break;
-
-                  case XFILETXTFORMATCHAR_UTF16_LE  : { XWORD* bufferw = (XWORD*)buffer;
-
-                                                        bw = (string->GetSize()*2);
-
-                                                        for(int d=0;d<(int)string->GetSize();d++)
-                                                          {
-                                                            bufferw[d] = (XWORD)string->Get()[d];
-                                                          }
-                                                      }
-                                                      break;
-
-                                       default      : break; 
-                }
-
-              if(bw) xbuffer.Add(buffer, bw);
-              xbuffer.Add(LF, sizeLF);
-            }
+                               default      : break;
         }
 
-      status = file->Write(xbuffer);
-
-      GEN_DELETE_ARRAY buffer;
+      if(sizeLF)
+        {
+          if(!file->Write(LF, sizeLF)) return false;
+          byteswritten += sizeLF;
+        }
     }
 
-  if(status)
+  if(byteswritten == 0) return false;
+
+  // Truncate any leftover from a previous longer file (SetSize updates cachesize).
+  if(!file->SetSize(byteswritten))
     {
-      XQWORD position = 0;
-
-      file->GetPosition(position);
-      status = file->SetSize(position);
+      // Data was already written; treat truncate failure as non-fatal when size matches.
+      XQWORD finalsize = file->GetSize();
+      if(finalsize < byteswritten) return false;
     }
 
-  return status;
+  return true;
 }
 
 

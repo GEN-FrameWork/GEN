@@ -195,9 +195,19 @@ bool XWINDOWSFILE::GetPosition(XQWORD& position)
   if(!isopen)     return false;
   if(!filehandle) return false;
 
-  position = SetFilePointer(filehandle, 0, NULL, FILE_CURRENT);
-  if(position == INVALID_SET_FILE_POINTER) return false;
+  LARGE_INTEGER distance;
+  LARGE_INTEGER result;
 
+  distance.QuadPart = 0;
+  result.QuadPart   = 0;
+
+  if(!SetFilePointerEx(filehandle, distance, &result, FILE_CURRENT))
+    {
+      position = 0;
+      return false;
+    }
+
+  position = (XQWORD)result.QuadPart;
   return true;
 }
 
@@ -218,17 +228,27 @@ bool XWINDOWSFILE::SetPosition(XQWORD position)
   if(!isopen)     return false;
   if(!filehandle) return false;
 
-  XQWORD _position    = position;
+  XQWORD _position = position;
 
   if(_position == XFILE_SEEKEND) _position = cachesize;
+
+  // Refresh live size: cachesize can lag when ActualizeSize/Flush failed after Write,
+  // which used to reject valid seeks (_position > cachesize) and break WriteAllFile.
+  LARGE_INTEGER exsize;
+  if(GetFileSizeEx(filehandle, &exsize))
+    {
+      XQWORD livesize = ((XQWORD)exsize.HighPart << 32) | (XQWORD)exsize.LowPart;
+      if(livesize > cachesize) cachesize = livesize;
+    }
+
   if(_position > cachesize) return false;
 
-  //XQWORD mask1 = 0xFFFFFFFF00000000;
+  LARGE_INTEGER distance;
+  LARGE_INTEGER result;
+  distance.QuadPart = (LONGLONG)_position;
+  result.QuadPart   = 0;
 
-  XDWORD high_position = HighQWORD(_position);
-  XDWORD low_position  = LowQWORD(_position);
-
-  if(SetFilePointer(filehandle, low_position, (PLONG)&high_position, FILE_BEGIN) == INVALID_SET_FILE_POINTER) return false;
+  if(!SetFilePointerEx(filehandle, distance, &result, FILE_BEGIN)) return false;
 
   return true;
 }
@@ -529,13 +549,15 @@ bool XWINDOWSFILE::ActualizeSize()
   if(!isopen)       return false;
   if(!filehandle)   return false;
 
+  // Flush is best-effort: a failed Flush must not skip GetFileSizeEx (stale cachesize=0
+  // after a successful WriteFile broke SetPosition/WriteAllFile and left 0-byte scripts).
   if(!isreadonly)
     {
-      if(!Flush()) return false;
+      Flush();
     }
 
   LARGE_INTEGER exsize;
-  if(GetFileSizeEx(filehandle, &exsize) == INVALID_FILE_SIZE) return false;
+  if(!GetFileSizeEx(filehandle, &exsize)) return false;
 
   cachesize  = exsize.HighPart;
   cachesize <<=32;

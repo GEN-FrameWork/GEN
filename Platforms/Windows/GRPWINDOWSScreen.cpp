@@ -68,6 +68,8 @@
 // already requires for its GLES3/EGL rendering path (see GRPBlitGLES.h), so this adds no new minimum
 // OS requirement. #pragma comment links dwmapi.lib automatically, so no project file changes are needed.
 #include <dwmapi.h>
+#include <stdio.h>
+#include <stdlib.h>
 #pragma comment(lib, "dwmapi.lib")
 
 #ifndef DWMWA_CLOAK
@@ -1415,12 +1417,15 @@ GRPBITMAP* GRPWINDOWSSCREEN::CaptureContent(GRPRECTINT* rect, void* handle_windo
   int  y       = 0;
   int  cx      = GetWidth();
   int  cy      = GetHeight();
-  bool status  = false;
 
   if(!hwndsrc || !IsWindow(hwndsrc))
     {
       return NULL;
     }
+
+  // Top-level frame: Chrome/Edge child HWNDs often capture as solid black.
+  HWND hwndroot = GetAncestor(hwndsrc, GA_ROOT);
+  if(hwndroot && IsWindow(hwndroot)) hwndsrc = hwndroot;
 
   if(rect)
     {
@@ -1459,141 +1464,226 @@ GRPBITMAP* GRPWINDOWSSCREEN::CaptureContent(GRPRECTINT* rect, void* handle_windo
   if((y + cy) > clienth) cy = clienth - y;
   if((cx <= 0) || (cy <= 0)) return NULL;
 
-  HDC hdcScreen = GetDC(NULL);
-  if(!hdcScreen) return NULL;
+  #ifndef PW_CLIENTONLY
+  #define PW_CLIENTONLY 0x00000001
+  #endif
+  #ifndef PW_RENDERFULLCONTENT
+  #define PW_RENDERFULLCONTENT 0x00000002
+  #endif
 
-  HDC hdcmemory = CreateCompatibleDC(hdcScreen);
-  if(!hdcmemory)
+  // Working buffer: top-down 32bpp. Final copy into GRPBITMAP is bottom-up
+  // (same packing as Linux CaptureContent / FindSubBitmap / historic GetDIBits).
+  XDWORD* cropbits = (XDWORD*)malloc((size_t)cx * (size_t)cy * sizeof(XDWORD));
+  if(!cropbits) return NULL;
+  memset(cropbits, 0, (size_t)cx * (size_t)cy * sizeof(XDWORD));
+
+  auto ismostlyblack = [&]() -> bool
     {
+      XDWORD n    = (XDWORD)cx * (XDWORD)cy;
+      int    step = (n > 64) ? (int)(n / 64) : 1;
+      int    dark = 0;
+      int    count = 0;
+      for(XDWORD i = 0; i < n; i += (XDWORD)step)
+        {
+          BYTE r = (BYTE)((cropbits[i] >> 16) & 0xFF);
+          BYTE g = (BYTE)((cropbits[i] >>  8) & 0xFF);
+          BYTE b = (BYTE)( cropbits[i]        & 0xFF);
+          if((r < 8) && (g < 8) && (b < 8)) dark++;
+          count++;
+        }
+      return (!count) || (((dark * 100) / count) >= 90);
+    };
+
+  auto copy_crop_from_dc = [&](HDC hdcfull) -> bool
+    {
+      HDC hdcScreen = GetDC(NULL);
+      if(!hdcScreen) return false;
+
+      BITMAPINFO bi;
+      memset(&bi, 0, sizeof(bi));
+      bi.bmiHeader.biSize        = sizeof(BITMAPINFOHEADER);
+      bi.bmiHeader.biWidth       = cx;
+      bi.bmiHeader.biHeight      = -cy;
+      bi.bmiHeader.biPlanes      = 1;
+      bi.bmiHeader.biBitCount    = 32;
+      bi.bmiHeader.biCompression = BI_RGB;
+      bi.bmiHeader.biSizeImage   = (DWORD)cx * (DWORD)cy * 4u;
+
+      void* bits = NULL;
+      HDC hdc = CreateCompatibleDC(hdcScreen);
+      HBITMAP hb = hdc ? CreateDIBSection(hdcScreen, &bi, DIB_RGB_COLORS, &bits, NULL, 0) : NULL;
+      bool ok = false;
+      if(hdc && hb && bits)
+        {
+          HBITMAP old = (HBITMAP)SelectObject(hdc, hb);
+          if(BitBlt(hdc, 0, 0, cx, cy, hdcfull, x, y, SRCCOPY))
+            {
+              memcpy(cropbits, bits, (size_t)cx * (size_t)cy * sizeof(XDWORD));
+              ok = true;
+            }
+          SelectObject(hdc, old);
+        }
+      if(hb) DeleteObject(hb);
+      if(hdc) DeleteDC(hdc);
       ReleaseDC(NULL, hdcScreen);
-      return NULL;
+      return ok;
+    };
+
+  bool have = false;
+
+  // 1) In-process PrintWindow (GDI apps and hosts where Chrome PW works).
+  {
+    HDC hdcScreen = GetDC(NULL);
+    HDC hdcfull = hdcScreen ? CreateCompatibleDC(hdcScreen) : NULL;
+    HBITMAP hbmfull = hdcfull ? CreateCompatibleBitmap(hdcScreen, clientw, clienth) : NULL;
+    if(hdcfull && hbmfull)
+      {
+        HBITMAP old = (HBITMAP)SelectObject(hdcfull, hbmfull);
+        BOOL pwok = PrintWindow(hwndsrc, hdcfull, PW_RENDERFULLCONTENT | PW_CLIENTONLY);
+        if(!pwok) pwok = PrintWindow(hwndsrc, hdcfull, PW_RENDERFULLCONTENT);
+        if(!pwok) pwok = PrintWindow(hwndsrc, hdcfull, PW_CLIENTONLY);
+        if(!pwok) pwok = PrintWindow(hwndsrc, hdcfull, 0);
+        if(pwok && copy_crop_from_dc(hdcfull)) have = !ismostlyblack();
+        SelectObject(hdcfull, old);
+      }
+    if(hbmfull) DeleteObject(hbmfull);
+    if(hdcfull) DeleteDC(hdcfull);
+    if(hdcScreen) ReleaseDC(NULL, hdcScreen);
+  }
+
+  // 2) Desktop / window DC (non-GPU windows).
+  if(!have)
+    {
+      HDC hdcScreen = GetDC(NULL);
+      if(hdcScreen)
+        {
+          HDC hdc = CreateCompatibleDC(hdcScreen);
+          BITMAPINFO bi;
+          memset(&bi, 0, sizeof(bi));
+          bi.bmiHeader.biSize = sizeof(BITMAPINFOHEADER);
+          bi.bmiHeader.biWidth = cx;
+          bi.bmiHeader.biHeight = -cy;
+          bi.bmiHeader.biPlanes = 1;
+          bi.bmiHeader.biBitCount = 32;
+          bi.bmiHeader.biCompression = BI_RGB;
+          bi.bmiHeader.biSizeImage = (DWORD)cx * (DWORD)cy * 4u;
+          void* bits = NULL;
+          HBITMAP hb = hdc ? CreateDIBSection(hdcScreen, &bi, DIB_RGB_COLORS, &bits, NULL, 0) : NULL;
+          if(hdc && hb && bits)
+            {
+              HBITMAP old = (HBITMAP)SelectObject(hdc, hb);
+              POINT pt = { x, y };
+              ClientToScreen(hwndsrc, &pt);
+              BOOL ok = BitBlt(hdc, 0, 0, cx, cy, hdcScreen, pt.x, pt.y, SRCCOPY | CAPTUREBLT);
+              if(!ok)
+                {
+                  HDC hdcwin = GetDC(hwndsrc);
+                  if(hdcwin)
+                    {
+                      ok = BitBlt(hdc, 0, 0, cx, cy, hdcwin, x, y, SRCCOPY);
+                      ReleaseDC(hwndsrc, hdcwin);
+                    }
+                }
+              if(ok)
+                {
+                  memcpy(cropbits, bits, (size_t)cx * (size_t)cy * sizeof(XDWORD));
+                  have = !ismostlyblack();
+                }
+              SelectObject(hdc, old);
+            }
+          if(hb) DeleteObject(hb);
+          if(hdc) DeleteDC(hdc);
+          ReleaseDC(NULL, hdcScreen);
+        }
     }
 
-  HBITMAP hbitmap    = CreateCompatibleBitmap(hdcScreen, cx, cy);
-  HBITMAP hbitmapold = (HBITMAP)SelectObject(hdcmemory, hbitmap);
-
-  // 1) Desktop blit: works with Chrome/Edge GPU compositing when the window is visible.
-  POINT ptscreen;
-  ptscreen.x = x;
-  ptscreen.y = y;
-  ClientToScreen(hwndsrc, &ptscreen);
-
-  BOOL bltok = BitBlt(hdcmemory, 0, 0, cx, cy, hdcScreen, ptscreen.x, ptscreen.y, SRCCOPY | CAPTUREBLT);
-
-  // Detect "all black" captures typical of accelerated browsers (Chrome/Edge GPU).
-  bool mostlyblack = true;
-  if(bltok)
+  // 3) Fresh helper process — Chrome PW_RENDERFULLCONTENT often paints solid black
+  //    in-process under console hosts (Windows Terminal + ASQ), while the same API
+  //    succeeds in a short-lived child. gen_wndcapture.exe lives next to the app.
+  if(!have)
     {
-      int stepx = (cx > 8) ? (cx / 8) : 1;
-      int stepy = (cy > 8) ? (cy / 8) : 1;
-      int dark  = 0;
-      int count = 0;
+      wchar_t modpath[MAX_PATH];
+      modpath[0] = 0;
+      GetModuleFileNameW(NULL, modpath, MAX_PATH);
+      wchar_t* slash = wcsrchr(modpath, L'\\');
+      if(slash) slash[1] = 0;
+      else modpath[0] = 0;
 
-      for(int sy = 0; sy < cy; sy += stepy)
+      wchar_t helper[MAX_PATH];
+      wchar_t bmppath[MAX_PATH];
+      _snwprintf_s(helper, _TRUNCATE, L"%sgen_wndcapture.exe", modpath);
+      _snwprintf_s(bmppath, _TRUNCATE, L"%sgen_wndcapture_%u.bmp", modpath, GetCurrentProcessId());
+
+      if(GetFileAttributesW(helper) != INVALID_FILE_ATTRIBUTES)
         {
-          for(int sx = 0; sx < cx; sx += stepx)
+          wchar_t cmdline[1024];
+          _snwprintf_s(cmdline, _TRUNCATE, L"\"%s\" %IX %d %d %d %d \"%s\"",
+                       helper, (uintptr_t)hwndsrc, x, y, cx, cy, bmppath);
+
+          STARTUPINFOW si;
+          PROCESS_INFORMATION pi;
+          memset(&si, 0, sizeof(si));
+          memset(&pi, 0, sizeof(pi));
+          si.cb = sizeof(si);
+          si.dwFlags = STARTF_USESHOWWINDOW;
+          si.wShowWindow = SW_HIDE;
+
+          if(CreateProcessW(helper, cmdline, NULL, NULL, FALSE, CREATE_NO_WINDOW, NULL, NULL, &si, &pi))
             {
-              COLORREF pixel = GetPixel(hdcmemory, sx, sy);
-              if(pixel != CLR_INVALID)
+              WaitForSingleObject(pi.hProcess, 8000);
+              CloseHandle(pi.hThread);
+              CloseHandle(pi.hProcess);
+
+              HANDLE fh = CreateFileW(bmppath, GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, 0, NULL);
+              if(fh != INVALID_HANDLE_VALUE)
                 {
-                  BYTE r = GetRValue(pixel);
-                  BYTE g = GetGValue(pixel);
-                  BYTE b = GetBValue(pixel);
-                  if((r < 8) && (g < 8) && (b < 8)) dark++;
-                  count++;
+                  BITMAPFILEHEADER bf;
+                  BITMAPINFOHEADER bi;
+                  DWORD rd = 0;
+                  if(ReadFile(fh, &bf, sizeof(bf), &rd, NULL) && rd == sizeof(bf) && bf.bfType == 0x4D42 &&
+                     ReadFile(fh, &bi, sizeof(bi), &rd, NULL) && rd == sizeof(bi) &&
+                     bi.biWidth == cx && abs(bi.biHeight) == cy && bi.biBitCount == 32)
+                    {
+                      DWORD nbytes = (DWORD)cx * (DWORD)cy * 4u;
+                      if(ReadFile(fh, cropbits, nbytes, &rd, NULL) && rd == nbytes)
+                        {
+                          // Helper writes top-down (negative biHeight).
+                          have = !ismostlyblack();
+                        }
+                    }
+                  CloseHandle(fh);
+                }
+              DeleteFileW(bmppath);
+            }
+        }
+    }
+
+  GRPBITMAP* grpbitmap = NULL;
+  if(have)
+    {
+      grpbitmap = GRPFACTORY::GetInstance().CreateBitmap(cx, cy, GRPPROPERTYMODE_32_BGRA_8888);
+      if(grpbitmap && grpbitmap->GetBuffer() &&
+         (grpbitmap->GetBufferSize() >= (int)(cx * cy * (int)sizeof(XDWORD))))
+        {
+          XDWORD* dst = (XDWORD*)grpbitmap->GetBuffer();
+          for(int py = 0; py < cy; py++)
+            {
+              XDWORD* srcrow = cropbits + (py * (XDWORD)cx);
+              XDWORD* dstrow = dst + ((cy - 1 - py) * (XDWORD)cx);
+              for(int px = 0; px < cx; px++)
+                {
+                  dstrow[px] = srcrow[px] | 0xFF000000u;
                 }
             }
         }
-
-      if(count && (((dark * 100) / count) < 90)) mostlyblack = false;
-    }
-
-  // 2) PrintWindow fallback (PW_RENDERFULLCONTENT) for GPU windows / when desktop blit is black.
-  if(!bltok || mostlyblack)
-    {
-      #ifndef PW_RENDERFULLCONTENT
-      #define PW_RENDERFULLCONTENT 0x00000002
-      #endif
-
-      HDC     hdcfull    = CreateCompatibleDC(hdcScreen);
-      HBITMAP hbmfull    = CreateCompatibleBitmap(hdcScreen, clientw, clienth);
-      HBITMAP hbmfullold = (HBITMAP)SelectObject(hdcfull, hbmfull);
-
-      if(PrintWindow(hwndsrc, hdcfull, PW_RENDERFULLCONTENT))
+       else
         {
-          BitBlt(hdcmemory, 0, 0, cx, cy, hdcfull, x, y, SRCCOPY);
-          bltok = TRUE;
-        }
-       else if(PrintWindow(hwndsrc, hdcfull, 0))
-        {
-          BitBlt(hdcmemory, 0, 0, cx, cy, hdcfull, x, y, SRCCOPY);
-          bltok = TRUE;
-        }
-
-      SelectObject(hdcfull, hbmfullold);
-      DeleteObject(hbmfull);
-      DeleteDC(hdcfull);
-    }
-
-  // 3) Last resort: classic window DC BitBlt (non-accelerated apps).
-  if(!bltok)
-    {
-      HDC hdcwin = GetDC(hwndsrc);
-      if(hdcwin)
-        {
-          bltok = BitBlt(hdcmemory, 0, 0, cx, cy, hdcwin, x, y, SRCCOPY);
-          ReleaseDC(hwndsrc, hdcwin);
+          GEN_DELETE grpbitmap;
+          grpbitmap = NULL;
         }
     }
 
-  SelectObject(hdcmemory, hbitmapold);
-  ReleaseDC(NULL, hdcScreen);
-  DeleteDC(hdcmemory);
-
-  if(!bltok)
-    {
-      DeleteObject(hbitmap);
-      return NULL;
-    }
-
-  BITMAP bitmap;
-  GetObject(hbitmap, sizeof(bitmap), (LPSTR)&bitmap);
-
-  HDC     dcbitmap = CreateCompatibleDC(NULL);
-  HBITMAP olddib   = (HBITMAP)SelectObject(dcbitmap, hbitmap);
-
-  BITMAPINFO bmpinfo;
-  memset(&bmpinfo, 0, sizeof(bmpinfo));
-  bmpinfo.bmiHeader.biSize        = sizeof(BITMAPINFOHEADER);
-  bmpinfo.bmiHeader.biWidth       = bitmap.bmWidth;
-  bmpinfo.bmiHeader.biHeight      = bitmap.bmHeight;
-  bmpinfo.bmiHeader.biPlanes      = bitmap.bmPlanes;
-  bmpinfo.bmiHeader.biBitCount    = bitmap.bmBitsPixel;
-  bmpinfo.bmiHeader.biCompression = BI_RGB;
-
-  GRPBITMAP* grpbitmap = GRPFACTORY::GetInstance().CreateBitmap(bitmap.bmWidth, bitmap.bmHeight, GRPPROPERTYMODE_32_BGRA_8888);
-  if(grpbitmap)
-    {
-      status = GetDIBits(dcbitmap, hbitmap, 0, bitmap.bmHeight, grpbitmap->GetBuffer(), &bmpinfo, DIB_RGB_COLORS)?true:false;
-
-      XDWORD* buffer = (XDWORD*)grpbitmap->GetBuffer();
-      for(XDWORD c=0; c<(grpbitmap->GetBufferSize()/sizeof(XDWORD)); c++)
-        {
-          (*buffer) |= 0xFF000000;
-          buffer++;
-        }
-    }
-
-  SelectObject(dcbitmap, olddib);
-  DeleteDC(dcbitmap);
-  DeleteObject(hbitmap);
-
-  if(!status)
-    {
-      GEN_DELETE grpbitmap;
-      grpbitmap = NULL;
-    }
-
+  free(cropbits);
   return grpbitmap;
 }
 
