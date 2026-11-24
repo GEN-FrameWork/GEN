@@ -1314,14 +1314,21 @@ bool XFILECFG::AjustRemarks()
               XFILEINIREMARK* ini_remark = ini_remarks->Get(c);
               if(!ini_remark) continue;
 
-              // Identity for merge is type + section + key (not relativeypos): loaded INI remarks
-              // keep a line index that would never match AddRemark(..., ypos=0), leaving the old
-              // comment on disk (e.g. defaultlanguage still saying "Chinese" after Language_PersistActual).
+              // Identity for merge is type + section + key.
+              // IN_KEY remarks ignore relativeypos: loaded line indexes would never match
+              // AddRemark(..., ypos=0), leaving stale text on disk (e.g. defaultlanguage).
+              // ALL_LINE section banners share an empty key; relativeypos (1, 2, …) is what
+              // distinguishes the separator line from "X section of configuration". Without it
+              // every banner updates the first empty-key remark and duplicates the description.
               if(ini_remark->GetType() != remark->GetType()) continue;
               if(!ini_remark->GetRelativeSection() || !remark->GetRelativeSection()) continue;
               if(!ini_remark->GetRelativeKey() || !remark->GetRelativeKey()) continue;
               if(ini_remark->GetRelativeSection()->Compare(remark->GetRelativeSection()->Get(), true) != 0) continue;
               if(ini_remark->GetRelativeKey()->Compare(remark->GetRelativeKey()->Get(), true) != 0) continue;
+              if(remark->GetType() == XFILEINI_TYPEREMARK_ALL_LINE && remark->GetRelativeKey()->IsEmpty())
+                {
+                  if(ini_remark->GetRelativeYPos() != remark->GetRelativeYPos()) continue;
+                }
 
               ini_remark->GetTextRemark()->Set(remark->GetTextRemark()->Get());
               ini_remark->SetXPos(remark->GetXPos());
