@@ -182,6 +182,32 @@ bool INPWINDOWSDEVICEKEYBOARD::TranslateKeyCodeToUnicode(XWORD keycode, XSTRING&
   BYTE keystate[256];
   if(!GetKeyboardState(keystate)) return false;
 
+  // GetKeyboardState is per calling-thread queue; while recording into another
+  // focused app, merge system-wide async modifiers so Shift/AltGr (e.g. '?')
+  // still translate correctly via ToUnicodeEx.
+  auto syncvkey = [&keystate](int vk) -> void
+    {
+      if(GetAsyncKeyState(vk) & 0x8000) keystate[vk] |= 0x80;
+                               else keystate[vk] &= (BYTE)~0x80;
+    };
+
+  syncvkey(VK_SHIFT);
+  syncvkey(VK_LSHIFT);
+  syncvkey(VK_RSHIFT);
+  syncvkey(VK_CONTROL);
+  syncvkey(VK_LCONTROL);
+  syncvkey(VK_RCONTROL);
+  syncvkey(VK_MENU);
+  syncvkey(VK_LMENU);
+  syncvkey(VK_RMENU);
+
+  if(keystate[VK_LSHIFT] & 0x80)   keystate[VK_SHIFT] |= 0x80;
+  if(keystate[VK_RSHIFT] & 0x80)   keystate[VK_SHIFT] |= 0x80;
+  if(keystate[VK_LCONTROL] & 0x80) keystate[VK_CONTROL] |= 0x80;
+  if(keystate[VK_RCONTROL] & 0x80) keystate[VK_CONTROL] |= 0x80;
+  if(keystate[VK_LMENU] & 0x80)    keystate[VK_MENU] |= 0x80;
+  if(keystate[VK_RMENU] & 0x80)    keystate[VK_MENU] |= 0x80;
+
   UINT scancode = MapVirtualKey((UINT)keycode, MAPVK_VK_TO_VSC);
   HKL  layout   = GetKeyboardLayout(0);
   WCHAR buffer[8];
@@ -236,16 +262,20 @@ bool INPWINDOWSDEVICEKEYBOARD::CreateAllButtons()
   INPBUTTON::CreateButton(&buttons, VK_RMENU, INPBUTTON_ID_ALT_RIGHT, _C('\x0'));
   INPBUTTON::CreateButton(&buttons, VK_LMENU, INPBUTTON_ID_ALT_LEFT, _C('\x0'));
 
-//INPBUTTON::CreateButton( &buttons, OPEN_BRANCH        , INPBUTTON_ID_OPEN_BRANCH        , _C('('  ));
-//INPBUTTON::CreateButton( &buttons, CLOSE_BRANCH       , INPBUTTON_ID_CLOSE_BRANCH       , _C(')'  ));
+  // OEM keys: layout-dependent glyphs (US /?, ES '? via OEM_4, ES ¡¿ via OEM_PLUS, etc.).
+  // ScriptRecord relies on TranslateKeyCodeToUnicode(ToUnicodeEx) for the actual character.
+  INPBUTTON::CreateButton(&buttons, VK_OEM_1, INPBUTTON_ID_OPEN_BRANCH, _C(';' ));
+  INPBUTTON::CreateButton(&buttons, VK_OEM_PLUS, INPBUTTON_ID_CLOSE_BRANCH, _C('=' ));
   INPBUTTON::CreateButton(&buttons, VK_OEM_COMMA, INPBUTTON_ID_COMMA, _C(',' ));
   INPBUTTON::CreateButton(&buttons, VK_OEM_MINUS, INPBUTTON_ID_MINUS, _C('-' ));
   INPBUTTON::CreateButton(&buttons, VK_OEM_PERIOD, INPBUTTON_ID_POINT, _C('.' ));
-//INPBUTTON::CreateButton( &buttons,  SLASH             , INPBUTTON_ID_SLASH              , _C('/'  ));
-//INPBUTTON::CreateButton( &buttons, BACK_QUOTE         , INPBUTTON_ID_BACK_QUOTE         , _C('\x0'));
-//INPBUTTON::CreateButton( &buttons, OPEN_BRACKET       , INPBUTTON_ID_OPEN_BRACKET       , _C('['  ));
-//INPBUTTON::CreateButton( &buttons, CLOSE_BRACKET      , INPBUTTON_ID_CLOSE_BRACKET      , _C(']'  ));
-//INPBUTTON::CreateButton( &buttons, QUOTE              , INPBUTTON_ID_QUOTE              , _C('\x0'));
+  INPBUTTON::CreateButton(&buttons, VK_OEM_2, INPBUTTON_ID_SLASH, _C('/' ));
+  INPBUTTON::CreateButton(&buttons, VK_OEM_3, INPBUTTON_ID_BACK_QUOTE, _C('`' ));
+  INPBUTTON::CreateButton(&buttons, VK_OEM_4, INPBUTTON_ID_OPEN_BRACKET, _C('[' ));
+  INPBUTTON::CreateButton(&buttons, VK_OEM_6, INPBUTTON_ID_CLOSE_BRACKET, _C(']' ));
+  INPBUTTON::CreateButton(&buttons, VK_OEM_7, INPBUTTON_ID_QUOTE, _C('\''));
+  INPBUTTON::CreateButton(&buttons, VK_OEM_5, INPBUTTON_ID_ARROWS, _C('\\'));
+  INPBUTTON::CreateButton(&buttons, VK_OEM_102, INPBUTTON_ID_NN, _C('<' ));
   INPBUTTON::CreateButton(&buttons, VK_SPACE, INPBUTTON_ID_SPACE, _C(' ' ));
   INPBUTTON::CreateButton(&buttons, VK_PRIOR, INPBUTTON_ID_PAGE_UP, _C('\x0'));
   INPBUTTON::CreateButton(&buttons, VK_NEXT, INPBUTTON_ID_PAGE_DOWN, _C('\x0'));

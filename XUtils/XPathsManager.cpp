@@ -438,6 +438,7 @@ bool XPATHSMANAGER::AdjustRootPathDefault(XCHAR* assetsdirname)
   XDIR* xdir;
   XPATH xpathroot;
   XPATH xpathtest;
+  XPATH xpathbest;
   bool  founddir    = false;
   int   indexfound  = 0;
   bool  status      = false;
@@ -459,10 +460,28 @@ bool XPATHSMANAGER::AdjustRootPathDefault(XCHAR* assetsdirname)
       xpathroot = appexecpath->Get();
     }
 
-  xpathroot.Slash_Add();
+  if(xpathroot.IsEmpty())
+    {
+      GEN_XFACTORY.Delete_Dir(xdir);
+      return false;
+    }
 
-  do{ indexfound = xpathroot.Find(NL("/"), false, indexfound);
-      if(indexfound == XSTRING_NOTFOUND)   indexfound = xpathroot.Find(NL("\\"), false, indexfound);
+  xpathroot.Slash_Add();
+  // One separator style so the walk below does not miss candidates (Find("\\") with start -1
+  // after a failed Find("/") used to abort the whole search on backslash-only paths).
+  xpathroot.Slash_Normalize();
+
+  // Walk every path prefix. Keep the *deepest* match so a release layout
+  //   <dir>/app.exe + <dir>/assets
+  // wins over a parent tree that also happens to contain an "assets" folder
+  // (e.g. deploying under Utilities/ActionScriptQA used to steal ASQ's assets,
+  // load the wrong .lng and exit during Ini).
+  do{ int indexslash  = xpathroot.Find(NL("/"),  false, indexfound);
+      int indexbslash = xpathroot.Find(NL("\\"), false, indexfound);
+
+      if(indexslash == XSTRING_NOTFOUND)       indexfound = indexbslash;
+      else if(indexbslash == XSTRING_NOTFOUND) indexfound = indexslash;
+      else                                     indexfound = (indexslash < indexbslash) ? indexslash : indexbslash;
 
       if(indexfound != XSTRING_NOTFOUND)
         {
@@ -471,12 +490,10 @@ bool XPATHSMANAGER::AdjustRootPathDefault(XCHAR* assetsdirname)
           xpathtest.Slash_Add();
           xpathtest.Add(assetsdirname);
 
-          founddir = xdir->Exist(xpathtest);
-          if(founddir)
+          if(xdir->Exist(xpathtest))
             {
-              AddPathSection(XPATHSMANAGERSECTIONTYPE_ROOT, xpathtest);
-              status  = true;
-              break;    
+              xpathbest = xpathtest;
+              founddir  = true;
             }
 
           indexfound++;
@@ -484,7 +501,12 @@ bool XPATHSMANAGER::AdjustRootPathDefault(XCHAR* assetsdirname)
 
     } while(indexfound != XSTRING_NOTFOUND);
 
-  if(!founddir)
+  if(founddir)
+    {
+      AddPathSection(XPATHSMANAGERSECTIONTYPE_ROOT, xpathbest);
+      status = true;
+    }
+   else
     {
       xpathtest = xpathroot;
       xpathtest.Slash_Add();

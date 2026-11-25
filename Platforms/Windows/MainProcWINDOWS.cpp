@@ -1290,24 +1290,23 @@ int WINAPI WinMain(HINSTANCE hinstance, HINSTANCE hprevinst, LPSTR cmdline, int 
 {
   XMEMORY_CONTROL_ACTIVATED
 
-  int      nargs        = 0;
-  LPWSTR*  ptrpathexec  = CommandLineToArgvW(NL(""), &nargs);
   XSTRING  xpathexecutable;
   XSTRING  cmdlinestr   = cmdline;
 
   mainprocwindows.SetHandle((void*)hinstance);
 
-  for(int c=0; c<nargs; c++)
+  // Reliable exe path (independent of cwd / argv quirks). Needed so APPFlow can
+  // locate a sibling "assets" folder in release deployments.
+  xpathexecutable.AdjustSize(_MAXPATH);
+  if(GetModuleFileNameW(NULL, xpathexecutable.Get(), xpathexecutable.GetSize()))
     {
-      xpathexecutable += ptrpathexec[c];
-      if(c != nargs-1)  xpathexecutable += NL(" ");
+      xpathexecutable.AdjustSize();
+      mainprocwindows.GetXPathExec()->Set(xpathexecutable);
     }
-
-  mainprocwindows.GetXPathExec()->Set(xpathexecutable);
+  xpathexecutable.Empty();
 
   mainprocwindows.CreateParams(cmdlinestr.Get());
-  cmdlinestr.Empty();
-  xpathexecutable.Empty(); 
+  cmdlinestr.Empty(); 
 
 
   if(!mainprocwindows.IsRunningAsService())
